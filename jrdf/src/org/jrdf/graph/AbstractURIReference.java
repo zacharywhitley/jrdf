@@ -77,6 +77,29 @@ public abstract class AbstractURIReference implements URIReference {
   protected URI uri;
 
   /**
+   * Constructor.
+   *
+   * Enforces a non-<code>null</code> and absolute <var>uri</var> parameter.
+   *
+   * @throws IllegalArgumentException if <var>uri</var> is <code>null</code> or
+   *                                  not absolute
+   */
+  protected AbstractURIReference(URI uri)
+  {
+    // Validate "uri" parameter
+    if (uri == null) {
+      throw new IllegalArgumentException("Null \"uri\" parameter");
+    }
+
+    if (!uri.isAbsolute()) {
+      throw new IllegalArgumentException("\""+uri+"\" is not absolute");
+    }
+
+    // Initialize the field
+    this.uri = uri;
+  }
+
+  /**
    * The {@link URI} identifiying this resource.
    *
    * @return the {@link URI} identifying this resource.
