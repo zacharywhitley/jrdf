@@ -1,3 +1,20 @@
+JRDF Release 0.3
+================
+* New memory implementation by Paul Gearon.
+* Abstract unit tests to test implementations.
+* Split out NodeFactory into TripleFactory and GraphElementFactory.
+* Added Container (Bag, Alternative and Sequence support) and Collection
+support.
+* Added visitor pattern for typed nodes (URIReference, BlankNode and
+Literals).
+* Creating literals is restricted to only valid construction: lexical value,
+lexical value and datatype or lexical value and language.
+* AbstractLiteral now has a getEscapedForm which returns an N-Triples
+escaped version of the Literal.  The toString now simply returns
+getLexicalValue (no escaping).
+* Modified AbstractURIReference to allow unchecked URIs to be added.
+* Added AbstractBlankNode.
+
 JRDF Release 0.2.1
 ==================
 * AbstractLiteral has improved toString.
