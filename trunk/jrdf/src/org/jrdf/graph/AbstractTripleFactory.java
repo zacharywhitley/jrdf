@@ -268,7 +268,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         ObjectNode object = (ObjectNode) iter.next();
         graph.add(subjectNode,
             (PredicateNode) elementFactory.createResource(new URI(
-            RDF.baseURI + "#_" + counter++)),
+            RDF.baseURI + "_" + counter++)),
             object);
       }
     }
