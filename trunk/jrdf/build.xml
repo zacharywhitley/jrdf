@@ -29,6 +29,8 @@
     <property name="lib.dir"         value="lib"/>
     <property name="doc.dir"         value="doc"/>
     <property name="javadoc.dir"     value="doc/javadoc"/>
+    <property name="junit.results.dir" value="tests"/>
+    <property name="junit.results" value="${junit.results.dir}/All-Tests.xml"/>
 
     <property name="jarfile"         value="${name}-${version}.jar"/>
 
@@ -76,5 +78,24 @@
       <delete dir="${dist.dir}"/>
       <delete dir="${obj.dir}"/>
       <delete dir="${javadoc.dir}"/>
+      <delete dir="${junit.results.dir}"/>
+    </target>
+
+    <target name="test" depends="dist" description="Runs unit tests">
+      <delete dir="${junit.results.dir}"/>
+      <mkdir dir="${junit.results.dir}"/>
+      <delete file="${junit.results}"/>
+
+      <junit haltonfailure="no" printsummary="on">
+        <classpath>
+          <fileset dir="${lib.dir}" includes="*.jar"/>
+          <fileset dir="${dist.dir}" includes="*.jar"/>
+        </classpath>
+        <formatter type="plain"/>
+        <batchtest todir="${junit.results.dir}">
+          <fileset dir="${src.dir}" includes="**/*UnitTest.java" />
+        </batchtest>
+      </junit>
+
     </target>
 </project>
