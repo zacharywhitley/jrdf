@@ -387,7 +387,7 @@ public class GraphImpl implements Graph, Serializable {
    *
    * @return the number of triples in the graph.
    */
-  public long getNumberOfTriples() {
+  public long getNumberOfTriples() throws GraphException {
     long size = 0;
     // go over the index map
     Iterator first = index012.values().iterator();
@@ -407,7 +407,7 @@ public class GraphImpl implements Graph, Serializable {
    *
    * @return true if the graph is empty i.e. the number of triples is 0.
    */
-  public boolean isEmpty() {
+  public boolean isEmpty() throws GraphException {
     return index012.isEmpty();
   }
 
