@@ -56,108 +56,132 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph;
+package org.jrdf.graph.mem;
 
 // Java 2 standard packages
 import java.util.*;
 
+// JRDF
+import org.jrdf.graph.*;
+
 /**
- * The base class for the implementation of Bag and Alt.
+ * An implementation of {@link org.jrdf.graph.Alternative}.
  *
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public abstract class AbstractUnorderedContainer implements Container {
+public class AlternativeImpl extends AbstractUnorderedContainer {
 
   /**
-   * The hashmap containing the elements.
-   */
-  protected HashMap elements = new HashMap();
-
-  /**
-   * Counter used to generate keys to add to the hashmap.
-   */
-  protected long key = 0;
-
-  public int size() {
-    return elements.values().size();
-  }
-
-  public boolean isEmpty() {
-    return elements.values().isEmpty();
-  }
-
-  public boolean contains(Object o) {
-    return elements.values().contains(o);
-  }
-
-  public Iterator iterator() {
-    return elements.values().iterator();
-  }
-
-  public Object[] toArray() {
-    return elements.values().toArray();
-  }
-
-  public Object[] toArray(Object[] a) {
-    return elements.values().toArray(a);
-  }
-
-  /**
-   * Always return true.
-   *
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
+   *   type, Alternative.
    */
-  public boolean add(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
+  public boolean containsAll(java.util.Collection c) {
+    if (!(c instanceof Alternative)) {
+      throw new IllegalArgumentException("Can only add alts to other alts");
     }
 
-    elements.put(new Long(key++), o);
-    return true;
+    return elements.values().containsAll(c);
   }
 
   /**
-   * Always returns true.  It will only remove one element if there is more
-   * than one is the container.  This can get quite costly as it must iterate
-   * through the values from the start to end looking for the object.
+   * Returns true if there's anything in the collection.
    *
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type.
+   *   type, Alternative.
    */
-  public boolean remove(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
+  public boolean addAll(java.util.Collection c) throws IllegalArgumentException {
+    if (!(c instanceof Alternative)) {
+      throw new IllegalArgumentException("Can only add alts to other alts");
     }
 
-    Iterator iter = elements.entrySet().iterator();
-    boolean found = false;
+    Alternative alt = (Alternative) c;
 
-    // Removes the first entry in the map that matches the given object.
-    while (!found && iter.hasNext()) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      if (o.equals(entry.getValue())) {
-        elements.remove(o);
-        found = true;
+    // Iterate through the bag adding object nodes
+    Iterator iter = alt.iterator();
+    boolean modified = iter.hasNext();
+    while (iter.hasNext()) {
+      ObjectNode obj = (ObjectNode) iter.next();
+      elements.put(new Long(key++), obj);
+    }
+
+    return modified;
+  }
+
+  /**
+   * Returns true if there's anything in the collection.
+   *
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, Alternative.
+   */
+  public boolean removeAll(java.util.Collection c) throws IllegalArgumentException {
+    if (!(c instanceof Alternative)) {
+      throw new IllegalArgumentException("Can only add bags to other bags");
+    }
+
+    Alternative alt = (Alternative) c;
+
+    // Iterate through the bag adding object nodes
+    Iterator iter = alt.iterator();
+    boolean modified = iter.hasNext();
+    while (iter.hasNext()) {
+      remove(iter.next());
+    }
+
+    return modified;
+  }
+
+
+  /**
+   * Returns true if there's anything in the collection.
+   *
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, Alternative.
+   */
+  public boolean retainAll(java.util.Collection c) throws IllegalArgumentException {
+    if (!(c instanceof Alternative)) {
+      throw new IllegalArgumentException("Can only add bags to other bags");
+    }
+
+    boolean modified = false;
+
+    // Iterate through this bag removing elements that are not in the given
+    // bag c.
+    Iterator iter = iterator();
+    while (iter.hasNext()) {
+
+      ObjectNode obj = (ObjectNode) iter.next();
+      if (!c.contains(obj)) {
+        modified = true;
+        remove(obj);
       }
     }
 
-    return found;
+    return modified;
   }
 
-  public void clear() {
-    key = 0;
-    elements.clear();
-  }
+  public boolean equals(Object o) {
 
-  /**
-   * Returns the hashCode of the internal hashMap.
-   *
-   * @return the hashCode of the internal hashMap.
-   */
-  public int hashCode() {
-    return elements.hashCode();
+    if (o == null) {
+      return false;
+    }
+
+    try {
+      Alternative alt = (Alternative) o;
+
+      boolean isEqual = false;
+      if (size() == alt.size()) {
+
+        List myValues = Arrays.asList(toArray());
+        List altValues = Arrays.asList(alt.toArray());
+        isEqual = myValues.equals(altValues);
+      }
+
+      return isEqual;
+    }
+    catch (ClassCastException cce) {
+      return false;
+    }
   }
 }
