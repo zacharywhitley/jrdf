@@ -164,7 +164,6 @@ public abstract class AbstractLiteral implements Literal {
   }
 
   public int hashCode() {
-
     int hashCode = getLexicalForm().hashCode();
 
     if (getDatatypeURI() != null) {
