@@ -37,7 +37,6 @@ import javax.xml.transform.*;
 import javax.xml.transform.sax.*;
 import javax.xml.transform.stream.*;
 
-
 import org.jrdf.graph.*;
 import org.jrdf.graph.mem.*;
 import org.jrdf.parser.*;
@@ -256,6 +255,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
   public void startElement(String namespaceURI, String localName,
       String qName, Attributes attributes) throws SAXException {
+
     if (_deferredElement != null) {
       // The next call could set _parseLiteralMode to true!
       _reportDeferredStartElement();
@@ -673,10 +673,6 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
     sb.append("\"");
   }
-
-  /*-----------------------------------------+
-   | Methods related to the ElementInfo stack |
-   +-----------------------------------------*/
 
   private ElementInfo _peekStack() {
     ElementInfo result = null;
