@@ -168,7 +168,8 @@ public class GraphImpl implements Graph, Serializable {
     if (subIndex == null) return false;
 
     // look up the predicate
-    Collection group = (Collection)subIndex.get(((MemNode)predicate).getId());
+    java.util.Collection group = (java.util.Collection)
+        subIndex.get(((MemNode)predicate).getId());
     // break out if the object set doesn't exist
     if (group == null) return false;
 
@@ -395,7 +396,7 @@ public class GraphImpl implements Graph, Serializable {
       Iterator second = ((Map)first.next()).values().iterator();
       while (second.hasNext()) {
         // accumulate the sizes of the groups
-        size += ((Collection)second.next()).size();
+        size += ((java.util.Collection) second.next()).size();
       }
     }
     return size;
@@ -459,7 +460,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     // find the final group
-    Collection group = (Collection)subIndex.get(second);
+    java.util.Collection group = (java.util.Collection) subIndex.get(second);
     // check that the group exists
     if (group == null) {
       // no, so create it and add it to the subindex
@@ -495,7 +496,7 @@ public class GraphImpl implements Graph, Serializable {
       throw new GraphException("Unable to remove nonexistent statement");
     }
     // find the final group
-    Collection group = (Collection)subIndex.get(msecond.getId());
+    java.util.Collection group = (java.util.Collection) subIndex.get(msecond.getId());
     // check that the group exists
     if (group == null) {
       throw new GraphException("Unable to remove nonexistent statement");

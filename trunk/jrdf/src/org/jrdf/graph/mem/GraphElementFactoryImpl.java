@@ -334,7 +334,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
    *
    * @return The node pool.
    */
-  Collection getNodePool() {
+  java.util.Collection getNodePool() {
     return nodePool.values();
   }
 
