@@ -76,4 +76,20 @@ import java.util.Collection;
  * @version $Revision$
  */
 public interface Container extends Collection {
+
+  /**
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, ObjectNode.
+   */
+  public boolean add(Object o) throws IllegalArgumentException;
+
+  /**
+   * Always returns true.  It will only remove one element if there is more
+   * than one is the container.  This can get quite costly as it must iterate
+   * through the values from the start to end looking for the object.
+   *
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, ObjectNode.
+   */
+  public boolean remove(Object o) throws IllegalArgumentException;
 }
