@@ -371,7 +371,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       iter.next();
       counter++;
     }
-    assertTrue("Should have three rdf:first statements", counter == 3);
+    assertTrue("Should have three rdf:first statements, not " + counter, counter == 3);
 
     // Find all three parts of the collection.
     for (int index = 0; index < fruit.length; index++) {

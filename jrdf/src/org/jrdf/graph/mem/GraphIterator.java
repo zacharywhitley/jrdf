@@ -121,19 +121,6 @@ public class GraphIterator implements ClosableIterator {
     subIterator = null;
     // start the iterator on the main index
     iterator = index.entrySet().iterator();
-    // check if there is data available
-    if (iterator.hasNext()) {
-      // yes, so get out the first entry
-      firstEntry = (Map.Entry)iterator.next();
-      // now get an iterator to the sub index map
-      subIterator = ((Map)firstEntry.getValue()).entrySet().iterator();
-      // check if there is data available - structural constraints say there should be
-      assert subIterator.hasNext();
-      // get the first entry of the sub index
-      secondEntry = (Map.Entry)subIterator.next();
-      // get an interator to the first set from the sub index
-      itemIterator = ((Set)secondEntry.getValue()).iterator();
-    }
   }
 
 
@@ -144,7 +131,9 @@ public class GraphIterator implements ClosableIterator {
    */
   public boolean hasNext() {
     // confirm we still have an item iterator, and that it has data available
-    return itemIterator != null && itemIterator.hasNext();
+    return (itemIterator != null && itemIterator.hasNext()) ||
+      (subIterator != null && subIterator.hasNext()) ||
+      (iterator != null && iterator.hasNext());
   }
 
 
@@ -155,7 +144,12 @@ public class GraphIterator implements ClosableIterator {
    * @throws NoSuchElementException iteration has no more elements.
    */
   public Object next() throws NoSuchElementException {
-    if (itemIterator == null) throw new NoSuchElementException();
+    if (iterator == null) throw new NoSuchElementException();
+
+    // move to the next position
+    updatePosition();
+
+    if (iterator == null) throw new NoSuchElementException();
 
     // get the next item
     Long third = (Long) itemIterator.next();
@@ -163,9 +157,6 @@ public class GraphIterator implements ClosableIterator {
     // construct the triple
     Long second = (Long) secondEntry.getKey();
     Long first = (Long) firstEntry.getKey();
-
-    // move to the next position
-    updatePosition();
 
     // get back the nodes for these IDs and uild the triple
     currentNodes = new Long[] { first, second, third };
@@ -181,14 +172,14 @@ public class GraphIterator implements ClosableIterator {
    */
   private void updatePosition() {
     // progress to the next item if needed
-    if (!itemIterator.hasNext()) {
+    if (itemIterator == null || !itemIterator.hasNext()) {
       // the current iterator been exhausted
-      if (!subIterator.hasNext()) {
+      if (subIterator == null || !subIterator.hasNext()) {
         // the subiterator has been exhausted
         if (!iterator.hasNext()) {
           // the main iterator has been exhausted
-          // tell the itemIterator to finish
-          itemIterator = null;
+          // tell the iterator to finish
+          iterator = null;
           return;
         }
         // move on the main iterator
@@ -216,6 +207,8 @@ public class GraphIterator implements ClosableIterator {
       cleanIndex();
       // now remove from the other 2 indexes
       removeFromNonCurrentIndex();
+    } else {
+      throw new IllegalStateException("Beyond end of data");
     }
   }
 
@@ -235,9 +228,6 @@ public class GraphIterator implements ClosableIterator {
         // remove the subindex
         iterator.remove();
       }
-      // since the set is cleaned out, the itemIterator will not have a next,
-      // so the subIterator and itemIterator will need to move on
-      updatePosition();
     }
   }
 

@@ -108,6 +108,8 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     suite.addTest(new GraphImplUnitTest("testContains"));
     suite.addTest(new GraphImplUnitTest("testFinding"));
     suite.addTest(new GraphImplUnitTest("testIteration"));
+    suite.addTest(new GraphImplUnitTest("testIterativeRemoval"));
+    suite.addTest(new GraphImplUnitTest("testFullIterativeRemoval"));
     suite.addTest(new GraphImplUnitTest("testSerializing"));
     return suite;
   }

@@ -130,10 +130,6 @@ public class OneFixedIterator implements ClosableIterator {
       subIterator = subIndex.entrySet().iterator();
       // check if there is data available - structural constraints say there should be
       assert subIterator.hasNext();
-      // get the first entry of the sub index
-      secondEntry = (Map.Entry)subIterator.next();
-      // get an interator to the first set from the sub index
-      itemIterator = ((Set)secondEntry.getValue()).iterator();
     }
   }
 
@@ -145,7 +141,8 @@ public class OneFixedIterator implements ClosableIterator {
    */
   public boolean hasNext() {
     // confirm we still have an item iterator, and that it has data available
-    return itemIterator != null && itemIterator.hasNext();
+    return (itemIterator != null && itemIterator.hasNext()) ||
+        (subIterator != null && subIterator.hasNext());
   }
 
 
@@ -156,13 +153,14 @@ public class OneFixedIterator implements ClosableIterator {
    * @throws NoSuchElementException iteration has no more elements.
    */
   public Object next() throws NoSuchElementException {
-    if (itemIterator == null) throw new NoSuchElementException();
+    if (subIterator == null) throw new NoSuchElementException();
+    // move to the next position
+    updatePosition();
+    if (subIterator == null) throw new NoSuchElementException();
     // get the next item
     Long third = (Long)itemIterator.next();
     // construct the triple
     Long second = (Long)secondEntry.getKey();
-    // move to the next position
-    updatePosition();
     // get back the nodes for these IDs and build the triple
     currentNodes = new Long[] { first, second, third };
     return new TripleImpl(nodeFactory, var, first, second, third);
@@ -177,17 +175,17 @@ public class OneFixedIterator implements ClosableIterator {
    */
   private void updatePosition() {
     // progress to the next item if needed
-    if (!itemIterator.hasNext()) {
+    if (itemIterator == null || !itemIterator.hasNext()) {
       // the current iterator been exhausted
       if (!subIterator.hasNext()) {
         // the subiterator has been exhausted
-        // tell the itemIterator to finish
-        itemIterator = null;
+        // tell the subIterator to finish
+        subIterator = null;
         return;
       }
       // get the next entry of the sub index
       secondEntry = (Map.Entry)subIterator.next();
-      // get an interator to the next set from the sub index
+      // get an iterator to the next set from the sub index
       itemIterator = ((Set)secondEntry.getValue()).iterator();
       assert itemIterator.hasNext();
     }
@@ -204,6 +202,8 @@ public class OneFixedIterator implements ClosableIterator {
       cleanIndex();
       // now remove from the other 2 indexes
       removeFromNonCurrentIndex();
+    } else {
+      throw new IllegalStateException("Beyond end of data");
     }
   }
 
@@ -221,10 +221,8 @@ public class OneFixedIterator implements ClosableIterator {
       if (subIndex.isEmpty()) {
         // remove the subindex
         index.remove(first);
+        subIndex = null;
       }
-      // since the set is cleaned out, the itemIterator will not have a next,
-      // so the subIterator and itemIterator will need to move on
-      updatePosition();
     }
   }
 

@@ -78,6 +78,9 @@ public class ThreeFixedIterator implements ClosableIterator {
   /** The triple to return on {@link next() next} */
   private TripleImpl triple = null;
 
+  /** The triple to remove */
+  private TripleImpl removeTriple = null;
+
 
   /**
    * Constructor.
@@ -87,6 +90,7 @@ public class ThreeFixedIterator implements ClosableIterator {
     if (graph.contains((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object)) {
       triple = new TripleImpl((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object);
     }
+    removeTriple = null;
   }
 
 
@@ -111,9 +115,9 @@ public class ThreeFixedIterator implements ClosableIterator {
       throw new NoSuchElementException();
     }
     // return the triple, clearing it first so next will fail on a subsequent call
-    Triple tmp = triple;
+    removeTriple = triple;
     triple = null;
-    return tmp;
+    return removeTriple;
   }
 
 
@@ -121,13 +125,15 @@ public class ThreeFixedIterator implements ClosableIterator {
    * Implemented for java.util.Iterator.
    */
   public void remove() {
-    if (triple != null) {
+    if (removeTriple != null) {
       try {
-        graph.remove(triple);
-        triple = null;
+        graph.remove(removeTriple);
+        removeTriple = null;
       } catch (GraphException ge) {
         throw new IllegalStateException(ge.getMessage());
       }
+    } else {
+      throw new IllegalStateException();
     }
   }
 
