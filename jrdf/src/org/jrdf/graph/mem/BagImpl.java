@@ -71,7 +71,7 @@ import org.jrdf.graph.*;
  *
  * @version $Revision$
  */
-public class BagImpl extends AbstractUnorderedContainer {
+public class BagImpl extends AbstractUnorderedContainer implements Bag {
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
