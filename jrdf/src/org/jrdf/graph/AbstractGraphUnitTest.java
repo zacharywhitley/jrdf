@@ -163,7 +163,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
    *
    * @throws Exception if query fails when it should have succeeded
    */
-  public void empty() throws Exception {
+  public void testEmpty() throws Exception {
     assertTrue(graph.isEmpty());
     assertEquals(0, graph.getNumberOfTriples());
   }
@@ -174,7 +174,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
    *
    * @throws Exception if query fails when it should have succeeded
    */
-  public void factory() throws Exception {
+  public void testFactory() throws Exception {
     GraphElementFactory f = graph.getElementFactory();
     assertTrue(f != null);
   }
@@ -183,7 +183,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
   /**
    * Tests addition.
    */
-  public void addition() throws Exception {
+  public void testAddition() throws Exception {
 
     // add in a triple by nodes
     graph.add(blank1, ref1, blank2);
@@ -228,7 +228,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
   /**
    * Tests removal.
    */
-  public void removal() throws Exception {
+  public void testRemoval() throws Exception {
     // add some test data
     graph.add(blank1, ref1, blank2);
     graph.add(blank1, ref2, blank2);
@@ -324,7 +324,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
   /**
    * Tests containership.
    */
-  public void contains() throws Exception {
+  public void testContains() throws Exception {
     // add some test data
     graph.add(blank1, ref1, blank2);
     graph.add(blank1, ref2, blank2);
@@ -363,7 +363,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
   /**
    * Tests finding.
    */
-  public void finding() throws Exception {
+  public void testFinding() throws Exception {
     graph.add(blank1, ref1, blank2);
     graph.add(blank1, ref1, l1);
     graph.add(blank1, ref2, blank2);
@@ -502,7 +502,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
   /**
    * Tests iteration over a found set.
    */
-  public void iteration() throws Exception {
+  public void testIteration() throws Exception {
     Triple t1 = elementFactory.createTriple(blank1, ref1, blank2);
     Triple t2 = elementFactory.createTriple(blank1, ref2, blank2);
     Triple t3 = elementFactory.createTriple(blank1, ref1, l1);
