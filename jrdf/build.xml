@@ -68,7 +68,8 @@
        version="true"
        windowtitle="${Name} Framework"
        doctitle="${Name} Framework"
-       packagenames="org.jrdf.graph, org.jrdf.util, org.jrdf.vocabulary"
+       packagenames="org.jrdf.graph, org.jrdf.util, org.jrdf.vocabulary,
+       org.jrdf.graph.mem"
        additionalparam="-breakiterator"
        Use="true"
     />
