@@ -164,14 +164,21 @@ public abstract class AbstractLiteral implements Literal {
         // Ensure that the lexical form is equal character by character.
         if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
 
-          // Datatypes are null and languages are equal or
-          // data type URIs are equal by their string values.
-          if (((getDatatypeURI() == null) && tmpLiteral.getDatatypeURI() == null) &&
-              (getLanguage().equals(tmpLiteral.getLanguage()))) {
-            returnValue = true;
+          // Data type and language can both be null and "" respectively.
+          if ((getDatatypeURI() == null) && (tmpLiteral.getDatatypeURI() == null)) {
+
+            if ((getLanguage().equals("")) &&
+                (tmpLiteral.getLanguage().equals(""))) {
+              returnValue = true;
+            }
+            // Datatypes are null and languages are equal.
+            else if ((getLanguage().equals(tmpLiteral.getLanguage()))) {
+              returnValue = true;
+            }
           }
-          else if (getDatatypeURI().toString().equals(tmpLiteral.
-              getDatatypeURI().toString())) {
+          // Data type URIs are equal by their string values.
+          else if ((getDatatypeURI() != null) && (tmpLiteral.getDatatypeURI() != null) &&
+              (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()))) {
             returnValue = true;
           }
         }
