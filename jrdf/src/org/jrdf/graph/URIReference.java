@@ -85,6 +85,14 @@ public interface URIReference extends SubjectNode, PredicateNode, ObjectNode {
   public URI getURI();
 
   /**
+   * Returns a hash-code value for this URI Reference. The hash code is based
+   * upon the URI.
+   *
+   * @return a hash-code value for this literal.
+   */
+  public int hashCode();
+
+  /**
    * Indicates whether some other object is "equal to" this one.
    *
    * A URI Reference is equal to another URI Reference if their URIs are equal
