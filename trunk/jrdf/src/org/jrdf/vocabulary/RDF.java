@@ -112,6 +112,13 @@ public class RDF extends Vocabulary {
   public static final URI LIST;
 
   /**
+   * A special property element that is equivalent to rdf:_1, rdf:_2 in order.
+   * Only used in RDF/XML as inserting members of containers using li normally
+   * will result in duplicate instances not being recorded.
+   */
+  public static final URI li;
+
+  /**
    * The empty list, with no items in it. If the rest of a list is nil then
    * the list has no more items in it.
    */
@@ -166,6 +173,8 @@ public class RDF extends Vocabulary {
       LIST = new URI(baseURI + "List");
       NIL = new URI(baseURI + "nil");
 
+      li = new URI(baseURI + "li");
+
       // Properties
       SUBJECT = new URI(baseURI + "subject");
       PREDICATE = new URI(baseURI + "predicate");
@@ -184,6 +193,8 @@ public class RDF extends Vocabulary {
       resources.add(XML_LITERAL);
       resources.add(LIST);
       resources.add(NIL);
+
+      resources.add(li);
 
       // Add Properties
       resources.add(SUBJECT);
