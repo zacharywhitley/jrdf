@@ -80,4 +80,12 @@ public interface URIReference extends Resource {
    * @return the {@link URI} identifying this resource.
    */
   public URI getURI();
+
+  /**
+   * Indicates whether some other object is "equal to" this one.
+   *
+   * A URI Reference is equal to another URI Reference if their URIs are equal
+   * to one another.
+   */
+  public boolean equals(Object obj);
 }
