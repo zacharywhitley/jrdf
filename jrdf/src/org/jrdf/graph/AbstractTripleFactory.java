@@ -164,21 +164,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
           "reification");
       }
 
-      ClosableIterator iter = graph.find(null, rdfType, rdfStatement);
-
-      // Iterate through all subjects used in reification and if used in the
-      // newly given s, p, o throw an exception.
-      while (iter.hasNext()) {
-        SubjectNode node = ((Triple) iter.next()).getSubject();
-        if (graph.contains(node, hasSubject, (ObjectNode) subjectNode) &&
-            graph.contains(node, hasPredicate, (ObjectNode) predicateNode) &&
-            graph.contains(node, hasObject, objectNode)) {
-          throw new AlreadyReifiedException(
-              "Triple: " + subjectNode + " " + predicateNode + " " + objectNode
-          );
-        }
-      }
-
       // insert the reification statements
       graph.add((SubjectNode) ru, rdfType, rdfStatement);
       graph.add((SubjectNode) ru, hasSubject, (ObjectNode) subjectNode);
