@@ -106,7 +106,8 @@ public interface Triple {
 
   /**
    * Returns a hash-code value for this triple. The hash code is based upon
-   * all of the components of a triple the subject, predicate and object.
+   * XORing all of the components of a triple i.e. the subject, predicate and
+   * object.
    *
    * @return a hash-code value for this triple.
    */
