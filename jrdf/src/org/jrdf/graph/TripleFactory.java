@@ -58,9 +58,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-import java.net.URI;
-
 /**
  * A Triple Factory is a class which defines the creation of certain sets of
  * triples.  This includes reification, containers and collections.
@@ -79,7 +76,7 @@ public interface TripleFactory {
    * @param predicateNode the predicate of the triple.
    * @param objectNode the object of the triple.
    * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws NodeFactoryException If the resource failed to be added.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
@@ -89,15 +86,71 @@ public interface TripleFactory {
       AlreadyReifiedException;
 
   /**
-   * Creates a reification of a triple.  The triple added to the graph and the
+   * Reifies a triple.  The triple added to the graph and the
    * reificationNode is used to reify the triple.
    *
    * @param triple the triple to be reified.
    * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws NodeFactoryException If the resource failed to be added.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
   public void reifyTriple(Triple triple, SubjectNode reificationNode)
       throws TripleFactoryException, AlreadyReifiedException;
+
+  /**
+   * Inserts a container.  The subjectNode and predicateNode are the first
+   * part of the container statement and the objectNode is used also as the
+   * subject in the other statements of the container.
+   *
+   * @param subjectNode the subject node of the triple.
+   * @param predicateNode the predicate node of the triple.
+   * @param object the object of the first triple and the subject of
+   *   subsequent statements to be added.
+   * @param container the bag, sequence or alternative to add.
+   * @throws TripleFactoryException If the resources were failed to be added.
+   */
+  public void insertContainer(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Container container)
+      throws TripleFactoryException;
+
+  /**
+   * Inserts a container.  The subject and predicate of the triple are the first
+   * part of the container statement and the object is used also as the
+   * subject in the other statements of the container.
+   *
+   * @param triple the triple to use to create the container.
+   * @param container the bag, sequence or alternative to add.
+   * @throws TripleFactoryException If the resources were failed to be added.
+   */
+  public void insertContainer(Triple triple, Container container)
+      throws TripleFactoryException;
+
+  /**
+   * Inserts a collection.  The subjectNode and predicateNode are the first
+   * part of the collection statement and the objectNode is used also as the
+   * subject in the other statements of the collection.
+   *
+   * @param subjectNode the subject node of the triple.
+   * @param predicateNode the predicate node of the triple.
+   * @param object the object of the first triple and the subject of
+   *   subsequent statements to be added.
+   * @param collection the collection to add.
+   * @throws TripleFactoryException If the resources were failed to be added.
+   */
+  public void insertCollection(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Collection collection)
+      throws TripleFactoryException;
+
+  /**
+   * Inserts a collection.  The subject and predicate of the triple are the first
+   * part of the collection statement and the object is used also as the
+   * subject in the other statements of the collection.
+   *
+   * @param triple the triple to use to create the collection.
+   * @param container the collect to add.
+   * @throws TripleFactoryException If the resources were failed to be added.
+   */
+  public void insertCollection(Triple triple, Collection collection)
+      throws TripleFactoryException;
 }

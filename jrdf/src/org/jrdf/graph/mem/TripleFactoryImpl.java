@@ -65,7 +65,6 @@ import org.jrdf.util.ClosableIterator;  // used by reification only
 // Java 2 standard packages
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
 
 /**
  * A Node Factory is a class which create the various components of a graph.
@@ -145,6 +144,29 @@ public class TripleFactoryImpl implements TripleFactory {
       throw new TripleFactoryException(gefe);
     }
   }
+
+  public void insertContainer(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Container container)
+      throws TripleFactoryException {
+
+  }
+
+  public void insertContainer(Triple triple, Container container)
+      throws TripleFactoryException {
+
+  }
+
+  public void insertCollection(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Collection collection)
+      throws TripleFactoryException {
+
+  }
+
+  public void insertCollection(Triple triple, Collection collection)
+      throws TripleFactoryException {
+
+  }
+
 
   /**
    * Creates a reification of a triple.
