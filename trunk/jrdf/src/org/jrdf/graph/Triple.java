@@ -59,39 +59,37 @@
 package org.jrdf.graph;
 
 /**
- * Exception from an {@link Graph} operation.
+ * RDF Triple. An RDF triple as defined in "Resource Description Framework (RDF):
+ * Concepts and Abstract Syntax"
+ * <a href="http://www.w3c.org/TR/rdf-concepts/#section-triples"/>6.1 RDF Triples</a>.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
+ * @author Andrew Newman
  *
  * @version $Revision$
  */
-public class GraphException extends Exception {
+public interface Triple {
 
   /**
-   * Create an exception.
+   * Obtains the subject of this statement.
    *
-   * @param message the message to wrap inside this exception.
+   * @return an {@link Subject} which is either a {@link BlankNode} or
+   *     {@link URIReference}
    */
-  public GraphException(String message) {
-    super(message);
-  }
+  public Subject getSubject();
 
   /**
-   * Create a wrapper exception.
+   * Obtains the predicate of this statement.
    *
-   * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
+   * @return a {@link Predicate} which is a {@link URIReference}
    */
-  public GraphException(String message, Throwable cause) {
-    super(message, cause);
-  }
+  public Predicate getPredicate();
 
   /**
-   * Create a wrapper exception.
+   * Obtains the object of this statement.
    *
-   * @param cause the original exception to wrap.
+   * @return a {@link Object} which is either a {@link BlankNode},
+   *     {@link URIReference} or {@link Literal}
    */
-  public GraphException(Throwable cause) {
-    super(cause);
-  }
+  public Object getObject();
 }

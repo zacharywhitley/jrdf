@@ -69,7 +69,7 @@ import java.net.URI;
  *
  * @version $Revision$
  */
-public interface Literal extends Node {
+public interface Literal extends Object {
 
   /**
    * Obtain the text of this literal.

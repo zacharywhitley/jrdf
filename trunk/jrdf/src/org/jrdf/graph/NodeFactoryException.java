@@ -70,7 +70,7 @@ public class NodeFactoryException extends Exception {
   /**
    * Create an exception.
    *
-   * @param message PARAMETER TO DO
+   * @param message the message to wrap inside this exception.
    */
   public NodeFactoryException(String message) {
     super(message);
@@ -79,8 +79,8 @@ public class NodeFactoryException extends Exception {
   /**
    * Create a wrapper exception.
    *
-   * @param message PARAMETER TO DO
-   * @param cause PARAMETER TO DO
+   * @param message the message to wrap inside this exception.
+   * @param cause the original exception to wrap.
    */
   public NodeFactoryException(String message, Throwable cause) {
     super(message, cause);
@@ -89,7 +89,7 @@ public class NodeFactoryException extends Exception {
   /**
    * Create a wrapper exception.
    *
-   * @param cause PARAMETER TO DO
+   * @param cause the original exception to wrap.
    */
   public NodeFactoryException(Throwable cause) {
     super(cause);

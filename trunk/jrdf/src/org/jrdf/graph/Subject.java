@@ -59,13 +59,14 @@
 package org.jrdf.graph;
 
 /**
- * An RDF Resource either a URIRef or a blank node.
+ * Indicates if an object can be the subject part of an RDF Triple.  Currently,
+ * this is either a URI Reference or a Blank node.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public interface Resource extends Node {
+public interface Subject extends Node {
 
 }

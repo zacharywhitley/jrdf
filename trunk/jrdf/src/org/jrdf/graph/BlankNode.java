@@ -62,11 +62,14 @@ package org.jrdf.graph;
  * RDF blank node. Note that blank nodes are deliberately devoid of indentifying
  * attributes.
  *
+ * Blank nodes, can either be subjects or objects.
+ *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
+ * @author Andrew Newman
  *
  * @version $Revision$
  */
-public interface BlankNode extends Resource {
+public interface BlankNode extends Subject, Object {
 
   /**
    * While the internal structure of a BlankNode is not defined equality between

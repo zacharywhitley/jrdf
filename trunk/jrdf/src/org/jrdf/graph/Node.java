@@ -59,7 +59,7 @@
 package org.jrdf.graph;
 
 /**
- * RDF node.  These include all things in the graph.
+ * RDF node.  This includes all things in the graph.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman

@@ -133,6 +133,6 @@ public interface NodeFactory {
    * @param predicate The predicate of the statement.
    * @param object The object of the statement.
    */
-  public Statement createStatement(Resource subject, URIReference predicate,
+  public Triple createStatement(Subject subject, URIReference predicate,
       Node object);
 }

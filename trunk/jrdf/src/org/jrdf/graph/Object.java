@@ -59,39 +59,14 @@
 package org.jrdf.graph;
 
 /**
- * Exception from an {@link Graph} operation.
+ * Indicates if an object can be the subject part of an RDF Triple.  Currently,
+ * this is either a URI Reference, Literal or a Blank node.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
+ * @author Andrew Newman
  *
  * @version $Revision$
  */
-public class GraphException extends Exception {
+public interface Object extends Node {
 
-  /**
-   * Create an exception.
-   *
-   * @param message the message to wrap inside this exception.
-   */
-  public GraphException(String message) {
-    super(message);
-  }
-
-  /**
-   * Create a wrapper exception.
-   *
-   * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
-   */
-  public GraphException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  /**
-   * Create a wrapper exception.
-   *
-   * @param cause the original exception to wrap.
-   */
-  public GraphException(Throwable cause) {
-    super(cause);
-  }
 }
