@@ -81,7 +81,7 @@ public abstract class AbstractURIReference implements URIReference {
    *
    * Enforces a non-<code>null</code> and absolute <var>uri</var> parameter.
    *
-   * @param the URI to use in creation.
+   * @param uri the URI to use in creation.
    * @throws IllegalArgumentException if <var>uri</var> is <code>null</code> or
    *     not absolute
    */
