@@ -158,27 +158,26 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     // assert that the statement is not already reified
     try {
-      ClosableIterator it = graph.find((SubjectNode) ru, hasSubject, null);
-      try {
-        if (it.hasNext() ||
-            graph.contains(subjectNode, predicateNode, objectNode) ||
-            graph.contains((SubjectNode) ru, rdfType, rdfStatement) &&
-            graph.contains((SubjectNode) ru, hasSubject,
-                (ObjectNode) subjectNode) &&
-            graph.contains((SubjectNode) ru, hasPredicate,
-                (ObjectNode) predicateNode) &&
-            graph.contains((SubjectNode) ru, hasObject, objectNode)) {
-          throw new AlreadyReifiedException(
-              "Triple: " + subjectNode + " " + predicateNode + " " + objectNode
-              );
-        }
-      }
-      finally {
-        it.close();
+
+      if (graph.contains((SubjectNode) ru, rdfType, rdfStatement)) {
+        throw new AlreadyReifiedException("Node: " + ru + " already used in " +
+          "reification");
       }
 
-      // insert the reified statement
-      graph.add(subjectNode, predicateNode, objectNode);
+      ClosableIterator iter = graph.find(null, rdfType, rdfStatement);
+
+      // Iterate through all subjects used in reification and if used in the
+      // newly given s, p, o throw an exception.
+      while (iter.hasNext()) {
+        SubjectNode node = ((Triple) iter.next()).getSubject();
+        if (graph.contains(node, hasSubject, (ObjectNode) subjectNode) &&
+            graph.contains(node, hasPredicate, (ObjectNode) predicateNode) &&
+            graph.contains(node, hasObject, objectNode)) {
+          throw new AlreadyReifiedException(
+              "Triple: " + subjectNode + " " + predicateNode + " " + objectNode
+          );
+        }
+      }
 
       // insert the reification statements
       graph.add((SubjectNode) ru, rdfType, rdfStatement);
@@ -252,9 +251,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    * Creates a container.
    *
    * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @param ru a Node denoting the reified triple.
+   * @param container the container to add.
+   * @param whether to produce <li> or _1, _2...
    * @throws NodeFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
@@ -268,6 +266,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
       // Insert statements from colletion.
       long counter = 1;
       Iterator iter = container.iterator();
+
       while (iter.hasNext()) {
         ObjectNode object = (ObjectNode) iter.next();
         graph.add(subjectNode,
