@@ -58,9 +58,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-import java.net.URI;
-
 /**
  * A base implementation of an RDF {@link BlankNode}.
  *
@@ -76,6 +73,6 @@ public abstract class AbstractBlankNode implements BlankNode {
    * @param visitor the object doing the visiting.
    */
   public void accept(TypedNodeVisitor visitor) {
-    visitor.visit(this);
+    visitor.visitBlankNode(this);
   }
 }

@@ -75,7 +75,7 @@ public class TypedNodeVisitorAdapter {
    *
    * @param blankNode the blank node to visit.
    */
-  public void visit(BlankNode blankNode) {
+  public void visitBlankNode(BlankNode blankNode) {
     // this method is left intentionally blank.
   }
 
@@ -84,7 +84,7 @@ public class TypedNodeVisitorAdapter {
    *
    * @param uriReference the URI Reference to visit.
    */
-  public void visit(URIReference uriReference) {
+  public void visitURIReference(URIReference uriReference) {
     // this method is left intentionally blank.
   }
 
@@ -93,7 +93,7 @@ public class TypedNodeVisitorAdapter {
    *
    * @param literal the Literal to visit.
    */
-  public void visit(Literal literal) {
+  public void visitLiteral(Literal literal) {
     // this method is left intentionally blank.
   }
 }

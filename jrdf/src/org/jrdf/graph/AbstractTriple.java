@@ -112,25 +112,22 @@ public abstract class AbstractTriple implements Triple {
   }
 
   public boolean equals(Object obj) {
-    boolean returnValue = false;
 
-    // Object must not be null
-    if (obj != null) {
-
-      try {
-        Triple tmpTriple = (Triple) obj;
-
-        returnValue = getSubject().equals(tmpTriple.getSubject()) &&
-            getPredicate().equals(tmpTriple.getPredicate()) &&
-            getObject().equals(tmpTriple.getObject());
-      }
-      catch (ClassCastException cce) {
-
-        // Leave return value to be false.
-      }
+    // Check equal by reference
+    if (this == obj) {
+      return true;
     }
 
-    return returnValue;
+    // Check for null and ensure exactly the same class - not subclass.
+    if ((obj == null) ||
+        (getClass() != obj.getClass())) {
+      return false;
+    }
+
+    Triple tmpTriple = (Triple) obj;
+    return getSubject().equals(tmpTriple.getSubject()) &&
+        getPredicate().equals(tmpTriple.getPredicate()) &&
+        getObject().equals(tmpTriple.getObject());
   }
 
   public int hashCode() {
