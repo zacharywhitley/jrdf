@@ -75,6 +75,7 @@ public interface NodeFactory {
    * Create a blank nodes that is associated with a specific graph.
    *
    * @return A new blank node within the graph.
+   * @return the newly created blank node value.
    * @throws NodeFactoryException If anonymous resources can't be generated.
    */
   public BlankNode createResource() throws NodeFactoryException;
@@ -83,6 +84,7 @@ public interface NodeFactory {
    * Create a URI reference.
    *
    * @param uri The URI of the resource.
+   * @return the newly created URI reference value.
    * @throws NodeFactoryException If the resource failed to be created.
    */
   public URIReference createResource(URI uri);
@@ -92,6 +94,7 @@ public interface NodeFactory {
    * datatype.
    *
    * @param lexicalValue The lexical value for the literal.
+   * @return the newly created literal value.
    */
   public Literal createLiteral(String lexicalValue);
 
@@ -101,6 +104,7 @@ public interface NodeFactory {
    *
    * @param lexicalValue The lexical value for the literal.  Cannot be null.
    * @param languageType The language of the literal or null if not required.
+   * @return the newly created literal value.
    */
   public Literal createLiteral(String lexicalValue, String languageType);
 
@@ -110,6 +114,7 @@ public interface NodeFactory {
    * @param lexicalValue The lexical value for the literal.  Cannot be null.
    * @param datatypeURI The URI of the datatype of the literal or null if not
    *     required.
+   * @return the newly created literal value.
    */
   public Literal createLiteral(String lexicalValue, URI datatypeURI);
 
@@ -121,18 +126,20 @@ public interface NodeFactory {
    * @param languageType The language of the literal or null if not required.
    * @param datatypeURI The URI of the datatype of the literal or null if not
    *     required.
+   * @return the newly created literal value.
    */
   public Literal createLiteral(String lexicalValue, String languageType,
       URI datatypeURI);
 
   /**
-   * Creates a new statement to be used in the graph.  Does not add it to the
+   * Creates a new triple to be used in the graph.  Does not add it to the
    * graph.  Use @see Graph#add.
    *
    * @param subject The subject of the statement.
    * @param predicate The predicate of the statement.
    * @param object The object of the statement.
+   * @return the newly created triple object.
    */
-  public Triple createStatement(Subject subject, URIReference predicate,
-      Node object);
+  public Triple createTriple(Subject subject, Predicate predicate,
+      Object object);
 }
