@@ -89,6 +89,8 @@ public interface URIReference extends Subject, Predicate, Object {
    *
    * A URI Reference is equal to another URI Reference if their URIs are equal
    * to one another, character by character.
+   *
+   * @param obj the reference object with which to compare.
    */
   public boolean equals(java.lang.Object obj);
 }
