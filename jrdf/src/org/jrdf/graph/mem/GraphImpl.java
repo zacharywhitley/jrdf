@@ -162,18 +162,88 @@ public class GraphImpl implements Graph, Serializable {
   public boolean contains(
       SubjectNode subject, PredicateNode predicate, ObjectNode object
   ) throws GraphException {
-    // look up the subject node
-    Map subIndex = (Map)index012.get(((MemNode)subject).getId());
-    // break out if it doesn't exist as a subject
-    if (subIndex == null) return false;
 
-    // look up the predicate
-    java.util.Collection group = (java.util.Collection)
-        subIndex.get(((MemNode)predicate).getId());
-    // break out if the object set doesn't exist
-    if (group == null) return false;
+    // Return true if all are null and size is greater than zero.
+    if ((subject == null) && (predicate == null) && (object == null)) {
+      return index012.size() > 0;
+    }
 
-    return group.contains(((MemNode)object).getId());
+    // Subject null.
+    if (subject == null) {
+
+      // Predicate null - was null, null obj.
+      if (predicate == null) {
+        Map objIndex = (Map) this.index201.get(((MemNode) object).getId());
+        return objIndex != null;
+      }
+      // Predicate is not null.  Could be null, pred, null or null, pred, obj.
+      else {
+        Map predIndex = (Map) index120.get(((MemNode) predicate).getId());
+
+        // If predicate not found return false.
+        if (predIndex == null) {
+          return false;
+        }
+
+        // If the object is null and we found the predicate return true.
+        if (object == null) {
+          return true;
+        }
+        // Was null, pred, obj
+        else {
+          java.util.Collection group = (java.util.Collection)
+              predIndex.get(((MemNode) object).getId());
+          return group != null;
+        }
+      }
+    }
+    // Subject is not null.
+    else {
+      Map subIndex = (Map) index012.get(((MemNode) subject).getId());
+
+      // If subject not found return false.
+      if (subIndex == null) {
+        return false;
+      }
+
+      // Predicate null.  Could be subj, null, null or subj, null, obj.
+      if (predicate == null) {
+
+        // If object null then we've found all we need to find.
+        if (object == null) {
+          return true;
+        }
+        // If the object is not null we need to find subj, null, obj
+        else {
+          Map objIndex = (Map) index201.get(((MemNode) object).getId());
+
+          if (objIndex == null) {
+            return false;
+          }
+
+          java.util.Collection group = (java.util.Collection)
+              objIndex.get(((MemNode) subject).getId());
+          return group != null;
+        }
+      }
+      // Predicate not null.  Could be subj, pred, obj or subj, pred, null.
+      else {
+
+        // look up the predicate
+        java.util.Collection group = (java.util.Collection)
+            subIndex.get(((MemNode) predicate).getId());
+        if (group == null) return false;
+
+        // Object not null.  Must be subj, pred, obj.
+        if (object != null) {
+          return group.contains(((MemNode) object).getId());
+        }
+        // Was subj, pred, null - must be true if we get this far.
+        else {
+          return true;
+        }
+      }
+    }
   }
 
 
