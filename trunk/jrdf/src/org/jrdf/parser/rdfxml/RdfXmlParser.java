@@ -395,7 +395,6 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
       factory.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
       XMLReader xmlReader = factory.newSAXParser().getXMLReader();
       xmlReader.setContentHandler(_saxFilter);
-
       xmlReader.parse(inputSource);
     }
     catch (ParserConfigurationException pce) {
