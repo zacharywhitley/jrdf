@@ -208,6 +208,13 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     jrdfGraph = graph;
     try {
       init(graph.getElementFactory());
+
+      // Initialize the statement handler to empty.
+      this.setStatementHandler(new StatementHandler() {
+        public void handleStatement(SubjectNode subject, PredicateNode predicate,
+          ObjectNode object) {
+          }
+      });
     }
     catch (TransformerConfigurationException tce) {
       throw new GraphException(tce);
