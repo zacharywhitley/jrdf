@@ -58,6 +58,9 @@
 
 package org.jrdf.graph;
 
+import java.net.*;
+import java.util.Iterator;
+
 import org.jrdf.graph.*;
 import org.jrdf.vocabulary.*;
 import org.jrdf.util.ClosableIterator;
@@ -187,25 +190,112 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     return ru;
   }
 
-  public void insertContainer(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Container container)
+  public void addAlternative(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Alternative alternative)
+      throws TripleFactoryException {
+    addContainer(subjectNode, predicateNode, object, alternative);
+  }
+
+  public void addBag(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Bag bag)
       throws TripleFactoryException {
 
   }
 
-  public void insertContainer(Triple triple, Container container)
+  public void addSequence(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Sequence sequence)
       throws TripleFactoryException {
 
   }
 
-  public void insertCollection(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Collection collection)
+  /**
+   * Creates a container.
+   *
+   * @param subjectNode the subject of the triple.
+   * @param predicateNode the predicate of the triple.
+   * @param objectNode the object of the triple.
+   * @param ru a Node denoting the reified triple.
+   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws AlreadyReifiedException If there was already a triple URI for
+   *     the given triple.
+   */
+  private void addContainer(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode objectNode, Container container)
       throws TripleFactoryException {
 
+    // assert that the statement is not already reified
+    try {
+
+      // insert the first container statement
+      graph.add(subjectNode, predicateNode, objectNode);
+
+      // add the right container type.
+      if (container instanceof Alternative) {
+        graph.add(
+            (SubjectNode) objectNode,
+            (PredicateNode) elementFactory.createResource(RDF.TYPE),
+            (ObjectNode) elementFactory.createResource(RDF.ALT));
+      }
+      else if (container instanceof Bag) {
+        graph.add(
+            (SubjectNode) objectNode,
+            (PredicateNode) elementFactory.createResource(RDF.TYPE),
+            (ObjectNode) elementFactory.createResource(RDF.BAG));
+      }
+      else if (container instanceof Sequence) {
+        graph.add(
+            (SubjectNode) objectNode,
+            (PredicateNode) elementFactory.createResource(RDF.TYPE),
+            (ObjectNode) elementFactory.createResource(RDF.SEQ));
+      }
+
+      // Insert statements from colletion.
+      long counter = 1;
+      Iterator iter = container.iterator();
+      while (iter.hasNext()) {
+        ObjectNode object = (ObjectNode) iter.next();
+        graph.add((SubjectNode) objectNode,
+            (PredicateNode) elementFactory.createResource(new URI(
+            RDF.baseURI + "#_" + counter++)),
+            object);
+      }
+    }
+    catch (URISyntaxException e) {
+      throw new TripleFactoryException(e);
+    }
+    catch (GraphElementFactoryException e) {
+      throw new TripleFactoryException(e);
+    }
+    catch (GraphException e) {
+      throw new TripleFactoryException(e);
+    }
   }
 
-  public void insertCollection(Triple triple, Collection collection)
+  public void addCollection(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode objectNode, Collection collection)
       throws TripleFactoryException {
 
+    // assert that the statement is not already reified
+    try {
+
+      // insert the first container statement
+      BlankNode firstNode = elementFactory.createResource();
+      graph.add(subjectNode, predicateNode, firstNode);
+
+      // Insert statements from colletion.
+      Iterator iter = collection.iterator();
+      while (iter.hasNext()) {
+        ObjectNode object = (ObjectNode) iter.next();
+        graph.add((SubjectNode) objectNode,
+            (PredicateNode) elementFactory.createResource(RDF.LIST),
+            object);
+      }
+    }
+    catch (GraphElementFactoryException e) {
+      throw new TripleFactoryException(e);
+    }
+    catch (GraphException e) {
+      throw new TripleFactoryException(e);
+    }
   }
 }
