@@ -99,10 +99,10 @@ public abstract class AbstractLiteral implements Literal {
    * This is used by the {@link #escape} method.
    */
   private static final Pattern pattern = Pattern.compile(
-    "\\p{InHighSurrogates}\\p{InLowSurrogates}"+  // surrogate pairs
-    "|"+                                          // ...or...
-    "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]"         // all other escaped chars
-  );
+      "\\p{InHighSurrogates}\\p{InLowSurrogates}" + // surrogate pairs
+      "|" +                                         // ...or...
+      "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]"         // all other escaped chars
+      );
 
   /**
    * The matcher instance used to escape characters from Unicode to ASCII.
@@ -110,6 +110,7 @@ public abstract class AbstractLiteral implements Literal {
    * This is lazily initialized and used by the {@link #escape} method.
    */
   private transient Matcher matcher;
+
 
   /**
    * Obtain the text of this literal.
@@ -142,11 +143,11 @@ public abstract class AbstractLiteral implements Literal {
   }
 
   /**
-   * Returns the URI of the RDF datatype of this literal, or <code>null</code>
-   * if this literal is untyped.
+   * Returns the URI of the RDF datatype of this resource, or <code>null</code>
+   *     for an untyped node.
    *
-   * @return the URI of the RDF datatype of this literal, or <code>null</code>
-   *   if this literal is untyped
+   * @return the URI of the RDF datatype of this resource, or <code>null</code>
+   *     for an untyped node.
    */
   public URI getDatatypeURI() {
     return datatypeURI;
@@ -163,16 +164,15 @@ public abstract class AbstractLiteral implements Literal {
         // Ensure that the lexical form is equal character by character.
         if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
 
-          // Ensure that either both languages are null or are equal.
-          if (((getLanguage() == null) && (tmpLiteral.getLanguage() == null)) ||
+          // Datatypes are null and languages are equal or
+          // data type URIs are equal by their string values.
+          if (((getDatatypeURI() == null) && tmpLiteral.getDatatypeURI() == null) &&
               (getLanguage().equals(tmpLiteral.getLanguage()))) {
-
-            // Ensure that both data type URIs are null or are equal by their
-            // string values.
-            if (((getDatatypeURI() == null) && (tmpLiteral.getDatatypeURI() == null)) ||
-                (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()))) {
-              returnValue = true;
-            }
+            returnValue = true;
+          }
+          else if (getDatatypeURI().toString().equals(tmpLiteral.
+              getDatatypeURI().toString())) {
+            returnValue = true;
           }
         }
       }
@@ -201,7 +201,9 @@ public abstract class AbstractLiteral implements Literal {
 
   /**
    * Provide a legible representation of a literal, following the N-Triples
-   * format defined in <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a> of the <a href="http://www.w3.org/">
+   * format defined in
+   * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a>
+   * of the <a href="http://www.w3.org/">
    * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
    * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
    * Cases</a> Recommendation.
@@ -213,17 +215,9 @@ public abstract class AbstractLiteral implements Literal {
    * @return this instance in N-Triples format
    */
   public String toString() {
-    StringBuffer buffer =
-      new StringBuffer('"' + escape(getLexicalForm()) + '"');
 
-    if (!"".equals(getLanguage())) {
-      buffer.append("@" + getLanguage());
-    }
-
-    if (getDatatypeURI() != null) {
-      buffer.append("^^<" + getDatatypeURI() + ">");
-    }
-
+    StringBuffer buffer = new StringBuffer('"' + escape(getLexicalForm()) +
+        '"');
     return buffer.toString();
   }
 
@@ -261,51 +255,63 @@ public abstract class AbstractLiteral implements Literal {
       // appropriate replacement
       String groupString = matcher.group();
       switch (groupString.length()) {
-      case 1:  // 16-bit characters requiring escaping
-        switch (groupString.charAt(0)) {
-        case '\t': escapeString = "\\\\t"; break;     // tab
-        case '\n': escapeString = "\\\\n"; break;     // newline
-        case '\r': escapeString = "\\\\r"; break;     // carriage return
-        case '"':  escapeString = "\\\\\\\""; break;  // quote
-        case '\\': escapeString = "\\\\\\\\"; break;  // backslash
+        case 1: // 16-bit characters requiring escaping
+          switch (groupString.charAt(0)) {
+            case '\t': // tab
+              escapeString = "\\\\t";
+            break;
+            case '\n': // newline
+              escapeString = "\\\\n";
+            break;
+            case '\r': // carriage return
+              escapeString = "\\\\r";
+            break;
+            case '"':  // quote
+              escapeString = "\\\\\\\"";
+            break;
+            case '\\': // backslash
+              escapeString = "\\\\\\\\";
+            break;
+            default:   // other characters use 4-digit hex escapes
+              String hexString =
+                  Integer.toHexString(groupString.charAt(0)).toUpperCase();
+              escapeString =
+                  "\\\\u0000".substring(0, 7 - hexString.length()) + hexString;
 
-        default:  // other characters use 4-digit hex escapes
-          String hexString =
-            Integer.toHexString(groupString.charAt(0)).toUpperCase();
+              assert escapeString.length() == 7;
+              assert escapeString.startsWith("\\\\u");
+            break;
+          }
+        break;
+
+        case 2: // surrogate pairs are represented as 8-digit hex escapes
+          assert Character.getType(groupString.charAt(0)) ==
+              Character.SURROGATE;
+          assert Character.getType(groupString.charAt(1)) ==
+              Character.SURROGATE;
+
+          String hexString = Integer.toHexString(
+              ( (groupString.charAt(0) & 0x3FF) << 10) + // high surrogate
+              (groupString.charAt(1) & 0x3FF) + // low surrogate
+              0x10000 // base codepoint U+10000
+              ).toUpperCase();
           escapeString =
-            "\\\\u0000".substring(0, 7-hexString.length()) + hexString;
+              "\\\\U00000000".substring(0, 11 - hexString.length()) + hexString;
 
-          assert escapeString.length() == 7;
-          assert escapeString.startsWith("\\\\u");
-          break;
-        }
+          assert escapeString.length() == 11;
+          assert escapeString.startsWith("\\\\U000");
         break;
 
-      case 2:  // surrogate pairs are represented as 8-digit hex escapes
-        assert Character.getType(groupString.charAt(0)) == Character.SURROGATE;
-        assert Character.getType(groupString.charAt(1)) == Character.SURROGATE;
-
-        String hexString = Integer.toHexString(
-          ((groupString.charAt(0) & 0x3FF) << 10) +  // high surrogate
-          (groupString.charAt(1) & 0x3FF) +          // low surrogate
-          0x10000                                    // base codepoint U+10000
-        ).toUpperCase();
-        escapeString =
-          "\\\\U00000000".substring(0, 11-hexString.length()) + hexString;
-
-        assert escapeString.length() == 11;
-        assert escapeString.startsWith("\\\\U000");
-        break;
-
-      default:
-        throw new Error("Escape sequence "+groupString+" has no handler");
+        default:
+          throw new Error("Escape sequence " + groupString + " has no handler");
       }
       assert escapeString != null;
 
       // Having determined an appropriate escapeString, add it to the
       // stringBuffer
       matcher.appendReplacement(stringBuffer, escapeString);
-    } while (matcher.find());
+    }
+    while (matcher.find());
 
     // Finish off by appending any remaining text that didn't require escaping,
     // and return the assembled buffer
