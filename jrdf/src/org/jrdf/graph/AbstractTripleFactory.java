@@ -190,22 +190,58 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     return ru;
   }
 
-  public void addAlternative(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Alternative alternative)
+  public void addAlternative(SubjectNode subjectNode, Alternative alternative)
       throws TripleFactoryException {
-    addContainer(subjectNode, predicateNode, object, alternative);
+    try {
+
+      graph.add(subjectNode,
+          (PredicateNode) elementFactory.createResource(RDF.TYPE),
+          (ObjectNode) elementFactory.createResource(RDF.ALT));
+
+      addContainer(subjectNode, alternative);
+    }
+    catch (GraphException e) {
+      throw new TripleFactoryException(e);
+    }
+    catch (GraphElementFactoryException e) {
+      throw new TripleFactoryException(e);
+    }
   }
 
-  public void addBag(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Bag bag)
+  public void addBag(SubjectNode subjectNode, Bag bag)
       throws TripleFactoryException {
+    try {
 
+      graph.add(subjectNode,
+          (PredicateNode) elementFactory.createResource(RDF.TYPE),
+          (ObjectNode) elementFactory.createResource(RDF.BAG));
+
+      addContainer(subjectNode, bag);
+    }
+    catch (GraphException e) {
+      throw new TripleFactoryException(e);
+    }
+    catch (GraphElementFactoryException e) {
+      throw new TripleFactoryException(e);
+    }
   }
 
-  public void addSequence(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Sequence sequence)
+  public void addSequence(SubjectNode subjectNode, Sequence sequence)
       throws TripleFactoryException {
+    try {
 
+      graph.add(subjectNode,
+          (PredicateNode) elementFactory.createResource(RDF.TYPE),
+          (ObjectNode) elementFactory.createResource(RDF.SEQ));
+
+      addContainer(subjectNode, sequence);
+    }
+    catch (GraphException e) {
+      throw new TripleFactoryException(e);
+    }
+    catch (GraphElementFactoryException e) {
+      throw new TripleFactoryException(e);
+    }
   }
 
   /**
@@ -219,42 +255,18 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
-  private void addContainer(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode objectNode, Container container)
+  private void addContainer(SubjectNode subjectNode, Container container)
       throws TripleFactoryException {
 
     // assert that the statement is not already reified
     try {
-
-      // insert the first container statement
-      graph.add(subjectNode, predicateNode, objectNode);
-
-      // add the right container type.
-      if (container instanceof Alternative) {
-        graph.add(
-            (SubjectNode) objectNode,
-            (PredicateNode) elementFactory.createResource(RDF.TYPE),
-            (ObjectNode) elementFactory.createResource(RDF.ALT));
-      }
-      else if (container instanceof Bag) {
-        graph.add(
-            (SubjectNode) objectNode,
-            (PredicateNode) elementFactory.createResource(RDF.TYPE),
-            (ObjectNode) elementFactory.createResource(RDF.BAG));
-      }
-      else if (container instanceof Sequence) {
-        graph.add(
-            (SubjectNode) objectNode,
-            (PredicateNode) elementFactory.createResource(RDF.TYPE),
-            (ObjectNode) elementFactory.createResource(RDF.SEQ));
-      }
 
       // Insert statements from colletion.
       long counter = 1;
       Iterator iter = container.iterator();
       while (iter.hasNext()) {
         ObjectNode object = (ObjectNode) iter.next();
-        graph.add((SubjectNode) objectNode,
+        graph.add(subjectNode,
             (PredicateNode) elementFactory.createResource(new URI(
             RDF.baseURI + "#_" + counter++)),
             object);
@@ -271,24 +283,44 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
   }
 
-  public void addCollection(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode objectNode, Collection collection)
+  public void addCollection(SubjectNode firstNode, Collection collection)
       throws TripleFactoryException {
 
-    // assert that the statement is not already reified
     try {
 
-      // insert the first container statement
-      BlankNode firstNode = elementFactory.createResource();
-      graph.add(subjectNode, predicateNode, firstNode);
+      // Constants.
+      PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(
+          RDF.FIRST);
+      PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(
+          RDF.REST);
+      ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
 
-      // Insert statements from colletion.
+      // Insert statements from the Colletion using the first given node.
+      SubjectNode subject = firstNode;
+
+      // Iterate through all elements in the Collection.
       Iterator iter = collection.iterator();
       while (iter.hasNext()) {
+
+        // Get the next object and create the new FIRST statement.
         ObjectNode object = (ObjectNode) iter.next();
-        graph.add((SubjectNode) objectNode,
-            (PredicateNode) elementFactory.createResource(RDF.LIST),
-            object);
+        graph.add(subject, rdfFirst, object);
+
+        // Check if there are any more elements in the Collection.
+        if (iter.hasNext()) {
+
+          // Create a new blank node, link the existing subject to it using
+          // the REST predicate.
+          ObjectNode newSubject = (ObjectNode) elementFactory.createResource();
+          graph.add(subject, rdfRest, newSubject);
+          subject = (SubjectNode) newSubject;
+        }
+        else {
+
+          // If we are at the end of the list link the existing subject to NIL
+          // using the REST predicate.
+          graph.add(subject, rdfRest, rdfNil);
+        }
       }
     }
     catch (GraphElementFactoryException e) {
