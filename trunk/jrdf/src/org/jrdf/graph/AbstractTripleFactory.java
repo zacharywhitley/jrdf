@@ -131,28 +131,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
   }
 
-  public void insertContainer(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Container container)
-      throws TripleFactoryException {
-
-  }
-
-  public void insertContainer(Triple triple, Container container)
-      throws TripleFactoryException {
-
-  }
-
-  public void insertCollection(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Collection collection)
-      throws TripleFactoryException {
-
-  }
-
-  public void insertCollection(Triple triple, Collection collection)
-      throws TripleFactoryException {
-
-  }
-
   /**
    * Creates a reification of a triple.
    *
@@ -207,5 +185,27 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     // return the ru to make it easier for returning the value from this method
     return ru;
+  }
+
+  public void insertContainer(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Container container)
+      throws TripleFactoryException {
+
+  }
+
+  public void insertContainer(Triple triple, Container container)
+      throws TripleFactoryException {
+
+  }
+
+  public void insertCollection(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Collection collection)
+      throws TripleFactoryException {
+
+  }
+
+  public void insertCollection(Triple triple, Collection collection)
+      throws TripleFactoryException {
+
   }
 }

@@ -69,108 +69,36 @@ import java.util.*;
  *
  * @version $Revision$
  */
-public class Alternative extends AbstractUnorderedContainer {
+public interface Alternative extends Container {
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  public boolean containsAll(java.util.Collection c) {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add alts to other alts");
-    }
+   /**
+    * @throws IllegalArgumentException if the given object is not the correct
+    *   type, Alternative.
+    */
+   public boolean containsAll(java.util.Collection c)
+       throws IllegalArgumentException;
 
-    return elements.values().containsAll(c);
-  }
+   /**
+    * Returns true if there's anything in the collection.
+    *
+    * @throws IllegalArgumentException if the given object is not the correct
+    *   type, Alternative.
+    */
+   public boolean addAll(java.util.Collection c) throws IllegalArgumentException;
 
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  public boolean addAll(java.util.Collection c) throws IllegalArgumentException {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add alts to other alts");
-    }
+   /**
+    * Returns true if there's anything in the collection.
+    *
+    * @throws IllegalArgumentException if the given object is not the correct
+    *   type, Alternative.
+    */
+   public boolean removeAll(java.util.Collection c) throws IllegalArgumentException;
 
-    Alternative alt = (Alternative) c;
-
-    // Iterate through the bag adding object nodes
-    Iterator iter = alt.iterator();
-    boolean modified = iter.hasNext();
-    while (iter.hasNext()) {
-      ObjectNode obj = (ObjectNode) iter.next();
-      elements.put(new Long(key++), obj);
-    }
-
-    return modified;
-  }
-
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  public boolean removeAll(java.util.Collection c) throws IllegalArgumentException {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
-    Alternative alt = (Alternative) c;
-
-    // Iterate through the bag adding object nodes
-    Iterator iter = alt.iterator();
-    boolean modified = iter.hasNext();
-    while (iter.hasNext()) {
-      remove(iter.next());
-    }
-
-    return modified;
-  }
-
-
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  public boolean retainAll(java.util.Collection c) throws IllegalArgumentException {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
-    boolean modified = false;
-
-    // Iterate through this bag removing elements that are not in the given
-    // bag c.
-    Iterator iter = iterator();
-    while (iter.hasNext()) {
-
-      ObjectNode obj = (ObjectNode) iter.next();
-      if (!c.contains(obj)) {
-        modified = true;
-        remove(obj);
-      }
-    }
-
-    return modified;
-  }
-
-  public boolean equals(Object o) {
-
-    if (o == null) {
-      return false;
-    }
-
-    try {
-      Alternative bag = (Alternative) o;
-      return (this.key == bag.key) && (elements.equals(bag.elements)) ;
-    }
-    catch (ClassCastException cce) {
-      return false;
-    }
-  }
+   /**
+    * Returns true if there's anything in the collection.
+    *
+    * @throws IllegalArgumentException if the given object is not the correct
+    *   type, Alternative.
+    */
+   public boolean retainAll(java.util.Collection c) throws IllegalArgumentException;
 }

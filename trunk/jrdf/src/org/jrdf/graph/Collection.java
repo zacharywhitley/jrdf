@@ -58,9 +58,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-import java.util.LinkedList;
-
 /**
  * A Collection all the statements of a particular group.
  *
@@ -68,182 +65,90 @@ import java.util.LinkedList;
  *
  * @version $Revision$
  */
-public class Collection extends LinkedList {
+public interface Collection {
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public void add(int index, Object element) throws IllegalArgumentException {
-    if (!(element instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
-    super.add(index, element);
-  }
+  public boolean add(Object o) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean add(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
-    return super.add(o);
-  }
-
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  public boolean addAll(java.util.Collection c)
-      throws IllegalArgumentException {
-    if (!(c instanceof Collection)) {
-      throw new IllegalArgumentException("Can only add collections to other " +
-          "collections");
-    }
-
-    return super.addAll(c);
-  }
+  public void add(int index, Object element) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */
-  public boolean addAll(int index, java.util.Collection c)
-      throws IllegalArgumentException {
-    if (!(c instanceof Collection)) {
-      throw new IllegalArgumentException("Can only add sequences to other " +
-          "sequences");
-    }
+  public boolean addAll(java.util.Collection c) throws IllegalArgumentException;
 
-    return super.addAll(index, c);
-  }
+  /**
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, Collection.
+   */
+  public boolean addAll(int index, java.util.Collection c) throws
+      IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public void addFirst(Object o) {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add object nodes");
-    }
-
-    super.addFirst(o);
-  }
+  public void addFirst(Object o);
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public void addLast(Object o) {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add object nodes");
-    }
-
-    super.addLast(o);
-  }
+  public void addLast(Object o);
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean contains(Object o) {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add object nodes");
-    }
+  public boolean contains(Object o);
 
-    return super.contains(o);
-  }
+  /**
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, Collection.
+   */
+  public boolean containsAll(java.util.Collection c);
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public int indexOf(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
-
-    return super.indexOf(o);
-  }
+  public int indexOf(Object o) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public int lastIndexOf(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
-
-    return super.lastIndexOf(o);
-  }
+  public int lastIndexOf(Object o) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type.
+   *   type, ObjectNode.
    */
-  public boolean remove(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
-    return super.remove(o);
-  }
+  public boolean remove(Object o) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
+   *   type, Collection.
    */
-  public boolean containsAll(java.util.Collection c) {
-    if (!(c instanceof Sequence)) {
-      throw new IllegalArgumentException("Can only add sequences to other " +
-          "sequences");
-    }
-
-    return super.containsAll(c);
-  }
+  public boolean removeAll(java.util.Collection c) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
+   *   type, Collection.
    */
-  public boolean removeAll(java.util.Collection c)
-      throws IllegalArgumentException {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
-    return super.removeAll(c);
-  }
-
+  public boolean retainAll(java.util.Collection c) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
+   *   type, ObjectNode.
    */
-  public boolean retainAll(java.util.Collection c)
-      throws IllegalArgumentException {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
-    return super.retainAll(c);
-  }
-
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type.
-   */
-  public Object set(int index, Object element) throws IllegalArgumentException {
-    if (!(element instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
-
-    return super.set(index, element);
-  }
+  public Object set(int index, Object element) throws IllegalArgumentException;
 }
-
