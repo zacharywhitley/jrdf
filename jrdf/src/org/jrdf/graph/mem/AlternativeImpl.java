@@ -71,7 +71,8 @@ import org.jrdf.graph.*;
  *
  * @version $Revision$
  */
-public class AlternativeImpl extends AbstractUnorderedContainer {
+public class AlternativeImpl extends AbstractUnorderedContainer
+    implements Alternative {
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
@@ -83,6 +84,23 @@ public class AlternativeImpl extends AbstractUnorderedContainer {
     }
 
     return elements.values().containsAll(c);
+  }
+
+  /**
+   * Always return true.
+   *
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, ObjectNode.
+   */
+  public boolean add(Object o) throws IllegalArgumentException {
+    if (!(o instanceof ObjectNode)) {
+      throw new IllegalArgumentException("Can only add Object nodes");
+    }
+
+    if (!elements.containsValue(o)) {
+      elements.put(new Long(key++), o);
+    }
+    return true;
   }
 
   /**
