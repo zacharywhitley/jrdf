@@ -73,7 +73,7 @@ public interface Triple {
   /**
    * Obtains the subject of this statement.
    *
-   * @return an {@link Subject} which is either a {@link BlankNode} or
+   * @return an {@link SubjectNode} which is either a {@link BlankNode} or
    *     {@link URIReference}
    */
   public SubjectNode getSubject();
@@ -81,14 +81,14 @@ public interface Triple {
   /**
    * Obtains the predicate of this statement.
    *
-   * @return a {@link Predicate} which is a {@link URIReference}
+   * @return a {@link PredicateNode} which is a {@link URIReference}
    */
   public PredicateNode getPredicate();
 
   /**
    * Obtains the object of this statement.
    *
-   * @return a {@link Object} which is either a {@link BlankNode},
+   * @return a {@link ObjectNode} which is either a {@link BlankNode},
    *     {@link URIReference} or {@link Literal}
    */
   public ObjectNode getObject();
