@@ -75,7 +75,8 @@ import java.net.URI;
  *
  * @version $Revision$
  */
-public interface URIReference extends SubjectNode, PredicateNode, ObjectNode {
+public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
+    TypedNodeVisitable {
 
   /**
    * The {@link URI} identifiying this resource.
