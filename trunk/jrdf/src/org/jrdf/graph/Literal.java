@@ -69,7 +69,7 @@ import java.net.URI;
  *
  * @version $Revision$
  */
-public interface Literal extends Object {
+public interface Literal extends ObjectNode {
 
   /**
    * Obtain the text of this literal.
@@ -119,5 +119,5 @@ public interface Literal extends Object {
    * @param obj the reference object with which to compare.
    * @return true if this object is the same as the obj argument; false otherwise.
    */
-  public boolean equals(java.lang.Object obj);
+  public boolean equals(Object obj);
 }

@@ -75,7 +75,7 @@ import java.net.URI;
  *
  * @version $Revision$
  */
-public interface URIReference extends Subject, Predicate, Object {
+public interface URIReference extends SubjectNode, PredicateNode, ObjectNode {
 
   /**
    * The {@link URI} identifiying this resource.
@@ -93,5 +93,5 @@ public interface URIReference extends Subject, Predicate, Object {
    * @param obj the reference object with which to compare.
    * @return true if this object is the same as the obj argument; false otherwise.
    */
-  public boolean equals(java.lang.Object obj);
+  public boolean equals(Object obj);
 }

@@ -89,8 +89,8 @@ public interface Graph {
    * @return True if the statement is found in the model, otherwise false.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public boolean contains(Subject subject, Predicate predicate,
-      Object object) throws GraphException;
+  public boolean contains(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object) throws GraphException;
 
   /**
    * Test the graph for the occurrence of the triple.
@@ -109,7 +109,7 @@ public interface Graph {
    * @param object The object.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(Subject subject, Predicate predicate, Object object)
+  public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object)
       throws GraphException;
 
   /**
@@ -129,7 +129,7 @@ public interface Graph {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  public void remove(Subject subject, Predicate predicate, Object object)
+  public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
       throws GraphException;
 
   /**
