@@ -60,11 +60,13 @@ package org.jrdf.graph;
 
 // Java 2 standard
 import java.net.URI;
+import java.util.regex.*;
 
 /**
  * A base implementation of an RDF {@link Literal}.
  *
  * @author Andrew Newman
+ * @author Simon Raboczi
  *
  * @version $Revision$
  */
@@ -89,6 +91,20 @@ public abstract class AbstractLiteral implements Literal {
    * RDF datatype URI, <code>null</code> for untyped literal.
    */
   protected URI datatypeURI = null;
+
+  /**
+   * A regular expression to pick out embedded quotation marks.
+   *
+   * This is used by the {@link #escape} method.
+   */
+  private static final Pattern quotePattern = Pattern.compile("\\x22");
+
+  /**
+   * The matcher instance used to escape embedded quotation marks.
+   *
+   * This is lazily initialized and used by the {@link #escape} method.
+   */
+  private transient Matcher quoteMatcher;
 
   /**
    * Obtain the text of this literal.
@@ -178,23 +194,46 @@ public abstract class AbstractLiteral implements Literal {
   }
 
   /**
-   * Provide a legible representation of a literal. Currently, quotes within the
-   * literal aren't correctly escaped.
+   * Provide a legible representation of a literal, following N3's format.
+   *
+   * Currently, quotes within the literal aren't correctly escaped.
    *
    * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
    *     characters.
    */
-  public String toString()
-  {
-    StringBuffer buffer = new StringBuffer('"' + getLexicalForm() + '"');
+  public String toString() {
+    StringBuffer buffer =
+      new StringBuffer('"' + escape(getLexicalForm()) + '"');
 
-    if (getLanguage() != null) {
+    if (!"".equals(getLanguage())) {
       buffer.append("@" + getLanguage());
     }
 
     if (getDatatypeURI() != null) {
       buffer.append("^^<" + getDatatypeURI() + ">");
     }
+
     return buffer.toString();
+  }
+
+  /**
+   * @param string  a string to escape, never <code>null</code>
+   * @return a version of the <var>string</var> with quotes escaped using a
+   *   backslash (\).
+   */
+  private String escape(String string) {
+    assert string != null;
+
+    if (quoteMatcher == null) {
+      // Lazily initialize the quoteMatcher
+      quoteMatcher = quotePattern.matcher(string);
+    }
+    else {
+      // Reuse the existing quoteMatcher
+      quoteMatcher.reset(string);
+    }
+    assert quoteMatcher != null;
+
+    return quoteMatcher.replaceAll("\\\\\\\"");
   }
 }
