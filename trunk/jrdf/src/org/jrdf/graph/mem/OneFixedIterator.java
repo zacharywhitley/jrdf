@@ -99,10 +99,10 @@ public class OneFixedIterator implements ClosableIterator {
   /**
    * Constructor.  Sets up the internal iterators.
    */
-  OneFixedIterator(Map index, int var, Node firstNode, GraphElementFactoryImpl nodeFactory) {
+  OneFixedIterator(Map index, int var, Long newFirst, GraphElementFactoryImpl nodeFactory) {
     // store the node factory and other starting data
     this.nodeFactory = nodeFactory;
-    this.first = ((MemNode)firstNode).getId();
+    this.first = newFirst;
     this.var = var;
     // initialise the iterators to empty
     itemIterator = null;
