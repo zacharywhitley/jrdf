@@ -99,7 +99,8 @@ public interface TripleFactory {
       throws TripleFactoryException, AlreadyReifiedException;
 
   /**
-   * Inserts a alternative for a given subject.
+   * Inserts a alternative using the given subject.  The subject is also
+   * the object of a proceeding statement that identifies the container.
    *
    * @param subjectNode the subject node of the triple.
    * @param altnerative the alternative to add.
@@ -109,7 +110,8 @@ public interface TripleFactory {
       throws TripleFactoryException;
 
   /**
-   * Inserts a bag for a given subject.
+   * Inserts a bag using the given subject.  The subject is also
+   * the object of a proceeding statement that identifies the container.
    *
    * @param subjectNode the subject node of the triple.
    * @param bag the bag to add.
@@ -119,7 +121,8 @@ public interface TripleFactory {
       throws TripleFactoryException;
 
   /**
-   * Inserts a sequence for a given subject.
+   * Inserts a sequence using the given subject.  The subject is also
+   * the object of a proceeding statement that identifies the container.
    *
    * @param subjectNode the subject node of the triple.
    * @param sequence the sequence to add.
@@ -129,7 +132,8 @@ public interface TripleFactory {
       throws TripleFactoryException;
 
   /**
-   * Inserts a collection for a given subject.
+   * Inserts a collection using the given subject.  The subject is also
+   * the object of a proceeding statement that identifies the collection.
    *
    * @param firstNode the subject node of the triple.
    * @param collection the collection to add.

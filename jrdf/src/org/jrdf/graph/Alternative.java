@@ -62,8 +62,9 @@ package org.jrdf.graph;
 import java.util.*;
 
 /**
- * An Alt is a list of unordered statements which allow duplicates.  It
- * represents objects which are semantically the same.
+ * An Alt is a list of unordered statements which prevents duplicates.  It
+ * represents objects which are semantically the same.  The order in which
+ * the objects go in may not be the returned in the same order.
  *
  * @author Andrew Newman
  *
