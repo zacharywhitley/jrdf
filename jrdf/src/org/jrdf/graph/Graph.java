@@ -166,6 +166,11 @@ public interface Graph extends Serializable {
   public void add(Iterator triples) throws GraphException;
 
   /**
+   * Closes any resources associated with this graph.
+   */
+  public void close();
+
+  /**
    * Removes a triple from the graph.  The nodes must have already been
    * created using {@link GraphElementFactory}.
    *
