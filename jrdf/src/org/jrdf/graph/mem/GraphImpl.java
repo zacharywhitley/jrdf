@@ -341,9 +341,11 @@ public class GraphImpl implements Graph, Serializable {
    * @param object The object.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(
-      SubjectNode subject, PredicateNode predicate, ObjectNode object
-  ) throws GraphException {
+  public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+
+    // Test that it's a valid subject, predicate and object.
+    isValidTriple(subject, predicate, object);
+
     // add to the first index
     add(index012, subject, predicate, object);
     // try and back out changes if an insertion fails
@@ -397,9 +399,12 @@ public class GraphImpl implements Graph, Serializable {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  public void remove(
-      SubjectNode subject, PredicateNode predicate, ObjectNode object
-  ) throws GraphException {
+  public void remove(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object) throws GraphException {
+
+    // Test that it's a valid subject, predicate and object.
+    isValidTriple(subject, predicate, object);
+
     remove(index012, subject, predicate, object);
     // if the first one succeeded then try and attempt removal on both of the others
     try {
@@ -660,4 +665,49 @@ public class GraphImpl implements Graph, Serializable {
     }
   }
 
+  private void isValidTriple(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object) throws GraphException {
+
+    // Test valid subject
+    if (subject instanceof URIReference) {
+      if (elementFactory.getNodeIdByString(((URIReference) subject).getURI().
+          toString()) == null) {
+        throw new GraphException("Subject does not exist in graph");
+      }
+    }
+    else if (subject instanceof BlankNodeImpl) {
+      Node node = elementFactory.getNodeById(((BlankNodeImpl) subject).getId());
+      if ((node == null) || (!node.equals(subject))) {
+        throw new GraphException("Subject does not exist in graph");
+      }
+    }
+
+    // Test valid predicate
+    if (predicate instanceof URIReference) {
+      if (elementFactory.getNodeIdByString(((URIReference) predicate).getURI().
+          toString()) == null) {
+        throw new GraphException("Predicate does not exist in graph");
+      }
+    }
+
+    // Test valid object
+    if (object instanceof URIReference) {
+      if (elementFactory.getNodeIdByString(((URIReference) object).getURI().
+          toString()) == null) {
+        throw new GraphException("Object does not exist in graph");
+      }
+    }
+    else if (object instanceof Literal) {
+      if (elementFactory.getNodeIdByString(((Literal) object).getEscapedForm().
+          toString()) == null) {
+        throw new GraphException("Object does not exist in graph");
+      }
+    }
+    else if (subject instanceof BlankNodeImpl) {
+      Node node = elementFactory.getNodeById(((BlankNodeImpl) object).getId());
+      if ((node == null) || (!node.equals(object))) {
+        throw new GraphException("Object does not exist in graph");
+      }
+    }
+  }
 }
