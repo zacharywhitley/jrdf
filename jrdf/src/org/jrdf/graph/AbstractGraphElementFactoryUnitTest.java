@@ -359,5 +359,14 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
     assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));
     assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).hasNext());
+
+    // Test the find(<foo>, null, null) works.
+    ClosableIterator iter = g2.find(g2u3, null, null);
+    assertTrue("Should get back at least one result", iter.hasNext());
+
+    // Test the find(null, null, null) works.
+    iter = g2.find(null, null, null);
+    assertTrue("Should get back at least one result", iter.hasNext());
+
   }
 }
