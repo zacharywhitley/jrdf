@@ -118,6 +118,7 @@ public class GraphImpl implements Graph, Serializable {
    * @throws GraphException There was an error creating the factory.
    */
   private void init() throws GraphException {
+
     // protect each field allocation with a test for null
     if (index012 == null) {
       index012 = new HashMap();
@@ -163,6 +164,18 @@ public class GraphImpl implements Graph, Serializable {
       SubjectNode subject, PredicateNode predicate, ObjectNode object
   ) throws GraphException {
 
+    // Get local node values
+    Long[] values;
+    try {
+      values = localize(subject, predicate, object);
+    }
+    catch (GraphException ge) {
+
+      // Graph exception on localize implies that the subject, predicate or
+      // object did not exist in the graph.
+      return false;
+    }
+
     // Return true if all are null and size is greater than zero.
     if ((subject == null) && (predicate == null) && (object == null)) {
       return index012.size() > 0;
@@ -173,12 +186,12 @@ public class GraphImpl implements Graph, Serializable {
 
       // Predicate null - was null, null obj.
       if (predicate == null) {
-        Map objIndex = (Map) this.index201.get(((MemNode) object).getId());
+        Map objIndex = (Map) this.index201.get(values[2]);
         return objIndex != null;
       }
       // Predicate is not null.  Could be null, pred, null or null, pred, obj.
       else {
-        Map predIndex = (Map) index120.get(((MemNode) predicate).getId());
+        Map predIndex = (Map) index120.get(values[1]);
 
         // If predicate not found return false.
         if (predIndex == null) {
@@ -192,14 +205,14 @@ public class GraphImpl implements Graph, Serializable {
         // Was null, pred, obj
         else {
           java.util.Collection group = (java.util.Collection)
-              predIndex.get(((MemNode) object).getId());
+              predIndex.get(values[2]);
           return group != null;
         }
       }
     }
     // Subject is not null.
     else {
-      Map subIndex = (Map) index012.get(((MemNode) subject).getId());
+      Map subIndex = (Map) index012.get(values[0]);
 
       // If subject not found return false.
       if (subIndex == null) {
@@ -215,14 +228,14 @@ public class GraphImpl implements Graph, Serializable {
         }
         // If the object is not null we need to find subj, null, obj
         else {
-          Map objIndex = (Map) index201.get(((MemNode) object).getId());
+          Map objIndex = (Map) index201.get(values[2]);
 
           if (objIndex == null) {
             return false;
           }
 
           java.util.Collection group = (java.util.Collection)
-              objIndex.get(((MemNode) subject).getId());
+              objIndex.get(values[0]);
           return group != null;
         }
       }
@@ -231,12 +244,12 @@ public class GraphImpl implements Graph, Serializable {
 
         // look up the predicate
         java.util.Collection group = (java.util.Collection)
-            subIndex.get(((MemNode) predicate).getId());
+            subIndex.get(values[1]);
         if (group == null) return false;
 
         // Object not null.  Must be subj, pred, obj.
         if (object != null) {
-          return group.contains(((MemNode) object).getId());
+          return group.contains(values[2]);
         }
         // Was subj, pred, null - must be true if we get this far.
         else {
@@ -274,6 +287,19 @@ public class GraphImpl implements Graph, Serializable {
   public ClosableIterator find(
       SubjectNode subject, PredicateNode predicate, ObjectNode object
   ) throws GraphException {
+
+    // Get local node values
+    Long[] values;
+    try {
+      values = localize(subject, predicate, object);
+    }
+    catch (GraphException ge) {
+
+      // A graph exception implies that the subject, predicate or object does
+      // not exist in the graph.
+      return new EmptyClosableIterator();
+    }
+
     // test which index to use
     if (subject != null) {
       // test for {sp*}
@@ -284,12 +310,12 @@ public class GraphImpl implements Graph, Serializable {
           return new ThreeFixedIterator(this, subject, predicate, object);
         } else {
           // got {sp*}
-          return new TwoFixedIterator(index012, 0, subject, predicate, elementFactory);
+          return new TwoFixedIterator(index012, 0, values[0], values[1], elementFactory);
         }
       } else {
         // test for {s**}
         if (object == null) {
-          return new OneFixedIterator(index012, 0, subject, elementFactory);
+          return new OneFixedIterator(index012, 0, values[0], elementFactory);
         }
         // {s*o} so fall through
       }
@@ -298,22 +324,22 @@ public class GraphImpl implements Graph, Serializable {
     if (predicate != null) {
       // test for {*po}
       if (object != null) {
-        return new TwoFixedIterator(index120, 2, predicate, object, elementFactory);
+        return new TwoFixedIterator(index120, 2, values[1], values[2], elementFactory);
       } else {
         // test for {*p*}.  {sp*} should have been picked up above
         assert subject == null;
-        return new OneFixedIterator(index120, 2, predicate, elementFactory);
+        return new OneFixedIterator(index120, 2, values[1], elementFactory);
       }
     }
 
     if (object != null) {
       // test for {s*o}
       if (subject != null) {
-        return new TwoFixedIterator(index201, 1, object, subject, elementFactory);
+        return new TwoFixedIterator(index201, 1, values[2], values[0], elementFactory);
       } else {
         // test for {**o}.  {*po} should have been picked up above
         assert predicate == null;
-        return new OneFixedIterator(index201, 1, object, elementFactory);
+        return new OneFixedIterator(index201, 1, values[2], elementFactory);
       }
     }
 
@@ -343,24 +369,26 @@ public class GraphImpl implements Graph, Serializable {
    */
   public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
 
-    // Test that it's a valid subject, predicate and object.
-    isValidTriple(subject, predicate, object);
+    // Get local node values also tests that it's a valid subject, predicate
+    // and object.
+    Long[] values = localize(subject, predicate, object);
 
     // add to the first index
-    add(index012, subject, predicate, object);
+    add(index012, values[0], values[1], values[2]);
+
     // try and back out changes if an insertion fails
     try {
       // add to the second index
-      add(index120, predicate, object, subject);
+      add(index120, values[1], values[2], values[0]);
       try {
         // add to the third index
-        add(index201, object, subject, predicate);
+        add(index201, values[2], values[0], values[1]);
       } catch (GraphException e) {
-        remove(index120, predicate, object, subject);
+        remove(index120, values[1], values[2], values[0]);
         throw e;
       }
     } catch (GraphException e) {
-      remove(index012, subject, predicate, object);
+      remove(index012, values[0], values[1], values[2]);
       throw e;
     }
   }
@@ -402,15 +430,16 @@ public class GraphImpl implements Graph, Serializable {
   public void remove(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws GraphException {
 
-    // Test that it's a valid subject, predicate and object.
-    isValidTriple(subject, predicate, object);
+    // Get local node values also tests that it's a valid subject, predicate
+    // and object.
+    Long[] values = localize(subject, predicate, object);
 
-    remove(index012, subject, predicate, object);
+    remove(index012, values[0], values[1], values[2]);
     // if the first one succeeded then try and attempt removal on both of the others
     try {
-      remove(index120, predicate, object, subject);
+      remove(index120, values[1], values[2], values[0]);
     } finally {
-      remove(index201, object, subject, predicate);
+      remove(index201, values[2], values[0], values[1]);
     }
   }
 
@@ -505,15 +534,31 @@ public class GraphImpl implements Graph, Serializable {
    * @param third The last node.
    * @throws GraphException If there was an error adding the statement.
    */
-  private void add(Map index, Node first, Node second, Node third) throws GraphException {
-    // convert the nodes to local memory nodes for convenience
-    MemNode mfirst = (MemNode)first;
-    MemNode msecond = (MemNode)second;
-    MemNode mthird = (MemNode)third;
-    // now pass the ids off to the add method which accepts IDs
-    add(index, mfirst.getId(), msecond.getId(), mthird.getId());
-  }
+  private Long[] localize(Node first, Node second, Node third) throws GraphException {
 
+    Long[] localValues = new Long[3];
+
+    // convert the nodes to local memory nodes for convenience
+    localValues[0] = elementFactory.getNodeIdByString(String.valueOf(first));
+
+    if (localValues[0] == null) {
+      throw new GraphException("Subject does not exist in graph");
+    }
+
+    localValues[1] = elementFactory.getNodeIdByString(String.valueOf(second));
+
+    if (localValues[1] == null) {
+      throw new GraphException("Predicate does not exist in graph");
+    }
+
+    localValues[2] = elementFactory.getNodeIdByString(String.valueOf(third));
+
+    if (localValues[0] == null) {
+      throw new GraphException("Object does not exist in graph");
+    }
+
+    return localValues;
+  }
 
   /**
    * Adds a triple to a single index.  This method defines the internal structure.
@@ -558,33 +603,29 @@ public class GraphImpl implements Graph, Serializable {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  private void remove(Map index, Node first, Node second, Node third) throws GraphException {
-    // convert the nodes to local memory nodes for convenience
-    MemNode mfirst = (MemNode)first;
-    MemNode msecond = (MemNode)second;
-    MemNode mthird = (MemNode)third;
+  private void remove(Map index, Long first, Long second, Long third) throws GraphException {
 
     // find the sub index
-    Map subIndex = (Map)index.get(mfirst.getId());
+    Map subIndex = (Map)index.get(first);
     // check that the subindex exists
     if (subIndex == null) {
       throw new GraphException("Unable to remove nonexistent statement");
     }
     // find the final group
-    java.util.Collection group = (java.util.Collection) subIndex.get(msecond.getId());
+    java.util.Collection group = (java.util.Collection) subIndex.get(second);
     // check that the group exists
     if (group == null) {
       throw new GraphException("Unable to remove nonexistent statement");
     }
     // remove from the group, report error if it didn't exist
-    if (!group.remove(mthird.getId())) {
+    if (!group.remove(third)) {
       throw new GraphException("Unable to remove nonexistent statement");
     }
     // clean up the graph
     if (group.isEmpty()) {
-      subIndex.remove(msecond.getId());
+      subIndex.remove(second);
       if (subIndex.isEmpty()) {
-        index.remove(mfirst.getId());
+        index.remove(first);
       }
     }
   }
@@ -662,52 +703,6 @@ public class GraphImpl implements Graph, Serializable {
       }
     } catch (GraphException e) {
       throw new ClassNotFoundException("Unable to add to a graph index", e);
-    }
-  }
-
-  private void isValidTriple(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object) throws GraphException {
-
-    // Test valid subject
-    if (subject instanceof URIReference) {
-      if (elementFactory.getNodeIdByString(((URIReference) subject).getURI().
-          toString()) == null) {
-        throw new GraphException("Subject does not exist in graph");
-      }
-    }
-    else if (subject instanceof BlankNodeImpl) {
-      Node node = elementFactory.getNodeById(((BlankNodeImpl) subject).getId());
-      if ((node == null) || (!node.equals(subject))) {
-        throw new GraphException("Subject does not exist in graph");
-      }
-    }
-
-    // Test valid predicate
-    if (predicate instanceof URIReference) {
-      if (elementFactory.getNodeIdByString(((URIReference) predicate).getURI().
-          toString()) == null) {
-        throw new GraphException("Predicate does not exist in graph");
-      }
-    }
-
-    // Test valid object
-    if (object instanceof URIReference) {
-      if (elementFactory.getNodeIdByString(((URIReference) object).getURI().
-          toString()) == null) {
-        throw new GraphException("Object does not exist in graph");
-      }
-    }
-    else if (object instanceof Literal) {
-      if (elementFactory.getNodeIdByString(((Literal) object).getEscapedForm().
-          toString()) == null) {
-        throw new GraphException("Object does not exist in graph");
-      }
-    }
-    else if (subject instanceof BlankNodeImpl) {
-      Node node = elementFactory.getNodeById(((BlankNodeImpl) object).getId());
-      if ((node == null) || (!node.equals(object))) {
-        throw new GraphException("Object does not exist in graph");
-      }
     }
   }
 }
