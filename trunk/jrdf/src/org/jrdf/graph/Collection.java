@@ -58,6 +58,8 @@
 
 package org.jrdf.graph;
 
+import java.util.Iterator;
+
 /**
  * A Collection all the statements of a particular group.
  *
@@ -121,6 +123,8 @@ public interface Collection {
    *   type, ObjectNode.
    */
   public int indexOf(Object o) throws IllegalArgumentException;
+
+  public Iterator iterator();
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
