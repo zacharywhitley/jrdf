@@ -101,9 +101,9 @@ public class GraphElementFactoryImplUnitTest
    */
   public static Test suite() {
     TestSuite suite = new TestSuite();
-    suite.addTest(new GraphElementFactoryImplUnitTest("createLiterals"));
-    suite.addTest(new GraphElementFactoryImplUnitTest("createResources"));
-    suite.addTest(new GraphElementFactoryImplUnitTest("createTriples"));
+    suite.addTest(new GraphElementFactoryImplUnitTest("testCreateLiterals"));
+    suite.addTest(new GraphElementFactoryImplUnitTest("testCreateResources"));
+    suite.addTest(new GraphElementFactoryImplUnitTest("testCreateTriples"));
     return suite;
   }
 
