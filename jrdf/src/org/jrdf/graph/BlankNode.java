@@ -77,6 +77,7 @@ public interface BlankNode extends Subject, Object {
    * equality would be defined by a blank node identifier.
    *
    * @param obj the reference object with which to compare.
+   * @return true if this object is the same as the obj argument; false otherwise.
    */
   public boolean equals(java.lang.Object obj);
 }

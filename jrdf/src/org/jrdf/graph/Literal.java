@@ -117,6 +117,7 @@ public interface Literal extends Object {
    * </ul>
    *
    * @param obj the reference object with which to compare.
+   * @return true if this object is the same as the obj argument; false otherwise.
    */
   public boolean equals(java.lang.Object obj);
 }
