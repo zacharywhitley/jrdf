@@ -92,4 +92,23 @@ public interface Triple {
    *     {@link URIReference} or {@link Literal}
    */
   public ObjectNode getObject();
+
+  /**
+   * Indicates whether some other object is "equal to" this one.
+   *
+   * A triple is equal to another triple if the subject, predicate and object
+   * are all equal.
+   *
+   * @param obj the reference object with which to compare.
+   * @return true if this object is the same as the obj argument; false otherwise.
+   */
+  public boolean equals(Object obj);
+
+  /**
+   * Returns a hash-code value for this triple. The hash code is based upon
+   * all of the components of a triple the subject, predicate and object.
+   *
+   * @return a hash-code value for this triple.
+   */
+  public int hashCode();
 }

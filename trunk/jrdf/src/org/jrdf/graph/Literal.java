@@ -120,4 +120,13 @@ public interface Literal extends ObjectNode {
    * @return true if this object is the same as the obj argument; false otherwise.
    */
   public boolean equals(Object obj);
+
+  /**
+   * Returns a hash-code value for this literal. The hash code is based upon
+   * all of the literal's components including the lexical form, datatype, and
+   * language.
+   *
+   * @return a hash-code value for this literal.
+   */
+  public int hashCode();
 }
