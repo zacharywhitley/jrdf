@@ -59,32 +59,19 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.*;
-import org.jrdf.vocabulary.*;
-import org.jrdf.util.ClosableIterator;  // used by reification only
 
 // Java 2 standard packages
 import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * A Node Factory is a class which create the various components of a graph.
- * It is tied to a specific instance of GraphImpl.
+ * A Triple Factory which is tied to a specific instance of GraphImpl.
  *
  * @author Paul Gearon
  *
  * @version $Revision$
  */
-public class TripleFactoryImpl implements TripleFactory {
-
-  /**
-   * The graph that this factory constructs nodes for.
-   */
-  private Graph graph;
-
-  /**
-   * The graph element factory.
-   */
-  private GraphElementFactory elementFactory;
+public class TripleFactoryImpl extends AbstractTripleFactory {
 
   /**
    * Package scope constructor.
@@ -95,131 +82,5 @@ public class TripleFactoryImpl implements TripleFactory {
       throws TripleFactoryException {
     this.graph = graph;
     this.elementFactory = elementFactory;
-  }
-
-  /**
-   * Reifies a triple.  A triple made up of the first three nodes is added to
-   * graph and the reificationNode is used to reify the triple.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public void reifyTriple(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode objectNode,
-      SubjectNode reificationNode) throws TripleFactoryException,
-      AlreadyReifiedException {
-
-    // create the reification node
-    try {
-      reallyReifyTriple(subjectNode, predicateNode, objectNode, reificationNode);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  /**
-   * Creates a reification of a triple.  The triple added to the graph and the
-   * reificationNode is used to reify the triple.
-   *
-   * @param triple the triple to be reified.
-   * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public void reifyTriple(Triple triple, SubjectNode reificationNode)
-      throws TripleFactoryException, AlreadyReifiedException {
-
-    try {
-      reallyReifyTriple(triple.getSubject(), triple.getPredicate(),
-          triple.getObject(), reificationNode);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  public void insertContainer(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Container container)
-      throws TripleFactoryException {
-
-  }
-
-  public void insertContainer(Triple triple, Container container)
-      throws TripleFactoryException {
-
-  }
-
-  public void insertCollection(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Collection collection)
-      throws TripleFactoryException {
-
-  }
-
-  public void insertCollection(Triple triple, Collection collection)
-      throws TripleFactoryException {
-
-  }
-
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @param ru a Node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  private Node reallyReifyTriple(
-      SubjectNode subjectNode, PredicateNode predicateNode,
-      ObjectNode objectNode, Node ru
-  ) throws GraphElementFactoryException, AlreadyReifiedException {
-
-    // get the nodes used for reification
-    URIReference hasSubject = elementFactory.createResource(RDF.SUBJECT);
-    URIReference hasPredicate = elementFactory.createResource(RDF.PREDICATE);
-    URIReference hasObject = elementFactory.createResource(RDF.OBJECT);
-
-    // assert that the statement is not already reified
-    try {
-      ClosableIterator it = graph.find((SubjectNode)ru, hasSubject, null);
-      try {
-        if (
-            it.hasNext() ||
-            graph.contains(subjectNode, predicateNode, objectNode) ||
-            graph.contains((SubjectNode)ru, hasSubject, (ObjectNode)subjectNode) &&
-            graph.contains((SubjectNode)ru, hasPredicate, (ObjectNode)predicateNode) &&
-            graph.contains((SubjectNode)ru, hasObject, objectNode)
-        ) {
-          throw new AlreadyReifiedException(
-              "Triple: " + subjectNode + " " + predicateNode + " " + objectNode
-          );
-        }
-      } finally {
-        it.close();
-      }
-
-      // insert the reified statement
-      graph.add(subjectNode, predicateNode, objectNode);
-
-      // insert the reification statements
-      graph.add((SubjectNode)ru, hasSubject, (ObjectNode)subjectNode);
-      graph.add((SubjectNode)ru, hasPredicate, (ObjectNode)predicateNode);
-      graph.add((SubjectNode)ru, hasObject, (ObjectNode)objectNode);
-    } catch (GraphException e) {
-      throw new GraphElementFactoryException(e);
-    }
-
-    // return the ru to make it easier for returning the value from this method
-    return ru;
   }
 }
