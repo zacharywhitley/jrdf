@@ -297,7 +297,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   }
 
   /**
-   * Test collections
+   * Test collections implmentations.
    */
   public void testCollections() throws Exception {
 
@@ -382,7 +382,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   }
 
   /**
-   * Test altnerative
+   * Test altnerative implementation.
    */
   public void testAlternative() throws Exception {
 
@@ -434,7 +434,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   }
 
   /**
-   * Test altnerative
+   * Test bag implementation.
    */
   public void testBag() throws Exception {
 
@@ -487,7 +487,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   }
 
   /**
-   * Test altnerative
+   * Test sequence implmentation.
    */
   public void testSequence() throws Exception {
 
