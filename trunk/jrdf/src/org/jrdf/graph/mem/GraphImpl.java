@@ -539,22 +539,28 @@ public class GraphImpl implements Graph, Serializable {
     Long[] localValues = new Long[3];
 
     // convert the nodes to local memory nodes for convenience
-    localValues[0] = elementFactory.getNodeIdByString(String.valueOf(first));
+    if (first != null) {
+      localValues[0] = elementFactory.getNodeIdByString(String.valueOf(first));
 
-    if (localValues[0] == null) {
-      throw new GraphException("Subject does not exist in graph");
+      if (localValues[0] == null) {
+        throw new GraphException("Subject does not exist in graph");
+      }
     }
 
-    localValues[1] = elementFactory.getNodeIdByString(String.valueOf(second));
+    if (second != null) {
+      localValues[1] = elementFactory.getNodeIdByString(String.valueOf(second));
 
-    if (localValues[1] == null) {
-      throw new GraphException("Predicate does not exist in graph");
+      if (localValues[1] == null) {
+        throw new GraphException("Predicate does not exist in graph");
+      }
     }
 
-    localValues[2] = elementFactory.getNodeIdByString(String.valueOf(third));
+    if (third != null) {
+      localValues[2] = elementFactory.getNodeIdByString(String.valueOf(third));
 
-    if (localValues[0] == null) {
-      throw new GraphException("Object does not exist in graph");
+      if (localValues[0] == null) {
+        throw new GraphException("Object does not exist in graph");
+      }
     }
 
     return localValues;
