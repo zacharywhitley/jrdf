@@ -168,35 +168,40 @@ public abstract class AbstractLiteral implements Literal {
       return true;
     }
 
-    // Check for null and ensure exactly the same class - not subclass.
-    if ((obj == null) ||
-        (getClass() != obj.getClass())) {
-      return false;
-    }
-
-    // Set default return value and cast given obj.
     boolean returnValue = false;
-    Literal tmpLiteral = (Literal) obj;
 
-    // Ensure that the lexical form is equal character by character.
-    if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
+    // Check for null and ensure exactly the same class - not subclass.
+    if (obj != null) {
 
-      // Data type and language can both be null and "" respectively.
-      if ((getDatatypeURI() == null) && (tmpLiteral.getDatatypeURI() == null)) {
+      try {
+        // Set default return value and cast given obj.
+        Literal tmpLiteral = (Literal) obj;
 
-        if ((getLanguage().equals("")) &&
-            (tmpLiteral.getLanguage().equals(""))) {
-          returnValue = true;
-        }
-        // Datatypes are null and languages are equal.
-        else if ((getLanguage().equals(tmpLiteral.getLanguage()))) {
-          returnValue = true;
+        // Ensure that the lexical form is equal character by character.
+        if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
+
+          // Data type and language can both be null and "" respectively.
+          if ( (getDatatypeURI() == null) && (tmpLiteral.getDatatypeURI() == null)) {
+
+            if ( (getLanguage().equals("")) &&
+                (tmpLiteral.getLanguage().equals(""))) {
+              returnValue = true;
+            }
+            // Datatypes are null and languages are equal.
+            else if ( (getLanguage().equals(tmpLiteral.getLanguage()))) {
+              returnValue = true;
+            }
+          }
+          // Data type URIs are equal by their string values.
+          else if ( (getDatatypeURI() != null) && (tmpLiteral.getDatatypeURI() != null) &&
+              (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().
+              toString()))) {
+            returnValue = true;
+          }
         }
       }
-      // Data type URIs are equal by their string values.
-      else if ((getDatatypeURI() != null) && (tmpLiteral.getDatatypeURI() != null) &&
-          (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()))) {
-        returnValue = true;
+      catch (ClassCastException cce) {
+        // Leave return value to be false.
       }
     }
     return returnValue;

@@ -151,14 +151,21 @@ public abstract class AbstractURIReference implements URIReference {
       return true;
     }
 
+    boolean returnValue = false;
+
     // Check for null and ensure exactly the same class - not subclass.
-    if ((obj == null) ||
-        (getClass() != obj.getClass())) {
-      return false;
+    if (obj != null) {
+
+      try {
+        URIReference tmpURIReference = (URIReference) obj;
+        returnValue = (getURI().equals(tmpURIReference.getURI()));
+      }
+      catch (ClassCastException cce) {
+        // Leave return value to be false.
+      }
     }
 
-    URIReference tmpURIReference = (URIReference) obj;
-    return (getURI().equals(tmpURIReference.getURI()));
+    return returnValue;
   }
 
   public int hashCode() {
