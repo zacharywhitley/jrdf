@@ -102,7 +102,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
    */
   public static Test suite() {
     TestSuite suite = new TestSuite();
-    suite.addTest(new TripleFactoryUnitTest("reification"));
+    suite.addTest(new TripleFactoryUnitTest("testReification"));
+    suite.addTest(new TripleFactoryUnitTest("testCollections"));
     return suite;
   }
 
@@ -142,6 +143,15 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     catch (GraphElementFactoryException gefe) {
       throw new TripleFactoryException(gefe);
     }
+  }
 
+  public Collection createCollection(ObjectNode[] objects) {
+    Collection collection = new CollectionImpl();
+
+    for (int index = 0; index < objects.length; index++) {
+      collection.add(objects[index]);
+    }
+
+    return collection;
   }
 }
