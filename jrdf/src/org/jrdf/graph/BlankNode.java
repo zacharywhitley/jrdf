@@ -75,6 +75,8 @@ public interface BlankNode extends Subject, Object {
    * While the internal structure of a BlankNode is not defined equality between
    * two nodes should be able to be determined.  In some representations this
    * equality would be defined by a blank node identifier.
+   *
+   * @param obj the reference object with which to compare.
    */
   public boolean equals(java.lang.Object obj);
 }
