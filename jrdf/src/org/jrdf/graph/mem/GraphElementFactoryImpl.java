@@ -137,8 +137,9 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
 
     // check if the node already exists in the string pool
     Long nodeid = getNodeIdByString(uri.toString());
+
     if (nodeid != null) {
-      return (URIReference)getNodeById(nodeid);
+      return (URIReference) getNodeById(nodeid);
     }
 
     // create the node identifier and increment the node
@@ -253,28 +254,34 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
    * @throws NodeFactoryException If the resource failed to be created.
    */
   private void addNodeId(LiteralImpl literal) throws GraphElementFactoryException {
-    // create the node identifier
-    Long nodeId = new Long(nextNode);
 
     // find the string identifier for this node
-    String strId = literal.toString();
+    String strId = literal.getEscapedForm();
 
     // check if the node already exists in the string pool
     Long tmpNodeId = (Long) stringPool.get(strId);
+
     if (tmpNodeId != null) {
+
       // return the existing node instead
-      literal = (LiteralImpl) nodePool.get(tmpNodeId);
+      literal.setId(tmpNodeId);
+      return;
     }
+    else {
 
-    // put the node in the pool
-    nodePool.put(nodeId, literal);
+      // create the node identifier
+      Long nodeId = new Long(nextNode);
+      literal.setId(nodeId);
 
-    // put the URI string into the pool
-    stringPool.put(strId, nodeId);
+      // put the node in the pool
+      nodePool.put(nodeId, literal);
 
-    // increment the node, since we used it
-    nextNode++;
-    literal.setId(nodeId);
+      // put the URI string into the pool
+      stringPool.put(strId, nodeId);
+
+      // increment the node, since we used it
+      nextNode++;
+    }
   }
 
 
@@ -305,7 +312,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     // get the id for this node
     Long id = node.getId();
     // look the node up to see if it already exists in the graph
-    MemNode existingNode = (MemNode)nodePool.get(id);
+    MemNode existingNode = (MemNode) nodePool.get(id);
     if (existingNode != null) {
       // check that the node is equal to the one that is already in the graph
       if (existingNode.equals(node)) {
@@ -319,7 +326,13 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
 
     // check if the node has a string representation
     if (!(node instanceof BlankNode)) {
-      stringPool.put(node.toString(), node);
+
+      if (node instanceof Literal) {
+        stringPool.put(((Literal) node).getEscapedForm(), node);
+      }
+      else {
+        stringPool.put(node.toString(), node);
+      }
     }
 
     // update the nextNode counter to a unique number
@@ -346,7 +359,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
    * @return The node referred to by the id, null if not found.
    */
   Node getNodeById(Long id) {
-    return (Node)nodePool.get(id);
+    return (Node) nodePool.get(id);
   }
 
 
@@ -357,7 +370,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
    * @return The id of the node with the given string.
    */
   Long getNodeIdByString(String str) {
-    return (Long)stringPool.get(str);
+    return (Long) stringPool.get(str);
   }
 
 }
