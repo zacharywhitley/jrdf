@@ -540,7 +540,6 @@ public class GraphImpl implements Graph, Serializable {
 
     // convert the nodes to local memory nodes for convenience
     if (first != null) {
-
       if (first instanceof BlankNodeImpl) {
         localValues[0] = ((BlankNodeImpl) first).getId();
       }
