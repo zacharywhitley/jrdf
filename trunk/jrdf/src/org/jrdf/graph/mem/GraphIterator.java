@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -59,7 +59,7 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.graph.NodeFactory;
+import org.jrdf.graph.GraphElementFactory;
 
 import java.util.*;
 
@@ -93,13 +93,13 @@ public class GraphIterator implements ClosableIterator {
   private Map.Entry secondEntry;
 
   /** The nodeFactory used to create the nodes to be returned in the triples. */
-  private NodeFactoryImpl nodeFactory;
+  private GraphElementFactoryImpl nodeFactory;
 
 
   /**
    * Constructor.  Sets up the internal iterators.
    */
-  GraphIterator(Map index, NodeFactoryImpl nodeFactory) {
+  GraphIterator(Map index, GraphElementFactoryImpl nodeFactory) {
     // store the node factory
     this.nodeFactory = nodeFactory;
     // initialise the iterators to empty

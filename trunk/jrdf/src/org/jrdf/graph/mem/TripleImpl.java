@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -90,10 +90,11 @@ public class TripleImpl extends AbstractTriple {
    * @param predicate The predicate node id of this triple.
    * @param object The object node id of this triple.
    */
-  TripleImpl(NodeFactoryImpl nodeFactory, Long subject, Long predicate, Long object) {
-    this.subjectNode = (SubjectNode)nodeFactory.getNodeById(subject);
-    this.predicateNode = (PredicateNode)nodeFactory.getNodeById(predicate);
-    this.objectNode = (ObjectNode)nodeFactory.getNodeById(object);
+  TripleImpl(GraphElementFactoryImpl nodeFactory, Long subject, Long predicate,
+      Long object) {
+    this.subjectNode = (SubjectNode) nodeFactory.getNodeById(subject);
+    this.predicateNode = (PredicateNode) nodeFactory.getNodeById(predicate);
+    this.objectNode = (ObjectNode) nodeFactory.getNodeById(object);
   }
 
 
@@ -104,12 +105,13 @@ public class TripleImpl extends AbstractTriple {
    * @param second The second node id of this triple.
    * @param third The third node id of this triple.
    */
-  TripleImpl(NodeFactoryImpl nodeFactory, int var, Long first, Long second, Long third) {
+  TripleImpl(GraphElementFactoryImpl nodeFactory, int var, Long first,
+      Long second, Long third) {
     Long[] nodes = new Long[] { first, second, third };
-    this.subjectNode = (SubjectNode)nodeFactory.getNodeById(nodes[var]);
-    this.predicateNode = (PredicateNode)nodeFactory.getNodeById(nodes[(var + 1) % 3]);
-    this.objectNode = (ObjectNode)nodeFactory.getNodeById(nodes[(var + 2) % 3]);
+    this.subjectNode = (SubjectNode) nodeFactory.getNodeById(nodes[var]);
+    this.predicateNode = (PredicateNode) nodeFactory.getNodeById(
+      nodes[(var + 1) % 3]);
+    this.objectNode = (ObjectNode) nodeFactory.getNodeById(
+      nodes[(var + 2) % 3]);
   }
-
 }
-

@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,40 +58,46 @@
 
 package org.jrdf.graph;
 
+// Java 2 standard packages
+import java.net.URI;
+
 /**
- * Exception from a {@link NodeFactory} operation.
+ * A Triple Factory is a class which defines the creation of certain sets of
+ * triples.  This includes reification, containers and collections.
  *
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public class NodeFactoryException extends Exception {
+public interface TripleFactory {
 
   /**
-   * Create an exception.
+   * Reifies a triple.  A triple made up of the first three nodes is added to
+   * graph and the reificationNode is used to reify the triple.
    *
-   * @param message the message to wrap inside this exception.
+   * @param subjectNode the subject of the triple.
+   * @param predicateNode the predicate of the triple.
+   * @param objectNode the object of the triple.
+   * @param reificationNode a node denoting the reified triple.
+   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws AlreadyReifiedException If there was already a triple URI for
+   *     the given triple.
    */
-  public NodeFactoryException(String message) {
-    super(message);
-  }
+  public void reifyTriple(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode objectNode,
+      SubjectNode reificationNode) throws TripleFactoryException,
+      AlreadyReifiedException;
 
   /**
-   * Create a wrapper exception.
+   * Creates a reification of a triple.  The triple added to the graph and the
+   * reificationNode is used to reify the triple.
    *
-   * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
+   * @param triple the triple to be reified.
+   * @param reificationNode a node denoting the reified triple.
+   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws AlreadyReifiedException If there was already a triple URI for
+   *     the given triple.
    */
-  public NodeFactoryException(String message, Throwable cause) {
-    super(message, cause);
-  }
-
-  /**
-   * Create a wrapper exception.
-   *
-   * @param cause the original exception to wrap.
-   */
-  public NodeFactoryException(Throwable cause) {
-    super(cause);
-  }
+  public void reifyTriple(Triple triple, SubjectNode reificationNode)
+      throws TripleFactoryException, AlreadyReifiedException;
 }

@@ -77,18 +77,30 @@ public class GraphImpl implements Graph, Serializable {
   // s -> {p -> {set of o}}
   // This is defined in the private add() method
 
-  /** First index. */
+  /**
+   * First index.
+   */
   protected HashMap index012;
 
-  /** Second index. */
+  /**
+   * Second index.
+   */
   protected transient HashMap index120;
 
-  /** Third index. */
+  /**
+   * Third index.
+   */
   protected transient HashMap index201;
 
-  /** Node Factory.  This caches the node factory. */
-  protected transient NodeFactoryImpl nodeFactory;
+  /**
+   * Graph Element Factory.  This caches the node factory.
+   */
+  protected transient GraphElementFactoryImpl elementFactory;
 
+  /**
+   * Triple Element Factory.  This caches the element factory.
+   */
+  protected transient TripleFactoryImpl tripleFactory;
 
   /**
    * Default constructor.
@@ -117,10 +129,19 @@ public class GraphImpl implements Graph, Serializable {
       index201 = new HashMap();
     }
 
-    if (nodeFactory == null) {
+    if (elementFactory == null) {
       try {
-        nodeFactory = new NodeFactoryImpl(this);
-      } catch (NodeFactoryException e) {
+        elementFactory = new GraphElementFactoryImpl(this);
+      } catch (TripleFactoryException e) {
+        throw new GraphException(e);
+      }
+    }
+
+    if (tripleFactory == null) {
+      try {
+        tripleFactory = new TripleFactoryImpl(this, elementFactory);
+      }
+      catch (TripleFactoryException e) {
         throw new GraphException(e);
       }
     }
@@ -192,12 +213,12 @@ public class GraphImpl implements Graph, Serializable {
           return new ThreeFixedIterator(this, subject, predicate, object);
         } else {
           // got {sp*}
-          return new TwoFixedIterator(index012, 0, subject, predicate, nodeFactory);
+          return new TwoFixedIterator(index012, 0, subject, predicate, elementFactory);
         }
       } else {
         // test for {s**}
         if (object == null) {
-          return new OneFixedIterator(index012, 0, subject, nodeFactory);
+          return new OneFixedIterator(index012, 0, subject, elementFactory);
         }
         // {s*o} so fall through
       }
@@ -206,27 +227,27 @@ public class GraphImpl implements Graph, Serializable {
     if (predicate != null) {
       // test for {*po}
       if (object != null) {
-        return new TwoFixedIterator(index120, 2, predicate, object, nodeFactory);
+        return new TwoFixedIterator(index120, 2, predicate, object, elementFactory);
       } else {
         // test for {*p*}.  {sp*} should have been picked up above
         assert subject == null;
-        return new OneFixedIterator(index120, 2, predicate, nodeFactory);
+        return new OneFixedIterator(index120, 2, predicate, elementFactory);
       }
     }
 
     if (object != null) {
       // test for {s*o}
       if (subject != null) {
-        return new TwoFixedIterator(index201, 1, object, subject, nodeFactory);
+        return new TwoFixedIterator(index201, 1, object, subject, elementFactory);
       } else {
         // test for {**o}.  {*po} should have been picked up above
         assert predicate == null;
-        return new OneFixedIterator(index201, 1, object, nodeFactory);
+        return new OneFixedIterator(index201, 1, object, elementFactory);
       }
     }
 
     // {***} so return entire graph
-    return new GraphIterator(index012, nodeFactory);
+    return new GraphIterator(index012, elementFactory);
   }
 
   /**
@@ -282,6 +303,19 @@ public class GraphImpl implements Graph, Serializable {
     add(triple.getSubject(), triple.getPredicate(), triple.getObject());
   }
 
+  /**
+   * Adds an iterator containing triples into the graph.
+   *
+   * @param triples The triple iterator.
+   * @throws GraphExcepotion If the statements can't be made.
+   */
+  public void add(Iterator triples) throws GraphException {
+    while (triples.hasNext()) {
+
+      Triple triple = (Triple) triples.next();
+      add(triple);
+    }
+  }
 
   /**
    * Removes a triple from the graph.
@@ -317,12 +351,34 @@ public class GraphImpl implements Graph, Serializable {
   }
 
   /**
+   * Removes an iterator containing triples from the graph.
+   *
+   * @param triples The triple iterator.
+   * @throws GraphExcepotion If the statements can't be revoked.
+   */
+  public void remove(Iterator triples) throws GraphException {
+    while (triples.hasNext()) {
+      Triple triple = (Triple) triples.next();
+      remove(triple);
+    }
+  }
+
+  /**
    * Returns the node factory for the graph, or creates one.
    *
    * @return the node factory for the graph, or creates one.
    */
-  public NodeFactory getNodeFactory() {
-    return nodeFactory;
+  public GraphElementFactory getElementFactory() {
+    return elementFactory;
+  }
+
+  /**
+   * Returns the triple factory for the graph, or creates one.
+   *
+   * @return the triple factory for the graph, or creates one.
+   */
+  public TripleFactory getTripleFactory() {
+    return tripleFactory;
   }
 
   /**
@@ -468,7 +524,7 @@ public class GraphImpl implements Graph, Serializable {
     // write out the first index with the default writer
     out.defaultWriteObject();
     // write all the nodes as well
-    out.writeObject(nodeFactory.getNodePool().toArray());
+    out.writeObject(elementFactory.getNodePool().toArray());
     // TODO: Consider writing these nodes individually.  Converting to an array
     // may take up unnecessary memory
   }
@@ -495,15 +551,15 @@ public class GraphImpl implements Graph, Serializable {
 
     try {
       // test node factory creation in case the constructor did it
-      if (nodeFactory == null) {
-        nodeFactory = new NodeFactoryImpl(this);
+      if (elementFactory == null) {
+        elementFactory = new GraphElementFactoryImpl(this);
       }
-    } catch (NodeFactoryException e) {
+    } catch (TripleFactoryException e) {
       throw new ClassNotFoundException("Unable to build NodeFactory", e);
     }
     // populate the node factory with these nodes
     for (int n = 0; n < nodes.length; n++) {
-      nodeFactory.registerNode((MemNode)nodes[n]);
+      elementFactory.registerNode((MemNode)nodes[n]);
     }
 
     // fill in the other indexes

@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -61,18 +61,20 @@ package org.jrdf.graph.mem;
 import java.io.*;
 
 import org.jrdf.graph.*;
+import org.jrdf.vocabulary.*;
 
 // Third party packages
 import junit.framework.*;
 
 /**
- * Implementation of {@link org.jrdf.tests.GraphTestAbs} test case.
+ * Implementation of {@link org.jrdf.graph.AbstractGraphUnitTest} test case.
  *
  * @author Paul Gearon
+ * @author Andrew Newman
  *
  * @version $Revision$
  */
-public class GraphImplUnitTest extends GraphUnitTestAbstract {
+public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
   /**
    * Constructs a new test with the given name.
@@ -106,7 +108,6 @@ public class GraphImplUnitTest extends GraphUnitTestAbstract {
     suite.addTest(new GraphImplUnitTest("contains"));
     suite.addTest(new GraphImplUnitTest("finding"));
     suite.addTest(new GraphImplUnitTest("iteration"));
-    suite.addTest(new GraphImplUnitTest("reification"));
     suite.addTest(new GraphImplUnitTest("serializing"));
     return suite;
   }
@@ -119,18 +120,6 @@ public class GraphImplUnitTest extends GraphUnitTestAbstract {
   public static void main(String[] args) throws Exception {
 
     junit.textui.TestRunner.run(suite());
-  }
-
-  public PredicateNode getReifySubject() throws NodeFactoryException {
-    return factory.createResource(NodeFactoryImpl.REIFICATION_SUBJECT);
-  }
-
-  public PredicateNode getReifyPredicate() throws NodeFactoryException {
-    return factory.createResource(NodeFactoryImpl.REIFICATION_PREDICATE);
-  }
-
-  public PredicateNode getReifyObject() throws NodeFactoryException {
-    return factory.createResource(NodeFactoryImpl.REIFICATION_OBJECT);
   }
 
   /**

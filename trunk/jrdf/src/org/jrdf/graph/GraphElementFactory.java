@@ -62,32 +62,45 @@ package org.jrdf.graph;
 import java.net.URI;
 
 /**
- * A Node Factory is a class which create the various components of a graph.
- * It is generally tied to a specific graph.
+ * A Graph Element Factory is a class which create the various components of a
+ * graph including: resources, literals and triples.  It is generally tied to a
+ * specific graph.
  *
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public interface NodeFactory {
+public interface GraphElementFactory {
 
   /**
    * Create a blank nodes that is associated with a specific graph.
    *
    * @return A new blank node within the graph.
    * @return the newly created blank node value.
-   * @throws NodeFactoryException If anonymous resources can't be generated.
    */
-  public BlankNode createResource() throws NodeFactoryException;
+  public BlankNode createResource() throws GraphElementFactoryException;
 
   /**
    * Create a URI reference.
    *
    * @param uri The URI of the resource.
    * @return the newly created URI reference value.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  public URIReference createResource(URI uri) throws NodeFactoryException;
+  public URIReference createResource(URI uri)
+      throws GraphElementFactoryException;
+
+  /**
+   * Create a URI reference without checking if the URI given is a valid RDF
+   * URI, currently if the URI is absolute.
+   *
+   * @param uri The URI of the resource.
+   * @param validate true if we disbale checking to see if the URI is valid.
+   * @return The newly created URI reference value.
+   * @throws GraphElementFactoryException
+   */
+  public URIReference createResource(URI uri, boolean validate)
+      throws GraphElementFactoryException;
 
   /**
    * Creates a new literal with the given lexical value, with no language or
@@ -95,9 +108,10 @@ public interface NodeFactory {
    *
    * @param lexicalValue The lexical value for the literal.
    * @return the newly created literal value.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue) throws NodeFactoryException;
+  public Literal createLiteral(String lexicalValue)
+      throws GraphElementFactoryException;
 
   /**
    * Creates a new literal with the given lexical value, with a given language
@@ -106,10 +120,10 @@ public interface NodeFactory {
    * @param lexicalValue The lexical value for the literal.  Cannot be null.
    * @param languageType The language of the literal or null if not required.
    * @return the newly created literal value.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws GraphElementFactoryException If the resource failed to be created.
    */
   public Literal createLiteral(String lexicalValue, String languageType)
-      throws NodeFactoryException;
+      throws GraphElementFactoryException;
 
   /**
    * Creates a new literal with the given lexical value and given datatype.
@@ -118,70 +132,21 @@ public interface NodeFactory {
    * @param datatypeURI The URI of the datatype of the literal or null if not
    *     required.
    * @return the newly created literal value.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws GraphElementFactoryException If the resource failed to be created.
    */
   public Literal createLiteral(String lexicalValue, URI datatypeURI)
-      throws NodeFactoryException;
+      throws GraphElementFactoryException;
 
   /**
-   * Creates a new triple to be used in the graph.  Does not add it to the
-   * graph.  Use @see Graph#add.
+   * Creates a new triple to be used in the graph.  Does not add it to an
+   * associated graph.  Use @see Graph#add.
    *
    * @param subject The subject of the statement.
    * @param predicate The predicate of the statement.
    * @param object The object of the statement.
    * @return the newly created triple object.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws GraphElementFactoryException If the resource failed to be created.
    */
   public Triple createTriple(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object) throws NodeFactoryException;
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @param reifiedTripleURI a URIReference denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public URIReference reifyTriple(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode objectNode, URI reifiedTripleURI)
-      throws NodeFactoryException, AlreadyReifiedException;
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param triple the triple to be reified.
-   * @param reifiedTripleURI a URIReference denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public URIReference reifyTriple(Triple triple, URI reifiedTripleURI)
-      throws NodeFactoryException, AlreadyReifiedException;
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param subject the subject of the triple.
-   * @param predicate the predicate of the triple.
-   * @param object the object of the triple.
-   * @throws NodeFactoryException If the resource failed to be created or to
-   *     be reified.
-   */
-  public BlankNode reifyTriple(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object) throws NodeFactoryException;
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param triple the triple to be reified.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public BlankNode reifyTriple(Triple triple) throws NodeFactoryException;
+      ObjectNode object) throws GraphElementFactoryException;
 }

@@ -74,16 +74,7 @@ import java.util.*;
  *
  * @version $Revision$
  */
-public class NodeFactoryImpl implements NodeFactory {
-
-  /** The predicate describing the subject of a reification. */
-  public static final URI REIFICATION_SUBJECT;
-
-  /** The predicate describing the predicate of a reification. */
-  public static final URI REIFICATION_PREDICATE;
-
-  /** The predicate describing the object of a reification. */
-  public static final URI REIFICATION_OBJECT;
+public class GraphElementFactoryImpl implements GraphElementFactory {
 
   /** The pool of all nodes, mapped from their ids. */
   private Map nodePool;
@@ -97,23 +88,12 @@ public class NodeFactoryImpl implements NodeFactory {
   /** The next available node id. */
   private long nextNode;
 
-  static {
-    // set up the constants that can throw exceptions
-    try {
-      REIFICATION_SUBJECT = new URI("jrdf:hasSubject");
-      REIFICATION_PREDICATE = new URI("jrdf:hasPredicate");
-      REIFICATION_OBJECT = new URI("jrdf:hasObject");
-    } catch (URISyntaxException e) {
-      throw new RuntimeException("Unexpected problem building constants.", e);
-    }
-  }
-
   /**
    * Package scope constructor.
    *
    * @param graph The GraphImpl that this class is attached to.
    */
-  NodeFactoryImpl(GraphImpl graph) throws NodeFactoryException {
+  GraphElementFactoryImpl(GraphImpl graph) throws TripleFactoryException {
     this.graph = graph;
     nodePool = new HashMap();
     stringPool = new HashMap();
@@ -128,7 +108,7 @@ public class NodeFactoryImpl implements NodeFactory {
    * @return the newly created blank node value.
    * @throws NodeFactoryException If anonymous resources can't be generated.
    */
-  public BlankNode createResource() throws NodeFactoryException {
+  public BlankNode createResource() throws GraphElementFactoryException {
     Long id = new Long(nextNode);
 
     // create the new node
@@ -150,9 +130,9 @@ public class NodeFactoryImpl implements NodeFactory {
    * @return the newly created URI reference value.
    * @throws NodeFactoryException If the resource failed to be created.
    */
-  public URIReference createResource(URI uri) throws NodeFactoryException {
+  public URIReference createResource(URI uri) throws GraphElementFactoryException {
     if (uri == null) {
-      throw new NodeFactoryException("URI may not be null for a URIReference");
+      throw new GraphElementFactoryException("URI may not be null for a URIReference");
     }
 
     // check if the node already exists in the string pool
@@ -176,6 +156,43 @@ public class NodeFactoryImpl implements NodeFactory {
     return node;
   }
 
+  /**
+   * Create a URI reference without checking if the URI given is a valid RDF
+   * URI, currently if the URI is absolute.
+   *
+   * @param uri The URI of the resource.
+   * @param validate true if we disbale checking to see if the URI is valid.
+   * @return The newly created URI reference value.
+   * @throws GraphElementFactoryException
+   */
+  public URIReference createResource(URI uri, boolean validate)
+      throws GraphElementFactoryException {
+
+    if (uri == null) {
+      throw new GraphElementFactoryException("URI may not be null for a URIReference");
+    }
+
+    // check if the node already exists in the string pool
+    Long nodeid = getNodeIdByString(uri.toString());
+    if (nodeid != null) {
+      return (URIReference)getNodeById(nodeid);
+    }
+
+    // create the node identifier and increment the node
+    nodeid = new Long(nextNode++);
+
+    // create the new node
+    URIReference node = new URIReferenceImpl(uri, validate, nodeid);
+
+    // put the node in the pool
+    nodePool.put(nodeid, node);
+
+    // put the URI string into the pool
+    // TODO: This could conflict with a literal
+    stringPool.put(uri.toString(), nodeid);
+    return node;
+  }
+
 
   /**
    * Creates a new literal with the given lexical value, with no language or
@@ -185,7 +202,8 @@ public class NodeFactoryImpl implements NodeFactory {
    * @return the newly created literal value.
    * @throws NodeFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue) throws NodeFactoryException {
+  public Literal createLiteral(String lexicalValue)
+      throws GraphElementFactoryException {
     LiteralImpl newLiteral = new LiteralImpl(lexicalValue);
     addNodeId(newLiteral);
     return newLiteral;
@@ -202,7 +220,7 @@ public class NodeFactoryImpl implements NodeFactory {
    * @throws NodeFactoryException If the resource failed to be created.
    */
   public Literal createLiteral(String lexicalValue, String languageType)
-      throws NodeFactoryException {
+      throws GraphElementFactoryException {
     LiteralImpl newLiteral = new LiteralImpl(lexicalValue, languageType);
     addNodeId(newLiteral);
     return newLiteral;
@@ -219,7 +237,7 @@ public class NodeFactoryImpl implements NodeFactory {
    * @throws NodeFactoryException If the resource failed to be created.
    */
   public Literal createLiteral(String lexicalValue, URI datatypeURI)
-      throws NodeFactoryException {
+      throws GraphElementFactoryException {
     // create the node identifier
     LiteralImpl newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
     addNodeId(newLiteral);
@@ -234,7 +252,7 @@ public class NodeFactoryImpl implements NodeFactory {
    * @param newLiteral A newly created literal.
    * @throws NodeFactoryException If the resource failed to be created.
    */
-  private void addNodeId(LiteralImpl literal) throws NodeFactoryException {
+  private void addNodeId(LiteralImpl literal) throws GraphElementFactoryException {
     // create the node identifier
     Long nodeId = new Long(nextNode);
 
@@ -271,128 +289,8 @@ public class NodeFactoryImpl implements NodeFactory {
    * @throws NodeFactoryException If the resource failed to be created.
    */
   public Triple createTriple(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object) throws NodeFactoryException {
+      ObjectNode object) throws GraphElementFactoryException {
     return new TripleImpl(subject, predicate, object);
-  }
-
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @param reifiedTripleURI a URIReference denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public URIReference reifyTriple(
-      SubjectNode subjectNode, PredicateNode predicateNode,
-      ObjectNode objectNode, URI reifiedTripleURI
-  ) throws NodeFactoryException, AlreadyReifiedException {
-
-    // create the reification node
-    return (URIReference)reifyTriple(subjectNode, predicateNode, objectNode, createResource(reifiedTripleURI));
-  }
-
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param triple the triple to be reified.
-   * @param reifiedTripleURI a URIReference denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public URIReference reifyTriple(Triple triple, URI reifiedTripleURI)
-      throws NodeFactoryException, AlreadyReifiedException {
-    return (URIReference)reifyTriple(triple.getSubject(), triple.getPredicate(), triple.getObject(), createResource(reifiedTripleURI));
-  }
-
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param subject the subject of the triple.
-   * @param predicate the predicate of the triple.
-   * @param object the object of the triple.
-   * @throws NodeFactoryException If the resource failed to be created or to
-   *     be reified.
-   */
-  public BlankNode reifyTriple(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object) throws NodeFactoryException {
-    return (BlankNode)reifyTriple(subject, predicate, object, createResource());
-  }
-
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param triple the triple to be reified.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public BlankNode reifyTriple(Triple triple) throws NodeFactoryException {
-    return (BlankNode)reifyTriple(triple.getSubject(), triple.getPredicate(), triple.getObject(), createResource());
-  }
-
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @param ru a Node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  private Node reifyTriple(
-      SubjectNode subjectNode, PredicateNode predicateNode,
-      ObjectNode objectNode, Node ru
-  ) throws NodeFactoryException, AlreadyReifiedException {
-
-    // get the nodes used for reification
-    URIReference hasSubject = createResource(REIFICATION_SUBJECT);
-    URIReference hasPredicate = createResource(REIFICATION_PREDICATE);
-    URIReference hasObject = createResource(REIFICATION_OBJECT);
-
-    // assert that the statement is not already reified
-    try {
-      ClosableIterator it = graph.find((SubjectNode)ru, hasSubject, null);
-      try {
-        if (
-            it.hasNext() ||
-            graph.contains(subjectNode, predicateNode, objectNode) ||
-            graph.contains((SubjectNode)ru, hasSubject, (ObjectNode)subjectNode) &&
-            graph.contains((SubjectNode)ru, hasPredicate, (ObjectNode)predicateNode) &&
-            graph.contains((SubjectNode)ru, hasObject, objectNode)
-        ) {
-          throw new AlreadyReifiedException(
-              "Triple: " + subjectNode + " " + predicateNode + " " + objectNode
-          );
-        }
-      } finally {
-        it.close();
-      }
-
-      // insert the reified statement
-      graph.add(subjectNode, predicateNode, objectNode);
-
-      // insert the reification statements
-      graph.add((SubjectNode)ru, hasSubject, (ObjectNode)subjectNode);
-      graph.add((SubjectNode)ru, hasPredicate, (ObjectNode)predicateNode);
-      graph.add((SubjectNode)ru, hasObject, (ObjectNode)objectNode);
-    } catch (GraphException e) {
-      throw new NodeFactoryException(e);
-    }
-
-    // return the ru to make it easier for returning the value from this method
-    return ru;
   }
 
 

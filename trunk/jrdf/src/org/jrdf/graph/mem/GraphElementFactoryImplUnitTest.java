@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -73,15 +73,15 @@ import java.net.URI;
  *
  * @version $Revision$
  */
-public class NodeFactoryImplUnitTest extends NodeFactoryUnitTestAbstract {
-
+public class GraphElementFactoryImplUnitTest
+    extends AbstractGraphElementFactoryUnitTest {
 
   /**
    * Constructs a new test with the given name.
    *
    * @param name the name of the test
    */
-  public NodeFactoryImplUnitTest(String name) {
+  public GraphElementFactoryImplUnitTest(String name) {
     super(name);
   }
 
@@ -101,9 +101,9 @@ public class NodeFactoryImplUnitTest extends NodeFactoryUnitTestAbstract {
    */
   public static Test suite() {
     TestSuite suite = new TestSuite();
-    suite.addTest(new NodeFactoryImplUnitTest("createLiterals"));
-    suite.addTest(new NodeFactoryImplUnitTest("createResources"));
-    suite.addTest(new NodeFactoryImplUnitTest("createTriples"));
+    suite.addTest(new GraphElementFactoryImplUnitTest("createLiterals"));
+    suite.addTest(new GraphElementFactoryImplUnitTest("createResources"));
+    suite.addTest(new GraphElementFactoryImplUnitTest("createTriples"));
     return suite;
   }
 

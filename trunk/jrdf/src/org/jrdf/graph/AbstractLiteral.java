@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -110,7 +110,6 @@ public abstract class AbstractLiteral implements Literal {
    * This is lazily initialized and used by the {@link #escape} method.
    */
   private transient Matcher matcher;
-
 
   /**
    * Obtain the text of this literal.
@@ -221,11 +220,17 @@ public abstract class AbstractLiteral implements Literal {
    *
    * @return this instance in N-Triples format
    */
-  public String toString() {
+  public String getEscapedForm() {
+    return escape(getLexicalForm());
+  }
 
-    StringBuffer buffer = new StringBuffer('"' + escape(getLexicalForm()) +
-        '"');
-    return buffer.toString();
+  /**
+   * Returns the lexical form.
+   *
+   * @return the lexical form.
+   */
+  public String toString() {
+    return getLexicalForm();
   }
 
   /**
