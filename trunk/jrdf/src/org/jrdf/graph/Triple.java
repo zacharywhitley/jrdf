@@ -58,6 +58,8 @@
 
 package org.jrdf.graph;
 
+import java.io.Serializable;
+
 /**
  * RDF Triple. An RDF triple as defined in "Resource Description Framework (RDF):
  * Concepts and Abstract Syntax"
@@ -68,7 +70,7 @@ package org.jrdf.graph;
  *
  * @version $Revision$
  */
-public interface Triple {
+public interface Triple extends Serializable {
 
   /**
    * Obtains the subject of this statement.

@@ -58,6 +58,8 @@
 
 package org.jrdf.graph;
 
+import java.io.Serializable;
+
 /**
  * An RDF Graph. As defined by the
  * <a href="http://www.w3.org/TR/2003/WD-rdf-concepts-20031010"><cite>Resource
@@ -70,7 +72,7 @@ package org.jrdf.graph;
  *
  * @version $Revision$
  */
-public interface Graph {
+public interface Graph extends Serializable {
 
   /**
    * Namespace prefix. This is defined in <a
