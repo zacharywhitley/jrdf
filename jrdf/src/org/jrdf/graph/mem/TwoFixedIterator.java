@@ -71,7 +71,7 @@ import java.util.*;
  * It will always be set to return the next value until it reaches
  * the end of the group.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */
@@ -83,6 +83,21 @@ public class TwoFixedIterator implements ClosableIterator {
   /** The nodeFactory used to create the nodes to be returned in the triples. */
   private GraphElementFactoryImpl nodeFactory;
 
+  /** The graph this iterator will operate on.  Only needed by the remove method. */
+  private GraphImpl graph;
+
+  /** The index of this iterator.  Only needed for initialization and the remove method. */
+  private Map index;
+
+  /** The subIndex of this iterator.  Only needed for initialization and the remove method. */
+  private Map subIndex;
+
+  /** The subSubIndex of this iterator.  Only needed for initialization and the remove method. */
+  private Set subGroup;
+
+  /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
+  private Long[] currentNodes;
+
   /** The first fixed item. */
   private Long first;
 
@@ -93,27 +108,31 @@ public class TwoFixedIterator implements ClosableIterator {
   private int var;
 
 
+
   /**
    * Constructor.  Sets up the internal iterators.
    */
   TwoFixedIterator(
-      Map index, int var, Long newFirst, Long newSecond, GraphElementFactoryImpl nodeFactory
+      Map index, int var, Long newFirst, Long newSecond, GraphElementFactoryImpl nodeFactory, GraphImpl graph
   ) {
     // store the node factory and other starting data
     this.nodeFactory = nodeFactory;
+    this.graph = graph;
+    this.index = index;
     this.first = newFirst;
     this.second = newSecond;
     this.var = var;
+    this.currentNodes = null;
     // initialize the itemiterator to null
     itemIterator = null;
     // find the subIndex from the main index
-    Map subIndex = (Map)index.get(first);
+    subIndex = (Map)index.get(first);
     // check that data exists
     if (subIndex != null) {
       // now find the set from the sub index map
-      Set subGroup = (Set)subIndex.get(second);
+      subGroup = (Set)subIndex.get(second);
       if (subGroup != null) {
-        // get an interator for the set
+        // get an iterator for the set
         itemIterator = subGroup.iterator();
       }
     }
@@ -142,15 +161,64 @@ public class TwoFixedIterator implements ClosableIterator {
     // get the next item
     Long third = (Long)itemIterator.next();
     // build the triple
+    currentNodes = new Long[] { first, second, third };
     return new TripleImpl(nodeFactory, var, first, second, third);
   }
 
 
   /**
-   * Implemented for java.util.Iterator.  Not supported by this implementation.
+   * Implemented for java.util.Iterator.
    */
   public void remove() {
-    throw new UnsupportedOperationException();
+    if (itemIterator != null) {
+      itemIterator.remove();
+      // clean up the current index after the removal
+      cleanIndex();
+      // now remove from the other 2 indexes
+      removeFromNonCurrentIndex();
+    }
+  }
+
+
+  /**
+   * Checks if a removed item is the last of its type, and removes any associated subindexes if appropriate.
+   */
+  private void cleanIndex() {
+    // check if a set was cleaned out
+    if (subGroup.isEmpty()) {
+      // remove the entry for the set
+      subIndex.remove(second);
+      // check if a subindex was cleaned out
+      if (subIndex.isEmpty()) {
+        // remove the subindex
+        index.remove(first);
+      }
+    }
+  }
+
+
+  /**
+   * Helper function for removal.  This removes the current statement from the indexes which
+   * the current iterator is not associated with.
+   */
+  private void removeFromNonCurrentIndex() {
+    try {
+      // can instead use var here to determine how to delete, but this is more intuitive
+      if (index == graph.index012) {
+        graph.remove(graph.index120, currentNodes[1], currentNodes[2], currentNodes[0]);
+        graph.remove(graph.index201, currentNodes[2], currentNodes[0], currentNodes[1]);
+      }
+      if (index == graph.index120) {
+        graph.remove(graph.index012, currentNodes[2], currentNodes[0], currentNodes[1]);
+        graph.remove(graph.index201, currentNodes[1], currentNodes[2], currentNodes[0]);
+      }
+      if (index == graph.index201) {
+        graph.remove(graph.index012, currentNodes[1], currentNodes[2], currentNodes[0]);
+        graph.remove(graph.index120, currentNodes[2], currentNodes[0], currentNodes[1]);
+      }
+    } catch (GraphException ge) {
+      throw new IllegalStateException(ge.getMessage());
+    }
   }
 
 

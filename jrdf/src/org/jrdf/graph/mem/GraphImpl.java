@@ -67,7 +67,7 @@ import org.jrdf.util.ClosableIterator;
 /**
  * A memory based RDF Graph.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */
@@ -310,12 +310,12 @@ public class GraphImpl implements Graph, Serializable {
           return new ThreeFixedIterator(this, subject, predicate, object);
         } else {
           // got {sp*}
-          return new TwoFixedIterator(index012, 0, values[0], values[1], elementFactory);
+          return new TwoFixedIterator(index012, 0, values[0], values[1], elementFactory, this);
         }
       } else {
         // test for {s**}
         if (object == null) {
-          return new OneFixedIterator(index012, 0, values[0], elementFactory);
+          return new OneFixedIterator(index012, 0, values[0], elementFactory, this);
         }
         // {s*o} so fall through
       }
@@ -324,27 +324,27 @@ public class GraphImpl implements Graph, Serializable {
     if (predicate != null) {
       // test for {*po}
       if (object != null) {
-        return new TwoFixedIterator(index120, 2, values[1], values[2], elementFactory);
+        return new TwoFixedIterator(index120, 2, values[1], values[2], elementFactory, this);
       } else {
         // test for {*p*}.  {sp*} should have been picked up above
         assert subject == null;
-        return new OneFixedIterator(index120, 2, values[1], elementFactory);
+        return new OneFixedIterator(index120, 2, values[1], elementFactory, this);
       }
     }
 
     if (object != null) {
       // test for {s*o}
       if (subject != null) {
-        return new TwoFixedIterator(index201, 1, values[2], values[0], elementFactory);
+        return new TwoFixedIterator(index201, 1, values[2], values[0], elementFactory, this);
       } else {
         // test for {**o}.  {*po} should have been picked up above
         assert predicate == null;
-        return new OneFixedIterator(index201, 1, values[2], elementFactory);
+        return new OneFixedIterator(index201, 1, values[2], elementFactory, this);
       }
     }
 
     // {***} so return entire graph
-    return new GraphIterator(index012, elementFactory);
+    return new GraphIterator(index012, elementFactory, this);
   }
 
   /**
@@ -623,7 +623,7 @@ public class GraphImpl implements Graph, Serializable {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  private void remove(Map index, Long first, Long second, Long third) throws GraphException {
+  protected void remove(Map index, Long first, Long second, Long third) throws GraphException {
 
     // find the sub index
     Map subIndex = (Map)index.get(first);
