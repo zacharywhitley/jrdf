@@ -241,21 +241,23 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     ObjectNode rdfStatement = getRdfStatement();
     assertTrue(graph.isEmpty());
 
+    // Make a reification about a triple that does not exist in the graph.
     URIReference u = this.elementFactory.createResource(uri1);
     tripleFactory.reifyTriple(blank1, ref1, blank2, u);
     assertEquals(uri1, u.getURI());
-    assertEquals(5, graph.getNumberOfTriples());
+    assertEquals(4, graph.getNumberOfTriples());
     assertTrue(graph.contains(u, rdfType, rdfStatement));
     assertTrue(graph.contains(u, reifySubject, blank1));
     assertTrue(graph.contains(u, reifyPredicate, ref1));
     assertTrue(graph.contains(u, reifyObject, blank2));
-    assertTrue(graph.contains(blank1, ref1, blank2));
 
+    // Make a reification about a triple that does exist in the graph.
     Triple t = elementFactory.createTriple(blank1, ref2, blank2);
     u = this.elementFactory.createResource(uri2);
+    graph.add(t);
     tripleFactory.reifyTriple(t, u);
     assertEquals(uri2, u.getURI());
-    assertEquals(10, graph.getNumberOfTriples());
+    assertEquals(9, graph.getNumberOfTriples());
     assertTrue(graph.contains(u, rdfType, rdfStatement));
     assertTrue(graph.contains(u, reifySubject, blank1));
     assertTrue(graph.contains(u, reifyPredicate, ref2));
@@ -269,7 +271,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for insertion of a new triple with an existing reference
     testCantInsert(blank2, ref1, blank1, this.elementFactory.createResource(uri1));
     // test that the graph did not change with the invalid insertions
-    assertEquals(10, graph.getNumberOfTriples());
+    assertEquals(9, graph.getNumberOfTriples());
 
     // test for double insertion
     testCantInsert(t, uri2);
@@ -278,23 +280,25 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for insertion of a new triple with an existing reference
     testCantInsert(elementFactory.createTriple(blank2, ref2, blank2), uri2);
     // test that the graph did not change with the invalid insertions
-    assertEquals(10, graph.getNumberOfTriples());
+    assertEquals(9, graph.getNumberOfTriples());
 
     // do it all again for blank nodes
-
+    // Make reification that does not exist in graph
     BlankNode b = this.elementFactory.createResource();
     tripleFactory.reifyTriple(blank1, ref1, l1, b);
-    assertEquals(15, graph.getNumberOfTriples());
+    assertEquals(13, graph.getNumberOfTriples());
     assertTrue(graph.contains(b, rdfType, rdfStatement));
     assertTrue(graph.contains(b, reifySubject, blank1));
     assertTrue(graph.contains(b, reifyPredicate, ref1));
     assertTrue(graph.contains(b, reifyObject, l1));
-    assertTrue(graph.contains(blank1, ref1, l1));
 
+    // Make a reification using a blank node for a statement that does exist
+    // in the graph.
     t = elementFactory.createTriple(blank1, ref2, l2);
+    graph.add(t);
     b = this.elementFactory.createResource();
     tripleFactory.reifyTriple(t, b);
-    assertEquals(20, graph.getNumberOfTriples());
+    assertEquals(18, graph.getNumberOfTriples());
     assertTrue(graph.contains(b, rdfType, rdfStatement));
     assertTrue(graph.contains(b, reifySubject, blank1));
     assertTrue(graph.contains(b, reifyPredicate, ref2));
@@ -306,14 +310,25 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for insertion with a a used blank reference
     testCantInsert(blank1, ref3, blank2, u);
     // test that the graph did not change with the invalid insertions
-    assertEquals(20, graph.getNumberOfTriples());
+    assertEquals(18, graph.getNumberOfTriples());
 
     // test for double insertion
     testCantInsert(t);
     // test for insertion with a a used blank reference
     testCantInsert(elementFactory.createTriple(blank1, ref3, blank2), u.getURI());
     // test that the graph did not change with the invalid insertions
-    assertEquals(20, graph.getNumberOfTriples());
+    assertEquals(18, graph.getNumberOfTriples());
+
+    // Test reifying an existing statement
+    b = this.elementFactory.createResource();
+    graph.add(ref3, ref3, ref3);
+
+    try {
+      tripleFactory.reifyTriple(ref3, ref3, ref3, b);
+    }
+    catch (AlreadyReifiedException e) {
+      fail("Should allow reification");
+    }
   }
 
   /**
@@ -435,8 +450,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // Add the collection to the graph.
     tripleFactory.addAlternative(s, alt);
 
-    // Check we've inserted it correctly.
-    assertEquals("Should have seven statements", 4, graph.getNumberOfTriples());
+    // Check we've inserted it correctly (banana is in twice should be removed)
+    assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
     assertTrue("Should have statement", graph.contains(s, rdfType, rdfAlternative));
     assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
     assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
@@ -444,7 +459,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     assertTrue("Should have statement", graph.contains(s, null, fruit[3]));
 
     // Check that it doesn't allow duplicates.
-    ClosableIterator iter = graph.find(s, null, fruit[0]);
+    ClosableIterator iter = graph.find(null, null, fruit[0]);
     int count = 0;
     while (iter.hasNext()) {
       iter.next();
@@ -489,8 +504,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // Add the collection to the graph.
     tripleFactory.addBag(s, bag);
 
-    // Check we've inserted it correctly.
-    assertEquals("Should have seven statements", 6, graph.getNumberOfTriples());
+    // Check we've inserted it correctly
+    assertEquals("Should have six statements", 6, graph.getNumberOfTriples());
     assertTrue("Should have statement", graph.contains(s, rdfType, rdfBag));
     assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
     assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
@@ -549,7 +564,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     tripleFactory.addSequence(s, sequence);
 
     // Check we've inserted it correctly.
-    assertEquals("Should have seven statements", 5, graph.getNumberOfTriples());
+    assertEquals("Should have five statements", 5, graph.getNumberOfTriples());
     assertTrue("Should have statement", graph.contains(s, rdfType, rdfSequence));
     assertTrue("Should have statement", graph.contains(s, rdfOne, fruit[0]));
     assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit[1]));
