@@ -152,6 +152,15 @@ public abstract class AbstractLiteral implements Literal {
     return datatypeURI;
   }
 
+  /**
+   * Accept a call from a TypedNodeVisitor.
+   *
+   * @param visitor the object doing the visiting.
+   */
+  public void accept(TypedNodeVisitor visitor) {
+    visitor.visit(this);
+  }
+
   public boolean equals(Object obj) {
     boolean returnValue = false;
 

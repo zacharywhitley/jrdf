@@ -135,6 +135,15 @@ public abstract class AbstractURIReference implements URIReference {
     return uri;
   }
 
+  /**
+   * Accept a call from a TypedNodeVisitor.
+   *
+   * @param visitor the object doing the visiting.
+   */
+  public void accept(TypedNodeVisitor visitor) {
+    visitor.visit(this);
+  }
+
   public boolean equals(Object obj) {
     boolean returnValue = false;
 
