@@ -59,7 +59,6 @@
 package org.jrdf.vocabulary;
 
 // Java 2 standard
-import java.io.Serializable;
 import java.net.*;
 import java.util.*;
 
@@ -176,9 +175,6 @@ public class RDFS extends Vocabulary {
       MEMBER = new URI(baseURI + "member");
       SEE_ALSO= new URI(baseURI + "seeAlso");
       IS_DEFINED_BY = new URI(baseURI + "isDefinedBy");
-
-      // Add the resources.
-      resources = new HashSet();
 
       // Add Classes
       resources.add(RESOURCE);
