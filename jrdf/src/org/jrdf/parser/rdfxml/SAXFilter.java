@@ -155,6 +155,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     _rdfParser = rdfParser;
     _th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).
         newTransformerHandler();
+    _th.setResult(new StreamResult(_os));
   }
 
   public Locator getLocator() {
@@ -222,7 +223,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   }
 
   public void startDocument() throws SAXException {
-    // ignore
+    _th.startDocument();
   }
 
   public void endDocument() throws SAXException {
@@ -441,22 +442,24 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   }
 
   public void characters(char[] ch, int start, int length) throws SAXException {
+
     if (_inRdfContext) {
       if (_deferredElement != null) {
         _reportDeferredStartElement();
       }
 
+      _th.characters(ch, start, length);
+
       if (_parseLiteralMode) {
         // Characters like '<', '>', and '&' must be escaped to
         // prevent breaking the XML text.
-        _th.setResult(new StreamResult(_os));
-        _th.characters(ch, start, length);
         _charBuf.append(_os.toString());
-        _os.reset();
       }
       else {
         _charBuf.append(ch, start, length);
       }
+
+      _os.reset();
     }
   }
 
