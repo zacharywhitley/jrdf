@@ -124,20 +124,6 @@ public interface NodeFactory {
       throws NodeFactoryException;
 
   /**
-   * Creates a new literal with the given lexical value, with a given language
-   * and given datatype.
-   *
-   * @param lexicalValue The lexical value for the literal.  Cannot be null.
-   * @param languageType The language of the literal or null if not required.
-   * @param datatypeURI The URI of the datatype of the literal or null if not
-   *     required.
-   * @return the newly created literal value.
-   * @throws NodeFactoryException If the resource failed to be created.
-   */
-  public Literal createLiteral(String lexicalValue, String languageType,
-      URI datatypeURI) throws NodeFactoryException;
-
-  /**
    * Creates a new triple to be used in the graph.  Does not add it to the
    * graph.  Use @see Graph#add.
    *
