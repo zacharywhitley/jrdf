@@ -159,7 +159,7 @@ public interface NodeFactory {
    * @param reifiedTripleURI a URIReference denoting the reified triple.
    * @throws NodeFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
-   *   the given triple.
+   *     the given triple.
    */
   public URIReference reifyStatement(SubjectNode subject, PredicateNode predicate,
     ObjectNode object, URI reifiedTripleURI) throws NodeFactoryException,
@@ -172,7 +172,7 @@ public interface NodeFactory {
    * @param reifiedTripleURI a URIReference denoting the reified triple.
    * @throws NodeFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
-   *   the given triple.
+   *     the given triple.
    */
   public URIReference reifyStatement(Triple triple, URI reifiedTripleURI)
       throws NodeFactoryException, AlreadyReifiedException;
@@ -184,7 +184,7 @@ public interface NodeFactory {
    * @param predicate the predicate of the triple.
    * @param object the object of the triple.
    * @throws NodeFactoryException If the resource failed to be created or to
-   *   be reified.
+   *     be reified.
    */
   public BlankNode reifyStatement(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws NodeFactoryException;
@@ -195,7 +195,7 @@ public interface NodeFactory {
    * @param triple the triple to be reified.
    * @throws NodeFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
-   *   the given triple.
+   *     the given triple.
    */
   public BlankNode reifyStatement(Triple triple) throws NodeFactoryException;
 }
