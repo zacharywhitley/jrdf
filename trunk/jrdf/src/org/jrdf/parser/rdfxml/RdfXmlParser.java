@@ -66,12 +66,8 @@ import org.xml.sax.*;
  * </ul>
  * Example code:
  * <pre>
- * // Use the SAX2-compliant Xerces parser:
- * System.setProperty(
- *     "org.xml.sax.driver",
- *     "org.apache.xerces.parsers.SAXParser");
- *
- * Parser parser = new RdfXmlParser();
+ * Graph jrdfGraph = new GraphImpl();
+ * Parser parser = new RdfXmlParser(jrdfGraph);
  * parser.setStatementHandler(myStatementHandler);
  * parser.setParseErrorListener(myParseErrorListener);
  * parser.setVerifyData(true);
