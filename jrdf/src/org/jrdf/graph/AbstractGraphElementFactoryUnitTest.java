@@ -162,7 +162,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     assertFalse(l1.equals(l2));
     assertEquals(l1, l3);
     assertEquals(getDefaultLiteralType(), l1.getDatatypeURI());
-    assertEquals(getDefaultLiteralLanguage(), l1.getLanguage());
+    assertEquals("", l1.getLanguage());
     assertEquals(TEST_STR1, l1.getLexicalForm());
 
     // createLiteral(String lexicalValue, String languageType)
@@ -187,7 +187,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     assertFalse(l1.equals(l4));
     assertEquals(l1, l3);
     assertEquals(type, l1.getDatatypeURI());
-    assertEquals(getDefaultLiteralLanguage(), l1.getLanguage());
+    assertEquals(null, l1.getLanguage());
     assertEquals("42", l1.getLexicalForm());
 
   }
