@@ -139,7 +139,7 @@ public interface Graph {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  public void remove(Triple statement) throws GraphException;
+  public void remove(Triple triple) throws GraphException;
 
   /**
    * Returns the node factory for the graph, or creates one.
