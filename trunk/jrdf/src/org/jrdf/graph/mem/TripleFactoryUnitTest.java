@@ -136,12 +136,29 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     catch (GraphElementFactoryException gefe) {
       throw new TripleFactoryException(gefe);
     }
-
   }
 
   public PredicateNode getReifyObject() throws TripleFactoryException {
     try {
       return elementFactory.createResource(RDF.OBJECT);
+    }
+    catch (GraphElementFactoryException gefe) {
+      throw new TripleFactoryException(gefe);
+    }
+  }
+
+  public PredicateNode getRdfType() throws TripleFactoryException {
+    try {
+      return elementFactory.createResource(RDF.TYPE);
+    }
+    catch (GraphElementFactoryException gefe) {
+      throw new TripleFactoryException(gefe);
+    }
+  }
+
+  public ObjectNode getRdfStatement() throws TripleFactoryException {
+    try {
+      return elementFactory.createResource(RDF.STATEMENT);
     }
     catch (GraphElementFactoryException gefe) {
       throw new TripleFactoryException(gefe);
