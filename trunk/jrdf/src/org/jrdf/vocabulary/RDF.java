@@ -59,7 +59,6 @@
 package org.jrdf.vocabulary;
 
 // Java 2 standard
-import java.io.Serializable;
 import java.net.*;
 import java.util.*;
 
@@ -175,9 +174,6 @@ public class RDF extends Vocabulary {
       VALUE = new URI(baseURI + "value");
       FIRST = new URI(baseURI + "first");
       REST = new URI(baseURI + "rest");
-
-      // Add the resources.
-      resources = new HashSet();
 
       // Add Classes
       resources.add(SEQ);
