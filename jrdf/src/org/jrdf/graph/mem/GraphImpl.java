@@ -716,8 +716,8 @@ public class GraphImpl implements Graph, Serializable {
           while (thirdValues.hasNext()) {
             Long third = (Long)thirdValues.next();
             // now add the row to the other two indexes
-            add(index120, first, second, third);
-            add(index201, first, second, third);
+            add(index120, second, third, first);
+            add(index201, third, first, second);
           }
         }
       }
