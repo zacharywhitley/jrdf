@@ -71,7 +71,7 @@ import org.jrdf.graph.*;
  *
  * @version $Revision$
  */
-public class SequenceImpl extends ArrayList implements Container {
+public class SequenceImpl extends ArrayList implements Sequence {
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
