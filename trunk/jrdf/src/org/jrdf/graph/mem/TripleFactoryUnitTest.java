@@ -104,6 +104,9 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     TestSuite suite = new TestSuite();
     suite.addTest(new TripleFactoryUnitTest("testReification"));
     suite.addTest(new TripleFactoryUnitTest("testCollections"));
+    suite.addTest(new TripleFactoryUnitTest("testAlternative"));
+    suite.addTest(new TripleFactoryUnitTest("testBag"));
+    suite.addTest(new TripleFactoryUnitTest("testSequence"));
     return suite;
   }
 
@@ -153,5 +156,35 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     }
 
     return collection;
+  }
+
+  public Alternative createAlternative(ObjectNode[] objects) {
+    Alternative alternative = new AlternativeImpl();
+
+    for (int index = 0; index < objects.length; index++) {
+      alternative.add(objects[index]);
+    }
+
+    return alternative;
+  }
+
+  public Bag createBag(ObjectNode[] objects) {
+    Bag bag = new BagImpl();
+
+    for (int index = 0; index < objects.length; index++) {
+      bag.add(objects[index]);
+    }
+
+    return bag;
+  }
+
+  public Sequence createSequence(ObjectNode[] objects) {
+    Sequence sequence = new SequenceImpl();
+
+    for (int index = 0; index < objects.length; index++) {
+      sequence.add(objects[index]);
+    }
+
+    return sequence;
   }
 }
