@@ -101,14 +101,14 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
    */
   public static Test suite() {
     TestSuite suite = new TestSuite();
-    suite.addTest(new GraphImplUnitTest("empty"));
-    suite.addTest(new GraphImplUnitTest("factory"));
-    suite.addTest(new GraphImplUnitTest("addition"));
-    suite.addTest(new GraphImplUnitTest("removal"));
-    suite.addTest(new GraphImplUnitTest("contains"));
-    suite.addTest(new GraphImplUnitTest("finding"));
-    suite.addTest(new GraphImplUnitTest("iteration"));
-    suite.addTest(new GraphImplUnitTest("serializing"));
+    suite.addTest(new GraphImplUnitTest("testEmpty"));
+    suite.addTest(new GraphImplUnitTest("testFactory"));
+    suite.addTest(new GraphImplUnitTest("testAddition"));
+    suite.addTest(new GraphImplUnitTest("testRemoval"));
+    suite.addTest(new GraphImplUnitTest("testContains"));
+    suite.addTest(new GraphImplUnitTest("testFinding"));
+    suite.addTest(new GraphImplUnitTest("testIteration"));
+    suite.addTest(new GraphImplUnitTest("testSerializing"));
     return suite;
   }
 
@@ -127,7 +127,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
    *
    * @throws Exception When a problem is found.
    */
-  public void serializing() throws Exception {
+  public void testSerializing() throws Exception {
     // populate the graph
     graph.add(blank1, ref1, blank2);
     graph.add(blank1, ref2, blank2);
