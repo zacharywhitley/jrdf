@@ -1,3 +1,10 @@
+JRDF Release 0.3.1
+==================
+* Bug fixes to the in memory implementation: creating the same Literal by
+value resulted in a different node ID (1014115) and preventing one in 
+memory graph adding nodes to another in memory graph (1014054).
+* Updated javadoc for Graph.
+
 JRDF Release 0.3
 ================
 * New memory implementation by Paul Gearon.
