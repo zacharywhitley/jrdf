@@ -200,14 +200,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
    **/
   boolean _stopAtFirstError = true;
 
-  /**
-   * Creates a new RdfXmlParser that will use a <tt>ValueFactoryImpl</tt> to
-   * create objects for resources, bNodes and literals.
-   * @see org.openrdf.model.impl.ValueFactoryImpl
-   **/
-  public RdfXmlParser() {
-    //this(new ValueFactoryImpl());
-  }
+  Graph jrdfGraph;
 
   /**
    * Creates a new RdfXmlParser that will use the supplied ValueFactory to
@@ -215,8 +208,18 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
    *
    * @param valueFactory A ValueFactory.
    **/
-  public RdfXmlParser(GraphElementFactory valueFactory)
-      throws TransformerConfigurationException {
+  public RdfXmlParser(Graph graph) throws GraphException {
+    jrdfGraph = graph;
+    try {
+      init(graph.getElementFactory());
+    }
+    catch (TransformerConfigurationException tce) {
+      throw new GraphException(tce);
+    }
+  }
+
+  private void init(GraphElementFactory valueFactory)
+      throws TransformerConfigurationException, GraphException {
     _valueFactory = valueFactory;
 
     _bNodeIdMap = new HashMap();
@@ -234,15 +237,12 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
       RDF_NIL = _valueFactory.createResource(RDF.NIL);
     }
     catch (GraphElementFactoryException ex) {
+      throw new GraphException(ex);
     }
 
     // SAXFilter does some filtering and verifying of SAX events
     _saxFilter = new SAXFilter(this);
   }
-
-  /*------------------------------------------------------+
-   | Methods from interface Parser                         |
-   +------------------------------------------------------*/
 
   // implements Parser.setStatementHandler(StatementHandler)
   public synchronized void setStatementHandler(StatementHandler sh) {
@@ -372,7 +372,10 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
       //_saxFilter.clear();
       _saxFilter.setDocumentURI(_documentURI);
 
-      XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
+      SAXParserFactory factory = SAXParserFactory.newInstance();
+      factory.setFeature("http://xml.org/sax/features/namespaces", true);
+      factory.setFeature("http://xml.org/sax/features/namespace-prefixes", false);
+      XMLReader xmlReader = factory.newSAXParser().getXMLReader();
       xmlReader.setContentHandler(_saxFilter);
 
       xmlReader.parse(inputSource);
@@ -431,6 +434,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     }
     else {
       // this element represents a property
+
       _processPropertyElt(namespaceURI, localName, qName, atts, false);
     }
   }
@@ -501,10 +505,6 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
     _handleReification(lit);
   }
-
-  /*------------------------------------------------------+
-   | RDF processing methods                                |
-   +------------------------------------------------------*/
 
   /* Process a node element (can be both subject and object) */
   private void _processNodeElt(
@@ -637,13 +637,13 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
   /** processes subject attributes. **/
   private void _processSubjectAtts(NodeElement nodeElt, Atts atts)
       throws SAXException {
+
     SubjectNode subject = nodeElt.getResource();
 
     Iterator iter = atts.iterator();
 
     while (iter.hasNext()) {
       Att att = (Att) iter.next();
-
       URIReference predicate = _createURI(att.getURI());
       Literal lit = _createLiteral(att.getValue(), _xmlLang, null);
 
@@ -981,8 +981,8 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     return result;
   }
 
-  private Literal _createLiteral(String label, String lang, String datatype) throws
-      SAXException {
+  private Literal _createLiteral(String label, String lang, String datatype)
+      throws SAXException {
     try {
       if (datatype != null) {
         if (_datatypeHandling == DT_VERIFY) {
@@ -1192,8 +1192,6 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
       while (iter.hasNext()) {
         Att att = (Att) iter.next();
-
-        sendError("unexpected attribute '" + att.getQName() + "'");
         iter.remove();
       }
     }
@@ -1286,6 +1284,10 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     public int getNextLiCounter() {
       return _liCounter++;
     }
+
+    public String toString() {
+      return "Subject Node: " + _resource + " isVolatile: " + _isVolatile;
+    }
   }
 
   static class PropertyElement {
@@ -1348,6 +1350,10 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
     public void setLastListResource(SubjectNode resource) {
       _lastListResource = resource;
+    }
+
+    public String toString() {
+      return "URI: " + _uri + " datatype " + _datatype;
     }
   }
 }
