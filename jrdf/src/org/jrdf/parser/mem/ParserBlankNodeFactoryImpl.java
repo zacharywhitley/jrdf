@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.mem;
 
 import java.util.Map;
 import java.util.HashMap;
