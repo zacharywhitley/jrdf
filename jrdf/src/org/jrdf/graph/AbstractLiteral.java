@@ -184,7 +184,17 @@ public abstract class AbstractLiteral implements Literal {
    * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
    *     characters.
    */
-  public String toString() {
-    return '"' + getLexicalForm() + '"';
+  public String toString()
+  {
+    StringBuffer buffer = new StringBuffer('"' + getLexicalForm() + '"');
+
+    if (getLanguage() != null) {
+      buffer.append("@" + getLanguage());
+    }
+
+    if (getDatatypeURI() != null) {
+      buffer.append("^^<" + getDatatypeURI() + ">");
+    }
+    return buffer.toString();
   }
 }
