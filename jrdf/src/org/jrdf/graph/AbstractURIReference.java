@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -81,8 +81,9 @@ public abstract class AbstractURIReference implements URIReference {
    *
    * Enforces a non-<code>null</code> and absolute <var>uri</var> parameter.
    *
+   * @param the URI to use in creation.
    * @throws IllegalArgumentException if <var>uri</var> is <code>null</code> or
-   *                                  not absolute
+   *     not absolute
    */
   protected AbstractURIReference(URI uri) {
 
@@ -92,6 +93,32 @@ public abstract class AbstractURIReference implements URIReference {
     }
 
     if (!uri.isAbsolute()) {
+      throw new IllegalArgumentException("\""+uri+"\" is not absolute");
+    }
+
+    // Initialize the field
+    this.uri = uri;
+  }
+
+  /**
+   * Constructor.
+   *
+   * Enforces a non-<code>null</code> parameter.  Use only for applications
+   * where enforcement of valid URIs is too expensive or not necessary.
+   *
+   * @param uri the URI to use in creation.
+   * @param validate whether to enforce valid RDF URIs.
+   * @throws IllegalArgumentException if <var>uri</var> is not absolute and
+   *   validate is true.
+   */
+  protected AbstractURIReference(URI uri, boolean validate) {
+
+    // Validate "uri" parameter
+    if (uri == null) {
+      throw new IllegalArgumentException("Null \"uri\" parameter");
+    }
+
+    if (validate && !uri.isAbsolute()) {
       throw new IllegalArgumentException("\""+uri+"\" is not absolute");
     }
 

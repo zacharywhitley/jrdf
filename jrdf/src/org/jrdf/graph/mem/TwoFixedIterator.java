@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -81,7 +81,7 @@ public class TwoFixedIterator implements ClosableIterator {
   private Iterator itemIterator;
 
   /** The nodeFactory used to create the nodes to be returned in the triples. */
-  private NodeFactoryImpl nodeFactory;
+  private GraphElementFactoryImpl nodeFactory;
 
   /** The first fixed item. */
   private Long first;
@@ -97,7 +97,7 @@ public class TwoFixedIterator implements ClosableIterator {
    * Constructor.  Sets up the internal iterators.
    */
   TwoFixedIterator(
-      Map index, int var, Node firstNode, Node secondNode, NodeFactoryImpl nodeFactory
+      Map index, int var, Node firstNode, Node secondNode, GraphElementFactoryImpl nodeFactory
   ) {
     // store the node factory and other starting data
     this.nodeFactory = nodeFactory;

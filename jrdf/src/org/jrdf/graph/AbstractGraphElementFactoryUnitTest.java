@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -80,17 +80,19 @@ import junit.framework.*;
  *
  * @version $Revision$
  */
-public abstract class NodeFactoryUnitTestAbstract extends TestCase {
+public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
-  /** Instance of a graph object. */
-  private NodeFactory factory;
+  /**
+   * Instance of a graph element factory.
+   */
+  private GraphElementFactory elementFactory;
 
   /**
    * Constructs a new test with the given name.
    *
    * @param name the name of the test
    */
-  public NodeFactoryUnitTestAbstract(String name) {
+  public AbstractGraphElementFactoryUnitTest(String name) {
     super(name);
   }
 
@@ -99,7 +101,7 @@ public abstract class NodeFactoryUnitTestAbstract extends TestCase {
    */
   public void setUp() throws Exception {
     Graph graph = newGraph();
-    factory = graph.getNodeFactory();
+    elementFactory = graph.getElementFactory();
   }
 
   /**
@@ -151,9 +153,9 @@ public abstract class NodeFactoryUnitTestAbstract extends TestCase {
     final String TEST_STR2 = "Another test string";
 
     // createLiteral(String lexicalValue)
-    Literal l1 = factory.createLiteral(TEST_STR1);
-    Literal l2 = factory.createLiteral(TEST_STR2);
-    Literal l3 = factory.createLiteral(TEST_STR1);
+    Literal l1 = elementFactory.createLiteral(TEST_STR1);
+    Literal l2 = elementFactory.createLiteral(TEST_STR2);
+    Literal l3 = elementFactory.createLiteral(TEST_STR1);
     assertFalse(l1.equals(l2));
     assertEquals(l1, l3);
     assertEquals(getDefaultLiteralType(), l1.getDatatypeURI());
@@ -161,10 +163,10 @@ public abstract class NodeFactoryUnitTestAbstract extends TestCase {
     assertEquals(TEST_STR1, l1.getLexicalForm());
 
     // createLiteral(String lexicalValue, String languageType)
-    l1 = factory.createLiteral(TEST_STR1, "it");
-    l2 = factory.createLiteral(TEST_STR2, "it");
-    l3 = factory.createLiteral(TEST_STR1, "it");
-    Literal l4 = factory.createLiteral(TEST_STR1);
+    l1 = elementFactory.createLiteral(TEST_STR1, "it");
+    l2 = elementFactory.createLiteral(TEST_STR2, "it");
+    l3 = elementFactory.createLiteral(TEST_STR1, "it");
+    Literal l4 = elementFactory.createLiteral(TEST_STR1);
     assertFalse(l1.equals(l2));
     assertFalse(l1.equals(l4));
     assertEquals(l1, l3);
@@ -174,10 +176,10 @@ public abstract class NodeFactoryUnitTestAbstract extends TestCase {
 
     // createLiteral(String lexicalValue, URI datatypeURI)
     URI type = new URI("xsd:long");
-    l1 = factory.createLiteral("42", type);
-    l2 = factory.createLiteral("0", type);
-    l3 = factory.createLiteral("42", type);
-    l4 = factory.createLiteral("42");
+    l1 = elementFactory.createLiteral("42", type);
+    l2 = elementFactory.createLiteral("0", type);
+    l3 = elementFactory.createLiteral("42", type);
+    l4 = elementFactory.createLiteral("42");
     assertFalse(l1.equals(l2));
     assertFalse(l1.equals(l4));
     assertEquals(l1, l3);
@@ -194,16 +196,16 @@ public abstract class NodeFactoryUnitTestAbstract extends TestCase {
    */
   public void createResources() throws Exception {
     // test blank node creation
-    BlankNode blank1 = factory.createResource();
-    BlankNode blank2 = factory.createResource();
+    BlankNode blank1 = elementFactory.createResource();
+    BlankNode blank2 = elementFactory.createResource();
     assertFalse(blank1.equals(blank2));
 
     // test named node creation
     URI uri1 = new URI("http://namespace#somevalue");
     URI uri2 = new URI("http://namespace#someothervalue");
-    URIReference ref1 = factory.createResource(uri1);
-    URIReference ref2 = factory.createResource(uri2);
-    URIReference ref3 = factory.createResource(uri1);
+    URIReference ref1 = elementFactory.createResource(uri1);
+    URIReference ref2 = elementFactory.createResource(uri2);
+    URIReference ref3 = elementFactory.createResource(uri1);
     assertFalse(ref1.equals(ref2));
     assertEquals(ref1, ref3);
     assertEquals(ref1.getURI(), uri1);
@@ -216,41 +218,41 @@ public abstract class NodeFactoryUnitTestAbstract extends TestCase {
    * @throws Exception if query fails when it should have succeeded
    */
   public void createTriples() throws Exception {
-    BlankNode blank1 = factory.createResource();
-    BlankNode blank2 = factory.createResource();
+    BlankNode blank1 = elementFactory.createResource();
+    BlankNode blank2 = elementFactory.createResource();
 
     URI uri1 = new URI("http://namespace#somevalue");
     URI uri2 = new URI("http://namespace#someothervalue");
     URI uri3 = new URI("http://namespace#yetanothervalue");
-    URIReference ref1 = factory.createResource(uri1);
-    URIReference ref2 = factory.createResource(uri2);
-    URIReference ref3 = factory.createResource(uri3);
+    URIReference ref1 = elementFactory.createResource(uri1);
+    URIReference ref2 = elementFactory.createResource(uri2);
+    URIReference ref3 = elementFactory.createResource(uri3);
 
     final String TEST_STR1 = "A test string";
     final String TEST_STR2 = "Another test string";
-    Literal l1 = factory.createLiteral(TEST_STR1);
-    Literal l2 = factory.createLiteral(TEST_STR2);
+    Literal l1 = elementFactory.createLiteral(TEST_STR1);
+    Literal l2 = elementFactory.createLiteral(TEST_STR2);
 
     // test ordinary creation
-    Triple triple = factory.createTriple(blank1, ref1, blank2);
+    Triple triple = elementFactory.createTriple(blank1, ref1, blank2);
     assertEquals(blank1, triple.getSubject());
     assertEquals(ref1, triple.getPredicate());
     assertEquals(blank2, triple.getObject());
 
     // test inequality, particularly against differing blank nodes
-    Triple triple2 = factory.createTriple(blank2, ref1, blank2);
+    Triple triple2 = elementFactory.createTriple(blank2, ref1, blank2);
     assertFalse(triple.equals(triple2));
 
     // test equality
-    triple2 = factory.createTriple(blank1, ref1, blank2);
+    triple2 = elementFactory.createTriple(blank1, ref1, blank2);
     assertEquals(triple, triple2);
 
     // test all types of statement creation
-    triple = factory.createTriple(blank1, ref1, l1);
-    triple = factory.createTriple(blank1, ref1, l1);
-    triple = factory.createTriple(ref1, ref2, l1);
-    triple = factory.createTriple(ref1, ref2, blank1);
-    triple = factory.createTriple(ref1, ref2, ref3);
+    triple = elementFactory.createTriple(blank1, ref1, l1);
+    triple = elementFactory.createTriple(blank1, ref1, l1);
+    triple = elementFactory.createTriple(ref1, ref2, l1);
+    triple = elementFactory.createTriple(ref1, ref2, blank1);
+    triple = elementFactory.createTriple(ref1, ref2, ref3);
   }
 
 

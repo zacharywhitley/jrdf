@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -59,21 +59,20 @@
 package org.jrdf.graph;
 
 /**
- * Exception from a {@link TripleFactory} operation involving the reificiation
- * of a statement - if the statement already has a reified triple.
+ * Exception from a {@link NodeFactory} operation.
  *
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public class AlreadyReifiedException extends TripleFactoryException {
+public class TripleFactoryException extends Exception {
 
   /**
    * Create an exception.
    *
    * @param message the message to wrap inside this exception.
    */
-  public AlreadyReifiedException(String message) {
+  public TripleFactoryException(String message) {
     super(message);
   }
 
@@ -83,7 +82,7 @@ public class AlreadyReifiedException extends TripleFactoryException {
    * @param message the message to wrap inside this exception.
    * @param cause the original exception to wrap.
    */
-  public AlreadyReifiedException(String message, Throwable cause) {
+  public TripleFactoryException(String message, Throwable cause) {
     super(message, cause);
   }
 
@@ -92,7 +91,7 @@ public class AlreadyReifiedException extends TripleFactoryException {
    *
    * @param cause the original exception to wrap.
    */
-  public AlreadyReifiedException(Throwable cause) {
+  public TripleFactoryException(Throwable cause) {
     super(cause);
   }
 }

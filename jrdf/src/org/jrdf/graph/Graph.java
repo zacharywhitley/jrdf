@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -59,6 +59,8 @@
 package org.jrdf.graph;
 
 import java.io.Serializable;
+import java.util.Iterator;
+
 import org.jrdf.util.ClosableIterator;
 
 /**
@@ -143,12 +145,20 @@ public interface Graph extends Serializable {
   public void add(Triple triple) throws GraphException;
 
   /**
+   * Adds an iterator containing triples into the graph.
+   *
+   * @param triples The triple iterator.
+   * @throws GraphExcepotion If the statements can't be made.
+   */
+  public void add(Iterator triples) throws GraphException;
+
+  /**
    * Removes a triple from the graph.
    *
    * @param subject The subject.
    * @param predicate The predicate.
    * @param object The object.
-   * @throws GraphException If there was an error revoking the statement, for
+   * @throws GraphException If there was an error revoking the statement, For
    *     example if it didn't exist.
    */
   public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
@@ -158,17 +168,32 @@ public interface Graph extends Serializable {
    * Removes a triple from the graph.
    *
    * @param triple The triple.
-   * @throws GraphException If there was an error revoking the statement, for
+   * @throws GraphException If there was an error revoking the statement, For
    *     example if it didn't exist.
    */
   public void remove(Triple triple) throws GraphException;
+
+  /**
+   * Removes an iterator containing triples from the graph.
+   *
+   * @param triples The triple iterator.
+   * @throws GraphExcepotion If the statements can't be revoked.
+   */
+  public void remove(Iterator triples) throws GraphException;
 
   /**
    * Returns the node factory for the graph, or creates one.
    *
    * @return the node factory for the graph, or creates one.
    */
-  public NodeFactory getNodeFactory();
+  public GraphElementFactory getElementFactory();
+
+  /**
+   * Returns the triple factory for the graph, or creates one.
+   *
+   * @return the triple factory for the graph, or creates one.
+   */
+  public TripleFactory getTripleFactory();
 
   /**
    * Returns the number of triples in the graph.

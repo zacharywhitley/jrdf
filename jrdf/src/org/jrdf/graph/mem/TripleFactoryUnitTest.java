@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,43 +56,92 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph;
+package org.jrdf.graph.mem;
+
+import java.io.*;
+
+import org.jrdf.graph.*;
+import org.jrdf.vocabulary.*;
+
+// Third party packages
+import junit.framework.*;
 
 /**
- * Exception from a {@link TripleFactory} operation involving the reificiation
- * of a statement - if the statement already has a reified triple.
+ * Implementation of {@link org.jrdf.graph.AbstractTripleFactoryUnitTest} test
+ * case.
  *
+ * @author Paul Gearon
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public class AlreadyReifiedException extends TripleFactoryException {
+public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
   /**
-   * Create an exception.
+   * Constructs a new test with the given name.
    *
-   * @param message the message to wrap inside this exception.
+   * @param name the name of the test
    */
-  public AlreadyReifiedException(String message) {
-    super(message);
+  public TripleFactoryUnitTest(String name) {
+    super(name);
   }
 
   /**
-   * Create a wrapper exception.
+   * Create a graph implementation.
    *
-   * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
+   * @return A new GraphImplUnitTest.
    */
-  public AlreadyReifiedException(String message, Throwable cause) {
-    super(message, cause);
+  public Graph newGraph() throws Exception {
+    return new GraphImpl();
   }
 
   /**
-   * Create a wrapper exception.
+   * Hook for test runner to obtain a test suite from.
    *
-   * @param cause the original exception to wrap.
+   * @return The test suite
    */
-  public AlreadyReifiedException(Throwable cause) {
-    super(cause);
+  public static Test suite() {
+    TestSuite suite = new TestSuite();
+    suite.addTest(new TripleFactoryUnitTest("reification"));
+    return suite;
+  }
+
+  /**
+   * Default test runner.
+   *
+   * @param args The command line arguments
+   */
+  public static void main(String[] args) throws Exception {
+
+    junit.textui.TestRunner.run(suite());
+  }
+
+  public PredicateNode getReifySubject() throws TripleFactoryException {
+    try {
+      return elementFactory.createResource(RDF.SUBJECT);
+    }
+    catch (GraphElementFactoryException gefe) {
+      throw new TripleFactoryException(gefe);
+    }
+  }
+
+  public PredicateNode getReifyPredicate() throws TripleFactoryException {
+    try {
+      return elementFactory.createResource(RDF.PREDICATE);
+    }
+    catch (GraphElementFactoryException gefe) {
+      throw new TripleFactoryException(gefe);
+    }
+
+  }
+
+  public PredicateNode getReifyObject() throws TripleFactoryException {
+    try {
+      return elementFactory.createResource(RDF.OBJECT);
+    }
+    catch (GraphElementFactoryException gefe) {
+      throw new TripleFactoryException(gefe);
+    }
+
   }
 }
