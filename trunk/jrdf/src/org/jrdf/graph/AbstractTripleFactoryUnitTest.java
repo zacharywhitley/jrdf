@@ -264,22 +264,28 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     assertTrue(graph.contains(u, reifyObject, blank2));
     assertTrue(graph.contains(blank1, ref2, blank2));
 
-    // test for double insertion
-    testCantInsert(blank1, ref1, blank2, this.elementFactory.createResource(uri1));
-    // test for insertion with a different reference
+    // test for double insertion (allowed)
+    tripleFactory.reifyTriple(blank1, ref1, blank2, this.elementFactory.createResource(uri1));
+    assertEquals(9, graph.getNumberOfTriples());
+
+    // test for double insertion (allowed)
+    tripleFactory.reifyTriple(t, elementFactory.createResource(uri2));
+    assertEquals(9, graph.getNumberOfTriples());
+
+    // test for insertion with a different reference (allowed)
     tripleFactory.reifyTriple(blank1, ref1, blank2, this.elementFactory.createResource(uri3));
-    // test for insertion of a new triple with an existing reference
-    testCantInsert(blank2, ref1, blank1, this.elementFactory.createResource(uri1));
-    // test that the graph did not change with the invalid insertions
     assertEquals(13, graph.getNumberOfTriples());
 
-    // test for double insertion
-    testCantInsert(t, uri2);
-    // test for insertion with a different reference
+    // test for insertion of a new triple with an existing reference (disallowed)
+    testCantInsert(blank2, ref1, blank1, this.elementFactory.createResource(uri1));
+    assertEquals(13, graph.getNumberOfTriples());
+
+    // test for insertion with a different reference (disallowed)
     testCantInsert(t, uri3);
+    assertEquals(13, graph.getNumberOfTriples());
+
     // test for insertion of a new triple with an existing reference
     testCantInsert(elementFactory.createTriple(blank2, ref2, blank2), uri2);
-    // test that the graph did not change with the invalid insertions
     assertEquals(13, graph.getNumberOfTriples());
 
     // do it all again for blank nodes

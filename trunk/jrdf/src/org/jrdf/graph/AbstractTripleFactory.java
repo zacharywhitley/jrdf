@@ -150,16 +150,21 @@ public abstract class AbstractTripleFactory implements TripleFactory {
       throws GraphElementFactoryException, AlreadyReifiedException {
 
     // get the nodes used for reification
-    URIReference hasSubject = elementFactory.createResource(RDF.SUBJECT);
-    URIReference hasPredicate = elementFactory.createResource(RDF.PREDICATE);
-    URIReference hasObject = elementFactory.createResource(RDF.OBJECT);
+    PredicateNode hasSubject = elementFactory.createResource(RDF.SUBJECT);
+    PredicateNode hasPredicate = elementFactory.createResource(RDF.PREDICATE);
+    PredicateNode hasObject = elementFactory.createResource(RDF.OBJECT);
     URIReference rdfType = elementFactory.createResource(RDF.TYPE);
     URIReference rdfStatement = elementFactory.createResource(RDF.STATEMENT);
 
     // assert that the statement is not already reified
     try {
 
-      if (graph.contains((SubjectNode) ru, rdfType, rdfStatement)) {
+      // An error if ru already reifies anything but the given s, p, o.
+      if (graph.contains((SubjectNode) ru, rdfType, rdfStatement) &&
+          !(graph.contains((SubjectNode) ru, hasSubject, (ObjectNode) subjectNode) &&
+            graph.contains((SubjectNode) ru, hasPredicate, (ObjectNode) predicateNode) &&
+            graph.contains((SubjectNode) ru, hasObject, objectNode))) {
+
         throw new AlreadyReifiedException("Node: " + ru + " already used in " +
           "reification");
       }
