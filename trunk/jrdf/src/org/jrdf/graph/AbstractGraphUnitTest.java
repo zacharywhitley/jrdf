@@ -364,7 +364,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     assertFalse(newGraph.contains(null, null, null));
 
     // Add a statement
-    newGraph.add(blank1, ref1, blank2);
+    GraphElementFactory newElementFactory = newGraph.getElementFactory(); 
+    blank1 = newElementFactory.createResource();
+    blank2 = newElementFactory.createResource();
+    ref1 = newElementFactory.createResource(uri1);
+    t1 = newElementFactory.createTriple(blank1, ref1, blank2);
+    newGraph.add(t1);
 
     // Check for existance
     assertTrue(newGraph.contains(null, ref1, blank2));
