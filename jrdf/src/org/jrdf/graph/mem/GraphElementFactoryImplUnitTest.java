@@ -134,7 +134,7 @@ public class GraphElementFactoryImplUnitTest
    * @return The default Literal language.
    */
   public String getDefaultLiteralLanguage() {
-    return "";
+    return null;
   }
 
 }
