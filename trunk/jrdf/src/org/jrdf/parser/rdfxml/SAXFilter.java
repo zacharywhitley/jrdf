@@ -246,6 +246,9 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   public void startElement(String namespaceURI, String localName,
       String qName, Attributes attributes) throws SAXException {
 
+    // Reset at start of element.
+    this._charBuf.setLength(0);
+
     if (_deferredElement != null) {
       // The next call could set _parseLiteralMode to true!
       _reportDeferredStartElement();
