@@ -67,12 +67,15 @@ import java.net.URI;
  * it's used as a predicate, because we don't always have access to an RDF
  * Schema that defines the property.
  *
+ * A URI Reference can be any part of an RDF Triple: subject, predicate or
+ * object.
+ *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public interface URIReference extends Resource {
+public interface URIReference extends Subject, Predicate, Object {
 
   /**
    * The {@link URI} identifiying this resource.
@@ -85,7 +88,7 @@ public interface URIReference extends Resource {
    * Indicates whether some other object is "equal to" this one.
    *
    * A URI Reference is equal to another URI Reference if their URIs are equal
-   * to one another.
+   * to one another, character by character.
    */
   public boolean equals(Object obj);
 }

@@ -59,35 +59,14 @@
 package org.jrdf.graph;
 
 /**
- * RDF Statement. An RDF statement as defined in the RDF model and <a
- * href="http://www.w3.org/TR/REC-rdf-syntax"/>syntax specification</a> .
+ * Indicates if an object can be the subject part of an RDF Triple.  Currently,
+ * this is a URI Reference.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public interface Statement {
+public interface Predicate extends Node {
 
-  /**
-   * Obtains the subject of this statement.
-   *
-   * @return an {@link Resource} which is either a {@link BlankNode} or
-   *     {@link URIReference}
-   */
-  public Resource getSubject();
-
-  /**
-   * Obtains the predicate of this statement.
-   *
-   * @return a {@link URIReference}
-   */
-  public URIReference getPredicate();
-
-  /**
-   * Obtains the object of this statement.
-   *
-   * @return a {@link Node}
-   */
-  public Node getObject();
 }

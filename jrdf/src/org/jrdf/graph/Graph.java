@@ -89,8 +89,8 @@ public interface Graph {
    * @return True if the statement is found in the model, otherwise false.
    * @throws GraphException If there was an error accessing the model.
    */
-  public boolean contains(Resource subject, URIReference predicate,
-      Node object) throws GraphException;
+  public boolean contains(Subject subject, Predicate predicate,
+      Object object) throws GraphException;
 
   /**
    * Test the graph for the occurrence of a statement.
@@ -99,7 +99,7 @@ public interface Graph {
    * @return True if the statement is found in the model, otherwise false.
    * @throws GraphException If there was an error accessing the model.
    */
-  public boolean contains(Statement statement) throws GraphException;
+  public boolean contains(Triple statement) throws GraphException;
 
   /**
    * Adds a statement to the graph.
@@ -109,7 +109,7 @@ public interface Graph {
    * @param object The object.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(Resource subject, URIReference predicate, Node object)
+  public void add(Subject subject, Predicate predicate, Object object)
       throws GraphException;
 
   /**
@@ -118,7 +118,7 @@ public interface Graph {
    * @param statement The statement.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(Statement statement) throws GraphException;
+  public void add(Triple statement) throws GraphException;
 
   /**
    * Removes a statement to the graph.
@@ -129,7 +129,7 @@ public interface Graph {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  public void remove(Resource subject, URIReference predicate, Node object)
+  public void remove(Subject subject, Predicate predicate, Object object)
       throws GraphException;
 
   /**
@@ -139,7 +139,7 @@ public interface Graph {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  public void remove(Statement statement) throws GraphException;
+  public void remove(Triple statement) throws GraphException;
 
   /**
    * Returns the node factory for the graph, or creates one.
