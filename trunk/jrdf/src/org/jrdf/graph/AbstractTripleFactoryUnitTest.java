@@ -185,6 +185,20 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   public abstract PredicateNode getReifyObject() throws TripleFactoryException;
 
   /**
+   * Get the node used for rdf:type.
+   *
+   * @return The object rdf:type node.
+   */
+  public abstract PredicateNode getRdfType() throws TripleFactoryException;
+
+  /**
+   * Get the node used for rdf:Statement.
+   *
+   * @return The object rdf:statement node.
+   */
+  public abstract ObjectNode getRdfStatement() throws TripleFactoryException;
+
+  /**
    * Create a concrete Collection.
    *
    * @return the new collection.
@@ -223,12 +237,15 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     PredicateNode reifySubject = getReifySubject();
     PredicateNode reifyPredicate = getReifyPredicate();
     PredicateNode reifyObject = getReifyObject();
+    PredicateNode rdfType = getRdfType();
+    ObjectNode rdfStatement = getRdfStatement();
     assertTrue(graph.isEmpty());
 
     URIReference u = this.elementFactory.createResource(uri1);
     tripleFactory.reifyTriple(blank1, ref1, blank2, u);
     assertEquals(uri1, u.getURI());
-    assertEquals(graph.getNumberOfTriples(), 4);
+    assertEquals(5, graph.getNumberOfTriples());
+    assertTrue(graph.contains(u, rdfType, rdfStatement));
     assertTrue(graph.contains(u, reifySubject, blank1));
     assertTrue(graph.contains(u, reifyPredicate, ref1));
     assertTrue(graph.contains(u, reifyObject, blank2));
@@ -238,7 +255,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     u = this.elementFactory.createResource(uri2);
     tripleFactory.reifyTriple(t, u);
     assertEquals(uri2, u.getURI());
-    assertEquals(graph.getNumberOfTriples(), 8);
+    assertEquals(10, graph.getNumberOfTriples());
+    assertTrue(graph.contains(u, rdfType, rdfStatement));
     assertTrue(graph.contains(u, reifySubject, blank1));
     assertTrue(graph.contains(u, reifyPredicate, ref2));
     assertTrue(graph.contains(u, reifyObject, blank2));
@@ -251,7 +269,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for insertion of a new triple with an existing reference
     testCantInsert(blank2, ref1, blank1, this.elementFactory.createResource(uri1));
     // test that the graph did not change with the invalid insertions
-    assertEquals(graph.getNumberOfTriples(), 8);
+    assertEquals(10, graph.getNumberOfTriples());
 
     // test for double insertion
     testCantInsert(t, uri2);
@@ -260,13 +278,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for insertion of a new triple with an existing reference
     testCantInsert(elementFactory.createTriple(blank2, ref2, blank2), uri2);
     // test that the graph did not change with the invalid insertions
-    assertEquals(graph.getNumberOfTriples(), 8);
+    assertEquals(10, graph.getNumberOfTriples());
 
     // do it all again for blank nodes
 
     BlankNode b = this.elementFactory.createResource();
     tripleFactory.reifyTriple(blank1, ref1, l1, b);
-    assertEquals(graph.getNumberOfTriples(), 12);
+    assertEquals(15, graph.getNumberOfTriples());
+    assertTrue(graph.contains(b, rdfType, rdfStatement));
     assertTrue(graph.contains(b, reifySubject, blank1));
     assertTrue(graph.contains(b, reifyPredicate, ref1));
     assertTrue(graph.contains(b, reifyObject, l1));
@@ -275,7 +294,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     t = elementFactory.createTriple(blank1, ref2, l2);
     b = this.elementFactory.createResource();
     tripleFactory.reifyTriple(t, b);
-    assertEquals(graph.getNumberOfTriples(), 16);
+    assertEquals(20, graph.getNumberOfTriples());
+    assertTrue(graph.contains(b, rdfType, rdfStatement));
     assertTrue(graph.contains(b, reifySubject, blank1));
     assertTrue(graph.contains(b, reifyPredicate, ref2));
     assertTrue(graph.contains(b, reifyObject, l2));
@@ -286,14 +306,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for insertion with a a used blank reference
     testCantInsert(blank1, ref3, blank2, u);
     // test that the graph did not change with the invalid insertions
-    assertEquals(graph.getNumberOfTriples(), 16);
+    assertEquals(20, graph.getNumberOfTriples());
 
     // test for double insertion
     testCantInsert(t);
     // test for insertion with a a used blank reference
     testCantInsert(elementFactory.createTriple(blank1, ref3, blank2), u.getURI());
     // test that the graph did not change with the invalid insertions
-    assertEquals(graph.getNumberOfTriples(), 16);
+    assertEquals(20, graph.getNumberOfTriples());
   }
 
   /**
