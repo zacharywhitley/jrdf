@@ -1,16 +1,6 @@
 /*  Sesame - Storage and Querying architecture for RDF and RDF Schema
  *  Copyright (C) 2001-2004 Aduna
- *
- *  Contact:
- *  	Aduna
- *  	Prinses Julianaplein 14 b
- *  	3817 CS Amersfoort
- *  	The Netherlands
- *  	tel. +33 (0)33 465 99 87
- *  	fax. +33 (0)33 465 99 87
- *
- *  	http://aduna.biz/
- *  	http://www.openrdf.org/
+ *  Copyright (C) 2005 Andrew Newman
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -446,12 +436,13 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
   void startElement(String namespaceURI, String localName, String qName,
       Atts atts) throws SAXException {
     if (_topIsProperty()) {
+
       // this element represents the subject and/or object of a statement
       _processNodeElt(namespaceURI, localName, qName, atts, false);
     }
     else {
-      // this element represents a property
 
+      // this element represents a property
       _processPropertyElt(namespaceURI, localName, qName, atts, false);
     }
   }
@@ -512,7 +503,6 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
     PropertyElement propEl = (PropertyElement) _peekStack(0);
     String datatype = propEl.getDatatype();
-
     Literal lit = _createLiteral(text, _xmlLang, datatype);
 
     NodeElement subject = (NodeElement) _peekStack(1);

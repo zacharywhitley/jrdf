@@ -1,16 +1,6 @@
 /*  Sesame - Storage and Querying architecture for RDF and RDF Schema
  *  Copyright (C) 2001-2004 Aduna
- *
- *  Contact:
- *  	Aduna
- *  	Prinses Julianaplein 14 b
- *  	3817 CS Amersfoort
- *  	The Netherlands
- *  	tel. +33 (0)33 465 99 87
- *  	fax. +33 (0)33 465 99 87
- *
- *  	http://aduna.biz/
- *  	http://www.openrdf.org/
+ *  Copyright (C) 2005 Andrew Newman
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -26,7 +16,6 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package org.jrdf.parser.rdfxml;
 
 import java.io.*;
@@ -48,7 +37,7 @@ import org.xml.sax.*;
  * itself. This filter does things like combining a call to
  * startElement() that is directly followed by a call to
  * endElement() to a single call to emptyElement().
- **/
+ */
 class SAXFilter implements org.xml.sax.ContentHandler {
 
   /**
@@ -428,12 +417,12 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
     else {
       // Check if any character data has been collected in the _charBuf
-      String s = _charBuf.toString().trim();
-      if (s.length() > 0) {
-        _rdfParser.text(s);
+      boolean literalValue = _charBuf.toString().trim().length() > 0;
+      if (literalValue) {
+        _rdfParser.text(_charBuf.toString());
       }
-      _charBuf.setLength(0);
 
+      _charBuf.setLength(0);
       _elInfoStack.pop();
       _rdfContextStackHeight--;
 
@@ -456,6 +445,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         _charBuf.append(_os.toString());
       }
       else {
+        _charBuf.setLength(0);
         _charBuf.append(ch, start, length);
       }
 
