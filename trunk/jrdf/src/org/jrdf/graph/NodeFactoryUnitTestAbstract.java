@@ -112,15 +112,6 @@ public abstract class NodeFactoryUnitTestAbstract extends TestCase {
     return null;
   }
 
-  /**
-   * Default text runner.
-   *
-   * @param args The command line arguments
-   */
-  public static void main(String[] args) {
-    junit.textui.TestRunner.run(suite());
-  }
-
   //
   // abstract methods specific to the implementation.
   //

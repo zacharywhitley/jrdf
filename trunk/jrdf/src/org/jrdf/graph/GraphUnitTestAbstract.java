@@ -142,15 +142,6 @@ public abstract class GraphUnitTestAbstract extends TestCase {
     return null;
   }
 
-  /**
-   * Default text runner.
-   *
-   * @param args The command line arguments
-   */
-  public static void main(String[] args) {
-    junit.textui.TestRunner.run(suite());
-  }
-
   //
   // implementation interfaces
   //
