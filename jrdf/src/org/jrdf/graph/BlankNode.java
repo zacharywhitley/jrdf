@@ -69,7 +69,7 @@ package org.jrdf.graph;
  *
  * @version $Revision$
  */
-public interface BlankNode extends Subject, Object {
+public interface BlankNode extends SubjectNode, ObjectNode {
 
   /**
    * While the internal structure of a BlankNode is not defined equality between
@@ -79,5 +79,5 @@ public interface BlankNode extends Subject, Object {
    * @param obj the reference object with which to compare.
    * @return true if this object is the same as the obj argument; false otherwise.
    */
-  public boolean equals(java.lang.Object obj);
+  public boolean equals(Object obj);
 }

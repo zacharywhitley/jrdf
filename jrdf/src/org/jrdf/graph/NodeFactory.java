@@ -140,6 +140,6 @@ public interface NodeFactory {
    * @param object The object of the statement.
    * @return the newly created triple object.
    */
-  public Triple createTriple(Subject subject, Predicate predicate,
-      Object object);
+  public Triple createTriple(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object);
 }
