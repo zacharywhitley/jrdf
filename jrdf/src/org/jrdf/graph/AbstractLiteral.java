@@ -93,18 +93,23 @@ public abstract class AbstractLiteral implements Literal {
   protected URI datatypeURI = null;
 
   /**
-   * A regular expression to pick out embedded quotation marks.
+   * A regular expression to pick out characters needing escape from Unicode to
+   * ASCII.
    *
    * This is used by the {@link #escape} method.
    */
-  private static final Pattern quotePattern = Pattern.compile("\\x22");
+  private static final Pattern pattern = Pattern.compile(
+    "\\p{InHighSurrogates}\\p{InLowSurrogates}"+  // surrogate pairs
+    "|"+                                          // ...or...
+    "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]"         // all other escaped chars
+  );
 
   /**
-   * The matcher instance used to escape embedded quotation marks.
+   * The matcher instance used to escape characters from Unicode to ASCII.
    *
    * This is lazily initialized and used by the {@link #escape} method.
    */
-  private transient Matcher quoteMatcher;
+  private transient Matcher matcher;
 
   /**
    * Obtain the text of this literal.
@@ -116,11 +121,12 @@ public abstract class AbstractLiteral implements Literal {
   }
 
   /**
-   * Returns the language code of the literal, or <code>null</code> if no
-   *     language specified.
+   * Returns the language code of the literal.
    *
-   * @return the language code of the literal, or <code>null</code> if no
-   *     language specified.
+   * When no language is specified, this field contains a zero-length
+   * {@link String} rather than being <code>null</code>.
+   *
+   * @return the language code of the literal, never <code>null</code>
    */
   public String getLanguage() {
     return language;
@@ -136,11 +142,11 @@ public abstract class AbstractLiteral implements Literal {
   }
 
   /**
-   * Returns the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for an untyped node.
+   * Returns the URI of the RDF datatype of this literal, or <code>null</code>
+   * if this literal is untyped.
    *
-   * @return the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for an untyped node.
+   * @return the URI of the RDF datatype of this literal, or <code>null</code>
+   *   if this literal is untyped
    */
   public URI getDatatypeURI() {
     return datatypeURI;
@@ -194,12 +200,17 @@ public abstract class AbstractLiteral implements Literal {
   }
 
   /**
-   * Provide a legible representation of a literal, following N3's format.
+   * Provide a legible representation of a literal, following the N-Triples
+   * format defined in <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a> of the <a href="http://www.w3.org/">
+   * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
+   * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
+   * Cases</a> Recommendation.
    *
-   * Currently, quotes within the literal aren't correctly escaped.
+   * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
+   * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
+   * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.
    *
-   * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
-   *     characters.
+   * @return this instance in N-Triples format
    */
   public String toString() {
     StringBuffer buffer =
@@ -218,22 +229,87 @@ public abstract class AbstractLiteral implements Literal {
 
   /**
    * @param string  a string to escape, never <code>null</code>
-   * @return a version of the <var>string</var> with quotes escaped using a
-   *   backslash (\).
+   * @return a version of the <var>string</var> with N-Triples escapes applied
    */
   private String escape(String string) {
     assert string != null;
 
-    if (quoteMatcher == null) {
-      // Lazily initialize the quoteMatcher
-      quoteMatcher = quotePattern.matcher(string);
+    // Obtain a fresh matcher
+    if (matcher == null) {
+      // Lazily initialize the matcher
+      matcher = pattern.matcher(string);
     }
     else {
-      // Reuse the existing quoteMatcher
-      quoteMatcher.reset(string);
+      // Reuse the existing matcher
+      matcher.reset(string);
     }
-    assert quoteMatcher != null;
+    assert matcher != null;
 
-    return quoteMatcher.replaceAll("\\\\\\\"");
+    // Try to short-circuit the whole process -- maybe nothing needs escaping?
+    if (!matcher.find()) {
+      return string;
+    }
+
+    // Perform escape character substitutions on each match found by the
+    // matcher, accumulating the escaped text into a stringBuffer
+    StringBuffer stringBuffer = new StringBuffer();
+    do {
+      // The escape text with which to replace the current match
+      String escapeString;
+
+      // Depending of the character sequence we're escaping, determine an
+      // appropriate replacement
+      String groupString = matcher.group();
+      switch (groupString.length()) {
+      case 1:  // 16-bit characters requiring escaping
+        switch (groupString.charAt(0)) {
+        case '\t': escapeString = "\\\\t"; break;     // tab
+        case '\n': escapeString = "\\\\n"; break;     // newline
+        case '\r': escapeString = "\\\\r"; break;     // carriage return
+        case '"':  escapeString = "\\\\\\\""; break;  // quote
+        case '\\': escapeString = "\\\\\\\\"; break;  // backslash
+
+        default:  // other characters use 4-digit hex escapes
+          String hexString =
+            Integer.toHexString(groupString.charAt(0)).toUpperCase();
+          escapeString =
+            "\\\\u0000".substring(0, 7-hexString.length()) + hexString;
+
+          assert escapeString.length() == 7;
+          assert escapeString.startsWith("\\\\u");
+          break;
+        }
+        break;
+
+      case 2:  // surrogate pairs are represented as 8-digit hex escapes
+        assert Character.getType(groupString.charAt(0)) == Character.SURROGATE;
+        assert Character.getType(groupString.charAt(1)) == Character.SURROGATE;
+
+        String hexString = Integer.toHexString(
+          ((groupString.charAt(0) & 0x3FF) << 10) +  // high surrogate
+          (groupString.charAt(1) & 0x3FF) +          // low surrogate
+          0x10000                                    // base codepoint U+10000
+        ).toUpperCase();
+        escapeString =
+          "\\\\U00000000".substring(0, 11-hexString.length()) + hexString;
+
+        assert escapeString.length() == 11;
+        assert escapeString.startsWith("\\\\U000");
+        break;
+
+      default:
+        throw new Error("Escape sequence "+groupString+" has no handler");
+      }
+      assert escapeString != null;
+
+      // Having determined an appropriate escapeString, add it to the
+      // stringBuffer
+      matcher.appendReplacement(stringBuffer, escapeString);
+    } while (matcher.find());
+
+    // Finish off by appending any remaining text that didn't require escaping,
+    // and return the assembled buffer
+    matcher.appendTail(stringBuffer);
+    return stringBuffer.toString();
   }
 }
