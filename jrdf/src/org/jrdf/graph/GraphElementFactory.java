@@ -62,7 +62,7 @@ package org.jrdf.graph;
 import java.net.URI;
 
 /**
- * A Graph Element Factory is a class which create the various components of a
+ * A Graph Element Factory is a class which creates the various components of a
  * graph including: resources, literals and triples.  It is generally tied to a
  * specific graph.
  *
@@ -75,7 +75,6 @@ public interface GraphElementFactory {
   /**
    * Create a blank nodes that is associated with a specific graph.
    *
-   * @return A new blank node within the graph.
    * @return the newly created blank node value.
    */
   public BlankNode createResource() throws GraphElementFactoryException;
