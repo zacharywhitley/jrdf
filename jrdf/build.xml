@@ -36,6 +36,7 @@
       <delete dir="${classes.dir}"/>
       <mkdir dir="${classes.dir}"/>
       <javac source="1.4"
+             classpath="${lib.dir}/junit-3.8.1.jar"
              srcdir="${src.dir}"
              destdir="${classes.dir}"
              debug="${debug}"
