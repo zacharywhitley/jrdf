@@ -183,13 +183,8 @@ public abstract class AbstractLiteral implements Literal {
           // If datatype is null then test language equality.
           if ((getDatatypeURI() == null) && (tmpLiteral.getDatatypeURI() == null)) {
 
-            // If languages are both null then equal.
-            if ((getLanguage() == null) &&
-                (tmpLiteral.getLanguage() == null)) {
-              returnValue = true;
-            }
             // If languages are equal by value then its equal.
-            else if ((getLanguage().equals(tmpLiteral.getLanguage()))) {
+            if ((String.valueOf(getLanguage()).equals(String.valueOf(tmpLiteral.getLanguage())))) {
               returnValue = true;
             }
           }
