@@ -315,7 +315,7 @@ public abstract class AbstractLiteral implements Literal {
    */
   public String getEscapedForm() {
     String escaped = escape(getLexicalForm());
-    return "\"" + escaped + appendType() + "\"";
+    return "\"" + escaped + "\"" + appendType();
   }
 
   /**
@@ -324,7 +324,7 @@ public abstract class AbstractLiteral implements Literal {
    * @return the lexical form.
    */
   public String toString() {
-    return getLexicalForm() + appendType();
+    return "\"" + getLexicalForm() + "\"" + appendType();
   }
 
   /**
