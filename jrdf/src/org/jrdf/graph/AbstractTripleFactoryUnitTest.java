@@ -191,6 +191,27 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
    */
   public abstract Collection createCollection(ObjectNode[] objects);
 
+  /**
+   * Create a concrete alternative
+   *
+   * @return the new alternative.
+   */
+  public abstract Alternative createAlternative(ObjectNode[] objects);
+
+  /**
+   * Create a concrete bag
+   *
+   * @return the new bag.
+   */
+  public abstract Bag createBag(ObjectNode[] objects);
+
+  /**
+   * Create a concrete sequence
+   *
+   * @return the new sequence.
+   */
+  public abstract Sequence createSequence(ObjectNode[] objects);
+
   //
   // Test cases
   //
@@ -358,6 +379,162 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     }
 
     assertTrue("Should have one rdf:rest with rdf:nil statements", counter == 1);
+  }
+
+  /**
+   * Test altnerative
+   */
+  public void testAlternative() throws Exception {
+
+    // Ensure graph is empty before starting.
+    assertTrue(graph.isEmpty());
+
+    // Create initial statement
+    SubjectNode s = (SubjectNode) elementFactory.createResource(
+        new URI("http://example.org/favourite-bananas"));
+
+    // Create collection object.
+    ObjectNode[] fruit = new ObjectNode[4];
+    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/banana"));
+    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/cavendish"));
+    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/ladyfinger"));
+    fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/banana"));
+
+    PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
+        RDF.TYPE);
+    ObjectNode rdfAlternative = (ObjectNode) elementFactory.createResource(
+        RDF.ALT);
+
+    // Create collection and add
+    Alternative alt = createAlternative(fruit);
+
+    // Add the collection to the graph.
+    tripleFactory.addAlternative(s, alt);
+
+    // Check we've inserted it correctly.
+    assertEquals("Should have seven statements", 4, graph.getNumberOfTriples());
+    assertTrue("Should have statement", graph.contains(s, rdfType, rdfAlternative));
+    assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
+    assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
+    assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
+    assertTrue("Should have statement", graph.contains(s, null, fruit[3]));
+
+    // Check that it doesn't allow duplicates.
+    ClosableIterator iter = graph.find(s, null, fruit[0]);
+    int count = 0;
+    while (iter.hasNext()) {
+      iter.next();
+      count++;
+    }
+    assertTrue("Should have only the same statements: " + fruit[0], count == 1);
+  }
+
+  /**
+   * Test altnerative
+   */
+  public void testBag() throws Exception {
+
+    // Ensure graph is empty before starting.
+    assertTrue(graph.isEmpty());
+
+    // Create initial statement
+    SubjectNode s = (SubjectNode) elementFactory.createResource(
+        new URI("http://example.org/favourite-fruit"));
+
+    // Create collection object.
+    ObjectNode[] fruit = new ObjectNode[5];
+    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/banana"));
+    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/kiwi"));
+    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/pineapple"));
+    fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/pineapple"));
+    fruit[4] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/banana"));
+
+    PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
+        RDF.TYPE);
+    ObjectNode rdfBag = (ObjectNode) elementFactory.createResource(
+        RDF.BAG);
+
+    // Create collection and add
+    Bag bag = createBag(fruit);
+
+    // Add the collection to the graph.
+    tripleFactory.addBag(s, bag);
+
+    // Check we've inserted it correctly.
+    assertEquals("Should have seven statements", 6, graph.getNumberOfTriples());
+    assertTrue("Should have statement", graph.contains(s, rdfType, rdfBag));
+    assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
+    assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
+    assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
+
+    // Check that it allows duplicates.
+    ClosableIterator iter = graph.find(s, null, fruit[2]);
+    int count = 0;
+    while (iter.hasNext()) {
+      iter.next();
+      count++;
+    }
+    assertTrue("Should have two of the same statements: " + fruit[2], count == 2);
+  }
+
+  /**
+   * Test altnerative
+   */
+  public void testSequence() throws Exception {
+
+    // Ensure graph is empty before starting.
+    assertTrue(graph.isEmpty());
+
+    // Create initial statement
+    SubjectNode s = (SubjectNode) elementFactory.createResource(
+        new URI("http://example.org/favourite-fruit"));
+
+    // Create collection object.
+    ObjectNode[] fruit = new ObjectNode[4];
+    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/banana"));
+    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/kiwi"));
+    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/pineapple"));
+    fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/kiwi"));
+
+    PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
+        RDF.TYPE);
+    PredicateNode rdfOne = (PredicateNode) elementFactory.createResource(
+        new URI(RDF.baseURI + "_1"));
+    PredicateNode rdfTwo = (PredicateNode) elementFactory.createResource(
+        new URI(RDF.baseURI + "_2"));
+    PredicateNode rdfThree = (PredicateNode) elementFactory.createResource(
+        new URI(RDF.baseURI + "_3"));
+    PredicateNode rdfFour = (PredicateNode) elementFactory.createResource(
+        new URI(RDF.baseURI + "_4"));
+    ObjectNode rdfSequence = (ObjectNode) elementFactory.createResource(
+        RDF.SEQ);
+
+    // Create collection and add
+    Sequence sequence = createSequence(fruit);
+
+    // Add the collection to the graph.
+    tripleFactory.addSequence(s, sequence);
+
+    // Check we've inserted it correctly.
+    assertEquals("Should have seven statements", 5, graph.getNumberOfTriples());
+    assertTrue("Should have statement", graph.contains(s, rdfType, rdfSequence));
+    assertTrue("Should have statement", graph.contains(s, rdfOne, fruit[0]));
+    assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit[1]));
+    assertTrue("Should have statement", graph.contains(s, rdfThree, fruit[2]));
+    assertTrue("Should have statement", graph.contains(s, rdfFour, fruit[3]));
   }
 
   /**
