@@ -75,14 +75,6 @@ import java.io.Serializable;
 public interface Graph extends Serializable {
 
   /**
-   * Namespace prefix. This is defined in <a
-   * href="http://www.w3.org/TR/rdf-syntax-grammar/">&sect;5.1 of <cite>RDF/XML
-   * Syntax Specification (Revised)</cite> </a> .
-   */
-  public final static String NAMESPACE =
-      "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-
-  /**
    * Test the graph for the occurrence of a statement.  A null value for any
    * of the parts of a triple are treated as unconstrained, any values will be
    * returned.
