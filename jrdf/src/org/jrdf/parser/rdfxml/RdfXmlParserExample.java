@@ -10,9 +10,8 @@ import org.jrdf.parser.*;
 import org.jrdf.parser.rdfxml.*;
 
 public class RdfXmlParserExample {
-
   public static void main(String[] args) throws Exception {
-    String baseURI = "http://morenews.blogspot.com/rss/morenews.xml";
+    String baseURI = "http://slashdot.org/index.rss";
     URL url = new URL(baseURI);
     InputStream is = url.openStream();
     final Graph jrdfMem = new GraphImpl();
@@ -31,12 +30,10 @@ public class RdfXmlParserExample {
     );
 
     parser.parse(is, baseURI);
-    System.err.println("Got: " + jrdfMem.getNumberOfTriples());
     Iterator iter = jrdfMem.find(null, null, null);
     while (iter.hasNext()) {
       System.err.println("Graph: " + iter.next());
     }
-
     is.close();
   }
 }
