@@ -328,10 +328,10 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     if (!(node instanceof BlankNode)) {
 
       if (node instanceof Literal) {
-        stringPool.put(((Literal) node).getEscapedForm(), node);
+        stringPool.put(((Literal) node).getEscapedForm(), node.getId());
       }
       else {
-        stringPool.put(node.toString(), node);
+        stringPool.put(node.toString(), node.getId());
       }
     }
 
