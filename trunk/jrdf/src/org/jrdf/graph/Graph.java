@@ -152,4 +152,11 @@ public interface Graph extends Serializable {
    * @return the number of triples in the graph.
    */
   public long getNumberOfTriples();
+
+  /**
+   * Returns true if the graph is empty i.e. the number of triples is 0.
+   *
+   * @return true if the graph is empty i.e. the number of triples is 0.
+   */
+  public boolean isEmpty();
 }
