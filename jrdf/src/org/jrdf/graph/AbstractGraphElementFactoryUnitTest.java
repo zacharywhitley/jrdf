@@ -74,7 +74,7 @@ import junit.framework.*;
  * {@link #newGraph}, {@link #getDefaultLiteralType} and
  * {@link #getDefaultLiteralLanguage} methods.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */

@@ -64,7 +64,7 @@ import java.io.Serializable;
  * Memory node.  This is an additional interface for nodes so they can be accessed by id.
  * Extends {@link java.io.Serializable} so all nodes will be serializable.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */

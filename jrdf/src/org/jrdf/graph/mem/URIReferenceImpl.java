@@ -74,7 +74,7 @@ import org.jrdf.graph.AbstractURIReference;
  * A URI Reference can be any part of an RDF Triple: subject, predicate or
  * object.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */

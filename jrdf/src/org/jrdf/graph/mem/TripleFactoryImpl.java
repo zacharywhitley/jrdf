@@ -67,7 +67,7 @@ import java.net.URISyntaxException;
 /**
  * A Triple Factory which is tied to a specific instance of GraphImpl.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */

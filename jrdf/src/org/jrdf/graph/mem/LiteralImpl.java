@@ -67,7 +67,7 @@ import org.jrdf.graph.*;
 /**
  * RDF literal node.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */
