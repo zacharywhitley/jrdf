@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 import java.io.Serializable;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * An RDF Graph. As defined by the
@@ -79,9 +80,9 @@ public interface Graph extends Serializable {
    * of the parts of a triple are treated as unconstrained, any values will be
    * returned.
    *
-   * @param subject The subject to find or null for any subject.
-   * @param predicate The predicate to find or null for any predicate.
-   * @param object The object to find or null for any object.
+   * @param subject The subject to find or null to indicate any subject.
+   * @param predicate The predicate to find or null to indicate any predicate.
+   * @param object The object to find or null to indicate any object.
    * @return True if the statement is found in the model, otherwise false.
    * @throws GraphException If there was an error accessing the graph.
    */
@@ -98,6 +99,29 @@ public interface Graph extends Serializable {
    * @throws GraphException If there was an error accessing the graph.
    */
   public boolean contains(Triple triple) throws GraphException;
+
+  /**
+   * Returns an iterator to a set of statements that match a given subject,
+   * predicate and object.  A null value for any of the parts of a triple are
+   * treated as unconstrained, any values will be returned.
+   *
+   * @param subject The subject to find or null to indicate any subject.
+   * @param predicate The predicate to find or null to indicate any predicate.
+   * @param object ObjectNode The object to find or null to indicate any object.
+   * @throws GraphException If there was an error accessing the graph.
+   */
+  public ClosableIterator find(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object) throws GraphException;
+
+  /**
+   * Returns an iterator to a set of statements that match a given subject,
+   * predicate and object.  A null value for any of the parts of a triple are
+   * treated as unconstrained, any values will be returned.
+   *
+   * @param triple The triple to find.
+   * @throws GraphException If there was an error accessing the graph.
+   */
+  public ClosableIterator find(Triple triple) throws GraphException;
 
   /**
    * Adds a triple to the graph.
