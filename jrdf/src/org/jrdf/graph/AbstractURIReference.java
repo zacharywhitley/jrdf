@@ -72,6 +72,14 @@ import java.net.URI;
 public abstract class AbstractURIReference implements URIReference {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 5692030014203936562L;
+
+  /**
    * The URI of the node.
    */
   protected URI uri;

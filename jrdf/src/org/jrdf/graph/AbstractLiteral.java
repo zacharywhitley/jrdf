@@ -73,6 +73,14 @@ import java.util.regex.*;
 public abstract class AbstractLiteral implements Literal {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 2589574733270452078L;
+
+  /**
    * The lexical form of the literal.
    */
   protected String lexicalForm = null;

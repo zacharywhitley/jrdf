@@ -69,7 +69,16 @@ import java.util.*;
  *
  * @version $Revision$
  */
-public abstract class Vocabulary implements Serializable {
+public abstract class Vocabulary
+    implements Serializable {
+
+  /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = -3602059929452647818L;
 
   /**
    * The set of URI references.

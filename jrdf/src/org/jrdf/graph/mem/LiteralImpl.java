@@ -74,6 +74,14 @@ import org.jrdf.graph.*;
 public class LiteralImpl extends AbstractLiteral implements MemNode {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = -6515350357124372641L;
+
+  /**
    * The internal identifier for this node.
    */
   private Long id;

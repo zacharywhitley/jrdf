@@ -69,7 +69,16 @@ import java.util.*;
  *
  * @version $Revision$
  */
-public class RDF extends Vocabulary {
+public class RDF
+    extends Vocabulary {
+
+  /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 5974585938932893808L;
 
   /**
    * The URI of the RDF name space.

@@ -75,6 +75,14 @@ public class CollectionImpl extends LinkedList
     implements Collection {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = -420874713471604278L;
+
+  /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */

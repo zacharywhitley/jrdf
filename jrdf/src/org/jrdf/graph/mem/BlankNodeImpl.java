@@ -71,21 +71,35 @@ import org.jrdf.graph.AbstractBlankNode;
  *
  * @version $Revision$
  */
-public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
+public class BlankNodeImpl
+    extends AbstractBlankNode
+    implements MemNode {
+
+  /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 1573129076314000518L;
 
   /** The internal identifier for this node. */
   private Long id;
 
+  /** Globally Unique Identifier. */
+  private String uid;
 
   /**
-   * The constructor for this node.  Package scope so that only NodeFactory can call it.
+   * The constructor for this node.  Package scope so that only NodeFactory and
+   * static methods can call it.
    *
    * @param id The id to be used for this node.
+   * @param uid String Globally Unique Identifier for external communication.
    */
-  BlankNodeImpl(Long id) {
+  BlankNodeImpl(Long id, String uid) {
     this.id = id;
+    this.uid = uid;
   }
-
 
   /**
    * Retrieves an internal identifier for this node.
@@ -96,6 +110,14 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
     return id;
   }
 
+  /**
+   * Retrieves a Globally Unique Identifier for this node.
+   *
+   * @return A global String identifier for this node.
+   */
+  public String getUID() {
+    return uid;
+  }
 
   /**
    * Returns a hash-code value for this BlankNode.  While the implementation
@@ -106,7 +128,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
    * @return a hash-code value for this blank node.
    */
   public int hashCode() {
-    return id.hashCode();
+    return id.hashCode() ^ uid.hashCode();
   }
 
   /**
@@ -129,9 +151,45 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
       return false;
     }
 
-    // Cast and check for equality by value.
-    MemNode tmpNode = (MemNode) obj;
-    return tmpNode.getId().equals(id);
+    // Cast and check for equality by value. (same class)
+    BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
+    return tmpNode.getId().equals(id) && tmpNode.getUID().equals(uid);
+  }
+
+  /**
+   * Returns the String value of this BlankNode as:
+   * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69)
+   *
+   * @return String
+   */
+  public String toString() {
+
+    return uid + "#" + id;
+  }
+
+  /**
+   * Parses a String in the format of:
+   * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69) and creates a new
+   * BlankNodeImpl from it.
+   *
+   * Should only be applied to a value previously returned by toString()
+   *
+   * @param nodeString String previously returned by toString()
+   * @return BlankNodeImpl
+   * @throws IllegalArgumentException
+   */
+  public static BlankNodeImpl valueOf(String nodeString) throws
+      IllegalArgumentException {
+
+    String [] split = nodeString.split("#");
+
+    //validate
+    if ((split == null)||(split.length < 2)) {
+      throw new IllegalArgumentException("String: " + nodeString + " is not " +
+                                         "of the format: uid#id");
+    }
+
+    return new BlankNodeImpl(Long.valueOf(split[1]), split[0]);
   }
 
 }
