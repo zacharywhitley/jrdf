@@ -64,7 +64,7 @@ import java.util.HashMap;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-
+import org.jrdf.parser.ParserBlankNodeFactory;
 
 /**
  * A factory for BlankNodes that uses a Map to keep track of the BlankNodes

@@ -44,7 +44,7 @@ import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.RDFS;
 import org.xml.sax.*;
 
-import org.jrdf.parser.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 
 /**
  * A parser for XML-serialized RDF. This parser operates directly
