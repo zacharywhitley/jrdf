@@ -35,7 +35,8 @@
     <target name="compile">
       <delete dir="${classes.dir}"/>
       <mkdir dir="${classes.dir}"/>
-      <javac srcdir="${src.dir}"
+      <javac source="1.4"
+             srcdir="${src.dir}"
              destdir="${classes.dir}"
              debug="${debug}"
              debuglevel="${debuglevel}"
