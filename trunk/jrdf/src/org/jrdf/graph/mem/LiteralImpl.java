@@ -97,7 +97,7 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
 
     // Initialize fields
     this.lexicalForm = lexicalForm;
-    this.language = "";
+    this.language = null;
     this.datatypeURI = null;
     thisString = super.toString();
   }
@@ -149,7 +149,7 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
 
     // Initialize fields
     this.lexicalForm = lexicalForm;
-    this.language = "";
+    this.language = null;
     this.datatypeURI = datatype;
     thisString = super.toString();
   }
