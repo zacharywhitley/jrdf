@@ -324,7 +324,17 @@ public abstract class AbstractLiteral implements Literal {
    * @return the lexical form.
    */
   public String toString() {
-    return "\"" + getLexicalForm() + "\"" + appendType();
+    return "\"" + getEscapedLexicalForm() + "\"" + appendType();
+  }
+
+  /**
+   * Returns an escaped lexical form where double quotes and backslashes are
+   * escaped.
+   *
+   * @return String the lexical form.
+   */
+  public String getEscapedLexicalForm() {
+    return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"", "\\\\\\\"");
   }
 
   /**
