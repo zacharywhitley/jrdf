@@ -1,3 +1,13 @@
+JRDF Release 0.3.2
+==================
+* Bug fixes to the in memory implementation including
+serialization/deserialization (Bug 1020911) and Literal equality (Bug 1016576).
+* All nodes for the in memory implementation are now localized (RFE 1016579)
+allowing any JRDF object to be added/removed or used in a find/contains. 
+This should be the semantics for all implementations of Graph.
+* The iterators returned by the in memory Graph implementation can now have
+remove called on them (RFE 1027563).
+
 JRDF Release 0.3.1
 ==================
 * Bug fixes to the in memory implementation: creating the same Literal by
