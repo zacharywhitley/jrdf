@@ -163,8 +163,7 @@ public interface NodeFactory {
    */
   public URIReference reifyTriple(SubjectNode subjectNode,
       PredicateNode predicateNode, ObjectNode objectNode, URI reifiedTripleURI)
-      throws NodeFactoryException,
-      AlreadyReifiedException;
+      throws NodeFactoryException, AlreadyReifiedException;
 
   /**
    * Creates a reification of a triple.
