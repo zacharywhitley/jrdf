@@ -62,7 +62,9 @@ package org.jrdf.graph;
 import java.util.*;
 
 /**
- * A Sequence is a group of statements that are an orderd list.
+ * A Sequence is a group of statements that are kept in an orderd list.  The
+ * order in which the objects go in dictates how they are returned in a First
+ * In, First Out manner.
  *
  * @author Andrew Newman
  *

@@ -67,7 +67,8 @@ import java.net.URI;
 
 
 /**
- * Implementation of {@link org.jrdf.tests.NodeFactoryTestAbs} test case.
+ * Implementation of {@link org.jrdf.graph.AbstractGraphElementFactoryUnitTest}
+ * test case.
  *
  * @author Paul Gearon
  *

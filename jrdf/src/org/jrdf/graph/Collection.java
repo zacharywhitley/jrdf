@@ -61,7 +61,12 @@ package org.jrdf.graph;
 import java.util.Iterator;
 
 /**
- * A Collection all the statements of a particular group.
+ * A Collection holds all the statements of a particular group.  A linked list
+ * is created by using pointer statements (REST) to the next item in the
+ * collection.  The group is closed, where the last statement in the group
+ * points to a NIL entry.
+ *
+ * See <A HREF="http://www.w3.org/TR/rdf-primer/#collections">4.1 RDF Collections</A>.
  *
  * @author Andrew Newman
  *
