@@ -145,7 +145,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
    *
    * @throws Exception if query fails when it should have succeeded
    */
-  public void createLiterals() throws Exception {
+  public void testCreateLiterals() throws Exception {
     final String TEST_STR1 = "A test string";
     final String TEST_STR2 = "Another test string";
 
@@ -191,7 +191,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
    *
    * @throws Exception if query fails when it should have succeeded
    */
-  public void createResources() throws Exception {
+  public void testCreateResources() throws Exception {
     // test blank node creation
     BlankNode blank1 = elementFactory.createResource();
     BlankNode blank2 = elementFactory.createResource();
@@ -214,7 +214,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
    *
    * @throws Exception if query fails when it should have succeeded
    */
-  public void createTriples() throws Exception {
+  public void testCreateTriples() throws Exception {
     BlankNode blank1 = elementFactory.createResource();
     BlankNode blank2 = elementFactory.createResource();
 
