@@ -533,10 +533,8 @@ public class GraphImpl
 
   /**
    * Closes any underlying resources used by this graph.
-   *
-   * @throws GraphException If there was a problem closing off an underlying data store.
    */
-  public void close() throws GraphException {
+  public void close() {
     // no op
   }
 
