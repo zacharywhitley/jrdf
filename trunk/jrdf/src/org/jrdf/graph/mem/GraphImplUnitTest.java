@@ -137,9 +137,11 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     graph.add(blank2, ref2, blank2);
     graph.add(blank2, ref1, l1);
     graph.add(blank2, ref1, l2);
+    graph.add(blank2, ref1, l2);
+    graph.add(ref1, ref1, ref1);
 
     // check that the graph is as expected
-    assertEquals(8, graph.getNumberOfTriples());
+    assertEquals(9, graph.getNumberOfTriples());
 
     // create an in-memory output stream
     ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
@@ -155,6 +157,9 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     // read the graph
     Graph graph2 = (Graph) is.readObject();
 
+    URIReference ref3 = graph2.getElementFactory().createResource(ref1.getURI());
+    Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
+
     // test that the graphs are equivalent
     assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
     assertTrue(graph2.contains(blank1, ref1, blank2));
@@ -164,7 +169,13 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     assertTrue(graph2.contains(blank2, ref1, blank2));
     assertTrue(graph2.contains(blank2, ref2, blank2));
     assertTrue(graph2.contains(blank2, ref1, l1));
-    assertTrue(graph2.contains(blank2, ref1, l2));
+    assertTrue(graph2.contains(blank2, ref3, l2));
+    assertTrue(graph2.contains(blank1, ref3, l3));
+    assertTrue(graph2.contains(ref1, ref1, ref1));
+    assertTrue(graph2.contains(null, ref1, null));
+    assertTrue(graph2.contains(ref3, ref3, ref3));
+    assertTrue(graph2.contains(null, ref3, null));
+    assertTrue(graph2.contains(null, ref3, l3));
   }
 
 }
