@@ -59,7 +59,7 @@
 package org.jrdf.graph.mem;
 
 // JRDF objects
-import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.AbstractBlankNode;
 
 /**
  * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying
@@ -71,7 +71,7 @@ import org.jrdf.graph.BlankNode;
  *
  * @version $Revision$
  */
-public class BlankNodeImpl implements BlankNode, MemNode {
+public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
 
   /** The internal identifier for this node. */
   private Long id;
