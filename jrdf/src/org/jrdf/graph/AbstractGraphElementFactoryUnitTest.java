@@ -299,48 +299,65 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     final String TEST_STR2 = "Foo 2";
     URI uri1 = new URI("http://namespace#somevalue1");
     URI uri2 = new URI("http://namespace#somevalue2");
-    URI uri3 = new URI("http://namespace#somevalue3");
-    URI uri4 = new URI("http://namespace#foo");
+    URI uri3 = new URI("http://namespace#foo");
 
     GraphElementFactory gef1 = g1.getElementFactory();
-    URIReference u1 = gef1.createResource(uri1);
-    URIReference u2 = gef1.createResource(uri2);
-    URIReference u3 = gef1.createResource(uri3);
+    URIReference g1u1 = gef1.createResource(uri1);
+    URIReference g1u2 = gef1.createResource(uri2);
+    URIReference g1u3 = gef1.createResource(uri3);
 
     GraphElementFactory gef2 = g2.getElementFactory();
-    Literal l1 = gef2.createLiteral(TEST_STR1);
-    Literal l2 = gef2.createLiteral(TEST_STR2);
-    URIReference u4 = gef2.createResource(uri4);
+    Literal g2l1 = gef2.createLiteral(TEST_STR1);
+    Literal g2l2 = gef2.createLiteral(TEST_STR2);
+    URIReference g2u1 = gef2.createResource(uri2);
 
+    // Test inserting a subject and predicate that do no exist in g2.
     boolean isOkay = false;
-
     try {
-      g2.add(u1, u1, l1);
+      g2.add(g1u1, g1u1, g2l1);
     }
     catch (GraphException ge) {
       isOkay = true;
     }
     assertTrue("Should fail to insert node", isOkay);
 
+    // Test inserting a predicate that does no exist in g2.
     isOkay = false;
     try {
-      g2.add(u4, u1, l1);
+      g2.add(g2u1, g1u1, g2l1);
     }
     catch (GraphException ge) {
       isOkay = true;
     }
     assertTrue("Should fail to insert node", isOkay);
 
+    // Test inserting an object that does not exist g2.
     isOkay = false;
     try {
-      g2.add(u4, u2, l2);
+      g2.add(g2u1, g1u1, g2l2);
     }
     catch (GraphException ge) {
       isOkay = true;
     }
     assertTrue("Should fail to insert node", isOkay);
+
+    // Test inserting a predicate and object that come from another graph but
+    // do exist.
+    try {
+      g2.add(g2u1, g1u2, g1u2);
+      assertTrue("Should contain the statemet", g2.contains(g2u1, g2u1, g2u1));
+    }
+    catch (GraphException ge) {
+      fail("Should allow nodes to be inserted from other graphs which have " +
+          "the same value but different node ids");
+    }
+
+    // Test inserting a statements using objects from the correct graph and then
+    // using find and contains with the same, by value, object from another.
+    URIReference g2u3 = gef2.createResource(uri3);
+    g2.add(g2u3, g2u3, g2u3);
+
+    assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));
+    assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).hasNext());
   }
-
-  // reification tests are not done here until their location within
-  // the JRDF package is properly resolved
 }
