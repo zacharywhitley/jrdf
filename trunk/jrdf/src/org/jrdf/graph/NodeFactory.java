@@ -87,7 +87,7 @@ public interface NodeFactory {
    * @return the newly created URI reference value.
    * @throws NodeFactoryException If the resource failed to be created.
    */
-  public URIReference createResource(URI uri);
+  public URIReference createResource(URI uri) throws NodeFactoryException;
 
   /**
    * Creates a new literal with the given lexical value, with no language or
@@ -95,8 +95,9 @@ public interface NodeFactory {
    *
    * @param lexicalValue The lexical value for the literal.
    * @return the newly created literal value.
+   * @throws NodeFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue);
+  public Literal createLiteral(String lexicalValue) throws NodeFactoryException;
 
   /**
    * Creates a new literal with the given lexical value, with a given language
@@ -105,8 +106,10 @@ public interface NodeFactory {
    * @param lexicalValue The lexical value for the literal.  Cannot be null.
    * @param languageType The language of the literal or null if not required.
    * @return the newly created literal value.
+   * @throws NodeFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue, String languageType);
+  public Literal createLiteral(String lexicalValue, String languageType)
+      throws NodeFactoryException;
 
   /**
    * Creates a new literal with the given lexical value and given datatype.
@@ -115,8 +118,10 @@ public interface NodeFactory {
    * @param datatypeURI The URI of the datatype of the literal or null if not
    *     required.
    * @return the newly created literal value.
+   * @throws NodeFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue, URI datatypeURI);
+  public Literal createLiteral(String lexicalValue, URI datatypeURI)
+      throws NodeFactoryException;
 
   /**
    * Creates a new literal with the given lexical value, with a given language
@@ -127,9 +132,10 @@ public interface NodeFactory {
    * @param datatypeURI The URI of the datatype of the literal or null if not
    *     required.
    * @return the newly created literal value.
+   * @throws NodeFactoryException If the resource failed to be created.
    */
   public Literal createLiteral(String lexicalValue, String languageType,
-      URI datatypeURI);
+      URI datatypeURI) throws NodeFactoryException;
 
   /**
    * Creates a new triple to be used in the graph.  Does not add it to the
@@ -139,7 +145,57 @@ public interface NodeFactory {
    * @param predicate The predicate of the statement.
    * @param object The object of the statement.
    * @return the newly created triple object.
+   * @throws NodeFactoryException If the resource failed to be created.
    */
   public Triple createTriple(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object);
+      ObjectNode object) throws NodeFactoryException;
+
+  /**
+   * Creates a reification of a triple.
+   *
+   * @param subject the subject of the triple.
+   * @param predicate the predicate of the triple.
+   * @param object the object of the triple.
+   * @param reifiedTripleURI a URIReference denoting the reified triple.
+   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws AlreadyReifiedException If there was already a triple URI for
+   *   the given triple.
+   */
+  public URIReference reifyStatement(SubjectNode subject, PredicateNode predicate,
+    ObjectNode object, URI reifiedTripleURI) throws NodeFactoryException,
+    AlreadyReifiedException;
+
+  /**
+   * Creates a reification of a triple.
+   *
+   * @param triple the triple to be reified.
+   * @param reifiedTripleURI a URIReference denoting the reified triple.
+   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws AlreadyReifiedException If there was already a triple URI for
+   *   the given triple.
+   */
+  public URIReference reifyStatement(Triple triple, URI reifiedTripleURI)
+      throws NodeFactoryException, AlreadyReifiedException;
+
+  /**
+   * Creates a reification of a triple.
+   *
+   * @param subject the subject of the triple.
+   * @param predicate the predicate of the triple.
+   * @param object the object of the triple.
+   * @throws NodeFactoryException If the resource failed to be created or to
+   *   be reified.
+   */
+  public BlankNode reifyStatement(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object) throws NodeFactoryException;
+
+  /**
+   * Creates a reification of a triple.
+   *
+   * @param triple the triple to be reified.
+   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws AlreadyReifiedException If there was already a triple URI for
+   *   the given triple.
+   */
+  public BlankNode reifyStatement(Triple triple) throws NodeFactoryException;
 }
