@@ -314,7 +314,8 @@ public abstract class AbstractLiteral implements Literal {
    * @return this instance in N-Triples format
    */
   public String getEscapedForm() {
-    return escape(getLexicalForm());
+    String escaped = escape(getLexicalForm());
+    return "\"" + escaped + appendType() + "\"";
   }
 
   /**
@@ -323,7 +324,7 @@ public abstract class AbstractLiteral implements Literal {
    * @return the lexical form.
    */
   public String toString() {
-    return getLexicalForm();
+    return getLexicalForm() + appendType();
   }
 
   /**
@@ -422,5 +423,24 @@ public abstract class AbstractLiteral implements Literal {
     // and return the assembled buffer
     matcher.appendTail(stringBuffer);
     return stringBuffer.toString();
+  }
+
+  /**
+   * Appends the datatype URI or language code of a literal.
+   *
+   * @return String the datatype URI in the form ^^<->, or language code @- or
+   *   an empty string.
+   */
+  private String appendType() {
+    String appendString = "";
+
+    if (getDatatypeURI() != null) {
+      appendString = "^^<" + getDatatypeURI() + ">";
+    }
+    else if (!getLanguage().equals("")) {
+      appendString = "@" + getLanguage();
+    }
+
+    return appendString;
   }
 }
