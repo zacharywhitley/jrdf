@@ -66,11 +66,14 @@ import java.util.*;
 /**
  * An iterator that returns only a single triple, if any exists.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */
 public class ThreeFixedIterator implements ClosableIterator {
+
+  /** The graph this iterator will operate on.  Only needed by the remove method. */
+  private Graph graph;
 
   /** The triple to return on {@link next() next} */
   private TripleImpl triple = null;
@@ -80,6 +83,7 @@ public class ThreeFixedIterator implements ClosableIterator {
    * Constructor.
    */
   ThreeFixedIterator(Graph graph, Node subject, Node predicate, Node object) throws GraphException {
+    this.graph = graph;
     if (graph.contains((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object)) {
       triple = new TripleImpl((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object);
     }
@@ -114,10 +118,17 @@ public class ThreeFixedIterator implements ClosableIterator {
 
 
   /**
-   * Implemented for java.util.Iterator.  Not supported by this implementation.
+   * Implemented for java.util.Iterator.
    */
   public void remove() {
-    throw new UnsupportedOperationException();
+    if (triple != null) {
+      try {
+        graph.remove(triple);
+        triple = null;
+      } catch (GraphException ge) {
+        throw new IllegalStateException(ge.getMessage());
+      }
+    }
   }
 
 

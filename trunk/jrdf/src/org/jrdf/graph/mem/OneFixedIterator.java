@@ -71,7 +71,7 @@ import java.util.*;
  * It will always be set to return the next value until it reaches
  * the end of the group.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */
@@ -89,26 +89,41 @@ public class OneFixedIterator implements ClosableIterator {
   /** The nodeFactory used to create the nodes to be returned in the triples. */
   private GraphElementFactoryImpl nodeFactory;
 
+  /** The graph this iterator will operate on.  Only needed by the remove method. */
+  private GraphImpl graph;
+
+  /** The index of this iterator.  Only needed for initialization and the remove method. */
+  private Map index;
+
+  /** The subIndex of this iterator.  Only needed for initialization and the remove method. */
+  private Map subIndex;
+
   /** The fixed item. */
   private Long first;
 
   /** The offset for the index. */
   private int var;
 
+  /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
+  private Long[] currentNodes;
+
 
   /**
    * Constructor.  Sets up the internal iterators.
    */
-  OneFixedIterator(Map index, int var, Long newFirst, GraphElementFactoryImpl nodeFactory) {
+  OneFixedIterator(Map index, int var, Long newFirst, GraphElementFactoryImpl nodeFactory, GraphImpl graph) {
     // store the node factory and other starting data
     this.nodeFactory = nodeFactory;
+    this.graph = graph;
     this.first = newFirst;
     this.var = var;
+    this.index = index;
+    this.currentNodes = null;
     // initialise the iterators to empty
     itemIterator = null;
     subIterator = null;
     // find the subIndex from the main index
-    Map subIndex = (Map)index.get(first);
+    subIndex = (Map)index.get(first);
     // check that data exists
     if (subIndex != null) {
       // now get an iterator to the sub index map
@@ -149,6 +164,7 @@ public class OneFixedIterator implements ClosableIterator {
     // move to the next position
     updatePosition();
     // get back the nodes for these IDs and build the triple
+    currentNodes = new Long[] { first, second, third };
     return new TripleImpl(nodeFactory, var, first, second, third);
   }
 
@@ -179,10 +195,62 @@ public class OneFixedIterator implements ClosableIterator {
 
 
   /**
-   * Implemented for java.util.Iterator.  Not supported by this implementation.
+   * Implemented for java.util.Iterator.
    */
   public void remove() {
-    throw new UnsupportedOperationException();
+    if (itemIterator != null) {
+      itemIterator.remove();
+      // clean up the current index after the removal
+      cleanIndex();
+      // now remove from the other 2 indexes
+      removeFromNonCurrentIndex();
+    }
+  }
+
+
+  /**
+   * Checks if a removed item is the last of its type, and removes any associated subindexes if appropriate.
+   */
+  private void cleanIndex() {
+    // check if a set was cleaned out
+    Set subGroup = (Set)secondEntry.getValue();
+    if (subGroup.isEmpty()) {
+      // remove the entry for the set
+      subIterator.remove();
+      // check if a subindex was cleaned out
+      if (subIndex.isEmpty()) {
+        // remove the subindex
+        index.remove(first);
+      }
+      // since the set is cleaned out, the itemIterator will not have a next,
+      // so the subIterator and itemIterator will need to move on
+      updatePosition();
+    }
+  }
+
+
+  /**
+   * Helper function for removal.  This removes the current statement from the indexes which
+   * the current iterator is not associated with.
+   */
+  private void removeFromNonCurrentIndex() {
+    try {
+      // can instead use var here to determine how to delete, but this is more intuitive
+      if (index == graph.index012) {
+        graph.remove(graph.index120, currentNodes[1], currentNodes[2], currentNodes[0]);
+        graph.remove(graph.index201, currentNodes[2], currentNodes[0], currentNodes[1]);
+      }
+      if (index == graph.index120) {
+        graph.remove(graph.index012, currentNodes[2], currentNodes[0], currentNodes[1]);
+        graph.remove(graph.index201, currentNodes[1], currentNodes[2], currentNodes[0]);
+      }
+      if (index == graph.index201) {
+        graph.remove(graph.index012, currentNodes[1], currentNodes[2], currentNodes[0]);
+        graph.remove(graph.index120, currentNodes[2], currentNodes[0], currentNodes[1]);
+      }
+    } catch (GraphException ge) {
+      throw new IllegalStateException(ge.getMessage());
+    }
   }
 
 
