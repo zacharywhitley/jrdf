@@ -1,3 +1,7 @@
+JRDF Release 0.3.3
+==================
+* Reification prevented from existing statements (Bug 1034837).
+
 JRDF Release 0.3.2
 ==================
 * Bug fixes to the in memory implementation including
