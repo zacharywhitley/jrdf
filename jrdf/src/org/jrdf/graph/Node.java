@@ -58,6 +58,8 @@
 
 package org.jrdf.graph;
 
+import java.io.Serializable;
+
 /**
  * RDF node.  This includes all things in the graph.
  *
@@ -66,6 +68,6 @@ package org.jrdf.graph;
  *
  * @version $Revision$
  */
-public interface Node {
+public interface Node extends Serializable {
 
 }
