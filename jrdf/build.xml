@@ -93,7 +93,8 @@
         </classpath>
         <formatter type="plain"/>
         <batchtest todir="${junit.results.dir}">
-          <fileset dir="${src.dir}" includes="**/*UnitTest.java" />
+          <fileset dir="${src.dir}" includes="**/*UnitTest.java"
+            excludes="**/Abstract*" />
         </batchtest>
       </junit>
 
