@@ -153,16 +153,17 @@ public interface NodeFactory {
   /**
    * Creates a reification of a triple.
    *
-   * @param subject the subject of the triple.
-   * @param predicate the predicate of the triple.
-   * @param object the object of the triple.
+   * @param subjectNode the subject of the triple.
+   * @param predicateNode the predicate of the triple.
+   * @param objectNode the object of the triple.
    * @param reifiedTripleURI a URIReference denoting the reified triple.
    * @throws NodeFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
-  public URIReference reifyTriple(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object, URI reifiedTripleURI) throws NodeFactoryException,
+  public URIReference reifyTriple(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode objectNode, URI reifiedTripleURI)
+      throws NodeFactoryException,
       AlreadyReifiedException;
 
   /**
