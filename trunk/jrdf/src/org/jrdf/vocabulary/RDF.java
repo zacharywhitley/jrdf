@@ -69,8 +69,7 @@ import java.util.*;
  *
  * @version $Revision$
  */
-public class RDF
-    extends Vocabulary {
+public class RDF extends Vocabulary {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
