@@ -63,15 +63,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-import java.io.IOException;
-import java.net.*;
-import java.sql.*;
-import java.util.*;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-
 /**
  * An RDF Graph. As defined by the
  * <a href="http://www.w3.org/TR/2003/WD-rdf-concepts-20031010"><cite>Resource

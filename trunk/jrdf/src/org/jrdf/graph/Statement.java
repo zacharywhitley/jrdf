@@ -63,9 +63,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-import org.w3c.dom.*;
-
 /**
  * RDF Statement. An RDF statement as defined in the RDF model and <a
  * href="http://www.w3.org/TR/REC-rdf-syntax"/>syntax specification</a> .

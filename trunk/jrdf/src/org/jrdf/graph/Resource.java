@@ -63,9 +63,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-import java.net.URI;
-
 /**
  * An RDF Resource either a URIRef or a blank node.
  *
