@@ -267,11 +267,11 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for double insertion
     testCantInsert(blank1, ref1, blank2, this.elementFactory.createResource(uri1));
     // test for insertion with a different reference
-    testCantInsert(blank1, ref1, blank2, this.elementFactory.createResource(uri3));
+    tripleFactory.reifyTriple(blank1, ref1, blank2, this.elementFactory.createResource(uri3));
     // test for insertion of a new triple with an existing reference
     testCantInsert(blank2, ref1, blank1, this.elementFactory.createResource(uri1));
     // test that the graph did not change with the invalid insertions
-    assertEquals(9, graph.getNumberOfTriples());
+    assertEquals(13, graph.getNumberOfTriples());
 
     // test for double insertion
     testCantInsert(t, uri2);
@@ -280,13 +280,13 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for insertion of a new triple with an existing reference
     testCantInsert(elementFactory.createTriple(blank2, ref2, blank2), uri2);
     // test that the graph did not change with the invalid insertions
-    assertEquals(9, graph.getNumberOfTriples());
+    assertEquals(13, graph.getNumberOfTriples());
 
     // do it all again for blank nodes
     // Make reification that does not exist in graph
     BlankNode b = this.elementFactory.createResource();
     tripleFactory.reifyTriple(blank1, ref1, l1, b);
-    assertEquals(13, graph.getNumberOfTriples());
+    assertEquals(17, graph.getNumberOfTriples());
     assertTrue(graph.contains(b, rdfType, rdfStatement));
     assertTrue(graph.contains(b, reifySubject, blank1));
     assertTrue(graph.contains(b, reifyPredicate, ref1));
@@ -298,7 +298,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     graph.add(t);
     b = this.elementFactory.createResource();
     tripleFactory.reifyTriple(t, b);
-    assertEquals(18, graph.getNumberOfTriples());
+    assertEquals(22, graph.getNumberOfTriples());
     assertTrue(graph.contains(b, rdfType, rdfStatement));
     assertTrue(graph.contains(b, reifySubject, blank1));
     assertTrue(graph.contains(b, reifyPredicate, ref2));
@@ -306,18 +306,18 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     assertTrue(graph.contains(blank1, ref2, l2));
 
     // test for double insertion
-    testCantInsert(blank1, ref1, blank2);
+    testCanInsert(blank1, ref1, blank2);
     // test for insertion with a a used blank reference
     testCantInsert(blank1, ref3, blank2, u);
     // test that the graph did not change with the invalid insertions
-    assertEquals(18, graph.getNumberOfTriples());
+    assertEquals(26, graph.getNumberOfTriples());
 
     // test for double insertion
-    testCantInsert(t);
+    testCanInsert(t);
     // test for insertion with a a used blank reference
     testCantInsert(elementFactory.createTriple(blank1, ref3, blank2), u.getURI());
     // test that the graph did not change with the invalid insertions
-    assertEquals(18, graph.getNumberOfTriples());
+    assertEquals(30, graph.getNumberOfTriples());
 
     // Test reifying an existing statement
     b = this.elementFactory.createResource();
@@ -327,7 +327,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       tripleFactory.reifyTriple(ref3, ref3, ref3, b);
     }
     catch (AlreadyReifiedException e) {
-      fail("Should allow reification");
+      fail("Should allow reification of an existing");
     }
   }
 
@@ -615,12 +615,12 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
    * @param object The object for the triple.
    * @throws Exception The triple could be reified.
    */
-  private void testCantInsert(SubjectNode subject, PredicateNode predicate,
+  private void testCanInsert(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws Exception {
     try {
       tripleFactory.reifyTriple(subject, predicate, object,
           elementFactory.createResource());
-      assertTrue(false);
+      assertTrue(true);
     } catch (AlreadyReifiedException e) {
     }
   }
@@ -632,10 +632,10 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
    * @param triple The triple to reify.
    * @throws Exception The triple could be reified.
    */
-  private void testCantInsert(Triple triple) throws Exception {
+  private void testCanInsert(Triple triple) throws Exception {
     try {
       tripleFactory.reifyTriple(triple, elementFactory.createResource());
-      assertTrue(false);
+      assertTrue(true);
     } catch (AlreadyReifiedException e) {
     }
   }
