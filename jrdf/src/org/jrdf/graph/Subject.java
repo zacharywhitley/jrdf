@@ -59,8 +59,8 @@
 package org.jrdf.graph;
 
 /**
- * Indicates if an object can be the subject part of an RDF Triple.  Currently,
- * this is either a URI Reference or a Blank node.
+ * Indicates if a Java object can be the subject part of an RDF Triple.
+ * Currently, this is either a URI Reference or a Blank node.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
