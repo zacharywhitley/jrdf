@@ -76,5 +76,5 @@ public interface BlankNode extends Subject, Object {
    * two nodes should be able to be determined.  In some representations this
    * equality would be defined by a blank node identifier.
    */
-  public boolean equals(Object obj);
+  public boolean equals(java.lang.Object obj);
 }

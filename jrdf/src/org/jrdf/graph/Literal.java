@@ -116,5 +116,5 @@ public interface Literal extends Object {
    * <li> The two datatype URIs, if any, compare equal, character by character.
    * </ul>
    */
-  public boolean equals(Object obj);
+  public boolean equals(java.lang.Object obj);
 }
