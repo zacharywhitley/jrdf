@@ -330,8 +330,13 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       iter.next();
       counter++;
     }
-
     assertTrue("Should have three rdf:first statements", counter == 3);
+
+    // Find all three parts of the collection.
+    for (int index = 0; index < fruit.length; index++) {
+      assertTrue("Should contain: " + fruit[index], graph.contains(
+          null, rdfFirst, fruit[index]));
+    }
 
     // Get all rdf:rest statements
     iter = graph.find(null, rdfRest, null);
@@ -341,7 +346,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       iter.next();
       counter++;
     }
-
     assertTrue("Should have three rdf:rest statements", counter == 3);
 
     // Get all rdf:rest with rdf:nil statements
