@@ -103,7 +103,7 @@ public interface TripleFactory {
    * the object of a proceeding statement that identifies the container.
    *
    * @param subjectNode the subject node of the triple.
-   * @param altnerative the alternative to add.
+   * @param alternative the alternative to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
   public void addAlternative(SubjectNode subjectNode, Alternative alternative)
