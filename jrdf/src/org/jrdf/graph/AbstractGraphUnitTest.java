@@ -353,10 +353,33 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     assertFalse(graph.contains(blank1, ref1, blank2));
     t1 = elementFactory.createTriple(blank1, ref1, blank2);
     assertFalse(graph.contains(t1));
+
     // put it back in and test again
     graph.add(blank1, ref1, blank2);
     assertTrue(graph.contains(blank1, ref1, blank2));
     assertTrue(graph.contains(t1));
+
+    // Null in contains.
+    Graph newGraph = newGraph();
+    assertFalse(newGraph.contains(null, null, null));
+
+    // Add a statement
+    newGraph.add(blank1, ref1, blank2);
+
+    // Check for existance
+    assertTrue(newGraph.contains(null, ref1, blank2));
+    assertTrue(newGraph.contains(null, null, blank2));
+    assertTrue(newGraph.contains(null, null, null));
+    assertTrue(newGraph.contains(blank1, null, blank2));
+    assertTrue(newGraph.contains(blank1, null, null));
+    assertTrue(newGraph.contains(blank1, ref1, null));
+
+    // Check non-existance
+    assertFalse(newGraph.contains(null, ref2, blank1));
+    assertFalse(newGraph.contains(null, null, blank1));
+    assertFalse(newGraph.contains(blank2, null, blank1));
+    assertFalse(newGraph.contains(blank2, null, null));
+    assertFalse(newGraph.contains(blank2, ref2, null));
   }
 
 
