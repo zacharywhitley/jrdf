@@ -81,11 +81,13 @@ public interface Graph {
       "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 
   /**
-   * Test the graph for the occurrence of a statement.
+   * Test the graph for the occurrence of a statement.  A null value for any
+   * of the parts of a triple are treated as unconstrained, any values will be
+   * returned.
    *
-   * @param subject The subject.
-   * @param predicate The predicate.
-   * @param object The object.
+   * @param subject The subject to find or null for any subject.
+   * @param predicate The predicate to find or null for any predicate.
+   * @param object The object to find or null for any object.
    * @return True if the statement is found in the model, otherwise false.
    * @throws GraphException If there was an error accessing the graph.
    */
@@ -93,9 +95,11 @@ public interface Graph {
       ObjectNode object) throws GraphException;
 
   /**
-   * Test the graph for the occurrence of the triple.
+   * Test the graph for the occurrence of the triple.  A null value for any
+   * of the parts of a triple are treated as unconstrained, any values will be
+   * returned.
    *
-   * @param triple The triple.
+   * @param triple The triple to find.
    * @return True if the triple is found in the graph, otherwise false.
    * @throws GraphException If there was an error accessing the graph.
    */
