@@ -1,8 +1,14 @@
-/* ====================================================================
+/*
+ * $Header: /cvsroot/jrdf/jrdf/src/org/jrdf/graph/URIReference.java,v
+1.1.1.1 2003/12/12 04:00:49 newmana Exp $
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
- * reserved.
+ * Copyright (c) 2003 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -16,23 +22,23 @@
  *    the documentation and/or other materials provided with the
  *    distribution.
  *
- * 3. The end-user documentation included with the redistribution,
- *    if any, must include the following acknowledgment:
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
  *       "This product includes software developed by the
- *        Apache Software Foundation (http://www.apache.org/)."
- *    Alternately, this acknowledgment may appear in the software itself,
- *    if and wherever such third-party acknowledgments normally appear.
+ *        the JRDF Project (http://jrdf.sf.net/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "Apache" and "Apache Software Foundation" must
- *    not be used to endorse or promote products derived from this
- *    software without prior written permission. For written
- *    permission, please contact apache@apache.org.
+ * 4. The names "The JRDF Project" and "JRDF" must not be used to endorse
+ *    or promote products derived from this software without prior written
+ *    permission. For written permission, please contact
+ *    newmana@users.sourceforge.net.
  *
- * 5. Products derived from this software may not be called "Apache",
- *    nor may "Apache" appear in their name, without prior written
- *    permission of the Apache Software Foundation.
+ * 5. Products derived from this software may not be called "JRDF"
+ *    nor may "JRDF" appear in their names without prior written
+ *    permission of the JRDF Project.
  *
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * THIS SOFTWARE IS PROVIDED `AS IS'' AND ANY EXPRESSED OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
@@ -47,12 +53,6 @@
  * ====================================================================
  *
  * This software consists of voluntary contributions made by many
- * individuals on behalf of the Apache Software Foundation.  For more
- * information on the Apache Software Foundation, please see
- * <http://www.apache.org/>.
- *
- * Portions of this software are based upon public domain software
- * originally written at the National Center for Supercomputing Applications,
- * University of Illinois, Urbana-Champaign.
+ * individuals on behalf of the JRDF Project.  For more
+ * information on the JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-
