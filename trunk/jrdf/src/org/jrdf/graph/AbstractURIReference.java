@@ -84,8 +84,8 @@ public abstract class AbstractURIReference implements URIReference {
    * @throws IllegalArgumentException if <var>uri</var> is <code>null</code> or
    *                                  not absolute
    */
-  protected AbstractURIReference(URI uri)
-  {
+  protected AbstractURIReference(URI uri) {
+
     // Validate "uri" parameter
     if (uri == null) {
       throw new IllegalArgumentException("Null \"uri\" parameter");
