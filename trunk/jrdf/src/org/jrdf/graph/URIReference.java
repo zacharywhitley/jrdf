@@ -85,8 +85,8 @@ public interface URIReference extends SubjectNode, PredicateNode, ObjectNode {
   public URI getURI();
 
   /**
-   * Returns a hash-code value for this URI Reference. The hash code is the
-   * hashcode of the URI.
+   * Returns a hash-code value for this URI Reference. This is the hash code
+   * of the URI.
    *
    * @return a hash-code value for this literal.
    */

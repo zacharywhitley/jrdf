@@ -89,7 +89,6 @@ public abstract class AbstractTriple implements Triple {
    *     {@link URIReference}
    */
   public SubjectNode getSubject() {
-
     return subjectNode;
   }
 
@@ -99,7 +98,6 @@ public abstract class AbstractTriple implements Triple {
    * @return a {@link PredicateNode} which is a {@link URIReference}
    */
   public PredicateNode getPredicate() {
-
     return predicateNode;
   }
 
@@ -110,7 +108,6 @@ public abstract class AbstractTriple implements Triple {
    *     {@link URIReference} or {@link Literal}
    */
   public ObjectNode getObject() {
-
     return objectNode;
   }
 
@@ -119,6 +116,7 @@ public abstract class AbstractTriple implements Triple {
 
     // Object must not be null
     if (obj != null) {
+
       try {
         Triple tmpTriple = (Triple) obj;
 
@@ -136,7 +134,6 @@ public abstract class AbstractTriple implements Triple {
   }
 
   public int hashCode() {
-
     return getSubject().hashCode() ^ getPredicate().hashCode() ^
         getObject().hashCode();
   }

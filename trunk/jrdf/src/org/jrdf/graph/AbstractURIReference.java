@@ -82,7 +82,6 @@ public abstract class AbstractURIReference implements URIReference {
    * @return the {@link URI} identifying this resource.
    */
   public URI getURI() {
-
     return uri;
   }
 
@@ -91,6 +90,7 @@ public abstract class AbstractURIReference implements URIReference {
 
     // Object must not be null
     if (obj != null) {
+
       try {
         URIReference tmpURIReference = (URIReference) obj;
 
