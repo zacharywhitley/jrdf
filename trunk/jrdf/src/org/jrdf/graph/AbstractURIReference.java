@@ -141,31 +141,24 @@ public abstract class AbstractURIReference implements URIReference {
    * @param visitor the object doing the visiting.
    */
   public void accept(TypedNodeVisitor visitor) {
-    visitor.visit(this);
+    visitor.visitURIReference(this);
   }
 
   public boolean equals(Object obj) {
-    boolean returnValue = false;
 
-    // Object must not be null
-    if (obj != null) {
-
-      try {
-        URIReference tmpURIReference = (URIReference) obj;
-
-        // Ensure that both data type URIs are null or are equal by their
-        // string values.
-        if (getURI().toString().equals(tmpURIReference.getURI().toString())) {
-          returnValue = true;
-        }
-      }
-      catch (ClassCastException cce) {
-
-        // Leave return value to be false.
-      }
+    // Check equal by reference
+    if (this == obj) {
+      return true;
     }
 
-    return returnValue;
+    // Check for null and ensure exactly the same class - not subclass.
+    if ((obj == null) ||
+        (getClass() != obj.getClass())) {
+      return false;
+    }
+
+    URIReference tmpURIReference = (URIReference) obj;
+    return (getURI().equals(tmpURIReference.getURI()));
   }
 
   public int hashCode() {

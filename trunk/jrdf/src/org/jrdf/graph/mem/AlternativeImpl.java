@@ -161,27 +161,29 @@ public class AlternativeImpl extends AbstractUnorderedContainer {
     return modified;
   }
 
-  public boolean equals(Object o) {
+  public boolean equals(Object obj) {
 
-    if (o == null) {
+    // Check equal by reference
+    if (this == obj) {
+      return true;
+    }
+
+    // Check for null and ensure exactly the same class - not subclass.
+    if ((obj == null) ||
+       (getClass() != obj.getClass())) {
       return false;
     }
 
-    try {
-      Alternative alt = (Alternative) o;
+    Alternative alt = (Alternative) obj;
 
-      boolean isEqual = false;
-      if (size() == alt.size()) {
+    boolean returnValue = false;
+    if (size() == alt.size()) {
 
-        List myValues = Arrays.asList(toArray());
-        List altValues = Arrays.asList(alt.toArray());
-        isEqual = myValues.equals(altValues);
-      }
-
-      return isEqual;
+      List myValues = Arrays.asList(toArray());
+      List altValues = Arrays.asList(alt.toArray());
+      returnValue = myValues.equals(altValues);
     }
-    catch (ClassCastException cce) {
-      return false;
-    }
+
+    return returnValue;
   }
 }

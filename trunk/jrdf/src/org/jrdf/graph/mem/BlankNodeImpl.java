@@ -117,7 +117,21 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
    * @return true if this object is the same as the obj argument; false otherwise.
    */
   public boolean equals(Object obj) {
-    return (obj instanceof MemNode) && ((MemNode)obj).getId().equals(id);
+
+    // Check equal by reference
+    if (this == obj) {
+      return true;
+    }
+
+    // Check for null and ensure exactly the same class - not subclass.
+    if ( (obj == null) ||
+        (getClass() != obj.getClass())) {
+      return false;
+    }
+
+    // Cast and check for equality by value.
+    MemNode tmpNode = (MemNode) obj;
+    return tmpNode.getId().equals(id);
   }
 
 }

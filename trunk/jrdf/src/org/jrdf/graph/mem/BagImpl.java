@@ -161,27 +161,28 @@ public class BagImpl extends AbstractUnorderedContainer {
     return modified;
   }
 
-  public boolean equals(Object o) {
+  public boolean equals(Object obj) {
 
-    if (o == null) {
+    // Check equal by reference
+    if (this == obj) {
+      return true;
+    }
+
+    // Check for null and ensure exactly the same class - not subclass.
+    if ((obj == null) ||
+       (getClass() != obj.getClass())) {
       return false;
     }
 
-    try {
-      Bag bag = (Bag) o;
+    Bag bag = (Bag) obj;
 
-      boolean isEqual = false;
-      if (size() == bag.size()) {
+    boolean returnValue = false;
+    if (size() == bag.size()) {
 
-        List myValues = Arrays.asList(toArray());
-        List altValues = Arrays.asList(bag.toArray());
-        isEqual = myValues.equals(altValues);
-      }
-
-      return isEqual;
+      List myValues = Arrays.asList(toArray());
+      List altValues = Arrays.asList(bag.toArray());
+      returnValue = myValues.equals(altValues);
     }
-    catch (ClassCastException cce) {
-      return false;
-    }
+    return returnValue;
   }
 }

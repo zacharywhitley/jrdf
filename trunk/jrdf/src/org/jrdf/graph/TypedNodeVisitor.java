@@ -73,19 +73,19 @@ public interface TypedNodeVisitor {
    *
    * @param blankNode the blank node to visit.
    */
-  public void visit(BlankNode blankNode);
+  public void visitBlankNode(BlankNode blankNode);
 
   /**
    * Visit URI Reference.
    *
    * @param uriReference the URI Reference to visit.
    */
-  public void visit(URIReference uriReference);
+  public void visitURIReference(URIReference uriReference);
 
   /**
    * Visit Literal.
    *
    * @param literal the Literal to visit.
    */
-  public void visit(Literal literal);
+  public void visitLiteral(Literal literal);
 }
