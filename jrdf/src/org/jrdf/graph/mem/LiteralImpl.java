@@ -92,26 +92,18 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
   private String thisString;
 
   /**
-   * Construct a literal.  For use by a NodeFactoryImpl.
+   * Construct a literal.
    *
    * @param lexicalForm  the text part of the literal
    * @throws IllegalArgumentException if <var>lexicalForm</var> is <code>null</code>
    */
   LiteralImpl(String lexicalForm) {
-    // Validate "lexicalForm" parameter
-    if (lexicalForm == null) {
-      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
-    }
-
-    // Initialize fields
-    this.lexicalForm = lexicalForm;
-    this.language = null;
-    this.datatypeURI = null;
+    super(lexicalForm);
     thisString = super.toString();
   }
 
   /**
-   * Construct a fully general literal.  For use by a NodeFactoryImpl.
+   * Construct a fully general literal.
    *
    * @param lexicalForm  the text part of the literal
    * @param language  the language code, possibly the empty string but not
@@ -120,45 +112,22 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
    *    <var>lang</var> are <code>null</code>
    */
   LiteralImpl(String lexicalForm, String language) {
-    // Validate "lexicalForm" parameter
-    if (lexicalForm == null) {
-      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
-    }
-
-    // Validate "language" parameter
-    if (language == null) {
-      throw new IllegalArgumentException("Null \"language\" parameter");
-    }
-
-    // Initialize fields
-    this.lexicalForm = lexicalForm;
-    this.language = language;
-    this.datatypeURI = null;
+    super(lexicalForm, language);
     thisString = super.toString();
   }
 
 
   /**
-   * Construct a fully general literal.  For use by a NodeFactoryImpl.
+   * Construct a fully general literal.
    *
    * @param lexicalForm  the text part of the literal
    * @param datatype  the URI for a datatyped literal, or <code>null</code> for
    *     an untyped literal
-   * @param id The internal identifier for this node.
    * @throws IllegalArgumentException if <var>lexicalForm</var> or
    *     <var>lang</var> are <code>null</code>
    */
   LiteralImpl(String lexicalForm, URI datatype) {
-
-    // Validate "lexicalForm" parameter
-    if (lexicalForm == null) {
-      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
-    }
-
-    // Initialize fields
-    this.lexicalForm = lexicalForm;
-    this.language = null;
-    this.datatypeURI = datatype;
+    super(lexicalForm, datatype);
     thisString = super.toString();
   }
 
