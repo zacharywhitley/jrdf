@@ -153,6 +153,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     URIReference hasSubject = elementFactory.createResource(RDF.SUBJECT);
     URIReference hasPredicate = elementFactory.createResource(RDF.PREDICATE);
     URIReference hasObject = elementFactory.createResource(RDF.OBJECT);
+    URIReference rdfType = elementFactory.createResource(RDF.TYPE);
+    URIReference rdfStatement = elementFactory.createResource(RDF.STATEMENT);
 
     // assert that the statement is not already reified
     try {
@@ -160,6 +162,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
       try {
         if (it.hasNext() ||
             graph.contains(subjectNode, predicateNode, objectNode) ||
+            graph.contains((SubjectNode) ru, rdfType, rdfStatement) &&
             graph.contains((SubjectNode) ru, hasSubject,
                 (ObjectNode) subjectNode) &&
             graph.contains((SubjectNode) ru, hasPredicate,
@@ -178,6 +181,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
       graph.add(subjectNode, predicateNode, objectNode);
 
       // insert the reification statements
+      graph.add((SubjectNode) ru, rdfType, rdfStatement);
       graph.add((SubjectNode) ru, hasSubject, (ObjectNode) subjectNode);
       graph.add((SubjectNode) ru, hasPredicate, (ObjectNode) predicateNode);
       graph.add((SubjectNode) ru, hasObject, (ObjectNode) objectNode);
