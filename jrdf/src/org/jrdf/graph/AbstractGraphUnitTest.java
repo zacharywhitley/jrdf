@@ -75,7 +75,8 @@ import junit.framework.*;
  *
  * @version $Revision$
  */
-public abstract class AbstractGraphUnitTest extends TestCase {
+public abstract class AbstractGraphUnitTest
+    extends TestCase {
 
   /**
    * Instance of a graph object.
@@ -168,7 +169,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     assertEquals(0, graph.getNumberOfTriples());
   }
 
-
   /**
    * Tests that it is possible to get a NodeFactory from a graph.
    *
@@ -178,7 +178,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     GraphElementFactory f = graph.getElementFactory();
     assertTrue(f != null);
   }
-
 
   /**
    * Tests addition.
@@ -269,14 +268,16 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     try {
       graph.remove(blank2, ref1, blank1);
       assertTrue(false);
-    } catch (GraphException e) { /* no-op */ }
+    }
+    catch (GraphException e) { /* no-op */}
     assertEquals(1, graph.getNumberOfTriples());
 
     // delete a triple that never existed
     try {
       graph.remove(blank2, ref2, l2);
       assertTrue(false);
-    } catch (GraphException e) { /* no-op */ }
+    }
+    catch (GraphException e) { /* no-op */}
     assertEquals(1, graph.getNumberOfTriples());
 
     // and delete with a triple object
@@ -284,7 +285,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     try {
       graph.remove(t1);
       assertTrue(false);
-    } catch (GraphException e) { /* no-op */ }
+    }
+    catch (GraphException e) { /* no-op */}
     assertEquals(1, graph.getNumberOfTriples());
 
     // now clear out the graph
@@ -297,7 +299,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     try {
       graph.remove(blank1, ref2, blank2);
       assertTrue(false);
-    } catch (GraphException e) { /* no-op */ }
+    }
+    catch (GraphException e) { /* no-op */}
     assertTrue(graph.isEmpty());
     assertEquals(0, graph.getNumberOfTriples());
 
@@ -314,12 +317,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     try {
       graph.remove(ref2, ref2, ref2);
       assertTrue(false);
-    } catch (GraphException e) { /* no-op */ }
+    }
+    catch (GraphException e) { /* no-op */}
 
     assertTrue(graph.isEmpty());
     assertEquals(0, graph.getNumberOfTriples());
   }
-
 
   /**
    * Tests containership.
@@ -386,7 +389,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     assertFalse(newGraph.contains(blank2, null, null));
     assertFalse(newGraph.contains(blank2, ref2, null));
   }
-
 
   /**
    * Tests finding.
@@ -526,130 +528,73 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     it.close();
   }
 
-
   /**
    * Tests iteration over a found set.
    */
   public void testIteration() throws Exception {
-    Triple t1 = elementFactory.createTriple(blank1, ref1, blank2);
-    Triple t2 = elementFactory.createTriple(blank1, ref2, blank2);
-    Triple t3 = elementFactory.createTriple(blank1, ref1, l1);
-    Triple t4 = elementFactory.createTriple(blank1, ref1, l2);
-    Triple t5 = elementFactory.createTriple(blank2, ref1, blank2);
-    Triple t6 = elementFactory.createTriple(blank2, ref2, blank2);
-    Triple t7 = elementFactory.createTriple(blank2, ref1, l1);
-    Triple t8 = elementFactory.createTriple(blank2, ref1, l2);
-    graph.add(t1);
-    graph.add(t2);
-    graph.add(t3);
-    graph.add(t4);
-    graph.add(t5);
-    graph.add(t6);
-    graph.add(t7);
-    graph.add(t8);
 
-    // look for the first triple and check that there is only one returned
-    ClosableIterator it = graph.find(t1);
-    assertTrue(it.hasNext());
-    Triple t = (Triple)it.next();
-    assertTrue(t.equals(t1));
-    assertFalse(it.hasNext());
+    GraphElementFactory factory = graph.getElementFactory();
 
-    Set triples = new HashSet();
+    //create nodes
+    BlankNode bNode1 = factory.createResource();
+    BlankNode bNode2 = factory.createResource();
+    URIReference uri1 = factory.createResource(new URI(
+        "http://tucana.org/tucana#uri1"));
+    URIReference uri2 = factory.createResource(new URI(
+        "http://tucana.org/tucana#uri2"));
+    Literal literal1 = factory.createLiteral("literal1");
+    Literal literal2 = factory.createLiteral("literal2");
 
-    // look for doubles and check that there is data there
-    t = elementFactory.createTriple(blank1, ref1, null);
-    triples.add(t1);
-    triples.add(t3);
-    triples.add(t4);
-    it = graph.find(t);
-    checkSet(triples, it);
+    //create some statements
+    Triple[] triples = new Triple[16];
+    triples[0] = factory.createTriple(bNode1, uri1, literal1);
+    triples[1] = factory.createTriple(bNode1, uri1, literal2);
+    triples[2] = factory.createTriple(bNode1, uri2, literal1);
+    triples[3] = factory.createTriple(bNode1, uri2, literal2);
+    triples[4] = factory.createTriple(bNode2, uri1, literal1);
+    triples[5] = factory.createTriple(bNode2, uri1, literal2);
+    triples[6] = factory.createTriple(bNode2, uri2, literal1);
+    triples[7] = factory.createTriple(bNode2, uri2, literal2);
+    triples[8] = factory.createTriple(bNode1, uri1, bNode2);
+    triples[9] = factory.createTriple(bNode1, uri2, bNode2);
+    triples[10] = factory.createTriple(bNode1, uri1, uri2);
+    triples[11] = factory.createTriple(bNode1, uri2, uri1);
+    triples[12] = factory.createTriple(uri1, uri2, bNode1);
+    triples[13] = factory.createTriple(uri2, uri1, bNode1);
+    triples[14] = factory.createTriple(uri1, uri2, bNode2);
+    triples[15] = factory.createTriple(uri2, uri1, bNode2);
 
-    t = elementFactory.createTriple(blank1, null, blank2);
-    triples.add(t1);
-    triples.add(t2);
-    it = graph.find(t);
-    checkSet(triples, it);
+    //add them
+    for (int i = 0; i < triples.length; i++) {
 
-    t = elementFactory.createTriple(null, ref1, blank2);
-    triples.add(t1);
-    triples.add(t5);
-    it = graph.find(t);
-    checkSet(triples, it);
+      graph.add(triples[i]);
+    }
 
-    // look for singles
-    t = elementFactory.createTriple(blank1, null, null);
-    triples.add(t1);
-    triples.add(t2);
-    triples.add(t3);
-    triples.add(t4);
-    it = graph.find(t);
-    checkSet(triples, it);
+    //query them and put contents of iterator in a set for checking
+    //(iterator may return results in a different order)
+    Set statements = new HashSet();
+    ClosableIterator iter = graph.find(null, null, null);
+    assertTrue("ClosableIterator is returning false for hasNext().",
+               iter.hasNext());
+    while (iter.hasNext()) {
 
-    t = elementFactory.createTriple(null, ref1, null);
-    triples.add(t1);
-    triples.add(t3);
-    triples.add(t4);
-    triples.add(t5);
-    triples.add(t7);
-    triples.add(t8);
-    it = graph.find(t);
-    checkSet(triples, it);
+      statements.add(iter.next());
+    }
+    iter.close();
 
-    t = elementFactory.createTriple(null, null, l1);
-    triples.add(t3);
-    triples.add(t7);
-    it = graph.find(t);
-    checkSet(triples, it);
+    //check that the iterator contained the correct number of statements
+    assertEquals("ClosableIterator is incomplete.", graph.getNumberOfTriples(),
+                 statements.size());
 
-    // look for the first triple and check that there is only one returned
-    it = graph.find(blank1, ref1, blank2);
-    assertTrue(it.hasNext());
-    t = (Triple)it.next();
-    assertTrue(t.equals(t1));
-    assertFalse(it.hasNext());
+    //check the the set contains all the original triples
+    for (int i = 0; i < triples.length; i++) {
 
-    // look for doubles and check that there is data there
-    it = graph.find(blank1, ref1, null);
-    triples.add(t1);
-    triples.add(t3);
-    triples.add(t4);
-    checkSet(triples, it);
+      if (!statements.contains(triples[i])) {
 
-    it=graph.find(blank1, null, blank2);
-    triples.add(t1);
-    triples.add(t2);
-    checkSet(triples, it);
-
-    it=graph.find(null, ref1, blank2);
-    triples.add(t1);
-    triples.add(t5);
-    checkSet(triples, it);
-
-    // look for singles
-    it=graph.find(blank1, null, null);
-    triples.add(t1);
-    triples.add(t2);
-    triples.add(t3);
-    triples.add(t4);
-    checkSet(triples, it);
-
-    it=graph.find(null, ref1, null);
-    triples.add(t1);
-    triples.add(t3);
-    triples.add(t4);
-    triples.add(t5);
-    triples.add(t7);
-    triples.add(t8);
-    checkSet(triples, it);
-
-    it=graph.find(null, null, l1);
-    triples.add(t3);
-    triples.add(t7);
-    checkSet(triples, it);
-
+        fail("Iterator did not contain triple: " + triples[i] + ".");
+      }
+    }
   }
-
 
   /**
    * Tests iterative removal.
@@ -678,7 +623,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     ci.next();
     ci.remove();
     assertEquals(5, graph.getNumberOfTriples());
-    
+
     // remove the second element
     assertTrue(ci.hasNext());
     ci.next();
@@ -695,7 +640,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     ci.next();
     ci.remove();
     assertEquals(3, graph.getNumberOfTriples());
-    
+
     // remove the second element
     assertTrue(ci.hasNext());
     ci.next();
@@ -712,7 +657,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     ci.next();
     ci.remove();
     assertEquals(1, graph.getNumberOfTriples());
-    
+
     assertFalse(ci.hasNext());
 
     // get an iterator for the final element
@@ -724,7 +669,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     ci.remove();
     assertEquals(0, graph.getNumberOfTriples());
     assertTrue(graph.isEmpty());
-    
+
     assertFalse(ci.hasNext());
     ci.close();
 
@@ -732,10 +677,10 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     try {
       graph.remove(ref2, ref2, ref2);
       assertTrue(false);
-    } catch (GraphException e) { /* no-op */ }
+    }
+    catch (GraphException e) { /* no-op */}
 
   }
-
 
   /**
    * Tests full iterative removal.
@@ -767,12 +712,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     assertTrue(graph.isEmpty());
-    
+
     assertFalse(ci.hasNext());
 
     ci.close();
   }
-
 
   /**
    * Checks that an iterator matches a set exactly.
@@ -782,7 +726,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
    */
   private void checkSet(Set triples, ClosableIterator it) throws Exception {
     while (it.hasNext()) {
-      Triple t = (Triple)it.next();
+      Triple t = (Triple) it.next();
       assertTrue(triples.contains(t));
       triples.remove(t);
     }
