@@ -63,8 +63,8 @@ import java.util.*;
 
 /**
  * A Bag is a group of statements that are an unorderd list which allow
- * duplicates.  The order in which the objects go in may not be the returned in
- * the same order.
+ * duplicates.  The order in which the objects go in may not be the ordered
+ * in which they are returned.
  *
  * @author Andrew Newman
  *

@@ -62,14 +62,18 @@ package org.jrdf.graph;
 import java.util.Collection;
 
 /**
- * A Container is a grouping of statements of statements.  A container can
- * either be a bag, sequence or alt.  Bags and Alts are unorderd, lists that
- * allow duplicates and sequences are ordered lists that also allow duplicates.
- * An Alt gives a list of alternatives that maybe chosen as being other
- * semantically equal values.
+ * A Container is a grouping of statements.  A container can either be a
+ * {@link Alternative}, {@link Bag}, or {@link Sequence}.
  *
- * Currently, just a copy of java.util.Collection but throws exceptions when
- * inappropriate objects are used, for example non-ObjectNodes are added.
+ * See <A HREF="http://www.w3.org/TR/rdf-primer/#containers">4.1 RDF Containers</A>.
+ *
+ * Alternatives are unordered lists that do not allow duplicates.  Bags are
+ * unordered lists that allow duplicates.  Sequences are ordered lists that
+ * allows duplicates.
+ *
+ * Currently, this is just an extension of java.util.Collection that throws
+ * exceptions when inappropriate objects are used, for example non-ObjectNodes
+ * are added.
  *
  * @author Andrew Newman
  *
