@@ -102,4 +102,19 @@ public interface Literal extends Node {
    *     for an untyped node.
    */
   public URI getDatatypeURI();
+
+  /**
+   * Indicates whether some other object is "equal to" this one.
+   *
+   * A literal is equal to another literal if:
+   * <ul>
+   * <li> The strings of the two lexical forms compare equal, character by
+   * character.
+   * <li> Either both or neither have language tags.
+   * <li> The language tags, if any, compare equal.
+   * <li> Either both or neither have datatype URIs.
+   * <li> The two datatype URIs, if any, compare equal, character by character.
+   * </ul>
+   */
+  public boolean equals(Object obj);
 }
