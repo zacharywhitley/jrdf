@@ -120,6 +120,78 @@ public abstract class AbstractLiteral implements Literal {
   private transient Matcher matcher;
 
   /**
+   * Construct a plain literal.
+   *
+   * @param lexicalForm  the text part of the literal
+   * @throws IllegalArgumentException if <var>lexicalForm</var> is <code>null</code>
+   */
+  protected AbstractLiteral(String lexicalForm) {
+
+    // Validate "lexicalForm" parameter
+    if (lexicalForm == null) {
+      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
+    }
+
+    // Initialize fields
+    this.lexicalForm = lexicalForm;
+    this.language = "";
+    this.datatypeURI = null;
+  }
+
+  /**
+   * Construct a literal with language.
+   *
+   * @param lexicalForm  the text part of the literal
+   * @param language  the language code, possibly the empty string but not
+   *    <code>null</code>
+   * @throws IllegalArgumentException if <var>lexicalForm</var> or
+   *    <var>lang</var> are <code>null</code>
+   */
+  protected AbstractLiteral(String lexicalForm, String language) {
+
+    // Validate "lexicalForm" parameter
+    if (lexicalForm == null) {
+      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
+    }
+
+    // Validate "language" parameter
+    if (language == null) {
+      throw new IllegalArgumentException("Null \"language\" parameter");
+    }
+
+    // Initialize fields
+    this.lexicalForm = lexicalForm;
+    this.language = language;
+    this.datatypeURI = null;
+  }
+
+  /**
+   * Construct a datatyped literal.
+   *
+   * @param lexicalForm  the text part of the literal
+   * @param datatypeURI  the URI for a datatyped literal
+   * @throws IllegalArgumentException if <var>lexicalForm</var> or
+   *     <var>datatype</var> are <code>null</code>
+   */
+  protected AbstractLiteral(String lexicalForm, URI datatypeURI) {
+
+    // Validate "lexicalForm" parameter
+    if (lexicalForm == null) {
+      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
+    }
+
+    // Validate "datatype" parameter
+    if (datatypeURI == null) {
+      throw new IllegalArgumentException("Null \"datatype\" parameter");
+    }
+
+    // Initialize fields
+    this.lexicalForm = lexicalForm;
+    this.language = null;
+    this.datatypeURI = datatypeURI;
+  }
+
+  /**
    * Obtain the text of this literal.
    *
    * @return the text of the literal, never <code>null</code>
@@ -131,10 +203,11 @@ public abstract class AbstractLiteral implements Literal {
   /**
    * Returns the language code of the literal.
    *
-   * When no language is specified, this field contains a zero-length
-   * {@link String} rather than being <code>null</code>.
+   * When no language is specified for a plain literal, this field contains a
+   * zero-length {@link String}.  Otherwise, this will be <code>null</code>.
    *
-   * @return the language code of the literal, never <code>null</code>
+   * @return the language code of the literal or <code>null</code> in the case
+   *   of a datatyped literal.
    */
   public String getLanguage() {
     return language;
@@ -151,10 +224,10 @@ public abstract class AbstractLiteral implements Literal {
 
   /**
    * Returns the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for an untyped node.
+   *     for a plain literal.
    *
    * @return the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for an untyped node.
+   *     for a plain literal.
    */
   public URI getDatatypeURI() {
     return datatypeURI;
@@ -192,7 +265,7 @@ public abstract class AbstractLiteral implements Literal {
           if ((getDatatypeURI() == null) && (tmpLiteral.getDatatypeURI() == null)) {
 
             // If languages are equal by value then its equal.
-            if ((String.valueOf(getLanguage()).equals(String.valueOf(tmpLiteral.getLanguage())))) {
+            if (getLanguage().equals(tmpLiteral.getLanguage())) {
               returnValue = true;
             }
           }
