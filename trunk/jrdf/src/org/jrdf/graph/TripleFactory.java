@@ -99,7 +99,7 @@ public interface TripleFactory {
       throws TripleFactoryException, AlreadyReifiedException;
 
   /**
-   * Inserts a container.  The subjectNode and predicateNode are the first
+   * Inserts a alternative.  The subjectNode and predicateNode are the first
    * part of the container statement and the objectNode is used also as the
    * subject in the other statements of the container.
    *
@@ -107,23 +107,43 @@ public interface TripleFactory {
    * @param predicateNode the predicate node of the triple.
    * @param object the object of the first triple and the subject of
    *   subsequent statements to be added.
-   * @param container the bag, sequence or alternative to add.
+   * @param alternative the alternative to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
-  public void insertContainer(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode object, Container container)
+  public void addAlternative(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Alternative alternative)
       throws TripleFactoryException;
 
   /**
-   * Inserts a container.  The subject and predicate of the triple are the first
-   * part of the container statement and the object is used also as the
+   * Inserts a bag.  The subjectNode and predicateNode are the first
+   * part of the container statement and the objectNode is used also as the
    * subject in the other statements of the container.
    *
-   * @param triple the triple to use to create the container.
-   * @param container the bag, sequence or alternative to add.
+   * @param subjectNode the subject node of the triple.
+   * @param predicateNode the predicate node of the triple.
+   * @param object the object of the first triple and the subject of
+   *   subsequent statements to be added.
+   * @param bag the bag to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
-  public void insertContainer(Triple triple, Container container)
+  public void addBag(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Bag bag)
+      throws TripleFactoryException;
+
+  /**
+   * Inserts a sequence.  The subjectNode and predicateNode are the first
+   * part of the container statement and the objectNode is used also as the
+   * subject in the other statements of the container.
+   *
+   * @param subjectNode the subject node of the triple.
+   * @param predicateNode the predicate node of the triple.
+   * @param object the object of the first triple and the subject of
+   *   subsequent statements to be added.
+   * @param sequence the sequence to add.
+   * @throws TripleFactoryException If the resources were failed to be added.
+   */
+  public void addSequence(SubjectNode subjectNode,
+      PredicateNode predicateNode, ObjectNode object, Sequence sequence)
       throws TripleFactoryException;
 
   /**
@@ -138,19 +158,7 @@ public interface TripleFactory {
    * @param collection the collection to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
-  public void insertCollection(SubjectNode subjectNode,
+  public void addCollection(SubjectNode subjectNode,
       PredicateNode predicateNode, ObjectNode object, Collection collection)
-      throws TripleFactoryException;
-
-  /**
-   * Inserts a collection.  The subject and predicate of the triple are the first
-   * part of the collection statement and the object is used also as the
-   * subject in the other statements of the collection.
-   *
-   * @param triple the triple to use to create the collection.
-   * @param container the collect to add.
-   * @throws TripleFactoryException If the resources were failed to be added.
-   */
-  public void insertCollection(Triple triple, Collection collection)
       throws TripleFactoryException;
 }
