@@ -1,6 +1,8 @@
 JRDF Release 0.3.3
 ==================
-* Reification prevented from existing statements (Bug 1034837).
+* Reification prevented from existing statements (Bug 1034837).  When
+reifying it used to add the statement that was being reified to the graph
+this is not the correct semantics of reification.
 
 JRDF Release 0.3.2
 ==================
