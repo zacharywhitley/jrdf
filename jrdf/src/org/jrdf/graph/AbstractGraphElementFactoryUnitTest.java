@@ -221,6 +221,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
    * @throws Exception if query fails when it should have succeeded
    */
   public void testCreateTriples() throws Exception {
+
     BlankNode blank1 = elementFactory.createResource();
     BlankNode blank2 = elementFactory.createResource();
 
