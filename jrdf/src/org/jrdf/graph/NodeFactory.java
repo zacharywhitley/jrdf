@@ -105,6 +105,15 @@ public interface NodeFactory {
   public Literal createLiteral(String lexicalValue, String languageType);
 
   /**
+   * Creates a new literal with the given lexical value and given datatype.
+   *
+   * @param lexicalValue The lexical value for the literal.  Cannot be null.
+   * @param datatypeURI The URI of the datatype of the literal or null if not
+   *     required.
+   */
+  public Literal createLiteral(String lexicalValue, URI datatypeURI);
+
+  /**
    * Creates a new literal with the given lexical value, with a given language
    * and given datatype.
    *
