@@ -564,6 +564,10 @@ public class GraphImpl implements Graph, Serializable {
       if (third instanceof BlankNodeImpl) {
         localValues[2] = ((BlankNodeImpl) third).getId();
       }
+      else if (third instanceof LiteralImpl) {
+        localValues[2] = elementFactory.getNodeIdByString(((LiteralImpl)
+            third).getEscapedForm());
+      }
       else {
         localValues[2] = elementFactory.getNodeIdByString(String.valueOf(third));
       }
