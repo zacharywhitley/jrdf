@@ -67,14 +67,11 @@ import java.net.URISyntaxException;
 import junit.framework.*;
 
 /**
- * Abstract Test case for {@link org.jrdfmem.graph.NodeFactoryImpl}.
+ * Abstract Test case for Graph Element Factories.
+ *
  * Implementing packages should extend this class and implement the
  * {@link #newGraph}, {@link #getDefaultLiteralType} and
  * {@link #getDefaultLiteralLanguage} methods.
- * Unfortunately this class is monolithic.  This is because all classes
- * in the org.jrdfmem.graph package are accessed through the Graph interface
- * which acts as a factory in many instances.  There is very tight coupling
- * thoughout the whole package.
  *
  * @author Paul Gearon
  *

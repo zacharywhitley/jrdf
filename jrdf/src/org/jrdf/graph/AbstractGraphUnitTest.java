@@ -68,11 +68,7 @@ import java.util.*;
 import junit.framework.*;
 
 /**
- * Abstract test case for {@link org.jrdfmem.graph.GraphImpl}.
- * Unfortunately this class is monolithic.  This is because all classes
- * in the org.jrdfmem.graph package are accessed through the Graph interface
- * which acts as a factory in many instances.  There is very tight coupling
- * thoughout the whole package.
+ * Abstract test case for graph implementations.
  *
  * @author Paul Gearon
  * @author Andrew Newman

@@ -59,7 +59,7 @@
 package org.jrdf.graph;
 
 /**
- * Exception from a {@link NodeFactory} operation.
+ * Exception from a {@link TripleFactory} operation.
  *
  * @author Andrew Newman
  *
