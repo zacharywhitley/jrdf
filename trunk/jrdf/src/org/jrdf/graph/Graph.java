@@ -145,4 +145,11 @@ public interface Graph extends Serializable {
    * @return the node factory for the graph, or creates one.
    */
   public NodeFactory getNodeFactory();
+
+  /**
+   * Returns the number of triples in the graph.
+   *
+   * @return the number of triples in the graph.
+   */
+  public long getNumberOfTriples();
 }
