@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 import org.jrdf.graph.*;
+import org.jrdf.util.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -85,6 +86,11 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
   private GraphElementFactory elementFactory;
 
   /**
+   * Global graph object
+   */
+  private Graph graph;
+
+  /**
    * Constructs a new test with the given name.
    *
    * @param name the name of the test
@@ -97,7 +103,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
    * Create test instance.
    */
   public void setUp() throws Exception {
-    Graph graph = newGraph();
+    graph = newGraph();
     elementFactory = graph.getElementFactory();
   }
 
@@ -249,9 +255,91 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     triple = elementFactory.createTriple(blank1, ref1, l1);
     triple = elementFactory.createTriple(ref1, ref2, l1);
     triple = elementFactory.createTriple(ref1, ref2, blank1);
-    triple = elementFactory.createTriple(ref1, ref2, ref3);
+
+    // Test that the node exists from a newly created predicate - the same
+    // as an already existing predicate
+    graph.add(triple);
+    graph.add(ref2, ref1, l1);
+
+    URIReference ref4 = elementFactory.createResource(uri1);
+    URIReference ref5 = elementFactory.createResource(uri2);
+    Literal l3 = elementFactory.createLiteral(TEST_STR1);
+    assertEquals(ref4, ref1);
+    assertEquals(ref5, ref2);
+    assertEquals(l1, l3);
+    assertEquals(l1.getEscapedForm(), l3.getEscapedForm());
+    assertTrue(graph.contains(ref4, ref5, blank1));
+
+    ClosableIterator iter = graph.find(ref2, ref1, null);
+    while (iter.hasNext()) {
+      triple = (Triple) iter.next();
+      assertEquals(l1, triple.getObject());
+      assertTrue(l1.hashCode() == triple.getObject().hashCode());
+      assertEquals(l3, triple.getObject());
+      assertTrue(l3.hashCode() == triple.getObject().hashCode());
+    }
+
+    assertTrue(graph.find(ref2, ref1, l1).hasNext());
+    assertTrue(graph.contains(ref2, ref1, l1));
+    assertTrue(graph.find(ref5, ref4, l3).hasNext());
+    assertTrue(graph.contains(ref5, ref4, l3));
   }
 
+  /**
+   * Tests that objects are always localized before testing.
+   *
+   * @throws Exception if query fails when it should have succeeded
+   */
+  public void testTwoGraphs() throws Exception {
+
+    Graph g1 = newGraph();
+    Graph g2 = newGraph();
+
+    final String TEST_STR1 = "A test string";
+    final String TEST_STR2 = "Foo 2";
+    URI uri1 = new URI("http://namespace#somevalue1");
+    URI uri2 = new URI("http://namespace#somevalue2");
+    URI uri3 = new URI("http://namespace#somevalue3");
+    URI uri4 = new URI("http://namespace#foo");
+
+    GraphElementFactory gef1 = g1.getElementFactory();
+    URIReference u1 = gef1.createResource(uri1);
+    URIReference u2 = gef1.createResource(uri2);
+    URIReference u3 = gef1.createResource(uri3);
+
+    GraphElementFactory gef2 = g2.getElementFactory();
+    Literal l1 = gef2.createLiteral(TEST_STR1);
+    Literal l2 = gef2.createLiteral(TEST_STR2);
+    URIReference u4 = gef2.createResource(uri4);
+
+    boolean isOkay = false;
+
+    try {
+      g2.add(u1, u1, l1);
+    }
+    catch (GraphException ge) {
+      isOkay = true;
+    }
+    assertTrue("Should fail to insert node", isOkay);
+
+    isOkay = false;
+    try {
+      g2.add(u4, u1, l1);
+    }
+    catch (GraphException ge) {
+      isOkay = true;
+    }
+    assertTrue("Should fail to insert node", isOkay);
+
+    isOkay = false;
+    try {
+      g2.add(u4, u2, l2);
+    }
+    catch (GraphException ge) {
+      isOkay = true;
+    }
+    assertTrue("Should fail to insert node", isOkay);
+  }
 
   // reification tests are not done here until their location within
   // the JRDF package is properly resolved
