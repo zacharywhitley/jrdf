@@ -102,6 +102,7 @@ public class GraphIterator implements ClosableIterator {
   GraphIterator(Map index, GraphElementFactoryImpl nodeFactory) {
     // store the node factory
     this.nodeFactory = nodeFactory;
+
     // initialise the iterators to empty
     itemIterator = null;
     subIterator = null;
@@ -142,13 +143,17 @@ public class GraphIterator implements ClosableIterator {
    */
   public Object next() throws NoSuchElementException {
     if (itemIterator == null) throw new NoSuchElementException();
+
     // get the next item
-    Long third = (Long)itemIterator.next();
+    Long third = (Long) itemIterator.next();
+
     // construct the triple
-    Long second = (Long)secondEntry.getKey();
-    Long first = (Long)firstEntry.getKey();
+    Long second = (Long) secondEntry.getKey();
+    Long first = (Long) firstEntry.getKey();
+
     // move to the next position
     updatePosition();
+
     // get back the nodes for these IDs and uild the triple
     return new TripleImpl(nodeFactory, first, second, third);
   }
