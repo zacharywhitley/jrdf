@@ -105,6 +105,7 @@ public class GraphElementFactoryImplUnitTest
     suite.addTest(new GraphElementFactoryImplUnitTest("testCreateLiterals"));
     suite.addTest(new GraphElementFactoryImplUnitTest("testCreateResources"));
     suite.addTest(new GraphElementFactoryImplUnitTest("testCreateTriples"));
+    suite.addTest(new GraphElementFactoryImplUnitTest("testTwoGraphs"));
     return suite;
   }
 
