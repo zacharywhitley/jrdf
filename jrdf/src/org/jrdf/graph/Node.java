@@ -63,7 +63,6 @@
 
 package org.jrdf.graph;
 
-
 /**
  * RDF node.  These include all things in the graph.
  *
@@ -74,5 +73,4 @@ package org.jrdf.graph;
  */
 public interface Node {
 
-  // No implementation just a marker interface.
 }

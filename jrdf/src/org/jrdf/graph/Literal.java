@@ -65,7 +65,6 @@ package org.jrdf.graph;
 
 // Java 2 standard
 import java.net.URI;
-import java.util.Locale;
 
 /**
  * RDF literal node.

@@ -64,13 +64,7 @@
 package org.jrdf.graph;
 
 // Java 2 standard packages
-import java.io.IOException;
-import java.net.*;
-import java.sql.*;
-import java.util.*;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
+import java.net.URI;
 
 /**
  * A Node Factory is a class which create the various components of a graph.
