@@ -69,8 +69,8 @@ import org.jrdf.util.ClosableIterator;
  * The base implementation of the Triple Factory which adds to a given graph
  * reified statements, containers and collections.
  *
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- * @author Paul Gearon
  *
  * @version $Revision$
  */

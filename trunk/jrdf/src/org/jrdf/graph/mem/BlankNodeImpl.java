@@ -67,7 +67,7 @@ import org.jrdf.graph.AbstractBlankNode;
  *
  * Blank nodes, can either be subjects or objects.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */

@@ -73,7 +73,7 @@ import junit.framework.*;
 /**
  * Abstract test case for graph implementations.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  *
  * @version $Revision$

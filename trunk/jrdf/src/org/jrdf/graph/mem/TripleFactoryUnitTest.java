@@ -70,7 +70,7 @@ import junit.framework.*;
  * Implementation of {@link org.jrdf.graph.AbstractTripleFactoryUnitTest} test
  * case.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  *
  * @version $Revision$

@@ -70,7 +70,7 @@ import java.net.URI;
  * Implementation of {@link org.jrdf.graph.AbstractGraphElementFactoryUnitTest}
  * test case.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */

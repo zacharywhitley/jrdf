@@ -70,7 +70,7 @@ import java.util.*;
  * A Node Factory is a class which create the various components of a graph.
  * It is tied to a specific instance of GraphImpl.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */

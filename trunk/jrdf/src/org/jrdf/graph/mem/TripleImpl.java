@@ -63,7 +63,7 @@ import org.jrdf.graph.*;
 /**
  * A trivial implementation of an RDF {@link Triple}.
  *
- * @author Paul Gearon
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */
