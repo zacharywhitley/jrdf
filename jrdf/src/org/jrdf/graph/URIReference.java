@@ -53,7 +53,7 @@
  *
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
- * information on the JRDF, please see <http://jrdf.sourceforge.net/>.
+ * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
 package org.jrdf.graph;
