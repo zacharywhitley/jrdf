@@ -418,6 +418,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     else {
       // Check if any character data has been collected in the _charBuf
       boolean literalValue = _charBuf.toString().trim().length() > 0;
+
       if (literalValue) {
         _rdfParser.text(_charBuf.toString());
       }
@@ -445,7 +446,6 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         _charBuf.append(_os.toString());
       }
       else {
-        _charBuf.setLength(0);
         _charBuf.append(ch, start, length);
       }
 
