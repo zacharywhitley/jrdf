@@ -103,9 +103,9 @@ public interface Graph extends Serializable {
   public boolean contains(Triple triple) throws GraphException;
 
   /**
-   * Returns an iterator of {@link Triple}s to a set of statements that 
-   * match a given subject, predicate and object.  A null value for any of 
-   * the parts of a triple are treated as unconstrained, any values will be 
+   * Returns an iterator of {@link Triple}s to a set of statements that
+   * match a given subject, predicate and object.  A null value for any of
+   * the parts of a triple are treated as unconstrained, any values will be
    * returned.
    *
    * @param subject The subject to find or null to indicate any subject.
@@ -117,9 +117,9 @@ public interface Graph extends Serializable {
       ObjectNode object) throws GraphException;
 
   /**
-   * Returns an iterator of {@link Triple}s to a set of statements that 
-   * match a given subject, predicate and object.  A null value for any of 
-   * the parts of a triple are treated as unconstrained, any values will be 
+   * Returns an iterator of {@link Triple}s to a set of statements that
+   * match a given subject, predicate and object.  A null value for any of
+   * the parts of a triple are treated as unconstrained, any values will be
    * returned.
    *
    * @param triple The triple to find.
@@ -149,8 +149,8 @@ public interface Graph extends Serializable {
   public void add(Triple triple) throws GraphException;
 
   /**
-   * Adds an iterator containing triples into the graph.  The nodes must 
-   * have already been created using {@link GraphElementFactory}.
+   * Adds all the triples contained in an iterator into the graph.  The nodes
+   * must have already been created using {@link GraphElementFactory}.
    *
    * @param triples The triple iterator.
    * @throws GraphExcepotion If the statements can't be made.
@@ -158,7 +158,7 @@ public interface Graph extends Serializable {
   public void add(Iterator triples) throws GraphException;
 
   /**
-   * Removes a triple from the graph.  The nodes must have already been 
+   * Removes a triple from the graph.  The nodes must have already been
    * created using {@link GraphElementFactory}.
    *
    * @param subject The subject.
@@ -171,7 +171,7 @@ public interface Graph extends Serializable {
       throws GraphException;
 
   /**
-   * Removes a triple from the graph.  The nodes must have already been 
+   * Removes a triple from the graph.  The nodes must have already been
    * created using {@link GraphElementFactory}.
    *
    * @param triple The triple.
@@ -181,8 +181,8 @@ public interface Graph extends Serializable {
   public void remove(Triple triple) throws GraphException;
 
   /**
-   * Removes an iterator containing triples from the graph.  The nodes must
-   * have already been created using {@link GraphElementFactory}.
+   * Removes all the triples contained in an iterator from the graph.  The
+   * nodes must have already been created using {@link GraphElementFactory}.
    *
    * @param triples The triple iterator.
    * @throws GraphExcepotion If the statements can't be revoked.
