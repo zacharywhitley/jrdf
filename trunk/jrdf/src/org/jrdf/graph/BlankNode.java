@@ -70,7 +70,8 @@ public interface BlankNode extends Resource {
 
   /**
    * While the internal structure of a BlankNode is not defined equality between
-   * two nodes should be able to be determined.
+   * two nodes should be able to be determined.  In some representations this
+   * equality would be defined by a blank node identifier.
    */
   public boolean equals(Object obj);
 }
