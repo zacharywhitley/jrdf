@@ -163,13 +163,6 @@ public abstract class AbstractLiteral implements Literal {
     return returnValue;
   }
 
-  /**
-   * Returns a hash-code value for this literal. The hash code is based upon
-   * all of the literal's components including the lexical form, datatype, and
-   * language.  This implementation XORs these values together.
-   *
-   * @return a hash-code value for this literal.
-   */
   public int hashCode() {
 
     int hashCode = getLexicalForm().hashCode();

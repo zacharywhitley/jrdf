@@ -135,13 +135,6 @@ public abstract class AbstractTriple implements Triple {
     return returnValue;
   }
 
-  /**
-   * Returns a hash-code value for this triple. The hash code is based upon
-   * all of the components of a triple the subject, predicate and object.
-   * This implementation XORs these values together.
-   *
-   * @return a hash-code value for this triple.
-   */
   public int hashCode() {
 
     return getSubject().hashCode() ^ getPredicate().hashCode() ^

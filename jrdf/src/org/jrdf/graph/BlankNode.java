@@ -72,6 +72,16 @@ package org.jrdf.graph;
 public interface BlankNode extends SubjectNode, ObjectNode {
 
   /**
+   * Returns a hash-code value for this BlankNode.  While the implementation
+   * is not defined, if there is a blank node identifier then it should be
+   * the hash code generated from this.  Hash code generation should follow
+   * the normal contract.
+   *
+   * @return a hash-code value for this blank node.
+   */
+  public int hashCode();
+
+  /**
    * While the internal structure of a BlankNode is not defined equality between
    * two nodes should be able to be determined.  In some representations this
    * equality would be defined by a blank node identifier.
