@@ -65,6 +65,7 @@ import org.jrdf.util.ClosableIterator;  // used by reification only
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import org.jrdf.util.UIDGenerator;
 
 /**
  * A Node Factory is a class which create the various components of a graph.
@@ -111,8 +112,19 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
   public BlankNode createResource() throws GraphElementFactoryException {
     Long id = new Long(nextNode);
 
+    //get an Unique Identifier
+    String uid = "";
+    try {
+
+      uid = UIDGenerator.generateUID();
+    } catch (Exception exception) {
+      throw new GraphElementFactoryException("Could not generate Unique " +
+                                             "Identifier for BlankNode.",
+                                             exception);
+    }
+
     // create the new node
-    BlankNode node = new BlankNodeImpl(id);
+    BlankNode node = new BlankNodeImpl(id, uid);
 
     // put the node in the pool
     nodePool.put(id, node);
@@ -121,7 +133,6 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     nextNode++;
     return node;
   }
-
 
   /**
    * Create a URI reference.

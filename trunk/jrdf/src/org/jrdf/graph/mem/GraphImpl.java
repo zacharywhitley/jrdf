@@ -71,7 +71,16 @@ import org.jrdf.util.ClosableIterator;
  *
  * @version $Revision$
  */
-public class GraphImpl implements Graph, Serializable {
+public class GraphImpl
+    implements Graph, Serializable {
+
+  /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = -3066836734480153804L;
 
   // indexes are mapped as:
   // s -> {p -> {set of o}}
@@ -111,7 +120,6 @@ public class GraphImpl implements Graph, Serializable {
     init();
   }
 
-
   /**
    * Initialization method used by the constructor and the deserializer.
    *
@@ -133,7 +141,8 @@ public class GraphImpl implements Graph, Serializable {
     if (elementFactory == null) {
       try {
         elementFactory = new GraphElementFactoryImpl(this);
-      } catch (TripleFactoryException e) {
+      }
+      catch (TripleFactoryException e) {
         throw new GraphException(e);
       }
     }
@@ -148,7 +157,6 @@ public class GraphImpl implements Graph, Serializable {
     }
   }
 
-
   /**
    * Test the graph for the occurrence of a statement.  A null value for any
    * of the parts of a triple are treated as unconstrained, any values will be
@@ -162,7 +170,7 @@ public class GraphImpl implements Graph, Serializable {
    */
   public boolean contains(
       SubjectNode subject, PredicateNode predicate, ObjectNode object
-  ) throws GraphException {
+      ) throws GraphException {
 
     // Get local node values
     Long[] values;
@@ -177,7 +185,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     // Return true if all are null and size is greater than zero.
-    if ((subject == null) && (predicate == null) && (object == null)) {
+    if ( (subject == null) && (predicate == null) && (object == null)) {
       return index012.size() > 0;
     }
 
@@ -186,7 +194,7 @@ public class GraphImpl implements Graph, Serializable {
 
       // Predicate null - was null, null obj.
       if (predicate == null) {
-        Map objIndex = (Map) this.index201.get(values[2]);
+        Map objIndex = (Map)this.index201.get(values[2]);
         return objIndex != null;
       }
       // Predicate is not null.  Could be null, pred, null or null, pred, obj.
@@ -245,7 +253,7 @@ public class GraphImpl implements Graph, Serializable {
         // look up the predicate
         java.util.Collection group = (java.util.Collection)
             subIndex.get(values[1]);
-        if (group == null) return false;
+        if (group == null)return false;
 
         // Object not null.  Must be subj, pred, obj.
         if (object != null) {
@@ -259,7 +267,6 @@ public class GraphImpl implements Graph, Serializable {
     }
   }
 
-
   /**
    * Test the graph for the occurrence of the triple.  A null value for any
    * of the parts of a triple are treated as unconstrained, any values will be
@@ -270,9 +277,9 @@ public class GraphImpl implements Graph, Serializable {
    * @throws GraphException If there was an error accessing the graph.
    */
   public boolean contains(Triple triple) throws GraphException {
-    return contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    return contains(triple.getSubject(), triple.getPredicate(),
+                    triple.getObject());
   }
-
 
   /**
    * Returns an iterator to a set of statements that match a given subject,
@@ -286,7 +293,7 @@ public class GraphImpl implements Graph, Serializable {
    */
   public ClosableIterator find(
       SubjectNode subject, PredicateNode predicate, ObjectNode object
-  ) throws GraphException {
+      ) throws GraphException {
 
     // Get local node values
     Long[] values;
@@ -308,11 +315,14 @@ public class GraphImpl implements Graph, Serializable {
         if (object != null) {
           // got {spo}
           return new ThreeFixedIterator(this, subject, predicate, object);
-        } else {
-          // got {sp*}
-          return new TwoFixedIterator(index012, 0, values[0], values[1], elementFactory, this);
         }
-      } else {
+        else {
+          // got {sp*}
+          return new TwoFixedIterator(index012, 0, values[0], values[1],
+                                      elementFactory, this);
+        }
+      }
+      else {
         // test for {s**}
         if (object == null) {
           return new OneFixedIterator(index012, 0, values[0], elementFactory, this);
@@ -324,8 +334,10 @@ public class GraphImpl implements Graph, Serializable {
     if (predicate != null) {
       // test for {*po}
       if (object != null) {
-        return new TwoFixedIterator(index120, 2, values[1], values[2], elementFactory, this);
-      } else {
+        return new TwoFixedIterator(index120, 2, values[1], values[2],
+                                    elementFactory, this);
+      }
+      else {
         // test for {*p*}.  {sp*} should have been picked up above
         assert subject == null;
         return new OneFixedIterator(index120, 2, values[1], elementFactory, this);
@@ -335,8 +347,10 @@ public class GraphImpl implements Graph, Serializable {
     if (object != null) {
       // test for {s*o}
       if (subject != null) {
-        return new TwoFixedIterator(index201, 1, values[2], values[0], elementFactory, this);
-      } else {
+        return new TwoFixedIterator(index201, 1, values[2], values[0],
+                                    elementFactory, this);
+      }
+      else {
         // test for {**o}.  {*po} should have been picked up above
         assert predicate == null;
         return new OneFixedIterator(index201, 1, values[2], elementFactory, this);
@@ -367,7 +381,8 @@ public class GraphImpl implements Graph, Serializable {
    * @param object The object.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+  public void add(SubjectNode subject, PredicateNode predicate,
+                  ObjectNode object) throws GraphException {
 
     // Get local node values also tests that it's a valid subject, predicate
     // and object.
@@ -383,16 +398,17 @@ public class GraphImpl implements Graph, Serializable {
       try {
         // add to the third index
         add(index201, values[2], values[0], values[1]);
-      } catch (GraphException e) {
+      }
+      catch (GraphException e) {
         remove(index120, values[1], values[2], values[0]);
         throw e;
       }
-    } catch (GraphException e) {
+    }
+    catch (GraphException e) {
       remove(index012, values[0], values[1], values[2]);
       throw e;
     }
   }
-
 
   /**
    * Adds a triple to the graph.
@@ -428,7 +444,7 @@ public class GraphImpl implements Graph, Serializable {
    *     example if it didn't exist.
    */
   public void remove(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object) throws GraphException {
+                     ObjectNode object) throws GraphException {
 
     // Get local node values also tests that it's a valid subject, predicate
     // and object.
@@ -438,11 +454,11 @@ public class GraphImpl implements Graph, Serializable {
     // if the first one succeeded then try and attempt removal on both of the others
     try {
       remove(index120, values[1], values[2], values[0]);
-    } finally {
+    }
+    finally {
       remove(index201, values[2], values[0], values[1]);
     }
   }
-
 
   /**
    * Removes a triple from the graph.
@@ -497,10 +513,10 @@ public class GraphImpl implements Graph, Serializable {
     Iterator first = index012.values().iterator();
     while (first.hasNext()) {
       // go over the sub indexes
-      Iterator second = ((Map)first.next()).values().iterator();
+      Iterator second = ( (Map) first.next()).values().iterator();
       while (second.hasNext()) {
         // accumulate the sizes of the groups
-        size += ((java.util.Collection) second.next()).size();
+        size += ( (java.util.Collection) second.next()).size();
       }
     }
     return size;
@@ -524,7 +540,6 @@ public class GraphImpl implements Graph, Serializable {
     // no op
   }
 
-
   /**
    * Adds a triple to a single index.
    *
@@ -534,14 +549,15 @@ public class GraphImpl implements Graph, Serializable {
    * @param third The last node.
    * @throws GraphException If there was an error adding the statement.
    */
-  private Long[] localize(Node first, Node second, Node third) throws GraphException {
+  private Long[] localize(Node first, Node second, Node third) throws
+      GraphException {
 
     Long[] localValues = new Long[3];
 
     // convert the nodes to local memory nodes for convenience
     if (first != null) {
       if (first instanceof BlankNodeImpl) {
-        localValues[0] = ((BlankNodeImpl) first).getId();
+        localValues[0] = ( (BlankNodeImpl) first).getId();
       }
       else {
         localValues[0] = elementFactory.getNodeIdByString(String.valueOf(first));
@@ -562,10 +578,10 @@ public class GraphImpl implements Graph, Serializable {
 
     if (third != null) {
       if (third instanceof BlankNodeImpl) {
-        localValues[2] = ((BlankNodeImpl) third).getId();
+        localValues[2] = ( (BlankNodeImpl) third).getId();
       }
       else if (third instanceof LiteralImpl) {
-        localValues[2] = elementFactory.getNodeIdByString(((LiteralImpl)
+        localValues[2] = elementFactory.getNodeIdByString( ( (LiteralImpl)
             third).getEscapedForm());
       }
       else {
@@ -589,9 +605,10 @@ public class GraphImpl implements Graph, Serializable {
    * @param third The last node id.
    * @throws GraphException If there was an error adding the statement.
    */
-  private void add(Map index, Long first, Long second, Long third) throws GraphException {
+  private void add(Map index, Long first, Long second, Long third) throws
+      GraphException {
     // find the sub index
-    Map subIndex = (Map)index.get(first);
+    Map subIndex = (Map) index.get(first);
     // check that the subindex exists
     if (subIndex == null) {
       // no, so create it and add it to the index
@@ -612,7 +629,6 @@ public class GraphImpl implements Graph, Serializable {
     group.add(third);
   }
 
-
   /**
    * Removes a triple from a single index.
    *
@@ -623,10 +639,11 @@ public class GraphImpl implements Graph, Serializable {
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
-  protected void remove(Map index, Long first, Long second, Long third) throws GraphException {
+  protected void remove(Map index, Long first, Long second, Long third) throws
+      GraphException {
 
     // find the sub index
-    Map subIndex = (Map)index.get(first);
+    Map subIndex = (Map) index.get(first);
     // check that the subindex exists
     if (subIndex == null) {
       throw new GraphException("Unable to remove nonexistent statement");
@@ -650,7 +667,6 @@ public class GraphImpl implements Graph, Serializable {
     }
   }
 
-
   /**
    * Serializes the current object to a stream.
    *
@@ -666,37 +682,39 @@ public class GraphImpl implements Graph, Serializable {
     // may take up unnecessary memory
   }
 
-
   /**
    * Deserializes an object from a stream.
    *
    * @param in The stream to read from.
    * @throws IOException If an I/O error occurs while reading.
    */
-  private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+  private void readObject(ObjectInputStream in) throws IOException,
+      ClassNotFoundException {
     // read in the first index with the default reader
     in.defaultReadObject();
     // initialize the fields not yet done by the constructor
     try {
       init();
-    } catch (GraphException e) {
+    }
+    catch (GraphException e) {
       throw new ClassNotFoundException("Unable to initialize a new graph", e);
     }
 
     // read all the nodes as well
-    Object[] nodes = (Object[])in.readObject();
+    Object[] nodes = (Object[]) in.readObject();
 
     try {
       // test node factory creation in case the constructor did it
       if (elementFactory == null) {
         elementFactory = new GraphElementFactoryImpl(this);
       }
-    } catch (TripleFactoryException e) {
+    }
+    catch (TripleFactoryException e) {
       throw new ClassNotFoundException("Unable to build NodeFactory", e);
     }
     // populate the node factory with these nodes
     for (int n = 0; n < nodes.length; n++) {
-      elementFactory.registerNode((MemNode)nodes[n]);
+      elementFactory.registerNode( (MemNode) nodes[n]);
     }
 
     // fill in the other indexes
@@ -704,28 +722,29 @@ public class GraphImpl implements Graph, Serializable {
       // iterate over the first column
       Iterator firstEntries = index012.entrySet().iterator();
       while (firstEntries.hasNext()) {
-        Map.Entry firstEntry = (Map.Entry)firstEntries.next();
-        Long first = (Long)firstEntry.getKey();
+        Map.Entry firstEntry = (Map.Entry) firstEntries.next();
+        Long first = (Long) firstEntry.getKey();
         // now iterate over the second column
-        Iterator secondEntries = ((Map)firstEntry.getValue()).entrySet().iterator();
+        Iterator secondEntries = ( (Map) firstEntry.getValue()).entrySet().
+            iterator();
         while (secondEntries.hasNext()) {
-          Map.Entry secondEntry = (Map.Entry)secondEntries.next();
-          Long second = (Long)secondEntry.getKey();
+          Map.Entry secondEntry = (Map.Entry) secondEntries.next();
+          Long second = (Long) secondEntry.getKey();
           // now iterate over the third column
-          Iterator thirdValues = ((Set)secondEntry.getValue()).iterator();
+          Iterator thirdValues = ( (Set) secondEntry.getValue()).iterator();
           while (thirdValues.hasNext()) {
-            Long third = (Long)thirdValues.next();
+            Long third = (Long) thirdValues.next();
             // now add the row to the other two indexes
             add(index120, second, third, first);
             add(index201, third, first, second);
           }
         }
       }
-    } catch (GraphException e) {
+    }
+    catch (GraphException e) {
       throw new ClassNotFoundException("Unable to add to a graph index", e);
     }
   }
-
 
   /**
    * Debug method to see the current state of the first index.
@@ -735,12 +754,12 @@ public class GraphImpl implements Graph, Serializable {
   static void dumpIndex(Map index) {
     Iterator iterator = index.entrySet().iterator();
     while (iterator.hasNext()) {
-      Map.Entry subjectEntry = (Map.Entry)iterator.next();
-      Long subject = (Long)subjectEntry.getKey();
+      Map.Entry subjectEntry = (Map.Entry) iterator.next();
+      Long subject = (Long) subjectEntry.getKey();
       int sWidth = subject.toString().length() + 5;
       System.out.print(subject.toString() + " --> ");
 
-      Map secondIndex = (Map)subjectEntry.getValue();
+      Map secondIndex = (Map) subjectEntry.getValue();
       if (secondIndex.isEmpty()) {
         System.out.println("X");
         continue;
@@ -749,20 +768,21 @@ public class GraphImpl implements Graph, Serializable {
 
       Iterator predIterator = secondIndex.entrySet().iterator();
       while (predIterator.hasNext()) {
-        Map.Entry predicateEntry = (Map.Entry)predIterator.next();
-        Long predicate = (Long)predicateEntry.getKey();
+        Map.Entry predicateEntry = (Map.Entry) predIterator.next();
+        Long predicate = (Long) predicateEntry.getKey();
         int pWidth = predicate.toString().length() + 5;
         if (!firstPredicate) {
           StringBuffer space = new StringBuffer(sWidth);
           space.setLength(sWidth);
           for (int c = 0; c < sWidth; c++) space.setCharAt(c, ' ');
           System.out.print(space.toString());
-        } else {
+        }
+        else {
           firstPredicate = false;
         }
         System.out.print(predicate.toString() + " --> ");
 
-        Set thirdIndex = (Set)predicateEntry.getValue();
+        Set thirdIndex = (Set) predicateEntry.getValue();
         if (thirdIndex.isEmpty()) {
           System.out.println("X");
           continue;
@@ -771,13 +791,14 @@ public class GraphImpl implements Graph, Serializable {
 
         Iterator objIterator = thirdIndex.iterator();
         while (objIterator.hasNext()) {
-          Long object = (Long)objIterator.next();
+          Long object = (Long) objIterator.next();
           if (!firstObject) {
             StringBuffer sp2 = new StringBuffer(sWidth + pWidth);
             sp2.setLength(sWidth + pWidth);
             for (int d = 0; d < sWidth + pWidth; d++) sp2.setCharAt(d, ' ');
             System.out.print(sp2.toString());
-          } else {
+          }
+          else {
             firstObject = false;
           }
           System.out.println(object);

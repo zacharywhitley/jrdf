@@ -68,6 +68,14 @@ package org.jrdf.graph;
 public class TripleFactoryException extends Exception {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 285284678430193536L;
+
+  /**
    * Create an exception.
    *
    * @param message the message to wrap inside this exception.

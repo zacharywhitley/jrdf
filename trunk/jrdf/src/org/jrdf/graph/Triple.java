@@ -73,6 +73,14 @@ import java.io.Serializable;
 public interface Triple extends Serializable {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 833569221232497968L;
+
+  /**
    * Obtains the subject of this statement.
    *
    * @return an {@link SubjectNode} which is either a {@link BlankNode} or

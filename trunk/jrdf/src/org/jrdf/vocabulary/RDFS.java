@@ -72,6 +72,14 @@ import java.util.*;
 public class RDFS extends Vocabulary {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 3344119222366953296L;
+
+  /**
    * The URI of the RDFS name space.
    */
   public static final URI baseURI;

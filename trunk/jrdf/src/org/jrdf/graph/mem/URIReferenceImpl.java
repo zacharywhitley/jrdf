@@ -80,6 +80,13 @@ import org.jrdf.graph.AbstractURIReference;
  */
 public class URIReferenceImpl extends AbstractURIReference implements MemNode {
 
+  /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = -4120822410726711976L;
 
   /** The internal identifier for this node. */
   private Long id;

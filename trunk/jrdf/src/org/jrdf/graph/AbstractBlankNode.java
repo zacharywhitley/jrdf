@@ -65,7 +65,16 @@ package org.jrdf.graph;
  *
  * @version $Revision$
  */
-public abstract class AbstractBlankNode implements BlankNode {
+public abstract class AbstractBlankNode
+    implements BlankNode {
+
+  /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = 3481053689307839406L;
 
   /**
    * Accept a call from a TypedNodeVisitor.

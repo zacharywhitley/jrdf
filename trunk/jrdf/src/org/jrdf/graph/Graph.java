@@ -78,6 +78,14 @@ import org.jrdf.util.ClosableIterator;
 public interface Graph extends Serializable {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = -4985940845539408817L;
+
+  /**
    * Test the graph for the occurrence of a statement.  A null value for any
    * of the parts of a triple are treated as unconstrained, any values will be
    * returned.

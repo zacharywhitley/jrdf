@@ -72,6 +72,14 @@ package org.jrdf.graph;
 public interface BlankNode extends SubjectNode, ObjectNode, TypedNodeVisitable {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  static final long serialVersionUID = -8505447977160366361L;
+
+  /**
    * Returns a hash-code value for this BlankNode.  While the implementation
    * is not defined, if there is a blank node identifier then it should be
    * the hash code generated from this.  Hash code generation should follow
