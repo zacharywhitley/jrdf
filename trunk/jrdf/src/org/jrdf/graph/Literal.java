@@ -69,7 +69,7 @@ import java.net.URI;
  *
  * @version $Revision$
  */
-public interface Literal extends ObjectNode {
+public interface Literal extends ObjectNode, TypedNodeVisitable {
 
   /**
    * Obtain the text of this literal.
