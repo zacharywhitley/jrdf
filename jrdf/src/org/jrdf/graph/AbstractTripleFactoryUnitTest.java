@@ -58,9 +58,14 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.*;
-
+// Java packages
 import java.net.*;
+import java.util.*;
+
+// Internal packages
+import org.jrdf.graph.*;
+import org.jrdf.vocabulary.*;
+import org.jrdf.util.*;
 
 // Third party packages
 import junit.framework.*;
@@ -179,6 +184,13 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
    */
   public abstract PredicateNode getReifyObject() throws TripleFactoryException;
 
+  /**
+   * Create a concrete Collection.
+   *
+   * @return the new collection.
+   */
+  public abstract Collection createCollection(ObjectNode[] objects);
+
   //
   // Test cases
   //
@@ -186,7 +198,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   /**
    * Tests reification.
    */
-  public void reification() throws Exception {
+  public void testReification() throws Exception {
     PredicateNode reifySubject = getReifySubject();
     PredicateNode reifyPredicate = getReifyPredicate();
     PredicateNode reifyObject = getReifyObject();
@@ -263,6 +275,86 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     assertEquals(graph.getNumberOfTriples(), 16);
   }
 
+  /**
+   * Test collections
+   */
+  public void testCollections() throws Exception {
+
+    // Ensure graph is empty before starting.
+    assertTrue(graph.isEmpty());
+
+    // Create initial statement
+    SubjectNode s = (SubjectNode) elementFactory.createResource(
+        new URI("http://example.org/basket"));
+    PredicateNode p = (PredicateNode) elementFactory.createResource(
+        new URI("http://example.org/stuff/1.0/hasFruit"));
+    ObjectNode o = (ObjectNode)
+        elementFactory.createResource();
+
+    // Add to graph
+    graph.add(s, p, o);
+
+    // Create collection object.
+    ObjectNode[] fruit = new ObjectNode[3];
+    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/banana"));
+    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/kiwi"));
+    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+        "http://example.org/pineapple"));
+
+    PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(
+        RDF.FIRST);
+    PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(
+        RDF.REST);
+    ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(
+        RDF.NIL);
+
+    // Create collection and add
+    Collection collection = createCollection(fruit);
+
+    // Add the collection to the graph.
+    tripleFactory.addCollection((SubjectNode) o, collection);
+
+    // Check we've inserted it correctly.
+    assertEquals("Should have seven statements", 7, graph.getNumberOfTriples());
+    assertTrue("Should have first statement", graph.contains(s, p, o));
+    assertTrue("Should have first object and first collection object",
+      graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
+
+    // Get all rdf:first statements
+    ClosableIterator iter = graph.find(null, rdfFirst, null);
+    int counter = 0;
+    while (iter.hasNext()) {
+//      System.err.println(iter.next());
+      iter.next();
+      counter++;
+    }
+
+    assertTrue("Should have three rdf:first statements", counter == 3);
+
+    // Get all rdf:rest statements
+    iter = graph.find(null, rdfRest, null);
+    counter = 0;
+    while (iter.hasNext()) {
+//      System.err.println(iter.next());
+      iter.next();
+      counter++;
+    }
+
+    assertTrue("Should have three rdf:rest statements", counter == 3);
+
+    // Get all rdf:rest with rdf:nil statements
+    iter = graph.find(null, rdfRest, rdfNil);
+    counter = 0;
+    while (iter.hasNext()) {
+//      System.err.println(iter.next());
+      iter.next();
+      counter++;
+    }
+
+    assertTrue("Should have one rdf:rest with rdf:nil statements", counter == 1);
+  }
 
   /**
    * Utility method to check that a triple cannot be reified.
