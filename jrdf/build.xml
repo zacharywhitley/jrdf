@@ -1,0 +1,77 @@
+<!-- tested using ant 1.5.4 -->
+<project name="jrdf" default="dist" basedir=".">
+
+    <property name="Name"            value="Java RDF API"/>
+    <property name="name"            value="jrdf"/>
+    
+    <!-- The major and minor version numbers  -->
+    <property name="version-major"   value="1"/>
+    <property name="version-minor"   value="0"/>
+
+    <!-- e.g. -beta1, or empty string for stable releases -->
+    <property name="version-status"  value="-beta1"/>
+    <property name="version"
+         value="${version-major}.${version-minor}${version-status}"/>
+
+    <property name="dist.name"       value="${Name}-${version}"/>
+    
+    <property name="web.site"        value="http://jrdf.sourceforge.net/" />
+  
+    <property name="debug"           value="true"/>
+    <property name="debuglevel"      value="source,lines"/>
+    <property name="deprecation"     value="false"/>
+    <property name="optimize"        value="true"/>
+
+    <property name="src.dir"         value="src"/>
+    <property name="obj.dir"         value="obj"/>
+    <property name="classes.dir"     value="obj/java/classes"/>
+    <property name="dist.dir"        value="dist"/>
+    <property name="lib.dir"         value="lib"/>
+    <property name="doc.dir"         value="doc"/>
+    <property name="javadoc.dir"     value="doc/javadoc"/>
+
+    <property name="jarfile"         value="${name}-${version}.jar"/>
+
+    <target name="compile">
+      <delete dir="${classes.dir}"/>
+      <mkdir dir="${classes.dir}"/>
+      <javac srcdir="${src.dir}"
+             destdir="${classes.dir}"
+             debug="${debug}"
+             debuglevel="${debuglevel}"
+             deprecation="${deprecation}"
+             optimize="${optimize}">
+      </javac>
+    </target>
+
+    <target name="dist" depends="compile">
+      <delete dir="${dist.dir}"/>
+      <mkdir dir="${dist.dir}"/>
+      <jar jarfile="${dist.dir}/${jarfile}"
+           basedir="${classes.dir}">
+      </jar>
+    </target>
+
+    <target name="javadoc">
+      <delete dir="${javadoc.dir}"/>
+      <mkdir dir="${javadoc.dir}"/>
+
+      <javadoc
+       sourcepath="${src.dir}"
+       destdir="${javadoc.dir}"
+       author="true"
+       version="true"
+       windowtitle="${Name} Framework"
+       doctitle="${Name} Framework"
+       packagenames="org.jrdf.graph"
+       additionalparam="-breakiterator"
+       Use="true"
+    />
+    </target>
+
+    <target name="clean">
+      <delete dir="${dist.dir}"/>
+      <delete dir="${obj.dir}"/>
+      <delete dir="${javadoc.dir}"/>
+    </target>
+</project>
