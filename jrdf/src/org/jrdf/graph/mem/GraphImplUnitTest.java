@@ -153,7 +153,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     ObjectInputStream is = new ObjectInputStream(inputBytes);
 
     // read the graph
-    Graph graph2 = (Graph)is.readObject();
+    Graph graph2 = (Graph) is.readObject();
 
     // test that the graphs are equivalent
     assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
