@@ -97,12 +97,12 @@ public class TwoFixedIterator implements ClosableIterator {
    * Constructor.  Sets up the internal iterators.
    */
   TwoFixedIterator(
-      Map index, int var, Node firstNode, Node secondNode, GraphElementFactoryImpl nodeFactory
+      Map index, int var, Long newFirst, Long newSecond, GraphElementFactoryImpl nodeFactory
   ) {
     // store the node factory and other starting data
     this.nodeFactory = nodeFactory;
-    this.first = ((MemNode)firstNode).getId();
-    this.second = ((MemNode)secondNode).getId();
+    this.first = newFirst;
+    this.second = newSecond;
     this.var = var;
     // initialize the itemiterator to null
     itemIterator = null;
