@@ -15,7 +15,7 @@ public class RdfXmlParserExample {
     URL url = new URL(baseURI);
     InputStream is = url.openStream();
     final Graph jrdfMem = new GraphImpl();
-    RdfXmlParser parser = new RdfXmlParser(jrdfMem);
+    RdfXmlParser parser = new RdfXmlParser(jrdfMem.getElementFactory());
     parser.setStatementHandler(new StatementHandler() {
       public void handleStatement(SubjectNode subject, PredicateNode predicate,
         ObjectNode object) {
