@@ -68,5 +68,9 @@ package org.jrdf.graph;
  */
 public interface BlankNode extends Resource {
 
-  // No implementation just a marker interface.
+  /**
+   * While the internal structure of a BlankNode is not defined equality between
+   * two nodes should be determined.
+   */
+  public boolean equals(Object obj);
 }
