@@ -139,7 +139,7 @@ public abstract class AbstractLiteral implements Literal {
         Literal tmpLiteral = (Literal) obj;
 
         // Ensure that the lexical form is equal character by character.
-        if (getLexicalForm().equals(obj)) {
+        if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
 
           // Ensure that either both languages are null or are equal.
           if (((getLanguage() == null) && (tmpLiteral.getLanguage() == null)) ||
