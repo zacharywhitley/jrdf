@@ -652,6 +652,129 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
 
   /**
+   * Tests iterative removal.
+   */
+  public void testIterativeRemoval() throws Exception {
+    // add some test data
+    graph.add(blank1, ref1, blank2);
+    graph.add(blank1, ref2, blank2);
+    graph.add(ref1, ref2, l2);
+    Triple t1 = elementFactory.createTriple(blank2, ref1, blank1);
+    graph.add(t1);
+    Triple t2 = elementFactory.createTriple(blank2, ref2, blank1);
+    graph.add(t2);
+    Triple t3 = elementFactory.createTriple(blank2, ref1, l1);
+    graph.add(t3);
+
+    // check that all is well
+    assertFalse(graph.isEmpty());
+    assertEquals(6, graph.getNumberOfTriples());
+
+    // get an iterator for the blank2,ref1 elements
+    ClosableIterator ci = graph.find(blank2, ref1, null);
+
+    // remove the first element
+    assertTrue(ci.hasNext());
+    ci.next();
+    ci.remove();
+    assertEquals(5, graph.getNumberOfTriples());
+    
+    // remove the second element
+    assertTrue(ci.hasNext());
+    ci.next();
+    ci.remove();
+    assertEquals(4, graph.getNumberOfTriples());
+
+    assertFalse(ci.hasNext());
+
+    // get an iterator for the blank1 elements
+    ci = graph.find(blank1, null, null);
+
+    // remove the first element
+    assertTrue(ci.hasNext());
+    ci.next();
+    ci.remove();
+    assertEquals(3, graph.getNumberOfTriples());
+    
+    // remove the second element
+    assertTrue(ci.hasNext());
+    ci.next();
+    ci.remove();
+    assertEquals(2, graph.getNumberOfTriples());
+
+    assertFalse(ci.hasNext());
+
+    // get an iterator for the ref1, ref2, l2 element
+    ci = graph.find(ref1, ref2, l2);
+
+    // remove the element
+    assertTrue(ci.hasNext());
+    ci.next();
+    ci.remove();
+    assertEquals(1, graph.getNumberOfTriples());
+    
+    assertFalse(ci.hasNext());
+
+    // get an iterator for the final element
+    ci = graph.find(null, null, null);
+
+    // remove the element
+    assertTrue(ci.hasNext());
+    ci.next();
+    ci.remove();
+    assertEquals(0, graph.getNumberOfTriples());
+    assertTrue(graph.isEmpty());
+    
+    assertFalse(ci.hasNext());
+    ci.close();
+
+    // check that we can't still remove things
+    try {
+      graph.remove(ref2, ref2, ref2);
+      assertTrue(false);
+    } catch (GraphException e) { /* no-op */ }
+
+  }
+
+
+  /**
+   * Tests full iterative removal.
+   */
+  public void testFullIterativeRemoval() throws Exception {
+    // add some test data
+    graph.add(blank1, ref1, blank2);
+    graph.add(blank1, ref2, blank2);
+    graph.add(ref1, ref2, l2);
+    Triple t1 = elementFactory.createTriple(blank2, ref1, blank1);
+    graph.add(t1);
+    Triple t2 = elementFactory.createTriple(blank2, ref2, blank1);
+    graph.add(t2);
+    Triple t3 = elementFactory.createTriple(blank2, ref1, l1);
+    graph.add(t3);
+
+    // check that all is well
+    assertFalse(graph.isEmpty());
+    assertEquals(6, graph.getNumberOfTriples());
+
+    // get an iterator for all the elements
+    ClosableIterator ci = graph.find(null, null, null);
+    for (int i = 5; i >= 0; i--) {
+      // remove the element
+      assertTrue(ci.hasNext());
+      ci.next();
+      ci.remove();
+      assertEquals(i, graph.getNumberOfTriples());
+    }
+
+    assertTrue(graph.isEmpty());
+    
+    assertFalse(ci.hasNext());
+
+    ci.close();
+  }
+
+
+  /**
    * Checks that an iterator matches a set exactly.
    * The set will be emptied and the iterator will be closed.
    *
@@ -662,6 +785,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
       Triple t = (Triple)it.next();
       assertTrue(triples.contains(t));
       triples.remove(t);
+    }
+    if (!triples.isEmpty()) {
+      System.out.println("triples still contains: " + triples.toString());
     }
     assertTrue(triples.isEmpty());
     it.close();

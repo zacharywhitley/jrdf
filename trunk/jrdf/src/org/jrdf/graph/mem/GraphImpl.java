@@ -725,4 +725,65 @@ public class GraphImpl implements Graph, Serializable {
       throw new ClassNotFoundException("Unable to add to a graph index", e);
     }
   }
+
+
+  /**
+   * Debug method to see the current state of the first index.
+   *
+   * @param index The index to display
+   */
+  static void dumpIndex(Map index) {
+    Iterator iterator = index.entrySet().iterator();
+    while (iterator.hasNext()) {
+      Map.Entry subjectEntry = (Map.Entry)iterator.next();
+      Long subject = (Long)subjectEntry.getKey();
+      int sWidth = subject.toString().length() + 5;
+      System.out.print(subject.toString() + " --> ");
+
+      Map secondIndex = (Map)subjectEntry.getValue();
+      if (secondIndex.isEmpty()) {
+        System.out.println("X");
+        continue;
+      }
+      boolean firstPredicate = true;
+
+      Iterator predIterator = secondIndex.entrySet().iterator();
+      while (predIterator.hasNext()) {
+        Map.Entry predicateEntry = (Map.Entry)predIterator.next();
+        Long predicate = (Long)predicateEntry.getKey();
+        int pWidth = predicate.toString().length() + 5;
+        if (!firstPredicate) {
+          StringBuffer space = new StringBuffer(sWidth);
+          space.setLength(sWidth);
+          for (int c = 0; c < sWidth; c++) space.setCharAt(c, ' ');
+          System.out.print(space.toString());
+        } else {
+          firstPredicate = false;
+        }
+        System.out.print(predicate.toString() + " --> ");
+
+        Set thirdIndex = (Set)predicateEntry.getValue();
+        if (thirdIndex.isEmpty()) {
+          System.out.println("X");
+          continue;
+        }
+        boolean firstObject = true;
+
+        Iterator objIterator = thirdIndex.iterator();
+        while (objIterator.hasNext()) {
+          Long object = (Long)objIterator.next();
+          if (!firstObject) {
+            StringBuffer sp2 = new StringBuffer(sWidth + pWidth);
+            sp2.setLength(sWidth + pWidth);
+            for (int d = 0; d < sWidth + pWidth; d++) sp2.setCharAt(d, ' ');
+            System.out.print(sp2.toString());
+          } else {
+            firstObject = false;
+          }
+          System.out.println(object);
+        }
+      }
+    }
+  }
+
 }
