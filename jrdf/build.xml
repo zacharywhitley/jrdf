@@ -58,6 +58,7 @@
       <mkdir dir="${javadoc.dir}"/>
 
       <javadoc
+       source="1.4"
        sourcepath="${src.dir}"
        destdir="${javadoc.dir}"
        author="true"
