@@ -1,0 +1,16 @@
+JRDF Release 0.2.1
+==================
+* AbstractLiteral has improved toString.
+* AbstractURIReference has a constructor that enforces a non-null URI.
+* Graph now has find, getNumberOfTriples and isEmpty methods.
+* Triple and Nodes are now Serializable.
+* NodeFactory now supports reification.
+* Added ClosableIterator for results.
+* Added RDF and RDFS vocabularies.
+
+JRDF Release 0.2
+================
+* Node, SubjectNode, PredicateNode and ObjectNode marker interfaces.
+* Renaming of Statement to Triple and other renaming.
+* Defining hashCode and equals.
+* Refication added to NodeFactory.
