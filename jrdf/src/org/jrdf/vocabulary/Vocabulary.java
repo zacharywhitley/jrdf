@@ -60,11 +60,7 @@ package org.jrdf.vocabulary;
 
 // Java 2 standard
 import java.io.Serializable;
-import java.net.*;
 import java.util.*;
-
-// JRDF API.
-import org.jrdf.graph.Graph;
 
 /**
  * A representation of a known vocabulary.
@@ -78,14 +74,14 @@ public abstract class Vocabulary implements Serializable {
   /**
    * The set of URI references.
    */
-  protected static Set resources;
+  protected static Set resources = new HashSet();
 
   /**
    * Returns the resources in this vocabulary.
    *
    * @return the resource in this vocabulary.
    */
-  public Set getResources() {
+  public static Set getResources() {
 
     return resources;
   }
