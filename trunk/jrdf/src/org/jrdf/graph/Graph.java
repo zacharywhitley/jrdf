@@ -87,22 +87,22 @@ public interface Graph {
    * @param predicate The predicate.
    * @param object The object.
    * @return True if the statement is found in the model, otherwise false.
-   * @throws GraphException If there was an error accessing the model.
+   * @throws GraphException If there was an error accessing the graph.
    */
   public boolean contains(Subject subject, Predicate predicate,
       Object object) throws GraphException;
 
   /**
-   * Test the graph for the occurrence of a statement.
+   * Test the graph for the occurrence of the triple.
    *
-   * @param statement The statement.
-   * @return True if the statement is found in the model, otherwise false.
-   * @throws GraphException If there was an error accessing the model.
+   * @param triple The triple.
+   * @return True if the triple is found in the graph, otherwise false.
+   * @throws GraphException If there was an error accessing the graph.
    */
-  public boolean contains(Triple statement) throws GraphException;
+  public boolean contains(Triple triple) throws GraphException;
 
   /**
-   * Adds a statement to the graph.
+   * Adds a triple to the graph.
    *
    * @param subject The subject.
    * @param predicate The predicate.
@@ -113,15 +113,15 @@ public interface Graph {
       throws GraphException;
 
   /**
-   * Adds a statement to the graph.
+   * Adds a triple to the graph.
    *
-   * @param statement The statement.
+   * @param triple The triple.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(Triple statement) throws GraphException;
+  public void add(Triple triple) throws GraphException;
 
   /**
-   * Removes a statement to the graph.
+   * Removes a triple from the graph.
    *
    * @param subject The subject.
    * @param predicate The predicate.
@@ -133,9 +133,9 @@ public interface Graph {
       throws GraphException;
 
   /**
-   * Removes a statement to the graph.
+   * Removes a triple from the graph.
    *
-   * @param statement The statement.
+   * @param triple The triple.
    * @throws GraphException If there was an error revoking the statement, for
    *     example if it didn't exist.
    */
