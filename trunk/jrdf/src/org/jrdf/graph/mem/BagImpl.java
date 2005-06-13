@@ -65,7 +65,7 @@ import java.util.*;
 import org.jrdf.graph.*;
 
 /**
- * An implementation of {@link org.jrdf.graph.Bag}.
+ * An implementation of {@link Bag}.
  *
  * @author Andrew Newman
  *
@@ -73,10 +73,6 @@ import org.jrdf.graph.*;
  */
 public class BagImpl extends AbstractUnorderedContainer implements Bag {
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
   public boolean containsAll(java.util.Collection c) {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
@@ -85,12 +81,6 @@ public class BagImpl extends AbstractUnorderedContainer implements Bag {
     return elements.values().containsAll(c);
   }
 
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
   public boolean addAll(java.util.Collection c) throws IllegalArgumentException {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
@@ -109,12 +99,6 @@ public class BagImpl extends AbstractUnorderedContainer implements Bag {
     return modified;
   }
 
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
   public boolean removeAll(java.util.Collection c) throws IllegalArgumentException {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
@@ -133,12 +117,6 @@ public class BagImpl extends AbstractUnorderedContainer implements Bag {
   }
 
 
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
   public boolean retainAll(java.util.Collection c) throws IllegalArgumentException {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
@@ -161,6 +139,10 @@ public class BagImpl extends AbstractUnorderedContainer implements Bag {
     return modified;
   }
 
+  public int hashCode() {
+    return super.hashCode();
+  }
+
   public boolean equals(Object obj) {
 
     // Check equal by reference
@@ -169,8 +151,8 @@ public class BagImpl extends AbstractUnorderedContainer implements Bag {
     }
 
     // Check for null and ensure exactly the same class - not subclass.
-    if ((obj == null) ||
-       (getClass() != obj.getClass())) {
+    if (obj == null ||
+        getClass() != obj.getClass()) {
       return false;
     }
 

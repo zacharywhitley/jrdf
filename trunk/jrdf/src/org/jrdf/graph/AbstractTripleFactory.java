@@ -94,7 +94,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    * @param predicateNode the predicate of the triple.
    * @param objectNode the object of the triple.
    * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws TripleFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
@@ -118,7 +118,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    *
    * @param triple the triple to be reified.
    * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws TripleFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
@@ -140,8 +140,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    * @param subjectNode the subject of the triple.
    * @param predicateNode the predicate of the triple.
    * @param objectNode the object of the triple.
-   * @param ru a Node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @return a node denoting the reified triple.
+   * @throws GraphElementFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
@@ -165,7 +165,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             graph.contains((SubjectNode) ru, hasPredicate, (ObjectNode) predicateNode) &&
             graph.contains((SubjectNode) ru, hasObject, objectNode))) {
 
-        throw new AlreadyReifiedException("Node: " + ru + " already used in " +
+        throw new AlreadyReifiedException("SkipListNode: " + ru + " already used in " +
           "reification");
       }
 
@@ -242,8 +242,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    *
    * @param subjectNode the subject of the triple.
    * @param container the container to add.
-   * @param whether to produce <li> or _1, _2...
-   * @throws NodeFactoryException If the resource failed to be created.
+   * @throws TripleFactoryException If the resource failed to be created.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */

@@ -59,7 +59,9 @@
 package org.jrdf.graph;
 
 // Java 2 standard packages
+
 import java.net.URI;
+import java.io.Serializable;
 
 /**
  * A base implementation of an RDF {@link URIReference}.
@@ -69,15 +71,8 @@ import java.net.URI;
  *
  * @version $Revision$
  */
-public abstract class AbstractURIReference implements URIReference {
-
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  static final long serialVersionUID = 5692030014203936562L;
+public abstract class AbstractURIReference implements URIReference,
+    Serializable {
 
   /**
    * The URI of the node.
@@ -87,25 +82,25 @@ public abstract class AbstractURIReference implements URIReference {
   /**
    * Constructor.
    *
-   * Enforces a non-<code>null</code> and absolute <var>uri</var> parameter.
+   * Enforces a non-<code>null</code> and absolute <var>newUri</var> parameter.
    *
-   * @param uri the URI to use in creation.
-   * @throws IllegalArgumentException if <var>uri</var> is <code>null</code> or
+   * @param newUri the URI to use in creation.
+   * @throws IllegalArgumentException if <var>newUri</var> is <code>null</code> or
    *     not absolute
    */
-  protected AbstractURIReference(URI uri) {
+  protected AbstractURIReference(URI newUri) {
 
-    // Validate "uri" parameter
-    if (uri == null) {
-      throw new IllegalArgumentException("Null \"uri\" parameter");
+    // Validate "newUri" parameter
+    if (newUri == null) {
+      throw new IllegalArgumentException("Null \"newUri\" parameter");
     }
 
-    if (!uri.isAbsolute()) {
-      throw new IllegalArgumentException("\""+uri+"\" is not absolute");
+    if (!newUri.isAbsolute()) {
+      throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
     }
 
     // Initialize the field
-    this.uri = uri;
+    uri = newUri;
   }
 
   /**
@@ -114,24 +109,24 @@ public abstract class AbstractURIReference implements URIReference {
    * Enforces a non-<code>null</code> parameter.  Use only for applications
    * where enforcement of valid URIs is too expensive or not necessary.
    *
-   * @param uri the URI to use in creation.
+   * @param newUri the URI to use in creation.
    * @param validate whether to enforce valid RDF URIs.
-   * @throws IllegalArgumentException if <var>uri</var> is not absolute and
+   * @throws IllegalArgumentException if <var>newUri</var> is not absolute and
    *   validate is true.
    */
-  protected AbstractURIReference(URI uri, boolean validate) {
+  protected AbstractURIReference(URI newUri, boolean validate) {
 
-    // Validate "uri" parameter
-    if (uri == null) {
-      throw new IllegalArgumentException("Null \"uri\" parameter");
+    // Validate "newUri" parameter
+    if (newUri == null) {
+      throw new IllegalArgumentException("Null \"newUri\" parameter");
     }
 
-    if (validate && !uri.isAbsolute()) {
-      throw new IllegalArgumentException("\""+uri+"\" is not absolute");
+    if (validate && !newUri.isAbsolute()) {
+      throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
     }
 
     // Initialize the field
-    this.uri = uri;
+    uri = newUri;
   }
 
   /**
@@ -166,7 +161,7 @@ public abstract class AbstractURIReference implements URIReference {
 
       try {
         URIReference tmpURIReference = (URIReference) obj;
-        returnValue = (getURI().equals(tmpURIReference.getURI()));
+        returnValue = getURI().equals(tmpURIReference.getURI());
       }
       catch (ClassCastException cce) {
         // Leave return value to be false.

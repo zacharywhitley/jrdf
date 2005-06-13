@@ -54,7 +54,7 @@ public class StatementHandlerException extends Exception {
    * The source of the exception, i.e. the application specific
    * error.
    **/
-  private Exception _source = null;
+  private Exception source;
 
   /**
    * Creates a new StatementHandlerException.
@@ -73,7 +73,7 @@ public class StatementHandlerException extends Exception {
    **/
   public StatementHandlerException(String msg, Exception source) {
     super(msg);
-    _source = source;
+    this.source = source;
   }
 
   /**
@@ -85,7 +85,7 @@ public class StatementHandlerException extends Exception {
    **/
   public StatementHandlerException(Exception source) {
     super(source.getMessage());
-    _source = source;
+    this.source = source;
   }
 
   /**
@@ -94,14 +94,16 @@ public class StatementHandlerException extends Exception {
    * @return The source of this exception.
    **/
   public Exception getSource() {
-    return _source;
+    return source;
   }
 
   /**
    * Overrides <tt>Throwable.getCause()</tt> (JDK 1.4 or later).
-   **/
+   *
+   * @return the source.
+   */
   public Throwable getCause() {
-    return _source;
+    return source;
   }
 
   // overrides Trowable.printStackTrace()
@@ -113,9 +115,9 @@ public class StatementHandlerException extends Exception {
   public void printStackTrace(PrintStream ps) {
     super.printStackTrace(ps);
 
-    if (_source != null) {
+    if (source != null) {
       ps.println("Source is:");
-      _source.printStackTrace(ps);
+      source.printStackTrace(ps);
     }
   }
 
@@ -123,9 +125,9 @@ public class StatementHandlerException extends Exception {
   public void printStackTrace(PrintWriter pw) {
     super.printStackTrace(pw);
 
-    if (_source != null) {
+    if (source != null) {
       pw.println("Source is:");
-      _source.printStackTrace(pw);
+      source.printStackTrace(pw);
     }
   }
 }

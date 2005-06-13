@@ -65,9 +65,10 @@ import org.jrdf.vocabulary.*;
 
 // Third party packages
 import junit.framework.*;
+import junit.textui.TestRunner;
 
 /**
- * Implementation of {@link org.jrdf.graph.AbstractTripleFactoryUnitTest} test
+ * Implementation of {@link AbstractTripleFactoryUnitTest} test
  * case.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
@@ -117,7 +118,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
    */
   public static void main(String[] args) throws Exception {
 
-    junit.textui.TestRunner.run(suite());
+    TestRunner.run(suite());
   }
 
   public PredicateNode getReifySubject() throws TripleFactoryException {

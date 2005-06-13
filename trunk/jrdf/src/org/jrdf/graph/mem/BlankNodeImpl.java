@@ -59,7 +59,9 @@
 package org.jrdf.graph.mem;
 
 // JRDF objects
+
 import org.jrdf.graph.AbstractBlankNode;
+import org.jrdf.graph.BlankNode;
 
 /**
  * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying
@@ -71,9 +73,7 @@ import org.jrdf.graph.AbstractBlankNode;
  *
  * @version $Revision$
  */
-public class BlankNodeImpl
-    extends AbstractBlankNode
-    implements MemNode {
+public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -93,12 +93,12 @@ public class BlankNodeImpl
    * The constructor for this node.  Package scope so that only NodeFactory and
    * static methods can call it.
    *
-   * @param id The id to be used for this node.
-   * @param uid String Globally Unique Identifier for external communication.
+   * @param newId The id to be used for this node.
+   * @param newUid String Globally Unique Identifier for external communication.
    */
-  BlankNodeImpl(Long id, String uid) {
-    this.id = id;
-    this.uid = uid;
+  BlankNodeImpl(Long newId, String newUid) {
+    id = newId;
+    uid = newUid;
   }
 
   /**
@@ -146,8 +146,7 @@ public class BlankNodeImpl
     }
 
     // Check for null and ensure exactly the same class - not subclass.
-    if ( (obj == null) ||
-        (getClass() != obj.getClass())) {
+    if (obj == null || getClass() != obj.getClass()) {
       return false;
     }
 
@@ -178,15 +177,15 @@ public class BlankNodeImpl
    * @return BlankNodeImpl
    * @throws IllegalArgumentException
    */
-  public static BlankNodeImpl valueOf(String nodeString) throws
+  public static BlankNode valueOf(String nodeString) throws
       IllegalArgumentException {
 
-    String [] split = nodeString.split("#");
+    String[] split = nodeString.split("#");
 
     //validate
-    if ((split == null)||(split.length < 2)) {
+    if (split == null || split.length < 2) {
       throw new IllegalArgumentException("String: " + nodeString + " is not " +
-                                         "of the format: uid#id");
+          "of the format: uid#id");
     }
 
     return new BlankNodeImpl(Long.valueOf(split[1]), split[0]);

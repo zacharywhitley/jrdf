@@ -41,7 +41,7 @@ public class ParseException extends Exception {
 
   private int _columnNo;
 
-  private Exception _source = null;
+  private Exception _source;
 
   /**
    * Creates a new ParseException.

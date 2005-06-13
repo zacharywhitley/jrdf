@@ -82,18 +82,20 @@ import java.util.Collection;
 public interface Container extends Collection {
 
   /**
+   * ${@inheritDoc}
+   *
+   * @param o ${@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean add(Object o) throws IllegalArgumentException;
+  boolean add(Object o) throws IllegalArgumentException;
 
   /**
-   * Always returns true.  It will only remove one element if there is more
-   * than one is the container.  This can get quite costly as it must iterate
-   * through the values from the start to end looking for the object.
+   * ${@inheritDoc}
    *
+   * @param o ${@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean remove(Object o) throws IllegalArgumentException;
+  boolean remove(Object o) throws IllegalArgumentException;
 }

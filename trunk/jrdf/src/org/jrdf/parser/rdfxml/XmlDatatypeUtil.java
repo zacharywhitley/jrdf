@@ -1343,7 +1343,7 @@ public class XmlDatatypeUtil {
 
     // Handle special case INF
     if (float1.equals("INF")) {
-      return (float2.equals("INF")) ? 0 : 1;
+      return float2.equals("INF") ? 0 : 1;
     }
     else if (float2.equals("INF")) {
       return -1;
@@ -1351,7 +1351,7 @@ public class XmlDatatypeUtil {
 
     // Handle special case -INF
     if (float1.equals("-INF")) {
-      return (float2.equals("-INF")) ? 0 : -1;
+      return float2.equals("-INF") ? 0 : -1;
     }
     else if (float2.equals("-INF")) {
       return 1;

@@ -58,6 +58,8 @@
 
 package org.jrdf.graph;
 
+import java.io.Serializable;
+
 /**
  * A base implementation of an RDF {@link BlankNode}.
  *
@@ -65,8 +67,7 @@ package org.jrdf.graph;
  *
  * @version $Revision$
  */
-public abstract class AbstractBlankNode
-    implements BlankNode {
+public abstract class AbstractBlankNode implements BlankNode, Serializable {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -74,7 +75,7 @@ public abstract class AbstractBlankNode
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 3481053689307839406L;
+  //static final long serialVersionUID = 3481053689307839406L;
 
   /**
    * Accept a call from a TypedNodeVisitor.

@@ -71,8 +71,7 @@ import org.jrdf.util.ClosableIterator;
  *
  * @version $Revision$
  */
-public class GraphImpl
-    implements Graph, Serializable {
+public class GraphImpl implements Graph, Serializable {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -89,17 +88,17 @@ public class GraphImpl
   /**
    * First index.
    */
-  protected HashMap index012;
+  protected Map index012;
 
   /**
    * Second index.
    */
-  protected transient HashMap index120;
+  protected transient Map index120;
 
   /**
    * Third index.
    */
-  protected transient HashMap index201;
+  protected transient Map index201;
 
   /**
    * Graph Element Factory.  This caches the node factory.
@@ -148,12 +147,7 @@ public class GraphImpl
     }
 
     if (tripleFactory == null) {
-      try {
-        tripleFactory = new TripleFactoryImpl(this, elementFactory);
-      }
-      catch (TripleFactoryException e) {
-        throw new GraphException(e);
-      }
+      tripleFactory = new TripleFactoryImpl(this, elementFactory);
     }
   }
 
@@ -168,9 +162,8 @@ public class GraphImpl
    * @return True if the statement is found in the model, otherwise false.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public boolean contains(
-      SubjectNode subject, PredicateNode predicate, ObjectNode object
-      ) throws GraphException {
+  public boolean contains(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object) throws GraphException {
 
     // Get local node values
     Long[] values;
@@ -185,7 +178,7 @@ public class GraphImpl
     }
 
     // Return true if all are null and size is greater than zero.
-    if ( (subject == null) && (predicate == null) && (object == null)) {
+    if (subject == null && predicate == null && object == null) {
       return index012.size() > 0;
     }
 
@@ -194,7 +187,7 @@ public class GraphImpl
 
       // Predicate null - was null, null obj.
       if (predicate == null) {
-        Map objIndex = (Map)this.index201.get(values[2]);
+        Map objIndex = (Map) index201.get(values[2]);
         return objIndex != null;
       }
       // Predicate is not null.  Could be null, pred, null or null, pred, obj.
@@ -253,7 +246,9 @@ public class GraphImpl
         // look up the predicate
         java.util.Collection group = (java.util.Collection)
             subIndex.get(values[1]);
-        if (group == null)return false;
+        if (group == null) {
+          return false;
+        }
 
         // Object not null.  Must be subj, pred, obj.
         if (object != null) {
@@ -278,7 +273,7 @@ public class GraphImpl
    */
   public boolean contains(Triple triple) throws GraphException {
     return contains(triple.getSubject(), triple.getPredicate(),
-                    triple.getObject());
+        triple.getObject());
   }
 
   /**
@@ -291,9 +286,8 @@ public class GraphImpl
    * @param object ObjectNode The object to find or null to indicate any object.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public ClosableIterator find(
-      SubjectNode subject, PredicateNode predicate, ObjectNode object
-      ) throws GraphException {
+  public ClosableIterator find(SubjectNode subject, PredicateNode predicate,
+      ObjectNode object) throws GraphException {
 
     // Get local node values
     Long[] values;
@@ -319,13 +313,14 @@ public class GraphImpl
         else {
           // got {sp*}
           return new TwoFixedIterator(index012, 0, values[0], values[1],
-                                      elementFactory, this);
+              elementFactory, this);
         }
       }
       else {
         // test for {s**}
         if (object == null) {
-          return new OneFixedIterator(index012, 0, values[0], elementFactory, this);
+          return new OneFixedIterator(index012, 0, values[0], elementFactory,
+              this);
         }
         // {s*o} so fall through
       }
@@ -335,12 +330,13 @@ public class GraphImpl
       // test for {*po}
       if (object != null) {
         return new TwoFixedIterator(index120, 2, values[1], values[2],
-                                    elementFactory, this);
+            elementFactory, this);
       }
       else {
         // test for {*p*}.  {sp*} should have been picked up above
         assert subject == null;
-        return new OneFixedIterator(index120, 2, values[1], elementFactory, this);
+        return new OneFixedIterator(index120, 2, values[1], elementFactory,
+            this);
       }
     }
 
@@ -348,12 +344,13 @@ public class GraphImpl
       // test for {s*o}
       if (subject != null) {
         return new TwoFixedIterator(index201, 1, values[2], values[0],
-                                    elementFactory, this);
+            elementFactory, this);
       }
       else {
         // test for {**o}.  {*po} should have been picked up above
         assert predicate == null;
-        return new OneFixedIterator(index201, 1, values[2], elementFactory, this);
+        return new OneFixedIterator(index201, 1, values[2], elementFactory,
+            this);
       }
     }
 
@@ -382,7 +379,7 @@ public class GraphImpl
    * @throws GraphException If the statement can't be made.
    */
   public void add(SubjectNode subject, PredicateNode predicate,
-                  ObjectNode object) throws GraphException {
+      ObjectNode object) throws GraphException {
 
     // Get local node values also tests that it's a valid subject, predicate
     // and object.
@@ -424,7 +421,7 @@ public class GraphImpl
    * Adds an iterator containing triples into the graph.
    *
    * @param triples The triple iterator.
-   * @throws GraphExcepotion If the statements can't be made.
+   * @throws GraphException If the statements can't be made.
    */
   public void add(Iterator triples) throws GraphException {
     while (triples.hasNext()) {
@@ -444,7 +441,7 @@ public class GraphImpl
    *     example if it didn't exist.
    */
   public void remove(SubjectNode subject, PredicateNode predicate,
-                     ObjectNode object) throws GraphException {
+      ObjectNode object) throws GraphException {
 
     // Get local node values also tests that it's a valid subject, predicate
     // and object.
@@ -475,7 +472,7 @@ public class GraphImpl
    * Removes an iterator containing triples from the graph.
    *
    * @param triples The triple iterator.
-   * @throws GraphExcepotion If the statements can't be revoked.
+   * @throws GraphException If the statements can't be revoked.
    */
   public void remove(Iterator triples) throws GraphException {
     while (triples.hasNext()) {
@@ -513,10 +510,10 @@ public class GraphImpl
     Iterator first = index012.values().iterator();
     while (first.hasNext()) {
       // go over the sub indexes
-      Iterator second = ( (Map) first.next()).values().iterator();
+      Iterator second = ((Map) first.next()).values().iterator();
       while (second.hasNext()) {
         // accumulate the sizes of the groups
-        size += ( (java.util.Collection) second.next()).size();
+        size += ((java.util.Collection) second.next()).size();
       }
     }
     return size;
@@ -541,7 +538,6 @@ public class GraphImpl
   /**
    * Adds a triple to a single index.
    *
-   * @param index The index to add the statement to.
    * @param first The first node.
    * @param second The second node.
    * @param third The last node.
@@ -555,10 +551,11 @@ public class GraphImpl
     // convert the nodes to local memory nodes for convenience
     if (first != null) {
       if (first instanceof BlankNodeImpl) {
-        localValues[0] = ( (BlankNodeImpl) first).getId();
+        localValues[0] = ((BlankNodeImpl) first).getId();
       }
       else {
-        localValues[0] = elementFactory.getNodeIdByString(String.valueOf(first));
+        localValues[0] =
+            elementFactory.getNodeIdByString(String.valueOf(first));
       }
 
       if (localValues[0] == null) {
@@ -567,7 +564,8 @@ public class GraphImpl
     }
 
     if (second != null) {
-      localValues[1] = elementFactory.getNodeIdByString(String.valueOf(second));
+      localValues[1] =
+          elementFactory.getNodeIdByString(String.valueOf(second));
 
       if (localValues[1] == null) {
         throw new GraphException("Predicate does not exist in graph");
@@ -576,14 +574,15 @@ public class GraphImpl
 
     if (third != null) {
       if (third instanceof BlankNodeImpl) {
-        localValues[2] = ( (BlankNodeImpl) third).getId();
+        localValues[2] = ((BlankNodeImpl) third).getId();
       }
       else if (third instanceof LiteralImpl) {
-        localValues[2] = elementFactory.getNodeIdByString( ( (LiteralImpl)
+        localValues[2] = elementFactory.getNodeIdByString(((LiteralImpl)
             third).getEscapedForm());
       }
       else {
-        localValues[2] = elementFactory.getNodeIdByString(String.valueOf(third));
+        localValues[2] =
+            elementFactory.getNodeIdByString(String.valueOf(third));
       }
 
       if (localValues[2] == null) {
@@ -712,7 +711,7 @@ public class GraphImpl
     }
     // populate the node factory with these nodes
     for (int n = 0; n < nodes.length; n++) {
-      elementFactory.registerNode( (MemNode) nodes[n]);
+      elementFactory.registerNode((MemNode) nodes[n]);
     }
 
     // fill in the other indexes
@@ -723,13 +722,13 @@ public class GraphImpl
         Map.Entry firstEntry = (Map.Entry) firstEntries.next();
         Long first = (Long) firstEntry.getKey();
         // now iterate over the second column
-        Iterator secondEntries = ( (Map) firstEntry.getValue()).entrySet().
+        Iterator secondEntries = ((Map) firstEntry.getValue()).entrySet().
             iterator();
         while (secondEntries.hasNext()) {
           Map.Entry secondEntry = (Map.Entry) secondEntries.next();
           Long second = (Long) secondEntry.getKey();
           // now iterate over the third column
-          Iterator thirdValues = ( (Set) secondEntry.getValue()).iterator();
+          Iterator thirdValues = ((Set) secondEntry.getValue()).iterator();
           while (thirdValues.hasNext()) {
             Long third = (Long) thirdValues.next();
             // now add the row to the other two indexes
@@ -772,7 +771,9 @@ public class GraphImpl
         if (!firstPredicate) {
           StringBuffer space = new StringBuffer(sWidth);
           space.setLength(sWidth);
-          for (int c = 0; c < sWidth; c++) space.setCharAt(c, ' ');
+          for (int c = 0; c < sWidth; c++) {
+            space.setCharAt(c, ' ');
+          }
           System.out.print(space.toString());
         }
         else {
@@ -793,7 +794,9 @@ public class GraphImpl
           if (!firstObject) {
             StringBuffer sp2 = new StringBuffer(sWidth + pWidth);
             sp2.setLength(sWidth + pWidth);
-            for (int d = 0; d < sWidth + pWidth; d++) sp2.setCharAt(d, ' ');
+            for (int d = 0; d < sWidth + pWidth; d++) {
+              sp2.setCharAt(d, ' ');
+            }
             System.out.print(sp2.toString());
           }
           else {

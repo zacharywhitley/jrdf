@@ -76,7 +76,7 @@ public interface Node extends Serializable {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -9031232254076464056L;
+  long serialVersionUID = -9031232254076464056L;
 
 
 }

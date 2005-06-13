@@ -83,7 +83,7 @@ public interface Graph extends Serializable {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -4985940845539408817L;
+  long serialVersionUID = -4985940845539408817L;
 
   /**
    * Test the graph for the occurrence of a statement.  A null value for any
@@ -96,7 +96,7 @@ public interface Graph extends Serializable {
    * @return True if the statement is found in the model, otherwise false.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public boolean contains(SubjectNode subject, PredicateNode predicate,
+  boolean contains(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws GraphException;
 
   /**
@@ -108,7 +108,7 @@ public interface Graph extends Serializable {
    * @return True if the triple is found in the graph, otherwise false.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public boolean contains(Triple triple) throws GraphException;
+  boolean contains(Triple triple) throws GraphException;
 
   /**
    * Returns an iterator of {@link Triple}s to a set of statements that
@@ -121,7 +121,7 @@ public interface Graph extends Serializable {
    * @param object ObjectNode The object to find or null to indicate any object.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public ClosableIterator find(SubjectNode subject, PredicateNode predicate,
+  ClosableIterator find(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws GraphException;
 
   /**
@@ -133,7 +133,7 @@ public interface Graph extends Serializable {
    * @param triple The triple to find.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public ClosableIterator find(Triple triple) throws GraphException;
+  ClosableIterator find(Triple triple) throws GraphException;
 
   /**
    * Adds a triple to the graph.  The nodes must have already been created
@@ -144,7 +144,7 @@ public interface Graph extends Serializable {
    * @param object The object.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+  void add(SubjectNode subject, PredicateNode predicate, ObjectNode object)
       throws GraphException;
 
   /**
@@ -154,7 +154,7 @@ public interface Graph extends Serializable {
    * @param triple The triple.
    * @throws GraphException If the statement can't be made.
    */
-  public void add(Triple triple) throws GraphException;
+  void add(Triple triple) throws GraphException;
 
   /**
    * Adds all the triples contained in an iterator into the graph.  The nodes
@@ -163,12 +163,12 @@ public interface Graph extends Serializable {
    * @param triples The triple iterator.
    * @throws GraphExcepotion If the statements can't be made.
    */
-  public void add(Iterator triples) throws GraphException;
+  void add(Iterator triples) throws GraphException;
 
   /**
    * Closes any resources associated with this graph.
    */
-  public void close();
+  void close();
 
   /**
    * Removes a triple from the graph.  The nodes must have already been
@@ -180,7 +180,7 @@ public interface Graph extends Serializable {
    * @throws GraphException If there was an error revoking the statement, For
    *     example if it didn't exist.
    */
-  public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+  void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
       throws GraphException;
 
   /**
@@ -191,7 +191,7 @@ public interface Graph extends Serializable {
    * @throws GraphException If there was an error revoking the statement, For
    *     example if it didn't exist.
    */
-  public void remove(Triple triple) throws GraphException;
+  void remove(Triple triple) throws GraphException;
 
   /**
    * Removes all the triples contained in an iterator from the graph.  The
@@ -200,33 +200,33 @@ public interface Graph extends Serializable {
    * @param triples The triple iterator.
    * @throws GraphExcepotion If the statements can't be revoked.
    */
-  public void remove(Iterator triples) throws GraphException;
+  void remove(Iterator triples) throws GraphException;
 
   /**
    * Returns the node factory for the graph, or creates one.
    *
    * @return the node factory for the graph, or creates one.
    */
-  public GraphElementFactory getElementFactory();
+  GraphElementFactory getElementFactory();
 
   /**
    * Returns the triple factory for the graph, or creates one.
    *
    * @return the triple factory for the graph, or creates one.
    */
-  public TripleFactory getTripleFactory();
+  TripleFactory getTripleFactory();
 
   /**
    * Returns the number of triples in the graph.
    *
    * @return the number of triples in the graph.
    */
-  public long getNumberOfTriples() throws GraphException;
+  long getNumberOfTriples() throws GraphException;
 
   /**
    * Returns true if the graph is empty i.e. the number of triples is 0.
    *
    * @return true if the graph is empty i.e. the number of triples is 0.
    */
-  public boolean isEmpty() throws GraphException;
+  boolean isEmpty() throws GraphException;
 }

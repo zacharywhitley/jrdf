@@ -108,29 +108,39 @@ public class TwoFixedIterator implements ClosableIterator {
   private int var;
 
 
-
   /**
    * Constructor.  Sets up the internal iterators.
    */
-  TwoFixedIterator(
-      Map index, int var, Long newFirst, Long newSecond, GraphElementFactoryImpl nodeFactory, GraphImpl graph
-  ) {
+  TwoFixedIterator(Map newIndex, int newVar, Long newFirst, Long newSecond,
+      GraphElementFactory newFactory, Graph newGraph) {
+
+    if (!(newFactory instanceof GraphElementFactoryImpl)) {
+      throw new IllegalArgumentException(
+          "Must use the memory implementation of GraphElementFactory");
+    }
+
+    if (!(newGraph instanceof GraphImpl)) {
+      throw new IllegalArgumentException(
+          "Must use the memory implementation of Graph");
+    }
+
+
     // store the node factory and other starting data
-    this.nodeFactory = nodeFactory;
-    this.graph = graph;
-    this.index = index;
-    this.first = newFirst;
-    this.second = newSecond;
-    this.var = var;
-    this.currentNodes = null;
+    nodeFactory = (GraphElementFactoryImpl) newFactory;
+    graph = (GraphImpl) newGraph;
+    index = newIndex;
+    first = newFirst;
+    second = newSecond;
+    var = newVar;
+    currentNodes = null;
     // initialize the itemiterator to null
     itemIterator = null;
     // find the subIndex from the main index
-    subIndex = (Map)index.get(first);
+    subIndex = (Map) newIndex.get(first);
     // check that data exists
     if (subIndex != null) {
       // now find the set from the sub index map
-      subGroup = (Set)subIndex.get(second);
+      subGroup = (Set) subIndex.get(second);
       if (subGroup != null) {
         // get an iterator for the set
         itemIterator = subGroup.iterator();
@@ -157,11 +167,13 @@ public class TwoFixedIterator implements ClosableIterator {
    * @throws NoSuchElementException iteration has no more elements.
    */
   public Object next() throws NoSuchElementException {
-    if (itemIterator == null) throw new NoSuchElementException();
+    if (itemIterator == null) {
+      throw new NoSuchElementException();
+    }
     // get the next item
-    Long third = (Long)itemIterator.next();
+    Long third = (Long) itemIterator.next();
     // build the triple
-    currentNodes = new Long[] { first, second, third };
+    currentNodes = new Long[]{first, second, third};
     return new TripleImpl(nodeFactory, var, first, second, third);
   }
 
@@ -205,18 +217,25 @@ public class TwoFixedIterator implements ClosableIterator {
     try {
       // can instead use var here to determine how to delete, but this is more intuitive
       if (index == graph.index012) {
-        graph.remove(graph.index120, currentNodes[1], currentNodes[2], currentNodes[0]);
-        graph.remove(graph.index201, currentNodes[2], currentNodes[0], currentNodes[1]);
+        graph.remove(graph.index120, currentNodes[1], currentNodes[2],
+            currentNodes[0]);
+        graph.remove(graph.index201, currentNodes[2], currentNodes[0],
+            currentNodes[1]);
       }
       if (index == graph.index120) {
-        graph.remove(graph.index012, currentNodes[2], currentNodes[0], currentNodes[1]);
-        graph.remove(graph.index201, currentNodes[1], currentNodes[2], currentNodes[0]);
+        graph.remove(graph.index012, currentNodes[2], currentNodes[0],
+            currentNodes[1]);
+        graph.remove(graph.index201, currentNodes[1], currentNodes[2],
+            currentNodes[0]);
       }
       if (index == graph.index201) {
-        graph.remove(graph.index012, currentNodes[1], currentNodes[2], currentNodes[0]);
-        graph.remove(graph.index120, currentNodes[2], currentNodes[0], currentNodes[1]);
+        graph.remove(graph.index012, currentNodes[1], currentNodes[2],
+            currentNodes[0]);
+        graph.remove(graph.index120, currentNodes[2], currentNodes[0],
+            currentNodes[1]);
       }
-    } catch (GraphException ge) {
+    }
+    catch (GraphException ge) {
       throw new IllegalStateException(ge.getMessage());
     }
   }

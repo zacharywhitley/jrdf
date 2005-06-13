@@ -42,5 +42,5 @@ public interface ParseLocationListener {
    * @param lineNo The line number, or -1 if none is available.
    * @param columnNo The column number, or -1 if none is available.
    **/
-  public void parseLocationUpdate(int lineNo, int columnNo);
+  void parseLocationUpdate(int lineNo, int columnNo);
 }

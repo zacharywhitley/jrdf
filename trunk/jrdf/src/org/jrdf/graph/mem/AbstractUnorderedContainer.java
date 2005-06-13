@@ -76,12 +76,12 @@ public abstract class AbstractUnorderedContainer implements Container {
   /**
    * The hashmap containing the elements.
    */
-  protected HashMap elements = new HashMap();
+  protected Map elements = new HashMap();
 
   /**
    * Counter used to generate keys to add to the hashmap.
    */
-  protected long key = 0;
+  protected long key;
 
   public int size() {
     return elements.values().size();
@@ -107,12 +107,6 @@ public abstract class AbstractUnorderedContainer implements Container {
     return elements.values().toArray(a);
   }
 
-  /**
-   * Always return true.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
   public boolean add(Object o) throws IllegalArgumentException {
     if (!(o instanceof ObjectNode)) {
       throw new IllegalArgumentException("Can only add Object nodes");
@@ -122,14 +116,6 @@ public abstract class AbstractUnorderedContainer implements Container {
     return true;
   }
 
-  /**
-   * Always returns true.  It will only remove one element if there is more
-   * than one is the container.  This can get quite costly as it must iterate
-   * through the values from the start to end looking for the object.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
   public boolean remove(Object o) throws IllegalArgumentException {
     if (!(o instanceof ObjectNode)) {
       throw new IllegalArgumentException("Can only add Object nodes");
@@ -155,12 +141,9 @@ public abstract class AbstractUnorderedContainer implements Container {
     elements.clear();
   }
 
-  /**
-   * Returns the hashCode of the internal hashMap.
-   *
-   * @return the hashCode of the internal hashMap.
-   */
   public int hashCode() {
     return elements.hashCode();
   }
+
+  public abstract boolean equals(Object o);
 }

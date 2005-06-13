@@ -77,14 +77,14 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -5616329176473407161L;
+  long serialVersionUID = -5616329176473407161L;
 
   /**
    * Obtain the text of this literal.
    *
    * @return the text of the literal, never <code>null</code>
    */
-  public String getLexicalForm();
+  String getLexicalForm();
 
   /**
    * Returns the language code of the literal, or <code>null</code> if no
@@ -93,14 +93,14 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
    * @return the language code of the literal, or <code>null</code> if no
    *     language specified.
    */
-  public String getLanguage();
+  String getLanguage();
 
   /**
    * Whether the literal is well formed XML.
    *
    * @return whether the literal is wll formed XML.
    */
-  public boolean isWellFormedXML();
+  boolean isWellFormedXML();
 
   /**
    * Returns the URI of the RDF datatype of this resource, or <code>null</code>
@@ -109,7 +109,7 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
    * @return the URI of the RDF datatype of this resource, or <code>null</code>
    *     for an untyped node.
    */
-  public URI getDatatypeURI();
+  URI getDatatypeURI();
 
   /**
    * Indicates whether some other object is "equal to" this one.
@@ -127,7 +127,7 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
    * @param obj the reference object with which to compare.
    * @return true if this object is the same as the obj argument; false otherwise.
    */
-  public boolean equals(Object obj);
+  boolean equals(Object obj);
 
   /**
    * Returns a hash-code value for this literal. The hash code is based upon
@@ -136,7 +136,7 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
    *
    * @return a hash-code value for this literal.
    */
-  public int hashCode();
+  int hashCode();
 
   /**
    * Provide a legible representation of a literal, following the N-Triples
@@ -153,12 +153,20 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
    *
    * @return this instance in N-Triples format
    */
-  public String getEscapedForm();
+  String getEscapedForm();
+
+  /**
+   * Returns an escaped lexical form where double quotes and backslashes are
+   * escaped.
+   *
+   * @return String the lexical form.
+   */
+  String getEscapedLexicalForm();
 
   /**
    * Returns the lexical form.
    *
    * @return the lexical form.
    */
-  public String toString();
+  String toString();
 }

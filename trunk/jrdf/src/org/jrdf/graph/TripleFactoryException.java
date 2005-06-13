@@ -88,18 +88,18 @@ public class TripleFactoryException extends Exception {
    * Create a wrapper exception.
    *
    * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public TripleFactoryException(String message, Throwable cause) {
-    super(message, cause);
+  public TripleFactoryException(String message, Throwable newCause) {
+    super(message, newCause);
   }
 
   /**
    * Create a wrapper exception.
    *
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public TripleFactoryException(Throwable cause) {
-    super(cause);
+  public TripleFactoryException(Throwable newCause) {
+    super(newCause);
   }
 }

@@ -60,7 +60,10 @@ package org.jrdf.graph;
 
 // Java 2 standard
 import java.net.URI;
-import java.util.regex.*;
+import java.io.Serializable;
+
+// JRDF
+import org.jrdf.util.EscapeUtil;
 
 /**
  * A base implementation of an RDF {@link Literal}.
@@ -70,7 +73,7 @@ import java.util.regex.*;
  *
  * @version $Revision$
  */
-public abstract class AbstractLiteral implements Literal {
+public abstract class AbstractLiteral implements Literal, Serializable {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -83,112 +86,93 @@ public abstract class AbstractLiteral implements Literal {
   /**
    * The lexical form of the literal.
    */
-  protected String lexicalForm = null;
+  private String lexicalForm;
 
   /**
    * The language code of the literal.
    */
-  protected String language = null;
+  private String language;
 
   /**
    * Whether the literal is well formed XML.
    */
-  protected boolean wellFormedXML = false;
+  private boolean wellFormedXML;
 
   /**
    * RDF datatype URI, <code>null</code> for untyped literal.
    */
-  protected URI datatypeURI = null;
-
-  /**
-   * A regular expression to pick out characters needing escape from Unicode to
-   * ASCII.
-   *
-   * This is used by the {@link #escape} method.
-   */
-  private static final Pattern pattern = Pattern.compile(
-      "\\p{InHighSurrogates}\\p{InLowSurrogates}" + // surrogate pairs
-      "|" +                                         // ...or...
-      "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]"         // all other escaped chars
-      );
-
-  /**
-   * The matcher instance used to escape characters from Unicode to ASCII.
-   *
-   * This is lazily initialized and used by the {@link #escape} method.
-   */
-  private transient Matcher matcher;
+  private URI datatypeURI;
 
   /**
    * Construct a plain literal.
    *
-   * @param lexicalForm  the text part of the literal
-   * @throws IllegalArgumentException if <var>lexicalForm</var> is <code>null</code>
+   * @param newLexicalForm  the text part of the literal
+   * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
    */
-  protected AbstractLiteral(String lexicalForm) {
+  protected AbstractLiteral(String newLexicalForm) {
 
-    // Validate "lexicalForm" parameter
-    if (lexicalForm == null) {
-      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
+    // Validate "newLexicalForm" parameter
+    if (newLexicalForm == null) {
+      throw new IllegalArgumentException("Null \"newLexicalForm\" parameter");
     }
 
     // Initialize fields
-    this.lexicalForm = lexicalForm;
-    this.language = "";
-    this.datatypeURI = null;
+    lexicalForm = newLexicalForm;
+    language = "";
+    datatypeURI = null;
   }
 
   /**
    * Construct a literal with language.
    *
-   * @param lexicalForm  the text part of the literal
-   * @param language  the language code, possibly the empty string but not
+   * @param newLexicalForm  the text part of the literal
+   * @param newLanguage  the language code, possibly the empty string but not
    *    <code>null</code>
    * @throws IllegalArgumentException if <var>lexicalForm</var> or
    *    <var>lang</var> are <code>null</code>
    */
-  protected AbstractLiteral(String lexicalForm, String language) {
+  protected AbstractLiteral(String newLexicalForm, String newLanguage) {
 
     // Validate "lexicalForm" parameter
-    if (lexicalForm == null) {
+    if (newLexicalForm == null) {
       throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
     }
 
     // Validate "language" parameter
-    if (language == null) {
+    if (newLanguage == null) {
       throw new IllegalArgumentException("Null \"language\" parameter");
     }
 
     // Initialize fields
-    this.lexicalForm = lexicalForm;
-    this.language = language;
-    this.datatypeURI = null;
+    lexicalForm = newLexicalForm;
+    language = newLanguage;
+    datatypeURI = null;
   }
 
   /**
    * Construct a datatyped literal.
    *
-   * @param lexicalForm  the text part of the literal
-   * @param datatypeURI  the URI for a datatyped literal
+   * @param newLexicalForm  the text part of the literal
+   * @param newDatatypeURI  the URI for a datatyped literal
    * @throws IllegalArgumentException if <var>lexicalForm</var> or
    *     <var>datatype</var> are <code>null</code>
    */
-  protected AbstractLiteral(String lexicalForm, URI datatypeURI) {
+  protected AbstractLiteral(String newLexicalForm, URI newDatatypeURI) {
 
     // Validate "lexicalForm" parameter
-    if (lexicalForm == null) {
+    if (newLexicalForm == null) {
       throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
     }
 
     // Validate "datatype" parameter
-    if (datatypeURI == null) {
+    if (newDatatypeURI == null) {
       throw new IllegalArgumentException("Null \"datatype\" parameter");
     }
 
     // Initialize fields
-    this.lexicalForm = lexicalForm;
-    this.language = null;
-    this.datatypeURI = datatypeURI;
+    lexicalForm = newLexicalForm;
+    language = null;
+    datatypeURI = newDatatypeURI;
   }
 
   /**
@@ -262,7 +246,7 @@ public abstract class AbstractLiteral implements Literal {
         if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
 
           // If datatype is null then test language equality.
-          if ((getDatatypeURI() == null) && (tmpLiteral.getDatatypeURI() == null)) {
+          if (getDatatypeURI() == null && tmpLiteral.getDatatypeURI() == null) {
 
             // If languages are equal by value then its equal.
             if (getLanguage().equals(tmpLiteral.getLanguage())) {
@@ -270,9 +254,10 @@ public abstract class AbstractLiteral implements Literal {
             }
           }
           // Data type URIs are equal by their string values.
-          else if ((getDatatypeURI() != null) && (tmpLiteral.getDatatypeURI() != null) &&
-              (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().
-              toString()))) {
+          else if (getDatatypeURI() != null && tmpLiteral.getDatatypeURI() !=
+              null &&
+              getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().
+              toString())) {
             returnValue = true;
           }
         }
@@ -288,11 +273,11 @@ public abstract class AbstractLiteral implements Literal {
     int hashCode = getLexicalForm().hashCode();
 
     if (getDatatypeURI() != null) {
-      hashCode = hashCode ^ getDatatypeURI().hashCode();
+      hashCode ^= getDatatypeURI().hashCode();
     }
 
     if (getLanguage() != null) {
-      hashCode = hashCode ^ getLanguage().hashCode();
+      hashCode ^= getLanguage().hashCode();
     }
 
     return hashCode;
@@ -314,8 +299,8 @@ public abstract class AbstractLiteral implements Literal {
    * @return this instance in N-Triples format
    */
   public String getEscapedForm() {
-    String escaped = escape(getLexicalForm());
-    return "\"" + escaped + "\"" + appendType();
+    String escaped = EscapeUtil.escape(getLexicalForm());
+    return '\"' + escaped + '\"' + appendType();
   }
 
   /**
@@ -324,115 +309,12 @@ public abstract class AbstractLiteral implements Literal {
    * @return the lexical form.
    */
   public String toString() {
-    return "\"" + getEscapedLexicalForm() + "\"" + appendType();
+    return '\"' + getEscapedLexicalForm() + '\"' + appendType();
   }
 
-  /**
-   * Returns an escaped lexical form where double quotes and backslashes are
-   * escaped.
-   *
-   * @return String the lexical form.
-   */
   public String getEscapedLexicalForm() {
-    return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"", "\\\\\\\"");
-  }
-
-  /**
-   * @param string  a string to escape, never <code>null</code>
-   * @return a version of the <var>string</var> with N-Triples escapes applied
-   */
-  private String escape(String string) {
-    assert string != null;
-
-    // Obtain a fresh matcher
-    if (matcher == null) {
-      // Lazily initialize the matcher
-      matcher = pattern.matcher(string);
-    }
-    else {
-      // Reuse the existing matcher
-      matcher.reset(string);
-    }
-    assert matcher != null;
-
-    // Try to short-circuit the whole process -- maybe nothing needs escaping?
-    if (!matcher.find()) {
-      return string;
-    }
-
-    // Perform escape character substitutions on each match found by the
-    // matcher, accumulating the escaped text into a stringBuffer
-    StringBuffer stringBuffer = new StringBuffer();
-    do {
-      // The escape text with which to replace the current match
-      String escapeString;
-
-      // Depending of the character sequence we're escaping, determine an
-      // appropriate replacement
-      String groupString = matcher.group();
-      switch (groupString.length()) {
-        case 1: // 16-bit characters requiring escaping
-          switch (groupString.charAt(0)) {
-            case '\t': // tab
-              escapeString = "\\\\t";
-            break;
-            case '\n': // newline
-              escapeString = "\\\\n";
-            break;
-            case '\r': // carriage return
-              escapeString = "\\\\r";
-            break;
-            case '"':  // quote
-              escapeString = "\\\\\\\"";
-            break;
-            case '\\': // backslash
-              escapeString = "\\\\\\\\";
-            break;
-            default:   // other characters use 4-digit hex escapes
-              String hexString =
-                  Integer.toHexString(groupString.charAt(0)).toUpperCase();
-              escapeString =
-                  "\\\\u0000".substring(0, 7 - hexString.length()) + hexString;
-
-              assert escapeString.length() == 7;
-              assert escapeString.startsWith("\\\\u");
-            break;
-          }
-        break;
-
-        case 2: // surrogate pairs are represented as 8-digit hex escapes
-          assert Character.getType(groupString.charAt(0)) ==
-              Character.SURROGATE;
-          assert Character.getType(groupString.charAt(1)) ==
-              Character.SURROGATE;
-
-          String hexString = Integer.toHexString(
-              ( (groupString.charAt(0) & 0x3FF) << 10) + // high surrogate
-              (groupString.charAt(1) & 0x3FF) + // low surrogate
-              0x10000 // base codepoint U+10000
-              ).toUpperCase();
-          escapeString =
-              "\\\\U00000000".substring(0, 11 - hexString.length()) + hexString;
-
-          assert escapeString.length() == 11;
-          assert escapeString.startsWith("\\\\U000");
-        break;
-
-        default:
-          throw new Error("Escape sequence " + groupString + " has no handler");
-      }
-      assert escapeString != null;
-
-      // Having determined an appropriate escapeString, add it to the
-      // stringBuffer
-      matcher.appendReplacement(stringBuffer, escapeString);
-    }
-    while (matcher.find());
-
-    // Finish off by appending any remaining text that didn't require escaping,
-    // and return the assembled buffer
-    matcher.appendTail(stringBuffer);
-    return stringBuffer.toString();
+    return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"",
+        "\\\\\\\"");
   }
 
   /**
@@ -445,10 +327,10 @@ public abstract class AbstractLiteral implements Literal {
     String appendString = "";
 
     if (getDatatypeURI() != null) {
-      appendString = "^^<" + getDatatypeURI() + ">";
+      appendString = "^^<" + getDatatypeURI() + '>';
     }
-    else if (!getLanguage().equals("")) {
-      appendString = "@" + getLanguage();
+    else if (!"".equals(language)) {
+      appendString = '@' + language;
     }
 
     return appendString;

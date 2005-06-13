@@ -77,7 +77,7 @@ public interface BlankNode extends SubjectNode, ObjectNode, TypedNodeVisitable {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -8505447977160366361L;
+  long serialVersionUID = -8505447977160366361L;
 
   /**
    * Returns a hash-code value for this BlankNode.  While the implementation
@@ -87,7 +87,7 @@ public interface BlankNode extends SubjectNode, ObjectNode, TypedNodeVisitable {
    *
    * @return a hash-code value for this blank node.
    */
-  public int hashCode();
+  int hashCode();
 
   /**
    * While the internal structure of a BlankNode is not defined equality between
@@ -97,5 +97,5 @@ public interface BlankNode extends SubjectNode, ObjectNode, TypedNodeVisitable {
    * @param obj the reference object with which to compare.
    * @return true if this object is the same as the obj argument; false otherwise.
    */
-  public boolean equals(Object obj);
+  boolean equals(Object obj);
 }

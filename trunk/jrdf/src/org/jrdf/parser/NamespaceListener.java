@@ -42,5 +42,5 @@ public interface NamespaceListener {
    * @param prefix The prefix that is used in the namespace declaration.
    * @param uri The URI of the namespace.
    **/
-  public void handleNamespace(String prefix, String uri);
+  void handleNamespace(String prefix, String uri);
 }

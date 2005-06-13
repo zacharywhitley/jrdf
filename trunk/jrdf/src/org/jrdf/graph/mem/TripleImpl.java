@@ -85,9 +85,9 @@ public class TripleImpl extends AbstractTriple {
    * @param object The object node of this triple.
    */
   TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-    this.subjectNode = subject;
-    this.predicateNode = predicate;
-    this.objectNode = object;
+    subjectNode = subject;
+    predicateNode = predicate;
+    objectNode = object;
   }
 
 
@@ -98,11 +98,12 @@ public class TripleImpl extends AbstractTriple {
    * @param predicate The predicate node id of this triple.
    * @param object The object node id of this triple.
    */
-  TripleImpl(GraphElementFactoryImpl nodeFactory, Long subject, Long predicate,
+  TripleImpl(GraphElementFactory factory, Long subject, Long predicate,
       Long object) {
-    this.subjectNode = (SubjectNode) nodeFactory.getNodeById(subject);
-    this.predicateNode = (PredicateNode) nodeFactory.getNodeById(predicate);
-    this.objectNode = (ObjectNode) nodeFactory.getNodeById(object);
+    GraphElementFactoryImpl graphFactory = (GraphElementFactoryImpl) factory;
+    subjectNode = (SubjectNode) graphFactory.getNodeById(subject);
+    predicateNode = (PredicateNode) graphFactory.getNodeById(predicate);
+    objectNode = (ObjectNode) graphFactory.getNodeById(object);
   }
 
 
@@ -115,11 +116,10 @@ public class TripleImpl extends AbstractTriple {
    */
   TripleImpl(GraphElementFactoryImpl nodeFactory, int var, Long first,
       Long second, Long third) {
-    Long[] nodes = new Long[] { first, second, third };
-    this.subjectNode = (SubjectNode) nodeFactory.getNodeById(nodes[var]);
-    this.predicateNode = (PredicateNode) nodeFactory.getNodeById(
-      nodes[(var + 1) % 3]);
-    this.objectNode = (ObjectNode) nodeFactory.getNodeById(
-      nodes[(var + 2) % 3]);
+    Long[] nodes = new Long[]{first, second, third};
+    subjectNode = (SubjectNode) nodeFactory.getNodeById(nodes[var]);
+    predicateNode = (PredicateNode) nodeFactory.getNodeById(
+        nodes[(var + 1) % 3]);
+    objectNode = (ObjectNode) nodeFactory.getNodeById(nodes[(var + 2) % 3]);
   }
 }

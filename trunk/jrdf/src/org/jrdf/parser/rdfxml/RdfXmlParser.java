@@ -169,7 +169,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
    * Flag indicating whether the parser should preserve bnode identifiers specified
    * in the source.
    */
-  boolean _preserveBNodeIds = false;
+  boolean _preserveBNodeIds;
 
   /**
    * Indicates how datatyped literals should be handled. Legal
@@ -212,7 +212,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
       init(valueFactory, parserBlankNodeFactory);
 
       // Initialize the statement handler to empty.
-      this.setStatementHandler(new StatementHandler() {
+      setStatementHandler(new StatementHandler() {
         public void handleStatement(SubjectNode subject, PredicateNode predicate,
           ObjectNode object) {
           }
@@ -920,7 +920,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
       URI relUri = new URI(uriReference);
 
       if (_verifyData) {
-        if ((relUri.getScheme() == null) && // Relative URI that is not a self-reference
+        if (relUri.getScheme() == null && // Relative URI that is not a self-reference
             !(relUri.getScheme() == null &&
             relUri.getAuthority() == null &&
             relUri.getQuery() == null &&
@@ -1254,7 +1254,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
   static class NodeElement {
     private SubjectNode _resource;
-    private boolean _isVolatile = false;
+    private boolean _isVolatile;
     private int _liCounter = 1;
 
     public NodeElement(SubjectNode resource) {
@@ -1278,7 +1278,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     }
 
     public String toString() {
-      return "Subject Node: " + _resource + " isVolatile: " + _isVolatile;
+      return "Subject SkipListNode: " + _resource + " isVolatile: " + _isVolatile;
     }
   }
 
@@ -1294,7 +1294,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
     /** Flag indicating whether this PropertyElement has an
      * attribute <tt>rdf:parseType="Collection"</tt>.  **/
-    private boolean _parseCollection = false;
+    private boolean _parseCollection;
 
     /** The resource that was used to append the last part
      * of an rdf:List. **/

@@ -65,9 +65,10 @@ import org.jrdf.vocabulary.*;
 
 // Third party packages
 import junit.framework.*;
+import junit.textui.TestRunner;
 
 /**
- * Implementation of {@link org.jrdf.graph.AbstractGraphUnitTest} test case.
+ * Implementation of {@link AbstractGraphUnitTest} test case.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
@@ -121,7 +122,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
    */
   public static void main(String[] args) throws Exception {
 
-    junit.textui.TestRunner.run(suite());
+    TestRunner.run(suite());
   }
 
   /**
@@ -159,7 +160,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     // read the graph
     Graph graph2 = (Graph) is.readObject();
 
-    URIReference ref3 = graph2.getElementFactory().createResource(ref1.getURI());
+    ref3 = graph2.getElementFactory().createResource(ref1.getURI());
     Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
 
     // test that the graphs are equivalent
