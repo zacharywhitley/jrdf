@@ -80,7 +80,7 @@ public interface TripleFactory {
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
-  public void reifyTriple(SubjectNode subjectNode,
+  void reifyTriple(SubjectNode subjectNode,
       PredicateNode predicateNode, ObjectNode objectNode,
       SubjectNode reificationNode) throws TripleFactoryException,
       AlreadyReifiedException;
@@ -95,7 +95,7 @@ public interface TripleFactory {
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
-  public void reifyTriple(Triple triple, SubjectNode reificationNode)
+  void reifyTriple(Triple triple, SubjectNode reificationNode)
       throws TripleFactoryException, AlreadyReifiedException;
 
   /**
@@ -106,7 +106,7 @@ public interface TripleFactory {
    * @param alternative the alternative to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
-  public void addAlternative(SubjectNode subjectNode, Alternative alternative)
+  void addAlternative(SubjectNode subjectNode, Alternative alternative)
       throws TripleFactoryException;
 
   /**
@@ -117,7 +117,7 @@ public interface TripleFactory {
    * @param bag the bag to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
-  public void addBag(SubjectNode subjectNode, Bag bag)
+  void addBag(SubjectNode subjectNode, Bag bag)
       throws TripleFactoryException;
 
   /**
@@ -128,7 +128,7 @@ public interface TripleFactory {
    * @param sequence the sequence to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
-  public void addSequence(SubjectNode subjectNode, Sequence sequence)
+  void addSequence(SubjectNode subjectNode, Sequence sequence)
       throws TripleFactoryException;
 
   /**
@@ -139,6 +139,6 @@ public interface TripleFactory {
    * @param collection the collection to add.
    * @throws TripleFactoryException If the resources were failed to be added.
    */
-  public void addCollection(SubjectNode firstNode, Collection collection)
+  void addCollection(SubjectNode firstNode, Collection collection)
       throws TripleFactoryException;
 }

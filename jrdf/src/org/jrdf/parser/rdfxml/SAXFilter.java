@@ -92,14 +92,14 @@ class SAXFilter implements org.xml.sax.ContentHandler {
    * documents. In stand-alone documents, the rdf:RDF element is
    * optional if it contains just one element.
    **/
-  private boolean _parseStandAloneDocuments = false;
+  private boolean _parseStandAloneDocuments;
 
   /**
    * Variable used to defer reporting of start tags. Reporting start
    * tags is deferred to be able to combine a start tag and an immediately
    * following end tag to a single call to emptyElement().
    **/
-  private ElementInfo _deferredElement = null;
+  private ElementInfo _deferredElement;
 
   /**
    * New namespace mappings that have been reported for the next start tag
@@ -121,7 +121,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   /**
    * Flag indicating whether we're currently parsing an XML literal.
    **/
-  private boolean _parseLiteralMode = false;
+  private boolean _parseLiteralMode;
 
   /**
    * The number of elements on the stack that are part of an XML literal.
@@ -247,7 +247,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       String qName, Attributes attributes) throws SAXException {
 
     // Reset at start of element.
-    this._charBuf.setLength(0);
+    _charBuf.setLength(0);
 
     if (_deferredElement != null) {
       // The next call could set _parseLiteralMode to true!
@@ -592,7 +592,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     // Check for any used prefixes that are not
     // defined in the XML literal itself
     int colonIdx = qName.indexOf(':');
-    String prefix = (colonIdx > 0) ? qName.substring(0, colonIdx) : "";
+    String prefix = colonIdx > 0 ? qName.substring(0, colonIdx) : "";
 
     if (!_xmlLiteralPrefixes.contains(prefix) &&
         !_unknownPrefixesInXmlLiteral.contains(prefix)) {
@@ -692,16 +692,16 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     public String baseURI;
     public String xmlLang;
 
-    public ElementInfo(String qName, String namespaceURI, String localName) {
-      this(null, qName, namespaceURI, localName);
+    public ElementInfo(String newQName, String newNamespaceURI, String newLocalName) {
+      this(null, newQName, newNamespaceURI, newLocalName);
     }
 
-    public ElementInfo(ElementInfo parent, String qName, String namespaceURI,
-        String localName) {
-      this.parent = parent;
-      this.qName = qName;
-      this.namespaceURI = namespaceURI;
-      this.localName = localName;
+    public ElementInfo(ElementInfo newParent, String newQName, String newNamespaceURI,
+        String newLocalName) {
+      parent = newParent;
+      qName = newQName;
+      namespaceURI = newNamespaceURI;
+      localName = newLocalName;
     }
 
     public void setNamespaceMappings(Map namespaceMappings) {

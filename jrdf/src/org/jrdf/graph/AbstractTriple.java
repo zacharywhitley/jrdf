@@ -58,6 +58,8 @@
 
 package org.jrdf.graph;
 
+import java.io.Serializable;
+
 /**
  * A base implementation of an RDF {@link Triple}.
  *
@@ -65,15 +67,7 @@ package org.jrdf.graph;
  *
  * @version $Revision$
  */
-public abstract class AbstractTriple implements Triple {
-
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  static final long serialVersionUID = -7072263934265338903L;
+public abstract class AbstractTriple implements Triple, Serializable {
 
   /**
    * Subject of this statement.

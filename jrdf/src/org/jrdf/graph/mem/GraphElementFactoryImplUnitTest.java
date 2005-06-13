@@ -62,12 +62,13 @@ import org.jrdf.graph.*;
 
 // Third party packages
 import junit.framework.*;
+import junit.textui.TestRunner;
 
 import java.net.URI;
 
 
 /**
- * Implementation of {@link org.jrdf.graph.AbstractGraphElementFactoryUnitTest}
+ * Implementation of {@link AbstractGraphElementFactoryUnitTest}
  * test case.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
@@ -116,7 +117,7 @@ public class GraphElementFactoryImplUnitTest
    */
   public static void main(String[] args) throws Exception {
 
-    junit.textui.TestRunner.run(suite());
+    TestRunner.run(suite());
   }
 
   /**

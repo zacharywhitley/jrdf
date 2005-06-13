@@ -62,14 +62,13 @@ import java.io.Serializable;
 
 /**
  * Memory node.  This is an additional interface for nodes so they can be accessed by id.
- * Extends {@link java.io.Serializable} so all nodes will be serializable.
+ * Extends {@link Serializable} so all nodes will be serializable.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
  * @version $Revision$
  */
-public interface MemNode
-    extends Serializable {
+public interface MemNode extends Serializable {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -77,13 +76,13 @@ public interface MemNode
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 7753039003701594778L;
+  long serialVersionUID = 7753039003701594778L;
 
   /**
    * Retrieves an internal identifier for a node.
    *
    * @return A numeric identifier for a node.
    */
-  public Long getId();
+  Long getId();
 
 }

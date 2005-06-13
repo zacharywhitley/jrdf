@@ -60,6 +60,7 @@ package org.jrdf.util;
 
 // Third party packages
 import junit.framework.*;
+import junit.textui.TestRunner;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -74,21 +75,21 @@ import java.util.*;
 public class UIDGeneratorUnitTest extends TestCase {
 
   /** Set of UIDs that have been generated */
-  private Set uids = null;
+  private Set uids;
 
-  /** Number of UIDs generated */
+  /** Number of UIDs generated. */
   private static final int NUM_UIDS = 10000;
 
-  /** Number of Threads concurrently generating UIDs */
+  /** Number of Threads concurrently generating UIDs. */
   private static final int NUM_THREADS = 10;
 
-  /** Number of ClassLoaders using UIDGenerator classes to genreateUIDs */
+  /** Number of ClassLoaders using UIDGenerator classes to genreateUIDs .*/
   private static final int NUM_CLASSLOADERS = 10;
 
-  /** Short name of the UIDGenerator class */
+  /** Short name of the UIDGenerator class. */
   private static final String CLASS_NAME = "UIDGenerator";
 
-  /** Fully qualified name of the UIDGenerator class */
+  /** Fully qualified name of the UIDGenerator class. */
   private static final String FULL_CLASS_NAME = "org.jrdf.util." + CLASS_NAME;
 
   /**
@@ -124,7 +125,7 @@ public class UIDGeneratorUnitTest extends TestCase {
    */
   public static void main(String[] args) throws Exception {
 
-    junit.textui.TestRunner.run(suite());
+    TestRunner.run(suite());
   }
 
   /**

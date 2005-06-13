@@ -71,8 +71,7 @@ import org.jrdf.graph.*;
  *
  * @version $Revision$
  */
-public class CollectionImpl extends LinkedList
-    implements Collection {
+public class CollectionImpl extends LinkedList implements Collection {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -83,9 +82,11 @@ public class CollectionImpl extends LinkedList
   static final long serialVersionUID = -420874713471604278L;
 
   /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
+   * ${@inheritDoc}
    */
+  public CollectionImpl() {
+  }
+
   public void add(int index, Object element) throws IllegalArgumentException {
     if (!(element instanceof ObjectNode)) {
       throw new IllegalArgumentException("Can only add Object nodes");
@@ -94,10 +95,6 @@ public class CollectionImpl extends LinkedList
     super.add(index, element);
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
   public boolean add(Object o) throws IllegalArgumentException {
     if (!(o instanceof ObjectNode)) {
       throw new IllegalArgumentException("Can only add Object nodes");
@@ -106,10 +103,6 @@ public class CollectionImpl extends LinkedList
     return super.add(o);
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Collection.
-   */
   public boolean addAll(java.util.Collection c)
       throws IllegalArgumentException {
     if (!(c instanceof Collection)) {

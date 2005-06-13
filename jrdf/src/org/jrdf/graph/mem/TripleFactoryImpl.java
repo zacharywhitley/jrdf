@@ -76,11 +76,10 @@ public class TripleFactoryImpl extends AbstractTripleFactory {
   /**
    * Package scope constructor.
    *
-   * @param graph The GraphImpl that this class is attached to.
+   * @param newGraph The GraphImpl that this class is attached to.
    */
-  TripleFactoryImpl(GraphImpl graph, GraphElementFactory elementFactory)
-      throws TripleFactoryException {
-    this.graph = graph;
-    this.elementFactory = elementFactory;
+  TripleFactoryImpl(Graph newGraph, GraphElementFactory newElementFactory) {
+    graph = newGraph;
+    elementFactory = newElementFactory;
   }
 }

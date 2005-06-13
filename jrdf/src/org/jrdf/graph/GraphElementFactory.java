@@ -77,7 +77,7 @@ public interface GraphElementFactory {
    *
    * @return the newly created blank node value.
    */
-  public BlankNode createResource() throws GraphElementFactoryException;
+  BlankNode createResource() throws GraphElementFactoryException;
 
   /**
    * Create a URI reference.
@@ -86,7 +86,7 @@ public interface GraphElementFactory {
    * @return the newly created URI reference value.
    * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  public URIReference createResource(URI uri)
+  URIReference createResource(URI uri)
       throws GraphElementFactoryException;
 
   /**
@@ -98,7 +98,7 @@ public interface GraphElementFactory {
    * @return The newly created URI reference value.
    * @throws GraphElementFactoryException
    */
-  public URIReference createResource(URI uri, boolean validate)
+  URIReference createResource(URI uri, boolean validate)
       throws GraphElementFactoryException;
 
   /**
@@ -109,7 +109,7 @@ public interface GraphElementFactory {
    * @return the newly created literal value.
    * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue)
+  Literal createLiteral(String lexicalValue)
       throws GraphElementFactoryException;
 
   /**
@@ -121,7 +121,7 @@ public interface GraphElementFactory {
    * @return the newly created literal value.
    * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue, String languageType)
+  Literal createLiteral(String lexicalValue, String languageType)
       throws GraphElementFactoryException;
 
   /**
@@ -133,7 +133,7 @@ public interface GraphElementFactory {
    * @return the newly created literal value.
    * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  public Literal createLiteral(String lexicalValue, URI datatypeURI)
+  Literal createLiteral(String lexicalValue, URI datatypeURI)
       throws GraphElementFactoryException;
 
   /**
@@ -146,6 +146,6 @@ public interface GraphElementFactory {
    * @return the newly created triple object.
    * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  public Triple createTriple(SubjectNode subject, PredicateNode predicate,
+  Triple createTriple(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws GraphElementFactoryException;
 }

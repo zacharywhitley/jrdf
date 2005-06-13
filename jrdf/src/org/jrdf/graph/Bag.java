@@ -60,6 +60,7 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 import java.util.*;
+import java.util.Collection;
 
 /**
  * A Bag is a group of statements that are an unorderd list which allow
@@ -73,33 +74,39 @@ import java.util.*;
 public interface Bag extends Container {
 
   /**
+   * ${@inheritDoc}
+   *
+   * @param c ${@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
-  public boolean containsAll(java.util.Collection c)
+  boolean containsAll(Collection c)
       throws IllegalArgumentException;
 
   /**
-   * Returns true if there's anything in the collection.
+   * ${@inheritDoc}
    *
+   * @param c ${@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
-  public boolean addAll(java.util.Collection c) throws IllegalArgumentException;
+  boolean addAll(Collection c) throws IllegalArgumentException;
 
   /**
-   * Returns true if there's anything in the collection.
+   * ${@inheritDoc}
    *
+   * @param c ${@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
-  public boolean removeAll(java.util.Collection c) throws IllegalArgumentException;
+  boolean removeAll(Collection c) throws IllegalArgumentException;
 
   /**
-   * Returns true if there's anything in the collection.
+   * ${@inheritDoc}
    *
+   * @param c ${@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
-  public boolean retainAll(java.util.Collection c) throws IllegalArgumentException;
+  boolean retainAll(Collection c) throws IllegalArgumentException;
 }

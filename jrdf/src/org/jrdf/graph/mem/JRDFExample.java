@@ -31,35 +31,34 @@ import org.jrdf.util.*;
 public class JRDFExample {
 
   //Resources
-  private URIReference person = null;
-  private BlankNode address = null;
+  private URIReference person;
+  private BlankNode address;
 
   //Properties
-  private URIReference hasAddress = null;
-  private URIReference hasStreet = null;
-  private URIReference hasCity = null;
-  private URIReference hasState = null;
-  private URIReference hasPostCode = null;
+  private URIReference hasAddress;
+  private URIReference hasStreet;
+  private URIReference hasCity;
+  private URIReference hasState;
+  private URIReference hasPostCode;
 
   //Values
-  private Literal street = null;
-  private Literal city = null;
-  private Literal state = null;
-  private Literal postCode = null;
+  private Literal street;
+  private Literal city;
+  private Literal state;
+  private Literal postCode;
 
   //Statements
-  private Triple addressStatement = null;
-  private Triple streetStatement = null;
-  private Triple cityStatement = null;
-  private Triple stateStatement = null;
-  private Triple postCodeStatement = null;
+  private Triple addressStatement;
+  private Triple streetStatement;
+  private Triple cityStatement;
+  private Triple stateStatement;
+  private Triple postCodeStatement;
 
   /**
    * Default Constructor.
    */
   public JRDFExample() {
 
-    super();
   }
 
   /**

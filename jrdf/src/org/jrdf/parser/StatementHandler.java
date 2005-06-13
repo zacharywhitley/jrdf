@@ -51,6 +51,6 @@ public interface StatementHandler {
    * @see org.openrdf.model.ValueFactory
    * @see org.openrdf.rio.Parser
    **/
-  public void handleStatement(SubjectNode subject, PredicateNode predicate,
+  void handleStatement(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws StatementHandlerException;
 }

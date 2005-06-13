@@ -89,18 +89,18 @@ public class AlreadyReifiedException extends TripleFactoryException {
    * Create a wrapper exception.
    *
    * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public AlreadyReifiedException(String message, Throwable cause) {
-    super(message, cause);
+  public AlreadyReifiedException(String message, Throwable newCause) {
+    super(message, newCause);
   }
 
   /**
    * Create a wrapper exception.
    *
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public AlreadyReifiedException(Throwable cause) {
-    super(cause);
+  public AlreadyReifiedException(Throwable newCause) {
+    super(newCause);
   }
 }

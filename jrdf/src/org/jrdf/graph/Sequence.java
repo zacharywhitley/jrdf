@@ -60,6 +60,7 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 import java.util.*;
+import java.util.Collection;
 
 /**
  * A Sequence is a group of statements that are kept in an orderd list.  The
@@ -76,62 +77,62 @@ public interface Sequence extends Container {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public void add(int index, Object o) throws IllegalArgumentException;
+  void add(int index, Object o) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean addAll(java.util.Collection c) throws IllegalArgumentException;
+  boolean addAll(Collection c) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean addAll(int index, java.util.Collection c)
+  boolean addAll(int index, Collection c)
       throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean contains(Object o);
+  boolean contains(Object o);
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean containsAll(java.util.Collection c);
+  boolean containsAll(Collection c);
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public int indexOf(Object o) throws IllegalArgumentException;
+  int indexOf(Object o) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public int lastIndexOf(Object o) throws IllegalArgumentException;
+  int lastIndexOf(Object o) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean removeAll(java.util.Collection c)
+  boolean removeAll(Collection c)
       throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean retainAll(java.util.Collection c)
+  boolean retainAll(Collection c)
       throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public Object set(int index, Object element) throws IllegalArgumentException;
+  Object set(int index, Object element) throws IllegalArgumentException;
 }

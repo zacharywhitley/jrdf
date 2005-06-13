@@ -80,44 +80,49 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
   /**
    * A factory for creating BlankNodes (as well as resources and literals).
    **/
-  private GraphElementFactory _valueFactory;
+  private GraphElementFactory valueFactory;
 
   /**
    * Mapping from bNode ID's as used in the RDF document to the
    * object created for it by the GraphElementFactory.
    **/
-  private Map _bNodeIdMap = new HashMap();
+  private Map bNodeIdMap = new HashMap();
 
 
   public ParserBlankNodeFactoryImpl(GraphElementFactory valueFactory) {
-    _valueFactory = valueFactory;
+    this.valueFactory = valueFactory;
   }
 
   /**
    * Always creates a new BlankNode object from the GraphElementFactory.
+   *
    * @return the new BlankNode object.
+   * @throws GraphElementFactoryException if it fails to create a new blank node.
    */
   public BlankNode createBlankNode() throws GraphElementFactoryException {
-    return _valueFactory.createResource();
+    return valueFactory.createResource();
   }
 
   /**
    * Returns the BlankNode for a <code>nodeID</code> that has not been seen
    * before or calls the GraphElementFactory to create a new BlankNode
    * otherwise.
-   * @param the nodeID that labels the bNode in the file being parsed.
+   *
+   * @param nodeID the node that labels the bNode in the file being parsed.
    * @return the BlankNode object.
+   * @throws GraphElementFactoryException if it fails to create a new blank node.
    */
-  public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
+  public BlankNode createBlankNode(String nodeID)
+      throws GraphElementFactoryException {
     // Maybe the node ID has been used before:
-    BlankNode result = (BlankNode) _bNodeIdMap.get(nodeID);
+    BlankNode result = (BlankNode) bNodeIdMap.get(nodeID);
 
     if (result == null) {
       // This is a new node ID, create a new BNode object for it
-      result = _valueFactory.createResource();
+      result = valueFactory.createResource();
 
       // Remember it, the nodeID might occur again.
-      _bNodeIdMap.put(nodeID, result);
+      bNodeIdMap.put(nodeID, result);
     }
 
     return result;
@@ -127,7 +132,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
    * Clears the internal Map.
    */
   public void clear() {
-    _bNodeIdMap.clear();
+    bNodeIdMap.clear();
   }
 
 }

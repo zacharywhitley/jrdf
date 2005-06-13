@@ -78,7 +78,7 @@ public interface Triple extends Serializable {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 833569221232497968L;
+  long serialVersionUID = 833569221232497968L;
 
   /**
    * Obtains the subject of this statement.
@@ -86,14 +86,14 @@ public interface Triple extends Serializable {
    * @return an {@link SubjectNode} which is either a {@link BlankNode} or
    *     {@link URIReference}
    */
-  public SubjectNode getSubject();
+  SubjectNode getSubject();
 
   /**
    * Obtains the predicate of this statement.
    *
    * @return a {@link PredicateNode} which is a {@link URIReference}
    */
-  public PredicateNode getPredicate();
+  PredicateNode getPredicate();
 
   /**
    * Obtains the object of this statement.
@@ -101,7 +101,7 @@ public interface Triple extends Serializable {
    * @return a {@link ObjectNode} which is either a {@link BlankNode},
    *     {@link URIReference} or {@link Literal}
    */
-  public ObjectNode getObject();
+  ObjectNode getObject();
 
   /**
    * Indicates whether some other object is "equal to" this one.
@@ -112,7 +112,7 @@ public interface Triple extends Serializable {
    * @param obj the reference object with which to compare.
    * @return true if this object is the same as the obj argument; false otherwise.
    */
-  public boolean equals(Object obj);
+  boolean equals(Object obj);
 
   /**
    * Returns a hash-code value for this triple. The hash code is based upon
@@ -121,5 +121,5 @@ public interface Triple extends Serializable {
    *
    * @return a hash-code value for this triple.
    */
-  public int hashCode();
+  int hashCode();
 }

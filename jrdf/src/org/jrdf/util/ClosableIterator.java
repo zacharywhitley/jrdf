@@ -75,6 +75,8 @@ public interface ClosableIterator extends Iterator {
    * Closes the iterator by freeing any resources that it current holds.  This
    * must be done as soon as possible.  Once an iterator is closed none of the
    * operations on a iterator will operate i.e. they will throw an exception.
+   *
+   * @return true if it was successfully closed.
    */
-  public boolean close();
+  boolean close();
 }

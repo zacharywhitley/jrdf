@@ -86,7 +86,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
   private GraphElementFactory elementFactory;
 
   /**
-   * Global graph object
+   * Global graph object.
    */
   private Graph graph;
 
@@ -101,6 +101,8 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
   /**
    * Create test instance.
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void setUp() throws Exception {
     graph = newGraph();
@@ -125,6 +127,8 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
    * Create a new graph of the appropriate type.
    *
    * @return A new graph implementation object.
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public abstract Graph newGraph() throws Exception;
 

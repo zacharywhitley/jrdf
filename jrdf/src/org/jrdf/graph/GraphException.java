@@ -88,18 +88,18 @@ public class GraphException extends Exception {
    * Create a wrapper exception.
    *
    * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public GraphException(String message, Throwable cause) {
-    super(message, cause);
+  public GraphException(String message, Throwable newCause) {
+    super(message, newCause);
   }
 
   /**
    * Create a wrapper exception.
    *
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public GraphException(Throwable cause) {
-    super(cause);
+  public GraphException(Throwable newCause) {
+    super(newCause);
   }
 }

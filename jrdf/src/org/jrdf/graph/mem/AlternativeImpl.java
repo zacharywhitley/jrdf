@@ -59,13 +59,14 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
+
 import java.util.*;
 
 // JRDF
 import org.jrdf.graph.*;
 
 /**
- * An implementation of {@link org.jrdf.graph.Alternative}.
+ * An implementation of {@link Alternative}.
  *
  * @author Andrew Newman
  *
@@ -74,10 +75,6 @@ import org.jrdf.graph.*;
 public class AlternativeImpl extends AbstractUnorderedContainer
     implements Alternative {
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Alternative.
-   */
   public boolean containsAll(java.util.Collection c) {
     if (!(c instanceof Alternative)) {
       throw new IllegalArgumentException("Can only add alts to other alts");
@@ -86,12 +83,6 @@ public class AlternativeImpl extends AbstractUnorderedContainer
     return elements.values().containsAll(c);
   }
 
-  /**
-   * Always return true.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
   public boolean add(Object o) throws IllegalArgumentException {
     if (!(o instanceof ObjectNode)) {
       throw new IllegalArgumentException("Can only add Object nodes");
@@ -103,13 +94,8 @@ public class AlternativeImpl extends AbstractUnorderedContainer
     return true;
   }
 
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Alternative.
-   */
-  public boolean addAll(java.util.Collection c) throws IllegalArgumentException {
+  public boolean addAll(java.util.Collection c)
+      throws IllegalArgumentException {
     if (!(c instanceof Alternative)) {
       throw new IllegalArgumentException("Can only add alts to other alts");
     }
@@ -127,13 +113,8 @@ public class AlternativeImpl extends AbstractUnorderedContainer
     return modified;
   }
 
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Alternative.
-   */
-  public boolean removeAll(java.util.Collection c) throws IllegalArgumentException {
+  public boolean removeAll(java.util.Collection c)
+      throws IllegalArgumentException {
     if (!(c instanceof Alternative)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
     }
@@ -151,13 +132,8 @@ public class AlternativeImpl extends AbstractUnorderedContainer
   }
 
 
-  /**
-   * Returns true if there's anything in the collection.
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Alternative.
-   */
-  public boolean retainAll(java.util.Collection c) throws IllegalArgumentException {
+  public boolean retainAll(java.util.Collection c)
+      throws IllegalArgumentException {
     if (!(c instanceof Alternative)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
     }
@@ -179,6 +155,10 @@ public class AlternativeImpl extends AbstractUnorderedContainer
     return modified;
   }
 
+  public int hashCode() {
+    return super.hashCode();
+  }
+
   public boolean equals(Object obj) {
 
     // Check equal by reference
@@ -187,8 +167,8 @@ public class AlternativeImpl extends AbstractUnorderedContainer
     }
 
     // Check for null and ensure exactly the same class - not subclass.
-    if ((obj == null) ||
-       (getClass() != obj.getClass())) {
+    if (obj == null ||
+        getClass() != obj.getClass()) {
       return false;
     }
 

@@ -84,14 +84,14 @@ public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 3546778208872583733L;
+  long serialVersionUID = 3546778208872583733L;
 
   /**
    * The {@link URI} identifiying this resource.
    *
    * @return the {@link URI} identifying this resource.
    */
-  public URI getURI();
+  URI getURI();
 
   /**
    * Returns a hash-code value for this URI Reference. This is the hash code
@@ -99,7 +99,7 @@ public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
    *
    * @return a hash-code value for this literal.
    */
-  public int hashCode();
+  int hashCode();
 
   /**
    * Indicates whether some other object is "equal to" this one.
@@ -110,5 +110,5 @@ public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
    * @param obj the reference object with which to compare.
    * @return true if this object is the same as the obj argument; false otherwise.
    */
-  public boolean equals(Object obj);
+  boolean equals(Object obj);
 }

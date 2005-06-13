@@ -86,20 +86,20 @@ public interface ParserBlankNodeFactory {
    *
    * @return the BlankNode.
    */
-  public BlankNode createBlankNode() throws GraphElementFactoryException;
+  BlankNode createBlankNode() throws GraphElementFactoryException;
 
   /**
    * Creates a BlankNode that is only distinguished by the nodeID value.
    *
    * @return the BlankNode.
    */
-  public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException;
+  BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException;
 
   /**
    * Resets this ParserBlankNodeFactory.  Subsequent calls to
    * {@link #createBlankNode()} may return BlankNodes that compare equal to
    * BlankNodes that were created before the call to <code>clear()</code>.
    */
-  public void clear();
+  void clear();
 
 }

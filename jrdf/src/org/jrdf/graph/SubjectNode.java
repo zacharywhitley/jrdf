@@ -75,6 +75,6 @@ public interface SubjectNode extends Node {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 8167702994588551279L;
+  long serialVersionUID = 8167702994588551279L;
 
 }

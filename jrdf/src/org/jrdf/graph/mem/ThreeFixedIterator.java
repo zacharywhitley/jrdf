@@ -76,18 +76,18 @@ public class ThreeFixedIterator implements ClosableIterator {
   private Graph graph;
 
   /** The triple to return on {@link next() next} */
-  private TripleImpl triple = null;
+  private TripleImpl triple;
 
   /** The triple to remove */
-  private TripleImpl removeTriple = null;
+  private TripleImpl removeTriple;
 
 
   /**
    * Constructor.
    */
-  ThreeFixedIterator(Graph graph, Node subject, Node predicate, Node object) throws GraphException {
-    this.graph = graph;
-    if (graph.contains((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object)) {
+  ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object) throws GraphException {
+    graph = newGraph;
+    if (newGraph.contains((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object)) {
       triple = new TripleImpl((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object);
     }
     removeTriple = null;

@@ -95,24 +95,24 @@ public class URIReferenceImpl extends AbstractURIReference implements MemNode {
   /**
    * Constructor for use by GraphElementFactory only.
    *
-   * @param uri The uri of this node.
-   * @param id The internal identifier for this node.
+   * @param newUri The newUri of this node.
+   * @param newId The internal identifier for this node.
    */
-  URIReferenceImpl(URI uri, Long id) {
-    super(uri);
-    this.id = id;
+  URIReferenceImpl(URI newUri, Long newId) {
+    super(newUri);
+    id = newId;
   }
 
   /**
    * Constructor for use by GraphElementFactory only.
    *
-   * @param uri The uri of this node.
+   * @param newUri The uri of this node.
    * @param validate whether to enforce valid RDF URIs.
-   * @param id The internal identifier for this node.
+   * @param newId The internal identifier for this node.
    */
-  URIReferenceImpl(URI uri, boolean validate, Long id) {
-    super(uri, validate);
-    this.id = id;
+  URIReferenceImpl(URI newUri, boolean validate, Long newId) {
+    super(newUri, validate);
+    id = newId;
   }
 
 

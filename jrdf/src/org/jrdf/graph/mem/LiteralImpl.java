@@ -94,25 +94,25 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
   /**
    * Construct a literal.
    *
-   * @param lexicalForm  the text part of the literal
-   * @throws IllegalArgumentException if <var>lexicalForm</var> is <code>null</code>
+   * @param newLexicalForm  the text part of the literal
+   * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
    */
-  LiteralImpl(String lexicalForm) {
-    super(lexicalForm);
+  LiteralImpl(String newLexicalForm) {
+    super(newLexicalForm);
     thisString = super.toString();
   }
 
   /**
    * Construct a fully general literal.
    *
-   * @param lexicalForm  the text part of the literal
-   * @param language  the language code, possibly the empty string but not
+   * @param newLexicalForm  the text part of the literal
+   * @param newLanguage  the language code, possibly the empty string but not
    *    <code>null</code>
    * @throws IllegalArgumentException if <var>lexicalForm</var> or
    *    <var>lang</var> are <code>null</code>
    */
-  LiteralImpl(String lexicalForm, String language) {
-    super(lexicalForm, language);
+  LiteralImpl(String newLexicalForm, String newLanguage) {
+    super(newLexicalForm, newLanguage);
     thisString = super.toString();
   }
 
@@ -120,14 +120,14 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
   /**
    * Construct a fully general literal.
    *
-   * @param lexicalForm  the text part of the literal
+   * @param newLexicalForm  the text part of the literal
    * @param datatype  the URI for a datatyped literal, or <code>null</code> for
    *     an untyped literal
-   * @throws IllegalArgumentException if <var>lexicalForm</var> or
+   * @throws IllegalArgumentException if <var>newLexicalForm</var> or
    *     <var>lang</var> are <code>null</code>
    */
-  LiteralImpl(String lexicalForm, URI datatype) {
-    super(lexicalForm, datatype);
+  LiteralImpl(String newLexicalForm, URI datatype) {
+    super(newLexicalForm, datatype);
     thisString = super.toString();
   }
 

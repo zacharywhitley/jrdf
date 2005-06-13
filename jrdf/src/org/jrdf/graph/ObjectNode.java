@@ -75,6 +75,6 @@ public interface ObjectNode extends Node {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -3185564345892541723L;
+  long serialVersionUID = -3185564345892541723L;
 
 }

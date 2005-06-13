@@ -88,18 +88,18 @@ public class GraphElementFactoryException extends Exception {
    * Create a wrapper exception.
    *
    * @param message the message to wrap inside this exception.
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public GraphElementFactoryException(String message, Throwable cause) {
-    super(message, cause);
+  public GraphElementFactoryException(String message, Throwable newCause) {
+    super(message, newCause);
   }
 
   /**
    * Create a wrapper exception.
    *
-   * @param cause the original exception to wrap.
+   * @param newCause the original exception to wrap.
    */
-  public GraphElementFactoryException(Throwable cause) {
-    super(cause);
+  public GraphElementFactoryException(Throwable newCause) {
+    super(newCause);
   }
 }

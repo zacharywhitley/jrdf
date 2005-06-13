@@ -84,24 +84,45 @@ public abstract class AbstractGraphUnitTest
   protected Graph graph;
 
   /**
-   * Instance of a factory for the graph
+   * Instance of a factory for the graph.
    */
   protected GraphElementFactory elementFactory;
 
-  // The following are interally used "constants"
-  protected static BlankNode blank1;
-  protected static BlankNode blank2;
+  /**
+   * Blank node 1.
+   */
+  protected BlankNode blank1;
 
-  protected static URI uri1;
-  protected static URI uri2;
-  protected static URI uri3;
-  protected static URIReference ref1;
-  protected static URIReference ref2;
-  protected static URIReference ref3;
+  /**
+   * Blank node 2.
+   */
+  protected BlankNode blank2;
 
+  protected URI uri1;
+  protected URI uri2;
+  protected URI uri3;
+  protected URIReference ref1;
+  protected URIReference ref2;
+  protected URIReference ref3;
+
+  /**
+   * Used to create literal.
+   */
   protected static final String TEST_STR1 = "A test string";
+
+  /**
+   * Used to create literal.
+   */
   protected static final String TEST_STR2 = "Another test string";
+
+  /**
+   * Literal 1.
+   */
   protected static Literal l1;
+
+  /**
+   * Literal 2.
+   */
   protected static Literal l2;
 
   /**
@@ -115,6 +136,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Create test instance.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void setUp() throws Exception {
     graph = newGraph();
@@ -151,7 +175,9 @@ public abstract class AbstractGraphUnitTest
   /**
    * Create a graph implementation.
    *
-   * @return A new GraphImpl.
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
+   * @return A new Graph.
    */
   public abstract Graph newGraph() throws Exception;
 
@@ -181,6 +207,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Tests addition.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void testAddition() throws Exception {
 
@@ -215,7 +244,7 @@ public abstract class AbstractGraphUnitTest
     assertEquals(2, graph.getNumberOfTriples());
 
     // Add using iterator
-    ArrayList list = new ArrayList();
+    List list = new ArrayList();
     list.add(elementFactory.createTriple(ref1, ref1, ref1));
     list.add(elementFactory.createTriple(ref2, ref2, ref2));
 
@@ -226,6 +255,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Tests removal.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void testRemoval() throws Exception {
     // add some test data
@@ -308,7 +340,7 @@ public abstract class AbstractGraphUnitTest
     graph.add(elementFactory.createTriple(ref1, ref1, ref1));
     graph.add(elementFactory.createTriple(ref2, ref2, ref2));
 
-    ArrayList list = new ArrayList();
+    List list = new ArrayList();
     list.add(elementFactory.createTriple(ref1, ref1, ref1));
     list.add(elementFactory.createTriple(ref2, ref2, ref2));
     graph.remove(list.iterator());
@@ -326,6 +358,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Tests containership.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void testContains() throws Exception {
     // add some test data
@@ -392,6 +427,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Tests finding.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void testFinding() throws Exception {
     graph.add(blank1, ref1, blank2);
@@ -530,6 +568,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Tests iteration over a found set.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void testIteration() throws Exception {
 
@@ -538,31 +579,31 @@ public abstract class AbstractGraphUnitTest
     //create nodes
     BlankNode bNode1 = factory.createResource();
     BlankNode bNode2 = factory.createResource();
-    URIReference uri1 = factory.createResource(new URI(
-        "http://tucana.org/tucana#uri1"));
-    URIReference uri2 = factory.createResource(new URI(
-        "http://tucana.org/tucana#uri2"));
+    URIReference testUri1 = factory.createResource(new URI(
+        "http://tucana.org/tucana#testUri1"));
+    URIReference testUri2 = factory.createResource(new URI(
+        "http://tucana.org/tucana#testUri2"));
     Literal literal1 = factory.createLiteral("literal1");
     Literal literal2 = factory.createLiteral("literal2");
 
     //create some statements
     Triple[] triples = new Triple[16];
-    triples[0] = factory.createTriple(bNode1, uri1, literal1);
-    triples[1] = factory.createTriple(bNode1, uri1, literal2);
-    triples[2] = factory.createTriple(bNode1, uri2, literal1);
-    triples[3] = factory.createTriple(bNode1, uri2, literal2);
-    triples[4] = factory.createTriple(bNode2, uri1, literal1);
-    triples[5] = factory.createTriple(bNode2, uri1, literal2);
-    triples[6] = factory.createTriple(bNode2, uri2, literal1);
-    triples[7] = factory.createTriple(bNode2, uri2, literal2);
-    triples[8] = factory.createTriple(bNode1, uri1, bNode2);
-    triples[9] = factory.createTriple(bNode1, uri2, bNode2);
-    triples[10] = factory.createTriple(bNode1, uri1, uri2);
-    triples[11] = factory.createTriple(bNode1, uri2, uri1);
-    triples[12] = factory.createTriple(uri1, uri2, bNode1);
-    triples[13] = factory.createTriple(uri2, uri1, bNode1);
-    triples[14] = factory.createTriple(uri1, uri2, bNode2);
-    triples[15] = factory.createTriple(uri2, uri1, bNode2);
+    triples[0] = factory.createTriple(bNode1, testUri1, literal1);
+    triples[1] = factory.createTriple(bNode1, testUri1, literal2);
+    triples[2] = factory.createTriple(bNode1, testUri2, literal1);
+    triples[3] = factory.createTriple(bNode1, testUri2, literal2);
+    triples[4] = factory.createTriple(bNode2, testUri1, literal1);
+    triples[5] = factory.createTriple(bNode2, testUri1, literal2);
+    triples[6] = factory.createTriple(bNode2, testUri2, literal1);
+    triples[7] = factory.createTriple(bNode2, testUri2, literal2);
+    triples[8] = factory.createTriple(bNode1, testUri1, bNode2);
+    triples[9] = factory.createTriple(bNode1, testUri2, bNode2);
+    triples[10] = factory.createTriple(bNode1, testUri1, testUri2);
+    triples[11] = factory.createTriple(bNode1, testUri2, testUri1);
+    triples[12] = factory.createTriple(testUri1, testUri2, bNode1);
+    triples[13] = factory.createTriple(testUri2, testUri1, bNode1);
+    triples[14] = factory.createTriple(testUri1, testUri2, bNode2);
+    triples[15] = factory.createTriple(testUri2, testUri1, bNode2);
 
     //add them
     for (int i = 0; i < triples.length; i++) {
@@ -598,6 +639,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Tests iterative removal.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void testIterativeRemoval() throws Exception {
     // add some test data
@@ -684,6 +728,9 @@ public abstract class AbstractGraphUnitTest
 
   /**
    * Tests full iterative removal.
+   *
+   * @throws Exception A generic exception - this should cause the tests to
+   *   fail.
    */
   public void testFullIterativeRemoval() throws Exception {
     // add some test data
@@ -722,19 +769,22 @@ public abstract class AbstractGraphUnitTest
    * Checks that an iterator matches a set exactly.
    * The set will be emptied and the iterator will be closed.
    *
+   * @param execptedTriples the expected set of execptedTriples.
+   * @param actualTriples the iterator containing the actual execptedTriples.
    * @throws Exception If the set does not match the iterator.
    */
-  private void checkSet(Set triples, ClosableIterator it) throws Exception {
-    while (it.hasNext()) {
-      Triple t = (Triple) it.next();
-      assertTrue(triples.contains(t));
-      triples.remove(t);
+  private void checkSet(Set execptedTriples, ClosableIterator actualTriples)
+      throws Exception {
+    while (actualTriples.hasNext()) {
+      Triple t = (Triple) actualTriples.next();
+      assertTrue(execptedTriples.contains(t));
+      execptedTriples.remove(t);
     }
-    if (!triples.isEmpty()) {
-      System.out.println("triples still contains: " + triples.toString());
+    if (!execptedTriples.isEmpty()) {
+      System.out.println("execptedTriples still contains: " + execptedTriples.toString());
     }
-    assertTrue(triples.isEmpty());
-    it.close();
+    assertTrue(execptedTriples.isEmpty());
+    actualTriples.close();
   }
 
 }

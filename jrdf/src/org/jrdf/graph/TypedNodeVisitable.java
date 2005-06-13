@@ -73,5 +73,5 @@ public interface TypedNodeVisitable {
    *
    * @param visitor the object doing the visiting.
    */
-  public void accept(TypedNodeVisitor visitor);
+  void accept(TypedNodeVisitor visitor);
 }

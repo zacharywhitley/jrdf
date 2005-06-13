@@ -39,61 +39,61 @@ public interface Parser {
   /**
    * Constant indicating that datatypes semantics should be ignored.
    **/
-  public static final int DT_IGNORE = 10;
+  int DT_IGNORE = 10;
 
   /**
    * Constant indicating that values of datatyped literals should be
    * verified.
    **/
-  public static final int DT_VERIFY = 20;
+  int DT_VERIFY = 20;
 
   /**
    * Constant indicating that values of datatyped literals should be
    * normalized to their canonical representation.
    **/
-  public static final int DT_NORMALIZE = 30;
+  int DT_NORMALIZE = 30;
 
   /**
    * Sets the StatementHandler that will be notified of statements that
    * are parsed by this parser.
    **/
-  public void setStatementHandler(StatementHandler sh);
+  void setStatementHandler(StatementHandler sh);
 
   /**
    * Sets the ParseErrorListener that will be notified of any errors
    * that this parser finds during parsing.
    **/
-  public void setParseErrorListener(ParseErrorListener el);
+  void setParseErrorListener(ParseErrorListener el);
 
   /**
    * Sets the ParseLocationListener that will be notified of the parser's
    * progress during the parse process.
    **/
-  public void setParseLocationListener(ParseLocationListener ll);
+  void setParseLocationListener(ParseLocationListener ll);
 
   /**
    * Sets the NamespaceListener that will be notified of any namespace
    * declarations that the parser finds during parsing.
    **/
-  public void setNamespaceListener(NamespaceListener nl);
+  void setNamespaceListener(NamespaceListener nl);
 
   /**
    * Sets whether the parser should verify the data it parses (default value
    * is <tt>true</tt>).
    **/
-  public void setVerifyData(boolean verifyData);
+  void setVerifyData(boolean verifyData);
 
   /**
    * Set whether the parser should preserve bnode identifiers specified
    * in the source (default is <tt>false</tt>).
    */
-  public void setPreserveBNodeIds(boolean preserveBNodeIds);
+  void setPreserveBNodeIds(boolean preserveBNodeIds);
 
   /**
    * Sets whether the parser should stop immediately if it finds an error
    * in the data (default value is <tt>true</tt>).
    **/
-  public void setStopAtFirstError(boolean stopAtFirstError);
+  void setStopAtFirstError(boolean stopAtFirstError);
 
   /**
    * Sets the datatype handling mode. There are three modes for
@@ -113,7 +113,7 @@ public interface Parser {
    * @see #DT_VERIFY
    * @see #DT_NORMALIZE
    **/
-  public void setDatatypeHandling(int datatypeHandling);
+  void setDatatypeHandling(int datatypeHandling);
 
   /**
    * Parses the data from the supplied InputStream, using the supplied
@@ -128,7 +128,7 @@ public interface Parser {
    * @exception StatementHandlerException If the configured statement handler
    * has encountered an unrecoverable error.
    **/
-  public void parse(InputStream in, String baseURI) throws IOException,
+  void parse(InputStream in, String baseURI) throws IOException,
       ParseException, StatementHandlerException;
 
   /**
@@ -144,6 +144,6 @@ public interface Parser {
    * @exception StatementHandlerException If the configured statement handler
    * has encountered an unrecoverable error.
    **/
-  public void parse(Reader reader, String baseURI) throws IOException,
+  void parse(Reader reader, String baseURI) throws IOException,
       ParseException, StatementHandlerException;
 }
