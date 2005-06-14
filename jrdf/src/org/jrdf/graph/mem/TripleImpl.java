@@ -94,6 +94,8 @@ public class TripleImpl extends AbstractTriple {
   /**
    * Constructor for this Triple, only to be used by the iterators.
    *
+   * @param factory the factory to use to get the nodes that make up this
+   *   triple.
    * @param subject The subject node id of this triple.
    * @param predicate The predicate node id of this triple.
    * @param object The object node id of this triple.
@@ -110,16 +112,18 @@ public class TripleImpl extends AbstractTriple {
   /**
    * Constructor for this Triple, only to be used by the variable iterators.
    *
+   * @param factory the factory to use to get the nodes that make up this
+   *   triple.
    * @param first The first node id of this triple.
    * @param second The second node id of this triple.
    * @param third The third node id of this triple.
    */
-  TripleImpl(GraphElementFactoryImpl nodeFactory, int var, Long first,
+  TripleImpl(GraphElementFactoryImpl factory, int var, Long first,
       Long second, Long third) {
     Long[] nodes = new Long[]{first, second, third};
-    subjectNode = (SubjectNode) nodeFactory.getNodeById(nodes[var]);
-    predicateNode = (PredicateNode) nodeFactory.getNodeById(
+    subjectNode = (SubjectNode) factory.getNodeById(nodes[var]);
+    predicateNode = (PredicateNode) factory.getNodeById(
         nodes[(var + 1) % 3]);
-    objectNode = (ObjectNode) nodeFactory.getNodeById(nodes[(var + 2) % 3]);
+    objectNode = (ObjectNode) factory.getNodeById(nodes[(var + 2) % 3]);
   }
 }

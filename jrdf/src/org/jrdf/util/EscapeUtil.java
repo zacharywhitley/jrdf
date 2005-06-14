@@ -22,30 +22,37 @@ public class EscapeUtil {
       "|" + // ...or...
       "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]"         // all other escaped chars
   );
+
   /**
    * The matcher instance used to escape characters from Unicode to ASCII.
    *
    * This is lazily initialized and used by the {@link #escape} method.
    */
-  private static transient Matcher matcher;
+  private static Matcher matcher;
+
   /**
    * Base UTF Code point.
    */
   private static final int UTF_BASE_CODEPOINT = 0x10000;
+
   /**
    * How shift to get UTF-16 to character codes.
    */
   private static final int CHARACTER_CODE_OFFSET = 0x3FF;
+
   /**
    *  How many characters at a time to decode for 8 bit encoding.
    */
   private static final int CHARACTER_LENGTH_8_BIT = 11;
+
   /**
    *  How many characters at a time to decode for 16 bit encoding.
    */
   private static final int CHARACTER_LENGTH_16_BIT = 7;
 
   /**
+   * Escapes a string literal to a string that is N-Triple escaped.
+   *
    * @param string  a string to escape, never <code>null</code>.
    * @return a version of the <var>string</var> with N-Triples escapes applied.
    */

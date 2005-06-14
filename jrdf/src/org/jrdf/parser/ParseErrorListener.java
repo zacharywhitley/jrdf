@@ -62,7 +62,6 @@ public interface ParseErrorListener {
    * available or applicable.
    * @param colNo A column number related to the error, or -1 if not
    * available or applicable.
-   * @see org.openrdf.rio.Parser#setStopAtFirstError
    **/
   void error(String msg, int lineNo, int colNo);
 

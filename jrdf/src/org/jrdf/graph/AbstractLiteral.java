@@ -81,7 +81,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 2589574733270452078L;
+  private static final long serialVersionUID = 2589574733270452078L;
 
   /**
    * The lexical form of the literal.

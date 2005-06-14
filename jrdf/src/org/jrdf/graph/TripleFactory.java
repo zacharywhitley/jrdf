@@ -76,7 +76,7 @@ public interface TripleFactory {
    * @param predicateNode the predicate of the triple.
    * @param objectNode the object of the triple.
    * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be added.
+   * @throws TripleFactoryException If the resource failed to be added.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
@@ -91,7 +91,7 @@ public interface TripleFactory {
    *
    * @param triple the triple to be reified.
    * @param reificationNode a node denoting the reified triple.
-   * @throws NodeFactoryException If the resource failed to be added.
+   * @throws TripleFactoryException If the resource failed to be added.
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */

@@ -75,8 +75,7 @@ import junit.framework.*;
  *
  * @version $Revision$
  */
-public abstract class AbstractGraphUnitTest
-    extends TestCase {
+public abstract class AbstractGraphUnitTest extends TestCase {
 
   /**
    * Instance of a graph object.

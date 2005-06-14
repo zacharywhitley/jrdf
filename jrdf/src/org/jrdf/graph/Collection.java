@@ -68,8 +68,6 @@ import java.util.Iterator;
  *
  * See <A HREF="http://www.w3.org/TR/rdf-primer/#collections">4.1 RDF Collections</A>.
  *
- * Basically an interface of ${@link java.util.LinkedList}.
- *
  * @author Andrew Newman
  *
  * @version $Revision$
@@ -80,6 +78,7 @@ public interface Collection {
    * Add an ${@link ObjectNode} to the collection.
    *
    * @param element object to add.
+   * @return true if the object was added successfully.
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
@@ -99,6 +98,7 @@ public interface Collection {
    * Add a collection of ${@link ObjectNode}s to this one.
    *
    * @param c the collection to add.
+   * @return true if the object was added successfully.
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */
@@ -110,6 +110,7 @@ public interface Collection {
    *
    * @param index the index into the collection to start adding.
    * @param c the collection to add.
+   * @return true if the object was added successfully.
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */
@@ -132,12 +133,19 @@ public interface Collection {
   void addLast(Object element);
 
   /**
+   * Search the collection and return if the object was found or not.
+   *
+   * @return true of the object was found.
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
   boolean contains(Object element);
 
   /**
+   * Search the collection and return if all of the given objects were found.
+   *
+   * @param c the collection containing the elements to search.
+   * @return true if all of the given objects were found. 
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */

@@ -74,18 +74,24 @@ import java.util.Collection;
 public interface Sequence extends Container {
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
   void add(int index, Object o) throws IllegalArgumentException;
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
   boolean addAll(Collection c) throws IllegalArgumentException;
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
@@ -93,37 +99,48 @@ public interface Sequence extends Container {
       throws IllegalArgumentException;
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
   boolean contains(Object o);
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
   boolean containsAll(Collection c);
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
   int indexOf(Object o) throws IllegalArgumentException;
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
   int lastIndexOf(Object o) throws IllegalArgumentException;
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  boolean removeAll(Collection c)
-      throws IllegalArgumentException;
+  boolean removeAll(Collection c) throws IllegalArgumentException;
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
@@ -131,6 +148,8 @@ public interface Sequence extends Container {
       throws IllegalArgumentException;
 
   /**
+   * ${@inheritDoc}
+   *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */

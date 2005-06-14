@@ -74,7 +74,7 @@ import java.util.*;
  */
 public class UIDGeneratorUnitTest extends TestCase {
 
-  /** Set of UIDs that have been generated */
+  /** Set of UIDs that have been generated. */
   private Set uids;
 
   /** Number of UIDs generated. */
@@ -280,10 +280,9 @@ public class UIDGeneratorUnitTest extends TestCase {
   }
 
   /**
-   * The teardown method for JUnit
+   * The teardown method for JUnit.
    *
    * @throws Exception
-   *             EXCEPTION TO DO
    */
   public void tearDown() throws Exception {
 

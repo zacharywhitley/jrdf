@@ -50,49 +50,63 @@ public interface Parser {
   /**
    * Constant indicating that values of datatyped literals should be
    * normalized to their canonical representation.
-   **/
+   */
   int DT_NORMALIZE = 30;
 
   /**
    * Sets the StatementHandler that will be notified of statements that
    * are parsed by this parser.
-   **/
+   *
+   * @param sh the StatementHandler.
+   */
   void setStatementHandler(StatementHandler sh);
 
   /**
    * Sets the ParseErrorListener that will be notified of any errors
    * that this parser finds during parsing.
-   **/
+   *
+   * @param el the error listener.
+   */
   void setParseErrorListener(ParseErrorListener el);
 
   /**
    * Sets the ParseLocationListener that will be notified of the parser's
    * progress during the parse process.
-   **/
+   *
+   * @param ll the parser location listener.
+   */
   void setParseLocationListener(ParseLocationListener ll);
 
   /**
    * Sets the NamespaceListener that will be notified of any namespace
    * declarations that the parser finds during parsing.
-   **/
+   *
+   * @param nl the namespace listener.
+   */
   void setNamespaceListener(NamespaceListener nl);
 
   /**
    * Sets whether the parser should verify the data it parses (default value
    * is <tt>true</tt>).
-   **/
+   *
+   * @param verifyData true to verify the data parsed in.
+   */
   void setVerifyData(boolean verifyData);
 
   /**
    * Set whether the parser should preserve bnode identifiers specified
    * in the source (default is <tt>false</tt>).
+   *
+   * @param preserveBNodeIds true to presever blank node identifier.
    */
   void setPreserveBNodeIds(boolean preserveBNodeIds);
 
   /**
    * Sets whether the parser should stop immediately if it finds an error
    * in the data (default value is <tt>true</tt>).
-   **/
+   *
+   * @param stopAtFirstError true if an error should stop parsing.
+   */
   void setStopAtFirstError(boolean stopAtFirstError);
 
   /**
@@ -112,7 +126,7 @@ public interface Parser {
    * @see #DT_IGNORE
    * @see #DT_VERIFY
    * @see #DT_NORMALIZE
-   **/
+   */
   void setDatatypeHandling(int datatypeHandling);
 
   /**
@@ -127,7 +141,7 @@ public interface Parser {
    * parse error.
    * @exception StatementHandlerException If the configured statement handler
    * has encountered an unrecoverable error.
-   **/
+   */
   void parse(InputStream in, String baseURI) throws IOException,
       ParseException, StatementHandlerException;
 
@@ -143,7 +157,7 @@ public interface Parser {
    * parse error.
    * @exception StatementHandlerException If the configured statement handler
    * has encountered an unrecoverable error.
-   **/
+   */
   void parse(Reader reader, String baseURI) throws IOException,
       ParseException, StatementHandlerException;
 }

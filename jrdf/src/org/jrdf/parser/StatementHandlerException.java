@@ -69,23 +69,23 @@ public class StatementHandlerException extends Exception {
    * Creates a new StatementHandlerException wrapping another exception.
    *
    * @param msg An error message.
-   * @param source The source exception.
+   * @param newSource The newSource exception.
    **/
-  public StatementHandlerException(String msg, Exception source) {
+  public StatementHandlerException(String msg, Exception newSource) {
     super(msg);
-    this.source = source;
+    source = newSource;
   }
 
   /**
    * Creates a new StatementHandlerException wrapping another exception. The
    * StatementHandlerException will inherit its message from the supplied
-   * source exception.
+   * newSource exception.
    *
-   * @param source The source exception.
+   * @param newSource The newSource exception.
    **/
-  public StatementHandlerException(Exception source) {
-    super(source.getMessage());
-    this.source = source;
+  public StatementHandlerException(Exception newSource) {
+    super(newSource.getMessage());
+    source = newSource;
   }
 
   /**

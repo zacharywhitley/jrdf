@@ -47,9 +47,6 @@ public interface StatementHandler {
    * @param object A URI, bNode or literal.
    * @exception StatementHandlerException If the statement handler has
    * encountered an unrecoverable error.
-   *
-   * @see org.openrdf.model.ValueFactory
-   * @see org.openrdf.rio.Parser
    **/
   void handleStatement(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws StatementHandlerException;

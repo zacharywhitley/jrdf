@@ -79,18 +79,23 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
 
   /**
    * A factory for creating BlankNodes (as well as resources and literals).
-   **/
+   */
   private GraphElementFactory valueFactory;
 
   /**
    * Mapping from bNode ID's as used in the RDF document to the
    * object created for it by the GraphElementFactory.
-   **/
+   */
   private Map bNodeIdMap = new HashMap();
 
 
-  public ParserBlankNodeFactoryImpl(GraphElementFactory valueFactory) {
-    this.valueFactory = valueFactory;
+  /**
+   * Create a new blank node factory with the given value factory.
+   *
+   * @param newValueFactory factory to create nodes with.
+   */
+  public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory) {
+    valueFactory = newValueFactory;
   }
 
   /**

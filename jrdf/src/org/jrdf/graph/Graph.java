@@ -119,6 +119,7 @@ public interface Graph extends Serializable {
    * @param subject The subject to find or null to indicate any subject.
    * @param predicate The predicate to find or null to indicate any predicate.
    * @param object ObjectNode The object to find or null to indicate any object.
+   * @return an iterator containing the matching statements.
    * @throws GraphException If there was an error accessing the graph.
    */
   ClosableIterator find(SubjectNode subject, PredicateNode predicate,
@@ -131,6 +132,7 @@ public interface Graph extends Serializable {
    * returned.
    *
    * @param triple The triple to find.
+   * @return an iterator containing the matching statements.
    * @throws GraphException If there was an error accessing the graph.
    */
   ClosableIterator find(Triple triple) throws GraphException;
@@ -161,7 +163,7 @@ public interface Graph extends Serializable {
    * must have already been created using {@link GraphElementFactory}.
    *
    * @param triples The triple iterator.
-   * @throws GraphExcepotion If the statements can't be made.
+   * @throws GraphException If the statements can't be made.
    */
   void add(Iterator triples) throws GraphException;
 
@@ -198,7 +200,7 @@ public interface Graph extends Serializable {
    * nodes must have already been created using {@link GraphElementFactory}.
    *
    * @param triples The triple iterator.
-   * @throws GraphExcepotion If the statements can't be revoked.
+   * @throws GraphException If the statements can't be revoked.
    */
   void remove(Iterator triples) throws GraphException;
 
@@ -220,6 +222,8 @@ public interface Graph extends Serializable {
    * Returns the number of triples in the graph.
    *
    * @return the number of triples in the graph.
+   * @throws GraphException If the statements number of statements in the graph
+   *   fails to be found.
    */
   long getNumberOfTriples() throws GraphException;
 
@@ -227,6 +231,8 @@ public interface Graph extends Serializable {
    * Returns true if the graph is empty i.e. the number of triples is 0.
    *
    * @return true if the graph is empty i.e. the number of triples is 0.
+   * @throws GraphException If the statements number of statements in the graph
+   *   fails to be found.
    */
   boolean isEmpty() throws GraphException;
 }
