@@ -76,6 +76,7 @@ public interface GraphElementFactory {
    * Create a blank nodes that is associated with a specific graph.
    *
    * @return the newly created blank node value.
+   * @throws GraphElementFactoryException if adding a blank node fails.
    */
   BlankNode createResource() throws GraphElementFactoryException;
 
@@ -86,8 +87,7 @@ public interface GraphElementFactory {
    * @return the newly created URI reference value.
    * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  URIReference createResource(URI uri)
-      throws GraphElementFactoryException;
+  URIReference createResource(URI uri) throws GraphElementFactoryException;
 
   /**
    * Create a URI reference without checking if the URI given is a valid RDF

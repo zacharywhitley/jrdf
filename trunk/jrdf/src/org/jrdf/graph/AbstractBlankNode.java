@@ -75,7 +75,7 @@ public abstract class AbstractBlankNode implements BlankNode, Serializable {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  //static final long serialVersionUID = 3481053689307839406L;
+  private static final long serialVersionUID = 3481053689307839406L;
 
   /**
    * Accept a call from a TypedNodeVisitor.

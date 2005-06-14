@@ -322,7 +322,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
    * from the InputStream.
    * @exception ParseException If the parser has found an unrecoverable
    * parse error.
-   * @exception StatementHandler If the configured statement handler
+   * @exception StatementHandlerException If the configured statement handler
    * encountered an unrecoverable error.
    * @exception IllegalArgumentException If the supplied input stream or
    * base URI is <tt>null</tt>.

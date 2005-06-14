@@ -85,13 +85,19 @@ public interface ParserBlankNodeFactory {
    * ParserBlankNodeFactory.
    *
    * @return the BlankNode.
+   * @throws GraphElementFactoryException if there is a failure to create the
+   *   blank node.
    */
   BlankNode createBlankNode() throws GraphElementFactoryException;
 
   /**
    * Creates a BlankNode that is only distinguished by the nodeID value.
    *
+   * @param nodeID the nodeID of the blank node - consistently returns the same
+   *   blank node if it exists. 
    * @return the BlankNode.
+   * @throws GraphElementFactoryException if there is a failure to create the
+   *   blank node.
    */
   BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException;
 

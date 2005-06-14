@@ -74,7 +74,7 @@ public class AlreadyReifiedException extends TripleFactoryException {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 1411562510088882899L;
+  private static final long serialVersionUID = 1411562510088882899L;
 
   /**
    * Create an exception.

@@ -75,6 +75,14 @@ public abstract class AbstractURIReference implements URIReference,
     Serializable {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  private static final long serialVersionUID = 8034954863132812197L;
+
+  /**
    * The URI of the node.
    */
   protected URI uri;

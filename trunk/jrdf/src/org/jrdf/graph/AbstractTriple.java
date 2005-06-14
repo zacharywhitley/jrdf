@@ -70,6 +70,14 @@ import java.io.Serializable;
 public abstract class AbstractTriple implements Triple, Serializable {
 
   /**
+   * Allow newer compiled version of the stub to operate when changes
+   * have not occurred with the class.
+   * NOTE : update this serialVersionUID when a method or a public member is
+   * deleted.
+   */
+  private static final long serialVersionUID = 8737092494833012690L;
+
+  /**
    * Subject of this statement.
    */
   protected SubjectNode subjectNode;
