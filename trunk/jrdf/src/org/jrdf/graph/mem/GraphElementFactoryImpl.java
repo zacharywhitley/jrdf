@@ -59,14 +59,11 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.*;
-import org.jrdf.util.ClosableIterator;  // used by reification only
-
-// Java 2 standard packages
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.*;
-
 import org.jrdf.util.UIDGenerator;
+
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A SkipListNode Factory is a class which create the various components of a graph.
@@ -145,7 +142,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
    */
   public URIReference createResource(URI uri)
       throws GraphElementFactoryException {
-    if (uri == null) {
+    if (null == uri) {
       throw new GraphElementFactoryException(
           "URI may not be null for a URIReference");
     }
@@ -153,7 +150,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     // check if the node already exists in the string pool
     Long nodeid = getNodeIdByString(uri.toString());
 
-    if (nodeid != null) {
+    if (null != nodeid) {
       return (URIReference) getNodeById(nodeid);
     }
 
@@ -184,14 +181,14 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
   public URIReference createResource(URI uri, boolean validate)
       throws GraphElementFactoryException {
 
-    if (uri == null) {
+    if (null == uri) {
       throw new GraphElementFactoryException(
           "URI may not be null for a URIReference");
     }
 
     // check if the node already exists in the string pool
     Long nodeid = getNodeIdByString(uri.toString());
-    if (nodeid != null) {
+    if (null != nodeid) {
       return (URIReference) getNodeById(nodeid);
     }
 
@@ -221,8 +218,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
    */
   public Literal createLiteral(String lexicalValue)
       throws GraphElementFactoryException {
-    final Literal literal = new LiteralImpl(lexicalValue);
-    addNodeId((LiteralImpl) literal);
+    LiteralImpl literal = new LiteralImpl(lexicalValue);
+    addNodeId(literal);
     return literal;
   }
 
@@ -256,8 +253,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
   public Literal createLiteral(String lexicalValue, URI datatypeURI)
       throws GraphElementFactoryException {
     // create the node identifier
-    final Literal newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
-    addNodeId((LiteralImpl) newLiteral);
+    LiteralImpl newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
+    addNodeId(newLiteral);
     return newLiteral;
   }
 
@@ -267,15 +264,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
    * given newLiteral.
    *
    * @param newLiteral A newly created newLiteral.
-   * @throws GraphElementFactoryException If the resource failed to be created.
    */
-  private void addNodeId(LiteralImpl newLiteral)
-      throws GraphElementFactoryException {
-
-    if (!(newLiteral instanceof LiteralImpl)) {
-      throw new IllegalArgumentException("Cannot add non-memory newLiteral " +
-          "implementation");
-    }
+  private void addNodeId(LiteralImpl newLiteral) {
 
     // find the string identifier for this node
     String strId = newLiteral.getEscapedForm();
@@ -283,7 +273,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     // check if the node already exists in the string pool
     Long tmpNodeId = (Long) stringPool.get(strId);
 
-    if (tmpNodeId != null) {
+    if (null != tmpNodeId) {
 
       // return the existing node instead
       newLiteral.setId(tmpNodeId);
@@ -336,7 +326,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
 
     // look the node up to see if it already exists in the graph
     MemNode existingNode = (MemNode) nodePool.get(id);
-    if (existingNode != null) {
+    if (null != existingNode) {
       // check that the node is equal to the one that is already in the graph
       if (existingNode.equals(node)) {
         return;

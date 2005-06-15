@@ -72,14 +72,6 @@ import java.net.URI;
 public interface Literal extends ObjectNode, TypedNodeVisitable {
 
   /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  long serialVersionUID = -5616329176473407161L;
-
-  /**
    * Obtain the text of this literal.
    *
    * @return the text of the literal, never <code>null</code>

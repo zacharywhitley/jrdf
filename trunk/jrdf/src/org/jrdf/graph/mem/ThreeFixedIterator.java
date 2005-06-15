@@ -58,10 +58,10 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.*;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.*;
+import java.util.NoSuchElementException;
 
 /**
  * An iterator that returns only a single triple, if any exists.
@@ -100,7 +100,7 @@ public class ThreeFixedIterator implements ClosableIterator {
    * @return <code>true</code> If there is an element to be read.
    */
   public boolean hasNext() {
-    return triple != null;
+    return null != triple;
   }
 
 
@@ -111,7 +111,7 @@ public class ThreeFixedIterator implements ClosableIterator {
    * @throws NoSuchElementException iteration has no more elements.
    */
   public Object next() throws NoSuchElementException {
-    if (triple == null) {
+    if (null == triple) {
       throw new NoSuchElementException();
     }
     // return the triple, clearing it first so next will fail on a subsequent call
@@ -125,7 +125,7 @@ public class ThreeFixedIterator implements ClosableIterator {
    * Implemented for java.util.Iterator.
    */
   public void remove() {
-    if (removeTriple != null) {
+    if (null != removeTriple) {
       try {
         graph.remove(removeTriple);
         removeTriple = null;

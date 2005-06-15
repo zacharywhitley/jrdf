@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,62 +56,28 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph;
+package org.jrdf.graph.mem;
 
-import java.io.Serializable;
+import org.jrdf.graph.GraphException;
+
+import java.util.Map;
 
 /**
- * RDF Triple. An RDF triple as defined in "Resource Description Framework (RDF):
- * Concepts and Abstract Syntax"
- * <a href="http://www.w3c.org/TR/rdf-concepts/#section-triples"/>6.1 RDF Triples</a>.
+ * Handles the modification of an index as we iterate through for the 201 index.
  *
- * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public interface Triple extends Serializable {
+public class GraphHandler201 implements GraphHandler {
+  protected GraphImpl graph;
 
-  /**
-   * Obtains the subject of this statement.
-   *
-   * @return an {@link SubjectNode} which is either a {@link BlankNode} or
-   *     {@link URIReference}
-   */
-  SubjectNode getSubject();
+  public GraphHandler201(GraphImpl graph) {
+    this.graph = graph;
+  }
 
-  /**
-   * Obtains the predicate of this statement.
-   *
-   * @return a {@link PredicateNode} which is a {@link URIReference}
-   */
-  PredicateNode getPredicate();
-
-  /**
-   * Obtains the object of this statement.
-   *
-   * @return a {@link ObjectNode} which is either a {@link BlankNode},
-   *     {@link URIReference} or {@link Literal}
-   */
-  ObjectNode getObject();
-
-  /**
-   * Indicates whether some other object is "equal to" this one.
-   *
-   * A triple is equal to another triple if the subject, predicate and object
-   * are all equal.
-   *
-   * @param obj the reference object with which to compare.
-   * @return true if this object is the same as the obj argument; false otherwise.
-   */
-  boolean equals(Object obj);
-
-  /**
-   * Returns a hash-code value for this triple. The hash code is based upon
-   * XORing all of the components of a triple i.e. the subject, predicate and
-   * object.
-   *
-   * @return a hash-code value for this triple.
-   */
-  int hashCode();
+  public void remove(Long[] currentNodes) throws GraphException {
+    graph.removeFrom012(currentNodes[1], currentNodes[2], currentNodes[0]);
+    graph.removeFrom120(currentNodes[2], currentNodes[0], currentNodes[1]);
+  }
 }

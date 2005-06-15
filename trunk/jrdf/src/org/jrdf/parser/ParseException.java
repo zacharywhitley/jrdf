@@ -94,7 +94,7 @@ public class ParseException extends Exception {
   public void printStackTrace(PrintStream ps) {
     super.printStackTrace(ps);
 
-    if (_source != null) {
+    if (null != _source) {
       ps.println("Source is:");
       _source.printStackTrace(ps);
     }
@@ -103,7 +103,7 @@ public class ParseException extends Exception {
   public void printStackTrace(PrintWriter pw) {
     super.printStackTrace(pw);
 
-    if (_source != null) {
+    if (null != _source) {
       pw.println("Source is:");
       _source.printStackTrace(pw);
     }

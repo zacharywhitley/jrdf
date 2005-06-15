@@ -59,13 +59,18 @@
 package org.jrdf.util;
 
 // Third party packages
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Unit test for testing the Unique Identifier Generator (UIDGenerator).
@@ -119,11 +124,9 @@ public class UIDGeneratorUnitTest extends TestCase {
   /**
    * Default test runner.
    *
-   * @param args
-   *            The command line arguments
-   * @throws Exception
+   * @param args The command line arguments
    */
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
 
     TestRunner.run(suite());
   }
@@ -137,7 +140,7 @@ public class UIDGeneratorUnitTest extends TestCase {
 
     String currentUID = "";
 
-    for (int i = 0; i < NUM_UIDS; i++) {
+    for (int i = 0; NUM_UIDS > i; i++) {
 
       currentUID = UIDGenerator.generateUID();
 
@@ -163,7 +166,7 @@ public class UIDGeneratorUnitTest extends TestCase {
     Thread currentThread = null;
 
     //start threads that generate UIDs
-    for (int i = 0; i < NUM_THREADS; i++) {
+    for (int i = 0; NUM_THREADS > i; i++) {
       //start a new thread that inserts and checks UIDS
       currentThread = new Thread(new Runnable() {
 
@@ -201,7 +204,7 @@ public class UIDGeneratorUnitTest extends TestCase {
     }
 
     //must wait for all threads to finish
-    for (int i = 0; i < NUM_THREADS; i++) {
+    for (int i = 0; NUM_THREADS > i; i++) {
 
       ((Thread) threadList.get(i)).join();
     }
@@ -222,11 +225,9 @@ public class UIDGeneratorUnitTest extends TestCase {
     //get an URL to the UIDGenerator class file
     URL[] uidClass = new URL[] {
         ClassLoader.getSystemClassLoader().getResource(CLASS_NAME)};
-    System.out.println("Got: " + ClassLoader.getSystemClassLoader().getResource(CLASS_NAME));
 
-    for (int i = 0; i < NUM_CLASSLOADERS; i++) {
+    for (int i = 0; NUM_CLASSLOADERS > i; i++) {
       currentLoader = new URLClassLoader(uidClass);
-      System.out.println("Got: " + currentLoader);
       currentUIDGeneratorClass = currentLoader.loadClass(FULL_CLASS_NAME);
       testUIDGeneratorClass(currentUIDGeneratorClass);
     }
@@ -243,7 +244,7 @@ public class UIDGeneratorUnitTest extends TestCase {
     //get the UIDGenerator's generateUID method
     Method generateUID = uidGenerator.getMethod("generateUID", null);
     String currentUID = "";
-    for (int i = 0; i < NUM_UIDS; i++) {
+    for (int i = 0; NUM_UIDS > i; i++) {
       currentUID = (String) generateUID.invoke(null, null);
       //is it unique??
       if (uids.contains(currentUID)) {

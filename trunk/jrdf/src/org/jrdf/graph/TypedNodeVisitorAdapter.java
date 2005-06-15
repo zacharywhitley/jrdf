@@ -68,7 +68,9 @@ package org.jrdf.graph;
  * @version $Revision$
  */
 
-public class TypedNodeVisitorAdapter {
+class TypedNodeVisitorAdapter implements TypedNodeVisitor {
+  public TypedNodeVisitorAdapter() {
+  }
 
   /**
    * Visit blank node.

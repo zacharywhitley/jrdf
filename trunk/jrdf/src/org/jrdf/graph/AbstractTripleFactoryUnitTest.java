@@ -59,16 +59,12 @@
 package org.jrdf.graph;
 
 // Java packages
-import java.net.*;
-import java.util.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.vocabulary.RDF;
 
-// Internal packages
-import org.jrdf.graph.*;
-import org.jrdf.vocabulary.*;
-import org.jrdf.util.*;
-
-// Third party packages
-import junit.framework.*;
+import java.net.URI;
 
 /**
  * Abstract test case for graph implementations.
@@ -83,7 +79,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   /**
    * Instance of a graph object.
    */
-  protected Graph graph;
+  private Graph graph;
 
   /**
    * Instance of a factory for the graph
@@ -93,23 +89,23 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
   /**
    * Instance of the triple factory for the graph.
    */
-  protected TripleFactory tripleFactory;
+  private TripleFactory tripleFactory;
 
   // The following are interally used "constants"
-  protected BlankNode blank1;
-  protected BlankNode blank2;
+  private BlankNode blank1;
+  private BlankNode blank2;
 
-  protected URI uri1;
-  protected URI uri2;
-  protected URI uri3;
-  protected URIReference ref1;
-  protected URIReference ref2;
-  protected URIReference ref3;
+  private URI uri1;
+  private URI uri2;
+  private URI uri3;
+  private URIReference ref1;
+  private URIReference ref2;
+  private URIReference ref3;
 
-  protected final String TEST_STR1 = "A test string";
-  protected final String TEST_STR2 = "Another test string";
-  protected Literal l1;
-  protected Literal l2;
+  private final String TEST_STR1 = "A test string";
+  private final String TEST_STR2 = "Another test string";
+  private Literal l1;
+  private Literal l2;
 
   /**
    * Constructs a new test with the given name.
@@ -161,70 +157,70 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
    *
    * @return A new GraphImpl.
    */
-  public abstract Graph newGraph() throws Exception;
+  protected abstract Graph newGraph() throws Exception;
 
   /**
    * Get the node used for subject reification.
    *
    * @return The subject reification node.
    */
-  public abstract PredicateNode getReifySubject() throws TripleFactoryException;
+  protected abstract PredicateNode getReifySubject() throws TripleFactoryException;
 
   /**
    * Get the node used for predicate reification.
    *
    * @return The predicate reification node.
    */
-  public abstract PredicateNode getReifyPredicate() throws TripleFactoryException;
+  protected abstract PredicateNode getReifyPredicate() throws TripleFactoryException;
 
   /**
    * Get the node used for object reification.
    *
    * @return The object reification node.
    */
-  public abstract PredicateNode getReifyObject() throws TripleFactoryException;
+  protected abstract PredicateNode getReifyObject() throws TripleFactoryException;
 
   /**
    * Get the node used for rdf:type.
    *
    * @return The object rdf:type node.
    */
-  public abstract PredicateNode getRdfType() throws TripleFactoryException;
+  protected abstract PredicateNode getRdfType() throws TripleFactoryException;
 
   /**
    * Get the node used for rdf:Statement.
    *
    * @return The object rdf:statement node.
    */
-  public abstract ObjectNode getRdfStatement() throws TripleFactoryException;
+  protected abstract ObjectNode getRdfStatement() throws TripleFactoryException;
 
   /**
    * Create a concrete Collection.
    *
    * @return the new collection.
    */
-  public abstract Collection createCollection(ObjectNode[] objects);
+  protected abstract Collection createCollection(ObjectNode[] objects);
 
   /**
    * Create a concrete alternative
    *
    * @return the new alternative.
    */
-  public abstract Alternative createAlternative(ObjectNode[] objects);
+  protected abstract Alternative createAlternative(ObjectNode[] objects);
 
   /**
    * Create a concrete bag
    *
    * @return the new bag.
    */
-  public abstract Bag createBag(ObjectNode[] objects);
+  protected abstract Bag createBag(ObjectNode[] objects);
 
   /**
    * Create a concrete sequence
    *
    * @return the new sequence.
    */
-  public abstract Sequence createSequence(ObjectNode[] objects);
+  protected abstract Sequence createSequence(ObjectNode[] objects);
 
   //
   // Test cases
@@ -392,7 +388,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       iter.next();
       counter++;
     }
-    assertTrue("Should have three rdf:first statements, not " + counter, counter == 3);
+    assertTrue("Should have three rdf:first statements, not " + counter, 3 ==
+        counter);
 
     // Find all three parts of the collection.
     for (int index = 0; index < fruit.length; index++) {
@@ -408,7 +405,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       iter.next();
       counter++;
     }
-    assertTrue("Should have three rdf:rest statements", counter == 3);
+    assertTrue("Should have three rdf:rest statements", 3 == counter);
 
     // Get all rdf:rest with rdf:nil statements
     iter = graph.find(null, rdfRest, rdfNil);
@@ -419,7 +416,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       counter++;
     }
 
-    assertTrue("Should have one rdf:rest with rdf:nil statements", counter == 1);
+    assertTrue("Should have one rdf:rest with rdf:nil statements", 1 ==
+        counter);
   }
 
   /**
@@ -471,7 +469,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       iter.next();
       count++;
     }
-    assertTrue("Should have only the same statements: " + fruit[0], count == 1);
+    assertTrue("Should have only the same statements: " + fruit[0], 1 == count);
   }
 
   /**
@@ -524,7 +522,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       iter.next();
       count++;
     }
-    assertTrue("Should have two of the same statements: " + fruit[2], count == 2);
+    assertTrue("Should have two of the same statements: " + fruit[2], 2 ==
+        count);
   }
 
   /**

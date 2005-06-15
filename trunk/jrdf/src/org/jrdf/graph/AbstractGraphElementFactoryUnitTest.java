@@ -58,14 +58,11 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.*;
-import org.jrdf.util.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
-import java.net.URISyntaxException;
-
-// Third party packages
-import junit.framework.*;
 
 /**
  * Abstract Test case for Graph Element Factories.
@@ -130,14 +127,14 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
    * @throws Exception A generic exception - this should cause the tests to
    *   fail.
    */
-  public abstract Graph newGraph() throws Exception;
+  protected abstract Graph newGraph() throws Exception;
 
   /**
    * Return the default literal type from the implementation.
    *
    * @return The default Literal type.
    */
-  public abstract URI getDefaultLiteralType();
+  protected abstract URI getDefaultLiteralType();
 
   /**
    * Get the default literal language from the implementation.

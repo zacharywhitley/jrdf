@@ -474,13 +474,13 @@ public class XmlDatatypeUtil {
    * not a legal boolean.
    **/
   public static String normalizeBoolean(String value) {
-    if (value.equals("1")) {
+    if ("1".equals(value)) {
       return "true";
     }
-    else if (value.equals("0")) {
+    else if ("0".equals(value)) {
       return "false";
     }
-    else if (value.equals("true") || value.equals("false")) {
+    else if ("true".equals(value) || "false".equals(value)) {
       return value;
     }
     else {
@@ -507,7 +507,7 @@ public class XmlDatatypeUtil {
     int decLength = decimal.length();
     StringBuffer result = new StringBuffer(decLength + 2);
 
-    if (decLength == 0) {
+    if (0 == decLength) {
       _throwIAE(errMsg);
     }
 
@@ -515,11 +515,11 @@ public class XmlDatatypeUtil {
 
     // process any sign info
     int idx = 0;
-    if (decimal.charAt(idx) == '-') {
+    if ('-' == decimal.charAt(idx)) {
       result.append('-');
       idx++;
     }
-    else if (decimal.charAt(idx) == '+') {
+    else if ('+' == decimal.charAt(idx)) {
       idx++;
     }
 
@@ -528,7 +528,7 @@ public class XmlDatatypeUtil {
     }
 
     // skip any leading zeros
-    while (idx < decLength && decimal.charAt(idx) == '0') {
+    while (idx < decLength && '0' == decimal.charAt(idx)) {
       idx++;
     }
 
@@ -537,7 +537,7 @@ public class XmlDatatypeUtil {
       // decimal consists of zeros only
       result.append('0');
     }
-    else if (idx < decLength && decimal.charAt(idx) == '.') {
+    else if (idx < decLength && '.' == decimal.charAt(idx)) {
       // no non-zero digit before the dot
       result.append('0');
     }
@@ -547,7 +547,7 @@ public class XmlDatatypeUtil {
       // Copy any digits before the dot
       while (idx < decLength) {
         char c = decimal.charAt(idx);
-        if (c == '.') {
+        if ('.' == c) {
           break;
         }
         if (!_isDigit(c)) {
@@ -570,7 +570,7 @@ public class XmlDatatypeUtil {
 
       // search last non-zero digit
       int lastIdx = decLength - 1;
-      while (lastIdx >= 0 && decimal.charAt(lastIdx) == '0') {
+      while (0 <= lastIdx && '0' == decimal.charAt(lastIdx)) {
         lastIdx--;
       }
 
@@ -710,7 +710,7 @@ public class XmlDatatypeUtil {
 
     int intLength = integer.length();
 
-    if (intLength == 0) {
+    if (0 == intLength) {
       _throwIAE(errMsg);
     }
 
@@ -718,11 +718,11 @@ public class XmlDatatypeUtil {
 
     // process any sign info
     boolean isNegative = false;
-    if (integer.charAt(idx) == '-') {
+    if ('-' == integer.charAt(idx)) {
       isNegative = true;
       idx++;
     }
-    else if (integer.charAt(idx) == '+') {
+    else if ('+' == integer.charAt(idx)) {
       idx++;
     }
 
@@ -730,11 +730,11 @@ public class XmlDatatypeUtil {
       _throwIAE(errMsg);
     }
 
-    if (integer.charAt(idx) == '0' && idx < intLength - 1) {
+    if ('0' == integer.charAt(idx) && idx < intLength - 1) {
       // integer starts with a zero followed by more characters,
       // skip any leading zeros
       idx++;
-      while (idx < intLength - 1 && integer.charAt(idx) == '0') {
+      while (idx < intLength - 1 && '0' == integer.charAt(idx)) {
         idx++;
       }
     }
@@ -748,18 +748,18 @@ public class XmlDatatypeUtil {
       }
     }
 
-    if (isNegative && norm.charAt(0) != '0') {
+    if (isNegative && '0' != norm.charAt(0)) {
       norm = "-" + norm;
     }
 
     // Check lower and upper bounds, if applicable
-    if (minValue != null) {
-      if (compareCanonicalIntegers(norm, minValue) < 0) {
+    if (null != minValue) {
+      if (0 > compareCanonicalIntegers(norm, minValue)) {
         _throwIAE("Value smaller than minimum value");
       }
     }
-    if (maxValue != null) {
-      if (compareCanonicalIntegers(norm, maxValue) > 0) {
+    if (null != maxValue) {
+      if (0 < compareCanonicalIntegers(norm, maxValue)) {
         _throwIAE("Value larger than maximum value");
       }
     }
@@ -828,20 +828,20 @@ public class XmlDatatypeUtil {
       String minMantissa, String maxMantissa,
       String minExponent, String maxExponent) {
     // handle special values
-    if (value.equals("INF") || value.equals("-INF") || value.equals("NaN")) {
+    if ("INF".equals(value) || "-INF".equals(value) || "NaN".equals(value)) {
       return value;
     }
 
     // Search for the exponent character E or e
     int eIdx = value.indexOf('E');
-    if (eIdx == -1) {
+    if (-1 == eIdx) {
       // try lower case
       eIdx = value.indexOf('e');
     }
 
     // Extract mantissa and exponent
     String mantissa, exponent;
-    if (eIdx == -1) {
+    if (-1 == eIdx) {
       mantissa = normalizeDecimal(value);
       exponent = "0";
     }
@@ -851,23 +851,23 @@ public class XmlDatatypeUtil {
     }
 
     // Check lower and upper bounds, if applicable
-    if (minMantissa != null) {
-      if (compareCanonicalDecimals(mantissa, minMantissa) < 0) {
+    if (null != minMantissa) {
+      if (0 > compareCanonicalDecimals(mantissa, minMantissa)) {
         _throwIAE("Mantissa smaller than minimum value (" + minMantissa + ")");
       }
     }
-    if (maxMantissa != null) {
-      if (compareCanonicalDecimals(mantissa, maxMantissa) > 0) {
+    if (null != maxMantissa) {
+      if (0 < compareCanonicalDecimals(mantissa, maxMantissa)) {
         _throwIAE("Mantissa larger than maximum value (" + maxMantissa + ")");
       }
     }
-    if (minExponent != null) {
-      if (compareCanonicalIntegers(exponent, minExponent) < 0) {
+    if (null != minExponent) {
+      if (0 > compareCanonicalIntegers(exponent, minExponent)) {
         _throwIAE("Exponent smaller than minimum value (" + minExponent + ")");
       }
     }
-    if (maxExponent != null) {
-      if (compareCanonicalIntegers(exponent, maxExponent) > 0) {
+    if (null != maxExponent) {
+      if (0 < compareCanonicalIntegers(exponent, maxExponent)) {
         _throwIAE("Exponent larger than maximum value (" + maxExponent + ")");
       }
     }
@@ -877,15 +877,15 @@ public class XmlDatatypeUtil {
 
     int dotIdx = mantissa.indexOf('.');
     int digitCount = dotIdx;
-    if (mantissa.charAt(0) == '-') {
+    if ('-' == mantissa.charAt(0)) {
       digitCount--;
     }
 
-    if (digitCount > 1) {
+    if (1 < digitCount) {
       // more than one digit before the dot, e.g 123.45, -10.0 or 100.0
       StringBuffer buf = new StringBuffer(mantissa.length());
       int firstDigitIdx = 0;
-      if (mantissa.charAt(0) == '-') {
+      if ('-' == mantissa.charAt(0)) {
         buf.append('-');
         firstDigitIdx = 1;
       }
@@ -900,11 +900,11 @@ public class XmlDatatypeUtil {
       // For example, 100.0 will be normalize to 1.000 and
       // -10.0 to -1.00.
       int nonZeroIdx = mantissa.length() - 1;
-      while (nonZeroIdx >= 3 && mantissa.charAt(nonZeroIdx) == '0') {
+      while (3 <= nonZeroIdx && '0' == mantissa.charAt(nonZeroIdx)) {
         nonZeroIdx--;
       }
 
-      if (nonZeroIdx < 3 && mantissa.charAt(0) == '-') {
+      if (3 > nonZeroIdx && '-' == mantissa.charAt(0)) {
         nonZeroIdx++;
       }
 
@@ -919,7 +919,7 @@ public class XmlDatatypeUtil {
       // search first non-zero digit
       int nonZeroIdx = 2;
       while (nonZeroIdx < mantissa.length() &&
-          mantissa.charAt(nonZeroIdx) == '0') {
+          '0' == mantissa.charAt(nonZeroIdx)) {
         nonZeroIdx++;
       }
 
@@ -941,7 +941,7 @@ public class XmlDatatypeUtil {
       }
     }
 
-    if (shift != 0) {
+    if (0 != shift) {
       try {
         int exp = Integer.parseInt(exponent);
         exponent = String.valueOf(exp - shift);
@@ -1046,11 +1046,11 @@ public class XmlDatatypeUtil {
     }
 
     // Check signs
-    if (dec1.charAt(0) == '-' && dec2.charAt(0) != '-') {
+    if ('-' == dec1.charAt(0) && '-' != dec2.charAt(0)) {
       // dec1 is negative, dec2 is not
       return -1;
     }
-    if (dec2.charAt(0) == '-' && dec1.charAt(0) != '-') {
+    if ('-' == dec2.charAt(0) && '-' != dec1.charAt(0)) {
       // dec2 is negative, dec1 is not
       return 1;
     }
@@ -1061,9 +1061,9 @@ public class XmlDatatypeUtil {
     // The decimal with the most digits before the dot is the largest
     int result = dotIdx1 - dotIdx2;
 
-    if (result == 0) {
+    if (0 == result) {
       // equal number of digits before the dot, compare them
-      for (int i = 0; result == 0 && i < dotIdx1; i++) {
+      for (int i = 0; 0 == result && i < dotIdx1; i++) {
         result = dec1.charAt(i) - dec2.charAt(i);
       }
 
@@ -1072,17 +1072,17 @@ public class XmlDatatypeUtil {
       int dec2Length = dec2.length();
       int lastIdx = dec1Length <= dec2Length ? dec1Length : dec2Length;
 
-      for (int i = dotIdx1 + 1; result == 0 && i < lastIdx; i++) {
+      for (int i = dotIdx1 + 1; 0 == result && i < lastIdx; i++) {
         result = dec1.charAt(i) - dec2.charAt(i);
       }
 
       // Still equal? The decimal with the most digits is the largest
-      if (result == 0) {
+      if (0 == result) {
         result = dec1Length - dec2Length;
       }
     }
 
-    if (dec1.charAt(0) == '-') {
+    if ('-' == dec1.charAt(0)) {
       // reverse result for negative values
       result = -result;
     }
@@ -1123,11 +1123,11 @@ public class XmlDatatypeUtil {
     }
 
     // Check signs
-    if (int1.charAt(0) == '-' && int2.charAt(0) != '-') {
+    if ('-' == int1.charAt(0) && '-' != int2.charAt(0)) {
       // int1 is negative, int2 is not
       return -1;
     }
-    if (int2.charAt(0) == '-' && int1.charAt(0) != '-') {
+    if ('-' == int2.charAt(0) && '-' != int1.charAt(0)) {
       // int2 is negative, int1 is not
       return 1;
     }
@@ -1135,14 +1135,14 @@ public class XmlDatatypeUtil {
     // The integer with the most digits is the largest
     int result = int1.length() - int2.length();
 
-    if (result == 0) {
+    if (0 == result) {
       // equal number of digits, compare them
-      for (int i = 0; result == 0 && i < int1.length(); i++) {
+      for (int i = 0; 0 == result && i < int1.length(); i++) {
         result = int1.charAt(i) - int2.charAt(i);
       }
     }
 
-    if (int1.charAt(0) == '-') {
+    if ('-' == int1.charAt(0)) {
       // reverse result for negative values
       result = -result;
     }
@@ -1331,7 +1331,7 @@ public class XmlDatatypeUtil {
    **/
   public static int compareCanonicalFPNumbers(String float1, String float2) {
     // Handle special case NaN
-    if (float1.equals("NaN") || float2.equals("NaN")) {
+    if ("NaN".equals(float1) || "NaN".equals(float2)) {
       if (float1.equals(float2)) {
         // NaN is equal to itself
         return 0;
@@ -1342,27 +1342,27 @@ public class XmlDatatypeUtil {
     }
 
     // Handle special case INF
-    if (float1.equals("INF")) {
-      return float2.equals("INF") ? 0 : 1;
+    if ("INF".equals(float1)) {
+      return "INF".equals(float2) ? 0 : 1;
     }
-    else if (float2.equals("INF")) {
+    else if ("INF".equals(float2)) {
       return -1;
     }
 
     // Handle special case -INF
-    if (float1.equals("-INF")) {
-      return float2.equals("-INF") ? 0 : -1;
+    if ("-INF".equals(float1)) {
+      return "-INF".equals(float2) ? 0 : -1;
     }
-    else if (float2.equals("-INF")) {
+    else if ("-INF".equals(float2)) {
       return 1;
     }
 
     // Check signs
-    if (float1.charAt(0) == '-' && float2.charAt(0) != '-') {
+    if ('-' == float1.charAt(0) && '-' != float2.charAt(0)) {
       // float1 is negative, float2 is not
       return -1;
     }
-    if (float2.charAt(0) == '-' && float1.charAt(0) != '-') {
+    if ('-' == float2.charAt(0) && '-' != float1.charAt(0)) {
       // float2 is negative, float1 is not
       return 1;
     }
@@ -1378,12 +1378,12 @@ public class XmlDatatypeUtil {
     // Compare exponents
     int result = compareCanonicalIntegers(exponent1, exponent2);
 
-    if (result != 0 && float1.charAt(0) == '-') {
+    if (0 != result && '-' == float1.charAt(0)) {
       // reverse result for negative values
       result = -result;
     }
 
-    if (result == 0) {
+    if (0 == result) {
       // Equal exponents, compare mantissas
       result = compareCanonicalDecimals(mantissa1, mantissa2);
     }
@@ -1392,7 +1392,7 @@ public class XmlDatatypeUtil {
   }
 
   private static final boolean _isDigit(char c) {
-    return c >= '0' && c <= '9';
+    return '0' <= c && '9' >= c;
   }
 
   /**

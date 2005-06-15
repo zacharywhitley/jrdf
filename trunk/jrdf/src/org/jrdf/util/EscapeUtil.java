@@ -1,7 +1,7 @@
 package org.jrdf.util;
 
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A utility which applies N-Triples escaping.
@@ -50,6 +50,9 @@ public class EscapeUtil {
    */
   private static final int CHARACTER_LENGTH_16_BIT = 7;
 
+  private EscapeUtil() {
+  }
+
   /**
    * Escapes a string literal to a string that is N-Triple escaped.
    *
@@ -57,10 +60,10 @@ public class EscapeUtil {
    * @return a version of the <var>string</var> with N-Triples escapes applied.
    */
   public static String escape(String string) {
-    assert string != null;
+    assert null != string;
 
     // Obtain a fresh matcher
-    if (matcher == null) {
+    if (null == matcher) {
       // Lazily initialize the matcher
       matcher = pattern.matcher(string);
     }
@@ -68,7 +71,7 @@ public class EscapeUtil {
       // Reuse the existing matcher
       matcher.reset(string);
     }
-    assert matcher != null;
+    assert null != matcher;
 
     // Try to short-circuit the whole process -- maybe nothing needs escaping?
     if (!matcher.find()) {
@@ -111,17 +114,17 @@ public class EscapeUtil {
                       CHARACTER_LENGTH_16_BIT - hexString.length()) +
                   hexString;
 
-              assert escapeString.length() == CHARACTER_LENGTH_16_BIT;
+              assert CHARACTER_LENGTH_16_BIT == escapeString.length();
               assert escapeString.startsWith("\\\\u");
               break;
           }
           break;
 
         case 2: // surrogate pairs are represented as 8-digit hex escapes
-          assert Character.getType(groupString.charAt(0)) ==
-              Character.SURROGATE;
-          assert Character.getType(groupString.charAt(1)) ==
-              Character.SURROGATE;
+          assert Character.SURROGATE ==
+              Character.getType(groupString.charAt(0));
+          assert Character.SURROGATE ==
+              Character.getType(groupString.charAt(1));
 
           String hexString = Integer.toHexString(((groupString.charAt(0) &
               CHARACTER_CODE_OFFSET) <<
@@ -134,14 +137,14 @@ public class EscapeUtil {
                   CHARACTER_LENGTH_8_BIT - hexString.length()) +
               hexString;
 
-          assert escapeString.length() == CHARACTER_LENGTH_8_BIT;
+          assert CHARACTER_LENGTH_8_BIT == escapeString.length();
           assert escapeString.startsWith("\\\\U000");
           break;
 
         default:
           throw new Error("Escape sequence " + groupString + " has no handler");
       }
-      assert escapeString != null;
+      assert null != escapeString;
 
       // Having determined an appropriate escapeString, add it to the
       // stringBuffer

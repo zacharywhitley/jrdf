@@ -1,13 +1,11 @@
 package org.jrdf.graph.mem;
 
 //Java 2 standard packages
-import java.util.*;
-import java.net.*;
-
-//JRDF
 import org.jrdf.graph.*;
-import org.jrdf.graph.mem.*;
-import org.jrdf.util.*;
+import org.jrdf.util.ClosableIterator;
+
+import java.net.URI;
+import java.util.Iterator;
 
 /**
  * An example that performs simple operations on a JRDF Graph.
@@ -262,7 +260,7 @@ public class JRDFExample {
       GraphElementFactoryException, GraphException {
 
     //validate
-    if (graph == null) {
+    if (null == graph) {
 
       throw new IllegalArgumentException("Graph is null.");
     }
@@ -289,7 +287,7 @@ public class JRDFExample {
       IllegalArgumentException {
 
     //validate
-    if (iterator == null) {
+    if (null == iterator) {
 
       throw new IllegalArgumentException("Iterator is null.");
     }

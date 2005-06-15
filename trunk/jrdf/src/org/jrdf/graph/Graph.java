@@ -58,10 +58,10 @@
 
 package org.jrdf.graph;
 
+import org.jrdf.util.ClosableIterator;
+
 import java.io.Serializable;
 import java.util.Iterator;
-
-import org.jrdf.util.ClosableIterator;
 
 /**
  * An RDF Graph. As defined by the
@@ -76,14 +76,6 @@ import org.jrdf.util.ClosableIterator;
  * @version $Revision$
  */
 public interface Graph extends Serializable {
-
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  long serialVersionUID = -4985940845539408817L;
 
   /**
    * Test the graph for the occurrence of a statement.  A null value for any

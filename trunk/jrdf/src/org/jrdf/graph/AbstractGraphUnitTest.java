@@ -58,14 +58,15 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.*;
-import org.jrdf.util.*;
+import junit.framework.Test;
+import junit.framework.TestCase;
+import org.jrdf.util.ClosableIterator;
 
-import java.net.*;
-import java.util.*;
-
-// Third party packages
-import junit.framework.*;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Abstract test case for graph implementations.
@@ -85,7 +86,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
   /**
    * Instance of a factory for the graph.
    */
-  protected GraphElementFactory elementFactory;
+  private GraphElementFactory elementFactory;
 
   /**
    * Blank node 1.
@@ -97,9 +98,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
    */
   protected BlankNode blank2;
 
-  protected URI uri1;
-  protected URI uri2;
-  protected URI uri3;
+  private URI uri1;
+  private URI uri2;
+  private URI uri3;
   protected URIReference ref1;
   protected URIReference ref2;
   protected URIReference ref3;
@@ -107,12 +108,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
   /**
    * Used to create literal.
    */
-  protected static final String TEST_STR1 = "A test string";
+  private static final String TEST_STR1 = "A test string";
 
   /**
    * Used to create literal.
    */
-  protected static final String TEST_STR2 = "Another test string";
+  private static final String TEST_STR2 = "Another test string";
 
   /**
    * Literal 1.
@@ -129,7 +130,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
    *
    * @param name the name of the test
    */
-  public AbstractGraphUnitTest(String name) {
+  protected AbstractGraphUnitTest(String name) {
     super(name);
   }
 
@@ -178,7 +179,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
    *   fail.
    * @return A new Graph.
    */
-  public abstract Graph newGraph() throws Exception;
+  protected abstract Graph newGraph() throws Exception;
 
   //
   // Test cases
@@ -196,12 +197,10 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
   /**
    * Tests that it is possible to get a NodeFactory from a graph.
-   *
-   * @throws Exception if query fails when it should have succeeded
    */
-  public void testFactory() throws Exception {
+  public void testFactory() {
     GraphElementFactory f = graph.getElementFactory();
-    assertTrue(f != null);
+    assertTrue(null != f);
   }
 
   /**
@@ -749,7 +748,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     // get an iterator for all the elements
     ClosableIterator ci = graph.find(null, null, null);
-    for (int i = 5; i >= 0; i--) {
+    for (int i = 5; 0 <= i; i--) {
       // remove the element
       assertTrue(ci.hasNext());
       ci.next();
@@ -770,10 +769,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
    *
    * @param execptedTriples the expected set of execptedTriples.
    * @param actualTriples the iterator containing the actual execptedTriples.
-   * @throws Exception If the set does not match the iterator.
    */
-  private void checkSet(Set execptedTriples, ClosableIterator actualTriples)
-      throws Exception {
+  private void checkSet(Set execptedTriples, ClosableIterator actualTriples) {
     while (actualTriples.hasNext()) {
       Triple t = (Triple) actualTriples.next();
       assertTrue(execptedTriples.contains(t));

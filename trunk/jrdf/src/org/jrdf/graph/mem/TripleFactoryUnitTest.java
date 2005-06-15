@@ -58,14 +58,11 @@
 
 package org.jrdf.graph.mem;
 
-import java.io.*;
-
-import org.jrdf.graph.*;
-import org.jrdf.vocabulary.*;
-
-// Third party packages
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+import org.jrdf.graph.*;
+import org.jrdf.vocabulary.RDF;
 
 /**
  * Implementation of {@link AbstractTripleFactoryUnitTest} test
@@ -83,7 +80,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
    *
    * @param name the name of the test
    */
-  public TripleFactoryUnitTest(String name) {
+  private TripleFactoryUnitTest(String name) {
     super(name);
   }
 

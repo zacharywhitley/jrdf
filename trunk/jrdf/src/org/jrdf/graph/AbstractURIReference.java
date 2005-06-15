@@ -60,8 +60,8 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 
-import java.net.URI;
 import java.io.Serializable;
+import java.net.URI;
 
 /**
  * A base implementation of an RDF {@link URIReference}.
@@ -85,7 +85,7 @@ public abstract class AbstractURIReference implements URIReference,
   /**
    * The URI of the node.
    */
-  protected URI uri;
+  private URI uri;
 
   /**
    * Constructor.
@@ -99,7 +99,7 @@ public abstract class AbstractURIReference implements URIReference,
   protected AbstractURIReference(URI newUri) {
 
     // Validate "newUri" parameter
-    if (newUri == null) {
+    if (null == newUri) {
       throw new IllegalArgumentException("Null \"newUri\" parameter");
     }
 
@@ -125,7 +125,7 @@ public abstract class AbstractURIReference implements URIReference,
   protected AbstractURIReference(URI newUri, boolean validate) {
 
     // Validate "newUri" parameter
-    if (newUri == null) {
+    if (null == newUri) {
       throw new IllegalArgumentException("Null \"newUri\" parameter");
     }
 
@@ -165,7 +165,7 @@ public abstract class AbstractURIReference implements URIReference,
     boolean returnValue = false;
 
     // Check for null and ensure exactly the same class - not subclass.
-    if (obj != null) {
+    if (null != obj) {
 
       try {
         URIReference tmpURIReference = (URIReference) obj;

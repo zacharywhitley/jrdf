@@ -58,11 +58,9 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.*;
-
-// Java 2 standard packages
-import java.net.URI;
-import java.net.URISyntaxException;
+import org.jrdf.graph.AbstractTripleFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 
 /**
  * A Triple Factory which is tied to a specific instance of GraphImpl.
@@ -71,7 +69,7 @@ import java.net.URISyntaxException;
  *
  * @version $Revision$
  */
-public class TripleFactoryImpl extends AbstractTripleFactory {
+class TripleFactoryImpl extends AbstractTripleFactory {
 
   /**
    * Package scope constructor.

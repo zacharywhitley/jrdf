@@ -58,14 +58,17 @@
 
 package org.jrdf.graph.mem;
 
-import java.io.*;
-
-import org.jrdf.graph.*;
-import org.jrdf.vocabulary.*;
-
-// Third party packages
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Literal;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
@@ -82,7 +85,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
    *
    * @param name the name of the test
    */
-  public GraphImplUnitTest(String name) {
+  private GraphImplUnitTest(String name) {
     super(name);
   }
 

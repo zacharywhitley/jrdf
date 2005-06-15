@@ -68,13 +68,4 @@ package org.jrdf.graph;
  * @version $Revision$
  */
 public interface PredicateNode extends Node {
-
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  long serialVersionUID = 5298835035571462246L;
-
 }

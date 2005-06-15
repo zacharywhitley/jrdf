@@ -81,7 +81,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 1573129076314000518L;
+  private static final long serialVersionUID = 1573129076314000518L;
 
   /** The internal identifier for this node. */
   private Long id;
@@ -115,7 +115,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
    *
    * @return A global String identifier for this node.
    */
-  public String getUID() {
+  private String getUID() {
     return uid;
   }
 
@@ -151,8 +151,13 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
     }
 
     // Cast and check for equality by value. (same class)
-    BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
-    return tmpNode.getId().equals(id) && tmpNode.getUID().equals(uid);
+    try {
+      BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
+      return tmpNode.getId().equals(id) && tmpNode.getUID().equals(uid);
+    }
+    catch (ClassCastException cce) {
+      return false;
+    }
   }
 
   /**
@@ -183,7 +188,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
     String[] split = nodeString.split("#");
 
     //validate
-    if (split == null || split.length < 2) {
+    if (null == split || 2 > split.length) {
       throw new IllegalArgumentException("String: " + nodeString + " is not " +
           "of the format: uid#id");
     }

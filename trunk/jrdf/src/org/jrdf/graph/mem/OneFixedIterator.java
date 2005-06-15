@@ -58,10 +58,15 @@
 
 package org.jrdf.graph.mem;
 
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.graph.*;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * An iterator that iterates over a group with a single fixed node.
@@ -89,9 +94,6 @@ public class OneFixedIterator implements ClosableIterator {
   /** The factory used to create the nodes to be returned in the triples. */
   private GraphElementFactoryImpl factory;
 
-  /** The graph this iterator will operate on.  Only needed by the remove method. */
-  private GraphImpl graph;
-
   /** The index of this iterator.  Only needed for initialization and the remove method. */
   private Map index;
 
@@ -107,6 +109,8 @@ public class OneFixedIterator implements ClosableIterator {
   /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
   private Long[] currentNodes;
 
+  /** Handles the removal of nodes */
+  private GraphHandler handler;
 
   /**
    * Constructor.  Sets up the internal iterators.
@@ -115,20 +119,16 @@ public class OneFixedIterator implements ClosableIterator {
    *   implementation.
    */
   OneFixedIterator(Map newIndex, int newVar, Long newFirst,
-      GraphElementFactory newFactory, Graph newGraph) {
+      GraphElementFactory newFactory, GraphHandler newHandler, Map newSubIndex) {
     if (!(newFactory instanceof GraphElementFactoryImpl)) {
       throw new IllegalArgumentException(
           "Must use the memory implementation of GraphElementFactory");
     }
 
-    if (!(newGraph instanceof GraphImpl)) {
-      throw new IllegalArgumentException(
-          "Must use the memory implementation of Graph");
-    }
-
     // store the node factory and other starting data
     factory = (GraphElementFactoryImpl) newFactory;
-    graph = (GraphImpl) newGraph;
+    handler = newHandler;
+
     first = newFirst;
     var = newVar;
     index = newIndex;
@@ -137,9 +137,9 @@ public class OneFixedIterator implements ClosableIterator {
     itemIterator = null;
     subIterator = null;
     // find the subIndex from the main index
-    subIndex = (Map) newIndex.get(first);
+    subIndex = newSubIndex;
     // check that data exists
-    if (subIndex != null) {
+    if (null != subIndex) {
       // now get an iterator to the sub index map
       subIterator = subIndex.entrySet().iterator();
       // check if there is data available - structural constraints say there should be
@@ -155,8 +155,8 @@ public class OneFixedIterator implements ClosableIterator {
    */
   public boolean hasNext() {
     // confirm we still have an item iterator, and that it has data available
-    return itemIterator != null && itemIterator.hasNext() ||
-        subIterator != null && subIterator.hasNext();
+    return null != itemIterator && itemIterator.hasNext() ||
+        null != subIterator && subIterator.hasNext();
   }
 
 
@@ -167,12 +167,12 @@ public class OneFixedIterator implements ClosableIterator {
    * @throws NoSuchElementException iteration has no more elements.
    */
   public Object next() throws NoSuchElementException {
-    if (subIterator == null) {
+    if (null == subIterator) {
       throw new NoSuchElementException();
     }
     // move to the next position
     updatePosition();
-    if (subIterator == null) {
+    if (null == subIterator) {
       throw new NoSuchElementException();
     }
     // get the next item
@@ -193,7 +193,7 @@ public class OneFixedIterator implements ClosableIterator {
    */
   private void updatePosition() {
     // progress to the next item if needed
-    if (itemIterator == null || !itemIterator.hasNext()) {
+    if (null == itemIterator || !itemIterator.hasNext()) {
       // the current iterator been exhausted
       if (!subIterator.hasNext()) {
         // the subiterator has been exhausted
@@ -214,7 +214,7 @@ public class OneFixedIterator implements ClosableIterator {
    * Implemented for java.util.Iterator.
    */
   public void remove() {
-    if (itemIterator != null) {
+    if (null != itemIterator) {
       itemIterator.remove();
       // clean up the current index after the removal
       cleanIndex();
@@ -252,25 +252,7 @@ public class OneFixedIterator implements ClosableIterator {
    */
   private void removeFromNonCurrentIndex() {
     try {
-      // can instead use var here to determine how to delete, but this is more intuitive
-      if (index == graph.index012) {
-        graph.remove(graph.index120, currentNodes[1], currentNodes[2],
-            currentNodes[0]);
-        graph.remove(graph.index201, currentNodes[2], currentNodes[0],
-            currentNodes[1]);
-      }
-      if (index == graph.index120) {
-        graph.remove(graph.index012, currentNodes[2], currentNodes[0],
-            currentNodes[1]);
-        graph.remove(graph.index201, currentNodes[1], currentNodes[2],
-            currentNodes[0]);
-      }
-      if (index == graph.index201) {
-        graph.remove(graph.index012, currentNodes[1], currentNodes[2],
-            currentNodes[0]);
-        graph.remove(graph.index120, currentNodes[2], currentNodes[0],
-            currentNodes[1]);
-      }
+      handler.remove(currentNodes);
     }
     catch (GraphException ge) {
       throw new IllegalStateException(ge.getMessage());

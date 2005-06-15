@@ -122,7 +122,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
     // Maybe the node ID has been used before:
     BlankNode result = (BlankNode) bNodeIdMap.get(nodeID);
 
-    if (result == null) {
+    if (null == result) {
       // This is a new node ID, create a new BNode object for it
       result = valueFactory.createResource();
 

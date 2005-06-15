@@ -59,11 +59,10 @@
 package org.jrdf.graph;
 
 // Java 2 standard
-import java.net.URI;
-import java.io.Serializable;
-
-// JRDF
 import org.jrdf.util.EscapeUtil;
+
+import java.io.Serializable;
+import java.net.URI;
 
 /**
  * A base implementation of an RDF {@link Literal}.
@@ -112,7 +111,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
   protected AbstractLiteral(String newLexicalForm) {
 
     // Validate "newLexicalForm" parameter
-    if (newLexicalForm == null) {
+    if (null == newLexicalForm) {
       throw new IllegalArgumentException("Null \"newLexicalForm\" parameter");
     }
 
@@ -134,12 +133,12 @@ public abstract class AbstractLiteral implements Literal, Serializable {
   protected AbstractLiteral(String newLexicalForm, String newLanguage) {
 
     // Validate "lexicalForm" parameter
-    if (newLexicalForm == null) {
+    if (null == newLexicalForm) {
       throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
     }
 
     // Validate "language" parameter
-    if (newLanguage == null) {
+    if (null == newLanguage) {
       throw new IllegalArgumentException("Null \"language\" parameter");
     }
 
@@ -160,12 +159,12 @@ public abstract class AbstractLiteral implements Literal, Serializable {
   protected AbstractLiteral(String newLexicalForm, URI newDatatypeURI) {
 
     // Validate "lexicalForm" parameter
-    if (newLexicalForm == null) {
+    if (null == newLexicalForm) {
       throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
     }
 
     // Validate "datatype" parameter
-    if (newDatatypeURI == null) {
+    if (null == newDatatypeURI) {
       throw new IllegalArgumentException("Null \"datatype\" parameter");
     }
 
@@ -236,7 +235,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     boolean returnValue = false;
 
     // Check for null and ensure exactly the same class - not subclass.
-    if (obj != null) {
+    if (null != obj) {
 
       try {
         // Set default return value and cast given obj.
@@ -246,7 +245,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
 
           // If datatype is null then test language equality.
-          if (getDatatypeURI() == null && tmpLiteral.getDatatypeURI() == null) {
+          if (null == getDatatypeURI() && null == tmpLiteral.getDatatypeURI()) {
 
             // If languages are equal by value then its equal.
             if (getLanguage().equals(tmpLiteral.getLanguage())) {
@@ -254,8 +253,8 @@ public abstract class AbstractLiteral implements Literal, Serializable {
             }
           }
           // Data type URIs are equal by their string values.
-          else if (getDatatypeURI() != null && tmpLiteral.getDatatypeURI() !=
-              null &&
+          else if (null != getDatatypeURI() && null !=
+              tmpLiteral.getDatatypeURI() &&
               getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().
               toString())) {
             returnValue = true;
@@ -272,11 +271,11 @@ public abstract class AbstractLiteral implements Literal, Serializable {
   public int hashCode() {
     int hashCode = getLexicalForm().hashCode();
 
-    if (getDatatypeURI() != null) {
+    if (null != getDatatypeURI()) {
       hashCode ^= getDatatypeURI().hashCode();
     }
 
-    if (getLanguage() != null) {
+    if (null != getLanguage()) {
       hashCode ^= getLanguage().hashCode();
     }
 
@@ -326,7 +325,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
   private String appendType() {
     String appendString = "";
 
-    if (getDatatypeURI() != null) {
+    if (null != getDatatypeURI()) {
       appendString = "^^<" + getDatatypeURI() + '>';
     }
     else if (!"".equals(language)) {

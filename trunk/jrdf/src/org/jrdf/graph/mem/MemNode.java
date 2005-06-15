@@ -71,14 +71,6 @@ import java.io.Serializable;
 public interface MemNode extends Serializable {
 
   /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  long serialVersionUID = 7753039003701594778L;
-
-  /**
    * Retrieves an internal identifier for a node.
    *
    * @return A numeric identifier for a node.

@@ -87,7 +87,7 @@
       <mkdir dir="${junit.results.dir}"/>
       <delete file="${junit.results}"/>
 
-      <junit haltonfailure="no" printsummary="on">
+      <junit failureproperty="tests.failed">
         <classpath>
           <fileset dir="${lib.dir}" includes="*.jar"/>
           <fileset dir="${dist.dir}" includes="*.jar"/>
@@ -99,5 +99,6 @@
         </batchtest>
       </junit>
 
+      <fail if="tests.failed" message="Failed to run all tests"/>  
     </target>
 </project>

@@ -73,7 +73,7 @@ public class GraphElementFactoryException extends Exception {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -8660240321973373993L;
+  private static final long serialVersionUID = -8660240321973373993L;
 
   /**
    * Create an exception.
