@@ -75,7 +75,7 @@ public class TripleImpl extends AbstractTriple {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 7468341140195609635L;
+  private static final long serialVersionUID = 7468341140195609635L;
 
   /**
    * Constructor for this Triple, only to be used by the NodeFactory.

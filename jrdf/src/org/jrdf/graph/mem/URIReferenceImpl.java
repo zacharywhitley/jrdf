@@ -59,11 +59,9 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
-import java.net.URI;
-
-// JRDF objects
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.AbstractURIReference;
+
+import java.net.URI;
 
 /**
  * RDF URI reference - resource node. Some RDF resources are properties. It's
@@ -86,7 +84,7 @@ public class URIReferenceImpl extends AbstractURIReference implements MemNode {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -4120822410726711976L;
+  private static final long serialVersionUID = -4120822410726711976L;
 
   /** The internal identifier for this node. */
   private Long id;

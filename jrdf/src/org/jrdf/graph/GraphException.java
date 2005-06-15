@@ -73,7 +73,7 @@ public class GraphException extends Exception {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -5259349384211599957L;
+  private static final long serialVersionUID = -5259349384211599957L;
 
   /**
    * Create an exception.

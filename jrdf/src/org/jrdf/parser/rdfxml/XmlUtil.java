@@ -41,7 +41,7 @@ public class XmlUtil {
     int ampIndex = text.indexOf("&");
     int prevIndex = 0;
 
-    while (ampIndex >= 0) {
+    while (0 <= ampIndex) {
       result.append(text.substring(prevIndex, ampIndex));
       int colonIndex = text.indexOf(";", ampIndex);
       result.append(
@@ -67,7 +67,7 @@ public class XmlUtil {
     if (entName.startsWith("#")) {
       // character reference
       StringBuffer result = new StringBuffer();
-      if (entName.charAt(1) == 'x') {
+      if ('x' == entName.charAt(1)) {
         // Hex-notation
         result.append((char) Integer.parseInt(entName.substring(2), 16));
       }
@@ -77,19 +77,19 @@ public class XmlUtil {
       }
       return result.toString();
     }
-    else if (entName.equals("apos")) {
+    else if ("apos".equals(entName)) {
       return "'";
     }
-    else if (entName.equals("quot")) {
+    else if ("quot".equals(entName)) {
       return "\"";
     }
-    else if (entName.equals("gt")) {
+    else if ("gt".equals(entName)) {
       return ">";
     }
-    else if (entName.equals("lt")) {
+    else if ("lt".equals(entName)) {
       return "<";
     }
-    else if (entName.equals("amp")) {
+    else if ("amp".equals(entName)) {
       return "&";
     }
     else {
@@ -114,12 +114,12 @@ public class XmlUtil {
 
     // Search last character that is not an NCName character
     int i = uriLength - 1;
-    while (i >= 0) {
+    while (0 <= i) {
       char c = uri.charAt(i);
 
       // Check for # and / characters explicitly as these
       // are used as the end of a namespace very frequently
-      if (c == '#' || c == '/' || !XmlUtil.isNCNameChar(c)) {
+      if ('#' == c || '/' == c || !isNCNameChar(c)) {
         // Found it at index i
         break;
       }
@@ -134,7 +134,7 @@ public class XmlUtil {
     while (i < uriLength) {
       char c = uri.charAt(i);
 
-      if (c == '_' || XmlUtil.isLetter(c)) {
+      if ('_' == c || isLetter(c)) {
         break;
       }
 
@@ -157,14 +157,14 @@ public class XmlUtil {
   public static final boolean isNCName(String name) {
     int nameLength = name.length();
 
-    if (nameLength == 0) {
+    if (0 == nameLength) {
       return false;
     }
 
     // Check first character
     char c = name.charAt(0);
 
-    if (c == '_' || isLetter(c)) {
+    if ('_' == c || isLetter(c)) {
       // Check the rest of the characters
       for (int i = 1; i < nameLength; i++) {
         c = name.charAt(i);
@@ -184,7 +184,7 @@ public class XmlUtil {
     return
         _isAsciiBaseChar(c) ||
         _isAsciiDigit(c) ||
-        c == '.' || c == '-' || c == '_' ||
+        '.' == c || '-' == c || '_' == c ||
         _isNonAsciiBaseChar(c) ||
         _isNonAsciiDigit(c) ||
         isIdeographic(c) ||
@@ -220,16 +220,16 @@ public class XmlUtil {
         _charInRange(c, 0x01FA, 0x0217) ||
         _charInRange(c, 0x0250, 0x02A8) ||
         _charInRange(c, 0x02BB, 0x02C1) ||
-        c == 0x0386 ||
+        0x0386 == c ||
         _charInRange(c, 0x0388, 0x038A) ||
-        c == 0x038C ||
+        0x038C == c ||
         _charInRange(c, 0x038E, 0x03A1) ||
         _charInRange(c, 0x03A3, 0x03CE) ||
         _charInRange(c, 0x03D0, 0x03D6) ||
-        c == 0x03DA ||
-        c == 0x03DC ||
-        c == 0x03DE ||
-        c == 0x03E0 ||
+        0x03DA == c ||
+        0x03DC == c ||
+        0x03DE == c ||
+        0x03E0 == c ||
         _charInRange(c, 0x03E2, 0x03F3) ||
         _charInRange(c, 0x0401, 0x040C) ||
         _charInRange(c, 0x040E, 0x044F) ||
@@ -242,7 +242,7 @@ public class XmlUtil {
         _charInRange(c, 0x04EE, 0x04F5) ||
         _charInRange(c, 0x04F8, 0x04F9) ||
         _charInRange(c, 0x0531, 0x0556) ||
-        c == 0x0559 ||
+        0x0559 == c ||
         _charInRange(c, 0x0561, 0x0586) ||
         _charInRange(c, 0x05D0, 0x05EA) ||
         _charInRange(c, 0x05F0, 0x05F2) ||
@@ -252,16 +252,16 @@ public class XmlUtil {
         _charInRange(c, 0x06BA, 0x06BE) ||
         _charInRange(c, 0x06C0, 0x06CE) ||
         _charInRange(c, 0x06D0, 0x06D3) ||
-        c == 0x06D5 ||
+        0x06D5 == c ||
         _charInRange(c, 0x06E5, 0x06E6) ||
         _charInRange(c, 0x0905, 0x0939) ||
-        c == 0x093D ||
+        0x093D == c ||
         _charInRange(c, 0x0958, 0x0961) ||
         _charInRange(c, 0x0985, 0x098C) ||
         _charInRange(c, 0x098F, 0x0990) ||
         _charInRange(c, 0x0993, 0x09A8) ||
         _charInRange(c, 0x09AA, 0x09B0) ||
-        c == 0x09B2 ||
+        0x09B2 == c ||
         _charInRange(c, 0x09B6, 0x09B9) ||
         _charInRange(c, 0x09DC, 0x09DD) ||
         _charInRange(c, 0x09DF, 0x09E1) ||
@@ -274,31 +274,31 @@ public class XmlUtil {
         _charInRange(c, 0x0A35, 0x0A36) ||
         _charInRange(c, 0x0A38, 0x0A39) ||
         _charInRange(c, 0x0A59, 0x0A5C) ||
-        c == 0x0A5E ||
+        0x0A5E == c ||
         _charInRange(c, 0x0A72, 0x0A74) ||
         _charInRange(c, 0x0A85, 0x0A8B) ||
-        c == 0x0A8D ||
+        0x0A8D == c ||
         _charInRange(c, 0x0A8F, 0x0A91) ||
         _charInRange(c, 0x0A93, 0x0AA8) ||
         _charInRange(c, 0x0AAA, 0x0AB0) ||
         _charInRange(c, 0x0AB2, 0x0AB3) ||
         _charInRange(c, 0x0AB5, 0x0AB9) ||
-        c == 0x0ABD ||
-        c == 0x0AE0 ||
+        0x0ABD == c ||
+        0x0AE0 == c ||
         _charInRange(c, 0x0B05, 0x0B0C) ||
         _charInRange(c, 0x0B0F, 0x0B10) ||
         _charInRange(c, 0x0B13, 0x0B28) ||
         _charInRange(c, 0x0B2A, 0x0B30) ||
         _charInRange(c, 0x0B32, 0x0B33) ||
         _charInRange(c, 0x0B36, 0x0B39) ||
-        c == 0x0B3D ||
+        0x0B3D == c ||
         _charInRange(c, 0x0B5C, 0x0B5D) ||
         _charInRange(c, 0x0B5F, 0x0B61) ||
         _charInRange(c, 0x0B85, 0x0B8A) ||
         _charInRange(c, 0x0B8E, 0x0B90) ||
         _charInRange(c, 0x0B92, 0x0B95) ||
         _charInRange(c, 0x0B99, 0x0B9A) ||
-        c == 0x0B9C ||
+        0x0B9C == c ||
         _charInRange(c, 0x0B9E, 0x0B9F) ||
         _charInRange(c, 0x0BA3, 0x0BA4) ||
         _charInRange(c, 0x0BA8, 0x0BAA) ||
@@ -315,7 +315,7 @@ public class XmlUtil {
         _charInRange(c, 0x0C92, 0x0CA8) ||
         _charInRange(c, 0x0CAA, 0x0CB3) ||
         _charInRange(c, 0x0CB5, 0x0CB9) ||
-        c == 0x0CDE ||
+        0x0CDE == c ||
         _charInRange(c, 0x0CE0, 0x0CE1) ||
         _charInRange(c, 0x0D05, 0x0D0C) ||
         _charInRange(c, 0x0D0E, 0x0D10) ||
@@ -323,61 +323,61 @@ public class XmlUtil {
         _charInRange(c, 0x0D2A, 0x0D39) ||
         _charInRange(c, 0x0D60, 0x0D61) ||
         _charInRange(c, 0x0E01, 0x0E2E) ||
-        c == 0x0E30 ||
+        0x0E30 == c ||
         _charInRange(c, 0x0E32, 0x0E33) ||
         _charInRange(c, 0x0E40, 0x0E45) ||
         _charInRange(c, 0x0E81, 0x0E82) ||
-        c == 0x0E84 ||
+        0x0E84 == c ||
         _charInRange(c, 0x0E87, 0x0E88) ||
-        c == 0x0E8A ||
-        c == 0x0E8D ||
+        0x0E8A == c ||
+        0x0E8D == c ||
         _charInRange(c, 0x0E94, 0x0E97) ||
         _charInRange(c, 0x0E99, 0x0E9F) ||
         _charInRange(c, 0x0EA1, 0x0EA3) ||
-        c == 0x0EA5 ||
-        c == 0x0EA7 ||
+        0x0EA5 == c ||
+        0x0EA7 == c ||
         _charInRange(c, 0x0EAA, 0x0EAB) ||
         _charInRange(c, 0x0EAD, 0x0EAE) ||
-        c == 0x0EB0 ||
+        0x0EB0 == c ||
         _charInRange(c, 0x0EB2, 0x0EB3) ||
-        c == 0x0EBD ||
+        0x0EBD == c ||
         _charInRange(c, 0x0EC0, 0x0EC4) ||
         _charInRange(c, 0x0F40, 0x0F47) ||
         _charInRange(c, 0x0F49, 0x0F69) ||
         _charInRange(c, 0x10A0, 0x10C5) ||
         _charInRange(c, 0x10D0, 0x10F6) ||
-        c == 0x1100 ||
+        0x1100 == c ||
         _charInRange(c, 0x1102, 0x1103) ||
         _charInRange(c, 0x1105, 0x1107) ||
-        c == 0x1109 ||
+        0x1109 == c ||
         _charInRange(c, 0x110B, 0x110C) ||
         _charInRange(c, 0x110E, 0x1112) ||
-        c == 0x113C ||
-        c == 0x113E ||
-        c == 0x1140 ||
-        c == 0x114C ||
-        c == 0x114E ||
-        c == 0x1150 ||
+        0x113C == c ||
+        0x113E == c ||
+        0x1140 == c ||
+        0x114C == c ||
+        0x114E == c ||
+        0x1150 == c ||
         _charInRange(c, 0x1154, 0x1155) ||
-        c == 0x1159 ||
+        0x1159 == c ||
         _charInRange(c, 0x115F, 0x1161) ||
-        c == 0x1163 ||
-        c == 0x1165 ||
-        c == 0x1167 ||
-        c == 0x1169 ||
+        0x1163 == c ||
+        0x1165 == c ||
+        0x1167 == c ||
+        0x1169 == c ||
         _charInRange(c, 0x116D, 0x116E) ||
         _charInRange(c, 0x1172, 0x1173) ||
-        c == 0x1175 ||
-        c == 0x119E ||
-        c == 0x11A8 ||
-        c == 0x11AB ||
+        0x1175 == c ||
+        0x119E == c ||
+        0x11A8 == c ||
+        0x11AB == c ||
         _charInRange(c, 0x11AE, 0x11AF) ||
         _charInRange(c, 0x11B7, 0x11B8) ||
-        c == 0x11BA ||
+        0x11BA == c ||
         _charInRange(c, 0x11BC, 0x11C2) ||
-        c == 0x11EB ||
-        c == 0x11F0 ||
-        c == 0x11F9 ||
+        0x11EB == c ||
+        0x11F0 == c ||
+        0x11F9 == c ||
         _charInRange(c, 0x1E00, 0x1E9B) ||
         _charInRange(c, 0x1EA0, 0x1EF9) ||
         _charInRange(c, 0x1F00, 0x1F15) ||
@@ -385,13 +385,13 @@ public class XmlUtil {
         _charInRange(c, 0x1F20, 0x1F45) ||
         _charInRange(c, 0x1F48, 0x1F4D) ||
         _charInRange(c, 0x1F50, 0x1F57) ||
-        c == 0x1F59 ||
-        c == 0x1F5B ||
-        c == 0x1F5D ||
+        0x1F59 == c ||
+        0x1F5B == c ||
+        0x1F5D == c ||
         _charInRange(c, 0x1F5F, 0x1F7D) ||
         _charInRange(c, 0x1F80, 0x1FB4) ||
         _charInRange(c, 0x1FB6, 0x1FBC) ||
-        c == 0x1FBE ||
+        0x1FBE == c ||
         _charInRange(c, 0x1FC2, 0x1FC4) ||
         _charInRange(c, 0x1FC6, 0x1FCC) ||
         _charInRange(c, 0x1FD0, 0x1FD3) ||
@@ -399,9 +399,9 @@ public class XmlUtil {
         _charInRange(c, 0x1FE0, 0x1FEC) ||
         _charInRange(c, 0x1FF2, 0x1FF4) ||
         _charInRange(c, 0x1FF6, 0x1FFC) ||
-        c == 0x2126 ||
+        0x2126 == c ||
         _charInRange(c, 0x212A, 0x212B) ||
-        c == 0x212E ||
+        0x212E == c ||
         _charInRange(c, 0x2180, 0x2182) ||
         _charInRange(c, 0x3041, 0x3094) ||
         _charInRange(c, 0x30A1, 0x30FA) ||
@@ -412,7 +412,7 @@ public class XmlUtil {
   public static final boolean isIdeographic(char c) {
     return
         _charInRange(c, 0x4E00, 0x9FA5) ||
-        c == 0x3007 ||
+        0x3007 == c ||
         _charInRange(c, 0x3021, 0x3029);
   }
 
@@ -424,46 +424,46 @@ public class XmlUtil {
         _charInRange(c, 0x0591, 0x05A1) ||
         _charInRange(c, 0x05A3, 0x05B9) ||
         _charInRange(c, 0x05BB, 0x05BD) ||
-        c == 0x05BF ||
+        0x05BF == c ||
         _charInRange(c, 0x05C1, 0x05C2) ||
-        c == 0x05C4 ||
+        0x05C4 == c ||
         _charInRange(c, 0x064B, 0x0652) ||
-        c == 0x0670 ||
+        0x0670 == c ||
         _charInRange(c, 0x06D6, 0x06DC) ||
         _charInRange(c, 0x06DD, 0x06DF) ||
         _charInRange(c, 0x06E0, 0x06E4) ||
         _charInRange(c, 0x06E7, 0x06E8) ||
         _charInRange(c, 0x06EA, 0x06ED) ||
         _charInRange(c, 0x0901, 0x0903) ||
-        c == 0x093C ||
+        0x093C == c ||
         _charInRange(c, 0x093E, 0x094C) ||
-        c == 0x094D ||
+        0x094D == c ||
         _charInRange(c, 0x0951, 0x0954) ||
         _charInRange(c, 0x0962, 0x0963) ||
         _charInRange(c, 0x0981, 0x0983) ||
-        c == 0x09BC ||
-        c == 0x09BE ||
-        c == 0x09BF ||
+        0x09BC == c ||
+        0x09BE == c ||
+        0x09BF == c ||
         _charInRange(c, 0x09C0, 0x09C4) ||
         _charInRange(c, 0x09C7, 0x09C8) ||
         _charInRange(c, 0x09CB, 0x09CD) ||
-        c == 0x09D7 ||
+        0x09D7 == c ||
         _charInRange(c, 0x09E2, 0x09E3) ||
-        c == 0x0A02 ||
-        c == 0x0A3C ||
-        c == 0x0A3E ||
-        c == 0x0A3F ||
+        0x0A02 == c ||
+        0x0A3C == c ||
+        0x0A3E == c ||
+        0x0A3F == c ||
         _charInRange(c, 0x0A40, 0x0A42) ||
         _charInRange(c, 0x0A47, 0x0A48) ||
         _charInRange(c, 0x0A4B, 0x0A4D) ||
         _charInRange(c, 0x0A70, 0x0A71) ||
         _charInRange(c, 0x0A81, 0x0A83) ||
-        c == 0x0ABC ||
+        0x0ABC == c ||
         _charInRange(c, 0x0ABE, 0x0AC5) ||
         _charInRange(c, 0x0AC7, 0x0AC9) ||
         _charInRange(c, 0x0ACB, 0x0ACD) ||
         _charInRange(c, 0x0B01, 0x0B03) ||
-        c == 0x0B3C ||
+        0x0B3C == c ||
         _charInRange(c, 0x0B3E, 0x0B43) ||
         _charInRange(c, 0x0B47, 0x0B48) ||
         _charInRange(c, 0x0B4B, 0x0B4D) ||
@@ -472,7 +472,7 @@ public class XmlUtil {
         _charInRange(c, 0x0BBE, 0x0BC2) ||
         _charInRange(c, 0x0BC6, 0x0BC8) ||
         _charInRange(c, 0x0BCA, 0x0BCD) ||
-        c == 0x0BD7 ||
+        0x0BD7 == c ||
         _charInRange(c, 0x0C01, 0x0C03) ||
         _charInRange(c, 0x0C3E, 0x0C44) ||
         _charInRange(c, 0x0C46, 0x0C48) ||
@@ -487,32 +487,32 @@ public class XmlUtil {
         _charInRange(c, 0x0D3E, 0x0D43) ||
         _charInRange(c, 0x0D46, 0x0D48) ||
         _charInRange(c, 0x0D4A, 0x0D4D) ||
-        c == 0x0D57 ||
-        c == 0x0E31 ||
+        0x0D57 == c ||
+        0x0E31 == c ||
         _charInRange(c, 0x0E34, 0x0E3A) ||
         _charInRange(c, 0x0E47, 0x0E4E) ||
-        c == 0x0EB1 ||
+        0x0EB1 == c ||
         _charInRange(c, 0x0EB4, 0x0EB9) ||
         _charInRange(c, 0x0EBB, 0x0EBC) ||
         _charInRange(c, 0x0EC8, 0x0ECD) ||
         _charInRange(c, 0x0F18, 0x0F19) ||
-        c == 0x0F35 ||
-        c == 0x0F37 ||
-        c == 0x0F39 ||
-        c == 0x0F3E ||
-        c == 0x0F3F ||
+        0x0F35 == c ||
+        0x0F37 == c ||
+        0x0F39 == c ||
+        0x0F3E == c ||
+        0x0F3F == c ||
         _charInRange(c, 0x0F71, 0x0F84) ||
         _charInRange(c, 0x0F86, 0x0F8B) ||
         _charInRange(c, 0x0F90, 0x0F95) ||
-        c == 0x0F97 ||
+        0x0F97 == c ||
         _charInRange(c, 0x0F99, 0x0FAD) ||
         _charInRange(c, 0x0FB1, 0x0FB7) ||
-        c == 0x0FB9 ||
+        0x0FB9 == c ||
         _charInRange(c, 0x20D0, 0x20DC) ||
-        c == 0x20E1 ||
+        0x20E1 == c ||
         _charInRange(c, 0x302A, 0x302F) ||
-        c == 0x3099 ||
-        c == 0x309A;
+        0x3099 == c ||
+        0x309A == c;
   }
 
   public static final boolean isDigit(char c) {
@@ -546,14 +546,14 @@ public class XmlUtil {
 
   public static final boolean isExtender(char c) {
     return
-        c == 0x00B7 ||
-        c == 0x02D0 ||
-        c == 0x02D1 ||
-        c == 0x0387 ||
-        c == 0x0640 ||
-        c == 0x0E46 ||
-        c == 0x0EC6 ||
-        c == 0x3005 ||
+        0x00B7 == c ||
+        0x02D0 == c ||
+        0x02D1 == c ||
+        0x0387 == c ||
+        0x0640 == c ||
+        0x0E46 == c ||
+        0x0EC6 == c ||
+        0x3005 == c ||
         _charInRange(c, 0x3031, 0x3035) ||
         _charInRange(c, 0x309D, 0x309E) ||
         _charInRange(c, 0x30FC, 0x30FE);

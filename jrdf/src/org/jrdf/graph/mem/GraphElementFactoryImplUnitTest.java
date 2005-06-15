@@ -58,11 +58,12 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.*;
-
-// Third party packages
-import junit.framework.*;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 
 import java.net.URI;
 
@@ -83,7 +84,7 @@ public class GraphElementFactoryImplUnitTest
    *
    * @param name the name of the test
    */
-  public GraphElementFactoryImplUnitTest(String name) {
+  private GraphElementFactoryImplUnitTest(String name) {
     super(name);
   }
 

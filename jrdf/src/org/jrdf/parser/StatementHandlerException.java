@@ -115,7 +115,7 @@ public class StatementHandlerException extends Exception {
   public void printStackTrace(PrintStream ps) {
     super.printStackTrace(ps);
 
-    if (source != null) {
+    if (null != source) {
       ps.println("Source is:");
       source.printStackTrace(ps);
     }
@@ -125,7 +125,7 @@ public class StatementHandlerException extends Exception {
   public void printStackTrace(PrintWriter pw) {
     super.printStackTrace(pw);
 
-    if (source != null) {
+    if (null != source) {
       pw.println("Source is:");
       source.printStackTrace(pw);
     }

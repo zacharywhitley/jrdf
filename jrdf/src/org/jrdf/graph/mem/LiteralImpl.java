@@ -59,10 +59,9 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard
-import java.net.URI;
+import org.jrdf.graph.AbstractLiteral;
 
-// JRDF objects
-import org.jrdf.graph.*;
+import java.net.URI;
 
 /**
  * RDF literal node.
@@ -79,7 +78,7 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -6515350357124372641L;
+  private static final long serialVersionUID = -6515350357124372641L;
 
   /**
    * The internal identifier for this node.

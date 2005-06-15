@@ -140,7 +140,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
    **/
   private List _unknownPrefixesInXmlLiteral = new ArrayList();
 
-  public SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
+  SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
     _rdfParser = rdfParser;
     _th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).
         newTransformerHandler();
@@ -154,7 +154,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   public void setParseLocationListener(ParseLocationListener el) {
     _locListener = el;
 
-    if (_locator != null) {
+    if (null != _locator) {
       _locListener.parseLocationUpdate(
           _locator.getLineNumber(), _locator.getColumnNumber());
     }
@@ -205,7 +205,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
   public void setDocumentLocator(Locator locator) {
     _locator = locator;
-    if (_locListener != null) {
+    if (null != _locListener) {
       _locListener.parseLocationUpdate(
           locator.getLineNumber(), locator.getColumnNumber());
     }
@@ -220,7 +220,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   }
 
   public void startPrefixMapping(String prefix, String uri) throws SAXException {
-    if (_deferredElement != null) {
+    if (null != _deferredElement) {
       // This new prefix mapping must come from a new start tag
       _reportDeferredStartElement();
     }
@@ -232,7 +232,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       _xmlLiteralPrefixes.add(prefix);
     }
 
-    if (_nsListener != null) {
+    if (null != _nsListener) {
       _nsListener.handleNamespace(prefix, uri);
     }
   }
@@ -249,7 +249,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     // Reset at start of element.
     _charBuf.setLength(0);
 
-    if (_deferredElement != null) {
+    if (null != _deferredElement) {
       // The next call could set _parseLiteralMode to true!
       _reportDeferredStartElement();
     }
@@ -267,7 +267,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       _newNamespaceMappings.clear();
 
       if (!_inRdfContext && _parseStandAloneDocuments &&
-          (!localName.equals("RDF") ||
+          (!"RDF".equals(localName) ||
           !namespaceURI.equals(RDF.baseURI.toString()))) {
         // Stand-alone document that does not start with an rdf:RDF root
         // element. Assume this root element is omitted.
@@ -294,7 +294,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         _elInfoStack.push(elInfo);
 
         // Check if we are entering RDF context now.
-        if (localName.equals("RDF") &&
+        if ("RDF".equals(localName) &&
             namespaceURI.equals(RDF.baseURI.toString())) {
           _inRdfContext = true;
           _rdfContextStackHeight = 0;
@@ -349,7 +349,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       // Verify that the end tag matches the start tag.
       ElementInfo elInfo;
 
-      if (_deferredElement != null) {
+      if (null != _deferredElement) {
         elInfo = _deferredElement;
       }
       else {
@@ -369,7 +369,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       return;
     }
 
-    if (_deferredElement == null && _rdfContextStackHeight == 0) {
+    if (null == _deferredElement && 0 == _rdfContextStackHeight) {
       // This end tag removes the element that signaled the start
       // of the RDF context (i.e. <rdf:RDF>) from the stack.
       _inRdfContext = false;
@@ -382,7 +382,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     // We're still in RDF context.
 
     if (_parseLiteralMode) {
-      if (_xmlLiteralStackHeight > 0) {
+      if (0 < _xmlLiteralStackHeight) {
         _appendEndTag(qName);
         _xmlLiteralStackHeight--;
         return;
@@ -402,7 +402,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     // Check for any deferred start elements
-    if (_deferredElement != null) {
+    if (null != _deferredElement) {
       // Start element still deferred, this is an empty element
       try {
         _rdfParser.setBaseURI(new URI(_deferredElement.baseURI));
@@ -420,7 +420,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
     else {
       // Check if any character data has been collected in the _charBuf
-      boolean literalValue = _charBuf.toString().trim().length() > 0;
+      boolean literalValue = 0 < _charBuf.toString().trim().length();
 
       if (literalValue) {
         _rdfParser.text(_charBuf.toString());
@@ -437,7 +437,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   public void characters(char[] ch, int start, int length) throws SAXException {
 
     if (_inRdfContext) {
-      if (_deferredElement != null) {
+      if (null != _deferredElement) {
         _reportDeferredStartElement();
       }
 
@@ -485,10 +485,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       // for the ones that are handled by this parser (xml:lang and
       // xml:base).
       if (qName.startsWith("xml")) {
-        if (qName.equals("xml:lang")) {
+        if ("xml:lang".equals(qName)) {
           elInfo.xmlLang = value;
         }
-        else if (qName.equals("xml:base")) {
+        else if ("xml:base".equals(qName)) {
           elInfo.baseURI = _createBaseURI(value);
         }
       }
@@ -502,7 +502,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 "unqualified attribute '" +
                 qName + "' not allowed");
           }
-          else if (qName.indexOf(":") == -1) {
+          else if (-1 == qName.indexOf(":")) {
             _rdfParser.sendWarning(
                 "unqualified attribute '" +
                 qName + "' not allowed");
@@ -540,9 +540,9 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
   private void _inheritXmlAttributes(ElementInfo elInfo) {
     // If baseURI has not been set, inherit it from the context.
-    if (elInfo.baseURI == null) {
+    if (null == elInfo.baseURI) {
       ElementInfo parent = _peekStack();
-      if (parent == null) {
+      if (null == parent) {
         elInfo.baseURI = _documentURI.toString();
       }
       else {
@@ -551,9 +551,9 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     // If xml:lang attribute has not been set, inherit it from the context.
-    if (elInfo.xmlLang == null) {
+    if (null == elInfo.xmlLang) {
       ElementInfo parent = _peekStack();
-      if (parent == null) {
+      if (null == parent) {
         elInfo.xmlLang = "";
       }
       else {
@@ -592,7 +592,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     // Check for any used prefixes that are not
     // defined in the XML literal itself
     int colonIdx = qName.indexOf(':');
-    String prefix = colonIdx > 0 ? qName.substring(0, colonIdx) : "";
+    String prefix = 0 < colonIdx ? qName.substring(0, colonIdx) : "";
 
     if (!_xmlLiteralPrefixes.contains(prefix) &&
         !_unknownPrefixesInXmlLiteral.contains(prefix)) {
@@ -616,7 +616,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   private void _insertUsedContextPrefixes() throws SAXException {
     int unknownPrefixesCount = _unknownPrefixesInXmlLiteral.size();
 
-    if (unknownPrefixesCount > 0) {
+    if (0 < unknownPrefixesCount) {
       // Create a String with all needed context prefixes
       StringBuffer contextPrefixes = new StringBuffer(1024);
       ElementInfo topElement = _peekStack();
@@ -624,7 +624,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       for (int i = 0; i < unknownPrefixesCount; i++) {
         String prefix = (String) _unknownPrefixesInXmlLiteral.get(i);
         String namespace = topElement.getNamespace(prefix);
-        if (namespace != null) {
+        if (null != namespace) {
           _appendNamespaceDecl(contextPrefixes, prefix, namespace);
         }
       }
@@ -634,7 +634,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       // StringBuffer.indexOf(String) requires JDK1.4 or newer
       //int endOfFirstStartTag = _charBuf.indexOf(">");
       int endOfFirstStartTag = 0;
-      while (_charBuf.charAt(endOfFirstStartTag) != '>') {
+      while ('>' != _charBuf.charAt(endOfFirstStartTag)) {
         endOfFirstStartTag++;
       }
       _charBuf.insert(endOfFirstStartTag, contextPrefixes.toString());
@@ -692,11 +692,11 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     public String baseURI;
     public String xmlLang;
 
-    public ElementInfo(String newQName, String newNamespaceURI, String newLocalName) {
+    ElementInfo(String newQName, String newNamespaceURI, String newLocalName) {
       this(null, newQName, newNamespaceURI, newLocalName);
     }
 
-    public ElementInfo(ElementInfo newParent, String newQName, String newNamespaceURI,
+    ElementInfo(ElementInfo newParent, String newQName, String newNamespaceURI,
         String newLocalName) {
       parent = newParent;
       qName = newQName;
@@ -716,11 +716,11 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     public String getNamespace(String prefix) {
       String result = null;
 
-      if (_namespaceMap != null) {
+      if (null != _namespaceMap) {
         result = (String) _namespaceMap.get(prefix);
       }
 
-      if (result == null && parent != null) {
+      if (null == result && null != parent) {
         result = parent.getNamespace(prefix);
       }
 

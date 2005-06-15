@@ -131,7 +131,7 @@ public abstract class AbstractTriple implements Triple, Serializable {
     boolean returnValue = false;
 
     // Check for null and ensure exactly the same class - not subclass.
-    if (obj != null) {
+    if (null != obj) {
 
       try {
 

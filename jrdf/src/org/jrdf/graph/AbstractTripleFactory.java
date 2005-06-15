@@ -58,12 +58,11 @@
 
 package org.jrdf.graph;
 
-import java.net.*;
-import java.util.Iterator;
+import org.jrdf.vocabulary.RDF;
 
-import org.jrdf.graph.*;
-import org.jrdf.vocabulary.*;
-import org.jrdf.util.ClosableIterator;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Iterator;
 
 /**
  * The base implementation of the Triple Factory which adds to a given graph

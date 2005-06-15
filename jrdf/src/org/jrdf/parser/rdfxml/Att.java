@@ -39,7 +39,7 @@ class Att {
   private String _qName;
   private String _value;
 
-  public Att(String namespace, String localName, String qName, String value) {
+  Att(String namespace, String localName, String qName, String value) {
     _namespace = namespace;
     _localName = localName;
     _qName = qName;

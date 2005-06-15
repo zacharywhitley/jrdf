@@ -79,14 +79,6 @@ public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
     TypedNodeVisitable {
 
   /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  long serialVersionUID = 3546778208872583733L;
-
-  /**
    * The {@link URI} identifiying this resource.
    *
    * @return the {@link URI} identifying this resource.

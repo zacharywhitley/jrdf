@@ -59,10 +59,12 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
-import java.util.*;
+import org.jrdf.graph.Container;
+import org.jrdf.graph.ObjectNode;
 
-// JRDF
-import org.jrdf.graph.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The base class for the implementation of Bag and Alternative.
@@ -76,12 +78,12 @@ public abstract class AbstractUnorderedContainer implements Container {
   /**
    * The hashmap containing the elements.
    */
-  protected Map elements = new HashMap();
+  Map elements = new HashMap();
 
   /**
    * Counter used to generate keys to add to the hashmap.
    */
-  protected long key;
+  long key;
 
   public int size() {
     return elements.values().size();

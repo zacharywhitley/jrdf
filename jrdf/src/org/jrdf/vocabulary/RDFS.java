@@ -59,8 +59,8 @@
 package org.jrdf.vocabulary;
 
 // Java 2 standard
-import java.net.*;
-import java.util.*;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * A set of constants for the standard RDFS vocabulary.
@@ -69,7 +69,7 @@ import java.util.*;
  *
  * @version $Revision$
  */
-public class RDFS extends Vocabulary {
+public abstract class RDFS extends Vocabulary {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -77,7 +77,7 @@ public class RDFS extends Vocabulary {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 3344119222366953296L;
+  private static final long serialVersionUID = 3344119222366953296L;
 
   /**
    * The URI of the RDFS name space.

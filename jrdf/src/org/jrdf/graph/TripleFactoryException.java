@@ -73,7 +73,7 @@ public class TripleFactoryException extends Exception {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = 285284678430193536L;
+  private static final long serialVersionUID = 285284678430193536L;
 
   /**
    * Create an exception.

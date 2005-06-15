@@ -60,10 +60,10 @@ package org.jrdf.graph.mem;
 
 // Java 2 standard packages
 
-import java.util.*;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.Sequence;
 
-// JRDF
-import org.jrdf.graph.*;
+import java.util.ArrayList;
 
 /**
  * An implementation of {@link Sequence}.
@@ -80,7 +80,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * NOTE : update this serialVersionUID when a method or a public member is
    * deleted.
    */
-  static final long serialVersionUID = -8659292687902645229L;
+  private static final long serialVersionUID = -8659292687902645229L;
 
   public SequenceImpl() {
   }

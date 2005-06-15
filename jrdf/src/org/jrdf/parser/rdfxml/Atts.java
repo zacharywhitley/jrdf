@@ -44,7 +44,7 @@ class Atts {
   /**
    * Creates a new <tt>Atts</tt> object.
    **/
-  public Atts() {
+  Atts() {
     this(4);
   }
 
@@ -53,7 +53,7 @@ class Atts {
    *
    * @param size The initial size of the array for storing attributes.
    **/
-  public Atts(int size) {
+  Atts(int size) {
     _attributes = new ArrayList(size);
   }
 

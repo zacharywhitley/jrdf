@@ -60,10 +60,12 @@ package org.jrdf.graph.mem;
 
 // Java 2 standard packages
 
-import java.util.*;
+import org.jrdf.graph.Alternative;
+import org.jrdf.graph.ObjectNode;
 
-// JRDF
-import org.jrdf.graph.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * An implementation of {@link Alternative}.
@@ -167,7 +169,7 @@ public class AlternativeImpl extends AbstractUnorderedContainer
     }
 
     // Check for null and ensure exactly the same class - not subclass.
-    if (obj == null ||
+    if (null == obj ||
         getClass() != obj.getClass()) {
       return false;
     }
