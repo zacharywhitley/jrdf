@@ -72,6 +72,7 @@ import java.util.Set;
  * An iterator that iterates over a group with a two fixed nodes.
  * Relies on an internal iterator which iterates over all entries in
  * a set, found in a subIndex.
+ * 
  * The itemIterator is used to indicate the current position.
  * It will always be set to return the next value until it reaches
  * the end of the group.
