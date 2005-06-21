@@ -61,6 +61,8 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.GraphException;
 
 import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Handles the modification of an index as we iterate through for the 012 index.
@@ -79,5 +81,21 @@ public class GraphHandler012 implements GraphHandler {
   public void remove(Long[] currentNodes) throws GraphException {
     graph.removeFrom120(currentNodes[1], currentNodes[2], currentNodes[0]);
     graph.removeFrom201(currentNodes[2], currentNodes[0], currentNodes[1]);
+  }
+
+  public void clean(Map.Entry secondEntry, Iterator subIterator, Map subIndex,
+      Map index, Long first) {
+    // check if a set was cleaned out
+    Set subGroup = (Set) secondEntry.getValue();
+    if (subGroup.isEmpty()) {
+      // remove the entry for the set
+      subIterator.remove();
+      // check if a subindex was cleaned out
+      if (subIndex.isEmpty()) {
+        // remove the subindex
+        index.remove(first);
+        subIndex = null;
+      }
+    }
   }
 }

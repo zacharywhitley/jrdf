@@ -228,16 +228,17 @@ public class GraphIterator implements ClosableIterator {
   private void cleanIndex() {
     // check if a set was cleaned out
     Set subGroup = (Set) secondEntry.getValue();
+    Map subIndex = (Map) firstEntry.getValue();
     if (subGroup.isEmpty()) {
       // remove the entry for the set
       subIterator.remove();
       // check if a subindex was cleaned out
-      Map subIndex = (Map) firstEntry.getValue();
       if (subIndex.isEmpty()) {
         // remove the subindex
         iterator.remove();
       }
     }
+    //handler.clean(secondEntry, subIterator, subIndex, );
   }
 
 

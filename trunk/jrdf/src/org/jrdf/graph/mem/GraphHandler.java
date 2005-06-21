@@ -60,6 +60,9 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphException;
 
+import java.util.Map;
+import java.util.Iterator;
+
 /**
  * Handles the modification of an index as we iterate through.
  *
@@ -69,4 +72,7 @@ import org.jrdf.graph.GraphException;
  */
 public interface GraphHandler {
   void remove(Long[] currentNodes) throws GraphException ;
+
+  void clean(Map.Entry secondEntry, Iterator subIterator, Map subIndex,
+      Map index, Long first);
 }

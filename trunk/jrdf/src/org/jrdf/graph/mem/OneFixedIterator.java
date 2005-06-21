@@ -77,6 +77,7 @@ import java.util.Set;
  * the end of the group.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @author Andrew Newman
  *
  * @version $Revision$
  */
@@ -217,45 +218,17 @@ public class OneFixedIterator implements ClosableIterator {
     if (null != itemIterator) {
       itemIterator.remove();
       // clean up the current index after the removal
-      cleanIndex();
+      handler.clean(secondEntry, subIterator, subIndex, index, first);
       // now remove from the other 2 indexes
-      removeFromNonCurrentIndex();
+      try {
+        handler.remove(currentNodes);
+      }
+      catch (GraphException ge) {
+        throw new IllegalStateException(ge.getMessage());
+      }
     }
     else {
       throw new IllegalStateException("Beyond end of data");
-    }
-  }
-
-
-  /**
-   * Checks if a removed item is the last of its type, and removes any associated subindexes if appropriate.
-   */
-  private void cleanIndex() {
-    // check if a set was cleaned out
-    Set subGroup = (Set) secondEntry.getValue();
-    if (subGroup.isEmpty()) {
-      // remove the entry for the set
-      subIterator.remove();
-      // check if a subindex was cleaned out
-      if (subIndex.isEmpty()) {
-        // remove the subindex
-        index.remove(first);
-        subIndex = null;
-      }
-    }
-  }
-
-
-  /**
-   * Helper function for removal.  This removes the current statement from the indexes which
-   * the current iterator is not associated with.
-   */
-  private void removeFromNonCurrentIndex() {
-    try {
-      handler.remove(currentNodes);
-    }
-    catch (GraphException ge) {
-      throw new IllegalStateException(ge.getMessage());
     }
   }
 
