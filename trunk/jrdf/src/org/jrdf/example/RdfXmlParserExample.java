@@ -1,4 +1,4 @@
-package org.jrdf.parser.rdfxml;
+package org.jrdf.example;
 
 import java.io.*;
 import java.net.*;
