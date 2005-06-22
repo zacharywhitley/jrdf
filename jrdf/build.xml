@@ -1,104 +1,62 @@
-<!-- tested using ant 1.5.4 -->
+<?xml version="1.0" encoding="UTF-8"?>
 <project name="jrdf" default="dist" basedir=".">
 
-    <property name="Name"            value="Java RDF API"/>
-    <property name="name"            value="jrdf"/>
-    
-    <!-- The major and minor version numbers  -->
-    <property name="version-major"   value="0"/>
-    <property name="version-minor"   value="3.4"/>
+    <import file="build-setup.xml"/>
+    <import file="build-sparql.xml"/>
 
-    <!-- e.g. -0.2, or empty string for stable releases -->
-    <property name="version-status"  value=""/>
-    <property name="version"
-         value="${version-major}.${version-minor}${version-status}"/>
-
-    <property name="dist.name"       value="${Name}-${version}"/>
-    
-    <property name="web.site"        value="http://jrdf.sourceforge.net/" />
-  
-    <property name="debug"           value="true"/>
-    <property name="debuglevel"      value="source,lines"/>
-    <property name="deprecation"     value="false"/>
-    <property name="optimize"        value="true"/>
-
-    <property name="src.dir"         value="src"/>
-    <property name="obj.dir"         value="obj"/>
-    <property name="classes.dir"     value="obj/java/classes"/>
-    <property name="dist.dir"        value="dist"/>
-    <property name="lib.dir"         value="lib"/>
-    <property name="doc.dir"         value="doc"/>
-    <property name="javadoc.dir"     value="doc/javadoc"/>
-    <property name="junit.results.dir" value="tests"/>
-    <property name="junit.results" value="${junit.results.dir}/All-Tests.xml"/>
-
-    <property name="jarfile"         value="${name}-${version}.jar"/>
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${javadoc.dir}"/>
+    </target>
 
     <target name="compile">
-      <delete dir="${classes.dir}"/>
-      <mkdir dir="${classes.dir}"/>
-      <javac source="1.4"
-             classpath="${lib.dir}/junit-3.8.1.jar:${lib.dir}/jsr173_1.0_api.jar"
-             srcdir="${src.dir}"
-             destdir="${classes.dir}"
-             debug="${debug}"
-             debuglevel="${debuglevel}"
-             deprecation="${deprecation}"
-             optimize="${optimize}">
-      </javac>
+        <mkdir dir="${classes.dir}"/>
+        <javac source="${java.src.version}" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="production.class.path"
+               debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
+               optimize="${compile.optimize}">
+            <src>
+                <path refid="all.code.path"/>
+            </src>
+            <patternset refid="all.code.pattern"/>
+        </javac>
     </target>
 
     <target name="dist" depends="compile">
-      <delete dir="${dist.dir}"/>
-      <mkdir dir="${dist.dir}"/>
-      <jar jarfile="${dist.dir}/${jarfile}"
-           basedir="${classes.dir}">
-      </jar>
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/${project.jar}">
+            <fileset refid="production.code.fileset"/>
+        </jar>
     </target>
 
     <target name="javadoc">
-      <delete dir="${javadoc.dir}"/>
-      <mkdir dir="${javadoc.dir}"/>
-
-      <javadoc
-       source="1.4"
-       sourcepath="${src.dir}"
-       destdir="${javadoc.dir}"
-       author="true"
-       version="true"
-       windowtitle="${Name} Framework"
-       doctitle="${Name} Framework"
-       packagenames="org.jrdf.graph, org.jrdf.util, org.jrdf.vocabulary,
-       org.jrdf.graph.mem"
-       additionalparam="-breakiterator"
-       Use="true"
-    />
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc destdir="${javadoc.dir}" author="true" version="true"
+                 additionalparam="-breakiterator" Use="true"
+                 classpathref="production.class.path" source="${java.src.version}"
+                 windowtitle="${project.longname} Framework ${project.version.full}"
+                 doctitle="${project.longname} Framework ${project.version.full}"
+                 packagenames="org.jrdf.*">
+            <fileset refid="production.code.fileset"/>
+        </javadoc>
     </target>
 
-    <target name="clean">
-      <delete dir="${dist.dir}"/>
-      <delete dir="${obj.dir}"/>
-      <delete dir="${javadoc.dir}"/>
-      <delete dir="${junit.results.dir}"/>
-    </target>
+    <macrodef name="test.macro">
+        <attribute name="failure.property"/>
+        <sequential>
+            <mkdir dir="${test.results.dir}"/>
+            <junit failureproperty="@{failure.property}" fork="true" forkmode="perBatch">
+                <classpath refid="test.class.path"/>
+                <formatter type="brief" usefile="false"/>
+                <batchtest todir="${test.results.dir}">
+                    <fileset refid="test.code.fileset"/>
+                </batchtest>
+                <!--<sysproperty key="log4j.configuration" value="file:${conf.dir}/log4j.test.properties"/>-->
+            </junit>
+        </sequential>
+    </macrodef>
 
-    <target name="test" depends="dist" description="Runs unit tests">
-      <delete dir="${junit.results.dir}"/>
-      <mkdir dir="${junit.results.dir}"/>
-      <delete file="${junit.results}"/>
-
-      <junit failureproperty="tests.failed">
-        <classpath>
-          <fileset dir="${lib.dir}" includes="*.jar"/>
-          <fileset dir="${dist.dir}" includes="*.jar"/>
-        </classpath>
-        <formatter type="plain"/>
-        <batchtest todir="${junit.results.dir}">
-          <fileset dir="${src.dir}" includes="**/*UnitTest.java"
-            excludes="**/Abstract*" />
-        </batchtest>
-      </junit>
-
-      <fail if="tests.failed" message="Failed to run all tests"/>  
+    <target name="test" depends="dist">
+        <test.macro failure.property="unit.test.failed"/>
+        <fail if="unit.test.failed" message="Tests failed."/>
     </target>
 </project>
