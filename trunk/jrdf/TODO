@@ -1,0 +1,7 @@
+JRDF TODO List
+
+o Fix javadoc errors
+o Move test classes into seperate tree
+o Implement SPARQL parser
+o Move all examples into their own package
+o Add build.cmd and build.sh scripts for command line building without adding libs to ant bootstrap classpath

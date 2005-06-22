@@ -1,32 +1,26 @@
-package org.jrdf.graph.mem;
-
-//Java 2 standard packages
-import org.jrdf.graph.*;
-import org.jrdf.util.ClosableIterator;
+package org.jrdf.example;
 
 import java.net.URI;
 import java.util.Iterator;
 
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.util.ClosableIterator;
+
 /**
  * An example that performs simple operations on a JRDF Graph.
  *
- * @created 2004-10-01
- *
- * @author <a href="mailto:robert.turner@tucanatech.com">Robert Turner</a>
- *
- * @version $Revision$
- *
- * @modified $Date$ by $Author$
- *
- * @company: <a href="http://www.tucanatech.com/">Tucana Technologies</a>
- *
- * @copyright &copy;2002-2003
- *   <a href="http://www.pisoftware.com/">Plugged In Software Pty Ltd</a>
- *
- * @licence <a href="{@docRoot}/../../LICENCE">Quoll License</a>
- *
+ * @author Robert Turner
  */
-public class JRDFExample {
+public class JrdfExample {
 
   //Resources
   private URIReference person;
@@ -55,7 +49,7 @@ public class JRDFExample {
   /**
    * Default Constructor.
    */
-  public JRDFExample() {
+  public JrdfExample() {
 
   }
 
@@ -314,7 +308,7 @@ public class JRDFExample {
 
     try {
 
-      JRDFExample example = new JRDFExample();
+      JrdfExample example = new JrdfExample();
       example.runExample();
     }
     catch (Exception exception) {
