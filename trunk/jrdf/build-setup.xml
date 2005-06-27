@@ -39,6 +39,13 @@
     <patternset id="all.code.pattern">
         <include name="**/*.java"/>
     </patternset>
+    <patternset id="test.class.pattern">
+        <include name="**/*Test*.class"/>
+        <include name="**/*Mock*.class"/>
+        <!-- Why is this out? -->
+        <exclude name="**/Abstract*"/>
+    </patternset>
+
 
     <!-- Note. Put other test code patterns here (integration, load, etc.) -->
     <fileset id="production.code.fileset" dir="${src.dir}">
@@ -69,8 +76,8 @@
         <pathelement location="${lib.dir}/junit-3.8.1.jar"/>
     </path>
     <path id="test.class.path">
-        <path refid="production.class.path"/>
         <pathelement location="${dist.dir}/${project.jar}"/>
+        <pathelement location="${classes.dir}"/>
     </path>
 
     <target name="default">

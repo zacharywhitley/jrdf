@@ -1,6 +1,6 @@
 JRDF TODO List
 
-o Fix javadoc errors (currently 35)
-o Move test classes into seperate source tree
 o Implement SPARQL parser
 o Add build.cmd and build.sh scripts for command line building without adding libs to ant bootstrap classpath
+o Move test classes into seperate source tree
+o Fix javadoc errors (currently 35)
