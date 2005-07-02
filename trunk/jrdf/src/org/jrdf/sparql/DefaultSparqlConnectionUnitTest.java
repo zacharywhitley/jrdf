@@ -3,6 +3,8 @@ package org.jrdf.sparql;
 import java.net.URI;
 
 import junit.framework.TestCase;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.connection.JrdfConnectionFactory;
@@ -17,7 +19,7 @@ import org.jrdf.sparql.DefaultSparqlConnection;
  * @author Tom Adams
  * @version $Revision$
  */
-class DefaultSparqlConnectionUnitTest extends TestCase {
+public class DefaultSparqlConnectionUnitTest extends TestCase {
 
   private static final MockBadGraph BAD_GRAPH = new MockBadGraph();
   private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
@@ -26,6 +28,17 @@ class DefaultSparqlConnectionUnitTest extends TestCase {
   private static final String NULL = ParameterTestUtil.NULL_STRING;
   private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
   private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
+
+  public DefaultSparqlConnectionUnitTest(String name) {
+    super(name);
+  }
+
+  /**
+   * Don't run any of the tests for now.
+   */
+  public static Test suite() {
+    return new TestSuite();
+  }
 
   public void testNullSessionInConstructor() {
     try {
