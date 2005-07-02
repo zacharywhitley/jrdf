@@ -71,7 +71,7 @@ import java.util.List;
  *
  * @version $Revision$
  */
-public interface Sequence extends List {
+public interface Sequence extends Container, List {
 
   /**
    * ${@inheritDoc}
