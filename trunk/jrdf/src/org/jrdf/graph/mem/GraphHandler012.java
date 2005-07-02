@@ -79,23 +79,24 @@ public class GraphHandler012 implements GraphHandler {
   }
 
   public void remove(Long[] currentNodes) throws GraphException {
+//    graph.removeFrom012(currentNodes[0], currentNodes[1], currentNodes[2]);
     graph.removeFrom120(currentNodes[1], currentNodes[2], currentNodes[0]);
     graph.removeFrom201(currentNodes[2], currentNodes[0], currentNodes[1]);
   }
 
-  public void clean(Map.Entry secondEntry, Iterator subIterator, Map subIndex,
-      Map index, Long first) {
-    // check if a set was cleaned out
-    Set subGroup = (Set) secondEntry.getValue();
-    if (subGroup.isEmpty()) {
-      // remove the entry for the set
-      subIterator.remove();
-      // check if a subindex was cleaned out
-      if (subIndex.isEmpty()) {
-        // remove the subindex
-        index.remove(first);
-        subIndex = null;
-      }
-    }
+  public void clean(Set subGroup, Map subIndex, Map index, Long first,
+      Long second) {
+
+//    // check if a set was cleaned out
+//    if (subGroup.isEmpty()) {
+//      // remove the entry for the set
+//      subIndex.remove(second);
+//      // check if a subindex was cleaned out
+//      if (subIndex.isEmpty()) {
+//        // remove the subindex
+//        index.remove(first);
+//        subIndex = null;
+//      }
+//    }
   }
 }

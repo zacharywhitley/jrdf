@@ -72,7 +72,7 @@ import java.util.Set;
  * An iterator that iterates over a group with a single fixed node.
  * Relies on internal iterators which iterate over all entries in
  * a submap, and the sets they point to.
- * The itemIterator is used to indicate the current position.
+ * The thirdIndexIterator is used to indicate the current position.
  * It will always be set to return the next value until it reaches
  * the end of the group.
  *
@@ -84,10 +84,10 @@ import java.util.Set;
 public class OneFixedIterator implements ClosableIterator {
 
   /** The iterator for the second index. */
-  private Iterator subIterator;
+  private Iterator secondIndexIterator;
 
   /** The iterator for the third index. */
-  private Iterator itemIterator;
+  private Iterator thirdIndexIterator;
 
   /** The current element for the iterator on the second index. */
   private Map.Entry secondEntry;
@@ -135,16 +135,16 @@ public class OneFixedIterator implements ClosableIterator {
     index = newIndex;
     currentNodes = null;
     // initialise the iterators to empty
-    itemIterator = null;
-    subIterator = null;
+    thirdIndexIterator = null;
+    secondIndexIterator = null;
     // find the subIndex from the main index
     subIndex = newSubIndex;
     // check that data exists
     if (null != subIndex) {
       // now get an iterator to the sub index map
-      subIterator = subIndex.entrySet().iterator();
+      secondIndexIterator = subIndex.entrySet().iterator();
       // check if there is data available - structural constraints say there should be
-      assert subIterator.hasNext();
+      assert secondIndexIterator.hasNext();
     }
   }
 
@@ -156,8 +156,8 @@ public class OneFixedIterator implements ClosableIterator {
    */
   public boolean hasNext() {
     // confirm we still have an item iterator, and that it has data available
-    return null != itemIterator && itemIterator.hasNext() ||
-        null != subIterator && subIterator.hasNext();
+    return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
+        null != secondIndexIterator && secondIndexIterator.hasNext();
   }
 
 
@@ -168,16 +168,16 @@ public class OneFixedIterator implements ClosableIterator {
    * @throws NoSuchElementException iteration has no more elements.
    */
   public Object next() throws NoSuchElementException {
-    if (null == subIterator) {
+    if (null == secondIndexIterator) {
       throw new NoSuchElementException();
     }
     // move to the next position
     updatePosition();
-    if (null == subIterator) {
+    if (null == secondIndexIterator) {
       throw new NoSuchElementException();
     }
     // get the next item
-    Long third = (Long) itemIterator.next();
+    Long third = (Long) thirdIndexIterator.next();
     // construct the triple
     Long second = (Long) secondEntry.getKey();
     // get back the nodes for these IDs and build the triple
@@ -188,25 +188,25 @@ public class OneFixedIterator implements ClosableIterator {
 
   /**
    * Helper method to move the iterators on to the next position.
-   * If there is no next position then {@link #itemIterator itemIterator}
+   * If there is no next position then {@link #thirdIndexIterator thirdIndexIterator}
    * will be set to null, telling {@link #hasNext() hasNext} to return
    * <code>false</code>.
    */
   private void updatePosition() {
     // progress to the next item if needed
-    if (null == itemIterator || !itemIterator.hasNext()) {
+    if (null == thirdIndexIterator || !thirdIndexIterator.hasNext()) {
       // the current iterator been exhausted
-      if (!subIterator.hasNext()) {
+      if (!secondIndexIterator.hasNext()) {
         // the subiterator has been exhausted
-        // tell the subIterator to finish
-        subIterator = null;
+        // tell the secondIndexIterator to finish
+        secondIndexIterator = null;
         return;
       }
       // get the next entry of the sub index
-      secondEntry = (Map.Entry) subIterator.next();
+      secondEntry = (Map.Entry) secondIndexIterator.next();
       // get an iterator to the next set from the sub index
-      itemIterator = ((Set) secondEntry.getValue()).iterator();
-      assert itemIterator.hasNext();
+      thirdIndexIterator = ((Set) secondEntry.getValue()).iterator();
+      assert thirdIndexIterator.hasNext();
     }
   }
 
@@ -215,20 +215,31 @@ public class OneFixedIterator implements ClosableIterator {
    * Implemented for java.util.Iterator.
    */
   public void remove() {
-    if (null != itemIterator) {
-      itemIterator.remove();
-      // clean up the current index after the removal
-      handler.clean(secondEntry, subIterator, subIndex, index, first);
+    if (null != thirdIndexIterator) {
       // now remove from the other 2 indexes
       try {
+        thirdIndexIterator.remove();
         handler.remove(currentNodes);
+
+        // check if a set was cleaned out
+        Set subGroup = (Set)secondEntry.getValue();
+        if (subGroup.isEmpty()) {
+          // remove the entry for the set
+          secondIndexIterator.remove();
+          // check if a subindex was cleaned out
+          if (subIndex.isEmpty()) {
+            // remove the subindex
+            index.remove(first);
+            subIndex = null;
+          }
+        }
       }
       catch (GraphException ge) {
         throw new IllegalStateException(ge.getMessage());
       }
     }
     else {
-      throw new IllegalStateException("Beyond end of data");
+      throw new IllegalStateException("Next not called or beyond end of data");
     }
   }
 

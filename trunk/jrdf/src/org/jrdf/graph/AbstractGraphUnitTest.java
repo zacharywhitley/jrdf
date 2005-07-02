@@ -649,6 +649,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     // get an iterator for the blank2,ref1 elements
     ClosableIterator ci = graph.find(blank2, ref1, null);
+    checkInvalidRemove(ci);
 
     // remove the first element
     assertTrue(ci.hasNext());
@@ -666,6 +667,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     // get an iterator for the blank1 elements
     ci = graph.find(blank1, null, null);
+    checkInvalidRemove(ci);
 
     // remove the first element
     assertTrue(ci.hasNext());
@@ -683,6 +685,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     // get an iterator for the ref1, ref2, l2 element
     ci = graph.find(ref1, ref2, l2);
+    checkInvalidRemove(ci);
 
     // remove the element
     assertTrue(ci.hasNext());
@@ -694,6 +697,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     // get an iterator for the final element
     ci = graph.find(null, null, null);
+    checkInvalidRemove(ci);
 
     // remove the element
     assertTrue(ci.hasNext());
@@ -712,6 +716,16 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
     catch (GraphException e) { /* no-op */}
 
+  }
+
+  private void checkInvalidRemove(ClosableIterator ci) {
+    try {
+      ci.remove();
+      fail("Must throw an exception.");
+    }
+    catch (IllegalStateException ise) {
+      assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
+    }
   }
 
   /**

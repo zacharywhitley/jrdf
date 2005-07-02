@@ -75,7 +75,7 @@ public class ThreeFixedIterator implements ClosableIterator {
   /** The graph this iterator will operate on.  Only needed by the remove method. */
   private Graph graph;
 
-  /** The triple to return on {@link next() next} */
+  /** The triple to return on */
   private TripleImpl triple;
 
   /** The triple to remove */
@@ -132,8 +132,9 @@ public class ThreeFixedIterator implements ClosableIterator {
       } catch (GraphException ge) {
         throw new IllegalStateException(ge.getMessage());
       }
-    } else {
-      throw new IllegalStateException();
+    }
+    else {
+      throw new IllegalStateException("Next not called or beyond end of data");
     }
   }
 

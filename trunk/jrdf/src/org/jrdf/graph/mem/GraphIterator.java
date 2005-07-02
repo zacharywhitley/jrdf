@@ -106,6 +106,7 @@ public class GraphIterator implements ClosableIterator {
 
   /** Handles the removal of nodes */
   private GraphHandler handler;
+  private boolean nextCalled = false;
 
   /**
    * Constructor.  Sets up the internal iterators.
@@ -158,6 +159,8 @@ public class GraphIterator implements ClosableIterator {
       throw new NoSuchElementException();
     }
 
+    nextCalled = true;
+
     // get the next item
     Long third = (Long) itemIterator.next();
 
@@ -209,7 +212,7 @@ public class GraphIterator implements ClosableIterator {
    * Implemented for java.util.Iterator.
    */
   public void remove() {
-    if (null != itemIterator) {
+    if (nextCalled && null != itemIterator) {
       itemIterator.remove();
       // clean up the current index after the removal
       cleanIndex();
@@ -217,7 +220,7 @@ public class GraphIterator implements ClosableIterator {
       removeFromNonCurrentIndex();
     }
     else {
-      throw new IllegalStateException("Beyond end of data");
+      throw new IllegalStateException("Next not called or beyond end of data");
     }
   }
 
