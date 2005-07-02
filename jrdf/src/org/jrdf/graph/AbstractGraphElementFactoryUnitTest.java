@@ -106,16 +106,6 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     elementFactory = graph.getElementFactory();
   }
 
-  /**
-   * Hook for test runner to obtain a test suite from.
-   * Override in derived class.
-   *
-   * @return The test suite
-   */
-  public static Test suite() {
-    return null;
-  }
-
   //
   // abstract methods specific to the implementation.
   //

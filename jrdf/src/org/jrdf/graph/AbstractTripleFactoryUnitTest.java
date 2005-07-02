@@ -138,16 +138,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     l2 = elementFactory.createLiteral(TEST_STR2);
   }
 
-  /**
-   * Hook for test runner to obtain a test suite from.
-   * Override in derived class.
-   *
-   * @return The test suite
-   */
-  public static Test suite() {
-    return null;
-  }
-
   //
   // implementation interfaces
   //
