@@ -33,8 +33,7 @@ public class XmlUtil {
 
   /**
    * Replaces all XML character entities with the character they represent.
-   * @see #escapeChars
-   **/
+   */
   public static String resolveEntities(String text) {
     StringBuffer result = new StringBuffer();
 

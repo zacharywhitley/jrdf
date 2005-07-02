@@ -70,12 +70,7 @@ import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
  * parser.parse(inputStream, "http://foo/bar");
  * </pre>
  *
- * @see org.openrdf.model.ValueFactory
- * @see org.openrdf.rio.StatementHandler
- * @see org.openrdf.rio.ParseErrorListener
- * @see org.openrdf.rio.ParseLocationListener
- * @see org.openrdf.rio.NamespaceListener
- **/
+ */
 public class RdfXmlParser implements org.jrdf.parser.Parser {
 
   /** The rdf:type resource. **/
