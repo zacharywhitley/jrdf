@@ -60,6 +60,7 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 import java.util.Collection;
+import java.util.List;
 
 /**
  * A Sequence is a group of statements that are kept in an orderd list.  The
@@ -70,7 +71,7 @@ import java.util.Collection;
  *
  * @version $Revision$
  */
-public interface Sequence extends Container {
+public interface Sequence extends List {
 
   /**
    * ${@inheritDoc}
