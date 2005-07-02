@@ -32,8 +32,9 @@
     </patternset>
     <patternset id="test.code.pattern">
         <include name="**/*Test*.java"/>
-        <include name="**/*Mock*.java"/>
         <!-- Why is this out? -->
+        <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*Mock*.java"/>
         <exclude name="**/Abstract*"/>
     </patternset>
     <patternset id="all.code.pattern">
@@ -41,8 +42,9 @@
     </patternset>
     <patternset id="test.class.pattern">
         <include name="**/*Test*.class"/>
-        <include name="**/*Mock*.class"/>
         <!-- Why is this out? -->
+        <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*Mock*.class"/>
         <exclude name="**/Abstract*"/>
     </patternset>
 
