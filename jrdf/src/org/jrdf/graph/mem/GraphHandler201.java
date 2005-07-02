@@ -62,6 +62,7 @@ import org.jrdf.graph.GraphException;
 
 import java.util.Map;
 import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Handles the modification of an index as we iterate through for the 201 index.
@@ -82,8 +83,8 @@ public class GraphHandler201 implements GraphHandler {
     graph.removeFrom120(currentNodes[2], currentNodes[0], currentNodes[1]);
   }
 
-  public void clean(Map.Entry secondEntry, Iterator subIterator, Map subIndex,
-      Map index, Long first) {
+  public void clean(Set subGroup, Map subIndex,
+      Map index, Long first, Long second) {
     throw new UnsupportedOperationException();
   }
 }

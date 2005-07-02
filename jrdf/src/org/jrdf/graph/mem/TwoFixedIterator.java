@@ -73,18 +73,19 @@ import java.util.Set;
  * Relies on an internal iterator which iterates over all entries in
  * a set, found in a subIndex.
  * 
- * The itemIterator is used to indicate the current position.
+ * The thirdIndexIterator is used to indicate the current position.
  * It will always be set to return the next value until it reaches
  * the end of the group.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @author Andrew Newman
  *
  * @version $Revision$
  */
 public class TwoFixedIterator implements ClosableIterator {
 
   /** The iterator for the third index. */
-  private Iterator itemIterator;
+  private Iterator thirdIndexIterator;
 
   /** The nodeFactory used to create the nodes to be returned in the triples. */
   private GraphElementFactoryImpl nodeFactory;
@@ -106,6 +107,12 @@ public class TwoFixedIterator implements ClosableIterator {
 
   /** The second fixed item. */
   private Long second;
+
+  /** The current third item */
+  private Long third;
+
+  /** If there are anymore items left */
+  private boolean hasNext;
 
   /** The offset for the index. */
   private int var;
@@ -132,17 +139,18 @@ public class TwoFixedIterator implements ClosableIterator {
     second = newSecond;
     var = newVar;
     currentNodes = null;
-    // initialize the itemiterator to null
-    itemIterator = null;
+
     // find the subIndex from the main index
     subIndex = newSubIndex;
+
     // check that data exists
     if (null != subIndex) {
       // now find the set from the sub index map
       subGroup = (Set) subIndex.get(second);
       if (null != subGroup) {
         // get an iterator for the set
-        itemIterator = subGroup.iterator();
+        thirdIndexIterator = subGroup.iterator();
+        hasNext = thirdIndexIterator.hasNext();
       }
     }
   }
@@ -154,8 +162,7 @@ public class TwoFixedIterator implements ClosableIterator {
    * @return <code>true</code> If there is an element to be read.
    */
   public boolean hasNext() {
-    // confirm we still have an item iterator, and that it has data available
-    return null != itemIterator && itemIterator.hasNext();
+    return hasNext;
   }
 
 
@@ -166,12 +173,13 @@ public class TwoFixedIterator implements ClosableIterator {
    * @throws NoSuchElementException iteration has no more elements.
    */
   public Object next() throws NoSuchElementException {
-    if (null == itemIterator) {
+    if (!hasNext()) {
       throw new NoSuchElementException();
     }
-    // get the next item
-    Long third = (Long) itemIterator.next();
-    // build the triple
+
+    // Get next node.
+    third = (Long) thirdIndexIterator.next();
+    hasNext = thirdIndexIterator.hasNext();
     currentNodes = new Long[]{first, second, third};
     return new TripleImpl(nodeFactory, var, first, second, third);
   }
@@ -181,46 +189,30 @@ public class TwoFixedIterator implements ClosableIterator {
    * Implemented for java.util.Iterator.
    */
   public void remove() {
-    if (null != itemIterator) {
-      itemIterator.remove();
-      // clean up the current index after the removal
-      cleanIndex();
-      // now remove from the other 2 indexes
-      removeFromNonCurrentIndex();
-    }
-  }
+    if (null != third) {
+      try {
+        thirdIndexIterator.remove();
+        handler.remove(currentNodes);
 
-
-  /**
-   * Checks if a removed item is the last of its type, and removes any associated subindexes if appropriate.
-   */
-  private void cleanIndex() {
-    // check if a set was cleaned out
-    if (subGroup.isEmpty()) {
-      // remove the entry for the set
-      subIndex.remove(second);
-      // check if a subindex was cleaned out
-      if (subIndex.isEmpty()) {
-        // remove the subindex
-        index.remove(first);
+        // check if a set was cleaned out
+        if (subGroup.isEmpty()) {
+          // remove the entry for the set
+          subIndex.remove(second);
+          // check if a subindex was cleaned out
+          if (subIndex.isEmpty()) {
+            // remove the subindex
+            index.remove(first);
+          }
+        }
+      }
+      catch (GraphException ge) {
+        throw new IllegalStateException(ge.getMessage());
       }
     }
-  }
-
-
-  /**
-   * Helper function for removal.  This removes the current statement from the indexes which
-   * the current iterator is not associated with.
-   */
-  private void removeFromNonCurrentIndex() {
-    try {
-      handler.remove(currentNodes);
-    }
-    catch (GraphException ge) {
-      throw new IllegalStateException(ge.getMessage());
+    else {
+      throw new IllegalStateException("Next not called or beyond end of data");
     }
   }
-
 
   /**
    * Closes the iterator by freeing any resources that it current holds.
@@ -230,5 +222,4 @@ public class TwoFixedIterator implements ClosableIterator {
   public boolean close() {
     return true;
   }
-
 }
