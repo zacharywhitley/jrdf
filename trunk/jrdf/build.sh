@@ -46,9 +46,9 @@ fi
 JAVA_BIN=${JAVA_HOME}/bin/java
 
 # Add the ant libraries to the classpath
-CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-1.6.2.jar
-CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-launcher-1.6.2.jar
-CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-junit-1.6.2.jar
+CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-1.6.5.jar
+CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-launcher-1.6.5.jar
+CLASSPATH=${CLASSPATH}:${LIBDIR}/ant/ant-junit-1.6.5.jar
 CLASSPATH=${CLASSPATH}:${LIBDIR}/junit-3.8.1.jar
 
 # Try to include tools.jar for compilation
