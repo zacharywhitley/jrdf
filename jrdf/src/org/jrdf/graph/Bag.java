@@ -73,9 +73,9 @@ import java.util.Collection;
 public interface Bag extends Container {
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
-   * @param c ${@inheritDoc}
+   * @param c {@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
@@ -83,27 +83,27 @@ public interface Bag extends Container {
       throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
-   * @param c ${@inheritDoc}
+   * @param c {@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
   boolean addAll(Collection c) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
-   * @param c ${@inheritDoc}
+   * @param c {@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
   boolean removeAll(Collection c) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
-   * @param c ${@inheritDoc}
+   * @param c {@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */

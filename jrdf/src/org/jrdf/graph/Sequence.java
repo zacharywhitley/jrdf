@@ -74,7 +74,7 @@ import java.util.List;
 public interface Sequence extends Container, List {
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
@@ -82,7 +82,7 @@ public interface Sequence extends Container, List {
   void add(int index, Object o) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
@@ -90,7 +90,7 @@ public interface Sequence extends Container, List {
   boolean addAll(Collection c) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
@@ -99,7 +99,7 @@ public interface Sequence extends Container, List {
       throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
@@ -107,7 +107,7 @@ public interface Sequence extends Container, List {
   boolean contains(Object o);
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
@@ -115,7 +115,7 @@ public interface Sequence extends Container, List {
   boolean containsAll(Collection c);
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
@@ -123,7 +123,7 @@ public interface Sequence extends Container, List {
   int indexOf(Object o) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
@@ -131,7 +131,7 @@ public interface Sequence extends Container, List {
   int lastIndexOf(Object o) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
@@ -139,7 +139,7 @@ public interface Sequence extends Container, List {
   boolean removeAll(Collection c) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
@@ -148,7 +148,7 @@ public interface Sequence extends Container, List {
       throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.

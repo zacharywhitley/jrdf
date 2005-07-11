@@ -82,18 +82,18 @@ import java.util.Collection;
 public interface Container extends Collection {
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
-   * @param o ${@inheritDoc}
+   * @param o {@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
   boolean add(Object o) throws IllegalArgumentException;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    *
-   * @param o ${@inheritDoc}
+   * @param o {@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
