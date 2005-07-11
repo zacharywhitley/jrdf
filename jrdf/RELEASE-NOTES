@@ -12,10 +12,10 @@ JRDF Release 0.3.4
 * Parsing RDF/XML literals removes spaces (Bug 1116687).
 * Literals should return n3 when toString is called, getEscapedForm return
 properly escape n3.  (Bug 1077343).
-* Serial version (Bug 1048968) and protected constructors added to AbstractLiteral (Bug
-1059228).
-* Javadoc enhanced, general style improved, and preparation for move to Java 1.5
-(Generics and Concurrency).
+* Serial version (Bug 1048968) and protected constructors added to
+AbstractLiteral (Bug 1059228).
+* Javadoc enhanced, general style improved, build files refactored and 
+preparation for move to Java 1.5 (Generics and Concurrency).
 
 JRDF Release 0.3.3
 ==================
