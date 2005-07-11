@@ -83,7 +83,7 @@ public class CollectionImpl extends LinkedList implements Collection {
   private static final long serialVersionUID = -420874713471604278L;
 
   /**
-   * ${@inheritDoc}
+   * {@inheritDoc}
    */
   public CollectionImpl() {
   }
