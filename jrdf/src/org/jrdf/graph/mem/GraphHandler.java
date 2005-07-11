@@ -73,7 +73,4 @@ import java.util.Set;
  */
 public interface GraphHandler {
   void remove(Long[] currentNodes) throws GraphException ;
-
-  void clean(Set subGroup, Map subIndex,
-      Map index, Long first, Long second);
 }

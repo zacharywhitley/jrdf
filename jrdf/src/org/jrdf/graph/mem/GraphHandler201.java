@@ -82,9 +82,4 @@ public class GraphHandler201 implements GraphHandler {
     graph.removeFrom012(currentNodes[1], currentNodes[2], currentNodes[0]);
     graph.removeFrom120(currentNodes[2], currentNodes[0], currentNodes[1]);
   }
-
-  public void clean(Set subGroup, Map subIndex,
-      Map index, Long first, Long second) {
-    throw new UnsupportedOperationException();
-  }
 }

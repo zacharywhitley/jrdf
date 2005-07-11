@@ -220,19 +220,7 @@ public class OneFixedIterator implements ClosableIterator {
       try {
         thirdIndexIterator.remove();
         handler.remove(currentNodes);
-
-        // check if a set was cleaned out
-        Set subGroup = (Set)secondEntry.getValue();
-        if (subGroup.isEmpty()) {
-          // remove the entry for the set
-          secondIndexIterator.remove();
-          // check if a subindex was cleaned out
-          if (subIndex.isEmpty()) {
-            // remove the subindex
-            index.remove(first);
-            subIndex = null;
-          }
-        }
+        cleanIndex();
       }
       catch (GraphException ge) {
         throw new IllegalStateException(ge.getMessage());
@@ -240,6 +228,21 @@ public class OneFixedIterator implements ClosableIterator {
     }
     else {
       throw new IllegalStateException("Next not called or beyond end of data");
+    }
+  }
+
+  private void cleanIndex() {
+    // check if a set was cleaned out
+    Set subGroup = (Set)secondEntry.getValue();
+    if (subGroup.isEmpty()) {
+      // remove the entry for the set
+      secondIndexIterator.remove();
+      // check if a subindex was cleaned out
+      if (subIndex.isEmpty()) {
+        // remove the subindex
+        index.remove(first);
+        subIndex = null;
+      }
     }
   }
 
