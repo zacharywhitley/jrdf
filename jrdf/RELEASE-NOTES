@@ -1,5 +1,7 @@
 JRDF Release 0.3.4
 ==================
+
+
 * Initial work on remote querying and SPARQL support (Tom Adams).
 * Added port of Sesame's RIO RDF/XML parser and associated interfaces (RFE 
 1075768).
@@ -12,6 +14,8 @@ JRDF Release 0.3.4
 properly escape n3.  (Bug 1077343).
 * Serial version (Bug 1048968) and protected constructors added to AbstractLiteral (Bug
 1059228).
+* Javadoc enhanced, general style improved, and preparation for move to Java 1.5
+(Generics and Concurrency).
 
 JRDF Release 0.3.3
 ==================
