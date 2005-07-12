@@ -2,7 +2,7 @@ JRDF Release 0.3.4
 ==================
 
 
-* Initial work on remote querying and SPARQL support (Tom Adams).
+* Initial work on remote querying and SPARQL support (RFE 1236476).
 * Added port of Sesame's RIO RDF/XML parser and associated interfaces (RFE 
 1075768).
 * Added protected constructor to Literals (RFE 1075771).
