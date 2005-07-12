@@ -9,6 +9,8 @@
     <property name="project.version.full" value="${project.version.major}.${project.version.minor}${version-status}"/>
     <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
     <property name="src.dir" value="src"/>
+    <property name="java.src.dir" value="${src.dir}/java"/>
+    <property name="sablecc.src.dir" value="${src.dir}/sablecc"/>
     <property name="build.dir" value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="dist.dir" value="${build.dir}/dist"/>
@@ -50,13 +52,13 @@
 
 
     <!-- Note. Put other test code patterns here (integration, load, etc.) -->
-    <fileset id="production.code.fileset" dir="${src.dir}">
+    <fileset id="production.code.fileset" dir="${java.src.dir}">
         <patternset refid="production.code.pattern"/>
     </fileset>
-    <fileset id="test.code.fileset" dir="${src.dir}">
+    <fileset id="test.code.fileset" dir="${java.src.dir}">
         <patternset refid="test.code.pattern"/>
     </fileset>
-    <fileset id="all.code.fileset" dir="${src.dir}">
+    <fileset id="all.code.fileset" dir="${java.src.dir}">
         <patternset refid="all.code.pattern"/>
     </fileset>
 
@@ -65,21 +67,18 @@
         <fileset refid="production.code.fileset"/>
     </path>
     <path id="test.code.path">
-        <pathelement location="${src.dir}"/>
+        <pathelement location="${java.src.dir}"/>
     </path>
     <path id="gen.path" location="${gen.src.dir}"/>
     -->
     <path id="all.code.path">
-        <pathelement location="${src.dir}"/>
+        <pathelement location="${java.src.dir}"/>
         <!--<path refid="gen.path"/>-->
     </path>
     <path id="production.class.path">
-        <pathelement location="${lib.dir}/jsr173_1.0_api.jar"/>
         <pathelement location="${lib.dir}/junit-3.8.1.jar"/>
-        <pathelement location="${lib.dir}/backport-util-concurrent-1.1_01.jar"/>
     </path>
     <path id="test.class.path">
-        <pathelement location="${lib.dir}/backport-util-concurrent-1.1_01.jar"/>
         <pathelement location="${dist.dir}/${project.jar}"/>
         <pathelement location="${classes.dir}"/>
     </path>

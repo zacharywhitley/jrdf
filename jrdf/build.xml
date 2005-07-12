@@ -11,7 +11,7 @@
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac source="${java.src.version}" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="production.class.path"
+        <javac source="${java.src.version}" srcdir="${java.src.dir}" destdir="${classes.dir}" classpathref="production.class.path"
                debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
                optimize="${compile.optimize}">
             <src>
