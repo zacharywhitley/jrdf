@@ -58,15 +58,10 @@
 
 package org.jrdf.graph.mem;
 
-import java.util.NoSuchElementException;
-
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.*;
 import org.jrdf.util.ClosableIterator;
+
+import java.util.NoSuchElementException;
 
 /**
  * An iterator that returns only a single triple, if any exists.

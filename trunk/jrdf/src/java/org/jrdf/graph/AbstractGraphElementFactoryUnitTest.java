@@ -58,10 +58,10 @@
 
 package org.jrdf.graph;
 
-import java.net.URI;
-
 import junit.framework.TestCase;
 import org.jrdf.util.ClosableIterator;
+
+import java.net.URI;
 
 /**
  * Abstract Test case for Graph Element Factories.

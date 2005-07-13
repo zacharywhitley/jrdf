@@ -1,19 +1,11 @@
 package org.jrdf.example;
 
-import java.net.URI;
-import java.util.Iterator;
-
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.*;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.util.ClosableIterator;
+
+import java.net.URI;
+import java.util.Iterator;
 
 /**
  * An example that performs simple operations on a JRDF Graph.

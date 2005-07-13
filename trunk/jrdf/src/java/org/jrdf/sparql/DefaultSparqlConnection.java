@@ -1,7 +1,5 @@
 package org.jrdf.sparql;
 
-import java.net.URI;
-
 import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Answer;
@@ -9,6 +7,8 @@ import org.jrdf.query.DefaultQueryExecutor;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.net.URI;
 
 
 /**

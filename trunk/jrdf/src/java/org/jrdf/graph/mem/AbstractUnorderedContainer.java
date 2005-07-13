@@ -59,12 +59,11 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
+import org.jrdf.graph.Container;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.jrdf.graph.Container;
-import org.jrdf.graph.ObjectNode;
 
 /**
  * The base class for the implementation of Bag and Alternative.
@@ -73,12 +72,13 @@ import org.jrdf.graph.ObjectNode;
  *
  * @version $Revision$
  */
-public abstract class AbstractUnorderedContainer implements Container {
+public abstract class AbstractUnorderedContainer<ObjectNode>
+    implements Container<ObjectNode> {
 
   /**
    * The hashmap containing the elements.
    */
-  Map elements = new HashMap();
+  Map<Long,ObjectNode> elements = new HashMap<Long, ObjectNode>();
 
   /**
    * Counter used to generate keys to add to the hashmap.
@@ -97,32 +97,28 @@ public abstract class AbstractUnorderedContainer implements Container {
     return elements.values().contains(o);
   }
 
-  public Iterator iterator() {
+  public Iterator<ObjectNode> iterator() {
     return elements.values().iterator();
   }
 
-  public Object[] toArray() {
-    return elements.values().toArray();
+  public ObjectNode[] toArray() {
+    return (ObjectNode[]) elements.values().toArray();
   }
 
-  public Object[] toArray(Object[] a) {
+  public <ObjectNode>ObjectNode[] toArray(ObjectNode[] a) {
     return elements.values().toArray(a);
   }
 
-  public boolean add(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
+  public boolean add(ObjectNode o) {
     elements.put(new Long(key++), o);
     return true;
   }
 
   public boolean remove(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
+//    if (!(o instanceof ObjectNode.class)) {
+//      throw new IllegalArgumentException("Cannot remove anything except " +
+//          "ObjectNodes");
+//    }
     Iterator iter = elements.entrySet().iterator();
     boolean found = false;
 

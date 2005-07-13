@@ -1,16 +1,9 @@
 package org.jrdf.connection;
 
-import java.util.Iterator;
-
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.*;
 import org.jrdf.util.ClosableIterator;
+
+import java.util.Iterator;
 
 /**
  * Mock {@link Graph} for unit testing.

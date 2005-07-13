@@ -58,9 +58,9 @@
 
 package org.jrdf.graph.mem;
 
-import java.util.NoSuchElementException;
-
 import org.jrdf.util.ClosableIterator;
+
+import java.util.NoSuchElementException;
 
 /**
  * An iterator that returns no triples.

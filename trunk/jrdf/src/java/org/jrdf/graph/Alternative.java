@@ -70,7 +70,16 @@ import java.util.Collection;
  *
  * @version $Revision$
  */
-public interface Alternative extends Container {
+public interface Alternative<ObjectNode> extends Container<ObjectNode> {
+
+//   /**
+//    * {@inheritDoc}
+//    * @param c {@inheritDoc}
+//    * @throws IllegalArgumentException if the given object is not the correct
+//    *   type, Alternative.
+//    */
+//   boolean containsAll(Alternative c)
+//       throws IllegalArgumentException;
 
    /**
     * {@inheritDoc}
@@ -78,33 +87,24 @@ public interface Alternative extends Container {
     * @throws IllegalArgumentException if the given object is not the correct
     *   type, Alternative.
     */
-   boolean containsAll(Collection c)
+   boolean addAll(Collection<? extends ObjectNode> c)
        throws IllegalArgumentException;
 
-   /**
-    * {@inheritDoc}
-    * @param c {@inheritDoc}
-    * @throws IllegalArgumentException if the given object is not the correct
-    *   type, Alternative.
-    */
-   boolean addAll(Collection c)
-       throws IllegalArgumentException;
-
-   /**
-    * {@inheritDoc}
-    * @param c {@inheritDoc}
-    * @throws IllegalArgumentException if the given object is not the correct
-    *   type, Alternative.
-    */
-   boolean removeAll(Collection c)
-       throws IllegalArgumentException;
-
-   /**
-    * {@inheritDoc}
-    * @param c {@inheritDoc}
-    * @throws IllegalArgumentException if the given object is not the correct
-    *   type, Alternative.
-    */
-   boolean retainAll(Collection c)
-       throws IllegalArgumentException;
+//   /**
+//    * {@inheritDoc}
+//    * @param c {@inheritDoc}
+//    * @throws IllegalArgumentException if the given object is not the correct
+//    *   type, Alternative.
+//    */
+//   boolean removeAll(Alternative c)
+//       throws IllegalArgumentException;
+//
+//   /**
+//    * {@inheritDoc}
+//    * @param c {@inheritDoc}
+//    * @throws IllegalArgumentException if the given object is not the correct
+//    *   type, Alternative.
+//    */
+//   boolean retainAll(Alternative c)
+//       throws IllegalArgumentException;
 }

@@ -61,16 +61,7 @@ package org.jrdf.graph.mem;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-import org.jrdf.graph.AbstractTripleFactoryUnitTest;
-import org.jrdf.graph.Alternative;
-import org.jrdf.graph.Bag;
-import org.jrdf.graph.Collection;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Sequence;
-import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.*;
 import org.jrdf.vocabulary.RDF;
 
 /**

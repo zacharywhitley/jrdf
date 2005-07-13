@@ -59,11 +59,11 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
-import java.util.LinkedList;
-
 import org.jrdf.graph.Bag;
 import org.jrdf.graph.Collection;
 import org.jrdf.graph.ObjectNode;
+
+import java.util.LinkedList;
 
 /**
  * A Collection all the statements of a particular group.

@@ -59,12 +59,12 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
+import org.jrdf.graph.Bag;
+
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.jrdf.graph.Bag;
-import org.jrdf.graph.ObjectNode;
 
 /**
  * An implementation of {@link Bag}.
@@ -73,17 +73,16 @@ import org.jrdf.graph.ObjectNode;
  *
  * @version $Revision$
  */
-public class BagImpl extends AbstractUnorderedContainer implements Bag {
+public class BagImpl<ObjectNode> extends AbstractUnorderedContainer<ObjectNode> implements Bag<ObjectNode> {
 
-  public boolean containsAll(java.util.Collection c) {
+  public boolean containsAll(Collection<?> c) {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
     }
-
     return elements.values().containsAll(c);
   }
 
-  public boolean addAll(java.util.Collection c) throws IllegalArgumentException {
+  public boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
     }
@@ -101,7 +100,7 @@ public class BagImpl extends AbstractUnorderedContainer implements Bag {
     return modified;
   }
 
-  public boolean removeAll(java.util.Collection c) throws IllegalArgumentException {
+  public boolean removeAll(Collection<?> c) throws IllegalArgumentException {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
     }
@@ -119,7 +118,7 @@ public class BagImpl extends AbstractUnorderedContainer implements Bag {
   }
 
 
-  public boolean retainAll(java.util.Collection c) throws IllegalArgumentException {
+  public boolean retainAll(Collection<?> c) throws IllegalArgumentException {
     if (!(c instanceof Bag)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
     }

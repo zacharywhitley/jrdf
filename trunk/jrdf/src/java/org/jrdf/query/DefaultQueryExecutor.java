@@ -1,10 +1,10 @@
 package org.jrdf.query;
 
-import java.net.URI;
-
 import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.net.URI;
 
 /**
  * Default implementation of a {@link org.jrdf.query.JrdfQueryExecutor}.

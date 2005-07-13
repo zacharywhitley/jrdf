@@ -1,9 +1,5 @@
 package org.jrdf.example;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Iterator;
-
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -11,6 +7,10 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Iterator;
 
 public class RdfXmlParserExample {
     public static void main(String[] args) throws Exception {

@@ -1,9 +1,9 @@
 package org.jrdf.util.param;
 
+import junit.framework.Assert;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import junit.framework.Assert;
 
 /**
  * Test utility for checking parameters bad to methods.

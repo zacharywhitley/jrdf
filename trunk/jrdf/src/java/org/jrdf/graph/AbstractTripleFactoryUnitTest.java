@@ -59,11 +59,11 @@
 package org.jrdf.graph;
 
 // Java packages
-import java.net.URI;
-
 import junit.framework.TestCase;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.vocabulary.RDF;
+
+import java.net.URI;
 
 /**
  * Abstract test case for graph implementations.

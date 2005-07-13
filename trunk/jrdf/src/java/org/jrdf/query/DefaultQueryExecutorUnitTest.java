@@ -1,11 +1,11 @@
 package org.jrdf.query;
 
-import java.net.URI;
-
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.connection.MockBadGraph;
 import org.jrdf.graph.Graph;
+
+import java.net.URI;
 
 /**
  * Unit test for {@link DefaultQueryExecutor}.

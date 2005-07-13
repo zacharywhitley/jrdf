@@ -60,6 +60,11 @@ package org.jrdf.util;
 
 // Third party packages
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
+
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -67,11 +72,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 
 /**
  * Unit test for testing the Unique Identifier Generator (UIDGenerator).
@@ -259,7 +259,7 @@ public class UIDGeneratorUnitTest extends TestCase {
         Method generateUID = uidGenerator.getMethod("generateUID", PARAMETER_TYPES_DONT_CARE);
         String currentUID = "";
         for (int i = 0; NUM_UIDS > i; i++) {
-            currentUID = (String) generateUID.invoke(null, null);
+            currentUID = (String) generateUID.invoke(null, (Object[]) null);
             //is it unique??
             if (uids.contains(currentUID)) {
                 fail("UID set already contains UID [" + i + "]: " + currentUID);
