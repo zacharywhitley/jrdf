@@ -60,10 +60,10 @@ package org.jrdf.graph.mem;
 
 // Java 2 standard packages
 
-import java.util.ArrayList;
-
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Sequence;
+
+import java.util.ArrayList;
 
 /**
  * An implementation of {@link Sequence}.
@@ -101,11 +101,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean add(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
+  public boolean add(ObjectNode o) throws IllegalArgumentException {
     return super.add(o);
   }
 
@@ -190,11 +186,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean remove(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
+  public boolean remove(ObjectNode o) throws IllegalArgumentException {
     return super.remove(o);
   }
 

@@ -59,10 +59,10 @@
 package org.jrdf.graph;
 
 // Java 2 standard
+import org.jrdf.util.EscapeUtil;
+
 import java.io.Serializable;
 import java.net.URI;
-
-import org.jrdf.util.EscapeUtil;
 
 /**
  * A base implementation of an RDF {@link Literal}.

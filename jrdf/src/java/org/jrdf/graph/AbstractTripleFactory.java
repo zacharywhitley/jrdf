@@ -58,11 +58,11 @@
 
 package org.jrdf.graph;
 
+import org.jrdf.vocabulary.RDF;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
-
-import org.jrdf.vocabulary.RDF;
 
 /**
  * The base implementation of the Triple Factory which adds to a given graph
@@ -253,10 +253,10 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
       // Insert statements from colletion.
       long counter = 1;
-      Iterator iter = container.iterator();
+      Iterator<ObjectNode> iter = container.iterator();
 
       while (iter.hasNext()) {
-        ObjectNode object = (ObjectNode) iter.next();
+        ObjectNode object = iter.next();
         graph.add(subjectNode,
             (PredicateNode) elementFactory.createResource(new URI(
             RDF.baseURI + "_" + counter++)),

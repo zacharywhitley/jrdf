@@ -1,8 +1,8 @@
 package org.jrdf.connection;
 
-import java.net.URI;
-
 import junit.framework.TestCase;
+
+import java.net.URI;
 
 /**
  * Unit test for {@link JrdfConnectionFactory}.

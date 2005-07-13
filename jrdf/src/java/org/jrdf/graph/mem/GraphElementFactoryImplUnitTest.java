@@ -58,14 +58,14 @@
 
 package org.jrdf.graph.mem;
 
-import java.net.URI;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+
+import java.net.URI;
 
 
 /**

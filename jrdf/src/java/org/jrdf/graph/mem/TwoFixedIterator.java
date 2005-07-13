@@ -58,14 +58,14 @@
 
 package org.jrdf.graph.mem;
 
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.util.ClosableIterator;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphException;
-import org.jrdf.util.ClosableIterator;
 
 /**
  * An iterator that iterates over a group with a two fixed nodes.

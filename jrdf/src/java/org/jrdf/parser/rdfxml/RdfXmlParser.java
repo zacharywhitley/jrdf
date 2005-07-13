@@ -19,6 +19,12 @@
 
 package org.jrdf.parser.rdfxml;
 
+import org.jrdf.graph.*;
+import org.jrdf.parser.*;
+import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import org.jrdf.vocabulary.RDF;
+import org.xml.sax.*;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.TransformerConfigurationException;
@@ -31,30 +37,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
-
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.URIReference;
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.ParseErrorListener;
-import org.jrdf.parser.ParseException;
-import org.jrdf.parser.ParseLocationListener;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.StatementHandler;
-import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
-import org.jrdf.vocabulary.RDF;
-import org.xml.sax.InputSource;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
 
 /**
  * A parser for XML-serialized RDF. This parser operates directly

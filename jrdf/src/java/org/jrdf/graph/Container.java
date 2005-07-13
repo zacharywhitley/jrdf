@@ -60,6 +60,7 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * A Container is a grouping of statements.  A container can either be a
@@ -79,7 +80,10 @@ import java.util.Collection;
  *
  * @version $Revision$
  */
-public interface Container extends Collection {
+public interface Container<ObjectNode> extends Collection<ObjectNode> {
+
+  ObjectNode[] toArray();
+  Iterator<ObjectNode> iterator();
 
   /**
    * {@inheritDoc}
@@ -88,7 +92,7 @@ public interface Container extends Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  boolean add(Object o) throws IllegalArgumentException;
+  boolean add(ObjectNode o);
 
   /**
    * {@inheritDoc}
@@ -97,5 +101,5 @@ public interface Container extends Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  boolean remove(Object o) throws IllegalArgumentException;
+  boolean remove(Object o);
 }

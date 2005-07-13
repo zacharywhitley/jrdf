@@ -59,9 +59,9 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard
-import java.net.URI;
-
 import org.jrdf.graph.AbstractLiteral;
+
+import java.net.URI;
 
 /**
  * RDF literal node.

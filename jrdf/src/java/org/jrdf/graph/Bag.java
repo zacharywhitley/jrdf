@@ -70,7 +70,16 @@ import java.util.Collection;
  *
  * @version $Revision$
  */
-public interface Bag extends Container {
+public interface Bag<ObjectNode> extends Container<ObjectNode> {
+
+//  /**
+//   * {@inheritDoc}
+//   *
+//   * @param c {@inheritDoc}
+//   * @throws IllegalArgumentException if the given object is not the correct
+//   *   type, Bag.
+//   */
+//  boolean containsAll(Collection<Bag> c) throws IllegalArgumentException;
 
   /**
    * {@inheritDoc}
@@ -79,33 +88,23 @@ public interface Bag extends Container {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Bag.
    */
-  boolean containsAll(Collection c)
-      throws IllegalArgumentException;
+  boolean addAll(Collection <? extends ObjectNode> c) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param c {@inheritDoc}
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  boolean addAll(Collection c) throws IllegalArgumentException;
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param c {@inheritDoc}
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  boolean removeAll(Collection c) throws IllegalArgumentException;
-
-  /**
-   * {@inheritDoc}
-   *
-   * @param c {@inheritDoc}
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  boolean retainAll(Collection c) throws IllegalArgumentException;
+//  /**
+//   * {@inheritDoc}
+//   *
+//   * @param c {@inheritDoc}
+//   * @throws IllegalArgumentException if the given object is not the correct
+//   *   type, Bag.
+//   */
+//  boolean removeAll(Collection c) throws IllegalArgumentException;
+//
+//  /**
+//   * {@inheritDoc}
+//   *
+//   * @param c {@inheritDoc}
+//   * @throws IllegalArgumentException if the given object is not the correct
+//   *   type, Bag.
+//   */
+//  boolean retainAll(Collection c) throws IllegalArgumentException;
 }

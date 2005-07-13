@@ -1,7 +1,5 @@
 package org.jrdf.sparql;
 
-import java.net.URI;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -11,6 +9,8 @@ import org.jrdf.connection.MockBadGraph;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.util.param.ParameterTestUtil;
+
+import java.net.URI;
 
 /**
  * Unit test for {@link DefaultSparqlConnection}.

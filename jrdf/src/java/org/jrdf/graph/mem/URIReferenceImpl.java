@@ -59,9 +59,9 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
-import java.net.URI;
-
 import org.jrdf.graph.AbstractURIReference;
+
+import java.net.URI;
 
 /**
  * RDF URI reference - resource node. Some RDF resources are properties. It's

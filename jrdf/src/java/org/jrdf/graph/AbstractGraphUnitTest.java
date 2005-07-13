@@ -58,14 +58,14 @@
 
 package org.jrdf.graph;
 
+import junit.framework.TestCase;
+import org.jrdf.util.ClosableIterator;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import junit.framework.TestCase;
-import org.jrdf.util.ClosableIterator;
 
 /**
  * Abstract test case for graph implementations.

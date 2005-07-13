@@ -60,12 +60,12 @@ package org.jrdf.graph.mem;
 
 // Java 2 standard packages
 
+import org.jrdf.graph.Alternative;
+
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.jrdf.graph.Alternative;
-import org.jrdf.graph.ObjectNode;
 
 /**
  * An implementation of {@link Alternative}.
@@ -74,38 +74,30 @@ import org.jrdf.graph.ObjectNode;
  *
  * @version $Revision$
  */
-public class AlternativeImpl extends AbstractUnorderedContainer
-    implements Alternative {
+public class AlternativeImpl<ObjectNode>
+    extends AbstractUnorderedContainer<ObjectNode>
+    implements Alternative<ObjectNode> {
 
-  public boolean containsAll(java.util.Collection c) {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add alts to other alts");
-    }
-
+  public boolean containsAll(Collection<?> c) {
     return elements.values().containsAll(c);
   }
 
-  public boolean add(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
+  public boolean add(ObjectNode o) throws IllegalArgumentException {
     if (!elements.containsValue(o)) {
       elements.put(new Long(key++), o);
     }
     return true;
   }
 
-  public boolean addAll(java.util.Collection c)
+  public boolean addAll(Collection<? extends ObjectNode> c)
       throws IllegalArgumentException {
     if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add alts to other alts");
+      throw new IllegalArgumentException("Can only add alternative to other " +
+          "alternatives");
     }
 
-    Alternative alt = (Alternative) c;
-
     // Iterate through the bag adding object nodes
-    Iterator iter = alt.iterator();
+    Iterator iter = c.iterator();
     boolean modified = iter.hasNext();
     while (iter.hasNext()) {
       ObjectNode obj = (ObjectNode) iter.next();
@@ -115,10 +107,11 @@ public class AlternativeImpl extends AbstractUnorderedContainer
     return modified;
   }
 
-  public boolean removeAll(java.util.Collection c)
+  public boolean removeAll(Collection<?> c)
       throws IllegalArgumentException {
     if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
+      throw new IllegalArgumentException("Can only add alternative to other " +
+          "alternatives");
     }
 
     Alternative alt = (Alternative) c;
@@ -134,10 +127,11 @@ public class AlternativeImpl extends AbstractUnorderedContainer
   }
 
 
-  public boolean retainAll(java.util.Collection c)
+  public boolean retainAll(Collection<?> c)
       throws IllegalArgumentException {
     if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
+      throw new IllegalArgumentException("Can only add alternative to other " +
+          "alternatives");
     }
 
     boolean modified = false;
