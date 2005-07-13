@@ -4,3 +4,4 @@ o Implement SPARQL parser
 o Add build.cmd and build.sh scripts for command
 line building without adding libs to ant bootstrap classpath
 o Finish of generics conversion.
+o Fix up javadoc (again sorry!!).
