@@ -62,6 +62,7 @@ package org.jrdf.vocabulary;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import java.net.URI;
 
 /**
  * A representation of a known vocabulary.
@@ -83,7 +84,7 @@ public abstract class Vocabulary implements Serializable {
   /**
    * The set of URI references.
    */
-  protected static Set resources = new HashSet();
+  protected static Set<URI> resources = new HashSet<URI>();
 
   protected Vocabulary() {
   }
@@ -93,7 +94,7 @@ public abstract class Vocabulary implements Serializable {
    *
    * @return the resource in this vocabulary.
    */
-  public static Set getResources() {
+  public static Set<URI> getResources() {
     return resources;
   }
 }

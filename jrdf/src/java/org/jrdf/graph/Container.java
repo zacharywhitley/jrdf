@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 // Java 2 standard packages
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -80,9 +81,42 @@ import java.util.Iterator;
  *
  * @version $Revision$
  */
-public interface Container<ObjectNode> extends Collection<ObjectNode> {
+public interface Container <ObjectNode> extends Collection<ObjectNode> {
 
-  ObjectNode[] toArray();
+  /**
+   * {@inheritDoc}
+   *
+   * @param o Add an ObjectNode.
+   * @return {@inheritDoc}
+   */
+  boolean add(ObjectNode o);
+
+  /**
+   * {@inheritDoc}
+   */
+  boolean addAll(Collection<? extends ObjectNode> c);
+
+  /**
+   * {@inheritDoc}
+   *
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, ObjectNode.
+   */
+  boolean contains(Object o);
+
+  /**
+   * {@inheritDoc}
+   *
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, Sequence.
+   */
+  boolean containsAll(Collection<?> c) throws IllegalArgumentException;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @return {@inheritDoc}
+   */
   Iterator<ObjectNode> iterator();
 
   /**
@@ -92,14 +126,28 @@ public interface Container<ObjectNode> extends Collection<ObjectNode> {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  boolean add(ObjectNode o);
+  boolean remove(Object o) throws IllegalArgumentException;
 
   /**
    * {@inheritDoc}
    *
-   * @param o {@inheritDoc}
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
+   *   type, Sequence.
    */
-  boolean remove(Object o);
+  boolean removeAll(Collection<?> c) throws IllegalArgumentException;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @throws IllegalArgumentException if the given object is not the correct
+   *   type, Sequence.
+   */
+  boolean retainAll(Collection<?> c) throws IllegalArgumentException;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @return {@inheritDoc}
+   */
+  <ObjectNode>ObjectNode[] toArray(ObjectNode[] a);
 }

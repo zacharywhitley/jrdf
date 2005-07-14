@@ -59,6 +59,9 @@
 package org.jrdf.graph;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * A Collection holds all the statements of a particular group.  A linked list
@@ -72,37 +75,32 @@ import java.util.Iterator;
  *
  * @version $Revision$
  */
-public interface Collection {
+public interface Collection<ObjectNode> extends List<ObjectNode>,
+    Queue<ObjectNode> {
 
   /**
    * Add an ${@link ObjectNode} to the collection.
    *
    * @param element object to add.
    * @return true if the object was added successfully.
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
    */
-  boolean add(Object element) throws IllegalArgumentException;
+  boolean add(ObjectNode element);
 
   /**
    * Add an ${@link ObjectNode} to the collection at the given position.
    *
    * @param index the index into the collection to add.
    * @param element the object to add.
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
    */
-  void add(int index, Object element) throws IllegalArgumentException;
+  void add(int index, ObjectNode element);
 
   /**
    * Add a collection of ${@link ObjectNode}s to this one.
    *
    * @param c the collection to add.
    * @return true if the object was added successfully.
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Collection.
    */
-  boolean addAll(java.util.Collection c) throws IllegalArgumentException;
+  boolean addAll(java.util.Collection<? extends ObjectNode> c);
 
   /**
    * Add a collection of ${@link ObjectNode}s to this one starting at the given
@@ -111,26 +109,12 @@ public interface Collection {
    * @param index the index into the collection to start adding.
    * @param c the collection to add.
    * @return true if the object was added successfully.
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Collection.
    */
-  boolean addAll(int index, java.util.Collection c) throws
-      IllegalArgumentException;
+  boolean addAll(int index, java.util.Collection<? extends ObjectNode> c);
 
-  /**
-   * Add an ${@link ObjectNode} to the start of the collection.
-   *
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  void addFirst(Object element);
+  void addFirst(ObjectNode element);
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  void addLast(Object element);
+  void addLast(ObjectNode element);
 
   /**
    * Search the collection and return if the object was found or not.
@@ -139,7 +123,7 @@ public interface Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  boolean contains(Object element);
+  boolean contains(Object o) throws IllegalArgumentException;
 
   /**
    * Search the collection and return if all of the given objects were found.
@@ -149,7 +133,7 @@ public interface Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */
-  boolean containsAll(java.util.Collection c);
+  boolean containsAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
@@ -157,13 +141,13 @@ public interface Collection {
    */
   int indexOf(Object element) throws IllegalArgumentException;
 
-  Iterator iterator();
-
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
   int lastIndexOf(Object element) throws IllegalArgumentException;
+
+  Iterator<ObjectNode> iterator();
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
@@ -173,19 +157,15 @@ public interface Collection {
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Collection.
+   *   type, ObjectNode.
    */
-  boolean removeAll(java.util.Collection c) throws IllegalArgumentException;
-
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Collection.
-   */
-  boolean retainAll(java.util.Collection c) throws IllegalArgumentException;
+  boolean removeAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  Object set(int index, Object element) throws IllegalArgumentException;
+  boolean retainAll(java.util.Collection<?> c) throws IllegalArgumentException;
+
+  ObjectNode set(int index, ObjectNode element);
 }

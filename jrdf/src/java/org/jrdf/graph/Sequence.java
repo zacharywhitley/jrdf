@@ -59,8 +59,11 @@
 package org.jrdf.graph;
 
 // Java 2 standard packages
+
 import java.util.Collection;
 import java.util.List;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 /**
  * A Sequence is a group of statements that are kept in an orderd list.  The
@@ -71,48 +74,28 @@ import java.util.List;
  *
  * @version $Revision$
  */
-public interface Sequence extends Container, List {
+public interface Sequence <ObjectNode> extends Container<ObjectNode>,
+    List<ObjectNode> {
 
   /**
    * {@inheritDoc}
    *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
+   * @param o Add an ObjectNode.
    */
-  void add(int index, Object o) throws IllegalArgumentException;
+  void add(int index, ObjectNode o);
+
+  /**
+   * {@inheritDoc}
+   */
+  boolean addAll(int index, Collection<? extends ObjectNode> c);
 
   /**
    * {@inheritDoc}
    *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
+   * @param index {@inheritDoc}
+   * @return {@inheritDoc}
    */
-  boolean addAll(Collection c) throws IllegalArgumentException;
-
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  boolean addAll(int index, Collection c)
-      throws IllegalArgumentException;
-
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  boolean contains(Object o);
-
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  boolean containsAll(Collection c);
+  ObjectNode get(int index);
 
   /**
    * {@inheritDoc}
@@ -130,22 +113,24 @@ public interface Sequence extends Container, List {
    */
   int lastIndexOf(Object o) throws IllegalArgumentException;
 
+  ListIterator<ObjectNode> listIterator();
+
+  ListIterator<ObjectNode> listIterator(int index);
+
   /**
-   * {@inheritDoc}
+   * Removes the first element in the list (in a FIFO manner).
    *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
+   * @return the ObjectNode that was at the start of the list.
    */
-  boolean removeAll(Collection c) throws IllegalArgumentException;
+  ObjectNode remove();
 
   /**
    * {@inheritDoc}
    *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
+   * @param index {@inheritDoc}
+   * @return the ObjectNode at that position.
    */
-  boolean retainAll(Collection c)
-      throws IllegalArgumentException;
+  ObjectNode remove(int index);
 
   /**
    * {@inheritDoc}
@@ -153,5 +138,14 @@ public interface Sequence extends Container, List {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  Object set(int index, Object element) throws IllegalArgumentException;
+  ObjectNode set(int index, ObjectNode element) throws IllegalArgumentException;
+
+  /**
+   * {@inheritDoc}
+   *
+   * @param fromIndex {@inheritDoc}
+   * @param toIndex {@inheritDoc}
+   * @return {@inheritDoc}
+   */
+  List<ObjectNode> subList(int fromIndex, int toIndex);
 }

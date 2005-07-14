@@ -82,42 +82,34 @@ public class AlternativeImpl<ObjectNode>
     return elements.values().containsAll(c);
   }
 
-  public boolean add(ObjectNode o) throws IllegalArgumentException {
+  public boolean add(ObjectNode o) {
     if (!elements.containsValue(o)) {
       elements.put(new Long(key++), o);
     }
     return true;
   }
 
+  // TODO This should be test drive - probably wrong.  Shouldn't add existing
+  // elements twice.
   public boolean addAll(Collection<? extends ObjectNode> c)
       throws IllegalArgumentException {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add alternative to other " +
-          "alternatives");
-    }
-
-    // Iterate through the bag adding object nodes
-    Iterator iter = c.iterator();
+//    if (!(c instanceof Alternative)) {
+//      throw new IllegalArgumentException("Can only add alternatives to other " +
+//          "alternatives");
+//    }
+    Iterator<? extends ObjectNode> iter = c.iterator();
     boolean modified = iter.hasNext();
     while (iter.hasNext()) {
-      ObjectNode obj = (ObjectNode) iter.next();
+      ObjectNode obj = iter.next();
       elements.put(new Long(key++), obj);
     }
 
     return modified;
   }
 
-  public boolean removeAll(Collection<?> c)
-      throws IllegalArgumentException {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add alternative to other " +
-          "alternatives");
-    }
-
-    Alternative alt = (Alternative) c;
-
-    // Iterate through the bag adding object nodes
-    Iterator iter = alt.iterator();
+  // TODO Test allowing any type of Collection through.
+  public boolean removeAll(Collection<?> c) {
+    Iterator iter = c.iterator();
     boolean modified = iter.hasNext();
     while (iter.hasNext()) {
       remove(iter.next());
@@ -127,32 +119,23 @@ public class AlternativeImpl<ObjectNode>
   }
 
 
+  // TODO Turned to use Object - also remove IllegalArgument check.
   public boolean retainAll(Collection<?> c)
       throws IllegalArgumentException {
-    if (!(c instanceof Alternative)) {
-      throw new IllegalArgumentException("Can only add alternative to other " +
-          "alternatives");
-    }
-
+//    if (!(c instanceof Alternative)) {
+//      throw new IllegalArgumentException("Can only add alternatives to other " +
+//          "alternatives");
+//    }
     boolean modified = false;
-
-    // Iterate through this bag removing elements that are not in the given
-    // bag c.
-    Iterator iter = iterator();
+    Iterator<?> iter = iterator();
     while (iter.hasNext()) {
-
-      ObjectNode obj = (ObjectNode) iter.next();
+      Object obj = iter.next();
       if (!c.contains(obj)) {
         modified = true;
         remove(obj);
       }
     }
-
     return modified;
-  }
-
-  public int hashCode() {
-    return super.hashCode();
   }
 
   public boolean equals(Object obj) {
