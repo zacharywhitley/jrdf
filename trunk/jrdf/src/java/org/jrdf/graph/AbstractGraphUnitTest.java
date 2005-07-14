@@ -231,7 +231,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     assertEquals(2, graph.getNumberOfTriples());
 
     // Add using iterator
-    List list = new ArrayList();
+    List<Triple> list = new ArrayList<Triple>();
     list.add(elementFactory.createTriple(ref1, ref1, ref1));
     list.add(elementFactory.createTriple(ref2, ref2, ref2));
 
@@ -327,7 +327,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     graph.add(elementFactory.createTriple(ref1, ref1, ref1));
     graph.add(elementFactory.createTriple(ref2, ref2, ref2));
 
-    List list = new ArrayList();
+    List<Triple> list = new ArrayList<Triple>();
     list.add(elementFactory.createTriple(ref1, ref1, ref1));
     list.add(elementFactory.createTriple(ref2, ref2, ref2));
     graph.remove(list.iterator());
@@ -605,7 +605,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     assertTrue("ClosableIterator is returning false for hasNext().",
                iter.hasNext());
     while (iter.hasNext()) {
-
       statements.add(iter.next());
     }
     iter.close();

@@ -245,7 +245,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
-  private void addContainer(SubjectNode subjectNode, Container container)
+  private void addContainer(SubjectNode subjectNode, Container<ObjectNode> container)
       throws TripleFactoryException {
 
     // assert that the statement is not already reified

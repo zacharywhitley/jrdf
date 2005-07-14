@@ -88,20 +88,12 @@ public class CollectionImpl extends LinkedList implements Collection {
   public CollectionImpl() {
   }
 
-  public void add(int index, Object element) throws IllegalArgumentException {
-    if (!(element instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
-    super.add(index, element);
+  public boolean add(ObjectNode o) {
+    return super.add(o);
   }
 
-  public boolean add(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
-    return super.add(o);
+  public void add(int index, ObjectNode element) {
+    super.add(index, element);
   }
 
   public boolean addAll(java.util.Collection c)

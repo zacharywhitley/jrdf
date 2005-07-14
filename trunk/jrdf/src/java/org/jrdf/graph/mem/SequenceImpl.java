@@ -58,8 +58,6 @@
 
 package org.jrdf.graph.mem;
 
-// Java 2 standard packages
-
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Sequence;
 
@@ -72,7 +70,7 @@ import java.util.ArrayList;
  *
  * @version $Revision$
  */
-public class SequenceImpl extends ArrayList implements Sequence {
+public class SequenceImpl <ObjectNode> extends ArrayList<ObjectNode> implements Sequence<ObjectNode> {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -85,23 +83,11 @@ public class SequenceImpl extends ArrayList implements Sequence {
   public SequenceImpl() {
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  public void add(int index, Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
+  public void add(int index, ObjectNode o) throws IllegalArgumentException {
     super.add(index, o);
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  public boolean add(ObjectNode o) throws IllegalArgumentException {
+  public boolean add(ObjectNode o) {
     return super.add(o);
   }
 
@@ -109,13 +95,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean addAll(java.util.Collection c)
-      throws IllegalArgumentException {
-    if (!(c instanceof Sequence)) {
-      throw new IllegalArgumentException("Can only add sequences to other " +
-          "sequences");
-    }
-
+  public boolean addAll(java.util.Collection<? extends ObjectNode> c) {
     return super.addAll(c);
   }
 
@@ -123,7 +103,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean addAll(int index, java.util.Collection c) throws
+  public boolean addAll(int index, java.util.Collection<? extends ObjectNode> c) throws
       IllegalArgumentException {
     if (!(c instanceof Sequence)) {
       throw new IllegalArgumentException("Can only add sequences to other " +
@@ -138,9 +118,9 @@ public class SequenceImpl extends ArrayList implements Sequence {
    *   type, ObjectNode.
    */
   public boolean contains(Object o) {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add object nodes");
-    }
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only add object nodes");
+//    }
 
     return super.contains(o);
   }
@@ -149,7 +129,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean containsAll(java.util.Collection c) {
+  public boolean containsAll(java.util.Collection<?> c) {
     if (!(c instanceof Sequence)) {
       throw new IllegalArgumentException("Can only add sequences to other " +
           "sequences");
@@ -163,9 +143,9 @@ public class SequenceImpl extends ArrayList implements Sequence {
    *   type, ObjectNode.
    */
   public int indexOf(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only get Object nodes");
+//    }
 
     return super.indexOf(o);
   }
@@ -175,18 +155,22 @@ public class SequenceImpl extends ArrayList implements Sequence {
    *   type, ObjectNode.
    */
   public int lastIndexOf(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only get Object nodes");
+//    }
 
     return super.lastIndexOf(o);
+  }
+
+  public ObjectNode remove() {
+    return remove(0);
   }
 
   /**
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public boolean remove(ObjectNode o) throws IllegalArgumentException {
+  public boolean remove(Object o) throws IllegalArgumentException {
     return super.remove(o);
   }
 
@@ -194,7 +178,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean removeAll(java.util.Collection c) throws
+  public boolean removeAll(java.util.Collection<?> c) throws
       IllegalArgumentException {
     if (!(c instanceof Sequence)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
@@ -207,7 +191,7 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Sequence.
    */
-  public boolean retainAll(java.util.Collection c) throws
+  public boolean retainAll(java.util.Collection<?> c) throws
       IllegalArgumentException {
     if (!(c instanceof Sequence)) {
       throw new IllegalArgumentException("Can only add bags to other bags");
@@ -220,10 +204,10 @@ public class SequenceImpl extends ArrayList implements Sequence {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
-  public Object set(int index, Object element) throws IllegalArgumentException {
-    if (!(element instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
+  public ObjectNode set(int index, ObjectNode element) {
+//    if (!(element instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only get Object nodes");
+//    }
 
     return super.set(index, element);
   }

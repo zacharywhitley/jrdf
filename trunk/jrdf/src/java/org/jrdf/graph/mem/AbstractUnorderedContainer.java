@@ -78,12 +78,12 @@ public abstract class AbstractUnorderedContainer<ObjectNode>
   /**
    * The hashmap containing the elements.
    */
-  Map<Long,ObjectNode> elements = new HashMap<Long, ObjectNode>();
+  protected Map<Long,ObjectNode> elements = new HashMap<Long, ObjectNode>();
 
   /**
    * Counter used to generate keys to add to the hashmap.
    */
-  long key;
+  protected long key;
 
   public int size() {
     return elements.values().size();
@@ -114,11 +114,7 @@ public abstract class AbstractUnorderedContainer<ObjectNode>
     return true;
   }
 
-  public boolean remove(Object o) throws IllegalArgumentException {
-//    if (!(o instanceof ObjectNode.class)) {
-//      throw new IllegalArgumentException("Cannot remove anything except " +
-//          "ObjectNodes");
-//    }
+  public boolean remove(Object o) {
     Iterator iter = elements.entrySet().iterator();
     boolean found = false;
 

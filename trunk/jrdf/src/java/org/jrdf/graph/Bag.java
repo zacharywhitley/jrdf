@@ -72,15 +72,6 @@ import java.util.Collection;
  */
 public interface Bag<ObjectNode> extends Container<ObjectNode> {
 
-//  /**
-//   * {@inheritDoc}
-//   *
-//   * @param c {@inheritDoc}
-//   * @throws IllegalArgumentException if the given object is not the correct
-//   *   type, Bag.
-//   */
-//  boolean containsAll(Collection<Bag> c) throws IllegalArgumentException;
-
   /**
    * {@inheritDoc}
    *
@@ -89,22 +80,4 @@ public interface Bag<ObjectNode> extends Container<ObjectNode> {
    *   type, Bag.
    */
   boolean addAll(Collection <? extends ObjectNode> c) throws IllegalArgumentException;
-
-//  /**
-//   * {@inheritDoc}
-//   *
-//   * @param c {@inheritDoc}
-//   * @throws IllegalArgumentException if the given object is not the correct
-//   *   type, Bag.
-//   */
-//  boolean removeAll(Collection c) throws IllegalArgumentException;
-//
-//  /**
-//   * {@inheritDoc}
-//   *
-//   * @param c {@inheritDoc}
-//   * @throws IllegalArgumentException if the given object is not the correct
-//   *   type, Bag.
-//   */
-//  boolean retainAll(Collection c) throws IllegalArgumentException;
 }

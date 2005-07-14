@@ -72,15 +72,6 @@ import java.util.Collection;
  */
 public interface Alternative<ObjectNode> extends Container<ObjectNode> {
 
-//   /**
-//    * {@inheritDoc}
-//    * @param c {@inheritDoc}
-//    * @throws IllegalArgumentException if the given object is not the correct
-//    *   type, Alternative.
-//    */
-//   boolean containsAll(Alternative c)
-//       throws IllegalArgumentException;
-
    /**
     * {@inheritDoc}
     * @param c {@inheritDoc}
@@ -89,22 +80,4 @@ public interface Alternative<ObjectNode> extends Container<ObjectNode> {
     */
    boolean addAll(Collection<? extends ObjectNode> c)
        throws IllegalArgumentException;
-
-//   /**
-//    * {@inheritDoc}
-//    * @param c {@inheritDoc}
-//    * @throws IllegalArgumentException if the given object is not the correct
-//    *   type, Alternative.
-//    */
-//   boolean removeAll(Alternative c)
-//       throws IllegalArgumentException;
-//
-//   /**
-//    * {@inheritDoc}
-//    * @param c {@inheritDoc}
-//    * @throws IllegalArgumentException if the given object is not the correct
-//    *   type, Alternative.
-//    */
-//   boolean retainAll(Alternative c)
-//       throws IllegalArgumentException;
 }

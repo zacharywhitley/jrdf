@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
+
 import org.jrdf.graph.Bag;
 
 import java.util.Arrays;
@@ -73,24 +74,15 @@ import java.util.List;
  *
  * @version $Revision$
  */
-public class BagImpl<ObjectNode> extends AbstractUnorderedContainer<ObjectNode> implements Bag<ObjectNode> {
+public class BagImpl <ObjectNode>
+    extends AbstractUnorderedContainer<ObjectNode> implements Bag<ObjectNode> {
 
   public boolean containsAll(Collection<?> c) {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
     return elements.values().containsAll(c);
   }
 
-  public boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
-    Bag bag = (Bag) c;
-
-    // Iterate through the bag adding object nodes
-    Iterator iter = bag.iterator();
+  public boolean addAll(Collection<? extends ObjectNode> c) {
+    Iterator iter = c.iterator();
     boolean modified = iter.hasNext();
     while (iter.hasNext()) {
       ObjectNode obj = (ObjectNode) iter.next();
@@ -100,37 +92,21 @@ public class BagImpl<ObjectNode> extends AbstractUnorderedContainer<ObjectNode> 
     return modified;
   }
 
-  public boolean removeAll(Collection<?> c) throws IllegalArgumentException {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
-    Bag bag = (Bag) c;
-
-    // Iterate through the bag adding object nodes
-    Iterator iter = bag.iterator();
+  public boolean removeAll(Collection<?> c) {
+    Iterator iter = c.iterator();
     boolean modified = iter.hasNext();
     while (iter.hasNext()) {
       remove(iter.next());
     }
-
     return modified;
   }
 
-
-  public boolean retainAll(Collection<?> c) throws IllegalArgumentException {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
+  // TODO Remove type checking.
+  public boolean retainAll(Collection<?> c) {
     boolean modified = false;
-
-    // Iterate through this bag removing elements that are not in the given
-    // bag c.
-    Iterator iter = iterator();
+    Iterator<?> iter = iterator();
     while (iter.hasNext()) {
-
-      ObjectNode obj = (ObjectNode) iter.next();
+      Object obj = iter.next();
       if (!c.contains(obj)) {
         modified = true;
         remove(obj);
@@ -138,10 +114,6 @@ public class BagImpl<ObjectNode> extends AbstractUnorderedContainer<ObjectNode> 
     }
 
     return modified;
-  }
-
-  public int hashCode() {
-    return super.hashCode();
   }
 
   public boolean equals(Object obj) {
