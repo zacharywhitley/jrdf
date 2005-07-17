@@ -43,10 +43,10 @@ Tokens
   {res->def}           endurl         = '>';
   {def}                datatypeprefix = '^^';
   {def->var}           variableprefix = ('?' | '$');
-  {def}                full_stop  =
-  {def}                number     = digit+;
-  {def}                float      = digit+ ('.' digit*) | ('.' digit+);
-  {def{                asterisk   = '*';
+  {def}                period         = '.';
+  {def}                number         = digit+;
+  {def}                float          = digit+ ('.' digit*) | ('.' digit+);
+  {def}                asterisk       = '*';
 
   {res}                resource    = urlchar*;
   {def->lit, lit->def} quote       = 39;  /* ' */
@@ -68,20 +68,20 @@ Productions
   where_clause =
     where? graph_pattern;
 
+  /* TODO: Don't allow mixes of { and ( parans, e.g. "{ ... )" */
   graph_pattern =
     lpar pattern_elements_list rpar ;
 
-  patter_elements_list =
+  pattern_elements_list =
     pattern_element pattern_elements_list_tail? ;
 
   pattern_elements_list_tail =
-    full_stop patter_elements_list? ;
+    period pattern_elements_list? ;
 
+  pattern_element =
+    triple ;
 
-    [subject]:element [predicate]:element [object]:element ;
-
-
-
+  /* TODO: Disallow literals as subjects & predicates in the grammar. */
   triple =
     [subject]:triple_element [predicate]:triple_element [object]:triple_element ;
 
@@ -89,50 +89,6 @@ Productions
     {resource} resource |
     {literal}  literal  |
     {variable} variable ;
-
-
-
-  graph_pattern_term =
-    {dterm}  graph_pattern_dterm                     |
-    {and}    graph_pattern_term and graph_pattern_dterm ;
-
-  graph_pattern_dterm =
-    {factor} graph_pattern_factor |
-    {minus} [minuend]:graph_pattern_dterm minus [subtrahend]:graph_pattern_factor ;
-
-  graph_pattern_factor =
-    {graph_pattern} exclude? graph_pattern                  |
-    {expression} exclude? lpar graph_pattern_expression rpar |
-    {transitive} transitive_clause |
-    {walk} walk_clause ;
-
-  transitive_clause =
-    {transitive1} trans lpar graph_pattern rpar |
-    {transitive2} trans lpar [graph_pattern1]:graph_pattern and [graph_pattern2]:graph_pattern rpar ;
-
-  walk_clause =
-    {walk1} walk lpar [graph_pattern1]:graph_pattern and [graph_pattern2]:graph_pattern rpar;
-
-  order_clause =
-    order by order_element+ ;
-
-  order_element =
-    variable direction ;
-
-  direction =
-    {ascending}  asc? |
-    {descending} desc ;
-
-  limit_clause =
-    limit number;
-
-  offset_clause =
-    offset number;
-
-
-  aggregate =
-    {count}    count    |
-    {subquery} subquery ;
 
   literal =
     [opening]:quote strand* [closing]:quote datatype?;
@@ -146,8 +102,4 @@ Productions
 
   variable =
     variableprefix identifier;
-
-  locality =
-    {local} local |
-    {remote} remote ;
 
