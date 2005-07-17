@@ -6,28 +6,44 @@
 
     <target name="clean">
         <delete dir="${build.dir}"/>
-        <delete dir="${javadoc.dir}"/>
     </target>
 
-    <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <javac source="${java.src.version}"
-               srcdir="${java.src.dir}" destdir="${classes.dir}"
-               classpathref="production.class.path"
-               debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
-               optimize="${compile.optimize}">
-            <src>
-                <path refid="all.code.path"/>
-            </src>
-            <patternset refid="all.code.pattern"/>
-            <compilerarg value="-Xlint"/>
-        </javac>
+    <target name="gen-src" depends="gen-sparql-parser"/>
+
+    <macrodef name="compile.macro">
+        <attribute name="src.dir"/>
+        <attribute name="output.dir"/>
+        <attribute name="classpath.ref"/>
+        <attribute name="code.path"/>
+        <attribute name="code.pattern"/>
+        <sequential>
+            <mkdir dir="@{output.dir}"/>
+            <javac source="${java.src.version}" srcdir="@{src.dir}" destdir="@{output.dir}"
+                   classpathref="@{classpath.ref}"
+                   debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
+                   optimize="${compile.optimize}">
+                <src>
+                    <path refid="@{code.path}"/>
+                </src>
+                <patternset refid="@{code.pattern}"/>
+                <compilerarg value="-Xlint"/>
+            </javac>
+        </sequential>
+    </macrodef>
+
+    <target name="compile" depends="gen-src">
+        <compile.macro src.dir="${prod.src.dir}" output.dir="${prod.classes.dir}"
+                classpath.ref="production.class.path" code.path="production.code.path"
+                code.pattern="production.code.pattern"/>
+        <compile.macro src.dir="${test.src.dir}" output.dir="${test.classes.dir}"
+                classpath.ref="test.class.path" code.path="test.code.path"
+                code.pattern="test.code.pattern"/>
     </target>
 
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${project.jar}">
-            <fileset refid="production.code.fileset"/>
+            <fileset dir="${prod.classes.dir}"/>
         </jar>
     </target>
 
@@ -59,6 +75,7 @@
         </sequential>
     </macrodef>
 
+    <!-- FIXME: Add integration test target! -->
     <target name="test" depends="dist">
         <test.macro failure.property="unit.test.failed"/>
         <fail if="unit.test.failed" message="Tests failed."/>
