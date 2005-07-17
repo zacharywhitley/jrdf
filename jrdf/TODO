@@ -1,7 +1,7 @@
 JRDF TODO List
 
-o Implement SPARQL parser 
-o Add build.cmd and build.sh scripts for command
-line building without adding libs to ant bootstrap classpath
+o Implement SPARQL parser.
 o Finish of generics conversion.
 o Fix up javadoc (again sorry!!).
+o Add test target for only running integration tests (as is done for unit tests now).
+o Continue refactoring code.
