@@ -15,13 +15,13 @@
     <property name="test.dir" value="test"/>
     <property name="prod.src.dir" value="${src.dir}/java"/>
     <property name="test.src.dir" value="${test.dir}/java"/>
+    <property name="gen.src.dir" value="${build.dir}/gen"/>
     <property name="sablecc.src.dir" value="${src.dir}/sablecc"/>
     <property name="prod.classes.dir" value="${build.dir}/prod-classes"/>
     <property name="test.classes.dir" value="${build.dir}/test-classes"/>
     <property name="dist.dir" value="${build.dir}/dist"/>
-    <property name="gen.src.dir" value="${build.dir}/gen"/>
     <property name="javadoc.dir" value="${build.dir}/javadoc"/>
-    <property name="test.results.dir" value="${build.dir}/test"/>
+    <property name="test.results.dir" value="${build.dir}/test-results"/>
     <property name="test.results" value="${test.results.dir}/All-Tests.xml"/>
     <property name="compile.debug" value="true"/>
     <property name="compile.debuglevel" value="source,lines,vars"/>
@@ -57,6 +57,9 @@
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
         <patternset refid="production.code.pattern"/>
     </fileset>
+    <fileset id="gen.code.fileset" dir="${gen.src.dir}">
+        <patternset refid="production.code.pattern"/>
+    </fileset>
     <fileset id="test.code.fileset" dir="${test.src.dir}">
         <patternset refid="test.code.pattern"/>
     </fileset>
@@ -64,10 +67,12 @@
         <patternset refid="all.code.pattern"/>
     </fileset>
 
-    <path id="gen.code.path" location="${gen.src.dir}"/>
+    <path id="gen.code.path">
+        <pathelement location="${gen.src.dir}"/>
+    </path>
     <path id="production.code.path">
         <pathelement location="${prod.src.dir}"/>
-        <path refid="gen.code.path"/>
+        <!--<path refid="gen.code.path"/>--> <!-- FIXME: REMOVE THIS -->
     </path>
     <path id="test.code.path">
         <pathelement location="${test.src.dir}"/>
@@ -75,16 +80,13 @@
     <path id="all.code.path">
         <path refid="production.code.path"/>
         <path refid="test.code.path"/>
-        <!--<pathelement location="${prod.src.dir}"/>
-        <pathelement location="${test.src.dir}"/>-->
+        <path refid="gen.code.path"/>
     </path>
-    <path id="production.class.path">
-        <pathelement location="${prod.classes.dir}"/>
-        <!--<pathelement location="${dist.dir}/${project.jar}"/>-->
-    </path>
+    <path id="gen.class.path"/>
+    <path id="production.class.path"/>
     <path id="test.class.path">
         <pathelement location="${lib.dir}/junit-3.8.1.jar"/>
-        <path refid="production.class.path"/>
+        <pathelement location="${prod.classes.dir}"/>
         <pathelement location="${test.classes.dir}"/>
     </path>
 

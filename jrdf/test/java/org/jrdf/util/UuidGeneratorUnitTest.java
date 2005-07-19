@@ -81,9 +81,9 @@ public class UuidGeneratorUnitTest extends TestCase {
     private void generateUuids(int numUuids) throws Exception {
         Set uuids = new HashSet(numUuids);
         for (int i = 0; i < numUuids; i++) {
-            String currentUID = UuidGenerator.generateUuid();
-            checkUuidIsUnique(uuids, currentUID);
-            uuids.add(currentUID);
+            String uuid = UuidGenerator.generateUuid();
+            checkUuidIsUnique(uuids, uuid);
+            uuids.add(uuid);
         }
     }
 
