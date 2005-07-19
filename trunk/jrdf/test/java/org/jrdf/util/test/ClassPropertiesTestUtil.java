@@ -30,10 +30,10 @@ public class ClassPropertiesTestUtil {
     }
 
     public static boolean isImplementationOf(Class targetInterface, Class cls) {
-        return isSubclassOf(targetInterface, cls);
+        return isExtensionOf(targetInterface, cls);
     }
 
-    public static boolean isSubclassOf(Class superClass, Class subclass) {
+    public static boolean isExtensionOf(Class superClass, Class subclass) {
         return superClass.isAssignableFrom(subclass);
     }
 
@@ -47,13 +47,8 @@ public class ClassPropertiesTestUtil {
         Assert.assertTrue(getShortName(implementationClass) + " must be final", isClassFinal(implementationClass));
     }
 
-    private static String getShortName(Class cls) {
-        String name = cls.getName();
-        return name.substring(name.lastIndexOf('.') + 1);
-    }
-
-    public static void checkSubclassOf(Class superClass, Class subClass) {
-        Assert.assertTrue(getShortName(subClass) + " is not a subclass of " + getShortName(superClass), isSubclassOf(superClass, subClass));
+    public static void checkExtensionOf(Class superClass, Class subClass) {
+        Assert.assertTrue(getShortName(subClass) + " is not a subclass of " + getShortName(superClass), isExtensionOf(superClass, subClass));
     }
 
     public static void checkClassFinal(Class cls) {
@@ -66,6 +61,11 @@ public class ClassPropertiesTestUtil {
 
     public static void checkInstance(Class expectedImpl, Object ref) {
         Assert.assertNotNull(ref);
-        Assert.assertTrue(isSubclassOf(expectedImpl, ref.getClass()));
+        Assert.assertTrue(isExtensionOf(expectedImpl, ref.getClass()));
+    }
+
+    private static String getShortName(Class cls) {
+        String name = cls.getName();
+        return name.substring(name.lastIndexOf('.') + 1);
     }
 }

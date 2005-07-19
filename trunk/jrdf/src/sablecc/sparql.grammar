@@ -62,7 +62,7 @@ Productions
     {query} select_clause where_clause?;
 
   select_clause =
-    /*{graph_pattern} select element+ |*/
+    /*{variable_list} select element+ |*/
     {wildcard} select asterisk ;
 
   where_clause =

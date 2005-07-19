@@ -76,8 +76,8 @@ import java.security.SecureRandom;
  */
 public final class UuidGenerator {
     // FIXME: Split this into a generator and UUID class.
-    // FIXME: Can we make this the default UUID generator, and create another one based on the RFC?
-    // FIXME: What about the Java UUID Generator?
+    // FIXME: Can we make this the default UUID generator, and create another one based on the RFC What about the Java UUID Generator?
+    // FIXME: What format should these take? The standard one? Short form and canonical form (do when a sep. UUID class).
     private static final String DIGEST_ALGORITHM = "MD5";
     private static final int SINGLE_DIGIT = 0x10;
     private static final int INT_OFFSET = 0xFF;

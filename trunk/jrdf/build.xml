@@ -16,6 +16,7 @@
         <attribute name="classpath.ref"/>
         <attribute name="code.path"/>
         <attribute name="code.pattern"/>
+        <attribute name="compiler.args" default="-Xlint"/>
         <sequential>
             <mkdir dir="@{output.dir}"/>
             <javac source="${java.src.version}" srcdir="@{src.dir}" destdir="@{output.dir}"
@@ -26,18 +27,20 @@
                     <path refid="@{code.path}"/>
                 </src>
                 <patternset refid="@{code.pattern}"/>
-                <compilerarg value="-Xlint"/>
+                <compilerarg value="@{compiler.args}"/>
             </javac>
         </sequential>
     </macrodef>
 
+    <!-- FIXME: Compile SableCC generated classes seperately to reduce warnings. -->
     <target name="compile" depends="gen-src">
-        <compile.macro src.dir="${prod.src.dir}" output.dir="${prod.classes.dir}"
-                classpath.ref="production.class.path" code.path="production.code.path"
-                code.pattern="production.code.pattern"/>
-        <compile.macro src.dir="${test.src.dir}" output.dir="${test.classes.dir}"
-                classpath.ref="test.class.path" code.path="test.code.path"
-                code.pattern="test.code.pattern"/>
+        <compile.macro src.dir="${gen.src.dir}" classpath.ref="gen.class.path" output.dir="${prod.classes.dir}"
+                code.path="gen.code.path" code.pattern="production.code.pattern"
+                compiler.args="-Xlint:-unchecked,-serial"/>
+        <compile.macro src.dir="${prod.src.dir}" classpath.ref="production.class.path" output.dir="${prod.classes.dir}"
+                code.path="production.code.path" code.pattern="production.code.pattern"/>
+        <compile.macro src.dir="${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
+                code.path="test.code.path" code.pattern="test.code.pattern"/>
     </target>
 
     <target name="dist" depends="compile">
@@ -47,7 +50,7 @@
         </jar>
     </target>
 
-    <target name="javadoc">
+    <target name="javadoc" depends="gen-src">
         <mkdir dir="${javadoc.dir}"/>
         <javadoc destdir="${javadoc.dir}" author="true" version="true"
                  additionalparam="-breakiterator" Use="true"
@@ -57,6 +60,7 @@
                  packagenames="org.jrdf.*"
                  link="http://java.sun.com/j2se/1.5.0/docs/api">
             <fileset refid="production.code.fileset"/>
+            <fileset refid="gen.code.fileset"/>
         </javadoc>
     </target>
 
