@@ -69,7 +69,7 @@ import java.util.Iterator;
  *
  * @version $Revision$
  */
-public interface ClosableIterator extends Iterator {
+public interface ClosableIterator<Triple> extends Iterator<Triple> {
 
   /**
    * Closes the iterator by freeing any resources that it current holds.  This

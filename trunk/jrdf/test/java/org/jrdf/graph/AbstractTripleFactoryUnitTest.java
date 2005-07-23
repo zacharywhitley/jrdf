@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 // Java packages
+
 import junit.framework.TestCase;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.vocabulary.RDF;
@@ -153,21 +154,24 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
    *
    * @return The subject reification node.
    */
-  protected abstract PredicateNode getReifySubject() throws TripleFactoryException;
+  protected abstract PredicateNode getReifySubject()
+      throws TripleFactoryException;
 
   /**
    * Get the node used for predicate reification.
    *
    * @return The predicate reification node.
    */
-  protected abstract PredicateNode getReifyPredicate() throws TripleFactoryException;
+  protected abstract PredicateNode getReifyPredicate()
+      throws TripleFactoryException;
 
   /**
    * Get the node used for object reification.
    *
    * @return The object reification node.
    */
-  protected abstract PredicateNode getReifyObject() throws TripleFactoryException;
+  protected abstract PredicateNode getReifyObject()
+      throws TripleFactoryException;
 
   /**
    * Get the node used for rdf:type.
@@ -181,35 +185,38 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
    *
    * @return The object rdf:statement node.
    */
-  protected abstract ObjectNode getRdfStatement() throws TripleFactoryException;
+  protected abstract ObjectNode getRdfStatement()
+      throws TripleFactoryException;
 
   /**
    * Create a concrete Collection.
    *
    * @return the new collection.
    */
-  protected abstract Collection createCollection(ObjectNode[] objects);
+  protected abstract Collection<ObjectNode> createCollection(
+      ObjectNode[] objects);
 
   /**
    * Create a concrete alternative
    *
    * @return the new alternative.
    */
-  protected abstract Alternative createAlternative(ObjectNode[] objects);
+  protected abstract Alternative<ObjectNode> createAlternative(
+      ObjectNode[] objects);
 
   /**
    * Create a concrete bag
    *
    * @return the new bag.
    */
-  protected abstract Bag createBag(ObjectNode[] objects);
+  protected abstract Bag<ObjectNode> createBag(ObjectNode[] objects);
 
   /**
    * Create a concrete sequence
    *
    * @return the new sequence.
    */
-  protected abstract Sequence createSequence(ObjectNode[] objects);
+  protected abstract Sequence<ObjectNode> createSequence(ObjectNode[] objects);
 
   //
   // Test cases
@@ -250,7 +257,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     assertTrue(graph.contains(blank1, ref2, blank2));
 
     // test for double insertion (allowed)
-    tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createResource(uri1));
+    tripleFactory.reifyTriple(blank1, ref1, blank2,
+        elementFactory.createResource(uri1));
     assertEquals(9, graph.getNumberOfTriples());
 
     // test for double insertion (allowed)
@@ -258,7 +266,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     assertEquals(9, graph.getNumberOfTriples());
 
     // test for insertion with a different reference (allowed)
-    tripleFactory.reifyTriple(blank1, ref1, blank2, elementFactory.createResource(uri3));
+    tripleFactory.reifyTriple(blank1, ref1, blank2,
+        elementFactory.createResource(uri3));
     assertEquals(13, graph.getNumberOfTriples());
 
     // test for insertion of a new triple with an existing reference (disallowed)
@@ -306,7 +315,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     // test for double insertion
     testCanInsert(t);
     // test for insertion with a a used blank reference
-    testCantInsert(elementFactory.createTriple(blank1, ref3, blank2), u.getURI());
+    testCantInsert(elementFactory.createTriple(blank1, ref3, blank2),
+        u.getURI());
     // test that the graph did not change with the invalid insertions
     assertEquals(30, graph.getNumberOfTriples());
 
@@ -354,11 +364,10 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         RDF.FIRST);
     PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(
         RDF.REST);
-    ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(
-        RDF.NIL);
+    ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
 
     // Create collection and add
-    Collection collection = createCollection(fruit);
+    Collection<ObjectNode> collection = createCollection(fruit);
 
     // Add the collection to the graph.
     tripleFactory.addCollection((SubjectNode) o, collection);
@@ -367,7 +376,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     assertEquals("Should have seven statements", 7, graph.getNumberOfTriples());
     assertTrue("Should have first statement", graph.contains(s, p, o));
     assertTrue("Should have first object and first collection object",
-      graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
+        graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
 
     // Get all rdf:first statements
     ClosableIterator iter = graph.find(null, rdfFirst, null);
@@ -382,8 +391,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     // Find all three parts of the collection.
     for (int index = 0; index < fruit.length; index++) {
-      assertTrue("Should contain: " + fruit[index], graph.contains(
-          null, rdfFirst, fruit[index]));
+      assertTrue("Should contain: " + fruit[index], graph.contains(null,
+          rdfFirst, fruit[index]));
     }
 
     // Get all rdf:rest statements
@@ -438,14 +447,15 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         RDF.ALT);
 
     // Create collection and add
-    Alternative alt = createAlternative(fruit);
+    Alternative<ObjectNode> alt = createAlternative(fruit);
 
     // Add the collection to the graph.
     tripleFactory.addAlternative(s, alt);
 
     // Check we've inserted it correctly (banana is in twice should be removed)
     assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
-    assertTrue("Should have statement", graph.contains(s, rdfType, rdfAlternative));
+    assertTrue("Should have statement",
+        graph.contains(s, rdfType, rdfAlternative));
     assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
     assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
     assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
@@ -488,11 +498,10 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
         RDF.TYPE);
-    ObjectNode rdfBag = (ObjectNode) elementFactory.createResource(
-        RDF.BAG);
+    ObjectNode rdfBag = (ObjectNode) elementFactory.createResource(RDF.BAG);
 
     // Create collection and add
-    Bag bag = createBag(fruit);
+    Bag<ObjectNode> bag = createBag(fruit);
 
     // Add the collection to the graph.
     tripleFactory.addBag(s, bag);
@@ -552,14 +561,15 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         RDF.SEQ);
 
     // Create collection and add
-    Sequence sequence = createSequence(fruit);
+    Sequence<ObjectNode> sequence = createSequence(fruit);
 
     // Add the collection to the graph.
     tripleFactory.addSequence(s, sequence);
 
     // Check we've inserted it correctly.
     assertEquals("Should have five statements", 5, graph.getNumberOfTriples());
-    assertTrue("Should have statement", graph.contains(s, rdfType, rdfSequence));
+    assertTrue("Should have statement",
+        graph.contains(s, rdfType, rdfSequence));
     assertTrue("Should have statement", graph.contains(s, rdfOne, fruit[0]));
     assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit[1]));
     assertTrue("Should have statement", graph.contains(s, rdfThree, fruit[2]));
@@ -580,7 +590,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     try {
       tripleFactory.reifyTriple(subject, predicate, object, r);
       assertTrue(false);
-    } catch (AlreadyReifiedException e) {
+    }
+    catch (AlreadyReifiedException e) {
     }
   }
 
@@ -596,7 +607,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     try {
       tripleFactory.reifyTriple(triple, elementFactory.createResource(r));
       assertTrue(false);
-    } catch (AlreadyReifiedException e) {
+    }
+    catch (AlreadyReifiedException e) {
     }
   }
 
@@ -615,7 +627,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
       tripleFactory.reifyTriple(subject, predicate, object,
           elementFactory.createResource());
       assertTrue(true);
-    } catch (AlreadyReifiedException e) {
+    }
+    catch (AlreadyReifiedException e) {
     }
   }
 
@@ -630,7 +643,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     try {
       tripleFactory.reifyTriple(triple, elementFactory.createResource());
       assertTrue(true);
-    } catch (AlreadyReifiedException e) {
+    }
+    catch (AlreadyReifiedException e) {
     }
   }
 }

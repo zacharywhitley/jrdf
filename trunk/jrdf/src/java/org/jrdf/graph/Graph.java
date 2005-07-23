@@ -114,7 +114,7 @@ public interface Graph extends Serializable {
    * @return an iterator containing the matching statements.
    * @throws GraphException If there was an error accessing the graph.
    */
-  ClosableIterator find(SubjectNode subject, PredicateNode predicate,
+  ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws GraphException;
 
   /**
@@ -127,7 +127,7 @@ public interface Graph extends Serializable {
    * @return an iterator containing the matching statements.
    * @throws GraphException If there was an error accessing the graph.
    */
-  ClosableIterator find(Triple triple) throws GraphException;
+  ClosableIterator<Triple> find(Triple triple) throws GraphException;
 
   /**
    * Adds a triple to the graph.  The nodes must have already been created

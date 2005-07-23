@@ -86,12 +86,12 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * The pool of all nodes, mapped from their ids.
      */
-    private Map nodePool;
+    private Map<Long, Node> nodePool;
 
     /**
      * A reverse mapping of all ids, mapped from their string.
      */
-    private Map stringPool;
+    private Map<String, Long> stringPool;
 
     /**
      * The graph that this factory constructs nodes for.
@@ -110,8 +110,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      */
     GraphElementFactoryImpl(Graph newGraph) throws TripleFactoryException {
         graph = newGraph;
-        nodePool = new HashMap();
-        stringPool = new HashMap();
+        nodePool = new HashMap<Long, Node>();
+        stringPool = new HashMap<String, Long>();
         nextNode = 1;
     }
 
@@ -128,7 +128,6 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
         //get an Unique Identifier
         String uid = "";
         try {
-
             uid = UuidGenerator.generateUuid();
         }
         catch (Exception exception) {
@@ -374,7 +373,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      *
      * @return The node pool.
      */
-    java.util.Collection getNodePool() {
+    java.util.Collection<Node> getNodePool() {
         return nodePool.values();
     }
 
@@ -386,7 +385,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @return The node referred to by the id, null if not found.
      */
     Node getNodeById(Long id) {
-        return (Node) nodePool.get(id);
+        return nodePool.get(id);
     }
 
 
@@ -397,7 +396,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @return The id of the node with the given string.
      */
     Long getNodeIdByString(String str) {
-        return (Long) stringPool.get(str);
+        return stringPool.get(str);
   }
 
 }

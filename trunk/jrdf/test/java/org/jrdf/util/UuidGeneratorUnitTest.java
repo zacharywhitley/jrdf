@@ -79,7 +79,7 @@ public class UuidGeneratorUnitTest extends TestCase {
 
     // FIXME: Refactor, UuidPopulator also does a similar thing.
     private void generateUuids(int numUuids) throws Exception {
-        Set uuids = new HashSet(numUuids);
+        Set<String> uuids = new HashSet<String>(numUuids);
         for (int i = 0; i < numUuids; i++) {
             String uuid = UuidGenerator.generateUuid();
             checkUuidIsUnique(uuids, uuid);
@@ -87,7 +87,7 @@ public class UuidGeneratorUnitTest extends TestCase {
         }
     }
 
-    static void checkUuidIsUnique(Set uuids, String uuid) {
+    static void checkUuidIsUnique(Set<String> uuids, String uuid) {
         if (uuids.contains(uuid)) fail("UUID " + uuid + " is not unique");
     }
 }

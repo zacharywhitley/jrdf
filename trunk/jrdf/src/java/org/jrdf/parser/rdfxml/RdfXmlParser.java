@@ -149,13 +149,13 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
   /**
    * A stack of node- and property elements.
    **/
-  private Stack _elementStack = new Stack();
+  private Stack<Element> _elementStack = new Stack<Element>();
 
   /**
    * A set containing URIs that have been generated as a result of rdf:ID
    * attributes. These URIs should be unique within a single document.
    **/
-  private Set _usedIDs = new HashSet();
+  private Set<String> _usedIDs = new HashSet<String>();
 
   /**
    * Flag indicating whether the parser should check the data it parses.
@@ -1177,10 +1177,10 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
    **/
   private void _checkNoMoreAtts(Atts atts) throws SAXException {
     if (0 < atts.size()) {
-      Iterator iter = atts.iterator();
+      Iterator<Att> iter = atts.iterator();
 
       while (iter.hasNext()) {
-        Att att = (Att) iter.next();
+        iter.next();
         iter.remove();
       }
     }
@@ -1249,7 +1249,12 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     throw new SAXException(msg);
   }
 
-  static class NodeElement {
+  // TODO Take a look NodeElement and PropertyElement.
+  interface Element {
+
+  }
+
+  static class NodeElement implements Element {
     private SubjectNode _resource;
     private boolean _isVolatile;
     private int _liCounter = 1;
@@ -1279,7 +1284,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     }
   }
 
-  static class PropertyElement {
+  static class PropertyElement implements Element {
     /** The property URI. **/
     private URIReference _uri;
 

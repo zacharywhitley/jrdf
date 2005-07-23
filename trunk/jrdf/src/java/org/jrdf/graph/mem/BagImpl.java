@@ -61,6 +61,7 @@ package org.jrdf.graph.mem;
 // Java 2 standard packages
 
 import org.jrdf.graph.Bag;
+import org.jrdf.graph.ObjectNode;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,18 +75,18 @@ import java.util.List;
  *
  * @version $Revision$
  */
-public class BagImpl <ObjectNode>
-    extends AbstractUnorderedContainer<ObjectNode> implements Bag<ObjectNode> {
+public final class BagImpl extends AbstractUnorderedContainer<ObjectNode>
+    implements Bag<ObjectNode> {
 
   public boolean containsAll(Collection<?> c) {
     return elements.values().containsAll(c);
   }
 
   public boolean addAll(Collection<? extends ObjectNode> c) {
-    Iterator iter = c.iterator();
+    Iterator<? extends ObjectNode> iter = c.iterator();
     boolean modified = iter.hasNext();
     while (iter.hasNext()) {
-      ObjectNode obj = (ObjectNode) iter.next();
+      ObjectNode obj = iter.next();
       elements.put(new Long(key++), obj);
     }
 

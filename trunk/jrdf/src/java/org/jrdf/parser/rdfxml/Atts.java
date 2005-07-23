@@ -41,7 +41,7 @@ class Atts {
   /**
    * List containing Att objects.
    **/
-  private List _attributes;
+  private List<Att> _attributes;
 
   /**
    * Creates a new <tt>Atts</tt> object.
@@ -56,7 +56,7 @@ class Atts {
    * @param size The initial size of the array for storing attributes.
    **/
   Atts(int size) {
-    _attributes = new ArrayList(size);
+    _attributes = new ArrayList<Att>(size);
   }
 
   /**
@@ -70,7 +70,7 @@ class Atts {
    * Get an iterator on the attributes.
    * @return an Iterator over Att objects.
    **/
-  public Iterator iterator() {
+  public Iterator<Att> iterator() {
     return _attributes.iterator();
   }
 
@@ -83,7 +83,7 @@ class Atts {
    **/
   public Att getAtt(String qName) {
     for (int i = 0; i < _attributes.size(); i++) {
-      Att att = (Att) _attributes.get(i);
+      Att att = _attributes.get(i);
 
       if (att.getQName().equals(qName)) {
         return att;
@@ -103,7 +103,7 @@ class Atts {
    **/
   public Att getAtt(String namespace, String localName) {
     for (int i = 0; i < _attributes.size(); i++) {
-      Att att = (Att) _attributes.get(i);
+      Att att = _attributes.get(i);
 
       if (att.getLocalName().equals(localName) &&
           att.getNamespace().equals(namespace)) {
@@ -123,7 +123,7 @@ class Atts {
    **/
   public Att removeAtt(String qName) {
     for (int i = 0; i < _attributes.size(); i++) {
-      Att att = (Att) _attributes.get(i);
+      Att att = _attributes.get(i);
 
       if (att.getQName().equals(qName)) {
         _attributes.remove(i);
@@ -145,7 +145,7 @@ class Atts {
    **/
   public Att removeAtt(String namespace, String localName) {
     for (int i = 0; i < _attributes.size(); i++) {
-      Att att = (Att) _attributes.get(i);
+      Att att = _attributes.get(i);
 
       if (att.getLocalName().equals(localName) &&
           att.getNamespace().equals(namespace)) {

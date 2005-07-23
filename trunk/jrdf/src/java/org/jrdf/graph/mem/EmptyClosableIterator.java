@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.Triple;
 
 import java.util.NoSuchElementException;
 
@@ -69,7 +70,7 @@ import java.util.NoSuchElementException;
  *
  * @version $Revision$
  */
-public class EmptyClosableIterator implements ClosableIterator {
+public class EmptyClosableIterator implements ClosableIterator<Triple> {
 
   EmptyClosableIterator() {
   }
@@ -89,7 +90,7 @@ public class EmptyClosableIterator implements ClosableIterator {
    * @return will not return.
    * @throws NoSuchElementException iteration has no more elements.
    */
-  public Object next() throws NoSuchElementException {
+  public Triple next() throws NoSuchElementException {
     throw new NoSuchElementException();
   }
 

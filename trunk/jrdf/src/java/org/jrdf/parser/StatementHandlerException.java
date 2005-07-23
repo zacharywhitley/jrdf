@@ -51,6 +51,8 @@ import java.io.PrintWriter;
  **/
 public class StatementHandlerException extends Exception {
 
+  private static final long serialVersionUID = -6755497249260716209L;
+
   /**
    * The source of the exception, i.e. the application specific
    * error.

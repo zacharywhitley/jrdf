@@ -61,6 +61,7 @@ package org.jrdf.graph.mem;
 // Java 2 standard packages
 
 import org.jrdf.graph.Alternative;
+import org.jrdf.graph.ObjectNode;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,7 +75,7 @@ import java.util.List;
  *
  * @version $Revision$
  */
-public class AlternativeImpl<ObjectNode>
+public final class AlternativeImpl
     extends AbstractUnorderedContainer<ObjectNode>
     implements Alternative<ObjectNode> {
 
