@@ -157,7 +157,7 @@ public interface Graph extends Serializable {
    * @param triples The triple iterator.
    * @throws GraphException If the statements can't be made.
    */
-  void add(Iterator triples) throws GraphException;
+  void add(Iterator<Triple> triples) throws GraphException;
 
   /**
    * Closes any resources associated with this graph.
@@ -194,7 +194,7 @@ public interface Graph extends Serializable {
    * @param triples The triple iterator.
    * @throws GraphException If the statements can't be revoked.
    */
-  void remove(Iterator triples) throws GraphException;
+  void remove(Iterator<Triple> triples) throws GraphException;
 
   /**
    * Returns the node factory for the graph, or creates one.
