@@ -163,8 +163,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     }
   }
 
-  public Collection createCollection(ObjectNode[] objects) {
-    Collection collection = new CollectionImpl();
+  public Collection<ObjectNode> createCollection(ObjectNode[] objects) {
+    Collection<ObjectNode> collection = new CollectionImpl();
 
     for (int index = 0; index < objects.length; index++) {
       collection.add(objects[index]);
@@ -173,8 +173,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     return collection;
   }
 
-  public Alternative createAlternative(ObjectNode[] objects) {
-    Alternative alternative = new AlternativeImpl();
+  public Alternative<ObjectNode> createAlternative(ObjectNode[] objects) {
+    Alternative<ObjectNode> alternative = new AlternativeImpl();
 
     for (int index = 0; index < objects.length; index++) {
       alternative.add(objects[index]);
@@ -183,8 +183,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     return alternative;
   }
 
-  public Bag createBag(ObjectNode[] objects) {
-    Bag bag = new BagImpl();
+  public Bag<ObjectNode> createBag(ObjectNode[] objects) {
+    Bag<ObjectNode> bag = new BagImpl();
 
     for (int index = 0; index < objects.length; index++) {
       bag.add(objects[index]);
@@ -193,8 +193,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     return bag;
   }
 
-  public Sequence createSequence(ObjectNode[] objects) {
-    Sequence sequence = new SequenceImpl();
+  public Sequence<ObjectNode> createSequence(ObjectNode[] objects) {
+    Sequence<ObjectNode> sequence = new SequenceImpl();
 
     for (int index = 0; index < objects.length; index++) {
       sequence.add(objects[index]);

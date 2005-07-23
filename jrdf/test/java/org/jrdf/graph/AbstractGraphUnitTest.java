@@ -600,8 +600,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     //query them and put contents of iterator in a set for checking
     //(iterator may return results in a different order)
-    Set statements = new HashSet();
-    ClosableIterator iter = graph.find(null, null, null);
+    Set<Triple> statements = new HashSet<Triple>();
+    ClosableIterator<Triple> iter = graph.find(null, null, null);
     assertTrue("ClosableIterator is returning false for hasNext().",
                iter.hasNext());
     while (iter.hasNext()) {

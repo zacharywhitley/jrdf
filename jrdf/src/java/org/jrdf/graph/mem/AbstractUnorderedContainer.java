@@ -100,6 +100,8 @@ public abstract class AbstractUnorderedContainer<ObjectNode>
     return elements.values().iterator();
   }
 
+  // TODO This appears to be the right way to do it.  Make sure everywhere else
+  // is the same.
   public ObjectNode[] toArray() {
     return (ObjectNode[]) elements.values().toArray();
   }

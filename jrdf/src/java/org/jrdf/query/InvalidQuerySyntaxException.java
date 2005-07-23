@@ -8,6 +8,8 @@ package org.jrdf.query;
  */
 public class InvalidQuerySyntaxException extends Exception {
 
+  private static final long serialVersionUID = -4108587331671842402L;
+
   public InvalidQuerySyntaxException(String message) {
     super(message);
   }

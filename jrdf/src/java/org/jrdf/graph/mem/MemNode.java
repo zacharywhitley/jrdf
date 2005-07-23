@@ -58,6 +58,8 @@
 
 package org.jrdf.graph.mem;
 
+import org.jrdf.graph.Node;
+
 import java.io.Serializable;
 
 /**
@@ -68,7 +70,7 @@ import java.io.Serializable;
  *
  * @version $Revision$
  */
-public interface MemNode extends Serializable {
+public interface MemNode extends Node, Serializable {
 
   /**
    * Retrieves an internal identifier for a node.

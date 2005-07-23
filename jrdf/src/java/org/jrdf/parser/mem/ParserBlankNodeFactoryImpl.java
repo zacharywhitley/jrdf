@@ -86,7 +86,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
    * Mapping from bNode ID's as used in the RDF document to the
    * object created for it by the GraphElementFactory.
    */
-  private Map bNodeIdMap = new HashMap();
+  private Map<String, BlankNode> bNodeIdMap = new HashMap<String, BlankNode>();
 
 
   /**
@@ -120,7 +120,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
   public BlankNode createBlankNode(String nodeID)
       throws GraphElementFactoryException {
     // Maybe the node ID has been used before:
-    BlankNode result = (BlankNode) bNodeIdMap.get(nodeID);
+    BlankNode result = bNodeIdMap.get(nodeID);
 
     if (null == result) {
       // This is a new node ID, create a new BNode object for it

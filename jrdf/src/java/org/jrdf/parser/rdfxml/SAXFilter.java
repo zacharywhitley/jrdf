@@ -77,7 +77,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   /**
    * Stack of ElementInfo objects.
    **/
-  private Stack _elInfoStack = new Stack();
+  private Stack<ElementInfo> _elInfoStack = new Stack<ElementInfo>();
 
   /**
    * StringBuffer used to collect text during parsing.
@@ -108,7 +108,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
    * by the SAX parser, but that are not yet assigned to an ElementInfo
    * object.
    **/
-  private Map _newNamespaceMappings = new HashMap();
+  private Map<String, String> _newNamespaceMappings =
+      new HashMap<String, String>();
 
   /**
    * Flag indicating whether we're currently parsing RDF elements.
@@ -134,13 +135,13 @@ class SAXFilter implements org.xml.sax.ContentHandler {
    * The prefixes that are defined in the XML literal itself (this in
    * contrast to the namespaces from the XML literal's context).
    **/
-  private List _xmlLiteralPrefixes = new ArrayList();
+  private List<String> _xmlLiteralPrefixes = new ArrayList<String>();
 
   /**
    * The prefixes that were used in an XML literal, but that were not
    * defined in it (but rather in the XML literal's context).
    **/
-  private List _unknownPrefixesInXmlLiteral = new ArrayList();
+  private List<String> _unknownPrefixesInXmlLiteral = new ArrayList<String>();
 
   SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
     _rdfParser = rdfParser;
@@ -157,8 +158,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     _locListener = el;
 
     if (null != _locator) {
-      _locListener.parseLocationUpdate(
-          _locator.getLineNumber(), _locator.getColumnNumber());
+      _locListener.parseLocationUpdate(_locator.getLineNumber(),
+          _locator.getColumnNumber());
     }
   }
 
@@ -208,8 +209,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
   public void setDocumentLocator(Locator locator) {
     _locator = locator;
     if (null != _locListener) {
-      _locListener.parseLocationUpdate(
-          locator.getLineNumber(), locator.getColumnNumber());
+      _locListener.parseLocationUpdate(locator.getLineNumber(),
+          locator.getColumnNumber());
     }
   }
 
@@ -221,7 +222,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     // ignore
   }
 
-  public void startPrefixMapping(String prefix, String uri) throws SAXException {
+  public void startPrefixMapping(String prefix, String uri)
+      throws SAXException {
     if (null != _deferredElement) {
       // This new prefix mapping must come from a new start tag
       _reportDeferredStartElement();
@@ -335,8 +337,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
     _rdfParser.setXmlLang(_deferredElement.xmlLang);
 
-    _rdfParser.startElement(
-        _deferredElement.namespaceURI, _deferredElement.localName,
+    _rdfParser.startElement(_deferredElement.namespaceURI, _deferredElement.localName,
         _deferredElement.qName, _deferredElement.atts);
 
     _deferredElement = null;
@@ -359,8 +360,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       }
 
       if (!qName.equals(elInfo.qName)) {
-        _rdfParser.sendFatalError(
-            "expected end tag </'" + elInfo.qName + ">, " +
+        _rdfParser.sendFatalError("expected end tag </'" + elInfo.qName +
+            ">, " +
             "found </" + qName + ">");
       }
     }
@@ -414,8 +415,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       }
       _rdfParser.setXmlLang(_deferredElement.xmlLang);
 
-      _rdfParser.emptyElement(
-          _deferredElement.namespaceURI, _deferredElement.localName,
+      _rdfParser.emptyElement(_deferredElement.namespaceURI, _deferredElement.localName,
           _deferredElement.qName, _deferredElement.atts);
 
       _deferredElement = null;
@@ -500,13 +500,11 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
         if (_rdfParser._verifyData) {
           if ("".equals(namespace)) {
-            _rdfParser.sendError(
-                "unqualified attribute '" +
+            _rdfParser.sendError("unqualified attribute '" +
                 qName + "' not allowed");
           }
           else if (-1 == qName.indexOf(":")) {
-            _rdfParser.sendWarning(
-                "unqualified attribute '" +
+            _rdfParser.sendWarning("unqualified attribute '" +
                 qName + "' not allowed");
           }
         }
@@ -574,10 +572,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     _charBuf.append("<" + qName);
 
     // Write any new namespace prefix definitions
-    Iterator prefixes = _newNamespaceMappings.keySet().iterator();
+    Iterator<String> prefixes = _newNamespaceMappings.keySet().iterator();
     while (prefixes.hasNext()) {
-      String prefix = (String) prefixes.next();
-      String namespace = (String) _newNamespaceMappings.get(prefix);
+      String prefix = prefixes.next();
+      String namespace = _newNamespaceMappings.get(prefix);
       _appendNamespaceDecl(_charBuf, prefix, namespace);
     }
 
@@ -624,7 +622,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       ElementInfo topElement = _peekStack();
 
       for (int i = 0; i < unknownPrefixesCount; i++) {
-        String prefix = (String) _unknownPrefixesInXmlLiteral.get(i);
+        String prefix = _unknownPrefixesInXmlLiteral.get(i);
         String namespace = topElement.getNamespace(prefix);
         if (null != namespace) {
           _appendNamespaceDecl(contextPrefixes, prefix, namespace);
@@ -663,7 +661,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     sb.append("=\"");
 
     char[] c = new char[value.length()];
-    value.getChars(0, c.length-1, c, 0);
+    value.getChars(0, c.length - 1, c, 0);
     _th.setResult(new StreamResult(_os));
     _th.characters(c, 0, c.length);
     sb.append(_os.toString());
@@ -676,7 +674,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     ElementInfo result = null;
 
     if (!_elInfoStack.empty()) {
-      result = (ElementInfo) _elInfoStack.peek();
+      result = _elInfoStack.peek();
     }
 
     return result;
@@ -689,7 +687,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     public Atts atts;
 
     public ElementInfo parent;
-    private Map _namespaceMap;
+    private Map<String, String> _namespaceMap;
 
     public String baseURI;
     public String xmlLang;
@@ -706,12 +704,12 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       localName = newLocalName;
     }
 
-    public void setNamespaceMappings(Map namespaceMappings) {
+    public void setNamespaceMappings(Map<String, String> namespaceMappings) {
       if (namespaceMappings.isEmpty()) {
         _namespaceMap = null;
       }
       else {
-        _namespaceMap = new HashMap(namespaceMappings);
+        _namespaceMap = new HashMap<String, String>(namespaceMappings);
       }
     }
 
@@ -719,7 +717,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
       String result = null;
 
       if (null != _namespaceMap) {
-        result = (String) _namespaceMap.get(prefix);
+        result = _namespaceMap.get(prefix);
       }
 
       if (null == result && null != parent) {

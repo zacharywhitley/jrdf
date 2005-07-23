@@ -38,6 +38,8 @@ import java.io.PrintWriter;
  **/
 public class ParseException extends Exception {
 
+  private static final long serialVersionUID = -1049335626292093759L;
+
   private int _lineNo;
 
   private int _columnNo;

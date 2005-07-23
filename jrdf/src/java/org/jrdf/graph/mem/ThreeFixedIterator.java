@@ -70,7 +70,7 @@ import java.util.NoSuchElementException;
  *
  * @version $Revision$
  */
-public class ThreeFixedIterator implements ClosableIterator {
+public class ThreeFixedIterator implements ClosableIterator<Triple> {
 
   /** The graph this iterator will operate on.  Only needed by the remove method. */
   private Graph graph;
@@ -110,7 +110,7 @@ public class ThreeFixedIterator implements ClosableIterator {
    * @return the next element in the iteration.
    * @throws NoSuchElementException iteration has no more elements.
    */
-  public Object next() throws NoSuchElementException {
+  public Triple next() throws NoSuchElementException {
     if (null == triple) {
       throw new NoSuchElementException();
     }

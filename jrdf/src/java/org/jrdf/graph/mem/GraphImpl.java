@@ -284,7 +284,7 @@ public class GraphImpl implements Graph, Serializable {
    * @param object ObjectNode The object to find or null to indicate any object.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public ClosableIterator find(SubjectNode subject, PredicateNode predicate,
+  public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate,
       ObjectNode object) throws GraphException {
 
     // Get local node values
@@ -368,7 +368,7 @@ public class GraphImpl implements Graph, Serializable {
    * @param triple The triple to find.
    * @throws GraphException If there was an error accessing the graph.
    */
-  public ClosableIterator find(Triple triple) throws GraphException {
+  public ClosableIterator<Triple> find(Triple triple) throws GraphException {
     return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
   }
 

@@ -60,12 +60,10 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 /**
  * An iterator that iterates over a group with a single fixed node.
@@ -80,7 +78,7 @@ import java.util.Set;
  *
  * @version $Revision$
  */
-public class OneFixedIterator implements ClosableIterator {
+public class OneFixedIterator implements ClosableIterator<Triple> {
 
   /** The iterator for the second index. */
   private Iterator secondIndexIterator;
@@ -166,7 +164,7 @@ public class OneFixedIterator implements ClosableIterator {
    * @return the next element in the iteration.
    * @throws NoSuchElementException iteration has no more elements.
    */
-  public Object next() throws NoSuchElementException {
+  public Triple next() throws NoSuchElementException {
     if (null == secondIndexIterator) {
       throw new NoSuchElementException();
     }

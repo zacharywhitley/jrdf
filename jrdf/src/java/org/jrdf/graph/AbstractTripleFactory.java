@@ -104,7 +104,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     // create the reification node
     try {
-      reallyReifyTriple(subjectNode, predicateNode, objectNode, reificationNode);
+      reallyReifyTriple(subjectNode, predicateNode, objectNode,
+          reificationNode);
     }
     catch (GraphElementFactoryException gefe) {
       throw new TripleFactoryException(gefe);
@@ -160,12 +161,15 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
       // An error if ru already reifies anything but the given s, p, o.
       if (graph.contains((SubjectNode) ru, rdfType, rdfStatement) &&
-          !(graph.contains((SubjectNode) ru, hasSubject, (ObjectNode) subjectNode) &&
-            graph.contains((SubjectNode) ru, hasPredicate, (ObjectNode) predicateNode) &&
-            graph.contains((SubjectNode) ru, hasObject, objectNode))) {
+          !(graph.contains((SubjectNode) ru, hasSubject,
+              (ObjectNode) subjectNode) &&
+          graph.contains((SubjectNode) ru, hasPredicate,
+              (ObjectNode) predicateNode) &&
+          graph.contains((SubjectNode) ru, hasObject, objectNode))) {
 
-        throw new AlreadyReifiedException("SkipListNode: " + ru + " already used in " +
-          "reification");
+        throw new AlreadyReifiedException("SkipListNode: " + ru +
+            " already used in " +
+            "reification");
       }
 
       // insert the reification statements
@@ -182,14 +186,12 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     return ru;
   }
 
-  public void addAlternative(SubjectNode subjectNode, Alternative alternative)
-      throws TripleFactoryException {
+  public void addAlternative(SubjectNode subjectNode,
+      Alternative<ObjectNode> alternative) throws TripleFactoryException {
     try {
-
       graph.add(subjectNode,
           (PredicateNode) elementFactory.createResource(RDF.TYPE),
           (ObjectNode) elementFactory.createResource(RDF.ALT));
-
       addContainer(subjectNode, alternative);
     }
     catch (GraphException e) {
@@ -200,7 +202,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
   }
 
-  public void addBag(SubjectNode subjectNode, Bag bag)
+  public void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag)
       throws TripleFactoryException {
     try {
 
@@ -218,8 +220,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
   }
 
-  public void addSequence(SubjectNode subjectNode, Sequence sequence)
-      throws TripleFactoryException {
+  public void addSequence(SubjectNode subjectNode,
+      Sequence<ObjectNode> sequence) throws TripleFactoryException {
     try {
 
       graph.add(subjectNode,
@@ -245,8 +247,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
    * @throws AlreadyReifiedException If there was already a triple URI for
    *     the given triple.
    */
-  private void addContainer(SubjectNode subjectNode, Container<ObjectNode> container)
-      throws TripleFactoryException {
+  private void addContainer(SubjectNode subjectNode,
+      Container<ObjectNode> container) throws TripleFactoryException {
 
     // assert that the statement is not already reified
     try {
@@ -259,7 +261,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         ObjectNode object = iter.next();
         graph.add(subjectNode,
             (PredicateNode) elementFactory.createResource(new URI(
-            RDF.baseURI + "_" + counter++)),
+                RDF.baseURI + "_" + counter++)),
             object);
       }
     }
@@ -274,11 +276,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
   }
 
-  public void addCollection(SubjectNode firstNode, Collection collection)
-      throws TripleFactoryException {
-
+  public void addCollection(SubjectNode firstNode,
+      Collection<ObjectNode> collection) throws TripleFactoryException {
     try {
-
       // Constants.
       PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(
           RDF.FIRST);
@@ -290,11 +290,11 @@ public abstract class AbstractTripleFactory implements TripleFactory {
       SubjectNode subject = firstNode;
 
       // Iterate through all elements in the Collection.
-      Iterator iter = collection.iterator();
+      Iterator<ObjectNode> iter = collection.iterator();
       while (iter.hasNext()) {
 
         // Get the next object and create the new FIRST statement.
-        ObjectNode object = (ObjectNode) iter.next();
+        ObjectNode object = iter.next();
         graph.add(subject, rdfFirst, object);
 
         // Check if there are any more elements in the Collection.

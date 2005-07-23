@@ -33,7 +33,7 @@ public class ClassPropertiesTestUtil {
         return isExtensionOf(targetInterface, cls);
     }
 
-    public static boolean isExtensionOf(Class superClass, Class subclass) {
+    public static boolean isExtensionOf(Class<?> superClass, Class<?> subclass) {
         return superClass.isAssignableFrom(subclass);
     }
 

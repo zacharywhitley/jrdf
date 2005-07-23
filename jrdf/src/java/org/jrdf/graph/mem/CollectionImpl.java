@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
+
 import org.jrdf.graph.Bag;
 import org.jrdf.graph.Collection;
 import org.jrdf.graph.ObjectNode;
@@ -72,7 +73,8 @@ import java.util.LinkedList;
  *
  * @version $Revision$
  */
-public class CollectionImpl extends LinkedList implements Collection {
+public final class CollectionImpl extends LinkedList<ObjectNode>
+    implements Collection<ObjectNode> {
 
   /**
    * Allow newer compiled version of the stub to operate when changes
@@ -85,70 +87,48 @@ public class CollectionImpl extends LinkedList implements Collection {
   public CollectionImpl() {
   }
 
-  public boolean add(ObjectNode o) {
-    return super.add(o);
-  }
-
-  public void add(int index, ObjectNode element) {
-    super.add(index, element);
-  }
-
-  public boolean addAll(java.util.Collection c)
+  // TODO Turned to use Object - also remove IllegalArgument check.
+  public boolean addAll(java.util.Collection<? extends ObjectNode> c)
       throws IllegalArgumentException {
-    if (!(c instanceof Collection)) {
-      throw new IllegalArgumentException("Can only add collections to other " +
-          "collections");
-    }
-
+//    if (!(c instanceof Collection)) {
+//      throw new IllegalArgumentException("Can only add collections to other " +
+//          "collections");
+//    }
     return super.addAll(c);
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Collection.
-   */
-  public boolean addAll(int index, java.util.Collection c)
+  // TODO Turned to use Object - also remove IllegalArgument check.
+  public boolean addAll(int index, java.util.Collection<? extends ObjectNode> c)
       throws IllegalArgumentException {
-    if (!(c instanceof Collection)) {
-      throw new IllegalArgumentException("Can only add sequences to other " +
-          "sequences");
-    }
+//    if (!(c instanceof Collection)) {
+//      throw new IllegalArgumentException("Can only add sequences to other " +
+//          "sequences");
+//    }
 
     return super.addAll(index, c);
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  public void addFirst(Object o) {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add object nodes");
-    }
-
+  // TODO Turned to use Object - also remove IllegalArgument check.
+  public void addFirst(ObjectNode o) {
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only add object nodes");
+//    }
     super.addFirst(o);
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  public void addLast(Object o) {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add object nodes");
-    }
-
+  // TODO Turned to use Object - also remove IllegalArgument check.
+  public void addLast(ObjectNode o) {
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only add object nodes");
+//    }
     super.addLast(o);
   }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
+  // TODO Turned to use Object - also remove IllegalArgument check.
   public boolean contains(Object o) {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add object nodes");
-    }
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only add object nodes");
+//    }
 
     return super.contains(o);
   }
@@ -157,10 +137,11 @@ public class CollectionImpl extends LinkedList implements Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
+  // TODO Turned to use Object - also remove IllegalArgument check.
   public int indexOf(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only get Object nodes");
+//    }
 
     return super.indexOf(o);
   }
@@ -169,11 +150,11 @@ public class CollectionImpl extends LinkedList implements Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, ObjectNode.
    */
+  // TODO Turned to use Object - also remove IllegalArgument check.
   public int lastIndexOf(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
-
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only get Object nodes");
+//    }
     return super.lastIndexOf(o);
   }
 
@@ -182,10 +163,9 @@ public class CollectionImpl extends LinkedList implements Collection {
    *   type.
    */
   public boolean remove(Object o) throws IllegalArgumentException {
-    if (!(o instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only add Object nodes");
-    }
-
+//    if (!(o instanceof ObjectNode)) {
+//      throw new IllegalArgumentException("Can only add Object nodes");
+//    }
     return super.remove(o);
   }
 
@@ -193,12 +173,11 @@ public class CollectionImpl extends LinkedList implements Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */
-  public boolean containsAll(java.util.Collection c) {
-    if (!(c instanceof Collection)) {
-      throw new IllegalArgumentException("Can only add sequences to other " +
-          "sequences");
-    }
-
+  public boolean containsAll(java.util.Collection<?> c) {
+//    if (!(c instanceof Collection)) {
+//      throw new IllegalArgumentException("Can only add sequences to other " +
+//          "sequences");
+//    }
     return super.containsAll(c);
   }
 
@@ -206,12 +185,12 @@ public class CollectionImpl extends LinkedList implements Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */
-  public boolean removeAll(java.util.Collection c)
+  public boolean removeAll(java.util.Collection<?> c)
       throws IllegalArgumentException {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
+//    if (!(c instanceof Bag)) {
+//      throw new IllegalArgumentException("Can only add bags to other bags");
+//    }
+//
     return super.removeAll(c);
   }
 
@@ -220,25 +199,13 @@ public class CollectionImpl extends LinkedList implements Collection {
    * @throws IllegalArgumentException if the given object is not the correct
    *   type, Collection.
    */
-  public boolean retainAll(java.util.Collection c)
+  public boolean retainAll(java.util.Collection<?> c)
       throws IllegalArgumentException {
-    if (!(c instanceof Bag)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
-    }
-
+//    if (!(c instanceof Bag)) {
+//      throw new IllegalArgumentException("Can only add bags to other bags");
+//    }
+//
     return super.retainAll(c);
-  }
-
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  public Object set(int index, Object element) throws IllegalArgumentException {
-    if (!(element instanceof ObjectNode)) {
-      throw new IllegalArgumentException("Can only get Object nodes");
-    }
-
-    return super.set(index, element);
   }
 }
 
