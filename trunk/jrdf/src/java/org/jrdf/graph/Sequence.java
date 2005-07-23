@@ -113,8 +113,18 @@ public interface Sequence <ObjectNode> extends Container<ObjectNode>,
    */
   int lastIndexOf(Object o) throws IllegalArgumentException;
 
+  /**
+   * {@inheritDoc}
+   *
+   * @return {@inheritDoc}
+   */
   ListIterator<ObjectNode> listIterator();
 
+  /**
+   * {@inheritDoc}
+   *
+   * @return {@inheritDoc}
+   */
   ListIterator<ObjectNode> listIterator(int index);
 
   /**

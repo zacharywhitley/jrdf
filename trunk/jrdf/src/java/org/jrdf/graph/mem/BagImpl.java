@@ -101,7 +101,7 @@ public class BagImpl <ObjectNode>
     return modified;
   }
 
-  // TODO Remove type checking.
+  // TODO Removed type checking.
   public boolean retainAll(Collection<?> c) {
     boolean modified = false;
     Iterator<?> iter = iterator();

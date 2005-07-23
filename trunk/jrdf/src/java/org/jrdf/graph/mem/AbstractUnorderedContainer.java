@@ -58,7 +58,6 @@
 
 package org.jrdf.graph.mem;
 
-// Java 2 standard packages
 import org.jrdf.graph.Container;
 
 import java.util.HashMap;
