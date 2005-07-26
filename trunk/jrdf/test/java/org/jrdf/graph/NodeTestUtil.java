@@ -56,22 +56,46 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.graph;
 
-import org.jrdf.connection.JrdfConnectionException;
+import java.net.URI;
+import org.jrdf.graph.mem.GraphImpl;
 
 /**
- * Executes queries against a graph.
+ * Utility for creating nodes, etc.
  * @author Tom Adams
  * @version $Revision$
  */
-interface JrdfQueryExecutor {
+public final class NodeTestUtil {
 
-  /**
-   * Executes a query against a graph.
-   * @param query The query to execute.
-   * @return The answer to the query, will never be <code>null</code>.
-   * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
-   */
-  Answer executeQuery(Query query) throws JrdfConnectionException;
+    public static URIReference createResource(String uri) {
+        try {
+            return getElementFactory().createResource(new URI(uri));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
+    public static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        try {
+            return getElementFactory().createTriple(subject, predicate, object);
+        } catch (GraphElementFactoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
+    private static GraphElementFactory getElementFactory() {
+        return createGraph().getElementFactory();
+    }
+
+    // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
+    private static GraphImpl createGraph() {
+        try {
+            return new GraphImpl();
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

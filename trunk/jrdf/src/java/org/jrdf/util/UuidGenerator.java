@@ -70,14 +70,13 @@ import java.security.SecureRandom;
 
 /**
  * Utility class that generates an Unique identifier.
- *
  * @author Robert Turner
  * @author Tom Adams
  */
 public final class UuidGenerator {
     // FIXME: Split this into a generator and UUID class.
     // FIXME: Can we make this the default UUID generator, and create another one based on the RFC What about the Java UUID Generator?
-    // FIXME: What format should these take? The standard one? Short form and canonical form (do when a sep. UUID class).
+    // FIXME: What format of UUID's should these give back? The standard one? Short form and canonical form (do when a sep. UUID class).
     private static final String DIGEST_ALGORITHM = "MD5";
     private static final int SINGLE_DIGIT = 0x10;
     private static final int INT_OFFSET = 0xFF;
@@ -90,9 +89,7 @@ public final class UuidGenerator {
     }
 
     /**
-     * Generates an Unique Identifier using the current time and the machines
-     * IP address.
-     *
+     * Generates an Unique Identifier using the current time and the machines' IP address.
      * @return A UUID.
      */
     public static synchronized String generateUuid() {
@@ -105,7 +102,7 @@ public final class UuidGenerator {
     private static synchronized String getUniqueId(char[] seed) {
         byte[] seedDigest = computeDigest(seed);
         String uid = toHexString(seedDigest);
-        // FIXME: Why do we need this?
+        // FIXME: Why do we need this? Will it ever happen?
         if (null == uid) {
             throw new RuntimeException("Failed to generate valid UUID: UUID was null");
         }

@@ -58,20 +58,11 @@
 
 package org.jrdf.query;
 
-import org.jrdf.connection.JrdfConnectionException;
-
 /**
- * Executes queries against a graph.
+ * A pattern of triples applied to a graph to constrain the results of a query.
+ * <p>Maps to a <code>GraphPattern</code> in the SPARQL grammar.</p>
  * @author Tom Adams
  * @version $Revision$
  */
-interface JrdfQueryExecutor {
-
-  /**
-   * Executes a query against a graph.
-   * @param query The query to execute.
-   * @return The answer to the query, will never be <code>null</code>.
-   * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
-   */
-  Answer executeQuery(Query query) throws JrdfConnectionException;
+public interface ConstraintExpression {
 }

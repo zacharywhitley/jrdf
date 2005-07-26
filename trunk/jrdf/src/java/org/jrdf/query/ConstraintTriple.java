@@ -58,20 +58,58 @@
 
 package org.jrdf.query;
 
-import org.jrdf.connection.JrdfConnectionException;
+import org.jrdf.graph.Triple;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
- * Executes queries against a graph.
+ * A constraint expression comprising a single constraint, i.e. a single triple.
  * @author Tom Adams
  * @version $Revision$
+ * @see org.jrdf.graph.Triple
  */
-interface JrdfQueryExecutor {
+public final class ConstraintTriple implements ConstraintExpression {
 
-  /**
-   * Executes a query against a graph.
-   * @param query The query to execute.
-   * @return The answer to the query, will never be <code>null</code>.
-   * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
-   */
-  Answer executeQuery(Query query) throws JrdfConnectionException;
+    private Triple triple;
+
+    public ConstraintTriple(Triple triple) {
+        ParameterUtil.checkNotNull("triple", triple);
+        this.triple = triple;
+    }
+
+    public Triple getTriple() {
+        return triple;
+    }
+
+    public boolean equals(Object obj) {
+        if (isNull(obj)) return false;
+        if (sameReference(this, obj)) return true;
+        if (differentClasses(this, obj)) return false;
+        return determineEqualityFromFields(this, obj);
+    }
+
+    // FIXME TJA: Test drive out use of triple.hasCode()
+    public int hashCode() {
+        return 47;
+    }
+
+    private boolean determineEqualityFromFields(Object o1, Object o2) {
+        Triple triple1 = ((ConstraintTriple) o1).getTriple();
+        Triple triple2 = ((ConstraintTriple) o2).getTriple();
+        return triple1.equals(triple2);
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean isNull(Object obj) {
+        return obj == null;
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean sameReference(Object o1, Object o2) {
+        return o1 == o2;
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean differentClasses(Object o1, Object o2) {
+        return o1.getClass() != o2.getClass();
+    }
 }
