@@ -62,105 +62,110 @@ import java.io.Serializable;
 
 /**
  * A base implementation of an RDF {@link Triple}.
- *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public abstract class AbstractTriple implements Triple, Serializable {
+public class AbstractTriple implements Triple, Serializable {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 8737092494833012690L;
+    private static final int DEFAULT_HASH_VALUE = 0;
+    static final long serialVersionUID = 8737092494833012690L;
+    // FIXME TJA: Why are these protected?
+    protected SubjectNode subjectNode;
+    protected PredicateNode predicateNode;
+    protected ObjectNode objectNode;
 
-  /**
-   * Subject of this statement.
-   */
-  protected SubjectNode subjectNode;
-
-  /**
-   * Predicate of this statement.
-   */
-  protected PredicateNode predicateNode;
-
-  /**
-   * Object of this statement.
-   */
-  protected ObjectNode objectNode;
-
-  /**
-   * Obtains the subject of this statement.
-   *
-   * @return an {@link SubjectNode} which is either a {@link BlankNode} or
-   *     {@link URIReference}
-   */
-  public SubjectNode getSubject() {
-    return subjectNode;
-  }
-
-  /**
-   * Obtains the predicate of this statement.
-   *
-   * @return a {@link PredicateNode} which is a {@link URIReference}
-   */
-  public PredicateNode getPredicate() {
-    return predicateNode;
-  }
-
-  /**
-   * Obtains the object of this statement.
-   *
-   * @return a {@link ObjectNode} which is either a {@link BlankNode},
-   *     {@link URIReference} or {@link Literal}
-   */
-  public ObjectNode getObject() {
-    return objectNode;
-  }
-
-  public boolean equals(Object obj) {
-
-    // Check equal by reference
-    if (this == obj) {
-      return true;
+    /**
+     * Obtains the subject of this statement.
+     * @return an {@link SubjectNode} which is either a {@link BlankNode} or
+     *         {@link URIReference}
+     */
+    public SubjectNode getSubject() {
+        return subjectNode;
     }
 
-    boolean returnValue = false;
-
-    // Check for null and ensure exactly the same class - not subclass.
-    if (null != obj) {
-
-      try {
-
-        Triple tmpTriple = (Triple) obj;
-        returnValue = getSubject().equals(tmpTriple.getSubject()) &&
-            getPredicate().equals(tmpTriple.getPredicate()) &&
-            getObject().equals(tmpTriple.getObject());
-      }
-      catch (ClassCastException cce) {
-        // Leave return value to be false.
-      }
+    /**
+     * Obtains the predicate of this statement.
+     * @return a {@link PredicateNode} which is a {@link URIReference}
+     */
+    public PredicateNode getPredicate() {
+        return predicateNode;
     }
-    return returnValue;
-  }
 
-  public int hashCode() {
-    return getSubject().hashCode() ^ getPredicate().hashCode() ^
-        getObject().hashCode();
-  }
+    /**
+     * Obtains the object of this statement.
+     * @return a {@link ObjectNode} which is either a {@link BlankNode},
+     *         {@link URIReference} or {@link Literal}
+     */
+    public ObjectNode getObject() {
+        return objectNode;
+    }
 
-  /**
-   * Provide a legible representation of a triple. Currently, square brackets
-   * with toString values of the parts of the triple.
-   *
-   * @return the string value of the subject, predicate and object in square
-   *   brackets.
-   */
-  public String toString() {
-    return "[" + getSubject() + ", " + getPredicate() + ", " + getObject() +
-        "]";
-  }
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object ref) {
+        if (isNull(ref)) return false;
+        if (sameReference(this, ref)) return true;
+        if (differentClasses(this, ref)) return false;
+        return determineEqualityFromFields((Triple) ref);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return getNodeHashCode(subjectNode) ^ getNodeHashCode(predicateNode) ^ getNodeHashCode(objectNode);
+    }
+
+    /**
+     * Provide a legible representation of a triple.
+     * <p>Currently, square brackets with toString values of the parts of the triple.</p>
+     * @return the string value of the subject, predicate and object in square
+     *         brackets.
+     */
+    public String toString() {
+        return "[" + subjectNode + ", " + predicateNode + ", " + objectNode + "]";
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean isNull(Object obj) {
+        return obj == null;
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean sameReference(Object o1, Object o2) {
+        return o1 == o2;
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean differentClasses(Object o1, Object o2) {
+        return o1.getClass() != o2.getClass();
+    }
+
+    private boolean determineEqualityFromFields(Triple ref) {
+        return nodesEqual(subjectNode, ref.getSubject()) && nodesEqual(predicateNode, ref.getPredicate())
+                && nodesEqual(objectNode, ref.getObject());
+    }
+
+    private boolean nodesEqual(Node node1, Node node2) {
+        if (bothNull(node1, node2)) return true;
+        if (eitherNull(node1, node2)) return false;
+        return node1.equals(node2);
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean eitherNull(Node node1, Node node2) {
+        if (node1 == null || node2 == null) return true;
+        return false;
+    }
+
+    // FIXME TJA: Move to utility class
+    private boolean bothNull(Node node1, Node node2) {
+        return (node1 == null && node2 == null);
+    }
+
+    private int getNodeHashCode(Node node) {
+        if (node == null) return DEFAULT_HASH_VALUE;
+        return node.hashCode();
+    }
 }

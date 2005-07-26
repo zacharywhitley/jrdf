@@ -56,22 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf;
 
-import org.jrdf.connection.JrdfConnectionException;
+import junit.framework.TestCase;
 
 /**
- * Executes queries against a graph.
+ * Checks that all classes that claim to be {@link java.io.Serializable} can actually be serialized and contain a
+ * <code>static final long serialVersionUID</code> field.
  * @author Tom Adams
  * @version $Revision$
  */
-interface JrdfQueryExecutor {
-
-  /**
-   * Executes a query against a graph.
-   * @param query The query to execute.
-   * @return The answer to the query, will never be <code>null</code>.
-   * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
-   */
-  Answer executeQuery(Query query) throws JrdfConnectionException;
+public final class SerializationIntegrationTest extends TestCase {
+    // FIXME TJA: Implement this.
+    public void testDoesNothingJustYetPleaseComeBackLater() {
+        assertTrue(true);
+    }
 }

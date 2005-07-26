@@ -56,22 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.sparql;
 
-import org.jrdf.connection.JrdfConnectionException;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.connection.JrdfConnection;
 
 /**
- * Executes queries against a graph.
+ * Unit test for {@link org.jrdf.sparql.SparqlConnection}.
  * @author Tom Adams
  * @version $Revision$
  */
-interface JrdfQueryExecutor {
-
-  /**
-   * Executes a query against a graph.
-   * @param query The query to execute.
-   * @return The answer to the query, will never be <code>null</code>.
-   * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
-   */
-  Answer executeQuery(Query query) throws JrdfConnectionException;
+public final class SparqlConnectionUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkExtensionOf(JrdfConnection.class, SparqlConnection.class);
+    }
 }
