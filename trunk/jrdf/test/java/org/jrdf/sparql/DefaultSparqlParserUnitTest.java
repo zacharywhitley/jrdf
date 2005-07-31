@@ -59,13 +59,14 @@
 package org.jrdf.sparql;
 
 import java.util.List;
+import java.lang.reflect.Field;
 import junit.framework.TestCase;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.Query;
 import org.jrdf.query.Variable;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.query.XxxQuery;
 import org.jrdf.util.param.ParameterTestUtil;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
  * Unit test for {@link DefaultSparqlParser}.
@@ -74,13 +75,18 @@ import org.jrdf.util.param.ParameterTestUtil;
  */
 public final class DefaultSparqlParserUnitTest extends TestCase {
 
-    private static final QueryParser PARSER = new DefaultSparqlParser();
     // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
     // FIXME TJA: Triangulate on variables.
     // FIXME TJA: Triangulate on constraint expression.
+    // FIXME TJA: Write failing test for non-wildcard projection lists.
+    // FIXME TJA: Write tests to force trimming of query string.
+
+    private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
+    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
+    private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkExtensionOf(DepthFirstAdapter.class, DefaultSparqlParser.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlParser.class, DefaultSparqlParser.class);
     }
 
@@ -90,17 +96,42 @@ public final class DefaultSparqlParserUnitTest extends TestCase {
         checkBadInput(ParameterTestUtil.SINGLE_SPACE);
     }
 
+    // FIXME TJA: Breadcrumb - Triangulate to force parsing of the variable list (requires non-wildcard variable projection).
     public void testProjectedVariables() {
-        checkVariables(SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE, Variable.ALL_VARIABLES);
-        // FIXME TJA: Breadcrumb - Triangulate to force parsing of the variable list.
+        checkVariablesOnParsedQuery(QUERY_BOOK_1_DC_TITLE, Variable.ALL_VARIABLES);
     }
 
+    // FIXME TJA: Triangulate to force parsing of the constraint expression.
     public void testSingleTriplePatternExpression() {
-        // FIXME TJA: Breadcrumb - Back here once ConstraintTriple.equals() is implemented.
-        Query query = PARSER.parseQuery(SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE);
+        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
+        //checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
+    }
+
+    private void checkSingleConstraintExpression(String queryString, ConstraintExpression constraint) {
+        // FIXME TJA: Add mock depth first adapter in here.
+        Query query = createParser().parseQuery(queryString);
         ConstraintExpression actualExpression = query.getConstraintExpression();
-        ConstraintExpression expectedExpression = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
+        ConstraintExpression expectedExpression = constraint;
         assertEquals(expectedExpression, actualExpression);
+    }
+
+    private SparqlParser createParser() {
+        MockSparqlAdapter mockAdapter = new MockSparqlAdapter();
+        // FIXME TJA: Should this be an XxxQuery???
+        mockAdapter.prepare(new XxxQuery());
+        DefaultSparqlParser parser = new DefaultSparqlParser();
+        insertMockAnalyser(parser);
+        return parser;
+    }
+
+    private void insertMockAnalyser(DefaultSparqlParser parser) {
+        try {
+            Field analyser = DefaultSparqlParser.class.getDeclaredField("analyser");
+            // FIXME TJA: Breadcrumb - Inserting a mock here
+            assertNotNull(analyser);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void checkBadInput(String queryText) {
@@ -110,8 +141,9 @@ public final class DefaultSparqlParserUnitTest extends TestCase {
         } catch (IllegalArgumentException expected) {}
     }
 
-    private void checkVariables(String queryText, List<? extends Variable> expectedVariables) {
-        Query query = PARSER.parseQuery(queryText);
+    private void checkVariablesOnParsedQuery(String queryText, List<? extends Variable> expectedVariables) {
+        // FIXME TJA: Use the mock parser here.
+        Query query = new DefaultSparqlParser().parseQuery(queryText);
         List<? extends Variable> actualVariables = query.getProjectedVariables();
         assertEquals(expectedVariables, actualVariables);
     }

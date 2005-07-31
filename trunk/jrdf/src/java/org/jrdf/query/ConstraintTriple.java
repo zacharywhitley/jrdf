@@ -87,9 +87,16 @@ public final class ConstraintTriple implements ConstraintExpression {
         return determineEqualityFromFields(this, obj);
     }
 
-    // FIXME TJA: Test drive out use of triple.hasCode()
     public int hashCode() {
+        // FIXME TJA: Test drive out values of triple.hashCode()
         return 47;
+    }
+
+    /**
+     * Delegates to <code>getTriple().toString()</code>.
+     */
+    public String toString() {
+        return triple.toString();
     }
 
     private boolean determineEqualityFromFields(Object o1, Object o2) {

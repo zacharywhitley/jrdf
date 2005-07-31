@@ -102,9 +102,30 @@ public final class AbstractTripleUnitTest extends TestCase {
         checkSymmetric();
         checkTransitive();
         checkConsistentEquals();
+        checkUnequal();
     }
 
-//        checkUnequal();
+    private void checkConsistentHashCode() {
+        checkConsistentHashCode(TRIPLE_ALL_NULL_1);
+        checkConsistentHashCode(TRIPLE_ALL_NULL_2);
+        checkConsistentHashCode(TRIPLE_1);
+        checkConsistentHashCode(TRIPLE_2);
+    }
+
+    private void checkConsistentHashCode(Triple triple) {
+        int hashCode1 = triple.hashCode();
+        int hashCode2 = triple.hashCode();
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    private void checkReflexive() {
+        checkSameValueSameReference();
+        checkSameValueDifferentReference();
+    }
+
+    private void checkDifferentClass() {
+        checkNotEquals(TRIPLE_1, URI_URN_FOO);
+    }
 
     private void checkSymmetric() {
         Triple x = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
@@ -129,13 +150,9 @@ public final class AbstractTripleUnitTest extends TestCase {
         checkEquals(x, y);
     }
 
-    private void checkDifferentClass() {
-        checkNotEquals(TRIPLE_1, URI_URN_FOO);
-    }
-
-    private void checkReflexive() {
-        checkSameValueSameReference();
-        checkSameValueDifferentReference();
+    private void checkUnequal() {
+        checkNotEquals(TRIPLE_ALL_NULL_1, TRIPLE_URI_URN_FOO);
+        checkNotEquals(TRIPLE_NULL_SUBJECT, TRIPLE_URI_URN_FOO);
     }
 
     private void checkSameValueSameReference() {
@@ -175,19 +192,6 @@ public final class AbstractTripleUnitTest extends TestCase {
 
     private void checkNullComparisonObject() {
         checkNotEquals(TRIPLE_1, null);
-    }
-
-    private void checkConsistentHashCode() {
-        checkConsistentHashCode(TRIPLE_ALL_NULL_1);
-        checkConsistentHashCode(TRIPLE_ALL_NULL_2);
-        checkConsistentHashCode(TRIPLE_1);
-        checkConsistentHashCode(TRIPLE_2);
-    }
-
-    private void checkConsistentHashCode(Triple triple) {
-        int hashCode1 = triple.hashCode();
-        int hashCode2 = triple.hashCode();
-        assertEquals(hashCode1, hashCode2);
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
