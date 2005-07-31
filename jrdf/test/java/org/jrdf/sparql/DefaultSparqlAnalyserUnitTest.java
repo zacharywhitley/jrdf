@@ -58,34 +58,48 @@
 
 package org.jrdf.sparql;
 
-import org.jrdf.query.Query;
-import org.jrdf.query.XxxQuery;
-import org.jrdf.util.param.ParameterUtil;
+import junit.framework.TestCase;
+import org.jrdf.sparql.parser.analysis.Analysis;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * Default implementation of a {@link SparqlParser}.
+ * Unit test for {@link DefaultSparqlAnalyser}.
  * @author Tom Adams
  * @version $Revision$
  */
-final class DefaultSparqlParser implements SparqlParser {
+public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 
-    SparqlAnalyser analyser;// = new DefaultSparqlAdapter();
-
-    /**
-     * Parses a textual query into a {@link org.jrdf.query.Query} object.
-     * @param queryText The textual query to parse.
-     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
-     */
-    public Query parseQuery(String queryText) {
-        // FIXME TJA: Breadcrumb - Triangulate to force a parsing of the query.
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
-        //return applyAdapter(queryText);
-        return new XxxQuery();
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, DefaultSparqlAnalyser.class);
+        ClassPropertiesTestUtil.checkExtensionOf(DepthFirstAdapter.class, DefaultSparqlAnalyser.class);
     }
 
-//    private void applyAdapter(String queryText) {
-//        Parser parser = new Parser(new Lexer(new PushbackReader(new StringReader(queryText), 256)));
-//        parser.parse().apply(analysis);
-//        return analysis.getQuery();
-//    }
+    public void testNoQueryConstant() {
+        checkImmutable();
+        checkDoesNothing();
+    }
+
+    public void testFirstGetQueryIsNoQueryConstant() {
+        SparqlAnalyser analyser = new DefaultSparqlAnalyser();
+        assertEquals(SparqlAnalyser.NO_QUERY, analyser.getQuery());
+    }
+
+    private void checkDoesNothing() {
+        try {
+            SparqlAnalyser.NO_QUERY.getProjectedVariables();
+            fail("SparqlAnalysis.NO_QUERY.getProjectedVariables() should have thrown UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {}
+        try {
+            SparqlAnalyser.NO_QUERY.getConstraintExpression();
+            fail("SparqlAnalysis.NO_QUERY.getConstraintExpression() should have thrown UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {}
+    }
+
+    private void checkImmutable() {
+        assertNotNull(SparqlAnalyser.NO_QUERY);
+        assertEquals(SparqlAnalyser.NO_QUERY, SparqlAnalyser.NO_QUERY);
+        assertTrue(SparqlAnalyser.NO_QUERY == SparqlAnalyser.NO_QUERY);
+    }
 }

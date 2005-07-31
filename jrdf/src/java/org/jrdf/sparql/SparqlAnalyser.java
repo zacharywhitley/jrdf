@@ -58,34 +58,38 @@
 
 package org.jrdf.sparql;
 
+import java.util.List;
+import org.jrdf.sparql.parser.analysis.Analysis;
 import org.jrdf.query.Query;
-import org.jrdf.query.XxxQuery;
-import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.query.Variable;
+import org.jrdf.query.ConstraintExpression;
 
 /**
- * Default implementation of a {@link SparqlParser}.
+ * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
  * @author Tom Adams
  * @version $Revision$
  */
-final class DefaultSparqlParser implements SparqlParser {
-
-    SparqlAnalyser analyser;// = new DefaultSparqlAdapter();
+interface SparqlAnalyser extends Analysis {
 
     /**
-     * Parses a textual query into a {@link org.jrdf.query.Query} object.
-     * @param queryText The textual query to parse.
-     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
+     * Indicates that this analyser has not processed a query yet.
      */
-    public Query parseQuery(String queryText) {
-        // FIXME TJA: Breadcrumb - Triangulate to force a parsing of the query.
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
-        //return applyAdapter(queryText);
-        return new XxxQuery();
-    }
+    static Query NO_QUERY = new NoQuery();
 
-//    private void applyAdapter(String queryText) {
-//        Parser parser = new Parser(new Lexer(new PushbackReader(new StringReader(queryText), 256)));
-//        parser.parse().apply(analysis);
-//        return analysis.getQuery();
-//    }
+    /**
+     * Returns the query processed by this analyser.
+     * @return The query processed by this analyser, or {@link SparqlAnalyser.NO_QUERY} if no query has been processed.
+     */
+    Query getQuery();
+
+    static class NoQuery implements Query {
+
+        public List<? extends Variable> getProjectedVariables() {
+            throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
+        }
+
+        public ConstraintExpression getConstraintExpression() {
+            throw new UnsupportedOperationException("Retrieving the constraint expression is not supported");
+        }
+    }
 }

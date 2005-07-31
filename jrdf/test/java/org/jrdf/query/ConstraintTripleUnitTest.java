@@ -69,6 +69,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  * @version $Revision$
  */
 public final class ConstraintTripleUnitTest extends TestCase {
+
     private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE;
     private static final Triple TRIPLE_2 = SparqlQueryTestUtil.TRIPLE_BOOK_2_DC_TITLE;
     private static final ConstraintTriple CONSTRAINT_TRIPLE_1 = new ConstraintTriple(TRIPLE_1);
@@ -104,6 +105,11 @@ public final class ConstraintTripleUnitTest extends TestCase {
     public void testHashCode() {
         checkConsistentHashCode();
         checkEqualObjectsReturnSameHashCode();
+    }
+
+    public void testToString() {
+        checkToStringDelegatesToTriple(TRIPLE_1, CONSTRAINT_TRIPLE_1);
+        checkToStringDelegatesToTriple(TRIPLE_2, CONSTRAINT_TRIPLE_2);
     }
 
     private void checkNull() {
@@ -177,5 +183,9 @@ public final class ConstraintTripleUnitTest extends TestCase {
 
     private void checkNotEquals(Object x, Object y) {
         assertFalse(x.equals(y));
+    }
+
+    private void checkToStringDelegatesToTriple(Triple triple, ConstraintTriple contraintTriple) {
+        assertEquals(triple.toString(), contraintTriple.toString());
     }
 }

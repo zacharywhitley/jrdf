@@ -68,7 +68,10 @@ import org.jrdf.util.param.ParameterUtil;
  * @version $Revision$
  */
 public final class DefaultQuery implements Query, Serializable {
+
     // FIXME: Check for immutability of parameters.
+    // FIXME TJA: Implement equals() and hashCode()
+
     static final long serialVersionUID = 409607492370028929L;
     private List<? extends Variable> variables;
     private ConstraintExpression expression;

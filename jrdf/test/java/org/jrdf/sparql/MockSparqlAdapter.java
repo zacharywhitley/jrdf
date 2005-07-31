@@ -59,33 +59,21 @@
 package org.jrdf.sparql;
 
 import org.jrdf.query.Query;
-import org.jrdf.query.XxxQuery;
-import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 
 /**
- * Default implementation of a {@link SparqlParser}.
  * @author Tom Adams
  * @version $Revision$
  */
-final class DefaultSparqlParser implements SparqlParser {
+final class MockSparqlAdapter extends DepthFirstAdapter implements SparqlAnalyser {
 
-    SparqlAnalyser analyser;// = new DefaultSparqlAdapter();
+    private Query query;
 
-    /**
-     * Parses a textual query into a {@link org.jrdf.query.Query} object.
-     * @param queryText The textual query to parse.
-     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
-     */
-    public Query parseQuery(String queryText) {
-        // FIXME TJA: Breadcrumb - Triangulate to force a parsing of the query.
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
-        //return applyAdapter(queryText);
-        return new XxxQuery();
+    public void prepare(Query query) {
+        this.query = query;
     }
 
-//    private void applyAdapter(String queryText) {
-//        Parser parser = new Parser(new Lexer(new PushbackReader(new StringReader(queryText), 256)));
-//        parser.parse().apply(analysis);
-//        return analysis.getQuery();
-//    }
+    public Query getQuery() {
+        return query;
+    }
 }

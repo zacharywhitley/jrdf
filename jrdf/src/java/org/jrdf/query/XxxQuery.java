@@ -76,6 +76,8 @@ import org.jrdf.graph.mem.GraphImpl;
  * @version $Revision$
  */
 public class XxxQuery implements Query {
+    // FIXME TJA: Remove this class.
+    // FIXME TJA: Rename, possibly to MockQuery, then delgate duplicated code to test utilities.
 
     private static final String URI_BOOK_1 = "http://example.org/book/book1";
     private static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";

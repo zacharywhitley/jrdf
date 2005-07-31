@@ -77,20 +77,27 @@ public final class SparqlQueryTestUtil {
     public static final String URI_BOOK_2 = "http://example.org/book/book2";
     public static final String URI_BOOK_3 = "http://example.org/book/book3";
     public static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";
-    public static final String QUERY_BOOK_1_DC_TITLE =
-            "SELECT * WHERE  { " + delimitUri(URI_BOOK_1) + " " + delimitUri(URI_DC_TITLE) + " ?title }";
-    public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = createBook1DcTitleExpression();
+    public static final String VARIABLE_TITLE = "?title";
+    public static final String QUERY_BOOK_1_DC_TITLE = createQueryString(URI_BOOK_1, URI_DC_TITLE, VARIABLE_TITLE);
+    public static final String QUERY_BOOK_2_DC_TITLE = createQueryString(URI_BOOK_2, URI_DC_TITLE, VARIABLE_TITLE);
+    public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = createBookDcTitleExpression(URI_BOOK_1);
+    public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = createBookDcTitleExpression(URI_BOOK_2);
     public static final Triple TRIPLE_BOOK_1_DC_TITLE = createDcTitleTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_2_DC_TITLE = createDcTitleTriple(URI_BOOK_2);
     public static final Triple TRIPLE_BOOK_3_DC_TITLE = createDcTitleTriple(URI_BOOK_3);
     private static final ObjectNode ANY_OBJECT_NODE = null;
 
-    private static String delimitUri(String uri) {
+    private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {
+        return "SELECT * WHERE  { " +
+                delimitUri(subjectUri) + " " + delimitUri(predicateUri) + " " + objectVariable + " }";
+    }
+
+    public static String delimitUri(String uri) {
         return "<" + uri + ">";
     }
 
-    private static ConstraintExpression createBook1DcTitleExpression() {
-        return new ConstraintTriple(createDcTitleTriple(URI_BOOK_1));
+    private static ConstraintExpression createBookDcTitleExpression(String bookUri) {
+        return new ConstraintTriple(createDcTitleTriple(bookUri));
     }
 
     private static Triple createDcTitleTriple(String bookUri) {
