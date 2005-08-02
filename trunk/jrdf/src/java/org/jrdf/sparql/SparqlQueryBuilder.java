@@ -69,6 +69,9 @@ import org.jrdf.util.param.ParameterUtil;
  * @version $Revision$
  */
 public final class SparqlQueryBuilder implements QueryBuilder {
+
+    // FIXME TJA: Breadcrumb - Waiting for a parser to be written.
+
     /**
      * {@inheritDoc}
      */

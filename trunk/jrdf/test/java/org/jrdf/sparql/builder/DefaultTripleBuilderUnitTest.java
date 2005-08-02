@@ -56,36 +56,31 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.sparql.builder;
 
-import org.jrdf.query.Query;
-import org.jrdf.query.XxxQuery;
-import org.jrdf.util.param.ParameterUtil;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.graph.Triple;
 
 /**
- * Default implementation of a {@link SparqlParser}.
+ * Unit test for {@link TripleBuilder}.
  * @author Tom Adams
  * @version $Revision$
  */
-final class DefaultSparqlParser implements SparqlParser {
+public final class DefaultTripleBuilderUnitTest extends TestCase {
 
-    SparqlAnalyser analyser;// = new DefaultSparqlAdapter();
-
-    /**
-     * Parses a textual query into a {@link org.jrdf.query.Query} object.
-     * @param queryText The textual query to parse.
-     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
-     */
-    public Query parseQuery(String queryText) {
-        // FIXME TJA: Breadcrumb - Triangulate to force a parsing of the query.
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
-        //return applyAdapter(queryText);
-        return new XxxQuery();
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkExtensionOf(LocalObjectBuilder.class, TripleBuilder.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilder.class);
     }
 
-//    private void applyAdapter(String queryText) {
-//        Parser parser = new Parser(new Lexer(new PushbackReader(new StringReader(queryText), 256)));
-//        parser.parse().apply(analysis);
-//        return analysis.getQuery();
-//    }
+    public void testNullThrowsException() {
+        try {
+            LocalObjectBuilder<ATriple, Triple> builder = new TripleBuilder();
+            builder.build(null);
+            fail("build(null) should have thrown IllegalArgumentException");
+        } catch (Exception expected) {
+        }
+    }
 }

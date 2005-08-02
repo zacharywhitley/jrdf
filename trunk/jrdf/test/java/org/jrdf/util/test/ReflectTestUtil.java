@@ -56,67 +56,38 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.util.test;
 
-import junit.framework.TestCase;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.QueryBuilder;
-import org.jrdf.util.param.ParameterTestUtil;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import java.lang.reflect.Field;
 
 /**
- * Unit test for {@link org.jrdf.sparql.SparqlQueryBuilder}.
+ * Test utilities that use relection.
  * @author Tom Adams
  * @version $Revision$
  */
-public class SparqlQueryBuilderUnitTest extends TestCase {
-    private static final String BUILD_QUERY_METHOD = "buildQuery";
-    private static final String NULL_STRING = ParameterTestUtil.NULL_STRING;
-    private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
-    private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
+public final class ReflectTestUtil {
 
-    public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(QueryBuilder.class, SparqlQueryBuilder.class);
+    private ReflectTestUtil() {}
+
+    public static void insertFieldValue(Object ref, String fieldName, Object fieldValue) {
+        Field field = getField(ref, fieldName);
+        setFieldValue(ref, field, fieldValue);
     }
 
-    public void testBadParams() throws Exception {
-        SparqlQueryBuilder builder = new SparqlQueryBuilder();
-        checkBadParam(builder, NULL_STRING);
-        checkBadParam(builder, EMPTY_STRING);
-        checkBadParam(builder, SINGLE_SPACE);
+    private static Field getField(Object ref, String fieldName) {
+        try {
+            return ref.getClass().getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void testBuildGoodQuery() throws InvalidQuerySyntaxException {
-        // TODO: Is there any more testing we can do on the form of the query?
-//    checkGoodQuery("select $s $p $o from <rmi://localhost/server1#> where $s $p $o ;");
-    }
-
-    public void testBuildUnsupportedUpdateQuery() throws InvalidQuerySyntaxException {
-//    checkUnsupportedQuery(" backup <rmi://localhost/server1> to <file:/tmp/bar.gz>;");
-    }
-
-    public void testBuildBadQuery() throws InvalidQuerySyntaxException {
-//    checkBadQuery("select $s $p $o from <rmi://localhost/server1#> where $s $p $o ");
-    }
-
-//  private void checkGoodQuery(String query) throws InvalidQuerySyntaxException {
-//    assertNotNull(new SparqlQueryBuilder().buildQuery(query));
-//  }
-
-//  private void checkBadQuery(String badQuery) {
-//    try {
-//      new SparqlQueryBuilder().buildQuery(badQuery);
-//    } catch (InvalidQuerySyntaxException expected) {
-//    } catch (IllegalArgumentException expected) {  }
-//  }
-
-//  private void checkUnsupportedQuery(String unsupportedQuery) throws InvalidQuerySyntaxException {
-//    try {
-//      new SparqlQueryBuilder().buildQuery(unsupportedQuery);
-//    } catch (IllegalArgumentException expected) { }
-//  }
-
-    private void checkBadParam(SparqlQueryBuilder builder, String param) throws Exception {
-        ParameterTestUtil.checkBadStringParam(builder, BUILD_QUERY_METHOD, param);
+    private static void setFieldValue(Object ref, Field field, Object fieldValue) {
+        field.setAccessible(true);
+        try {
+            field.set(ref, fieldValue);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

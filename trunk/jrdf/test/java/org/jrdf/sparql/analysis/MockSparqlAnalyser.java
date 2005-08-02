@@ -56,13 +56,25 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.sparql.analysis;
+
+import org.jrdf.query.Query;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.analysis.SparqlAnalyser;
 
 /**
- * Parses <a href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL</a> textual queries into
- * {@linkplain org.jrdf.query.Query queries}.
  * @author Tom Adams
  * @version $Revision$
  */
-interface SparqlParser extends QueryParser {
+public final class MockSparqlAnalyser extends DepthFirstAdapter implements SparqlAnalyser {
+
+    private Query query;
+
+    public void prepare(Query query) {
+        this.query = query;
+    }
+
+    public Query getQuery() {
+        return query;
+    }
 }

@@ -56,21 +56,56 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.Query;
+import junit.framework.TestCase;
+import org.jrdf.sparql.parser.analysis.Analysis;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * Parses {@link String}s into {@linkplain org.jrdf.query.Query queries}.
+ * Unit test for {@link DefaultSparqlAnalyser}.
  * @author Tom Adams
  * @version $Revision$
  */
-interface QueryParser {
+public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 
-    /**
-     * Parses a textual query into a {@link Query} object.
-     * @param queryText The textual query to parse.
-     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
-     */
-    Query parseQuery(String queryText);
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, DefaultSparqlAnalyser.class);
+        ClassPropertiesTestUtil.checkExtensionOf(DepthFirstAdapter.class, DefaultSparqlAnalyser.class);
+    }
+
+    public void testNoQueryConstant() {
+        checkNoQueryConstantImmutable();
+        checkNoQueryConstantDoesNothing();
+    }
+
+    // Note. getQuery() should always return SparqlAnalyser.NO_QUERY when not applied via SableCC framework.
+    public void testGetQueryAlwaysReturnsNoQueryWhenNotApplied() {
+        SparqlAnalyser analyser = new DefaultSparqlAnalyser();
+        checkGetQuery(analyser);
+        checkGetQuery(analyser);
+    }
+
+    private void checkGetQuery(SparqlAnalyser analyser) {
+        assertEquals(SparqlAnalyser.NO_QUERY, analyser.getQuery());
+    }
+
+    private void checkNoQueryConstantDoesNothing() {
+        try {
+            SparqlAnalyser.NO_QUERY.getProjectedVariables();
+            fail("SparqlAnalysis.NO_QUERY.getProjectedVariables() should have thrown UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {}
+        try {
+            SparqlAnalyser.NO_QUERY.getConstraintExpression();
+            fail("SparqlAnalysis.NO_QUERY.getConstraintExpression() should have thrown UnsupportedOperationException");
+        } catch (UnsupportedOperationException expected) {}
+    }
+
+    private void checkNoQueryConstantImmutable() {
+        assertNotNull(SparqlAnalyser.NO_QUERY);
+        assertEquals(SparqlAnalyser.NO_QUERY, SparqlAnalyser.NO_QUERY);
+        assertTrue(SparqlAnalyser.NO_QUERY == SparqlAnalyser.NO_QUERY);
+    }
 }

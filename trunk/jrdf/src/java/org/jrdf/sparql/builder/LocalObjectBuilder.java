@@ -56,80 +56,22 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.sparql.builder;
 
-import java.net.URI;
-import java.util.List;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.sparql.parser.node.Node;
 
 /**
- * Remove this class!!! Not test driven. Contains duplicate code!!
+ * Build instances of local (JRDF) classes from SableCC nodes.
  * @author Tom Adams
  * @version $Revision$
  */
-public class XxxQuery implements Query {
-     // FIXME TJA: Remove this class from production source.
-    // FIXME TJA: Rename, possibly to MockQuery, then delgate duplicated code to test utilities.
+interface LocalObjectBuilder<S extends Node, L> {
+    // FIXME TJA: Move these generics into the method signature!! Ala example on page 9 of generics tutorial./
 
-    private static final String URI_BOOK_1 = "http://example.org/book/book1";
-    private static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";
-    private static final ObjectNode ANY_OBJECT_NODE = null;
-
-    public List<? extends Variable> getProjectedVariables() {
-        return Variable.ALL_VARIABLES;
-    }
-
-    public ConstraintExpression getConstraintExpression() {
-        return createBook1DcTitleExpression();
-    }
-
-    private ConstraintExpression createBook1DcTitleExpression() {
-        return new ConstraintTriple(createDcTitleTriple(URI_BOOK_1));
-    }
-
-    private Triple createDcTitleTriple(String bookUri) {
-        return createTripleWithWildcardObject(bookUri, URI_DC_TITLE);
-    }
-
-    private Triple createTripleWithWildcardObject(String subjectUri, String predicateUri) {
-        SubjectNode subject = createResource(subjectUri);
-        PredicateNode predicate = createResource(predicateUri);
-        return createTriple(subject, predicate, ANY_OBJECT_NODE);
-    }
-
-    private URIReference createResource(String uri) {
-        try {
-            return getElementFactory().createResource(new URI(uri));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        try {
-            return getElementFactory().createTriple(subject, predicate, object);
-        } catch (GraphElementFactoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private GraphElementFactory getElementFactory() {
-        return createGraph().getElementFactory();
-    }
-
-    private GraphImpl createGraph() {
-        try {
-            return new GraphImpl();
-        } catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    /**
+     * Builds the given <var>parserNode</var> into its local equivalent.
+     * @param parserNode The parserNode to build into a JRDF class instance.
+     * @return The local version of the given <var>parserNode</var>
+     */
+    L build(S parserNode);
 }
