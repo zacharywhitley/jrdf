@@ -56,40 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.sparql.parser;
 
-import java.util.List;
-import org.jrdf.sparql.parser.analysis.Analysis;
-import org.jrdf.query.Query;
-import org.jrdf.query.Variable;
-import org.jrdf.query.ConstraintExpression;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
+ * Unit test for {@link SparqlParser}.
  * @author Tom Adams
  * @version $Revision$
  */
-interface SparqlAnalyser extends Analysis {
+public final class SparqlParserUnitTest extends TestCase {
 
-    /**
-     * Indicates that this analyser has not processed a query yet.
-     */
-    static Query NO_QUERY = new NoQuery();
-
-    /**
-     * Returns the query processed by this analyser.
-     * @return The query processed by this analyser, or {@link SparqlAnalyser.NO_QUERY} if no query has been processed.
-     */
-    Query getQuery();
-
-    static class NoQuery implements Query {
-
-        public List<? extends Variable> getProjectedVariables() {
-            throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
-        }
-
-        public ConstraintExpression getConstraintExpression() {
-            throw new UnsupportedOperationException("Retrieving the constraint expression is not supported");
-        }
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkExtensionOf(QueryParser.class, SparqlParser.class);
     }
 }

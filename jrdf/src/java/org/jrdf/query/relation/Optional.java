@@ -1,7 +1,7 @@
 package org.jrdf.query.relation;
 
 /**
- * The same as SPARQLs optional.
+ * The same as SPARQL's optional.
  *
  * @author Andrew Newman
  *

@@ -62,7 +62,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import junit.framework.Assert;
 
-public class ClassPropertiesTestUtil {
+public final class ClassPropertiesTestUtil {
+
+    private ClassPropertiesTestUtil() {}
 
     public static boolean isPublicInstance(Method method) {
         int modifiers = method.getModifiers();

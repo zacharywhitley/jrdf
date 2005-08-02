@@ -56,50 +56,40 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.sparql.analysis;
 
-import junit.framework.TestCase;
+import java.util.List;
 import org.jrdf.sparql.parser.analysis.Analysis;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.query.Query;
+import org.jrdf.query.Variable;
+import org.jrdf.query.ConstraintExpression;
 
 /**
- * Unit test for {@link DefaultSparqlAnalyser}.
+ * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
  * @author Tom Adams
  * @version $Revision$
  */
-public final class DefaultSparqlAnalyserUnitTest extends TestCase {
+public interface SparqlAnalyser extends Analysis {
 
-    public void testClassProperties() {
-        ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, DefaultSparqlAnalyser.class);
-        ClassPropertiesTestUtil.checkExtensionOf(DepthFirstAdapter.class, DefaultSparqlAnalyser.class);
-    }
+    /**
+     * Indicates that this analyser has not processed a query yet.
+     */
+    static Query NO_QUERY = new NoQuery();
 
-    public void testNoQueryConstant() {
-        checkImmutable();
-        checkDoesNothing();
-    }
+    /**
+     * Returns the query processed by this analyser.
+     * @return The query processed by this analyser, or {@link SparqlAnalyser.NO_QUERY} if no query has been processed.
+     */
+    Query getQuery();
 
-    public void testFirstGetQueryIsNoQueryConstant() {
-        SparqlAnalyser analyser = new DefaultSparqlAnalyser();
-        assertEquals(SparqlAnalyser.NO_QUERY, analyser.getQuery());
-    }
+    static class NoQuery implements Query {
 
-    private void checkDoesNothing() {
-        try {
-            SparqlAnalyser.NO_QUERY.getProjectedVariables();
-            fail("SparqlAnalysis.NO_QUERY.getProjectedVariables() should have thrown UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {}
-        try {
-            SparqlAnalyser.NO_QUERY.getConstraintExpression();
-            fail("SparqlAnalysis.NO_QUERY.getConstraintExpression() should have thrown UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {}
-    }
+        public List<? extends Variable> getProjectedVariables() {
+            throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
+        }
 
-    private void checkImmutable() {
-        assertNotNull(SparqlAnalyser.NO_QUERY);
-        assertEquals(SparqlAnalyser.NO_QUERY, SparqlAnalyser.NO_QUERY);
-        assertTrue(SparqlAnalyser.NO_QUERY == SparqlAnalyser.NO_QUERY);
+        public ConstraintExpression getConstraintExpression() {
+            throw new UnsupportedOperationException("Retrieving the constraint expression is not supported");
+        }
     }
 }

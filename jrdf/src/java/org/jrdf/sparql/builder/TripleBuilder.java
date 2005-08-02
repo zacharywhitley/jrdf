@@ -56,19 +56,23 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.sparql.builder;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.sparql.parser.node.Node;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
- * Unit test for {@link org.jrdf.sparql.SparqlParser}.
- *
+ * Constructs {@link org.jrdf.graph.Triple}s from {@link org.jrdf.sparql.parser.node.ATriple}s.
  * @author Tom Adams
  * @version $Revision$
  */
-public final class SparqlParserUnitTest extends TestCase {
-    public void testClassProperties() {
-        ClassPropertiesTestUtil.checkExtensionOf(QueryParser.class, SparqlParser.class);
+final class TripleBuilder implements LocalObjectBuilder {
+
+    /**
+     * {@inheritDoc}
+     */
+    public Object build(Node parserNode) {
+        ParameterUtil.checkNotNull("parserNode", parserNode);
+        throw new UnsupportedOperationException("Implement me...");
     }
 }
