@@ -9,8 +9,6 @@ import java.util.Set;
  * either be the set of attributes to include or the list of attributes to
  * exclude.
  *
- * May have to work out a way of specifying both variables and attributes?
- *
  * @author Andrew Newman
  *
  * @version $Revision$
@@ -22,7 +20,7 @@ public interface Project extends Operation {
    *
    * @param attributes the set of attributes to keep during projection.
    */
-  void attributesToInclude(Set<PredicateNode> attributes);
+  Relation include(Relation relation, Set<PredicateNode> attributes);
 
   /**
    * The attributes to exclude in the project.  Will overwrite any existing
@@ -30,5 +28,5 @@ public interface Project extends Operation {
    *
    * @param attributes the set of attributes to keep during projection.
    */
-  void attributesToExclude(Set<PredicateNode> attributes);
+  Relation exclude(Relation relation, Set<PredicateNode> attributes);
 }

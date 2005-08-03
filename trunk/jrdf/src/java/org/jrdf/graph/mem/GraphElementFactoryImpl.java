@@ -384,7 +384,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @param id The id of the node to search for.
      * @return The node referred to by the id, null if not found.
      */
-    Node getNodeById(Long id) {
+    // TODO Comeback and make this a different interface.
+    public Node getNodeById(Long id) {
         return nodePool.get(id);
     }
 
@@ -395,7 +396,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @param str The string representation of a node.
      * @return The id of the node with the given string.
      */
-    Long getNodeIdByString(String str) {
+    // TODO Comeback and make this a different interface.
+    public Long getNodeIdByString(String str) {
         return stringPool.get(str);
   }
 
