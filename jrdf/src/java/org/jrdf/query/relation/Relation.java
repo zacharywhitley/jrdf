@@ -41,7 +41,7 @@ public interface Relation {
   /**
    * Returns the tuples for this relation.  A tuple is made of a set of
    * attribute names and values.  Each distinct tuple has an associated subject
-   * node (or tuple name).
+   * node (or tuple name).  SubjectNodes with no attributes are not listed.
    *
    * @param tupleNames the subject nodes (tuple names) to get.
    * @return a map containing tuples.
