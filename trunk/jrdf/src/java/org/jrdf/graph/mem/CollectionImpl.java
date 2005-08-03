@@ -65,6 +65,7 @@ import org.jrdf.graph.Collection;
 import org.jrdf.graph.ObjectNode;
 
 import java.util.LinkedList;
+import java.util.Collections;
 
 /**
  * A Collection all the statements of a particular group.
@@ -90,6 +91,8 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
   // TODO Turned to use Object - also remove IllegalArgument check.
   public boolean addAll(java.util.Collection<? extends ObjectNode> c)
       throws IllegalArgumentException {
+
+//    if (Collections.checkedCollection(c, Collection.class);
 //    if (!(c instanceof Collection)) {
 //      throw new IllegalArgumentException("Can only add collections to other " +
 //          "collections");
