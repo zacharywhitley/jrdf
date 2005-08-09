@@ -68,6 +68,7 @@ import org.jrdf.connection.JrdfConnection;
  * @version $Revision$
  */
 public final class SparqlConnectionUnitTest extends TestCase {
+
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(JrdfConnection.class, SparqlConnection.class);
     }

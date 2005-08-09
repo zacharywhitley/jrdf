@@ -68,583 +68,567 @@ import java.net.URI;
 
 /**
  * Abstract test case for graph implementations.
- *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
-  /**
-   * Instance of a graph object.
-   */
-  private Graph graph;
+    /**
+     * Instance of a graph object.
+     */
+    private Graph graph;
 
-  /**
-   * Instance of a factory for the graph
-   */
-  protected GraphElementFactory elementFactory;
+    /**
+     * Instance of a factory for the graph
+     */
+    protected GraphElementFactory elementFactory;
 
-  /**
-   * Instance of the triple factory for the graph.
-   */
-  private TripleFactory tripleFactory;
+    /**
+     * Instance of the triple factory for the graph.
+     */
+    private TripleFactory tripleFactory;
 
-  // The following are interally used "constants"
-  private BlankNode blank1;
-  private BlankNode blank2;
+    // The following are interally used "constants"
+    private BlankNode blank1;
+    private BlankNode blank2;
 
-  private URI uri1;
-  private URI uri2;
-  private URI uri3;
-  private URIReference ref1;
-  private URIReference ref2;
-  private URIReference ref3;
+    private URI uri1;
+    private URI uri2;
+    private URI uri3;
+    private URIReference ref1;
+    private URIReference ref2;
+    private URIReference ref3;
 
-  private final String TEST_STR1 = "A test string";
-  private final String TEST_STR2 = "Another test string";
-  private Literal l1;
-  private Literal l2;
+    private final String TEST_STR1 = "A test string";
+    private final String TEST_STR2 = "Another test string";
+    private Literal l1;
+    private Literal l2;
 
-  /**
-   * Constructs a new test with the given name.
-   *
-   * @param name the name of the test
-   */
-  public AbstractTripleFactoryUnitTest(String name) {
-    super(name);
-  }
-
-  /**
-   * Create test instance.
-   */
-  public void setUp() throws Exception {
-    graph = newGraph();
-    elementFactory = graph.getElementFactory();
-    tripleFactory = graph.getTripleFactory();
-
-    blank1 = elementFactory.createResource();
-    blank2 = elementFactory.createResource();
-
-    uri1 = new URI("http://namespace#somevalue");
-    uri2 = new URI("http://namespace#someothervalue");
-    uri3 = new URI("http://namespace#yetanothervalue");
-    ref1 = elementFactory.createResource(uri1);
-    ref2 = elementFactory.createResource(uri2);
-    ref3 = elementFactory.createResource(uri3);
-
-    l1 = elementFactory.createLiteral(TEST_STR1);
-    l2 = elementFactory.createLiteral(TEST_STR2);
-  }
-
-  //
-  // implementation interfaces
-  //
-
-  /**
-   * Create a graph implementation.
-   *
-   * @return A new GraphImpl.
-   */
-  protected abstract Graph newGraph() throws Exception;
-
-  /**
-   * Get the node used for subject reification.
-   *
-   * @return The subject reification node.
-   */
-  protected abstract PredicateNode getReifySubject()
-      throws TripleFactoryException;
-
-  /**
-   * Get the node used for predicate reification.
-   *
-   * @return The predicate reification node.
-   */
-  protected abstract PredicateNode getReifyPredicate()
-      throws TripleFactoryException;
-
-  /**
-   * Get the node used for object reification.
-   *
-   * @return The object reification node.
-   */
-  protected abstract PredicateNode getReifyObject()
-      throws TripleFactoryException;
-
-  /**
-   * Get the node used for rdf:type.
-   *
-   * @return The object rdf:type node.
-   */
-  protected abstract PredicateNode getRdfType() throws TripleFactoryException;
-
-  /**
-   * Get the node used for rdf:Statement.
-   *
-   * @return The object rdf:statement node.
-   */
-  protected abstract ObjectNode getRdfStatement()
-      throws TripleFactoryException;
-
-  /**
-   * Create a concrete Collection.
-   *
-   * @return the new collection.
-   */
-  protected abstract Collection<ObjectNode> createCollection(
-      ObjectNode[] objects);
-
-  /**
-   * Create a concrete alternative
-   *
-   * @return the new alternative.
-   */
-  protected abstract Alternative<ObjectNode> createAlternative(
-      ObjectNode[] objects);
-
-  /**
-   * Create a concrete bag
-   *
-   * @return the new bag.
-   */
-  protected abstract Bag<ObjectNode> createBag(ObjectNode[] objects);
-
-  /**
-   * Create a concrete sequence
-   *
-   * @return the new sequence.
-   */
-  protected abstract Sequence<ObjectNode> createSequence(ObjectNode[] objects);
-
-  //
-  // Test cases
-  //
-
-  /**
-   * Tests reification.
-   */
-  public void testReification() throws Exception {
-    PredicateNode reifySubject = getReifySubject();
-    PredicateNode reifyPredicate = getReifyPredicate();
-    PredicateNode reifyObject = getReifyObject();
-    PredicateNode rdfType = getRdfType();
-    ObjectNode rdfStatement = getRdfStatement();
-    assertTrue(graph.isEmpty());
-
-    // Make a reification about a triple that does not exist in the graph.
-    URIReference u = elementFactory.createResource(uri1);
-    tripleFactory.reifyTriple(blank1, ref1, blank2, u);
-    assertEquals(uri1, u.getURI());
-    assertEquals(4, graph.getNumberOfTriples());
-    assertTrue(graph.contains(u, rdfType, rdfStatement));
-    assertTrue(graph.contains(u, reifySubject, blank1));
-    assertTrue(graph.contains(u, reifyPredicate, ref1));
-    assertTrue(graph.contains(u, reifyObject, blank2));
-
-    // Make a reification about a triple that does exist in the graph.
-    Triple t = elementFactory.createTriple(blank1, ref2, blank2);
-    u = elementFactory.createResource(uri2);
-    graph.add(t);
-    tripleFactory.reifyTriple(t, u);
-    assertEquals(uri2, u.getURI());
-    assertEquals(9, graph.getNumberOfTriples());
-    assertTrue(graph.contains(u, rdfType, rdfStatement));
-    assertTrue(graph.contains(u, reifySubject, blank1));
-    assertTrue(graph.contains(u, reifyPredicate, ref2));
-    assertTrue(graph.contains(u, reifyObject, blank2));
-    assertTrue(graph.contains(blank1, ref2, blank2));
-
-    // test for double insertion (allowed)
-    tripleFactory.reifyTriple(blank1, ref1, blank2,
-        elementFactory.createResource(uri1));
-    assertEquals(9, graph.getNumberOfTriples());
-
-    // test for double insertion (allowed)
-    tripleFactory.reifyTriple(t, elementFactory.createResource(uri2));
-    assertEquals(9, graph.getNumberOfTriples());
-
-    // test for insertion with a different reference (allowed)
-    tripleFactory.reifyTriple(blank1, ref1, blank2,
-        elementFactory.createResource(uri3));
-    assertEquals(13, graph.getNumberOfTriples());
-
-    // test for insertion of a new triple with an existing reference (disallowed)
-    testCantInsert(blank2, ref1, blank1, elementFactory.createResource(uri1));
-    assertEquals(13, graph.getNumberOfTriples());
-
-    // test for insertion with a different reference (disallowed)
-    testCantInsert(t, uri3);
-    assertEquals(13, graph.getNumberOfTriples());
-
-    // test for insertion of a new triple with an existing reference
-    testCantInsert(elementFactory.createTriple(blank2, ref2, blank2), uri2);
-    assertEquals(13, graph.getNumberOfTriples());
-
-    // do it all again for blank nodes
-    // Make reification that does not exist in graph
-    BlankNode b = elementFactory.createResource();
-    tripleFactory.reifyTriple(blank1, ref1, l1, b);
-    assertEquals(17, graph.getNumberOfTriples());
-    assertTrue(graph.contains(b, rdfType, rdfStatement));
-    assertTrue(graph.contains(b, reifySubject, blank1));
-    assertTrue(graph.contains(b, reifyPredicate, ref1));
-    assertTrue(graph.contains(b, reifyObject, l1));
-
-    // Make a reification using a blank node for a statement that does exist
-    // in the graph.
-    t = elementFactory.createTriple(blank1, ref2, l2);
-    graph.add(t);
-    b = elementFactory.createResource();
-    tripleFactory.reifyTriple(t, b);
-    assertEquals(22, graph.getNumberOfTriples());
-    assertTrue(graph.contains(b, rdfType, rdfStatement));
-    assertTrue(graph.contains(b, reifySubject, blank1));
-    assertTrue(graph.contains(b, reifyPredicate, ref2));
-    assertTrue(graph.contains(b, reifyObject, l2));
-    assertTrue(graph.contains(blank1, ref2, l2));
-
-    // test for double insertion
-    testCanInsert(blank1, ref1, blank2);
-    // test for insertion with a a used blank reference
-    testCantInsert(blank1, ref3, blank2, u);
-    // test that the graph did not change with the invalid insertions
-    assertEquals(26, graph.getNumberOfTriples());
-
-    // test for double insertion
-    testCanInsert(t);
-    // test for insertion with a a used blank reference
-    testCantInsert(elementFactory.createTriple(blank1, ref3, blank2),
-        u.getURI());
-    // test that the graph did not change with the invalid insertions
-    assertEquals(30, graph.getNumberOfTriples());
-
-    // Test reifying an existing statement
-    b = elementFactory.createResource();
-    graph.add(ref3, ref3, ref3);
-
-    try {
-      tripleFactory.reifyTriple(ref3, ref3, ref3, b);
+    /**
+     * Constructs a new test with the given name.
+     * @param name the name of the test
+     */
+    public AbstractTripleFactoryUnitTest(String name) {
+        super(name);
     }
-    catch (AlreadyReifiedException e) {
-      fail("Should allow reification of an existing");
+
+    /**
+     * Create test instance.
+     */
+    public void setUp() throws Exception {
+        graph = newGraph();
+        elementFactory = graph.getElementFactory();
+        tripleFactory = graph.getTripleFactory();
+
+        blank1 = elementFactory.createResource();
+        blank2 = elementFactory.createResource();
+
+        uri1 = new URI("http://namespace#somevalue");
+        uri2 = new URI("http://namespace#someothervalue");
+        uri3 = new URI("http://namespace#yetanothervalue");
+        ref1 = elementFactory.createResource(uri1);
+        ref2 = elementFactory.createResource(uri2);
+        ref3 = elementFactory.createResource(uri3);
+
+        l1 = elementFactory.createLiteral(TEST_STR1);
+        l2 = elementFactory.createLiteral(TEST_STR2);
     }
-  }
 
-  /**
-   * Test collections implmentations.
-   */
-  public void testCollections() throws Exception {
+    //
+    // implementation interfaces
+    //
 
-    // Ensure graph is empty before starting.
-    assertTrue(graph.isEmpty());
+    /**
+     * Create a graph implementation.
+     * @return A new GraphImpl.
+     */
+    protected abstract Graph newGraph() throws Exception;
 
-    // Create initial statement
-    SubjectNode s = (SubjectNode) elementFactory.createResource(
-        new URI("http://example.org/basket"));
-    PredicateNode p = (PredicateNode) elementFactory.createResource(
-        new URI("http://example.org/stuff/1.0/hasFruit"));
-    ObjectNode o = (ObjectNode)
-        elementFactory.createResource();
+    /**
+     * Get the node used for subject reification.
+     * @return The subject reification node.
+     */
+    protected abstract PredicateNode getReifySubject()
+            throws TripleFactoryException;
 
-    // Add to graph
-    graph.add(s, p, o);
+    /**
+     * Get the node used for predicate reification.
+     * @return The predicate reification node.
+     */
+    protected abstract PredicateNode getReifyPredicate()
+            throws TripleFactoryException;
 
-    // Create collection object.
-    ObjectNode[] fruit = new ObjectNode[3];
-    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/banana"));
-    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/kiwi"));
-    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/pineapple"));
+    /**
+     * Get the node used for object reification.
+     * @return The object reification node.
+     */
+    protected abstract PredicateNode getReifyObject()
+            throws TripleFactoryException;
 
-    PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(
-        RDF.FIRST);
-    PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(
-        RDF.REST);
-    ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
+    /**
+     * Get the node used for rdf:type.
+     * @return The object rdf:type node.
+     */
+    protected abstract PredicateNode getRdfType() throws TripleFactoryException;
 
-    // Create collection and add
-    Collection<ObjectNode> collection = createCollection(fruit);
+    /**
+     * Get the node used for rdf:Statement.
+     * @return The object rdf:statement node.
+     */
+    protected abstract ObjectNode getRdfStatement()
+            throws TripleFactoryException;
 
-    // Add the collection to the graph.
-    tripleFactory.addCollection((SubjectNode) o, collection);
+    /**
+     * Create a concrete Collection.
+     * @return the new collection.
+     */
+    protected abstract Collection<ObjectNode> createCollection(
+            ObjectNode[] objects);
 
-    // Check we've inserted it correctly.
-    assertEquals("Should have seven statements", 7, graph.getNumberOfTriples());
-    assertTrue("Should have first statement", graph.contains(s, p, o));
-    assertTrue("Should have first object and first collection object",
-        graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
+    /**
+     * Create a concrete alternative
+     * @return the new alternative.
+     */
+    protected abstract Alternative<ObjectNode> createAlternative(
+            ObjectNode[] objects);
 
-    // Get all rdf:first statements
-    ClosableIterator iter = graph.find(null, rdfFirst, null);
-    int counter = 0;
-    while (iter.hasNext()) {
+    /**
+     * Create a concrete bag
+     * @return the new bag.
+     */
+    protected abstract Bag<ObjectNode> createBag(ObjectNode[] objects);
+
+    /**
+     * Create a concrete sequence
+     * @return the new sequence.
+     */
+    protected abstract Sequence<ObjectNode> createSequence(ObjectNode[] objects);
+
+    //
+    // Test cases
+    //
+
+    /**
+     * Tests reification.
+     */
+    public void testReification() throws Exception {
+        PredicateNode reifySubject = getReifySubject();
+        PredicateNode reifyPredicate = getReifyPredicate();
+        PredicateNode reifyObject = getReifyObject();
+        PredicateNode rdfType = getRdfType();
+        ObjectNode rdfStatement = getRdfStatement();
+        assertTrue(graph.isEmpty());
+
+        // Make a reification about a triple that does not exist in the graph.
+        URIReference u = elementFactory.createResource(uri1);
+        tripleFactory.reifyTriple(blank1, ref1, blank2, u);
+        assertEquals(uri1, u.getURI());
+        assertEquals(4, graph.getNumberOfTriples());
+        assertTrue(graph.contains(u, rdfType, rdfStatement));
+        assertTrue(graph.contains(u, reifySubject, blank1));
+        assertTrue(graph.contains(u, reifyPredicate, ref1));
+        assertTrue(graph.contains(u, reifyObject, blank2));
+
+        // Make a reification about a triple that does exist in the graph.
+        Triple t = elementFactory.createTriple(blank1, ref2, blank2);
+        u = elementFactory.createResource(uri2);
+        graph.add(t);
+        tripleFactory.reifyTriple(t, u);
+        assertEquals(uri2, u.getURI());
+        assertEquals(9, graph.getNumberOfTriples());
+        assertTrue(graph.contains(u, rdfType, rdfStatement));
+        assertTrue(graph.contains(u, reifySubject, blank1));
+        assertTrue(graph.contains(u, reifyPredicate, ref2));
+        assertTrue(graph.contains(u, reifyObject, blank2));
+        assertTrue(graph.contains(blank1, ref2, blank2));
+
+        // test for double insertion (allowed)
+        tripleFactory.reifyTriple(blank1, ref1, blank2,
+                elementFactory.createResource(uri1));
+        assertEquals(9, graph.getNumberOfTriples());
+
+        // test for double insertion (allowed)
+        tripleFactory.reifyTriple(t, elementFactory.createResource(uri2));
+        assertEquals(9, graph.getNumberOfTriples());
+
+        // test for insertion with a different reference (allowed)
+        tripleFactory.reifyTriple(blank1, ref1, blank2,
+                elementFactory.createResource(uri3));
+        assertEquals(13, graph.getNumberOfTriples());
+
+        // test for insertion of a new triple with an existing reference (disallowed)
+        testCantInsert(blank2, ref1, blank1, elementFactory.createResource(uri1));
+        assertEquals(13, graph.getNumberOfTriples());
+
+        // test for insertion with a different reference (disallowed)
+        testCantInsert(t, uri3);
+        assertEquals(13, graph.getNumberOfTriples());
+
+        // test for insertion of a new triple with an existing reference
+        testCantInsert(elementFactory.createTriple(blank2, ref2, blank2), uri2);
+        assertEquals(13, graph.getNumberOfTriples());
+
+        // do it all again for blank nodes
+        // Make reification that does not exist in graph
+        BlankNode b = elementFactory.createResource();
+        tripleFactory.reifyTriple(blank1, ref1, l1, b);
+        assertEquals(17, graph.getNumberOfTriples());
+        assertTrue(graph.contains(b, rdfType, rdfStatement));
+        assertTrue(graph.contains(b, reifySubject, blank1));
+        assertTrue(graph.contains(b, reifyPredicate, ref1));
+        assertTrue(graph.contains(b, reifyObject, l1));
+
+        // Make a reification using a blank node for a statement that does exist
+        // in the graph.
+        t = elementFactory.createTriple(blank1, ref2, l2);
+        graph.add(t);
+        b = elementFactory.createResource();
+        tripleFactory.reifyTriple(t, b);
+        assertEquals(22, graph.getNumberOfTriples());
+        assertTrue(graph.contains(b, rdfType, rdfStatement));
+        assertTrue(graph.contains(b, reifySubject, blank1));
+        assertTrue(graph.contains(b, reifyPredicate, ref2));
+        assertTrue(graph.contains(b, reifyObject, l2));
+        assertTrue(graph.contains(blank1, ref2, l2));
+
+        // test for double insertion
+        testCanInsert(blank1, ref1, blank2);
+        // test for insertion with a a used blank reference
+        testCantInsert(blank1, ref3, blank2, u);
+        // test that the graph did not change with the invalid insertions
+        assertEquals(26, graph.getNumberOfTriples());
+
+        // test for double insertion
+        testCanInsert(t);
+        // test for insertion with a a used blank reference
+        testCantInsert(elementFactory.createTriple(blank1, ref3, blank2),
+                u.getURI());
+        // test that the graph did not change with the invalid insertions
+        assertEquals(30, graph.getNumberOfTriples());
+
+        // Test reifying an existing statement
+        b = elementFactory.createResource();
+        graph.add(ref3, ref3, ref3);
+
+        try {
+            tripleFactory.reifyTriple(ref3, ref3, ref3, b);
+        }
+        catch (AlreadyReifiedException e) {
+            fail("Should allow reification of an existing");
+        }
+    }
+
+    /**
+     * Test collections implmentations.
+     */
+    public void testCollections() throws Exception {
+
+        // Ensure graph is empty before starting.
+        assertTrue(graph.isEmpty());
+
+        // Create initial statement
+        SubjectNode s = (SubjectNode) elementFactory.createResource(
+                new URI("http://example.org/basket"));
+        PredicateNode p = (PredicateNode) elementFactory.createResource(
+                new URI("http://example.org/stuff/1.0/hasFruit"));
+        ObjectNode o = (ObjectNode)
+                elementFactory.createResource();
+
+        // Add to graph
+        graph.add(s, p, o);
+
+        // Create collection object.
+        ObjectNode[] fruit = new ObjectNode[3];
+        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/banana"));
+        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/kiwi"));
+        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/pineapple"));
+
+        PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(
+                RDF.FIRST);
+        PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(
+                RDF.REST);
+        ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
+
+        // Create collection and add
+        Collection<ObjectNode> collection = createCollection(fruit);
+
+        // Add the collection to the graph.
+        tripleFactory.addCollection((SubjectNode) o, collection);
+
+        // Check we've inserted it correctly.
+        assertEquals("Should have seven statements", 7, graph.getNumberOfTriples());
+        assertTrue("Should have first statement", graph.contains(s, p, o));
+        assertTrue("Should have first object and first collection object",
+                graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
+
+        // Get all rdf:first statements
+        ClosableIterator iter = graph.find(null, rdfFirst, null);
+        int counter = 0;
+        while (iter.hasNext()) {
 //      System.err.println(iter.next());
-      iter.next();
-      counter++;
-    }
-    assertTrue("Should have three rdf:first statements, not " + counter, 3 ==
-        counter);
+            iter.next();
+            counter++;
+        }
+        assertTrue("Should have three rdf:first statements, not " + counter, 3 ==
+                counter);
 
-    // Find all three parts of the collection.
-    for (int index = 0; index < fruit.length; index++) {
-      assertTrue("Should contain: " + fruit[index], graph.contains(null,
-          rdfFirst, fruit[index]));
-    }
+        // Find all three parts of the collection.
+        for (int index = 0; index < fruit.length; index++) {
+            assertTrue("Should contain: " + fruit[index], graph.contains(null,
+                    rdfFirst, fruit[index]));
+        }
 
-    // Get all rdf:rest statements
-    iter = graph.find(null, rdfRest, null);
-    counter = 0;
-    while (iter.hasNext()) {
+        // Get all rdf:rest statements
+        iter = graph.find(null, rdfRest, null);
+        counter = 0;
+        while (iter.hasNext()) {
 //      System.err.println(iter.next());
-      iter.next();
-      counter++;
-    }
-    assertTrue("Should have three rdf:rest statements", 3 == counter);
+            iter.next();
+            counter++;
+        }
+        assertTrue("Should have three rdf:rest statements", 3 == counter);
 
-    // Get all rdf:rest with rdf:nil statements
-    iter = graph.find(null, rdfRest, rdfNil);
-    counter = 0;
-    while (iter.hasNext()) {
+        // Get all rdf:rest with rdf:nil statements
+        iter = graph.find(null, rdfRest, rdfNil);
+        counter = 0;
+        while (iter.hasNext()) {
 //      System.err.println(iter.next());
-      iter.next();
-      counter++;
+            iter.next();
+            counter++;
+        }
+
+        assertTrue("Should have one rdf:rest with rdf:nil statements", 1 ==
+                counter);
     }
 
-    assertTrue("Should have one rdf:rest with rdf:nil statements", 1 ==
-        counter);
-  }
+    /**
+     * Test altnerative implementation.
+     */
+    public void testAlternative() throws Exception {
 
-  /**
-   * Test altnerative implementation.
-   */
-  public void testAlternative() throws Exception {
+        // Ensure graph is empty before starting.
+        assertTrue(graph.isEmpty());
 
-    // Ensure graph is empty before starting.
-    assertTrue(graph.isEmpty());
+        // Create initial statement
+        SubjectNode s = (SubjectNode) elementFactory.createResource(
+                new URI("http://example.org/favourite-bananas"));
 
-    // Create initial statement
-    SubjectNode s = (SubjectNode) elementFactory.createResource(
-        new URI("http://example.org/favourite-bananas"));
+        // Create collection object.
+        ObjectNode[] fruit = new ObjectNode[4];
+        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/banana"));
+        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/cavendish"));
+        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/ladyfinger"));
+        fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/banana"));
 
-    // Create collection object.
-    ObjectNode[] fruit = new ObjectNode[4];
-    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/banana"));
-    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/cavendish"));
-    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/ladyfinger"));
-    fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/banana"));
+        PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
+                RDF.TYPE);
+        ObjectNode rdfAlternative = (ObjectNode) elementFactory.createResource(
+                RDF.ALT);
 
-    PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
-        RDF.TYPE);
-    ObjectNode rdfAlternative = (ObjectNode) elementFactory.createResource(
-        RDF.ALT);
+        // Create collection and add
+        Alternative<ObjectNode> alt = createAlternative(fruit);
 
-    // Create collection and add
-    Alternative<ObjectNode> alt = createAlternative(fruit);
+        // Add the collection to the graph.
+        tripleFactory.addAlternative(s, alt);
 
-    // Add the collection to the graph.
-    tripleFactory.addAlternative(s, alt);
+        // Check we've inserted it correctly (banana is in twice should be removed)
+        assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
+        assertTrue("Should have statement",
+                graph.contains(s, rdfType, rdfAlternative));
+        assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
+        assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
+        assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
+        assertTrue("Should have statement", graph.contains(s, null, fruit[3]));
 
-    // Check we've inserted it correctly (banana is in twice should be removed)
-    assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
-    assertTrue("Should have statement",
-        graph.contains(s, rdfType, rdfAlternative));
-    assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
-    assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
-    assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
-    assertTrue("Should have statement", graph.contains(s, null, fruit[3]));
-
-    // Check that it doesn't allow duplicates.
-    ClosableIterator iter = graph.find(null, null, fruit[0]);
-    int count = 0;
-    while (iter.hasNext()) {
-      iter.next();
-      count++;
+        // Check that it doesn't allow duplicates.
+        ClosableIterator iter = graph.find(null, null, fruit[0]);
+        int count = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            count++;
+        }
+        assertTrue("Should have only the same statements: " + fruit[0], 1 == count);
     }
-    assertTrue("Should have only the same statements: " + fruit[0], 1 == count);
-  }
 
-  /**
-   * Test bag implementation.
-   */
-  public void testBag() throws Exception {
+    /**
+     * Test bag implementation.
+     */
+    public void testBag() throws Exception {
 
-    // Ensure graph is empty before starting.
-    assertTrue(graph.isEmpty());
+        // Ensure graph is empty before starting.
+        assertTrue(graph.isEmpty());
 
-    // Create initial statement
-    SubjectNode s = (SubjectNode) elementFactory.createResource(
-        new URI("http://example.org/favourite-fruit"));
+        // Create initial statement
+        SubjectNode s = (SubjectNode) elementFactory.createResource(
+                new URI("http://example.org/favourite-fruit"));
 
-    // Create collection object.
-    ObjectNode[] fruit = new ObjectNode[5];
-    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/banana"));
-    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/kiwi"));
-    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/pineapple"));
-    fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/pineapple"));
-    fruit[4] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/banana"));
+        // Create collection object.
+        ObjectNode[] fruit = new ObjectNode[5];
+        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/banana"));
+        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/kiwi"));
+        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/pineapple"));
+        fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/pineapple"));
+        fruit[4] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/banana"));
 
-    PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
-        RDF.TYPE);
-    ObjectNode rdfBag = (ObjectNode) elementFactory.createResource(RDF.BAG);
+        PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
+                RDF.TYPE);
+        ObjectNode rdfBag = (ObjectNode) elementFactory.createResource(RDF.BAG);
 
-    // Create collection and add
-    Bag<ObjectNode> bag = createBag(fruit);
+        // Create collection and add
+        Bag<ObjectNode> bag = createBag(fruit);
 
-    // Add the collection to the graph.
-    tripleFactory.addBag(s, bag);
+        // Add the collection to the graph.
+        tripleFactory.addBag(s, bag);
 
-    // Check we've inserted it correctly
-    assertEquals("Should have six statements", 6, graph.getNumberOfTriples());
-    assertTrue("Should have statement", graph.contains(s, rdfType, rdfBag));
-    assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
-    assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
-    assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
+        // Check we've inserted it correctly
+        assertEquals("Should have six statements", 6, graph.getNumberOfTriples());
+        assertTrue("Should have statement", graph.contains(s, rdfType, rdfBag));
+        assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
+        assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
+        assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
 
-    // Check that it allows duplicates.
-    ClosableIterator iter = graph.find(s, null, fruit[2]);
-    int count = 0;
-    while (iter.hasNext()) {
-      iter.next();
-      count++;
+        // Check that it allows duplicates.
+        ClosableIterator iter = graph.find(s, null, fruit[2]);
+        int count = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            count++;
+        }
+        assertTrue("Should have two of the same statements: " + fruit[2], 2 ==
+                count);
     }
-    assertTrue("Should have two of the same statements: " + fruit[2], 2 ==
-        count);
-  }
 
-  /**
-   * Test sequence implmentation.
-   */
-  public void testSequence() throws Exception {
+    /**
+     * Test sequence implmentation.
+     */
+    public void testSequence() throws Exception {
 
-    // Ensure graph is empty before starting.
-    assertTrue(graph.isEmpty());
+        // Ensure graph is empty before starting.
+        assertTrue(graph.isEmpty());
 
-    // Create initial statement
-    SubjectNode s = (SubjectNode) elementFactory.createResource(
-        new URI("http://example.org/favourite-fruit"));
+        // Create initial statement
+        SubjectNode s = (SubjectNode) elementFactory.createResource(
+                new URI("http://example.org/favourite-fruit"));
 
-    // Create collection object.
-    ObjectNode[] fruit = new ObjectNode[4];
-    fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/banana"));
-    fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/kiwi"));
-    fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/pineapple"));
-    fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
-        "http://example.org/kiwi"));
+        // Create collection object.
+        ObjectNode[] fruit = new ObjectNode[4];
+        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/banana"));
+        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/kiwi"));
+        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/pineapple"));
+        fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
+                "http://example.org/kiwi"));
 
-    PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
-        RDF.TYPE);
-    PredicateNode rdfOne = (PredicateNode) elementFactory.createResource(
-        new URI(RDF.baseURI + "_1"));
-    PredicateNode rdfTwo = (PredicateNode) elementFactory.createResource(
-        new URI(RDF.baseURI + "_2"));
-    PredicateNode rdfThree = (PredicateNode) elementFactory.createResource(
-        new URI(RDF.baseURI + "_3"));
-    PredicateNode rdfFour = (PredicateNode) elementFactory.createResource(
-        new URI(RDF.baseURI + "_4"));
-    ObjectNode rdfSequence = (ObjectNode) elementFactory.createResource(
-        RDF.SEQ);
+        PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
+                RDF.TYPE);
+        PredicateNode rdfOne = (PredicateNode) elementFactory.createResource(
+                new URI(RDF.baseURI + "_1"));
+        PredicateNode rdfTwo = (PredicateNode) elementFactory.createResource(
+                new URI(RDF.baseURI + "_2"));
+        PredicateNode rdfThree = (PredicateNode) elementFactory.createResource(
+                new URI(RDF.baseURI + "_3"));
+        PredicateNode rdfFour = (PredicateNode) elementFactory.createResource(
+                new URI(RDF.baseURI + "_4"));
+        ObjectNode rdfSequence = (ObjectNode) elementFactory.createResource(
+                RDF.SEQ);
 
-    // Create collection and add
-    Sequence<ObjectNode> sequence = createSequence(fruit);
+        // Create collection and add
+        Sequence<ObjectNode> sequence = createSequence(fruit);
 
-    // Add the collection to the graph.
-    tripleFactory.addSequence(s, sequence);
+        // Add the collection to the graph.
+        tripleFactory.addSequence(s, sequence);
 
-    // Check we've inserted it correctly.
-    assertEquals("Should have five statements", 5, graph.getNumberOfTriples());
-    assertTrue("Should have statement",
-        graph.contains(s, rdfType, rdfSequence));
-    assertTrue("Should have statement", graph.contains(s, rdfOne, fruit[0]));
-    assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit[1]));
-    assertTrue("Should have statement", graph.contains(s, rdfThree, fruit[2]));
-    assertTrue("Should have statement", graph.contains(s, rdfFour, fruit[3]));
-  }
-
-  /**
-   * Utility method to check that a triple cannot be reified.
-   *
-   * @param subject The subject for the triple.
-   * @param predicate The predicate for the triple.
-   * @param object The object for the triple.
-   * @param r The reification node for the triple.
-   * @throws Exception The triple could be reified.
-   */
-  private void testCantInsert(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object, SubjectNode r) throws Exception {
-    try {
-      tripleFactory.reifyTriple(subject, predicate, object, r);
-      assertTrue(false);
+        // Check we've inserted it correctly.
+        assertEquals("Should have five statements", 5, graph.getNumberOfTriples());
+        assertTrue("Should have statement",
+                graph.contains(s, rdfType, rdfSequence));
+        assertTrue("Should have statement", graph.contains(s, rdfOne, fruit[0]));
+        assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit[1]));
+        assertTrue("Should have statement", graph.contains(s, rdfThree, fruit[2]));
+        assertTrue("Should have statement", graph.contains(s, rdfFour, fruit[3]));
     }
-    catch (AlreadyReifiedException e) {
+
+    /**
+     * Utility method to check that a triple cannot be reified.
+     * @param subject The subject for the triple.
+     * @param predicate The predicate for the triple.
+     * @param object The object for the triple.
+     * @param r The reification node for the triple.
+     * @throws Exception The triple could be reified.
+     */
+    private void testCantInsert(SubjectNode subject, PredicateNode predicate,
+            ObjectNode object, SubjectNode r) throws Exception {
+        try {
+            tripleFactory.reifyTriple(subject, predicate, object, r);
+            assertTrue(false);
+        }
+        catch (AlreadyReifiedException e) {
+        }
     }
-  }
 
 
-  /**
-   * Utility method to check that a triple cannot be reified.
-   *
-   * @param triple The triple to reify.
-   * @param r The reification node for the triple.
-   * @throws Exception The triple could be reified.
-   */
-  private void testCantInsert(Triple triple, URI r) throws Exception {
-    try {
-      tripleFactory.reifyTriple(triple, elementFactory.createResource(r));
-      assertTrue(false);
+    /**
+     * Utility method to check that a triple cannot be reified.
+     * @param triple The triple to reify.
+     * @param r The reification node for the triple.
+     * @throws Exception The triple could be reified.
+     */
+    private void testCantInsert(Triple triple, URI r) throws Exception {
+        try {
+            tripleFactory.reifyTriple(triple, elementFactory.createResource(r));
+            assertTrue(false);
+        }
+        catch (AlreadyReifiedException e) {
+        }
     }
-    catch (AlreadyReifiedException e) {
-    }
-  }
 
 
-  /**
-   * Utility method to check that a triple cannot be reified with a blank node.
-   *
-   * @param subject The subject for the triple.
-   * @param predicate The predicate for the triple.
-   * @param object The object for the triple.
-   * @throws Exception The triple could be reified.
-   */
-  private void testCanInsert(SubjectNode subject, PredicateNode predicate,
-      ObjectNode object) throws Exception {
-    try {
-      tripleFactory.reifyTriple(subject, predicate, object,
-          elementFactory.createResource());
-      assertTrue(true);
+    /**
+     * Utility method to check that a triple cannot be reified with a blank node.
+     * @param subject The subject for the triple.
+     * @param predicate The predicate for the triple.
+     * @param object The object for the triple.
+     * @throws Exception The triple could be reified.
+     */
+    private void testCanInsert(SubjectNode subject, PredicateNode predicate,
+            ObjectNode object) throws Exception {
+        try {
+            tripleFactory.reifyTriple(subject, predicate, object,
+                    elementFactory.createResource());
+            assertTrue(true);
+        }
+        catch (AlreadyReifiedException e) {
+        }
     }
-    catch (AlreadyReifiedException e) {
-    }
-  }
 
 
-  /**
-   * Utility method to check that a triple cannot be reified with a blank node.
-   *
-   * @param triple The triple to reify.
-   * @throws Exception The triple could be reified.
-   */
-  private void testCanInsert(Triple triple) throws Exception {
-    try {
-      tripleFactory.reifyTriple(triple, elementFactory.createResource());
-      assertTrue(true);
-    }
-    catch (AlreadyReifiedException e) {
+    /**
+     * Utility method to check that a triple cannot be reified with a blank node.
+     *
+     * @param triple The triple to reify.
+     * @throws Exception The triple could be reified.
+     */
+    private void testCanInsert(Triple triple) throws Exception {
+        try {
+            tripleFactory.reifyTriple(triple, elementFactory.createResource());
+            assertTrue(true);
+        }
+        catch (AlreadyReifiedException e) {
     }
   }
 }

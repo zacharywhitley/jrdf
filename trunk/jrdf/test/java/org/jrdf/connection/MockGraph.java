@@ -7,11 +7,11 @@ import java.util.Iterator;
 
 /**
  * Mock {@link Graph} for unit testing.
- *
  * @author Tom Adams
  * @version $Revision$
  */
 final class MockGraph implements Graph {
+
     private ClosableIterator expectedIterator;
 
     public MockGraph(ClosableIterator expectedIterator) {

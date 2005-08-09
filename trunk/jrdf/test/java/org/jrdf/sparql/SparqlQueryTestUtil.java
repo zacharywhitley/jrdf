@@ -77,7 +77,9 @@ public final class SparqlQueryTestUtil {
     public static final String URI_BOOK_2 = "http://example.org/book/book2";
     public static final String URI_BOOK_3 = "http://example.org/book/book3";
     public static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";
-    public static final String VARIABLE_TITLE = "?title";
+    public static final String VARIABLE_PREFIX = "?";
+    public static final String VARIABLE_NAME_TITLE = "title";
+    public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
     public static final String QUERY_BOOK_1_DC_TITLE = createQueryString(URI_BOOK_1, URI_DC_TITLE, VARIABLE_TITLE);
     public static final String QUERY_BOOK_2_DC_TITLE = createQueryString(URI_BOOK_2, URI_DC_TITLE, VARIABLE_TITLE);
     public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = createBookDcTitleExpression(URI_BOOK_1);

@@ -71,6 +71,7 @@ import org.jrdf.sparql.SparqlQueryBuilder;
  * @version $Revision$
  */
 public class SparqlQueryBuilderUnitTest extends TestCase {
+
     private static final String BUILD_QUERY_METHOD = "buildQuery";
     private static final String NULL_STRING = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;

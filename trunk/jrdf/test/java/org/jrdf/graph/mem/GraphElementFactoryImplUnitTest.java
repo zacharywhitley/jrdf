@@ -71,72 +71,65 @@ import java.net.URI;
 /**
  * Implementation of {@link AbstractGraphElementFactoryUnitTest}
  * test case.
- *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- *
  * @version $Revision$
  */
 public class GraphElementFactoryImplUnitTest
-    extends AbstractGraphElementFactoryUnitTest {
+        extends AbstractGraphElementFactoryUnitTest {
 
-  /**
-   * Constructs a new test with the given name.
-   *
-   * @param name the name of the test
-   */
-  private GraphElementFactoryImplUnitTest(String name) {
-    super(name);
-  }
+    /**
+     * Constructs a new test with the given name.
+     * @param name the name of the test
+     */
+    private GraphElementFactoryImplUnitTest(String name) {
+        super(name);
+    }
 
-  /**
-   * Create a new graph of the appropriate type.
-   *
-   * @return A new graph implementation object.
-   */
-  public Graph newGraph() throws GraphException {
-    return new GraphImpl();
-  }
+    /**
+     * Create a new graph of the appropriate type.
+     * @return A new graph implementation object.
+     */
+    public Graph newGraph() throws GraphException {
+        return new GraphImpl();
+    }
 
-  /**
-   * Hook for test runner to obtain a test suite from.
-   *
-   * @return The test suite
-   */
-  public static Test suite() {
-    TestSuite suite = new TestSuite();
-    suite.addTest(new GraphElementFactoryImplUnitTest("testCreateLiterals"));
-    suite.addTest(new GraphElementFactoryImplUnitTest("testCreateResources"));
-    suite.addTest(new GraphElementFactoryImplUnitTest("testCreateTriples"));
-    suite.addTest(new GraphElementFactoryImplUnitTest("testTwoGraphs"));
-    return suite;
-  }
+    /**
+     * Hook for test runner to obtain a test suite from.
+     * @return The test suite
+     */
+    public static Test suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new GraphElementFactoryImplUnitTest("testCreateLiterals"));
+        suite.addTest(new GraphElementFactoryImplUnitTest("testCreateResources"));
+        suite.addTest(new GraphElementFactoryImplUnitTest("testCreateTriples"));
+        suite.addTest(new GraphElementFactoryImplUnitTest("testTwoGraphs"));
+        return suite;
+    }
 
-  /**
-   * Default test runner.
-   *
-   * @param args The command line arguments
-   */
-  public static void main(String[] args) throws Exception {
+    /**
+     * Default test runner.
+     * @param args The command line arguments
+     */
+    public static void main(String[] args) throws Exception {
 
-    TestRunner.run(suite());
-  }
+        TestRunner.run(suite());
+    }
 
-  /**
-   * Return the default literal type from the implementation.
-   *
-   * @return The default Literal type.
-   */
-  public URI getDefaultLiteralType() {
-    return null;
-  }
+    /**
+     * Return the default literal type from the implementation.
+     * @return The default Literal type.
+     */
+    public URI getDefaultLiteralType() {
+        return null;
+    }
 
-  /**
-   * Get the default literal language from the implementation.
-   *
-   * @return The default Literal language.
-   */
-  public String getDefaultLiteralLanguage() {
-    return null;
+    /**
+     * Get the default literal language from the implementation.
+     *
+     * @return The default Literal language.
+     */
+    public String getDefaultLiteralLanguage() {
+        return null;
   }
 
 }

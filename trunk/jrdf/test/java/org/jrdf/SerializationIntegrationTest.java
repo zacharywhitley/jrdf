@@ -67,6 +67,7 @@ import junit.framework.TestCase;
  * @version $Revision$
  */
 public final class SerializationIntegrationTest extends TestCase {
+
     // FIXME TJA: Implement this.
     public void testDoesNothingJustYetPleaseComeBackLater() {
         assertTrue(true);

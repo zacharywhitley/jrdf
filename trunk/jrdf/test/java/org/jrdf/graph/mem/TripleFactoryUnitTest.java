@@ -67,139 +67,133 @@ import org.jrdf.vocabulary.RDF;
 /**
  * Implementation of {@link AbstractTripleFactoryUnitTest} test
  * case.
- *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
-  /**
-   * Constructs a new test with the given name.
-   *
-   * @param name the name of the test
-   */
-  private TripleFactoryUnitTest(String name) {
-    super(name);
-  }
-
-  /**
-   * Create a graph implementation.
-   *
-   * @return A new GraphImplUnitTest.
-   */
-  public Graph newGraph() throws Exception {
-    return new GraphImpl();
-  }
-
-  /**
-   * Hook for test runner to obtain a test suite from.
-   *
-   * @return The test suite
-   */
-  public static Test suite() {
-    TestSuite suite = new TestSuite();
-    suite.addTest(new TripleFactoryUnitTest("testReification"));
-    suite.addTest(new TripleFactoryUnitTest("testCollections"));
-    suite.addTest(new TripleFactoryUnitTest("testAlternative"));
-    suite.addTest(new TripleFactoryUnitTest("testBag"));
-    suite.addTest(new TripleFactoryUnitTest("testSequence"));
-    return suite;
-  }
-
-  /**
-   * Default test runner.
-   *
-   * @param args The command line arguments
-   */
-  public static void main(String[] args) throws Exception {
-
-    TestRunner.run(suite());
-  }
-
-  public PredicateNode getReifySubject() throws TripleFactoryException {
-    try {
-      return elementFactory.createResource(RDF.SUBJECT);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  public PredicateNode getReifyPredicate() throws TripleFactoryException {
-    try {
-      return elementFactory.createResource(RDF.PREDICATE);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  public PredicateNode getReifyObject() throws TripleFactoryException {
-    try {
-      return elementFactory.createResource(RDF.OBJECT);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  public PredicateNode getRdfType() throws TripleFactoryException {
-    try {
-      return elementFactory.createResource(RDF.TYPE);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  public ObjectNode getRdfStatement() throws TripleFactoryException {
-    try {
-      return elementFactory.createResource(RDF.STATEMENT);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  public Collection<ObjectNode> createCollection(ObjectNode[] objects) {
-    Collection<ObjectNode> collection = new CollectionImpl();
-
-    for (int index = 0; index < objects.length; index++) {
-      collection.add(objects[index]);
+    /**
+     * Constructs a new test with the given name.
+     * @param name the name of the test
+     */
+    private TripleFactoryUnitTest(String name) {
+        super(name);
     }
 
-    return collection;
-  }
-
-  public Alternative<ObjectNode> createAlternative(ObjectNode[] objects) {
-    Alternative<ObjectNode> alternative = new AlternativeImpl();
-
-    for (int index = 0; index < objects.length; index++) {
-      alternative.add(objects[index]);
+    /**
+     * Create a graph implementation.
+     * @return A new GraphImplUnitTest.
+     */
+    public Graph newGraph() throws Exception {
+        return new GraphImpl();
     }
 
-    return alternative;
-  }
-
-  public Bag<ObjectNode> createBag(ObjectNode[] objects) {
-    Bag<ObjectNode> bag = new BagImpl();
-
-    for (int index = 0; index < objects.length; index++) {
-      bag.add(objects[index]);
+    /**
+     * Hook for test runner to obtain a test suite from.
+     * @return The test suite
+     */
+    public static Test suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new TripleFactoryUnitTest("testReification"));
+        suite.addTest(new TripleFactoryUnitTest("testCollections"));
+        suite.addTest(new TripleFactoryUnitTest("testAlternative"));
+        suite.addTest(new TripleFactoryUnitTest("testBag"));
+        suite.addTest(new TripleFactoryUnitTest("testSequence"));
+        return suite;
     }
 
-    return bag;
-  }
+    /**
+     * Default test runner.
+     * @param args The command line arguments
+     */
+    public static void main(String[] args) throws Exception {
 
-  public Sequence<ObjectNode> createSequence(ObjectNode[] objects) {
-    Sequence<ObjectNode> sequence = new SequenceImpl();
-
-    for (int index = 0; index < objects.length; index++) {
-      sequence.add(objects[index]);
+        TestRunner.run(suite());
     }
 
-    return sequence;
+    public PredicateNode getReifySubject() throws TripleFactoryException {
+        try {
+            return elementFactory.createResource(RDF.SUBJECT);
+        }
+        catch (GraphElementFactoryException gefe) {
+            throw new TripleFactoryException(gefe);
+        }
+    }
+
+    public PredicateNode getReifyPredicate() throws TripleFactoryException {
+        try {
+            return elementFactory.createResource(RDF.PREDICATE);
+        }
+        catch (GraphElementFactoryException gefe) {
+            throw new TripleFactoryException(gefe);
+        }
+    }
+
+    public PredicateNode getReifyObject() throws TripleFactoryException {
+        try {
+            return elementFactory.createResource(RDF.OBJECT);
+        }
+        catch (GraphElementFactoryException gefe) {
+            throw new TripleFactoryException(gefe);
+        }
+    }
+
+    public PredicateNode getRdfType() throws TripleFactoryException {
+        try {
+            return elementFactory.createResource(RDF.TYPE);
+        }
+        catch (GraphElementFactoryException gefe) {
+            throw new TripleFactoryException(gefe);
+        }
+    }
+
+    public ObjectNode getRdfStatement() throws TripleFactoryException {
+        try {
+            return elementFactory.createResource(RDF.STATEMENT);
+        }
+        catch (GraphElementFactoryException gefe) {
+            throw new TripleFactoryException(gefe);
+        }
+    }
+
+    public Collection<ObjectNode> createCollection(ObjectNode[] objects) {
+        Collection<ObjectNode> collection = new CollectionImpl();
+
+        for (int index = 0; index < objects.length; index++) {
+            collection.add(objects[index]);
+        }
+
+        return collection;
+    }
+
+    public Alternative<ObjectNode> createAlternative(ObjectNode[] objects) {
+        Alternative<ObjectNode> alternative = new AlternativeImpl();
+
+        for (int index = 0; index < objects.length; index++) {
+            alternative.add(objects[index]);
+        }
+
+        return alternative;
+    }
+
+    public Bag<ObjectNode> createBag(ObjectNode[] objects) {
+        Bag<ObjectNode> bag = new BagImpl();
+
+        for (int index = 0; index < objects.length; index++) {
+            bag.add(objects[index]);
+        }
+
+        return bag;
+    }
+
+    public Sequence<ObjectNode> createSequence(ObjectNode[] objects) {
+        Sequence<ObjectNode> sequence = new SequenceImpl();
+
+        for (int index = 0; index < objects.length; index++) {
+            sequence.add(objects[index]);
+        }
+
+        return sequence;
   }
 }

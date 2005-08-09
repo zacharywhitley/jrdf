@@ -66,6 +66,7 @@ import org.jrdf.util.ClosableIterator;
  * @version $Revision$
  */
 class MockClosableIterator implements ClosableIterator {
+
     public boolean close() {
         throw new UnsupportedOperationException("Implement me...");
     }

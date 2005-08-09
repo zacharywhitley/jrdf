@@ -66,11 +66,11 @@ import junit.framework.TestCase;
 
 /**
  * Unit test for {@link UuidGenerator}.
- *
  * @author Robert Turner
  * @author Tom Adams
  */
 public class UuidGeneratorUnitTest extends TestCase {
+
     static final int NUM_UIDS = 10000;
 
     public void testUuidsUnique() throws Exception {

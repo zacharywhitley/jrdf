@@ -72,116 +72,110 @@ import java.io.ObjectOutputStream;
 
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
- *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
-  /**
-   * Constructs a new test with the given name.
-   *
-   * @param name the name of the test
-   */
-  private GraphImplUnitTest(String name) {
-    super(name);
-  }
+    /**
+     * Constructs a new test with the given name.
+     * @param name the name of the test
+     */
+    private GraphImplUnitTest(String name) {
+        super(name);
+    }
 
-  /**
-   * Create a graph implementation.
-   *
-   * @return A new GraphImplUnitTest.
-   */
-  public Graph newGraph() throws Exception {
-    return new GraphImpl();
-  }
+    /**
+     * Create a graph implementation.
+     * @return A new GraphImplUnitTest.
+     */
+    public Graph newGraph() throws Exception {
+        return new GraphImpl();
+    }
 
-  /**
-   * Hook for test runner to obtain a test suite from.
-   *
-   * @return The test suite
-   */
-  public static Test suite() {
-    TestSuite suite = new TestSuite();
-    suite.addTest(new GraphImplUnitTest("testEmpty"));
-    suite.addTest(new GraphImplUnitTest("testFactory"));
-    suite.addTest(new GraphImplUnitTest("testAddition"));
-    suite.addTest(new GraphImplUnitTest("testRemoval"));
-    suite.addTest(new GraphImplUnitTest("testContains"));
-    suite.addTest(new GraphImplUnitTest("testFinding"));
-    suite.addTest(new GraphImplUnitTest("testIteration"));
-    suite.addTest(new GraphImplUnitTest("testIterativeRemoval"));
-    suite.addTest(new GraphImplUnitTest("testFullIterativeRemoval"));
-    suite.addTest(new GraphImplUnitTest("testSerializing"));
-    return suite;
-  }
+    /**
+     * Hook for test runner to obtain a test suite from.
+     * @return The test suite
+     */
+    public static Test suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new GraphImplUnitTest("testEmpty"));
+        suite.addTest(new GraphImplUnitTest("testFactory"));
+        suite.addTest(new GraphImplUnitTest("testAddition"));
+        suite.addTest(new GraphImplUnitTest("testRemoval"));
+        suite.addTest(new GraphImplUnitTest("testContains"));
+        suite.addTest(new GraphImplUnitTest("testFinding"));
+        suite.addTest(new GraphImplUnitTest("testIteration"));
+        suite.addTest(new GraphImplUnitTest("testIterativeRemoval"));
+        suite.addTest(new GraphImplUnitTest("testFullIterativeRemoval"));
+        suite.addTest(new GraphImplUnitTest("testSerializing"));
+        return suite;
+    }
 
-  /**
-   * Default test runner.
-   *
-   * @param args The command line arguments
-   */
-  public static void main(String[] args) throws Exception {
+    /**
+     * Default test runner.
+     * @param args The command line arguments
+     */
+    public static void main(String[] args) throws Exception {
 
-    TestRunner.run(suite());
-  }
+        TestRunner.run(suite());
+    }
 
-  /**
-   * Implementation method for testing serialization of the graph.
-   *
-   * @throws Exception When a problem is found.
-   */
-  public void testSerializing() throws Exception {
-    // populate the graph
-    graph.add(blank1, ref1, blank2);
-    graph.add(blank1, ref2, blank2);
-    graph.add(blank1, ref1, l1);
-    graph.add(blank1, ref1, l2);
-    graph.add(blank2, ref1, blank2);
-    graph.add(blank2, ref2, blank2);
-    graph.add(blank2, ref1, l1);
-    graph.add(blank2, ref1, l2);
-    graph.add(blank2, ref1, l2);
-    graph.add(ref1, ref1, ref1);
+    /**
+     * Implementation method for testing serialization of the graph.
+     *
+     * @throws Exception When a problem is found.
+     */
+    public void testSerializing() throws Exception {
+        // populate the graph
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(blank1, ref1, l1);
+        graph.add(blank1, ref1, l2);
+        graph.add(blank2, ref1, blank2);
+        graph.add(blank2, ref2, blank2);
+        graph.add(blank2, ref1, l1);
+        graph.add(blank2, ref1, l2);
+        graph.add(blank2, ref1, l2);
+        graph.add(ref1, ref1, ref1);
 
-    // check that the graph is as expected
-    assertEquals(9, graph.getNumberOfTriples());
+        // check that the graph is as expected
+        assertEquals(9, graph.getNumberOfTriples());
 
-    // create an in-memory output stream
-    ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
-    ObjectOutputStream os = new ObjectOutputStream(outputBytes);
+        // create an in-memory output stream
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
 
-    // write the graph
-    os.writeObject(graph);
+        // write the graph
+        os.writeObject(graph);
 
-    // read a new graph back in
-    ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
-    ObjectInputStream is = new ObjectInputStream(inputBytes);
+        // read a new graph back in
+        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
+        ObjectInputStream is = new ObjectInputStream(inputBytes);
 
-    // read the graph
-    Graph graph2 = (Graph) is.readObject();
+        // read the graph
+        Graph graph2 = (Graph) is.readObject();
 
-    ref3 = graph2.getElementFactory().createResource(ref1.getURI());
-    Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
+        ref3 = graph2.getElementFactory().createResource(ref1.getURI());
+        Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
 
-    // test that the graphs are equivalent
-    assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
-    assertTrue(graph2.contains(blank1, ref1, blank2));
-    assertTrue(graph2.contains(blank1, ref2, blank2));
-    assertTrue(graph2.contains(blank1, ref1, l1));
-    assertTrue(graph2.contains(blank1, ref1, l2));
-    assertTrue(graph2.contains(blank2, ref1, blank2));
-    assertTrue(graph2.contains(blank2, ref2, blank2));
-    assertTrue(graph2.contains(blank2, ref1, l1));
-    assertTrue(graph2.contains(blank2, ref3, l2));
-    assertTrue(graph2.contains(blank1, ref3, l3));
-    assertTrue(graph2.contains(ref1, ref1, ref1));
-    assertTrue(graph2.contains(null, ref1, null));
-    assertTrue(graph2.contains(ref3, ref3, ref3));
-    assertTrue(graph2.contains(null, ref3, null));
-    assertTrue(graph2.contains(null, ref3, l3));
+        // test that the graphs are equivalent
+        assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
+        assertTrue(graph2.contains(blank1, ref1, blank2));
+        assertTrue(graph2.contains(blank1, ref2, blank2));
+        assertTrue(graph2.contains(blank1, ref1, l1));
+        assertTrue(graph2.contains(blank1, ref1, l2));
+        assertTrue(graph2.contains(blank2, ref1, blank2));
+        assertTrue(graph2.contains(blank2, ref2, blank2));
+        assertTrue(graph2.contains(blank2, ref1, l1));
+        assertTrue(graph2.contains(blank2, ref3, l2));
+        assertTrue(graph2.contains(blank1, ref3, l3));
+        assertTrue(graph2.contains(ref1, ref1, ref1));
+        assertTrue(graph2.contains(null, ref1, null));
+        assertTrue(graph2.contains(ref3, ref3, ref3));
+        assertTrue(graph2.contains(null, ref3, null));
+        assertTrue(graph2.contains(null, ref3, l3));
   }
 
 }
