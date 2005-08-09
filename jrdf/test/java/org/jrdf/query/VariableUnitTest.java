@@ -67,6 +67,7 @@ import junit.framework.TestCase;
  * @version $Revision$
  */
 public final class VariableUnitTest extends TestCase {
+
     public void testConstants() {
         assertEquals(Collections.emptyList(), Variable.ALL_VARIABLES);
     }

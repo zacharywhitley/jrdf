@@ -6,39 +6,38 @@ import java.net.URI;
 
 /**
  * Unit test for {@link JrdfConnectionFactory}.
- *
  * @author Tom Adams
  * @version $Revision$
  */
 public class JrdfConnectionFactoryUnitTest extends TestCase {
 
-  private static final MockBadGraph BAD_GRAPH = new MockBadGraph();
-  private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
+    private static final MockBadGraph BAD_GRAPH = new MockBadGraph();
+    private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
 
-  public void testNoSecurityConstant() {
-    assertEquals(URI.create("http://jrdf.sf.net/connection#NO_SECURITY"), JrdfConnectionFactory.NO_SECURITY_DOMAIN);
-  }
+    public void testNoSecurityConstant() {
+        assertEquals(URI.create("http://jrdf.sf.net/connection#NO_SECURITY"), JrdfConnectionFactory.NO_SECURITY_DOMAIN);
+    }
 
-  public void testNullSessionThrowsException() {
-    JrdfConnectionFactory factory = new JrdfConnectionFactory();
-    try {
-      factory.getSparqlConnection(null, NO_SECURITY_DOMAIN);
-      fail("Null session should have thrown IllegalArgumentException");
-    } catch (IllegalArgumentException expected) { }
-  }
+    public void testNullSessionThrowsException() {
+        JrdfConnectionFactory factory = new JrdfConnectionFactory();
+        try {
+            factory.getSparqlConnection(null, NO_SECURITY_DOMAIN);
+            fail("Null session should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException expected) { }
+    }
 
-  public void testNullSecurityDomainThrowsException() {
-    JrdfConnectionFactory factory = new JrdfConnectionFactory();
-    try {
-      factory.getSparqlConnection(BAD_GRAPH, null);
-      fail("Null security domain should have thrown IllegalArgumentException");
-    } catch (IllegalArgumentException expected) { }
-  }
+    public void testNullSecurityDomainThrowsException() {
+        JrdfConnectionFactory factory = new JrdfConnectionFactory();
+        try {
+            factory.getSparqlConnection(BAD_GRAPH, null);
+            fail("Null security domain should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException expected) { }
+    }
 
-  public void testGeSparqlConnection() {
-    JrdfConnectionFactory factory = new JrdfConnectionFactory();
-    assertNotNull(factory.getSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN));
-  }
+    public void testGeSparqlConnection() {
+        JrdfConnectionFactory factory = new JrdfConnectionFactory();
+        assertNotNull(factory.getSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN));
+    }
 
 //  public void testBadSessionPassthrough() {
 //    try {

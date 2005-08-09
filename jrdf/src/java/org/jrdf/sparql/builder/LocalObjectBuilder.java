@@ -65,8 +65,9 @@ import org.jrdf.sparql.parser.node.Node;
  * @author Tom Adams
  * @version $Revision$
  */
-interface LocalObjectBuilder<S extends Node, L> {
-    // FIXME TJA: Move these generics into the method signature!! Ala example on page 9 of generics tutorial./
+interface LocalObjectBuilder<L, S extends Node> {
+
+    // FIXME TJA: What more can we do to type check build()?
 
     /**
      * Builds the given <var>parserNode</var> into its local equivalent.

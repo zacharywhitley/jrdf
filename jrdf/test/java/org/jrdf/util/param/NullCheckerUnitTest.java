@@ -66,6 +66,7 @@ import junit.framework.TestCase;
  * @version $Revision$
  */
 public final class NullCheckerUnitTest extends TestCase {
+
     private static final NullChecker NULL_CHECKER = new NullChecker();
 
     public void testParamAllowed() {

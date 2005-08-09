@@ -67,6 +67,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  * @version $Revision$
  */
 public final class ParameterUtilUnitTest extends TestCase {
+
     private static final String NULL = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;

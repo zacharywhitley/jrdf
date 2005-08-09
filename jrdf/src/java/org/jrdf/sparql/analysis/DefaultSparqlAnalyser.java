@@ -82,6 +82,7 @@ import org.jrdf.sparql.parser.node.ATriple;
  */
 public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements SparqlAnalyser {
 
+    // FIXME TJA: Breadcrumb - Put this back in once we have a triple builder.
 //    private static final TripleBuilder TRIPLE_BUILDER = new DefaultTripleBuilder();
     private List<? extends Variable> variables = Variable.ALL_VARIABLES;
     private ConstraintExpression constraintExpression;
@@ -103,33 +104,4 @@ public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements Sp
 //        PTripleElement object = tripleNode.getObject();
 //        constraintExpression = new ConstraintTriple();
     }
-
-    public static URIReference createResource(String uri) {
-        try {
-            return getElementFactory().createResource(new URI(uri));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        try {
-            return getElementFactory().createTriple(subject, predicate, object);
-        } catch (GraphElementFactoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static GraphElementFactory getElementFactory() {
-        return createGraph().getElementFactory();
-    }
-
-    private static GraphImpl createGraph() {
-        try {
-            return new GraphImpl();
-        } catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 }

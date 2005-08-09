@@ -8,13 +8,4 @@ o Continue refactoring code.
 
 
 TJA: Done
-o Tightened up tests for class properties such as implementation of interfaces and access modifiers.
-o Added Apache licence headers to all query and connection classes that didn't contain them.
-o Added null checks to all public constructors and methods in query & sparql packages.
-o Improved formatting on legacy code.
-o Improved JavaDoc.
-o Supporting objects for simple queries: "SELECT * WHERE ?subject ?predicate ?object"
-o Fixed bug in AbstractTriple.equals() that causes triple with null fields (representing a variable/wildcard) to give NPE.
-o Added AbstractTriple.hashCode().
-o Tightened testing on Abstract triple to handle nulls as s,p,o in equals() and hashCode().
-
+o Fixed uptodate dependency for SPARQL parser building.

@@ -66,6 +66,7 @@ import junit.framework.TestCase;
  * @version $Revision$
  */
 public final class EmtpyStringCheckerUnitTest extends TestCase {
+
     public void testParamAllowed() {
         //checkParam(ParameterTestUtil.NULL_STRING); // assume null's are not handled by this checker
         checkParam(ParameterTestUtil.EMPTY_STRING);

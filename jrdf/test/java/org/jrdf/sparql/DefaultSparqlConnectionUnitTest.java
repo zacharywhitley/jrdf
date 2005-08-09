@@ -77,6 +77,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  * @version $Revision$
  */
 public class DefaultSparqlConnectionUnitTest extends TestCase {
+
     private static final MockBadGraph BAD_GRAPH = new MockBadGraph();
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
     private static final String EXECUTE_UPDATE_METHOD = "executeUpdate";

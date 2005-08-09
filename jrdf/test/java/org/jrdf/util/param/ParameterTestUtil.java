@@ -69,6 +69,7 @@ import junit.framework.Assert;
  * @version $Revision$
  */
 public final class ParameterTestUtil {
+
     public static final String NULL_STRING = null;
     public static final String EMPTY_STRING = "";
     public static final String SINGLE_SPACE = " ";
