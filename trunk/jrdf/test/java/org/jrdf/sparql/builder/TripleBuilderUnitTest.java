@@ -60,15 +60,9 @@ package org.jrdf.sparql.builder;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
-import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.PTripleElement;
-import org.jrdf.sparql.parser.node.AResourceTripleElement;
-import org.jrdf.sparql.parser.node.TResource;
-import org.jrdf.sparql.parser.node.AVariableTripleElement;
-import org.jrdf.sparql.parser.node.AVariable;
-import org.jrdf.sparql.parser.node.TVariableprefix;
-import org.jrdf.sparql.parser.node.TIdentifier;
 import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.SableCcNodeTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
@@ -79,23 +73,29 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 public final class TripleBuilderUnitTest extends TestCase {
 
     private static final String URI_DC_TITLE = SparqlQueryTestUtil.URI_DC_TITLE;
-    private static final Triple TRIPLE_BOOK_1_DC_TITLE = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE;
-    private static final Triple TRIPLE_BOOK_2_DC_TITLE = SparqlQueryTestUtil.TRIPLE_BOOK_2_DC_TITLE;
+    private static final String URI_DC_SUBJECT = SparqlQueryTestUtil.URI_DC_SUBJECT;
+    private static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
+    private static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = SparqlQueryTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
+    private static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE;
+    private static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
+    private static final String VARIABLE_NAME_TITLE = SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
+    private static final String VARIABLE_NAME_SUBJECT = SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
+    private static final String LITERAL_BOOK_TITLE = SparqlQueryTestUtil.LITERAL_BOOK_TITLE;
     private static final String URI_BOOK_1 = SparqlQueryTestUtil.URI_BOOK_1;
     private static final String URI_BOOK_2 = SparqlQueryTestUtil.URI_BOOK_2;
-    private static final String VARIABLE_PREFIX = SparqlQueryTestUtil.VARIABLE_PREFIX;
-    private static final String VARIABLE_NAME_TITLE = SparqlQueryTestUtil.VARIABLE_NAME_TITLE;;
     private static final TripleBuilder BUILDER = new TripleBuilder();
 
     public void testClassProperties() {
         // FIXME TJA: Reenable this if we figure out how to do it generically.
-//        ClassPropertiesTestUtil.checkExtensionOf(LocalObjectBuilder.class, TripleBuilder.class);
+        //ClassPropertiesTestUtil.checkExtensionOf(LocalObjectBuilder.class, TripleBuilder.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilder.class);
     }
 
     public void testBuildTripleFromParserNode() {
-        checkBuiltTriple(URI_BOOK_1, TRIPLE_BOOK_1_DC_TITLE);
-        checkBuiltTriple(URI_BOOK_2, TRIPLE_BOOK_2_DC_TITLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
+        checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
     }
 
     public void testNullThrowsException() {
@@ -105,25 +105,18 @@ public final class TripleBuilderUnitTest extends TestCase {
         } catch (Exception expected) { }
     }
 
-    private void checkBuiltTriple(String predicateUri, Triple expectedTriple) {
-        Triple triple = BUILDER.build(createTripleNode(predicateUri));
+    private void checkBuiltTripleWithVariable(Triple expectedTriple, String subjectUri, String predicateUri, String variableName) {
+        ATriple variable = SableCcNodeTestUtil.createTripleNodeWithVariable(subjectUri, predicateUri, variableName);
+        checkBuiltTriple(expectedTriple, variable);
+    }
+
+    private void checkBuiltTripleWithLiteral(Triple expectedTriple, String subjectUri, String predicateUri, String literalText) {
+        ATriple literal = SableCcNodeTestUtil.createTripleNodeWithLiteral(subjectUri, predicateUri, literalText);
+        checkBuiltTriple(expectedTriple, literal);
+    }
+
+    private void checkBuiltTriple(Triple expectedTriple, ATriple actualTripleNode) {
+        Triple triple = BUILDER.build(actualTripleNode);
         assertEquals(expectedTriple, triple);
     }
-
-    private ATriple createTripleNode(String subjectUri) {
-        PTripleElement subject = createResourceNode(subjectUri);
-        PTripleElement predicate = createResourceNode(URI_DC_TITLE);
-        PTripleElement object = createVariableNode(VARIABLE_NAME_TITLE);
-        return new ATriple(subject, predicate, object);
-    }
-
-    private AResourceTripleElement createResourceNode(String subjectUri) {
-        return new AResourceTripleElement(new TResource(subjectUri));
-    }
-
-    private AVariableTripleElement createVariableNode(String variableName) {
-        AVariable variable = new AVariable(new TVariableprefix(VARIABLE_PREFIX), new TIdentifier(variableName));
-        return new AVariableTripleElement(variable);
-    }
-
 }

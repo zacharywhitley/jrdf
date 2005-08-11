@@ -74,7 +74,7 @@ public interface SparqlAnalyser extends Analysis {
     /**
      * Indicates that this analyser has not processed a query yet.
      */
-    static Query NO_QUERY = new NoQuery();
+    static final Query NO_QUERY = new NoQuery();
 
     /**
      * Returns the query processed by this analyser.

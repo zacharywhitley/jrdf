@@ -58,11 +58,11 @@
 
 package org.jrdf.sparql;
 
+import org.jrdf.graph.NodeTestUtil;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.NodeTestUtil;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.ConstraintTriple;
 
@@ -77,16 +77,21 @@ public final class SparqlQueryTestUtil {
     public static final String URI_BOOK_2 = "http://example.org/book/book2";
     public static final String URI_BOOK_3 = "http://example.org/book/book3";
     public static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";
+    public static final String URI_DC_SUBJECT = "http://purl.org/dc/elements/1.1/subject";
     public static final String VARIABLE_PREFIX = "?";
     public static final String VARIABLE_NAME_TITLE = "title";
+    public static final String VARIABLE_NAME_SUBJECT = "subject";
+    public static final String LITERAL_BOOK_TITLE = "The Pragmatic Programmer";
     public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
     public static final String QUERY_BOOK_1_DC_TITLE = createQueryString(URI_BOOK_1, URI_DC_TITLE, VARIABLE_TITLE);
     public static final String QUERY_BOOK_2_DC_TITLE = createQueryString(URI_BOOK_2, URI_DC_TITLE, VARIABLE_TITLE);
     public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = createBookDcTitleExpression(URI_BOOK_1);
     public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = createBookDcTitleExpression(URI_BOOK_2);
-    public static final Triple TRIPLE_BOOK_1_DC_TITLE = createDcTitleTriple(URI_BOOK_1);
-    public static final Triple TRIPLE_BOOK_2_DC_TITLE = createDcTitleTriple(URI_BOOK_2);
+    public static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_1);
+    public static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_2);
     public static final Triple TRIPLE_BOOK_3_DC_TITLE = createDcTitleTriple(URI_BOOK_3);
+    public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = createDcSubjectTriple(URI_BOOK_1);
+    public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = createDcSubjectTriple(URI_BOOK_1, LITERAL_BOOK_TITLE);
     private static final ObjectNode ANY_OBJECT_NODE = null;
 
     private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {
@@ -103,12 +108,34 @@ public final class SparqlQueryTestUtil {
     }
 
     private static Triple createDcTitleTriple(String bookUri) {
-        return createTripleWithWildcardObject(bookUri, URI_DC_TITLE);
+        return createTripleWithVariableObject(bookUri, URI_DC_TITLE);
     }
 
-    private static Triple createTripleWithWildcardObject(String subjectUri, String predicateUri) {
+    private static Triple createDcSubjectTriple(String bookUri) {
+        return createTripleWithVariableObject(bookUri, URI_DC_SUBJECT);
+    }
+
+    private static Triple createDcSubjectTriple(String bookUri, String literal) {
+        return createTripleWithLiteralObject(bookUri, URI_DC_SUBJECT, literal);
+    }
+
+    private static Triple createTripleWithVariableObject(String subjectUri, String predicateUri) {
+        ObjectNode object = ANY_OBJECT_NODE;
+        return createTriple(subjectUri, predicateUri, object);
+    }
+
+    private static Triple createTripleWithLiteralObject(String subjectUri, String predicateUri, String literal) {
+        ObjectNode object = NodeTestUtil.createLiteral(literal);
+        return createTriple(subjectUri, predicateUri, object);
+    }
+
+    private static Triple createTriple(String subjectUri, String predicateUri, ObjectNode object) {
         SubjectNode subject = NodeTestUtil.createResource(subjectUri);
         PredicateNode predicate = NodeTestUtil.createResource(predicateUri);
-        return NodeTestUtil.createTriple(subject, predicate, ANY_OBJECT_NODE);
+        return createTriple(subject,  predicate, object);
+    }
+
+    private static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return NodeTestUtil.createTriple(subject, predicate, object);
     }
 }

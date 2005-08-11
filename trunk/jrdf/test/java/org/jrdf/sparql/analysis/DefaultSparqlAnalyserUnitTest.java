@@ -61,6 +61,9 @@ package org.jrdf.sparql.analysis;
 import junit.framework.TestCase;
 import org.jrdf.sparql.parser.analysis.Analysis;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.SableCcNodeTestUtil;
+import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
@@ -84,11 +87,21 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
     // Note. getQuery() should always return SparqlAnalyser.NO_QUERY when not applied via SableCC framework.
     public void testGetQueryAlwaysReturnsNoQueryWhenNotApplied() {
         SparqlAnalyser analyser = new DefaultSparqlAnalyser();
-        checkGetQuery(analyser);
-        checkGetQuery(analyser);
+        checkGetQueryReturnsNoQuery(analyser);
+        checkGetQueryReturnsNoQuery(analyser);
     }
 
-    private void checkGetQuery(SparqlAnalyser analyser) {
+    // FIXME TJA: Breadcrumb - Call outATriple() with a triple, then check that getQuery() returns a query with the correct constraint expression.
+    public void testParsingTripleReturnsCorrectQuery() {
+        DefaultSparqlAnalyser analyser = new DefaultSparqlAnalyser();
+        checkGetQueryReturnsNoQuery(analyser);
+        ATriple triple = SableCcNodeTestUtil.createTripleNodeWithVariable(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE, SparqlQueryTestUtil.VARIABLE_NAME_TITLE);
+        analyser.outATriple(triple);
+        // FIXME TJA: More stuff here
+    }
+
+
+    private void checkGetQueryReturnsNoQuery(SparqlAnalyser analyser) {
         assertEquals(SparqlAnalyser.NO_QUERY, analyser.getQuery());
     }
 
