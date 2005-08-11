@@ -71,13 +71,11 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.mem.GraphImpl;
 
 /**
- * Remove this class!!! Not test driven. Contains duplicate code!!
  * @author Tom Adams
  * @version $Revision$
  */
-public class XxxQuery implements Query {
-     // FIXME TJA: Remove this class from production source.
-    // FIXME TJA: Rename, possibly to MockQuery, then delgate duplicated code to test utilities.
+public class MockQuery implements Query {
+    // FIXME TJA: Remove duplicated code into test utilities, or test drive out code in TripleBuilder into utility.
 
     private static final String URI_BOOK_1 = "http://example.org/book/book1";
     private static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";

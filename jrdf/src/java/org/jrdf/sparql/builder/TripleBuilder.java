@@ -62,13 +62,19 @@ import java.net.URI;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.sparql.parser.node.ALiteralTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.AVariableTripleElement;
+import org.jrdf.sparql.parser.node.Node;
+import org.jrdf.sparql.parser.node.PLiteral;
+import org.jrdf.sparql.parser.node.PTripleElement;
 import org.jrdf.util.param.ParameterUtil;
 
 /**
@@ -76,7 +82,11 @@ import org.jrdf.util.param.ParameterUtil;
  * @author Tom Adams
  * @version $Revision$
  */
-final class TripleBuilder {
+public final class TripleBuilder {
+    // FIXME TJA: Test drive out code to do with creating triples & resources, etc. into a utility.
+
+    private static final String SINGLE_QUOTE = "'";
+    private static final ObjectNode ANY_VALUE = null;
 
     /**
      * Builds the given <var>tripleNode</var> into a local Triple.
@@ -84,27 +94,66 @@ final class TripleBuilder {
      * @return The local version of the given <var>tripleNode</var>
      */
     public Triple build(ATriple tripleNode) {
-        // FIXME TJA: Breadcrumb - Do the actually pulling apart of the node here to get the test to pass.
         ParameterUtil.checkNotNull("tripleNode", tripleNode);
-        return createTriple(buildSubject(tripleNode), buildPredicate(tripleNode), buildObject(tripleNode));
+        SubjectNode subject = buildSubject(tripleNode);
+        PredicateNode predicate = buildPredicate(tripleNode);
+        ObjectNode object = buildObject(tripleNode);
+        return createTriple(subject, predicate, object);
     }
 
     private URIReference buildSubject(ATriple tripleNode) {
-        String str = tripleNode.getSubject().toString();
-        return createResource(trim(str));
+        return createResource(getStringForm(tripleNode.getSubject()));
     }
 
     private URIReference buildPredicate(ATriple tripleNode) {
-        return createResource("http://purl.org/dc/elements/1.1/title");
+        return createResource(getStringForm(tripleNode.getPredicate()));
     }
 
     private ObjectNode buildObject(ATriple tripleNode) {
-        return null;
+        // FIXME TJA: Use the visitor pattern to do this.
+        PTripleElement object = tripleNode.getObject();
+        if (object instanceof AVariableTripleElement) {
+            return ANY_VALUE;
+        } else {
+            PLiteral literal = ((ALiteralTripleElement) object).getLiteral();
+            String text = extractTextFromLiteralNode(literal);
+            return createLiteral(text);
+        }
+    }
+
+    // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() & Kowari::ItqlIntepreter::getLiteralText()
+    // FIXME TJA: Handle datatypes.
+    // FIXME TJA: Handle language code.
+    private String extractTextFromLiteralNode(PLiteral literal) {
+        return trim(stripQuotes(literal));
+    }
+
+    private String stripQuotes(PLiteral literal) {
+        String lexicalValue = literal.toString();
+        int start = lexicalValue.indexOf(SINGLE_QUOTE) + 1;
+        int end = lexicalValue.lastIndexOf(SINGLE_QUOTE);
+        return lexicalValue.substring(start, end);
+    }
+
+    private String getStringForm(Node node) {
+        return trim(node.toString());
+    }
+
+    private String trim(String s) {
+        return s.trim();
     }
 
     private URIReference createResource(String uri) {
         try {
             return getElementFactory().createResource(new URI(uri));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Literal createLiteral(String lexicalValue) {
+        try {
+            return getElementFactory().createLiteral(lexicalValue);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -128,9 +177,5 @@ final class TripleBuilder {
         } catch (GraphException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private String trim(String str) {
-        return str.trim();
     }
 }

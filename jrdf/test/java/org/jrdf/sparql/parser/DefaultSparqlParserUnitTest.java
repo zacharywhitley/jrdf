@@ -63,7 +63,7 @@ import junit.framework.TestCase;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.query.XxxQuery;
+import org.jrdf.query.MockQuery;
 import org.jrdf.query.Variable;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -140,7 +140,7 @@ public final class DefaultSparqlParserUnitTest extends TestCase {
 
     private MockSparqlAnalyser createMockSparqlAnalyser() {
         MockSparqlAnalyser mockAnalyser = new MockSparqlAnalyser();
-        mockAnalyser.prepare(new XxxQuery());
+        mockAnalyser.prepare(new MockQuery());
         return mockAnalyser;
     }
 }

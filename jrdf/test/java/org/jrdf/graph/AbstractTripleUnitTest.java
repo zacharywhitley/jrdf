@@ -72,8 +72,8 @@ public final class AbstractTripleUnitTest extends TestCase {
 
     private static final Triple TRIPLE_ALL_NULL_1 = NodeTestUtil.createTriple(null, null, null);
     private static final Triple TRIPLE_ALL_NULL_2 = NodeTestUtil.createTriple(null, null, null);
-    private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE;
-    private static final Triple TRIPLE_2 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE;
+    private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
+    private static final Triple TRIPLE_2 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
     private static final URIReference URI_URN_FOO = NodeTestUtil.createResource("urn:foo");
     private static final Triple TRIPLE_URI_URN_FOO = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
     private static final Triple TRIPLE_NULL_SUBJECT = NodeTestUtil.createTriple(null, URI_URN_FOO, URI_URN_FOO);

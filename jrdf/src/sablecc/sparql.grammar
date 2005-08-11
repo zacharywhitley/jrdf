@@ -91,7 +91,7 @@ Productions
     {variable} variable ;
 
   literal =
-    [opening]:quote strand* [closing]:quote datatype?;
+    [opening]:quote strand* [closing]:quote;  /*datatype?;*/
 
   strand =
     {unescaped} text |

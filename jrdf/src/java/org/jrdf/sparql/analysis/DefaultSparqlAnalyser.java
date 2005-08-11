@@ -58,20 +58,7 @@
 
 package org.jrdf.sparql.analysis;
 
-import java.net.URI;
-import java.util.List;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.Query;
-import org.jrdf.query.Variable;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
 
@@ -82,26 +69,22 @@ import org.jrdf.sparql.parser.node.ATriple;
  */
 public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements SparqlAnalyser {
 
-    // FIXME TJA: Breadcrumb - Put this back in once we have a triple builder.
-//    private static final TripleBuilder TRIPLE_BUILDER = new DefaultTripleBuilder();
-    private List<? extends Variable> variables = Variable.ALL_VARIABLES;
-    private ConstraintExpression constraintExpression;
+//    private static final TripleBuilder TRIPLE_BUILDER = new TripleBuilder();
+//    private List<? extends Variable> variables = Variable.ALL_VARIABLES;
+    private Query query = SparqlAnalyser.NO_QUERY;
+
 
     /**
      * {@inheritDoc}
      */
     public Query getQuery() {
-        // FIXME TJA: Need to be careful that the tests on this check careful state keeping.
-        return SparqlAnalyser.NO_QUERY;
+        // FIXME TJA: Need to be careful that the tests on this method check careful state keeping.
+        return query;
     }
 
-    // FIXME TJA: We will really want to create a ConstraintExpressionBuilder to do this work for us.
-    // FIXME TJA: Breadcrumb - Move all from here down into a TripleBuilder.
+    // FIXME TJA: Don't set the query here, just set it's constituents.
     public void outATriple(ATriple tripleNode) {
-//        constraintExpression = TRIPLE_BUILDER.buildTriple(tripleNode);
-//        PTripleElement subject = tripleNode.getSubject();
-//        PTripleElement predicate = tripleNode.getPredicate();
-//        PTripleElement object = tripleNode.getObject();
-//        constraintExpression = new ConstraintTriple();
+//        Triple triple = TRIPLE_BUILDER.build(tripleNode);
+//        ConstraintExpression constraintExpression = new ConstraintTriple(triple);
     }
 }

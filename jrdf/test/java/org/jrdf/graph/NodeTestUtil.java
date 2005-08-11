@@ -76,6 +76,14 @@ public final class NodeTestUtil {
         }
     }
 
+    public static Literal createLiteral(String literal) {
+        try {
+            return getElementFactory().createLiteral(literal);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     public static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {

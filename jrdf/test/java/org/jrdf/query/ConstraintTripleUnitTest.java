@@ -70,8 +70,8 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public final class ConstraintTripleUnitTest extends TestCase {
 
-    private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE;
-    private static final Triple TRIPLE_2 = SparqlQueryTestUtil.TRIPLE_BOOK_2_DC_TITLE;
+    private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
+    private static final Triple TRIPLE_2 = SparqlQueryTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
     private static final ConstraintTriple CONSTRAINT_TRIPLE_1 = new ConstraintTriple(TRIPLE_1);
     private static final ConstraintTriple CONSTRAINT_TRIPLE_2 = new ConstraintTriple(TRIPLE_2);
 
