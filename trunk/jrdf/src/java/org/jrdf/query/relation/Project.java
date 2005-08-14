@@ -1,6 +1,7 @@
 package org.jrdf.query.relation;
 
 import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.operation.Operation;
 
 import java.util.Set;
 
@@ -13,7 +14,7 @@ import java.util.Set;
  *
  * @version $Revision$
  */
-public interface Project extends Operation {
+public interface Project {
   /**
    * The attributes to include in the projection.  Will overwrite any existing
    * inclusion or exclusion.
