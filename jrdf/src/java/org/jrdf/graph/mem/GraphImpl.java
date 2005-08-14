@@ -110,6 +110,9 @@ public class GraphImpl implements Graph, Serializable {
    * Triple Element Factory.  This caches the element factory.
    */
   private transient TripleFactoryImpl tripleFactory;
+  private LongIndexMem longIndex012;
+  private LongIndexMem longIndex120;
+  private LongIndexMem longIndex201;
 
   /**
    * Default constructor.
@@ -137,6 +140,10 @@ public class GraphImpl implements Graph, Serializable {
     if (null == index201) {
       index201 = new HashMap<Long, Map<Long, Set<Long>>>();
     }
+
+    longIndex012 = new LongIndexMem(index012);
+    longIndex120 = new LongIndexMem(index120);
+    longIndex201 = new LongIndexMem(index201);
 
     if (null == elementFactory) {
       try {
@@ -628,23 +635,23 @@ public class GraphImpl implements Graph, Serializable {
     // fill in the other indexes
     try {
       // iterate over the first column
-      Iterator firstEntries = index012.entrySet().iterator();
+      Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = iterator012();
       while (firstEntries.hasNext()) {
-        Map.Entry firstEntry = (Map.Entry) firstEntries.next();
-        Long first = (Long) firstEntry.getKey();
+        Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
+        Long first = firstEntry.getKey();
         // now iterate over the second column
-        Iterator secondEntries = ((Map) firstEntry.getValue()).entrySet().
-            iterator();
+        Iterator<Map.Entry<Long, Set<Long>>> secondEntries =
+            firstEntry.getValue().entrySet().iterator();
         while (secondEntries.hasNext()) {
-          Map.Entry secondEntry = (Map.Entry) secondEntries.next();
-          Long second = (Long) secondEntry.getKey();
+          Map.Entry<Long, Set<Long>> secondEntry = secondEntries.next();
+          Long second = secondEntry.getKey();
           // now iterate over the third column
-          Iterator thirdValues = ((Set) secondEntry.getValue()).iterator();
+          Iterator<Long> thirdValues = secondEntry.getValue().iterator();
           while (thirdValues.hasNext()) {
-            Long third = (Long) thirdValues.next();
+            Long third = thirdValues.next();
             // now add the row to the other two indexes
-            add(index120, second, third, first);
-            add(index201, third, first, second);
+            longIndex120.add(second, third, first);
+            longIndex201.add(third, first, second);
           }
         }
       }
@@ -721,23 +728,23 @@ public class GraphImpl implements Graph, Serializable {
 
   void removeFrom012(Long first, Long second, Long third)
       throws GraphException {
-    remove(index012, first, second, third);
+    longIndex012.remove(first, second, third);
   }
 
   void removeFrom120(Long first, Long second, Long third)
       throws GraphException {
-    remove(index120, first, second, third);
+    longIndex120.remove(first, second, third);
   }
 
   void removeFrom201(Long first, Long second, Long third)
       throws GraphException {
-    remove(index201, first, second, third);
+    longIndex201.remove(first, second, third);
   }
 
   void addTo012(Long first, Long second, Long third)
       throws GraphException {
     try {
-      add(index012, first, second, third);
+      longIndex012.add(first, second, third);
     }
     catch (GraphException e) {
       removeFrom012(first, second, third);
@@ -748,7 +755,7 @@ public class GraphImpl implements Graph, Serializable {
   void addTo120(Long first, Long second, Long third)
       throws GraphException {
     try {
-      add(index120, first, second, third);
+      longIndex120.add(first, second, third);
     }
     catch (GraphException e) {
       removeFrom120(first, second, third);
@@ -758,45 +765,7 @@ public class GraphImpl implements Graph, Serializable {
 
   void addTo201(Long first, Long second, Long third)
       throws GraphException {
-    add(index201, first, second, third);
-  }
-
-  /**
-   * Removes a triple from a single index.
-   *
-   * @param index The index to remove the statement from.
-   * @param first The first node.
-   * @param second The second node.
-   * @param third The last node.
-   * @throws GraphException If there was an error revoking the statement, for
-   *     example if it didn't exist.
-   */
-  private void remove(Map<Long, Map<Long, Set<Long>>> index, Long first,
-      Long second, Long third) throws GraphException {
-
-    // find the sub index
-    Map<Long, Set<Long>> subIndex = index.get(first);
-    // check that the subindex exists
-    if (null == subIndex) {
-      throw new GraphException("Unable to remove nonexistent statement");
-    }
-    // find the final group
-    Set<Long> group = subIndex.get(second);
-    // check that the group exists
-    if (null == group) {
-      throw new GraphException("Unable to remove nonexistent statement");
-    }
-    // remove from the group, report error if it didn't exist
-    if (!group.remove(third)) {
-      throw new GraphException("Unable to remove nonexistent statement");
-    }
-    // clean up the graph
-    if (group.isEmpty()) {
-      subIndex.remove(second);
-      if (subIndex.isEmpty()) {
-        index.remove(first);
-      }
-    }
+    longIndex201.add(first, second, third);
   }
 
   Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012() {
@@ -809,38 +778,5 @@ public class GraphImpl implements Graph, Serializable {
 
   Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201() {
     return index201.entrySet().iterator();
-  }
-
-  /**
-   * Adds a triple to a single index.  This method defines the internal structure.
-   *
-   * @param index The index to add the statement to.
-   * @param first The first node id.
-   * @param second The second node id.
-   * @param third The last node id.
-   * @throws GraphException If there was an error adding the statement.
-   */
-  private void add(Map<Long, Map<Long, Set<Long>>> index, Long first, Long second,
-      Long third) throws GraphException {
-    // find the sub index
-    Map<Long, Set<Long>> subIndex = index.get(first);
-    // check that the subindex exists
-    if (null == subIndex) {
-      // no, so create it and add it to the index
-      subIndex = new HashMap<Long, Set<Long>>();
-      index.put(first, subIndex);
-    }
-
-    // find the final group
-    Set<Long> group = subIndex.get(second);
-    // check that the group exists
-    if (null == group) {
-      // no, so create it and add it to the subindex
-      group = new HashSet<Long>();
-      subIndex.put(second, group);
-    }
-
-    // Add the final node to the group
-    group.add(third);
   }
 }
