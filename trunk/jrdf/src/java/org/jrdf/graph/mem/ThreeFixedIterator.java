@@ -72,23 +72,33 @@ import java.util.NoSuchElementException;
  */
 public class ThreeFixedIterator implements ClosableIterator<Triple> {
 
-  /** The graph this iterator will operate on.  Only needed by the remove method. */
+  /**
+   * The graph this iterator will operate on.  Only needed by the remove
+   * method.
+   */
   private Graph graph;
 
-  /** The triple to return on */
+  /**
+   * The triple to return on
+   */
   private TripleImpl triple;
 
-  /** The triple to remove */
+  /**
+   * The triple to remove
+   */
   private TripleImpl removeTriple;
-
 
   /**
    * Constructor.
    */
-  ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object) throws GraphException {
+  ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object)
+      throws GraphException {
     graph = newGraph;
-    if (newGraph.contains((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object)) {
-      triple = new TripleImpl((SubjectNode)subject, (PredicateNode)predicate, (ObjectNode)object);
+    if (newGraph.contains((SubjectNode) subject, (PredicateNode) predicate,
+        (ObjectNode) object)) {
+      triple =
+          new TripleImpl((SubjectNode) subject, (PredicateNode) predicate,
+              (ObjectNode) object);
     }
     removeTriple = null;
   }
@@ -129,7 +139,8 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
       try {
         graph.remove(removeTriple);
         removeTriple = null;
-      } catch (GraphException ge) {
+      }
+      catch (GraphException ge) {
         throw new IllegalStateException(ge.getMessage());
       }
     }
@@ -147,5 +158,4 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
   public boolean close() {
     return true;
   }
-
 }

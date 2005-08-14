@@ -60,8 +60,12 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphException;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.Iterator;
+
 /**
- * Handles the modification of an index as we iterate through for the 201 index.
+ * Handles operations on 201 index.
  *
  * @author Andrew Newman
  *
@@ -77,5 +81,13 @@ public class GraphHandler201 implements GraphHandler {
   public void remove(Long[] currentNodes) throws GraphException {
     graph.removeFrom012(currentNodes[1], currentNodes[2], currentNodes[0]);
     graph.removeFrom120(currentNodes[2], currentNodes[0], currentNodes[1]);
+  }
+
+  public void add(Long[] currentNodes) throws GraphException {
+    graph.addTo012(currentNodes[0], currentNodes[1], currentNodes[2]);
+  }
+
+  public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+    return graph.iterator201();
   }
 }
