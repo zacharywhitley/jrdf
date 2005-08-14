@@ -9,7 +9,7 @@ import org.jrdf.graph.operation.Operation;
  * The general algorithm is:
  * 1. Find all matching attributes on two relations.
  * 2. Union the attributes and tuples together.
- * 3. Remove any attributes that are no common between the two.
+ * 3. Remove any attributes that are not common between the two.
  *
  * For example:
  * Relation 1 has the following statements: <1, a, foo>, <1, b, bar>,
