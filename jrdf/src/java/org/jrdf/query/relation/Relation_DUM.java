@@ -33,6 +33,4 @@ public class Relation_DUM implements Relation {
     return FALSE_TUPLE;
   }
 
-  public static class FalseSubjectNode implements SubjectNode {
-  }
 }

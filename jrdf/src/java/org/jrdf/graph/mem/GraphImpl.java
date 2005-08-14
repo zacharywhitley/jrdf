@@ -153,6 +153,20 @@ public class GraphImpl implements Graph, Serializable {
   }
 
   /**
+   * Test the graph for the occurrence of the triple.  A null value for any
+   * of the parts of a triple are treated as unconstrained, any values will be
+   * returned.
+   *
+   * @param triple The triple to find.
+   * @return True if the triple is found in the graph, otherwise false.
+   * @throws GraphException If there was an error accessing the graph.
+   */
+  public boolean contains(Triple triple) throws GraphException {
+    return contains(triple.getSubject(), triple.getPredicate(),
+        triple.getObject());
+  }
+
+  /**
    * Test the graph for the occurrence of a statement.  A null value for any
    * of the parts of a triple are treated as unconstrained, any values will be
    * returned.
@@ -261,20 +275,6 @@ public class GraphImpl implements Graph, Serializable {
   }
 
   /**
-   * Test the graph for the occurrence of the triple.  A null value for any
-   * of the parts of a triple are treated as unconstrained, any values will be
-   * returned.
-   *
-   * @param triple The triple to find.
-   * @return True if the triple is found in the graph, otherwise false.
-   * @throws GraphException If there was an error accessing the graph.
-   */
-  public boolean contains(Triple triple) throws GraphException {
-    return contains(triple.getSubject(), triple.getPredicate(),
-        triple.getObject());
-  }
-
-  /**
    * Returns an iterator to a set of statements that match a given subject,
    * predicate and object.  A null value for any of the parts of a triple are
    * treated as unconstrained, any values will be returned.
@@ -356,8 +356,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     // {***} so return entire graph
-    return new GraphIterator(index012.entrySet().iterator(), elementFactory,
-        new GraphHandler012(this));
+    return new GraphIterator(elementFactory, new GraphHandler012(this));
   }
 
   /**
@@ -370,6 +369,29 @@ public class GraphImpl implements Graph, Serializable {
    */
   public ClosableIterator<Triple> find(Triple triple) throws GraphException {
     return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
+  }
+
+  /**
+   * Adds an iterator containing triples into the graph.
+   *
+   * @param triples The triple iterator.
+   * @throws GraphException If the statements can't be made.
+   */
+  public void add(Iterator triples) throws GraphException {
+    while (triples.hasNext()) {
+      Triple triple = (Triple) triples.next();
+      add(triple);
+    }
+  }
+
+  /**
+   * Adds a triple to the graph.
+   *
+   * @param triple The triple.
+   * @throws GraphException If the statement can't be made.
+   */
+  public void add(Triple triple) throws GraphException {
+    add(triple.getSubject(), triple.getPredicate(), triple.getObject());
   }
 
   /**
@@ -386,50 +408,33 @@ public class GraphImpl implements Graph, Serializable {
     // Get local node values also tests that it's a valid subject, predicate
     // and object.
     Long[] values = localize(subject, predicate, object);
-
-    // add to the first index
-    add(index012, values[0], values[1], values[2]);
-
-    // try and back out changes if an insertion fails
-    try {
-      // add to the second index
-      add(index120, values[1], values[2], values[0]);
-      try {
-        // add to the third index
-        add(index201, values[2], values[0], values[1]);
-      }
-      catch (GraphException e) {
-        removeFrom120(values[1], values[2], values[0]);
-        throw e;
-      }
-    }
-    catch (GraphException e) {
-      removeFrom012(values[0], values[1], values[2]);
-      throw e;
-    }
+    addTo012(values[0], values[1], values[2]);
+    addTo120(values[1], values[2], values[0]);
+    addTo201(values[2], values[0], values[1]);
   }
 
   /**
-   * Adds a triple to the graph.
-   *
-   * @param triple The triple.
-   * @throws GraphException If the statement can't be made.
-   */
-  public void add(Triple triple) throws GraphException {
-    add(triple.getSubject(), triple.getPredicate(), triple.getObject());
-  }
-
-  /**
-   * Adds an iterator containing triples into the graph.
+   * Removes an iterator containing triples from the graph.
    *
    * @param triples The triple iterator.
-   * @throws GraphException If the statements can't be made.
+   * @throws GraphException If the statements can't be revoked.
    */
-  public void add(Iterator triples) throws GraphException {
+  public void remove(Iterator triples) throws GraphException {
     while (triples.hasNext()) {
       Triple triple = (Triple) triples.next();
-      add(triple);
+      remove(triple);
     }
+  }
+
+  /**
+   * Removes a triple from the graph.
+   *
+   * @param triple The triple.
+   * @throws GraphException If there was an error revoking the statement, for
+   *     example if it didn't exist.
+   */
+  public void remove(Triple triple) throws GraphException {
+    remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
   }
 
   /**
@@ -455,30 +460,6 @@ public class GraphImpl implements Graph, Serializable {
     }
     finally {
       removeFrom201(values[2], values[0], values[1]);
-    }
-  }
-
-  /**
-   * Removes a triple from the graph.
-   *
-   * @param triple The triple.
-   * @throws GraphException If there was an error revoking the statement, for
-   *     example if it didn't exist.
-   */
-  public void remove(Triple triple) throws GraphException {
-    remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
-  }
-
-  /**
-   * Removes an iterator containing triples from the graph.
-   *
-   * @param triples The triple iterator.
-   * @throws GraphException If the statements can't be revoked.
-   */
-  public void remove(Iterator triples) throws GraphException {
-    while (triples.hasNext()) {
-      Triple triple = (Triple) triples.next();
-      remove(triple);
     }
   }
 
@@ -592,92 +573,6 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     return localValues;
-  }
-
-  /**
-   * Adds a triple to a single index.  This method defines the internal structure.
-   *
-   * @param index The index to add the statement to.
-   * @param first The first node id.
-   * @param second The second node id.
-   * @param third The last node id.
-   * @throws GraphException If there was an error adding the statement.
-   */
-  private void add(Map<Long, Map<Long, Set<Long>>> index, Long first, Long second,
-      Long third) throws GraphException {
-    // find the sub index
-    Map<Long, Set<Long>> subIndex = index.get(first);
-    // check that the subindex exists
-    if (null == subIndex) {
-      // no, so create it and add it to the index
-      subIndex = new HashMap<Long, Set<Long>>();
-      index.put(first, subIndex);
-    }
-
-    // find the final group
-    Set<Long> group = subIndex.get(second);
-    // check that the group exists
-    if (null == group) {
-      // no, so create it and add it to the subindex
-      group = new HashSet<Long>();
-      subIndex.put(second, group);
-    }
-
-    // Add the final node to the group
-    group.add(third);
-  }
-
-  void removeFrom012(Long first, Long second, Long third)
-      throws GraphException {
-    remove(index012, first, second, third);
-  }
-
-  void removeFrom120(Long first, Long second, Long third)
-      throws GraphException {
-    remove(index120, first, second, third);
-  }
-
-  void removeFrom201(Long first, Long second, Long third)
-      throws GraphException {
-    remove(index201, first, second, third);
-  }
-
-  /**
-   * Removes a triple from a single index.
-   *
-   * @param index The index to remove the statement from.
-   * @param first The first node.
-   * @param second The second node.
-   * @param third The last node.
-   * @throws GraphException If there was an error revoking the statement, for
-   *     example if it didn't exist.
-   */
-  private void remove(Map<Long, Map<Long, Set<Long>>> index, Long first,
-      Long second, Long third) throws GraphException {
-
-    // find the sub index
-    Map<Long, Set<Long>> subIndex = index.get(first);
-    // check that the subindex exists
-    if (null == subIndex) {
-      throw new GraphException("Unable to remove nonexistent statement");
-    }
-    // find the final group
-    Set<Long> group = subIndex.get(second);
-    // check that the group exists
-    if (null == group) {
-      throw new GraphException("Unable to remove nonexistent statement");
-    }
-    // remove from the group, report error if it didn't exist
-    if (!group.remove(third)) {
-      throw new GraphException("Unable to remove nonexistent statement");
-    }
-    // clean up the graph
-    if (group.isEmpty()) {
-      subIndex.remove(second);
-      if (subIndex.isEmpty()) {
-        index.remove(first);
-      }
-    }
   }
 
   /**
@@ -824,4 +719,128 @@ public class GraphImpl implements Graph, Serializable {
     }
   }
 
+  void removeFrom012(Long first, Long second, Long third)
+      throws GraphException {
+    remove(index012, first, second, third);
+  }
+
+  void removeFrom120(Long first, Long second, Long third)
+      throws GraphException {
+    remove(index120, first, second, third);
+  }
+
+  void removeFrom201(Long first, Long second, Long third)
+      throws GraphException {
+    remove(index201, first, second, third);
+  }
+
+  void addTo012(Long first, Long second, Long third)
+      throws GraphException {
+    try {
+      add(index012, first, second, third);
+    }
+    catch (GraphException e) {
+      removeFrom012(first, second, third);
+      throw e;
+    }
+  }
+
+  void addTo120(Long first, Long second, Long third)
+      throws GraphException {
+    try {
+      add(index120, first, second, third);
+    }
+    catch (GraphException e) {
+      removeFrom120(first, second, third);
+      throw e;
+    }
+  }
+
+  void addTo201(Long first, Long second, Long third)
+      throws GraphException {
+    add(index201, first, second, third);
+  }
+
+  /**
+   * Removes a triple from a single index.
+   *
+   * @param index The index to remove the statement from.
+   * @param first The first node.
+   * @param second The second node.
+   * @param third The last node.
+   * @throws GraphException If there was an error revoking the statement, for
+   *     example if it didn't exist.
+   */
+  private void remove(Map<Long, Map<Long, Set<Long>>> index, Long first,
+      Long second, Long third) throws GraphException {
+
+    // find the sub index
+    Map<Long, Set<Long>> subIndex = index.get(first);
+    // check that the subindex exists
+    if (null == subIndex) {
+      throw new GraphException("Unable to remove nonexistent statement");
+    }
+    // find the final group
+    Set<Long> group = subIndex.get(second);
+    // check that the group exists
+    if (null == group) {
+      throw new GraphException("Unable to remove nonexistent statement");
+    }
+    // remove from the group, report error if it didn't exist
+    if (!group.remove(third)) {
+      throw new GraphException("Unable to remove nonexistent statement");
+    }
+    // clean up the graph
+    if (group.isEmpty()) {
+      subIndex.remove(second);
+      if (subIndex.isEmpty()) {
+        index.remove(first);
+      }
+    }
+  }
+
+  Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012() {
+    return index012.entrySet().iterator();
+  }
+
+  Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator120() {
+    return index120.entrySet().iterator();
+  }
+
+  Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201() {
+    return index201.entrySet().iterator();
+  }
+
+  /**
+   * Adds a triple to a single index.  This method defines the internal structure.
+   *
+   * @param index The index to add the statement to.
+   * @param first The first node id.
+   * @param second The second node id.
+   * @param third The last node id.
+   * @throws GraphException If there was an error adding the statement.
+   */
+  private void add(Map<Long, Map<Long, Set<Long>>> index, Long first, Long second,
+      Long third) throws GraphException {
+    // find the sub index
+    Map<Long, Set<Long>> subIndex = index.get(first);
+    // check that the subindex exists
+    if (null == subIndex) {
+      // no, so create it and add it to the index
+      subIndex = new HashMap<Long, Set<Long>>();
+      index.put(first, subIndex);
+    }
+
+    // find the final group
+    Set<Long> group = subIndex.get(second);
+    // check that the group exists
+    if (null == group) {
+      // no, so create it and add it to the subindex
+      group = new HashSet<Long>();
+      subIndex.put(second, group);
+    }
+
+    // Add the final node to the group
+    group.add(third);
+  }
 }

@@ -84,7 +84,7 @@ import java.util.Set;
 public final class GraphIterator implements ClosableIterator<Triple> {
 
   /** The iterator for the first index. */
-  private Iterator iterator;
+  private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
 
   /** The iterator for the second index. */
   private Iterator subIterator;
@@ -98,7 +98,10 @@ public final class GraphIterator implements ClosableIterator<Triple> {
   /** The current element for the iterator on the second index. */
   private Map.Entry secondEntry;
 
-  /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
+  /**
+   * The current subject predicate and object, last returned from next().
+   * Only needed by the remove method.
+   * */
   private Long[] currentNodes;
 
   /** The nodeFactory used to create the nodes to be returned in the triples. */
@@ -106,6 +109,8 @@ public final class GraphIterator implements ClosableIterator<Triple> {
 
   /** Handles the removal of nodes */
   private GraphHandler handler;
+
+  /** True if next has been called */
   private boolean nextCalled = false;
 
   /**
@@ -114,8 +119,7 @@ public final class GraphIterator implements ClosableIterator<Triple> {
    * @throws IllegalArgumentException Must be created with implementations from
    *   the memory package.
    */
-  GraphIterator(Iterator newIterator, GraphElementFactory newNodeFactory,
-      GraphHandler newHandler) {
+  GraphIterator(GraphElementFactory newNodeFactory, GraphHandler newHandler) {
     if (!(newNodeFactory instanceof GraphElementFactoryImpl)) {
       throw new IllegalArgumentException("Node factory must be a memory " +
           "implementation");
@@ -124,7 +128,7 @@ public final class GraphIterator implements ClosableIterator<Triple> {
     // store the node factory
     nodeFactory = (GraphElementFactoryImpl) newNodeFactory;
     handler = newHandler;
-    iterator = newIterator;
+    iterator = handler.getEntries();
   }
 
 
@@ -241,7 +245,6 @@ public final class GraphIterator implements ClosableIterator<Triple> {
         iterator.remove();
       }
     }
-    //handler.clean(secondEntry, subIterator, subIndex, );
   }
 
 
@@ -270,5 +273,4 @@ public final class GraphIterator implements ClosableIterator<Triple> {
   public boolean close() {
     return true;
   }
-
 }

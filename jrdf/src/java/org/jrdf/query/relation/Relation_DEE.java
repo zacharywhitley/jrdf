@@ -39,6 +39,4 @@ public class Relation_DEE implements Relation {
     return TRUE_TUPLE;
   }
 
-  public static class TrueSubjectNode implements SubjectNode {
-  }
 }
