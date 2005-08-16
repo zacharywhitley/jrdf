@@ -71,7 +71,8 @@ import java.util.Set;
  *
  * @version $Revision$
  */
-public class GraphHandler012 implements GraphHandler {
+public class GraphHandler012 extends AbstractGraphHandler
+    implements GraphHandler {
   protected GraphImpl graph;
 
   public GraphHandler012(GraphImpl graph) {

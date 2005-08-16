@@ -2,10 +2,7 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphException;
 
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.io.Serializable;
 
 /**
@@ -24,14 +21,6 @@ public class LongIndexMem implements LongIndex, Serializable {
     index = newIndex;
   }
 
-  /**
-   * Adds a triple to a single index.  This method defines the internal structure.
-   *
-   * @param first The first node id.
-   * @param second The second node id.
-   * @param third The last node id.
-   * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
-   */
   public void add(Long first, Long second, Long third) throws GraphException {
     // find the sub index
     Map<Long, Set<Long>> subIndex = index.get(first);
@@ -55,15 +44,6 @@ public class LongIndexMem implements LongIndex, Serializable {
     group.add(third);
   }
 
-  /**
-   * Removes a triple from a single index.
-   *
-   * @param first The first node.
-   * @param second The second node.
-   * @param third The last node.
-   * @throws GraphException If there was an error revoking the statement, for
-   *     example if it didn't exist.
-   */
   public void remove(Long first, Long second, Long third)
       throws GraphException {
 
@@ -90,6 +70,10 @@ public class LongIndexMem implements LongIndex, Serializable {
         index.remove(first);
       }
     }
+  }
+
+  public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
+    return index.entrySet().iterator();
   }
 
   // TODO Remove this.

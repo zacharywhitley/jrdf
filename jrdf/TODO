@@ -3,9 +3,16 @@ JRDF TODO List
 o Implement SPARQL parser.
 o Finish of generics conversion.
 o Fix up javadoc (again sorry!!).
-o Add test target for only running integration tests (as is done for unit tests now).
+o Add test target for only running integration tests (as is done for unit 
+tests now).
 o Continue refactoring code.
-
+o Make GraphImpl IoCed.  Take in the constructor GraphHandlers, LongIndexes 
+and TripleFactory.  Then test drive the lot - once the interfaces have
+settled down - currently it's a bit of a spike.
+o Once indices are greaters do Graph operations.
+o Finish Relational operators.
+o Write a push based RDF/XML parser.
 
 TJA: Done
 o Fixed uptodate dependency for SPARQL parser building.
+
