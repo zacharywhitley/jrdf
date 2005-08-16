@@ -77,4 +77,9 @@ public interface GraphHandler {
   void add(Long[] currentNodes) throws GraphException;
 
   Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
+
+  void reconstructIndices(
+      Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries,
+      LongIndex secondIndex, LongIndex thirdIndex)
+      throws GraphException;
 }
