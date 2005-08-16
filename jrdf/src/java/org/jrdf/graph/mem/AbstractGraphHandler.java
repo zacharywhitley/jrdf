@@ -16,9 +16,11 @@ import java.io.PrintStream;
  */
 public abstract class AbstractGraphHandler implements GraphHandler {
   /**
-   * Because 012, 120 and 201 are symmetrical.  The 2nd and 3rd indices if you
-   * fed 120 in is 201 and 120 and likewise for 201 the 2nd and 3rd indices are
-   * 012 and 120.
+   * As 012, 120 and 201 are symmetrical this can be used to reconstruct either
+   * two from any one index.  If you put the iterator for in 012 it will add
+   * them correctly to 120 (secondIndex) and 201 (thirdIndex), or 120 will make
+   * 201 (secondIndex) and 012 (thirdIndex) and 201 will
+   * produce 120 and 201.
    *
    * @param firstEntries the list of items to reconstruct the index from.
    * @param secondIndex the second index.
