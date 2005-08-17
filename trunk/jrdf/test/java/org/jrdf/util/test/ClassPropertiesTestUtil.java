@@ -103,15 +103,13 @@ public final class ClassPropertiesTestUtil {
 
     public static void checkImplementationOfInterfaceAndFinal(Class targetInterface, Class implementationClass) {
         Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
-                + targetInterface.getSimpleName(),
-                isImplementationOf(targetInterface, implementationClass));
+                + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
         Assert.assertTrue(implementationClass.getSimpleName() + " must be final", isClassFinal(implementationClass));
     }
 
     public static void checkImplementationOfInterface(Class targetInterface, Class implementationClass) {
         Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
-                + targetInterface.getSimpleName(),
-                isImplementationOf(targetInterface, implementationClass));
+                + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
     }
 
     public static void checkExtensionOf(Class superClass, Class subClass) {
@@ -120,15 +118,20 @@ public final class ClassPropertiesTestUtil {
     }
 
     public static void checkClassFinal(Class cls) {
-        Assert.assertTrue(isClassFinal(cls));
+        Assert.assertTrue(cls.getSimpleName() + " must be final", isClassFinal(cls));
     }
 
     public static void checkClassPublic(Class cls) {
-        Assert.assertTrue(isClassPublic(cls));
+        Assert.assertTrue(cls.getSimpleName() + " must be public", isClassPublic(cls));
     }
 
-    public static void checkInstance(Class superClass, Object ref) {
+    public static void checkInstanceExtendsClass(Class superClass, Object ref) {
         Assert.assertNotNull(ref);
-        Assert.assertTrue(isExtensionOf(superClass, ref.getClass()));
+        checkExtensionOf(superClass, ref.getClass());
+    }
+
+    public static void checkInstanceImplementsInterface(Class targetInterface, Object ref) {
+        Assert.assertNotNull(ref);
+        checkImplementationOfInterface(targetInterface, ref.getClass());
     }
 }

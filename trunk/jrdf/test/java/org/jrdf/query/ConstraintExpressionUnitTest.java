@@ -56,56 +56,32 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.query;
 
 import junit.framework.TestCase;
-import org.jrdf.query.ConstraintExpression;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * Integration test for {@link DefaultSparqlParser}.
+ * Unit test for {@link org.jrdf.query.ConstraintExpression}.
  * @author Tom Adams
  * @version $Revision$
  */
-public final class DefaultSparqlParserIntegrationTest extends TestCase {
+public final class ConstraintExpressionUnitTest extends TestCase {
 
-    // FIXME TJA: Triangulate on variables.
-    // FIXME TJA: Triangulate on constraint expression.
-    // FIXME TJA: Write failing test for non-wildcard projection lists.
-    // FIXME TJA: Write tests to force trimming of query string.
-    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
-
-    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
-    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
-    private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-
-    public void testNeedThisForIntelliJRunner() {
-        assertTrue(true);
+    public void testAllConstant() {
+        checkAllConstantImmutable();
+        checkAllConstantType();
     }
 
-    public void testSingleConstraint() {
-        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
-        checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
+    private void checkAllConstantImmutable() {
+        assertNotNull(ConstraintExpression.ALL);
+        ConstraintExpression x = ConstraintExpression.ALL;
+        ConstraintExpression y = ConstraintExpression.ALL;
+        assertEquals(x, y);
+        assertTrue(x == y);
     }
 
-    private void checkSingleConstraintExpression(String queryString, ConstraintExpression expectedExpression) {
-        Query query = parseQuery(queryString);
-        ConstraintExpression actualExpression = query.getConstraintExpression();
-        assertEquals(expectedExpression, actualExpression);
-    }
-
-    private Query parseQuery(String queryString) {
-        try {
-            return createParser().parseQuery(queryString);
-        } catch (InvalidQuerySyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SparqlParser createParser() {
-        return new DefaultSparqlParser();
+    public void checkAllConstantType() {
+        ClassPropertiesTestUtil.checkInstanceImplementsInterface(ConstraintExpression.class, ConstraintExpression.ALL);
     }
 }

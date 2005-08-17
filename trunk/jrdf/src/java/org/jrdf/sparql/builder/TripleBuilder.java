@@ -69,12 +69,12 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.sparql.parser.node.ALiteralTripleElement;
+import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.AVariableTripleElement;
-import org.jrdf.sparql.parser.node.Node;
+import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
-import org.jrdf.sparql.parser.node.PTripleElement;
+import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.util.param.ParameterUtil;
 
 /**
@@ -83,7 +83,7 @@ import org.jrdf.util.param.ParameterUtil;
  * @version $Revision$
  */
 public final class TripleBuilder {
-    // FIXME TJA: Test drive out code to do with creating triples & resources, etc. into a utility.
+    // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
 
     private static final String SINGLE_QUOTE = "'";
     private static final ObjectNode ANY_VALUE = null;
@@ -95,27 +95,31 @@ public final class TripleBuilder {
      */
     public Triple build(ATriple tripleNode) {
         ParameterUtil.checkNotNull("tripleNode", tripleNode);
+        // FIXME TJA: Check format of triple here.
         SubjectNode subject = buildSubject(tripleNode);
         PredicateNode predicate = buildPredicate(tripleNode);
         ObjectNode object = buildObject(tripleNode);
         return createTriple(subject, predicate, object);
     }
 
+    // FIXME TJA: We should not get to here, having to check that the field is a resource. Should be handled earlier.
     private URIReference buildSubject(ATriple tripleNode) {
-        return createResource(getStringForm(tripleNode.getSubject()));
+        AResourceResourceTripleElement subject = (AResourceResourceTripleElement) tripleNode.getSubject();
+        return createResource(getStringForm(subject));
     }
 
     private URIReference buildPredicate(ATriple tripleNode) {
-        return createResource(getStringForm(tripleNode.getPredicate()));
+        AResourceResourceTripleElement predicate = (AResourceResourceTripleElement) tripleNode.getPredicate();
+        return createResource(getStringForm(predicate));
     }
 
     private ObjectNode buildObject(ATriple tripleNode) {
         // FIXME TJA: Use the visitor pattern to do this.
-        PTripleElement object = tripleNode.getObject();
-        if (object instanceof AVariableTripleElement) {
+        PObjectTripleElement object = tripleNode.getObject();
+        if (object instanceof AVariableObjectTripleElement) {
             return ANY_VALUE;
         } else {
-            PLiteral literal = ((ALiteralTripleElement) object).getLiteral();
+            PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
             return createLiteral(text);
         }
@@ -135,8 +139,8 @@ public final class TripleBuilder {
         return lexicalValue.substring(start, end);
     }
 
-    private String getStringForm(Node node) {
-        return trim(node.toString());
+    private String getStringForm(AResourceResourceTripleElement resourceNode) {
+        return resourceNode.getResource().getText();
     }
 
     private String trim(String s) {

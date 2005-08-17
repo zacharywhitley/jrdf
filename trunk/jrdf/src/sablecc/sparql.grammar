@@ -83,9 +83,12 @@ Productions
 
   /* TODO: Disallow literals as subjects & predicates in the grammar. */
   triple =
-    [subject]:triple_element [predicate]:triple_element [object]:triple_element ;
+    [subject]:resource_triple_element [predicate]:resource_triple_element [object]:object_triple_element ;
 
-  triple_element =
+  resource_triple_element =
+    {resource} resource ;
+
+  object_triple_element =
     {resource} resource |
     {literal}  literal  |
     {variable} variable ;

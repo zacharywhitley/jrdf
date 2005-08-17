@@ -72,6 +72,8 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public final class TripleBuilderUnitTest extends TestCase {
 
+    // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined way.
+
     private static final String URI_DC_TITLE = SparqlQueryTestUtil.URI_DC_TITLE;
     private static final String URI_DC_SUBJECT = SparqlQueryTestUtil.URI_DC_SUBJECT;
     private static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
