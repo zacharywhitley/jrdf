@@ -94,7 +94,7 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
     public void testNoQueryConstant() {
         checkNoQueryConstantImmutable();
         checkNoQueryConstantDoesNothing();
-        checkNoQueryType();
+        checkNoQueryConstantType();
     }
 
     // Note. getQuery() should always return SparqlAnalyser.NO_QUERY when not applied via SableCC framework.
@@ -166,11 +166,13 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 
     private void checkNoQueryConstantImmutable() {
         assertNotNull(SparqlAnalyser.NO_QUERY);
-        assertEquals(SparqlAnalyser.NO_QUERY, SparqlAnalyser.NO_QUERY);
-        assertTrue(SparqlAnalyser.NO_QUERY == SparqlAnalyser.NO_QUERY);
+        Query x = SparqlAnalyser.NO_QUERY;
+        Query y = SparqlAnalyser.NO_QUERY;
+        assertEquals(x, y);
+        assertTrue(x == y);
     }
 
-    public void checkNoQueryType() {
+    public void checkNoQueryConstantType() {
         ClassPropertiesTestUtil.checkInstanceImplementsInterface(Query.class,  SparqlAnalyser.NO_QUERY);
     }
 }

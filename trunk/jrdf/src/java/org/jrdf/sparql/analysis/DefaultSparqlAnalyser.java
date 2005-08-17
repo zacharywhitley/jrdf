@@ -81,16 +81,16 @@ public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements Sp
     private static final TripleBuilder TRIPLE_BUILDER = new TripleBuilder();
     private Query query = SparqlAnalyser.NO_QUERY;
     private List<? extends Variable> variables = Variable.ALL_VARIABLES;
-    // FIXME TJA: Breadcrumb - Test drive out ConstraintExpression.ALL, and replace null check below with check to it.
     // FIXME TJA: Breadcrumb - Test drive out ConstraintExpression.equals().
-    private ConstraintExpression expression;
+    private ConstraintExpression expression = ConstraintExpression.ALL;
 
 
     /**
      * {@inheritDoc}
      */
     public Query getQuery() {
-        if (expressionIsNotInitialised()) {
+        // FIXME TJA: Breadcrumb - This will not work if the same analyser is used to parse two queries. May need to use in/outASelectClause.
+        if (expressionIsInitialised()) {
             query = new DefaultQuery(variables, expression);
         }
         return query;
@@ -101,7 +101,7 @@ public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements Sp
         expression = new ConstraintTriple(triple);
     }
 
-    private boolean expressionIsNotInitialised() {
-        return expression != null;
+    private boolean expressionIsInitialised() {
+        return expression != ConstraintExpression.ALL;
     }
 }
