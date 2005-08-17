@@ -58,12 +58,19 @@
 
 package org.jrdf.sparql.analysis;
 
+import java.net.URI;
 import junit.framework.TestCase;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.URIReference;
+import org.jrdf.query.ConstraintTriple;
+import org.jrdf.query.Query;
+import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.sparql.parser.SableCcNodeTestUtil;
 import org.jrdf.sparql.parser.analysis.Analysis;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.SableCcNodeTestUtil;
+import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.sparql.parser.node.TResource;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
@@ -72,6 +79,11 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  * @version $Revision$
  */
 public final class DefaultSparqlAnalyserUnitTest extends TestCase {
+
+    private static final String URI_BOOK_1 = SparqlQueryTestUtil.URI_BOOK_1;
+    private static final String URI_DC_TITLE = SparqlQueryTestUtil.URI_DC_TITLE;
+    private static final String VARIABLE_NAME_TITLE = SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
+    private static final Object EXPECTED_PARSED_VARIABLE = null;
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
@@ -82,6 +94,7 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
     public void testNoQueryConstant() {
         checkNoQueryConstantImmutable();
         checkNoQueryConstantDoesNothing();
+        checkNoQueryType();
     }
 
     // Note. getQuery() should always return SparqlAnalyser.NO_QUERY when not applied via SableCC framework.
@@ -91,15 +104,50 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
         checkGetQueryReturnsNoQuery(analyser);
     }
 
-    // FIXME TJA: Breadcrumb - Call outATriple() with a triple, then check that getQuery() returns a query with the correct constraint expression.
     public void testParsingTripleReturnsCorrectQuery() {
         DefaultSparqlAnalyser analyser = new DefaultSparqlAnalyser();
         checkGetQueryReturnsNoQuery(analyser);
-        ATriple triple = SableCcNodeTestUtil.createTripleNodeWithVariable(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE, SparqlQueryTestUtil.VARIABLE_NAME_TITLE);
-        analyser.outATriple(triple);
-        // FIXME TJA: More stuff here
+        ATriple expectedTriple = createTripleNodeWithVariable();
+        ConstraintTriple actualTriple = analyseTriple(analyser, expectedTriple);
+        checkAnalysedTriple(expectedTriple, actualTriple);
     }
 
+    private void checkAnalysedTriple(ATriple expectedTriple, ConstraintTriple actualTriple) {
+        checkSubject(expectedTriple, actualTriple);
+        checkPredicate(expectedTriple, actualTriple);
+        checkObjectIsAVariable(actualTriple);
+    }
+
+    private void checkSubject(ATriple expectedTriple, ConstraintTriple actualTriple) {
+        AResourceResourceTripleElement expectedSubject = (AResourceResourceTripleElement) expectedTriple.getSubject();
+        URIReference actualSubject = (URIReference) actualTriple.getTriple().getSubject();
+        checkResource(expectedSubject.getResource(), actualSubject.getURI());
+    }
+
+    private void checkPredicate(ATriple expectedTriple, ConstraintTriple actualTriple) {
+        AResourceResourceTripleElement expectedPredicate = (AResourceResourceTripleElement) expectedTriple.getPredicate();
+        URIReference actualPredicate = (URIReference) actualTriple.getTriple().getPredicate();
+        checkResource(expectedPredicate.getResource(), actualPredicate.getURI());
+    }
+
+    private void checkObjectIsAVariable(ConstraintTriple actualTriple) {
+        Literal actualLiteral = (Literal) actualTriple.getTriple().getObject();
+        assertEquals(EXPECTED_PARSED_VARIABLE, actualLiteral);
+    }
+
+    private void checkResource(TResource expectedResource, URI actualUri) {
+        assertEquals(expectedResource.getText(), actualUri.toString());
+    }
+
+    private ConstraintTriple analyseTriple(DefaultSparqlAnalyser analyser, ATriple triple) {
+        analyser.outATriple(triple);
+        Query query = analyser.getQuery();
+        return (ConstraintTriple) query.getConstraintExpression();
+    }
+
+    private ATriple createTripleNodeWithVariable() {
+        return SableCcNodeTestUtil.createTripleNodeWithVariable(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+    }
 
     private void checkGetQueryReturnsNoQuery(SparqlAnalyser analyser) {
         assertEquals(SparqlAnalyser.NO_QUERY, analyser.getQuery());
@@ -120,5 +168,9 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
         assertNotNull(SparqlAnalyser.NO_QUERY);
         assertEquals(SparqlAnalyser.NO_QUERY, SparqlAnalyser.NO_QUERY);
         assertTrue(SparqlAnalyser.NO_QUERY == SparqlAnalyser.NO_QUERY);
+    }
+
+    public void checkNoQueryType() {
+        ClassPropertiesTestUtil.checkInstanceImplementsInterface(Query.class,  SparqlAnalyser.NO_QUERY);
     }
 }

@@ -58,9 +58,16 @@
 
 package org.jrdf.sparql.analysis;
 
+import java.util.List;
 import org.jrdf.query.Query;
+import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.ConstraintTriple;
+import org.jrdf.query.DefaultQuery;
+import org.jrdf.query.Variable;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.graph.Triple;
 
 /**
  * Default implementation of {@link SparqlAnalyser}.
@@ -69,22 +76,32 @@ import org.jrdf.sparql.parser.node.ATriple;
  */
 public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements SparqlAnalyser {
 
-//    private static final TripleBuilder TRIPLE_BUILDER = new TripleBuilder();
-//    private List<? extends Variable> variables = Variable.ALL_VARIABLES;
+    // FIXME TJA: Should really be using a ConstraintExpression builder here.
+
+    private static final TripleBuilder TRIPLE_BUILDER = new TripleBuilder();
     private Query query = SparqlAnalyser.NO_QUERY;
+    private List<? extends Variable> variables = Variable.ALL_VARIABLES;
+    // FIXME TJA: Breadcrumb - Test drive out ConstraintExpression.ALL, and replace null check below with check to it.
+    // FIXME TJA: Breadcrumb - Test drive out ConstraintExpression.equals().
+    private ConstraintExpression expression;
 
 
     /**
      * {@inheritDoc}
      */
     public Query getQuery() {
-        // FIXME TJA: Need to be careful that the tests on this method check careful state keeping.
+        if (expressionIsNotInitialised()) {
+            query = new DefaultQuery(variables, expression);
+        }
         return query;
     }
 
-    // FIXME TJA: Don't set the query here, just set it's constituents.
     public void outATriple(ATriple tripleNode) {
-//        Triple triple = TRIPLE_BUILDER.build(tripleNode);
-//        ConstraintExpression constraintExpression = new ConstraintTriple(triple);
+        Triple triple = TRIPLE_BUILDER.build(tripleNode);
+        expression = new ConstraintTriple(triple);
+    }
+
+    private boolean expressionIsNotInitialised() {
+        return expression != null;
     }
 }

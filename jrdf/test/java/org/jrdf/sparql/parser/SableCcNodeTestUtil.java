@@ -59,22 +59,23 @@
 package org.jrdf.sparql.parser;
 
 import org.jrdf.sparql.SparqlQueryTestUtil;
-import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.PTripleElement;
-import org.jrdf.sparql.parser.node.AResourceTripleElement;
-import org.jrdf.sparql.parser.node.TResource;
-import org.jrdf.sparql.parser.node.AVariableTripleElement;
-import org.jrdf.sparql.parser.node.AVariable;
-import org.jrdf.sparql.parser.node.TVariableprefix;
-import org.jrdf.sparql.parser.node.TIdentifier;
-import org.jrdf.sparql.parser.node.ALiteralTripleElement;
 import org.jrdf.sparql.parser.node.ALiteral;
-import org.jrdf.sparql.parser.node.PStrand;
+import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.AUnescapedStrand;
-import org.jrdf.sparql.parser.node.TText;
-import org.jrdf.sparql.parser.node.XPStrand;
-import org.jrdf.sparql.parser.node.X2PStrand;
+import org.jrdf.sparql.parser.node.AVariable;
+import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
+import org.jrdf.sparql.parser.node.PObjectTripleElement;
+import org.jrdf.sparql.parser.node.PResourceTripleElement;
+import org.jrdf.sparql.parser.node.PStrand;
+import org.jrdf.sparql.parser.node.TIdentifier;
 import org.jrdf.sparql.parser.node.TQuote;
+import org.jrdf.sparql.parser.node.TResource;
+import org.jrdf.sparql.parser.node.TText;
+import org.jrdf.sparql.parser.node.TVariableprefix;
+import org.jrdf.sparql.parser.node.X2PStrand;
+import org.jrdf.sparql.parser.node.XPStrand;
 
 /**
  * Utilities for creating SableCC nodes.
@@ -87,30 +88,30 @@ public final class SableCcNodeTestUtil {
     private static final String SPARQL_QUOTE = "'";
 
     public static ATriple createTripleNodeWithVariable(String subjectUri, String predicateUri, String variableName) {
-        PTripleElement subject = createResourceElement(subjectUri);
-        PTripleElement predicate = createResourceElement(predicateUri);
-        PTripleElement object = createVariableElement(variableName);
+        PResourceTripleElement subject = createResourceElement(subjectUri);
+        PResourceTripleElement predicate = createResourceElement(predicateUri);
+        PObjectTripleElement object = createVariableElement(variableName);
         return new ATriple(subject, predicate, object);
     }
 
     public static ATriple createTripleNodeWithLiteral(String subjectUri, String predicateUri, String literal) {
-        PTripleElement subject = createResourceElement(subjectUri);
-        PTripleElement predicate = createResourceElement(predicateUri);
-        PTripleElement object = createLiteralElement(literal);
+        PResourceTripleElement subject = createResourceElement(subjectUri);
+        PResourceTripleElement predicate = createResourceElement(predicateUri);
+        PObjectTripleElement object = createLiteralElement(literal);
         return new ATriple(subject, predicate, object);
     }
 
-    public static AResourceTripleElement createResourceElement(String subjectUri) {
-        return new AResourceTripleElement(new TResource(subjectUri));
+    public static PResourceTripleElement createResourceElement(String subjectUri) {
+        return new AResourceResourceTripleElement(new TResource(subjectUri));
     }
 
-    public static AVariableTripleElement createVariableElement(String variableName) {
+    public static AVariableObjectTripleElement createVariableElement(String variableName) {
         AVariable variable = new AVariable(new TVariableprefix(VARIABLE_PREFIX), new TIdentifier(variableName));
-        return new AVariableTripleElement(variable);
+        return new AVariableObjectTripleElement(variable);
     }
 
-    public static ALiteralTripleElement createLiteralElement(String literalText) {
-        return new ALiteralTripleElement(createLiteralNode(literalText));
+    public static ALiteralObjectTripleElement createLiteralElement(String literalText) {
+        return new ALiteralObjectTripleElement(createLiteralNode(literalText));
     }
 
     public static ALiteral createLiteralNode(String literalText) {
