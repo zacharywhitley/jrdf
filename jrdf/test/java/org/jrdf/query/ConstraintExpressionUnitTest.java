@@ -81,7 +81,7 @@ public final class ConstraintExpressionUnitTest extends TestCase {
         assertTrue(x == y);
     }
 
-    public void checkAllConstantType() {
+    private void checkAllConstantType() {
         ClassPropertiesTestUtil.checkInstanceImplementsInterface(ConstraintExpression.class, ConstraintExpression.ALL);
     }
 }

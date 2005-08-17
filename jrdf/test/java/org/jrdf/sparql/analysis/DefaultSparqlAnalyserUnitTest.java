@@ -76,7 +76,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 /**
  * Unit test for {@link DefaultSparqlAnalyser}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 
@@ -99,17 +99,22 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 
     // Note. getQuery() should always return SparqlAnalyser.NO_QUERY when not applied via SableCC framework.
     public void testGetQueryAlwaysReturnsNoQueryWhenNotApplied() {
-        SparqlAnalyser analyser = new DefaultSparqlAnalyser();
-        checkGetQueryReturnsNoQuery(analyser);
-        checkGetQueryReturnsNoQuery(analyser);
+        SparqlAnalyser analyser = createAnalyser();
+        checkFirstGetQueryReturnsNoQuery(analyser);
+        checkFirstGetQueryReturnsNoQuery(analyser);
     }
 
     public void testParsingTripleReturnsCorrectQuery() {
-        DefaultSparqlAnalyser analyser = new DefaultSparqlAnalyser();
-        checkGetQueryReturnsNoQuery(analyser);
-        ATriple expectedTriple = createTripleNodeWithVariable();
-        ConstraintTriple actualTriple = analyseTriple(analyser, expectedTriple);
-        checkAnalysedTriple(expectedTriple, actualTriple);
+        DefaultSparqlAnalyser analyser = createAnalyser();
+        ATriple tripleToParse = createTripleNodeWithVariable();
+        ConstraintTriple parsedTriple = parseTriple(analyser, tripleToParse);
+
+        checkAnalysedTriple(tripleToParse, parsedTriple);
+    }
+
+    private ConstraintTriple parseTriple(DefaultSparqlAnalyser analyser, ATriple tripleToParse) {
+        checkFirstGetQueryReturnsNoQuery(analyser);
+        return analyseTriple(analyser, tripleToParse);
     }
 
     private void checkAnalysedTriple(ATriple expectedTriple, ConstraintTriple actualTriple) {
@@ -149,7 +154,7 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
         return SableCcNodeTestUtil.createTripleNodeWithVariable(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
     }
 
-    private void checkGetQueryReturnsNoQuery(SparqlAnalyser analyser) {
+    private void checkFirstGetQueryReturnsNoQuery(SparqlAnalyser analyser) {
         assertEquals(SparqlAnalyser.NO_QUERY, analyser.getQuery());
     }
 
@@ -172,7 +177,11 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
         assertTrue(x == y);
     }
 
-    public void checkNoQueryConstantType() {
+    private void checkNoQueryConstantType() {
         ClassPropertiesTestUtil.checkInstanceImplementsInterface(Query.class,  SparqlAnalyser.NO_QUERY);
+    }
+
+    private DefaultSparqlAnalyser createAnalyser() {
+        return new DefaultSparqlAnalyser();
     }
 }
