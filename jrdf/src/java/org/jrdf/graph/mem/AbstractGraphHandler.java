@@ -15,23 +15,25 @@ import java.io.PrintStream;
  * @version $Revision$
  */
 public abstract class AbstractGraphHandler implements GraphHandler {
+
+  protected GraphImpl graph;
+
   /**
    * As 012, 120 and 201 are symmetrical this can be used to reconstruct either
-   * two from any one index.  If you put the iterator for in 012 it will add
-   * them correctly to 120 (secondIndex) and 201 (thirdIndex), or 120 will make
+   * two from any one index.  Using the 012 index it will add entries correctly
+   * to 120 (secondIndex) and 201 (thirdIndex), or 120 will make
    * 201 (secondIndex) and 012 (thirdIndex) and 201 will
    * produce 120 and 201.
    *
-   * @param firstEntries the list of items to reconstruct the index from.
+   * @param firstIndex
    * @param secondIndex the second index.
    * @param thirdIndex the third index.
    * @throws org.jrdf.graph.GraphException if the adds fail.
    */
-  public void reconstructIndices(
-      Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries,
-      LongIndex secondIndex, LongIndex thirdIndex)
-      throws GraphException {
-
+  public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex,
+      LongIndex thirdIndex) throws GraphException {
+    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries =
+        firstIndex.iterator();
     while (firstEntries.hasNext()) {
       Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
       Long first = firstEntry.getKey();
@@ -59,25 +61,26 @@ public abstract class AbstractGraphHandler implements GraphHandler {
   /**
    * Debug method to see the current state of the first index.
    */
-  public static void dumpIndex(PrintStream out, GraphHandler handler) {
-    Iterator iterator = handler.getEntries();
+  public void dumpIndex(PrintStream out) {
+    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator = getEntries();
     while (iterator.hasNext()) {
-      Map.Entry subjectEntry = (Map.Entry) iterator.next();
-      Long subject = (Long) subjectEntry.getKey();
+      Map.Entry<Long, Map<Long, Set<Long>>> subjectEntry = iterator.next();
+      Long subject = subjectEntry.getKey();
       int sWidth = subject.toString().length() + 5;
       out.print(subject.toString() + " --> ");
 
-      Map secondIndex = (Map) subjectEntry.getValue();
+      Map<Long, Set<Long>> secondIndex = subjectEntry.getValue();
       if (secondIndex.isEmpty()) {
         out.println("X");
         continue;
       }
       boolean firstPredicate = true;
 
-      Iterator predIterator = secondIndex.entrySet().iterator();
+      Iterator<Map.Entry<Long,Set<Long>>> predIterator =
+          secondIndex.entrySet().iterator();
       while (predIterator.hasNext()) {
-        Map.Entry predicateEntry = (Map.Entry) predIterator.next();
-        Long predicate = (Long) predicateEntry.getKey();
+        Map.Entry<Long,Set<Long>> predicateEntry = predIterator.next();
+        Long predicate = predicateEntry.getKey();
         int pWidth = predicate.toString().length() + 5;
         if (!firstPredicate) {
           StringBuffer space = new StringBuffer(sWidth);
@@ -92,16 +95,16 @@ public abstract class AbstractGraphHandler implements GraphHandler {
         }
         out.print(predicate.toString() + " --> ");
 
-        Set thirdIndex = (Set) predicateEntry.getValue();
+        Set<Long> thirdIndex = predicateEntry.getValue();
         if (thirdIndex.isEmpty()) {
           out.println("X");
           continue;
         }
         boolean firstObject = true;
 
-        Iterator objIterator = thirdIndex.iterator();
+        Iterator<Long> objIterator = thirdIndex.iterator();
         while (objIterator.hasNext()) {
-          Long object = (Long) objIterator.next();
+          Long object = objIterator.next();
           if (!firstObject) {
             StringBuffer sp2 = new StringBuffer(sWidth + pWidth);
             sp2.setLength(sWidth + pWidth);
