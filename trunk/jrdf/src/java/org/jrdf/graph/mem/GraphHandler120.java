@@ -73,7 +73,6 @@ import java.util.Iterator;
  */
 public class GraphHandler120 extends AbstractGraphHandler
     implements GraphHandler {
-  protected GraphImpl graph;
 
   public GraphHandler120(GraphImpl graph) {
     this.graph = graph;
