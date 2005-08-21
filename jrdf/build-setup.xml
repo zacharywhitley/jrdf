@@ -39,6 +39,7 @@
         <include name="**/*Test*.java"/>
         <!-- Why is this out? -->
         <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*TestRunner*.java"/>
         <exclude name="**/*Mock*.java"/>
         <exclude name="**/Abstract*"/>
     </patternset>
@@ -86,6 +87,7 @@
     <path id="production.class.path"/>
     <path id="test.class.path">
         <pathelement location="${lib.dir}/junit-3.8.1.jar"/>
+        <pathelement location="${lib.dir}/gsbase-2.0.1.jar"/>
         <pathelement location="${prod.classes.dir}"/>
         <pathelement location="${test.classes.dir}"/>
     </path>
