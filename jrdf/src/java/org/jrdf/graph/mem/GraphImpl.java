@@ -635,7 +635,7 @@ public class GraphImpl implements Graph, Serializable {
     // fill in the other indexes
     try {
       GraphHandler012 graphHandler012 = new GraphHandler012(this);
-      graphHandler012.reconstructIndices(graphHandler012.getEntries(), longIndex120, longIndex201);
+      graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
     }
     catch (GraphException e) {
       throw new ClassNotFoundException("Unable to add to a graph index", e);

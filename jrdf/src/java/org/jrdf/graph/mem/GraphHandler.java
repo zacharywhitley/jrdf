@@ -78,8 +78,7 @@ public interface GraphHandler {
 
   Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
 
-  void reconstructIndices(
-      Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries,
-      LongIndex secondIndex, LongIndex thirdIndex)
+  void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex,
+      LongIndex thirdIndex)
       throws GraphException;
 }
