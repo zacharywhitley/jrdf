@@ -1,13 +1,16 @@
 package org.jrdf.graph.operation;
 
-import org.jrdf.graph.operation.Operation;
+import org.jrdf.query.relation.operation.Operation;
+import org.jrdf.graph.Graph;
 
 /**
- * Similar to Union in SPARQL or OR in Algebra A.
+ * The set union of two graphs - all of the items in the first graph are
+ * added to the second graph (no duplicates).
  *
  * @author Andrew Newman
  *
  * @version $Revision$
  */
-public interface Union extends Operation {
+public interface Union extends SetOperation {
+  Graph perform(Graph a, Graph b);
 }

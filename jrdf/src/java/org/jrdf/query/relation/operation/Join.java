@@ -1,6 +1,5 @@
-package org.jrdf.graph.operation;
+package org.jrdf.query.relation.operation;
 
-import org.jrdf.graph.operation.Operation;
 
 /**
  * Combines two relations attributes if they have common tuple values.  The

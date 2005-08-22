@@ -5,6 +5,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.query.Variable;
+import org.jrdf.query.relation.AttributeNameValue;
 
 import java.util.Set;
 import java.util.Map;

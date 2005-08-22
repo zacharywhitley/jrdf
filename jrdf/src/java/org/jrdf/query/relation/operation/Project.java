@@ -1,7 +1,8 @@
-package org.jrdf.query.relation;
+package org.jrdf.query.relation.operation;
 
 import java.util.Set;
 import org.jrdf.graph.PredicateNode;
+import org.jrdf.query.relation.Relation;
 
 /**
  * Derives a new relation by removing attributes.  The list of attributes may

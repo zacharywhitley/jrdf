@@ -75,7 +75,7 @@ import junit.framework.TestCase;
  */
 public final class UuidGeneratorIntegrationTest extends TestCase {
 
-    // FIXME: Remove classname as string and instead use UuidGenerator.class.getName() (to aid with refactoring).
+    // FIXME: Remove classname as string and instead use UuidGenerator.class.getType() (to aid with refactoring).
     private static final Class[] NO_PARAMS = null;
     private static final Object[] NO_ARGS = (Object[]) null;
     private static final String CLASS_NAME = "UuidGenerator";

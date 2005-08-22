@@ -1,4 +1,4 @@
-package org.jrdf.graph.operation;
+package org.jrdf.query.relation.operation;
 
 /**
  * Base interface.
