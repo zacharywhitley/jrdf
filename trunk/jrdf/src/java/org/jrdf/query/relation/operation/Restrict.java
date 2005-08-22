@@ -1,11 +1,13 @@
-package org.jrdf.graph.operation;
+package org.jrdf.query.relation.operation;
 
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.operation.Operation;
+import org.jrdf.query.relation.operation.Operation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.AttributeNameValue;
+import org.jrdf.query.relation.operation.Operation;
+import org.jrdf.query.relation.Relation;
 
 import java.util.Set;
 
