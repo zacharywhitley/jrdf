@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard packages
+
 import org.jrdf.graph.AbstractURIReference;
 
 import java.net.URI;
@@ -78,48 +79,48 @@ import java.net.URI;
  */
 public class URIReferenceImpl extends AbstractURIReference implements MemNode {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = -4120822410726711976L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = -4120822410726711976L;
 
-  /** The internal identifier for this node. */
-  private Long id;
-
-
-  /**
-   * Constructor for use by GraphElementFactory only.
-   *
-   * @param newUri The newUri of this node.
-   * @param newId The internal identifier for this node.
-   */
-  URIReferenceImpl(URI newUri, Long newId) {
-    super(newUri);
-    id = newId;
-  }
-
-  /**
-   * Constructor for use by GraphElementFactory only.
-   *
-   * @param newUri The uri of this node.
-   * @param validate whether to enforce valid RDF URIs.
-   * @param newId The internal identifier for this node.
-   */
-  URIReferenceImpl(URI newUri, boolean validate, Long newId) {
-    super(newUri, validate);
-    id = newId;
-  }
+    /** The internal identifier for this node. */
+    private Long id;
 
 
-  /**
-   * Retrieves an internal identifier for this node.
-   *
-   * @return A numeric identifier for this node.
-   */
-  public Long getId() {
-    return id;
-  }
+    /**
+     * Constructor for use by GraphElementFactory only.
+     *
+     * @param newUri The newUri of this node.
+     * @param newId The internal identifier for this node.
+     */
+    URIReferenceImpl(URI newUri, Long newId) {
+        super(newUri);
+        id = newId;
+    }
+
+    /**
+     * Constructor for use by GraphElementFactory only.
+     *
+     * @param newUri The uri of this node.
+     * @param validate whether to enforce valid RDF URIs.
+     * @param newId The internal identifier for this node.
+     */
+    URIReferenceImpl(URI newUri, boolean validate, Long newId) {
+        super(newUri, validate);
+        id = newId;
+    }
+
+
+    /**
+     * Retrieves an internal identifier for this node.
+     *
+     * @return A numeric identifier for this node.
+     */
+    public Long getId() {
+        return id;
+    }
 }

@@ -79,89 +79,89 @@ public final class AlternativeImpl
     extends AbstractUnorderedContainer<ObjectNode>
     implements Alternative<ObjectNode> {
 
-  public boolean containsAll(Collection<?> c) {
-    return elements.values().containsAll(c);
-  }
-
-  public boolean add(ObjectNode o) {
-    if (!elements.containsValue(o)) {
-      elements.put(new Long(key++), o);
+    public boolean containsAll(Collection<?> c) {
+        return elements.values().containsAll(c);
     }
-    return true;
-  }
 
-  // TODO This should be test drive - probably wrong.  Shouldn't add existing
-  // elements twice.
-  public boolean addAll(Collection<? extends ObjectNode> c)
-      throws IllegalArgumentException {
+    public boolean add(ObjectNode o) {
+        if (!elements.containsValue(o)) {
+            elements.put(new Long(key++), o);
+        }
+        return true;
+    }
+
+    // TODO This should be test drive - probably wrong.  Shouldn't add existing
+    // elements twice.
+    public boolean addAll(Collection<? extends ObjectNode> c)
+        throws IllegalArgumentException {
 //    if (!(c instanceof Alternative)) {
 //      throw new IllegalArgumentException("Can only add alternatives to other " +
 //          "alternatives");
 //    }
-    Iterator<? extends ObjectNode> iter = c.iterator();
-    boolean modified = iter.hasNext();
-    while (iter.hasNext()) {
-      ObjectNode obj = iter.next();
-      elements.put(new Long(key++), obj);
+        Iterator<? extends ObjectNode> iter = c.iterator();
+        boolean modified = iter.hasNext();
+        while (iter.hasNext()) {
+            ObjectNode obj = iter.next();
+            elements.put(new Long(key++), obj);
+        }
+
+        return modified;
     }
 
-    return modified;
-  }
+    // TODO Test allowing any type of Collection through.
+    public boolean removeAll(Collection<?> c) {
+        Iterator iter = c.iterator();
+        boolean modified = iter.hasNext();
+        while (iter.hasNext()) {
+            remove(iter.next());
+        }
 
-  // TODO Test allowing any type of Collection through.
-  public boolean removeAll(Collection<?> c) {
-    Iterator iter = c.iterator();
-    boolean modified = iter.hasNext();
-    while (iter.hasNext()) {
-      remove(iter.next());
+        return modified;
     }
 
-    return modified;
-  }
 
-
-  // TODO Turned to use Object - also remove IllegalArgument check.
-  public boolean retainAll(Collection<?> c)
-      throws IllegalArgumentException {
+    // TODO Turned to use Object - also remove IllegalArgument check.
+    public boolean retainAll(Collection<?> c)
+        throws IllegalArgumentException {
 //    if (!(c instanceof Alternative)) {
 //      throw new IllegalArgumentException("Can only add alternatives to other " +
 //          "alternatives");
 //    }
-    boolean modified = false;
-    Iterator<?> iter = iterator();
-    while (iter.hasNext()) {
-      Object obj = iter.next();
-      if (!c.contains(obj)) {
-        modified = true;
-        remove(obj);
-      }
-    }
-    return modified;
-  }
-
-  public boolean equals(Object obj) {
-
-    // Check equal by reference
-    if (this == obj) {
-      return true;
+        boolean modified = false;
+        Iterator<?> iter = iterator();
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (!c.contains(obj)) {
+                modified = true;
+                remove(obj);
+            }
+        }
+        return modified;
     }
 
-    // Check for null and ensure exactly the same class - not subclass.
-    if (null == obj ||
-        getClass() != obj.getClass()) {
-      return false;
+    public boolean equals(Object obj) {
+
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
+
+        // Check for null and ensure exactly the same class - not subclass.
+        if (null == obj ||
+            getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Alternative alt = (Alternative) obj;
+
+        boolean returnValue = false;
+        if (size() == alt.size()) {
+
+            List myValues = Arrays.asList(toArray());
+            List altValues = Arrays.asList(alt.toArray());
+            returnValue = myValues.equals(altValues);
+        }
+
+        return returnValue;
     }
-
-    Alternative alt = (Alternative) obj;
-
-    boolean returnValue = false;
-    if (size() == alt.size()) {
-
-      List myValues = Arrays.asList(toArray());
-      List altValues = Arrays.asList(alt.toArray());
-      returnValue = myValues.equals(altValues);
-    }
-
-    return returnValue;
-  }
 }

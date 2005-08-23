@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 // Java 2 standard
+
 import org.jrdf.graph.AbstractLiteral;
 
 import java.net.URI;
@@ -72,92 +73,92 @@ import java.net.URI;
  */
 public class LiteralImpl extends AbstractLiteral implements MemNode {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = -6515350357124372641L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = -6515350357124372641L;
 
-  /**
-   * The internal identifier for this node.
-   */
-  private Long id;
+    /**
+     * The internal identifier for this node.
+     */
+    private Long id;
 
-  /**
-   * A cache of the toString value for efficiency in mapping.
-   */
-  private String thisString;
+    /**
+     * A cache of the toString value for efficiency in mapping.
+     */
+    private String thisString;
 
-  /**
-   * Construct a literal.
-   *
-   * @param newLexicalForm  the text part of the literal
-   * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
-   */
-  LiteralImpl(String newLexicalForm) {
-    super(newLexicalForm);
-    thisString = super.toString();
-  }
+    /**
+     * Construct a literal.
+     *
+     * @param newLexicalForm  the text part of the literal
+     * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
+     */
+    LiteralImpl(String newLexicalForm) {
+        super(newLexicalForm);
+        thisString = super.toString();
+    }
 
-  /**
-   * Construct a fully general literal.
-   *
-   * @param newLexicalForm  the text part of the literal
-   * @param newLanguage  the language code, possibly the empty string but not
-   *    <code>null</code>
-   * @throws IllegalArgumentException if <var>lexicalForm</var> or
-   *    <var>lang</var> are <code>null</code>
-   */
-  LiteralImpl(String newLexicalForm, String newLanguage) {
-    super(newLexicalForm, newLanguage);
-    thisString = super.toString();
-  }
-
-
-  /**
-   * Construct a fully general literal.
-   *
-   * @param newLexicalForm  the text part of the literal
-   * @param datatype  the URI for a datatyped literal, or <code>null</code> for
-   *     an untyped literal
-   * @throws IllegalArgumentException if <var>newLexicalForm</var> or
-   *     <var>lang</var> are <code>null</code>
-   */
-  LiteralImpl(String newLexicalForm, URI datatype) {
-    super(newLexicalForm, datatype);
-    thisString = super.toString();
-  }
+    /**
+     * Construct a fully general literal.
+     *
+     * @param newLexicalForm  the text part of the literal
+     * @param newLanguage  the language code, possibly the empty string but not
+     *    <code>null</code>
+     * @throws IllegalArgumentException if <var>lexicalForm</var> or
+     *    <var>lang</var> are <code>null</code>
+     */
+    LiteralImpl(String newLexicalForm, String newLanguage) {
+        super(newLexicalForm, newLanguage);
+        thisString = super.toString();
+    }
 
 
-  /**
-   * Retrieves an internal identifier for this node.
-   *
-   * @return A numeric identifier for thisa node.
-   */
-  public Long getId() {
-    return id;
-  }
+    /**
+     * Construct a fully general literal.
+     *
+     * @param newLexicalForm  the text part of the literal
+     * @param datatype  the URI for a datatyped literal, or <code>null</code> for
+     *     an untyped literal
+     * @throws IllegalArgumentException if <var>newLexicalForm</var> or
+     *     <var>lang</var> are <code>null</code>
+     */
+    LiteralImpl(String newLexicalForm, URI datatype) {
+        super(newLexicalForm, datatype);
+        thisString = super.toString();
+    }
 
-  /**
-   * Sets the interanl identifier for this node.
-   *
-   * @param newId new id.
-   */
-  public void setId(Long newId) {
-    id = newId;
-  }
 
-  /**
-   * Provide a legible representation of a literal.  Caches the immutable value
-   * so it gets mapped efficiently.
-   *
-   * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
-   *     characters.
-   */
-  public String toString() {
-    return thisString;
-  }
+    /**
+     * Retrieves an internal identifier for this node.
+     *
+     * @return A numeric identifier for thisa node.
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Sets the interanl identifier for this node.
+     *
+     * @param newId new id.
+     */
+    public void setId(Long newId) {
+        id = newId;
+    }
+
+    /**
+     * Provide a legible representation of a literal.  Caches the immutable value
+     * so it gets mapped efficiently.
+     *
+     * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
+     *     characters.
+     */
+    public String toString() {
+        return thisString;
+    }
 }
 

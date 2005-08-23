@@ -75,250 +75,247 @@ import java.util.Iterator;
  */
 public abstract class AbstractTripleFactory implements TripleFactory {
 
-  /**
-   * The graph that this factory constructs nodes for.
-   */
-  protected Graph graph;
+    /**
+     * The graph that this factory constructs nodes for.
+     */
+    protected Graph graph;
 
-  /**
-   * The graph element factory.
-   */
-  protected GraphElementFactory elementFactory;
+    /**
+     * The graph element factory.
+     */
+    protected GraphElementFactory elementFactory;
 
-  /**
-   * Reifies a triple.  A triple made up of the first three nodes is added to
-   * graph and the reificationNode is used to reify the triple.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @param reificationNode a node denoting the reified triple.
-   * @throws TripleFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public void reifyTriple(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode objectNode,
-      SubjectNode reificationNode) throws TripleFactoryException,
-      AlreadyReifiedException {
+    /**
+     * Reifies a triple.  A triple made up of the first three nodes is added to
+     * graph and the reificationNode is used to reify the triple.
+     *
+     * @param subjectNode the subject of the triple.
+     * @param predicateNode the predicate of the triple.
+     * @param objectNode the object of the triple.
+     * @param reificationNode a node denoting the reified triple.
+     * @throws TripleFactoryException If the resource failed to be created.
+     * @throws AlreadyReifiedException If there was already a triple URI for
+     *     the given triple.
+     */
+    public void reifyTriple(SubjectNode subjectNode,
+        PredicateNode predicateNode, ObjectNode objectNode,
+        SubjectNode reificationNode) throws TripleFactoryException,
+        AlreadyReifiedException {
 
-    // create the reification node
-    try {
-      reallyReifyTriple(subjectNode, predicateNode, objectNode,
-          reificationNode);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  /**
-   * Creates a reification of a triple.  The triple added to the graph and the
-   * reificationNode is used to reify the triple.
-   *
-   * @param triple the triple to be reified.
-   * @param reificationNode a node denoting the reified triple.
-   * @throws TripleFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  public void reifyTriple(Triple triple, SubjectNode reificationNode)
-      throws TripleFactoryException, AlreadyReifiedException {
-
-    try {
-      reallyReifyTriple(triple.getSubject(), triple.getPredicate(),
-          triple.getObject(), reificationNode);
-    }
-    catch (GraphElementFactoryException gefe) {
-      throw new TripleFactoryException(gefe);
-    }
-  }
-
-  /**
-   * Creates a reification of a triple.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param predicateNode the predicate of the triple.
-   * @param objectNode the object of the triple.
-   * @return a node denoting the reified triple.
-   * @throws GraphElementFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  private Node reallyReifyTriple(SubjectNode subjectNode,
-      PredicateNode predicateNode, ObjectNode objectNode, Node ru)
-      throws GraphElementFactoryException, AlreadyReifiedException {
-
-    // get the nodes used for reification
-    PredicateNode hasSubject = elementFactory.createResource(RDF.SUBJECT);
-    PredicateNode hasPredicate = elementFactory.createResource(RDF.PREDICATE);
-    PredicateNode hasObject = elementFactory.createResource(RDF.OBJECT);
-    URIReference rdfType = elementFactory.createResource(RDF.TYPE);
-    URIReference rdfStatement = elementFactory.createResource(RDF.STATEMENT);
-
-    // assert that the statement is not already reified
-    try {
-
-      // An error if ru already reifies anything but the given s, p, o.
-      if (graph.contains((SubjectNode) ru, rdfType, rdfStatement) &&
-          !(graph.contains((SubjectNode) ru, hasSubject,
-              (ObjectNode) subjectNode) &&
-          graph.contains((SubjectNode) ru, hasPredicate,
-              (ObjectNode) predicateNode) &&
-          graph.contains((SubjectNode) ru, hasObject, objectNode))) {
-
-        throw new AlreadyReifiedException("SkipListNode: " + ru +
-            " already used in " +
-            "reification");
-      }
-
-      // insert the reification statements
-      graph.add((SubjectNode) ru, rdfType, rdfStatement);
-      graph.add((SubjectNode) ru, hasSubject, (ObjectNode) subjectNode);
-      graph.add((SubjectNode) ru, hasPredicate, (ObjectNode) predicateNode);
-      graph.add((SubjectNode) ru, hasObject, (ObjectNode) objectNode);
-    }
-    catch (GraphException e) {
-      throw new GraphElementFactoryException(e);
-    }
-
-    // return the ru to make it easier for returning the value from this method
-    return ru;
-  }
-
-  public void addAlternative(SubjectNode subjectNode,
-      Alternative<ObjectNode> alternative) throws TripleFactoryException {
-    try {
-      graph.add(subjectNode,
-          (PredicateNode) elementFactory.createResource(RDF.TYPE),
-          (ObjectNode) elementFactory.createResource(RDF.ALT));
-      addContainer(subjectNode, alternative);
-    }
-    catch (GraphException e) {
-      throw new TripleFactoryException(e);
-    }
-    catch (GraphElementFactoryException e) {
-      throw new TripleFactoryException(e);
-    }
-  }
-
-  public void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag)
-      throws TripleFactoryException {
-    try {
-
-      graph.add(subjectNode,
-          (PredicateNode) elementFactory.createResource(RDF.TYPE),
-          (ObjectNode) elementFactory.createResource(RDF.BAG));
-
-      addContainer(subjectNode, bag);
-    }
-    catch (GraphException e) {
-      throw new TripleFactoryException(e);
-    }
-    catch (GraphElementFactoryException e) {
-      throw new TripleFactoryException(e);
-    }
-  }
-
-  public void addSequence(SubjectNode subjectNode,
-      Sequence<ObjectNode> sequence) throws TripleFactoryException {
-    try {
-
-      graph.add(subjectNode,
-          (PredicateNode) elementFactory.createResource(RDF.TYPE),
-          (ObjectNode) elementFactory.createResource(RDF.SEQ));
-
-      addContainer(subjectNode, sequence);
-    }
-    catch (GraphException e) {
-      throw new TripleFactoryException(e);
-    }
-    catch (GraphElementFactoryException e) {
-      throw new TripleFactoryException(e);
-    }
-  }
-
-  /**
-   * Creates a container.
-   *
-   * @param subjectNode the subject of the triple.
-   * @param container the container to add.
-   * @throws TripleFactoryException If the resource failed to be created.
-   * @throws AlreadyReifiedException If there was already a triple URI for
-   *     the given triple.
-   */
-  private void addContainer(SubjectNode subjectNode,
-      Container<ObjectNode> container) throws TripleFactoryException {
-
-    // assert that the statement is not already reified
-    try {
-
-      // Insert statements from colletion.
-      long counter = 1;
-      Iterator<ObjectNode> iter = container.iterator();
-
-      while (iter.hasNext()) {
-        ObjectNode object = iter.next();
-        graph.add(subjectNode,
-            (PredicateNode) elementFactory.createResource(new URI(
-                RDF.baseURI + "_" + counter++)),
-            object);
-      }
-    }
-    catch (URISyntaxException e) {
-      throw new TripleFactoryException(e);
-    }
-    catch (GraphElementFactoryException e) {
-      throw new TripleFactoryException(e);
-    }
-    catch (GraphException e) {
-      throw new TripleFactoryException(e);
-    }
-  }
-
-  public void addCollection(SubjectNode firstNode,
-      Collection<ObjectNode> collection) throws TripleFactoryException {
-    try {
-      // Constants.
-      PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(
-          RDF.FIRST);
-      PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(
-          RDF.REST);
-      ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
-
-      // Insert statements from the Colletion using the first given node.
-      SubjectNode subject = firstNode;
-
-      // Iterate through all elements in the Collection.
-      Iterator<ObjectNode> iter = collection.iterator();
-      while (iter.hasNext()) {
-
-        // Get the next object and create the new FIRST statement.
-        ObjectNode object = iter.next();
-        graph.add(subject, rdfFirst, object);
-
-        // Check if there are any more elements in the Collection.
-        if (iter.hasNext()) {
-
-          // Create a new blank node, link the existing subject to it using
-          // the REST predicate.
-          ObjectNode newSubject = (ObjectNode) elementFactory.createResource();
-          graph.add(subject, rdfRest, newSubject);
-          subject = (SubjectNode) newSubject;
+        // create the reification node
+        try {
+            reallyReifyTriple(subjectNode, predicateNode, objectNode,
+                reificationNode);
         }
-        else {
-
-          // If we are at the end of the list link the existing subject to NIL
-          // using the REST predicate.
-          graph.add(subject, rdfRest, rdfNil);
+        catch (GraphElementFactoryException gefe) {
+            throw new TripleFactoryException(gefe);
         }
-      }
     }
-    catch (GraphElementFactoryException e) {
-      throw new TripleFactoryException(e);
+
+    /**
+     * Creates a reification of a triple.  The triple added to the graph and the
+     * reificationNode is used to reify the triple.
+     *
+     * @param triple the triple to be reified.
+     * @param reificationNode a node denoting the reified triple.
+     * @throws TripleFactoryException If the resource failed to be created.
+     * @throws AlreadyReifiedException If there was already a triple URI for
+     *     the given triple.
+     */
+    public void reifyTriple(Triple triple, SubjectNode reificationNode)
+        throws TripleFactoryException, AlreadyReifiedException {
+
+        try {
+            reallyReifyTriple(triple.getSubject(), triple.getPredicate(),
+                triple.getObject(), reificationNode);
+        }
+        catch (GraphElementFactoryException gefe) {
+            throw new TripleFactoryException(gefe);
+        }
     }
-    catch (GraphException e) {
-      throw new TripleFactoryException(e);
+
+    /**
+     * Creates a reification of a triple.
+     *
+     * @param subjectNode the subject of the triple.
+     * @param predicateNode the predicate of the triple.
+     * @param objectNode the object of the triple.
+     * @return a node denoting the reified triple.
+     * @throws GraphElementFactoryException If the resource failed to be created.
+     * @throws AlreadyReifiedException If there was already a triple URI for
+     *     the given triple.
+     */
+    private Node reallyReifyTriple(SubjectNode subjectNode,
+        PredicateNode predicateNode, ObjectNode objectNode, Node ru)
+        throws GraphElementFactoryException, AlreadyReifiedException {
+
+        // get the nodes used for reification
+        PredicateNode hasSubject = elementFactory.createResource(RDF.SUBJECT);
+        PredicateNode hasPredicate = elementFactory.createResource(RDF.PREDICATE);
+        PredicateNode hasObject = elementFactory.createResource(RDF.OBJECT);
+        URIReference rdfType = elementFactory.createResource(RDF.TYPE);
+        URIReference rdfStatement = elementFactory.createResource(RDF.STATEMENT);
+
+        // assert that the statement is not already reified
+        try {
+
+            // An error if ru already reifies anything but the given s, p, o.
+            if (graph.contains((SubjectNode) ru, rdfType, rdfStatement) &&
+                !(graph.contains((SubjectNode) ru, hasSubject,
+                    (ObjectNode) subjectNode) &&
+                graph.contains((SubjectNode) ru, hasPredicate,
+                    (ObjectNode) predicateNode) &&
+                graph.contains((SubjectNode) ru, hasObject, objectNode))) {
+
+                throw new AlreadyReifiedException("SkipListNode: " + ru +
+                    " already used in " +
+                    "reification");
+            }
+
+            // insert the reification statements
+            graph.add((SubjectNode) ru, rdfType, rdfStatement);
+            graph.add((SubjectNode) ru, hasSubject, (ObjectNode) subjectNode);
+            graph.add((SubjectNode) ru, hasPredicate, (ObjectNode) predicateNode);
+            graph.add((SubjectNode) ru, hasObject, (ObjectNode) objectNode);
+        }
+        catch (GraphException e) {
+            throw new GraphElementFactoryException(e);
+        }
+
+        // return the ru to make it easier for returning the value from this method
+        return ru;
     }
-  }
+
+    public void addAlternative(SubjectNode subjectNode,
+        Alternative<ObjectNode> alternative) throws TripleFactoryException {
+        try {
+            graph.add(subjectNode,
+                (PredicateNode) elementFactory.createResource(RDF.TYPE),
+                (ObjectNode) elementFactory.createResource(RDF.ALT));
+            addContainer(subjectNode, alternative);
+        }
+        catch (GraphException e) {
+            throw new TripleFactoryException(e);
+        }
+        catch (GraphElementFactoryException e) {
+            throw new TripleFactoryException(e);
+        }
+    }
+
+    public void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag)
+        throws TripleFactoryException {
+        try {
+
+            graph.add(subjectNode,
+                (PredicateNode) elementFactory.createResource(RDF.TYPE),
+                (ObjectNode) elementFactory.createResource(RDF.BAG));
+
+            addContainer(subjectNode, bag);
+        }
+        catch (GraphException e) {
+            throw new TripleFactoryException(e);
+        }
+        catch (GraphElementFactoryException e) {
+            throw new TripleFactoryException(e);
+        }
+    }
+
+    public void addSequence(SubjectNode subjectNode,
+        Sequence<ObjectNode> sequence) throws TripleFactoryException {
+        try {
+
+            graph.add(subjectNode,
+                (PredicateNode) elementFactory.createResource(RDF.TYPE),
+                (ObjectNode) elementFactory.createResource(RDF.SEQ));
+
+            addContainer(subjectNode, sequence);
+        }
+        catch (GraphException e) {
+            throw new TripleFactoryException(e);
+        }
+        catch (GraphElementFactoryException e) {
+            throw new TripleFactoryException(e);
+        }
+    }
+
+    /**
+     * Creates a container.
+     *
+     * @param subjectNode the subject of the triple.
+     * @param container the container to add.
+     * @throws TripleFactoryException If the resource failed to be created.
+     * @throws AlreadyReifiedException If there was already a triple URI for
+     *     the given triple.
+     */
+    private void addContainer(SubjectNode subjectNode,
+        Container<ObjectNode> container) throws TripleFactoryException {
+
+        // assert that the statement is not already reified
+        try {
+
+            // Insert statements from colletion.
+            long counter = 1;
+            Iterator<ObjectNode> iter = container.iterator();
+
+            while (iter.hasNext()) {
+                ObjectNode object = iter.next();
+                graph.add(subjectNode,
+                    (PredicateNode) elementFactory.createResource(new URI(RDF.baseURI + "_" + counter++)),
+                    object);
+            }
+        }
+        catch (URISyntaxException e) {
+            throw new TripleFactoryException(e);
+        }
+        catch (GraphElementFactoryException e) {
+            throw new TripleFactoryException(e);
+        }
+        catch (GraphException e) {
+            throw new TripleFactoryException(e);
+        }
+    }
+
+    public void addCollection(SubjectNode firstNode,
+        Collection<ObjectNode> collection) throws TripleFactoryException {
+        try {
+            // Constants.
+            PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(RDF.FIRST);
+            PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(RDF.REST);
+            ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
+
+            // Insert statements from the Colletion using the first given node.
+            SubjectNode subject = firstNode;
+
+            // Iterate through all elements in the Collection.
+            Iterator<ObjectNode> iter = collection.iterator();
+            while (iter.hasNext()) {
+
+                // Get the next object and create the new FIRST statement.
+                ObjectNode object = iter.next();
+                graph.add(subject, rdfFirst, object);
+
+                // Check if there are any more elements in the Collection.
+                if (iter.hasNext()) {
+
+                    // Create a new blank node, link the existing subject to it using
+                    // the REST predicate.
+                    ObjectNode newSubject = (ObjectNode) elementFactory.createResource();
+                    graph.add(subject, rdfRest, newSubject);
+                    subject = (SubjectNode) newSubject;
+                }
+                else {
+
+                    // If we are at the end of the list link the existing subject to NIL
+                    // using the REST predicate.
+                    graph.add(subject, rdfRest, rdfNil);
+                }
+            }
+        }
+        catch (GraphElementFactoryException e) {
+            throw new TripleFactoryException(e);
+        }
+        catch (GraphException e) {
+            throw new TripleFactoryException(e);
+        }
+    }
 }

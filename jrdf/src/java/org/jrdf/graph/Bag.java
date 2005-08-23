@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 // Java 2 standard packages
+
 import java.util.Collection;
 
 /**
@@ -70,14 +71,14 @@ import java.util.Collection;
  *
  * @version $Revision$
  */
-public interface Bag<ObjectNode> extends Container<ObjectNode> {
+public interface Bag <ObjectNode> extends Container<ObjectNode> {
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param c {@inheritDoc}
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Bag.
-   */
-  boolean addAll(Collection <? extends ObjectNode> c) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @param c {@inheritDoc}
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Bag.
+     */
+    boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException;
 }

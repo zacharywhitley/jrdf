@@ -83,71 +83,71 @@ import java.util.Iterator;
  */
 public interface Container <ObjectNode> extends Collection<ObjectNode> {
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param o Add an ObjectNode.
-   * @return {@inheritDoc}
-   */
-  boolean add(ObjectNode o);
+    /**
+     * {@inheritDoc}
+     *
+     * @param o Add an ObjectNode.
+     * @return {@inheritDoc}
+     */
+    boolean add(ObjectNode o);
 
-  /**
-   * {@inheritDoc}
-   */
-  boolean addAll(Collection<? extends ObjectNode> c);
+    /**
+     * {@inheritDoc}
+     */
+    boolean addAll(Collection<? extends ObjectNode> c);
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  boolean contains(Object o);
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    boolean contains(Object o);
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  boolean containsAll(Collection<?> c) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Sequence.
+     */
+    boolean containsAll(Collection<?> c) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return {@inheritDoc}
-   */
-  Iterator<ObjectNode> iterator();
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
+    Iterator<ObjectNode> iterator();
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param o {@inheritDoc}
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  boolean remove(Object o) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @param o {@inheritDoc}
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    boolean remove(Object o) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  boolean removeAll(Collection<?> c) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Sequence.
+     */
+    boolean removeAll(Collection<?> c) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  boolean retainAll(Collection<?> c) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Sequence.
+     */
+    boolean retainAll(Collection<?> c) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return {@inheritDoc}
-   */
-  <ObjectNode>ObjectNode[] toArray(ObjectNode[] a);
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
+    <ObjectNode>ObjectNode[] toArray(ObjectNode[] a);
 }

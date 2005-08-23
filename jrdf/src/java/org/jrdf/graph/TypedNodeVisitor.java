@@ -68,24 +68,24 @@ package org.jrdf.graph;
  */
 public interface TypedNodeVisitor {
 
-  /**
-   * Visit blank node.
-   *
-   * @param blankNode the blank node to visit.
-   */
-  void visitBlankNode(BlankNode blankNode);
+    /**
+     * Visit blank node.
+     *
+     * @param blankNode the blank node to visit.
+     */
+    void visitBlankNode(BlankNode blankNode);
 
-  /**
-   * Visit URI Reference.
-   *
-   * @param uriReference the URI Reference to visit.
-   */
-  void visitURIReference(URIReference uriReference);
+    /**
+     * Visit URI Reference.
+     *
+     * @param uriReference the URI Reference to visit.
+     */
+    void visitURIReference(URIReference uriReference);
 
-  /**
-   * Visit Literal.
-   *
-   * @param literal the Literal to visit.
-   */
-  void visitLiteral(Literal literal);
+    /**
+     * Visit Literal.
+     *
+     * @param literal the Literal to visit.
+     */
+    void visitLiteral(Literal literal);
 }

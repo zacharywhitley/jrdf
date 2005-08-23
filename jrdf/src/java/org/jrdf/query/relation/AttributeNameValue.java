@@ -1,7 +1,7 @@
 package org.jrdf.query.relation;
 
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
 
 /**
  * Something in here
@@ -11,6 +11,7 @@ import org.jrdf.graph.ObjectNode;
  * @version $Revision$
  */
 public interface AttributeNameValue {
-  PredicateNode getName();
-  ObjectNode getValue();
+    PredicateNode getName();
+
+    ObjectNode getValue();
 }

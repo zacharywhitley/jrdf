@@ -78,67 +78,67 @@ import java.util.List;
 public final class BagImpl extends AbstractUnorderedContainer<ObjectNode>
     implements Bag<ObjectNode> {
 
-  public boolean containsAll(Collection<?> c) {
-    return elements.values().containsAll(c);
-  }
-
-  public boolean addAll(Collection<? extends ObjectNode> c) {
-    Iterator<? extends ObjectNode> iter = c.iterator();
-    boolean modified = iter.hasNext();
-    while (iter.hasNext()) {
-      ObjectNode obj = iter.next();
-      elements.put(new Long(key++), obj);
+    public boolean containsAll(Collection<?> c) {
+        return elements.values().containsAll(c);
     }
 
-    return modified;
-  }
+    public boolean addAll(Collection<? extends ObjectNode> c) {
+        Iterator<? extends ObjectNode> iter = c.iterator();
+        boolean modified = iter.hasNext();
+        while (iter.hasNext()) {
+            ObjectNode obj = iter.next();
+            elements.put(new Long(key++), obj);
+        }
 
-  public boolean removeAll(Collection<?> c) {
-    Iterator iter = c.iterator();
-    boolean modified = iter.hasNext();
-    while (iter.hasNext()) {
-      remove(iter.next());
-    }
-    return modified;
-  }
-
-  // TODO Removed type checking.
-  public boolean retainAll(Collection<?> c) {
-    boolean modified = false;
-    Iterator<?> iter = iterator();
-    while (iter.hasNext()) {
-      Object obj = iter.next();
-      if (!c.contains(obj)) {
-        modified = true;
-        remove(obj);
-      }
+        return modified;
     }
 
-    return modified;
-  }
-
-  public boolean equals(Object obj) {
-
-    // Check equal by reference
-    if (this == obj) {
-      return true;
+    public boolean removeAll(Collection<?> c) {
+        Iterator iter = c.iterator();
+        boolean modified = iter.hasNext();
+        while (iter.hasNext()) {
+            remove(iter.next());
+        }
+        return modified;
     }
 
-    // Check for null and ensure exactly the same class - not subclass.
-    if (null == obj ||
-        getClass() != obj.getClass()) {
-      return false;
+    // TODO Removed type checking.
+    public boolean retainAll(Collection<?> c) {
+        boolean modified = false;
+        Iterator<?> iter = iterator();
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (!c.contains(obj)) {
+                modified = true;
+                remove(obj);
+            }
+        }
+
+        return modified;
     }
 
-    Bag bag = (Bag) obj;
+    public boolean equals(Object obj) {
 
-    boolean returnValue = false;
-    if (size() == bag.size()) {
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
 
-      List myValues = Arrays.asList(toArray());
-      List altValues = Arrays.asList(bag.toArray());
-      returnValue = myValues.equals(altValues);
+        // Check for null and ensure exactly the same class - not subclass.
+        if (null == obj ||
+            getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Bag bag = (Bag) obj;
+
+        boolean returnValue = false;
+        if (size() == bag.size()) {
+
+            List myValues = Arrays.asList(toArray());
+            List altValues = Arrays.asList(bag.toArray());
+            returnValue = myValues.equals(altValues);
+        }
+        return returnValue;
     }
-    return returnValue;
-  }
 }

@@ -73,99 +73,99 @@ import java.util.ArrayList;
 public final class SequenceImpl extends ArrayList<ObjectNode>
     implements Sequence<ObjectNode> {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = -8659292687902645229L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = -8659292687902645229L;
 
-  public SequenceImpl() {
-  }
+    public SequenceImpl() {
+    }
 
-  public ObjectNode remove() {
-    return remove(0);
-  }
+    public ObjectNode remove() {
+        return remove(0);
+    }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  // TODO Possibly dodgy now due to Generics
-  public boolean contains(Object o) {
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    // TODO Possibly dodgy now due to Generics
+    public boolean contains(Object o) {
 //    if (!(o instanceof ObjectNode)) {
 //      throw new IllegalArgumentException("Can only add object nodes");
 //    }
 
-    return super.contains(o);
-  }
-
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  // TODO Possibly dodgy now due to Generics
-  public boolean containsAll(java.util.Collection<?> c) {
-    if (!(c instanceof Sequence)) {
-      throw new IllegalArgumentException("Can only add sequences to other " +
-          "sequences");
+        return super.contains(o);
     }
 
-    return super.containsAll(c);
-  }
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Sequence.
+     */
+    // TODO Possibly dodgy now due to Generics
+    public boolean containsAll(java.util.Collection<?> c) {
+        if (!(c instanceof Sequence)) {
+            throw new IllegalArgumentException("Can only add sequences to other " +
+                "sequences");
+        }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  // TODO Possibly dodgy now due to Generics
-  public int indexOf(Object o) throws IllegalArgumentException {
+        return super.containsAll(c);
+    }
+
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    // TODO Possibly dodgy now due to Generics
+    public int indexOf(Object o) throws IllegalArgumentException {
 //    if (!(o instanceof ObjectNode)) {
 //      throw new IllegalArgumentException("Can only get Object nodes");
 //    }
 
-    return super.indexOf(o);
-  }
+        return super.indexOf(o);
+    }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  // TODO Possibly dodgy now due to Generics
-  public int lastIndexOf(Object o) throws IllegalArgumentException {
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    // TODO Possibly dodgy now due to Generics
+    public int lastIndexOf(Object o) throws IllegalArgumentException {
 //    if (!(o instanceof ObjectNode)) {
 //      throw new IllegalArgumentException("Can only get Object nodes");
 //    }
 
-    return super.lastIndexOf(o);
-  }
-
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  // TODO Possibly dodgy now due to Generics
-  public boolean removeAll(java.util.Collection<?> c) throws
-      IllegalArgumentException {
-    if (!(c instanceof Sequence)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
+        return super.lastIndexOf(o);
     }
 
-    return super.removeAll(c);
-  }
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Sequence.
+     */
+    // TODO Possibly dodgy now due to Generics
+    public boolean removeAll(java.util.Collection<?> c) throws
+        IllegalArgumentException {
+        if (!(c instanceof Sequence)) {
+            throw new IllegalArgumentException("Can only add bags to other bags");
+        }
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Sequence.
-   */
-  // TODO Possibly dodgy now due to Generics
-  public boolean retainAll(java.util.Collection<?> c) throws
-      IllegalArgumentException {
-    if (!(c instanceof Sequence)) {
-      throw new IllegalArgumentException("Can only add bags to other bags");
+        return super.removeAll(c);
     }
 
-    return super.retainAll(c);
-  }
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Sequence.
+     */
+    // TODO Possibly dodgy now due to Generics
+    public boolean retainAll(java.util.Collection<?> c) throws
+        IllegalArgumentException {
+        if (!(c instanceof Sequence)) {
+            throw new IllegalArgumentException("Can only add bags to other bags");
+        }
+
+        return super.retainAll(c);
+    }
 }

@@ -71,74 +71,74 @@ import java.util.Map;
  *
  * @version $Revision$
  */
-public abstract class AbstractUnorderedContainer<ObjectNode>
+public abstract class AbstractUnorderedContainer <ObjectNode>
     implements Container<ObjectNode> {
 
-  /**
-   * The hashmap containing the elements.
-   */
-  protected Map<Long,ObjectNode> elements = new HashMap<Long, ObjectNode>();
+    /**
+     * The hashmap containing the elements.
+     */
+    protected Map<Long, ObjectNode> elements = new HashMap<Long, ObjectNode>();
 
-  /**
-   * Counter used to generate keys to add to the hashmap.
-   */
-  protected long key;
+    /**
+     * Counter used to generate keys to add to the hashmap.
+     */
+    protected long key;
 
-  public int size() {
-    return elements.values().size();
-  }
-
-  public boolean isEmpty() {
-    return elements.values().isEmpty();
-  }
-
-  public boolean contains(Object o) {
-    return elements.values().contains(o);
-  }
-
-  public Iterator<ObjectNode> iterator() {
-    return elements.values().iterator();
-  }
-
-  // TODO This appears to be the right way to do it.  Make sure everywhere else
-  // is the same.
-  public ObjectNode[] toArray() {
-    return (ObjectNode[]) elements.values().toArray();
-  }
-
-  public <ObjectNode>ObjectNode[] toArray(ObjectNode[] a) {
-    return elements.values().toArray(a);
-  }
-
-  public boolean add(ObjectNode o) {
-    elements.put(new Long(key++), o);
-    return true;
-  }
-
-  public boolean remove(Object o) {
-    Iterator iter = elements.entrySet().iterator();
-    boolean found = false;
-
-    // Removes the first entry in the map that matches the given object.
-    while (!found && iter.hasNext()) {
-      Map.Entry entry = (Map.Entry) iter.next();
-      if (o.equals(entry.getValue())) {
-        elements.remove(o);
-        found = true;
-      }
+    public int size() {
+        return elements.values().size();
     }
 
-    return found;
-  }
+    public boolean isEmpty() {
+        return elements.values().isEmpty();
+    }
 
-  public void clear() {
-    key = 0;
-    elements.clear();
-  }
+    public boolean contains(Object o) {
+        return elements.values().contains(o);
+    }
 
-  public int hashCode() {
-    return elements.hashCode();
-  }
+    public Iterator<ObjectNode> iterator() {
+        return elements.values().iterator();
+    }
 
-  public abstract boolean equals(Object o);
+    // TODO This appears to be the right way to do it.  Make sure everywhere else
+    // is the same.
+    public ObjectNode[] toArray() {
+        return (ObjectNode[]) elements.values().toArray();
+    }
+
+    public <ObjectNode>ObjectNode[] toArray(ObjectNode[] a) {
+        return elements.values().toArray(a);
+    }
+
+    public boolean add(ObjectNode o) {
+        elements.put(new Long(key++), o);
+        return true;
+    }
+
+    public boolean remove(Object o) {
+        Iterator iter = elements.entrySet().iterator();
+        boolean found = false;
+
+        // Removes the first entry in the map that matches the given object.
+        while (!found && iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            if (o.equals(entry.getValue())) {
+                elements.remove(o);
+                found = true;
+            }
+        }
+
+        return found;
+    }
+
+    public void clear() {
+        key = 0;
+        elements.clear();
+    }
+
+    public int hashCode() {
+        return elements.hashCode();
+    }
+
+    public abstract boolean equals(Object o);
 }

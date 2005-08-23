@@ -10,5 +10,5 @@ import org.jrdf.graph.Graph;
  * @version $Revision$
  */
 public interface Intersection extends SetOperation {
-  Graph perform(Graph a, Graph b);
+    Graph perform(Graph a, Graph b);
 }

@@ -60,12 +60,17 @@ package org.jrdf.graph;
 
 import junit.framework.TestCase;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.AssertThrows;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * Abstract test case for graph implementations.
@@ -121,6 +126,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      * Literal 2.
      */
     protected static Literal l2;
+    private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
+    private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
+    private static final String CANT_REMOVE_ANY_NODE_MESSAGE = "Cannot remove any node values into the graph";
+    private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
+    private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
+    private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
 
     /**
      * Constructs a new test with the given name.
@@ -188,6 +199,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Tests addition.
+     *
      * @throws Exception A generic exception - this should cause the tests to
      * fail.
      */
@@ -231,6 +243,40 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(list.iterator());
         assertFalse(graph.isEmpty());
         assertEquals(4, graph.getNumberOfTriples());
+
+        // Try to add nulls
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.add(null, ref1, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.add(ref1, null, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.add(ref1, ref1, null);
+            }
+        });
+
+        // Try to add any nodes
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.add(ANY_SUBJECT_NODE, ref1, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.add(ref1, ANY_PREDICATE_NODE, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.add(ref1, ref1, ANY_OBJECT_NODE);
+            }
+        });
     }
 
     /**
@@ -280,7 +326,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             graph.remove(blank2, ref1, blank1);
             assertTrue(false);
         }
-        catch (GraphException e) { /* no-op */}
+        catch (GraphException e) { /* no-op */
+        }
         assertEquals(1, graph.getNumberOfTriples());
 
         // delete a triple that never existed
@@ -288,7 +335,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             graph.remove(blank2, ref2, l2);
             assertTrue(false);
         }
-        catch (GraphException e) { /* no-op */}
+        catch (GraphException e) { /* no-op */
+        }
         assertEquals(1, graph.getNumberOfTriples());
 
         // and delete with a triple object
@@ -297,7 +345,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             graph.remove(t1);
             assertTrue(false);
         }
-        catch (GraphException e) { /* no-op */}
+        catch (GraphException e) { /* no-op */
+        }
         assertEquals(1, graph.getNumberOfTriples());
 
         // now clear out the graph
@@ -311,7 +360,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             graph.remove(blank1, ref2, blank2);
             assertTrue(false);
         }
-        catch (GraphException e) { /* no-op */}
+        catch (GraphException e) { /* no-op */
+        }
         assertTrue(graph.isEmpty());
         assertEquals(0, graph.getNumberOfTriples());
 
@@ -329,14 +379,53 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             graph.remove(ref2, ref2, ref2);
             assertTrue(false);
         }
-        catch (GraphException e) { /* no-op */}
+        catch (GraphException e) { /* no-op */
+        }
 
         assertTrue(graph.isEmpty());
         assertEquals(0, graph.getNumberOfTriples());
+
+        // Try to add nulls
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.remove(null, ref1, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.remove(ref1, null, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.remove(ref1, ref1, null);
+            }
+        });
+
+        // Try to add any nodes
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
+            new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    graph.remove(ANY_SUBJECT_NODE, ref1, ref1);
+                }
+            });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
+            new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    graph.remove(ref1, ANY_PREDICATE_NODE, ref1);
+                }
+            });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
+            new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    graph.remove(ref1, ref1, ANY_OBJECT_NODE);
+                }
+            });
     }
 
     /**
      * Tests containership.
+     *
      * @throws Exception A generic exception - this should cause the tests to
      * fail.
      */
@@ -375,9 +464,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertTrue(graph.contains(blank1, ref1, blank2));
         assertTrue(graph.contains(t1));
 
-        // Null in contains.
+        // AnySubjectNode in contains.
         Graph newGraph = newGraph();
-        assertFalse(newGraph.contains(null, null, null));
+        assertFalse(newGraph.contains(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
 
         // Add a statement
         GraphElementFactory newElementFactory = newGraph.getElementFactory();
@@ -388,19 +477,37 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         newGraph.add(t1);
 
         // Check for existance
-        assertTrue(newGraph.contains(null, ref1, blank2));
-        assertTrue(newGraph.contains(null, null, blank2));
-        assertTrue(newGraph.contains(null, null, null));
-        assertTrue(newGraph.contains(blank1, null, blank2));
-        assertTrue(newGraph.contains(blank1, null, null));
-        assertTrue(newGraph.contains(blank1, ref1, null));
+        assertTrue(newGraph.contains(ANY_SUBJECT_NODE, ref1, blank2));
+        assertTrue(newGraph.contains(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, blank2));
+        assertTrue(newGraph.contains(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+        assertTrue(newGraph.contains(blank1, ANY_PREDICATE_NODE, blank2));
+        assertTrue(newGraph.contains(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+        assertTrue(newGraph.contains(blank1, ref1, ANY_OBJECT_NODE));
+        assertTrue(newGraph.contains(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
 
         // Check non-existance
-        assertFalse(newGraph.contains(null, ref2, blank1));
-        assertFalse(newGraph.contains(null, null, blank1));
-        assertFalse(newGraph.contains(blank2, null, blank1));
-        assertFalse(newGraph.contains(blank2, null, null));
-        assertFalse(newGraph.contains(blank2, ref2, null));
+        assertFalse(newGraph.contains(ANY_SUBJECT_NODE, ref2, blank1));
+        assertFalse(newGraph.contains(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, blank1));
+        assertFalse(newGraph.contains(blank2, ANY_PREDICATE_NODE, blank1));
+        assertFalse(newGraph.contains(blank2, ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+        assertFalse(newGraph.contains(blank2, ref2, ANY_OBJECT_NODE));
+
+        // Try to test for containing nulls
+        AssertThrows.assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.contains(null, ref1, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.contains(ref1, null, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.contains(ref1, ref1, null);
+            }
+        });
     }
 
     /**
@@ -429,46 +536,46 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         it.close();
 
         // look for doubles and check that there is data there
-        it = graph.find(blank1, ref1, null);
+        it = graph.find(blank1, ref1, ANY_OBJECT_NODE);
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(blank1, null, blank2);
+        it = graph.find(blank1, ANY_PREDICATE_NODE, blank2);
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(null, ref1, blank2);
+        it = graph.find(ANY_SUBJECT_NODE, ref1, blank2);
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent double
-        it = graph.find(ref1, ref1, null);
+        it = graph.find(ref1, ref1, ANY_OBJECT_NODE);
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(ref1, null, blank2);
+        it = graph.find(ref1, ANY_PREDICATE_NODE, blank2);
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(null, ref3, blank2);
+        it = graph.find(ANY_SUBJECT_NODE, ref3, blank2);
         assertFalse(it.hasNext());
         it.close();
 
         // look for singles
-        it = graph.find(blank1, null, null);
+        it = graph.find(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(null, ref1, null);
+        it = graph.find(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE);
         assertTrue(it.hasNext());
         it.close();
-        it = graph.find(null, null, l1);
+        it = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, l1);
         assertTrue(it.hasNext());
         it.close();
 
         // look for non-existent singles
-        it = graph.find(ref1, null, null);
+        it = graph.find(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(null, ref3, null);
+        it = graph.find(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE);
         assertFalse(it.hasNext());
         it.close();
-        it = graph.find(null, null, ref1);
+        it = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1);
         assertFalse(it.hasNext());
         it.close();
 
@@ -487,60 +594,77 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         it.close();
 
         // look for doubles and check that there is data there
-        t = elementFactory.createTriple(blank1, ref1, null);
+        t = elementFactory.createTriple(blank1, ref1, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(blank1, null, blank2);
+        t = elementFactory.createTriple(blank1, ANY_PREDICATE_NODE, blank2);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(null, ref1, blank2);
+        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref1, blank2);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent double
-        t = elementFactory.createTriple(ref1, ref1, null);
+        t = elementFactory.createTriple(ref1, ref1, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ref1, null, blank2);
+        t = elementFactory.createTriple(ref1, ANY_PREDICATE_NODE, blank2);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(null, ref3, blank2);
+        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref3, blank2);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
 
         // look for singles
-        t = elementFactory.createTriple(blank1, null, null);
+        t = elementFactory.createTriple(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(null, ref1, null);
+        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(null, null, l1);
+        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, l1);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
 
         // look for non-existent singles
-        t = elementFactory.createTriple(ref1, null, null);
+        t = elementFactory.createTriple(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(null, ref3, null);
+        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(null, null, ref1);
+        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
+
+        // Try to test for finding nulls
+        AssertThrows.assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.find(null, ref1, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.find(ref1, null, ref1);
+            }
+        });
+        AssertThrows.assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                graph.find(ref1, ref1, null);
+            }
+        });
     }
 
     /**
@@ -555,10 +679,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         //create nodes
         BlankNode bNode1 = factory.createResource();
         BlankNode bNode2 = factory.createResource();
-        URIReference testUri1 = factory.createResource(new URI(
-                "http://tucana.org/tucana#testUri1"));
-        URIReference testUri2 = factory.createResource(new URI(
-                "http://tucana.org/tucana#testUri2"));
+        URIReference testUri1 = factory.createResource(new URI("http://tucana.org/tucana#testUri1"));
+        URIReference testUri2 = factory.createResource(new URI("http://tucana.org/tucana#testUri2"));
         Literal literal1 = factory.createLiteral("literal1");
         Literal literal2 = factory.createLiteral("literal2");
 
@@ -583,30 +705,26 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
         //add them
         for (int i = 0; i < triples.length; i++) {
-
             graph.add(triples[i]);
         }
 
         //query them and put contents of iterator in a set for checking
         //(iterator may return results in a different order)
         Set<Triple> statements = new HashSet<Triple>();
-        ClosableIterator<Triple> iter = graph.find(null, null, null);
+        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("ClosableIterator is returning false for hasNext().",
-                iter.hasNext());
+            iter.hasNext());
         while (iter.hasNext()) {
             statements.add(iter.next());
         }
         iter.close();
 
         //check that the iterator contained the correct number of statements
-        assertEquals("ClosableIterator is incomplete.", graph.getNumberOfTriples(),
-                statements.size());
+        assertEquals("ClosableIterator is incomplete.", statements.size(), graph.getNumberOfTriples());
 
         //check the the set contains all the original triples
         for (int i = 0; i < triples.length; i++) {
-
             if (!statements.contains(triples[i])) {
-
                 fail("Iterator did not contain triple: " + triples[i] + ".");
             }
         }
@@ -634,7 +752,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(6, graph.getNumberOfTriples());
 
         // get an iterator for the blank2,ref1 elements
-        ClosableIterator ci = graph.find(blank2, ref1, null);
+        ClosableIterator ci = graph.find(blank2, ref1, ANY_OBJECT_NODE);
         checkInvalidRemove(ci);
 
         // remove the first element
@@ -652,7 +770,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertFalse(ci.hasNext());
 
         // get an iterator for the blank1 elements
-        ci = graph.find(blank1, null, null);
+        ci = graph.find(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         checkInvalidRemove(ci);
 
         // remove the first element
@@ -682,7 +800,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertFalse(ci.hasNext());
 
         // get an iterator for the final element
-        ci = graph.find(null, null, null);
+        ci = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         checkInvalidRemove(ci);
 
         // remove the element
@@ -700,18 +818,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             graph.remove(ref2, ref2, ref2);
             assertTrue(false);
         }
-        catch (GraphException e) { /* no-op */}
-
-    }
-
-    private void checkInvalidRemove(ClosableIterator ci) {
-        try {
-            ci.remove();
-            fail("Must throw an exception.");
+        catch (GraphException e) { /* no-op */
         }
-        catch (IllegalStateException ise) {
-            assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
-        }
+
     }
 
     /**
@@ -736,7 +845,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(6, graph.getNumberOfTriples());
 
         // get an iterator for all the elements
-        ClosableIterator ci = graph.find(null, null, null);
+        ClosableIterator ci = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         for (int i = 5; 0 <= i; i--) {
             // remove the element
             assertTrue(ci.hasNext());
@@ -750,6 +859,16 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertFalse(ci.hasNext());
 
         ci.close();
+    }
+
+    private void checkInvalidRemove(ClosableIterator ci) {
+        try {
+            ci.remove();
+            fail("Must throw an exception.");
+        }
+        catch (IllegalStateException ise) {
+            assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
+        }
     }
 
     /**
@@ -770,6 +889,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         }
         assertTrue(execptedTriples.isEmpty());
         actualTriples.close();
-  }
+    }
 
 }

@@ -69,6 +69,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
@@ -172,10 +175,10 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         assertTrue(graph2.contains(blank2, ref3, l2));
         assertTrue(graph2.contains(blank1, ref3, l3));
         assertTrue(graph2.contains(ref1, ref1, ref1));
-        assertTrue(graph2.contains(null, ref1, null));
+        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE));
         assertTrue(graph2.contains(ref3, ref3, ref3));
-        assertTrue(graph2.contains(null, ref3, null));
-        assertTrue(graph2.contains(null, ref3, l3));
+        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE));
+        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, l3));
   }
 
 }

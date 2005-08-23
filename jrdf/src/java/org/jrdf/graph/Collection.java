@@ -59,7 +59,6 @@
 package org.jrdf.graph;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
@@ -75,97 +74,97 @@ import java.util.Queue;
  *
  * @version $Revision$
  */
-public interface Collection<ObjectNode> extends List<ObjectNode>,
+public interface Collection <ObjectNode> extends List<ObjectNode>,
     Queue<ObjectNode> {
 
-  /**
-   * Add an ${@link ObjectNode} to the collection.
-   *
-   * @param element object to add.
-   * @return true if the object was added successfully.
-   */
-  boolean add(ObjectNode element);
+    /**
+     * Add an ${@link ObjectNode} to the collection.
+     *
+     * @param element object to add.
+     * @return true if the object was added successfully.
+     */
+    boolean add(ObjectNode element);
 
-  /**
-   * Add an ${@link ObjectNode} to the collection at the given position.
-   *
-   * @param index the index into the collection to add.
-   * @param element the object to add.
-   */
-  void add(int index, ObjectNode element);
+    /**
+     * Add an ${@link ObjectNode} to the collection at the given position.
+     *
+     * @param index the index into the collection to add.
+     * @param element the object to add.
+     */
+    void add(int index, ObjectNode element);
 
-  /**
-   * Add a collection of ${@link ObjectNode}s to this one.
-   *
-   * @param c the collection to add.
-   * @return true if the object was added successfully.
-   */
-  boolean addAll(java.util.Collection<? extends ObjectNode> c);
+    /**
+     * Add a collection of ${@link ObjectNode}s to this one.
+     *
+     * @param c the collection to add.
+     * @return true if the object was added successfully.
+     */
+    boolean addAll(java.util.Collection<? extends ObjectNode> c);
 
-  /**
-   * Add a collection of ${@link ObjectNode}s to this one starting at the given
-   * index.
-   *
-   * @param index the index into the collection to start adding.
-   * @param c the collection to add.
-   * @return true if the object was added successfully.
-   */
-  boolean addAll(int index, java.util.Collection<? extends ObjectNode> c);
+    /**
+     * Add a collection of ${@link ObjectNode}s to this one starting at the given
+     * index.
+     *
+     * @param index the index into the collection to start adding.
+     * @param c the collection to add.
+     * @return true if the object was added successfully.
+     */
+    boolean addAll(int index, java.util.Collection<? extends ObjectNode> c);
 
-  void addFirst(ObjectNode element);
+    void addFirst(ObjectNode element);
 
-  void addLast(ObjectNode element);
+    void addLast(ObjectNode element);
 
-  /**
-   * Search the collection and return if the object was found or not.
-   *
-   * @return true of the object was found.
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  boolean contains(Object o) throws IllegalArgumentException;
+    /**
+     * Search the collection and return if the object was found or not.
+     *
+     * @return true of the object was found.
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    boolean contains(Object o) throws IllegalArgumentException;
 
-  /**
-   * Search the collection and return if all of the given objects were found.
-   *
-   * @param c the collection containing the elements to search.
-   * @return true if all of the given objects were found. 
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, Collection.
-   */
-  boolean containsAll(java.util.Collection<?> c) throws IllegalArgumentException;
+    /**
+     * Search the collection and return if all of the given objects were found.
+     *
+     * @param c the collection containing the elements to search.
+     * @return true if all of the given objects were found.
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, Collection.
+     */
+    boolean containsAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  int indexOf(Object element) throws IllegalArgumentException;
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    int indexOf(Object element) throws IllegalArgumentException;
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  int lastIndexOf(Object element) throws IllegalArgumentException;
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    int lastIndexOf(Object element) throws IllegalArgumentException;
 
-  Iterator<ObjectNode> iterator();
+    Iterator<ObjectNode> iterator();
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  boolean remove(Object element) throws IllegalArgumentException;
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    boolean remove(Object element) throws IllegalArgumentException;
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  boolean removeAll(java.util.Collection<?> c) throws IllegalArgumentException;
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    boolean removeAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
-  /**
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  boolean retainAll(java.util.Collection<?> c) throws IllegalArgumentException;
+    /**
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    boolean retainAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
-  ObjectNode set(int index, ObjectNode element);
+    ObjectNode set(int index, ObjectNode element);
 }
