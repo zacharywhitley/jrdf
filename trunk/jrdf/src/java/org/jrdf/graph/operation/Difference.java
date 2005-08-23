@@ -11,5 +11,5 @@ import org.jrdf.graph.Graph;
  * @version $Revision$
  */
 public interface Difference extends SetOperation {
-  Graph perform(Graph a, Graph b);
+    Graph perform(Graph a, Graph b);
 }

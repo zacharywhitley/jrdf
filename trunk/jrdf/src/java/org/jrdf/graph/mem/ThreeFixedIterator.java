@@ -72,90 +72,90 @@ import java.util.NoSuchElementException;
  */
 public class ThreeFixedIterator implements ClosableIterator<Triple> {
 
-  /**
-   * The graph this iterator will operate on.  Only needed by the remove
-   * method.
-   */
-  private Graph graph;
+    /**
+     * The graph this iterator will operate on.  Only needed by the remove
+     * method.
+     */
+    private Graph graph;
 
-  /**
-   * The triple to return on
-   */
-  private TripleImpl triple;
+    /**
+     * The triple to return on
+     */
+    private TripleImpl triple;
 
-  /**
-   * The triple to remove
-   */
-  private TripleImpl removeTriple;
+    /**
+     * The triple to remove
+     */
+    private TripleImpl removeTriple;
 
-  /**
-   * Constructor.
-   */
-  ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object)
-      throws GraphException {
-    graph = newGraph;
-    if (newGraph.contains((SubjectNode) subject, (PredicateNode) predicate,
-        (ObjectNode) object)) {
-      triple =
-          new TripleImpl((SubjectNode) subject, (PredicateNode) predicate,
-              (ObjectNode) object);
-    }
-    removeTriple = null;
-  }
-
-
-  /**
-   * Returns true if the iteration has more elements.
-   *
-   * @return <code>true</code> If there is an element to be read.
-   */
-  public boolean hasNext() {
-    return null != triple;
-  }
-
-
-  /**
-   * Returns the next element in the iteration.
-   *
-   * @return the next element in the iteration.
-   * @throws NoSuchElementException iteration has no more elements.
-   */
-  public Triple next() throws NoSuchElementException {
-    if (null == triple) {
-      throw new NoSuchElementException();
-    }
-    // return the triple, clearing it first so next will fail on a subsequent call
-    removeTriple = triple;
-    triple = null;
-    return removeTriple;
-  }
-
-
-  /**
-   * Implemented for java.util.Iterator.
-   */
-  public void remove() {
-    if (null != removeTriple) {
-      try {
-        graph.remove(removeTriple);
+    /**
+     * Constructor.
+     */
+    ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object)
+        throws GraphException {
+        graph = newGraph;
+        if (newGraph.contains((SubjectNode) subject, (PredicateNode) predicate,
+            (ObjectNode) object)) {
+            triple =
+                new TripleImpl((SubjectNode) subject, (PredicateNode) predicate,
+                    (ObjectNode) object);
+        }
         removeTriple = null;
-      }
-      catch (GraphException ge) {
-        throw new IllegalStateException(ge.getMessage());
-      }
     }
-    else {
-      throw new IllegalStateException("Next not called or beyond end of data");
-    }
-  }
 
 
-  /**
-   * Closes the iterator by freeing any resources that it current holds.
-   * Nothing to be done for this class.
-   * @return <code>true</code> indicating success.
-   */
-  public boolean close() {
-    return true;
-  }
+    /**
+     * Returns true if the iteration has more elements.
+     *
+     * @return <code>true</code> If there is an element to be read.
+     */
+    public boolean hasNext() {
+        return null != triple;
+    }
+
+
+    /**
+     * Returns the next element in the iteration.
+     *
+     * @return the next element in the iteration.
+     * @throws NoSuchElementException iteration has no more elements.
+     */
+    public Triple next() throws NoSuchElementException {
+        if (null == triple) {
+            throw new NoSuchElementException();
+        }
+        // return the triple, clearing it first so next will fail on a subsequent call
+        removeTriple = triple;
+        triple = null;
+        return removeTriple;
+    }
+
+
+    /**
+     * Implemented for java.util.Iterator.
+     */
+    public void remove() {
+        if (null != removeTriple) {
+            try {
+                graph.remove(removeTriple);
+                removeTriple = null;
+            }
+            catch (GraphException ge) {
+                throw new IllegalStateException(ge.getMessage());
+            }
+        }
+        else {
+            throw new IllegalStateException("Next not called or beyond end of data");
+        }
+    }
+
+
+    /**
+     * Closes the iterator by freeing any resources that it current holds.
+     * Nothing to be done for this class.
+     * @return <code>true</code> indicating success.
+     */
+    public boolean close() {
+        return true;
+    }
 }

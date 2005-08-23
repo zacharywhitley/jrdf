@@ -69,61 +69,60 @@ import org.jrdf.graph.*;
  */
 public class TripleImpl extends AbstractTriple {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 7468341140195609635L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 7468341140195609635L;
 
-  /**
-   * Constructor for this Triple, only to be used by the NodeFactory.
-   *
-   * @param subject The subject node of this triple.
-   * @param predicate The predicate node of this triple.
-   * @param object The object node of this triple.
-   */
-  TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-    subjectNode = subject;
-    predicateNode = predicate;
-    objectNode = object;
-  }
-
-
-  /**
-   * Constructor for this Triple, only to be used by the iterators.
-   *
-   * @param factory the factory to use to get the nodes that make up this
-   *   triple.
-   * @param subject The subject node id of this triple.
-   * @param predicate The predicate node id of this triple.
-   * @param object The object node id of this triple.
-   */
-  TripleImpl(GraphElementFactory factory, Long subject, Long predicate,
-      Long object) {
-    GraphElementFactoryImpl graphFactory = (GraphElementFactoryImpl) factory;
-    subjectNode = (SubjectNode) graphFactory.getNodeById(subject);
-    predicateNode = (PredicateNode) graphFactory.getNodeById(predicate);
-    objectNode = (ObjectNode) graphFactory.getNodeById(object);
-  }
+    /**
+     * Constructor for this Triple, only to be used by the NodeFactory.
+     *
+     * @param subject The subject node of this triple.
+     * @param predicate The predicate node of this triple.
+     * @param object The object node of this triple.
+     */
+    TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        subjectNode = subject;
+        predicateNode = predicate;
+        objectNode = object;
+    }
 
 
-  /**
-   * Constructor for this Triple, only to be used by the variable iterators.
-   *
-   * @param factory the factory to use to get the nodes that make up this
-   *   triple.
-   * @param first The first node id of this triple.
-   * @param second The second node id of this triple.
-   * @param third The third node id of this triple.
-   */
-  TripleImpl(GraphElementFactoryImpl factory, int var, Long first,
-      Long second, Long third) {
-    Long[] nodes = new Long[]{first, second, third};
-    subjectNode = (SubjectNode) factory.getNodeById(nodes[var]);
-    predicateNode = (PredicateNode) factory.getNodeById(
-        nodes[(var + 1) % 3]);
-    objectNode = (ObjectNode) factory.getNodeById(nodes[(var + 2) % 3]);
-  }
+    /**
+     * Constructor for this Triple, only to be used by the iterators.
+     *
+     * @param factory the factory to use to get the nodes that make up this
+     *   triple.
+     * @param subject The subject node id of this triple.
+     * @param predicate The predicate node id of this triple.
+     * @param object The object node id of this triple.
+     */
+    TripleImpl(GraphElementFactory factory, Long subject, Long predicate,
+        Long object) {
+        GraphElementFactoryImpl graphFactory = (GraphElementFactoryImpl) factory;
+        subjectNode = (SubjectNode) graphFactory.getNodeById(subject);
+        predicateNode = (PredicateNode) graphFactory.getNodeById(predicate);
+        objectNode = (ObjectNode) graphFactory.getNodeById(object);
+    }
+
+
+    /**
+     * Constructor for this Triple, only to be used by the variable iterators.
+     *
+     * @param factory the factory to use to get the nodes that make up this
+     *   triple.
+     * @param first The first node id of this triple.
+     * @param second The second node id of this triple.
+     * @param third The third node id of this triple.
+     */
+    TripleImpl(GraphElementFactoryImpl factory, int var, Long first,
+        Long second, Long third) {
+        Long[] nodes = new Long[]{first, second, third};
+        subjectNode = (SubjectNode) factory.getNodeById(nodes[var]);
+        predicateNode = (PredicateNode) factory.getNodeById(nodes[(var + 1) % 3]);
+        objectNode = (ObjectNode) factory.getNodeById(nodes[(var + 2) % 3]);
+    }
 }

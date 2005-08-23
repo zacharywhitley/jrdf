@@ -72,11 +72,11 @@ import java.io.Serializable;
  */
 public interface MemNode extends Node, Serializable {
 
-  /**
-   * Retrieves an internal identifier for a node.
-   *
-   * @return A numeric identifier for a node.
-   */
-  Long getId();
+    /**
+     * Retrieves an internal identifier for a node.
+     *
+     * @return A numeric identifier for a node.
+     */
+    Long getId();
 
 }

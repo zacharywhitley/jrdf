@@ -1,7 +1,5 @@
 package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.relation.operation.Operation;
-import org.jrdf.query.relation.operation.Operation;
 
 /**
  * A more general form of difference - maybe replace by more basic operations

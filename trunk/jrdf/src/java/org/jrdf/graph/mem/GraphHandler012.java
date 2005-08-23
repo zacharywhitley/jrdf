@@ -74,20 +74,20 @@ import java.util.Set;
 public class GraphHandler012 extends AbstractGraphHandler
     implements GraphHandler {
 
-  public GraphHandler012(GraphImpl graph) {
-    this.graph = graph;
-  }
+    public GraphHandler012(GraphImpl graph) {
+        this.graph = graph;
+    }
 
-  public void remove(Long[] currentNodes) throws GraphException {
-    graph.removeFrom120(currentNodes[1], currentNodes[2], currentNodes[0]);
-    graph.removeFrom201(currentNodes[2], currentNodes[0], currentNodes[1]);
-  }
+    public void remove(Long[] currentNodes) throws GraphException {
+        graph.removeFrom120(currentNodes[1], currentNodes[2], currentNodes[0]);
+        graph.removeFrom201(currentNodes[2], currentNodes[0], currentNodes[1]);
+    }
 
-  public void add(Long[] currentNodes) throws GraphException {
-    graph.addTo012(currentNodes[0], currentNodes[1], currentNodes[2]);
-  }
+    public void add(Long[] currentNodes) throws GraphException {
+        graph.addTo012(currentNodes[0], currentNodes[1], currentNodes[2]);
+    }
 
-  public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-    return graph.iterator012();
-  }
+    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+        return graph.iterator012();
+    }
 }

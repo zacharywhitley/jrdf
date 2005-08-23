@@ -71,13 +71,13 @@ import org.jrdf.graph.GraphElementFactory;
  */
 class TripleFactoryImpl extends AbstractTripleFactory {
 
-  /**
-   * Package scope constructor.
-   *
-   * @param newGraph The GraphImpl that this class is attached to.
-   */
-  TripleFactoryImpl(Graph newGraph, GraphElementFactory newElementFactory) {
-    graph = newGraph;
-    elementFactory = newElementFactory;
-  }
+    /**
+     * Package scope constructor.
+     *
+     * @param newGraph The GraphImpl that this class is attached to.
+     */
+    TripleFactoryImpl(Graph newGraph, GraphElementFactory newElementFactory) {
+        graph = newGraph;
+        elementFactory = newElementFactory;
+    }
 }

@@ -69,20 +69,20 @@ import java.io.Serializable;
  */
 public abstract class AbstractBlankNode implements BlankNode, Serializable {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 3481053689307839406L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 3481053689307839406L;
 
-  /**
-   * Accept a call from a TypedNodeVisitor.
-   *
-   * @param visitor the object doing the visiting.
-   */
-  public void accept(TypedNodeVisitor visitor) {
-    visitor.visitBlankNode(this);
-  }
+    /**
+     * Accept a call from a TypedNodeVisitor.
+     *
+     * @param visitor the object doing the visiting.
+     */
+    public void accept(TypedNodeVisitor visitor) {
+        visitor.visitBlankNode(this);
+    }
 }

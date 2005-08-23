@@ -58,8 +58,8 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.Triple;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.NoSuchElementException;
 
@@ -72,36 +72,36 @@ import java.util.NoSuchElementException;
  */
 public class EmptyClosableIterator implements ClosableIterator<Triple> {
 
-  EmptyClosableIterator() {
-  }
+    EmptyClosableIterator() {
+    }
 
-  /**
-   * Returns false.
-   *
-   * @return <code>false</code>.
-   */
-  public boolean hasNext() {
-    return false;
-  }
+    /**
+     * Returns false.
+     *
+     * @return <code>false</code>.
+     */
+    public boolean hasNext() {
+        return false;
+    }
 
-  /**
-   * Never returns anything.  A call to this will throw NoSuchElementException.
-   *
-   * @return will not return.
-   * @throws NoSuchElementException iteration has no more elements.
-   */
-  public Triple next() throws NoSuchElementException {
-    throw new NoSuchElementException();
-  }
+    /**
+     * Never returns anything.  A call to this will throw NoSuchElementException.
+     *
+     * @return will not return.
+     * @throws NoSuchElementException iteration has no more elements.
+     */
+    public Triple next() throws NoSuchElementException {
+        throw new NoSuchElementException();
+    }
 
-  /**
-   * Implemented for java.util.Iterator.  Not supported by this implementation.
-   */
-  public void remove() {
-    throw new UnsupportedOperationException();
-  }
+    /**
+     * Implemented for java.util.Iterator.  Not supported by this implementation.
+     */
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
 
-  public boolean close() {
-    return true;
-  }
+    public boolean close() {
+        return true;
+    }
 }

@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 // Java 2 standard
+
 import org.jrdf.util.EscapeUtil;
 
 import java.io.Serializable;
@@ -74,264 +75,264 @@ import java.net.URI;
  */
 public abstract class AbstractLiteral implements Literal, Serializable {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 2589574733270452078L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 2589574733270452078L;
 
-  /**
-   * The lexical form of the literal.
-   */
-  private String lexicalForm;
+    /**
+     * The lexical form of the literal.
+     */
+    private String lexicalForm;
 
-  /**
-   * The language code of the literal.
-   */
-  private String language;
+    /**
+     * The language code of the literal.
+     */
+    private String language;
 
-  /**
-   * Whether the literal is well formed XML.
-   */
-  private boolean wellFormedXML;
+    /**
+     * Whether the literal is well formed XML.
+     */
+    private boolean wellFormedXML;
 
-  /**
-   * RDF datatype URI, <code>null</code> for untyped literal.
-   */
-  private URI datatypeURI;
+    /**
+     * RDF datatype URI, <code>null</code> for untyped literal.
+     */
+    private URI datatypeURI;
 
-  /**
-   * Construct a plain literal.
-   *
-   * @param newLexicalForm  the text part of the literal
-   * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
-   */
-  protected AbstractLiteral(String newLexicalForm) {
+    /**
+     * Construct a plain literal.
+     *
+     * @param newLexicalForm  the text part of the literal
+     * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
+     */
+    protected AbstractLiteral(String newLexicalForm) {
 
-    // Validate "newLexicalForm" parameter
-    if (null == newLexicalForm) {
-      throw new IllegalArgumentException("Null \"newLexicalForm\" parameter");
-    }
-
-    // Initialize fields
-    lexicalForm = newLexicalForm;
-    language = "";
-    datatypeURI = null;
-  }
-
-  /**
-   * Construct a literal with language.
-   *
-   * @param newLexicalForm  the text part of the literal
-   * @param newLanguage  the language code, possibly the empty string but not
-   *    <code>null</code>
-   * @throws IllegalArgumentException if <var>lexicalForm</var> or
-   *    <var>lang</var> are <code>null</code>
-   */
-  protected AbstractLiteral(String newLexicalForm, String newLanguage) {
-
-    // Validate "lexicalForm" parameter
-    if (null == newLexicalForm) {
-      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
-    }
-
-    // Validate "language" parameter
-    if (null == newLanguage) {
-      throw new IllegalArgumentException("Null \"language\" parameter");
-    }
-
-    // Initialize fields
-    lexicalForm = newLexicalForm;
-    language = newLanguage;
-    datatypeURI = null;
-  }
-
-  /**
-   * Construct a datatyped literal.
-   *
-   * @param newLexicalForm  the text part of the literal
-   * @param newDatatypeURI  the URI for a datatyped literal
-   * @throws IllegalArgumentException if <var>lexicalForm</var> or
-   *     <var>datatype</var> are <code>null</code>
-   */
-  protected AbstractLiteral(String newLexicalForm, URI newDatatypeURI) {
-
-    // Validate "lexicalForm" parameter
-    if (null == newLexicalForm) {
-      throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
-    }
-
-    // Validate "datatype" parameter
-    if (null == newDatatypeURI) {
-      throw new IllegalArgumentException("Null \"datatype\" parameter");
-    }
-
-    // Initialize fields
-    lexicalForm = newLexicalForm;
-    language = null;
-    datatypeURI = newDatatypeURI;
-  }
-
-  /**
-   * Obtain the text of this literal.
-   *
-   * @return the text of the literal, never <code>null</code>
-   */
-  public String getLexicalForm() {
-    return lexicalForm;
-  }
-
-  /**
-   * Returns the language code of the literal.
-   *
-   * When no language is specified for a plain literal, this field contains a
-   * zero-length {@link String}.  Otherwise, this will be <code>null</code>.
-   *
-   * @return the language code of the literal or <code>null</code> in the case
-   *   of a datatyped literal.
-   */
-  public String getLanguage() {
-    return language;
-  }
-
-  /**
-   * Whether the literal is well formed XML.
-   *
-   * @return whether the literal is wll formed XML.
-   */
-  public boolean isWellFormedXML() {
-    return wellFormedXML;
-  }
-
-  /**
-   * Returns the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for a plain literal.
-   *
-   * @return the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for a plain literal.
-   */
-  public URI getDatatypeURI() {
-    return datatypeURI;
-  }
-
-  /**
-   * Accept a call from a TypedNodeVisitor.
-   *
-   * @param visitor the object doing the visiting.
-   */
-  public void accept(TypedNodeVisitor visitor) {
-    visitor.visitLiteral(this);
-  }
-
-  public boolean equals(Object obj) {
-
-    // Check equal by reference
-    if (this == obj) {
-      return true;
-    }
-
-    boolean returnValue = false;
-
-    // Check for null and ensure exactly the same class - not subclass.
-    if (null != obj) {
-
-      try {
-        // Set default return value and cast given obj.
-        Literal tmpLiteral = (Literal) obj;
-
-        // Ensure that the lexical form is equal character by character.
-        if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
-
-          // If datatype is null then test language equality.
-          if (null == getDatatypeURI() && null == tmpLiteral.getDatatypeURI()) {
-
-            // If languages are equal by value then its equal.
-            if (getLanguage().equals(tmpLiteral.getLanguage())) {
-              returnValue = true;
-            }
-          }
-          // Data type URIs are equal by their string values.
-          else if (null != getDatatypeURI() && null !=
-              tmpLiteral.getDatatypeURI() &&
-              getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().
-              toString())) {
-            returnValue = true;
-          }
+        // Validate "newLexicalForm" parameter
+        if (null == newLexicalForm) {
+            throw new IllegalArgumentException("Null \"newLexicalForm\" parameter");
         }
-      }
-      catch (ClassCastException cce) {
-        // Leave return value to be false.
-      }
-    }
-    return returnValue;
-  }
 
-  public int hashCode() {
-    int hashCode = getLexicalForm().hashCode();
-
-    if (null != getDatatypeURI()) {
-      hashCode ^= getDatatypeURI().hashCode();
+        // Initialize fields
+        lexicalForm = newLexicalForm;
+        language = "";
+        datatypeURI = null;
     }
 
-    if (null != getLanguage()) {
-      hashCode ^= getLanguage().hashCode();
+    /**
+     * Construct a literal with language.
+     *
+     * @param newLexicalForm  the text part of the literal
+     * @param newLanguage  the language code, possibly the empty string but not
+     *    <code>null</code>
+     * @throws IllegalArgumentException if <var>lexicalForm</var> or
+     *    <var>lang</var> are <code>null</code>
+     */
+    protected AbstractLiteral(String newLexicalForm, String newLanguage) {
+
+        // Validate "lexicalForm" parameter
+        if (null == newLexicalForm) {
+            throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
+        }
+
+        // Validate "language" parameter
+        if (null == newLanguage) {
+            throw new IllegalArgumentException("Null \"language\" parameter");
+        }
+
+        // Initialize fields
+        lexicalForm = newLexicalForm;
+        language = newLanguage;
+        datatypeURI = null;
     }
 
-    return hashCode;
-  }
+    /**
+     * Construct a datatyped literal.
+     *
+     * @param newLexicalForm  the text part of the literal
+     * @param newDatatypeURI  the URI for a datatyped literal
+     * @throws IllegalArgumentException if <var>lexicalForm</var> or
+     *     <var>datatype</var> are <code>null</code>
+     */
+    protected AbstractLiteral(String newLexicalForm, URI newDatatypeURI) {
 
-  /**
-   * Provide a legible representation of a literal, following the N-Triples
-   * format defined in
-   * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a>
-   * of the <a href="http://www.w3.org/">
-   * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
-   * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
-   * Cases</a> Recommendation.
-   *
-   * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
-   * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
-   * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.
-   *
-   * @return this instance in N-Triples format
-   */
-  public String getEscapedForm() {
-    String escaped = EscapeUtil.escape(getLexicalForm());
-    return '\"' + escaped + '\"' + appendType();
-  }
+        // Validate "lexicalForm" parameter
+        if (null == newLexicalForm) {
+            throw new IllegalArgumentException("Null \"lexicalForm\" parameter");
+        }
 
-  /**
-   * Returns the lexical form.
-   *
-   * @return the lexical form.
-   */
-  public String toString() {
-    return '\"' + getEscapedLexicalForm() + '\"' + appendType();
-  }
+        // Validate "datatype" parameter
+        if (null == newDatatypeURI) {
+            throw new IllegalArgumentException("Null \"datatype\" parameter");
+        }
 
-  public String getEscapedLexicalForm() {
-    return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"",
-        "\\\\\\\"");
-  }
-
-  /**
-   * Appends the datatype URI or language code of a literal.
-   *
-   * @return String the datatype URI in the form ^^<->, or language code @- or
-   *   an empty string.
-   */
-  private String appendType() {
-    String appendString = "";
-
-    if (null != getDatatypeURI()) {
-      appendString = "^^<" + getDatatypeURI() + '>';
-    }
-    else if (!"".equals(language)) {
-      appendString = '@' + language;
+        // Initialize fields
+        lexicalForm = newLexicalForm;
+        language = null;
+        datatypeURI = newDatatypeURI;
     }
 
-    return appendString;
-  }
+    /**
+     * Obtain the text of this literal.
+     *
+     * @return the text of the literal, never <code>null</code>
+     */
+    public String getLexicalForm() {
+        return lexicalForm;
+    }
+
+    /**
+     * Returns the language code of the literal.
+     *
+     * When no language is specified for a plain literal, this field contains a
+     * zero-length {@link String}.  Otherwise, this will be <code>null</code>.
+     *
+     * @return the language code of the literal or <code>null</code> in the case
+     *   of a datatyped literal.
+     */
+    public String getLanguage() {
+        return language;
+    }
+
+    /**
+     * Whether the literal is well formed XML.
+     *
+     * @return whether the literal is wll formed XML.
+     */
+    public boolean isWellFormedXML() {
+        return wellFormedXML;
+    }
+
+    /**
+     * Returns the URI of the RDF datatype of this resource, or <code>null</code>
+     *     for a plain literal.
+     *
+     * @return the URI of the RDF datatype of this resource, or <code>null</code>
+     *     for a plain literal.
+     */
+    public URI getDatatypeURI() {
+        return datatypeURI;
+    }
+
+    /**
+     * Accept a call from a TypedNodeVisitor.
+     *
+     * @param visitor the object doing the visiting.
+     */
+    public void accept(TypedNodeVisitor visitor) {
+        visitor.visitLiteral(this);
+    }
+
+    public boolean equals(Object obj) {
+
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
+
+        boolean returnValue = false;
+
+        // Check for null and ensure exactly the same class - not subclass.
+        if (null != obj) {
+
+            try {
+                // Set default return value and cast given obj.
+                Literal tmpLiteral = (Literal) obj;
+
+                // Ensure that the lexical form is equal character by character.
+                if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
+
+                    // If datatype is null then test language equality.
+                    if (null == getDatatypeURI() && null == tmpLiteral.getDatatypeURI()) {
+
+                        // If languages are equal by value then its equal.
+                        if (getLanguage().equals(tmpLiteral.getLanguage())) {
+                            returnValue = true;
+                        }
+                    }
+                    // Data type URIs are equal by their string values.
+                    else if (null != getDatatypeURI() && null !=
+                        tmpLiteral.getDatatypeURI() &&
+                        getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().
+                        toString())) {
+                        returnValue = true;
+                    }
+                }
+            }
+            catch (ClassCastException cce) {
+                // Leave return value to be false.
+            }
+        }
+        return returnValue;
+    }
+
+    public int hashCode() {
+        int hashCode = getLexicalForm().hashCode();
+
+        if (null != getDatatypeURI()) {
+            hashCode ^= getDatatypeURI().hashCode();
+        }
+
+        if (null != getLanguage()) {
+            hashCode ^= getLanguage().hashCode();
+        }
+
+        return hashCode;
+    }
+
+    /**
+     * Provide a legible representation of a literal, following the N-Triples
+     * format defined in
+     * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a>
+     * of the <a href="http://www.w3.org/">
+     * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
+     * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
+     * Cases</a> Recommendation.
+     *
+     * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
+     * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
+     * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.
+     *
+     * @return this instance in N-Triples format
+     */
+    public String getEscapedForm() {
+        String escaped = EscapeUtil.escape(getLexicalForm());
+        return '\"' + escaped + '\"' + appendType();
+    }
+
+    /**
+     * Returns the lexical form.
+     *
+     * @return the lexical form.
+     */
+    public String toString() {
+        return '\"' + getEscapedLexicalForm() + '\"' + appendType();
+    }
+
+    public String getEscapedLexicalForm() {
+        return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"",
+            "\\\\\\\"");
+    }
+
+    /**
+     * Appends the datatype URI or language code of a literal.
+     *
+     * @return String the datatype URI in the form ^^<->, or language code @- or
+     *   an empty string.
+     */
+    private String appendType() {
+        String appendString = "";
+
+        if (null != getDatatypeURI()) {
+            appendString = "^^<" + getDatatypeURI() + '>';
+        }
+        else if (!"".equals(language)) {
+            appendString = '@' + language;
+        }
+
+        return appendString;
+    }
 }

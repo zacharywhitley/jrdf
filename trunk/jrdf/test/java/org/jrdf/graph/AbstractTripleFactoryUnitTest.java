@@ -65,9 +65,13 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * Abstract test case for graph implementations.
+ *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision$
@@ -366,7 +370,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
                 graph.contains((SubjectNode) o, rdfFirst, fruit[0]));
 
         // Get all rdf:first statements
-        ClosableIterator iter = graph.find(null, rdfFirst, null);
+        ClosableIterator iter = graph.find(ANY_SUBJECT_NODE, rdfFirst, ANY_OBJECT_NODE);
         int counter = 0;
         while (iter.hasNext()) {
 //      System.err.println(iter.next());
@@ -378,12 +382,12 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
         // Find all three parts of the collection.
         for (int index = 0; index < fruit.length; index++) {
-            assertTrue("Should contain: " + fruit[index], graph.contains(null,
+            assertTrue("Should contain: " + fruit[index], graph.contains(ANY_SUBJECT_NODE,
                     rdfFirst, fruit[index]));
         }
 
         // Get all rdf:rest statements
-        iter = graph.find(null, rdfRest, null);
+        iter = graph.find(ANY_SUBJECT_NODE, rdfRest, ANY_OBJECT_NODE);
         counter = 0;
         while (iter.hasNext()) {
 //      System.err.println(iter.next());
@@ -393,7 +397,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue("Should have three rdf:rest statements", 3 == counter);
 
         // Get all rdf:rest with rdf:nil statements
-        iter = graph.find(null, rdfRest, rdfNil);
+        iter = graph.find(ANY_SUBJECT_NODE, rdfRest, rdfNil);
         counter = 0;
         while (iter.hasNext()) {
 //      System.err.println(iter.next());
@@ -443,13 +447,13 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertEquals("Should have five statements", 4, graph.getNumberOfTriples());
         assertTrue("Should have statement",
                 graph.contains(s, rdfType, rdfAlternative));
-        assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
-        assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
-        assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
-        assertTrue("Should have statement", graph.contains(s, null, fruit[3]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[0]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[1]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[2]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[3]));
 
         // Check that it doesn't allow duplicates.
-        ClosableIterator iter = graph.find(null, null, fruit[0]);
+        ClosableIterator iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit[0]);
         int count = 0;
         while (iter.hasNext()) {
             iter.next();
@@ -496,12 +500,12 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         // Check we've inserted it correctly
         assertEquals("Should have six statements", 6, graph.getNumberOfTriples());
         assertTrue("Should have statement", graph.contains(s, rdfType, rdfBag));
-        assertTrue("Should have statement", graph.contains(s, null, fruit[0]));
-        assertTrue("Should have statement", graph.contains(s, null, fruit[1]));
-        assertTrue("Should have statement", graph.contains(s, null, fruit[2]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[0]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[1]));
+        assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[2]));
 
         // Check that it allows duplicates.
-        ClosableIterator iter = graph.find(s, null, fruit[2]);
+        ClosableIterator iter = graph.find(s, ANY_PREDICATE_NODE, fruit[2]);
         int count = 0;
         while (iter.hasNext()) {
             iter.next();

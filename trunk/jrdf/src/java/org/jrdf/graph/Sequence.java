@@ -62,7 +62,6 @@ package org.jrdf.graph;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Iterator;
 import java.util.ListIterator;
 
 /**
@@ -77,85 +76,85 @@ import java.util.ListIterator;
 public interface Sequence <ObjectNode> extends Container<ObjectNode>,
     List<ObjectNode> {
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param o Add an ObjectNode.
-   */
-  void add(int index, ObjectNode o);
+    /**
+     * {@inheritDoc}
+     *
+     * @param o Add an ObjectNode.
+     */
+    void add(int index, ObjectNode o);
 
-  /**
-   * {@inheritDoc}
-   */
-  boolean addAll(int index, Collection<? extends ObjectNode> c);
+    /**
+     * {@inheritDoc}
+     */
+    boolean addAll(int index, Collection<? extends ObjectNode> c);
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param index {@inheritDoc}
-   * @return {@inheritDoc}
-   */
-  ObjectNode get(int index);
+    /**
+     * {@inheritDoc}
+     *
+     * @param index {@inheritDoc}
+     * @return {@inheritDoc}
+     */
+    ObjectNode get(int index);
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  int indexOf(Object o) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    int indexOf(Object o) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  int lastIndexOf(Object o) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    int lastIndexOf(Object o) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return {@inheritDoc}
-   */
-  ListIterator<ObjectNode> listIterator();
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
+    ListIterator<ObjectNode> listIterator();
 
-  /**
-   * {@inheritDoc}
-   *
-   * @return {@inheritDoc}
-   */
-  ListIterator<ObjectNode> listIterator(int index);
+    /**
+     * {@inheritDoc}
+     *
+     * @return {@inheritDoc}
+     */
+    ListIterator<ObjectNode> listIterator(int index);
 
-  /**
-   * Removes the first element in the list (in a FIFO manner).
-   *
-   * @return the ObjectNode that was at the start of the list.
-   */
-  ObjectNode remove();
+    /**
+     * Removes the first element in the list (in a FIFO manner).
+     *
+     * @return the ObjectNode that was at the start of the list.
+     */
+    ObjectNode remove();
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param index {@inheritDoc}
-   * @return the ObjectNode at that position.
-   */
-  ObjectNode remove(int index);
+    /**
+     * {@inheritDoc}
+     *
+     * @param index {@inheritDoc}
+     * @return the ObjectNode at that position.
+     */
+    ObjectNode remove(int index);
 
-  /**
-   * {@inheritDoc}
-   *
-   * @throws IllegalArgumentException if the given object is not the correct
-   *   type, ObjectNode.
-   */
-  ObjectNode set(int index, ObjectNode element) throws IllegalArgumentException;
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the given object is not the correct
+     *   type, ObjectNode.
+     */
+    ObjectNode set(int index, ObjectNode element) throws IllegalArgumentException;
 
-  /**
-   * {@inheritDoc}
-   *
-   * @param fromIndex {@inheritDoc}
-   * @param toIndex {@inheritDoc}
-   * @return {@inheritDoc}
-   */
-  List<ObjectNode> subList(int fromIndex, int toIndex);
+    /**
+     * {@inheritDoc}
+     *
+     * @param fromIndex {@inheritDoc}
+     * @param toIndex {@inheritDoc}
+     * @return {@inheritDoc}
+     */
+    List<ObjectNode> subList(int fromIndex, int toIndex);
 }

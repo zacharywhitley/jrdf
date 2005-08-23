@@ -68,10 +68,10 @@ package org.jrdf.graph;
  */
 public interface TypedNodeVisitable {
 
-  /**
-   * Accept a call from a TypedNodeVisitor.
-   *
-   * @param visitor the object doing the visiting.
-   */
-  void accept(TypedNodeVisitor visitor);
+    /**
+     * Accept a call from a TypedNodeVisitor.
+     *
+     * @param visitor the object doing the visiting.
+     */
+    void accept(TypedNodeVisitor visitor);
 }

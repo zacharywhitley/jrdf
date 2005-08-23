@@ -72,46 +72,46 @@ import java.io.Serializable;
  */
 public interface Triple extends Serializable {
 
-  /**
-   * Obtains the subject of this statement.
-   *
-   * @return an {@link SubjectNode} which is either a {@link BlankNode} or
-   *     {@link URIReference}
-   */
-  SubjectNode getSubject();
+    /**
+     * Obtains the subject of this statement.
+     *
+     * @return an {@link SubjectNode} which is either a {@link BlankNode} or
+     *     {@link URIReference}
+     */
+    SubjectNode getSubject();
 
-  /**
-   * Obtains the predicate of this statement.
-   *
-   * @return a {@link PredicateNode} which is a {@link URIReference}
-   */
-  PredicateNode getPredicate();
+    /**
+     * Obtains the predicate of this statement.
+     *
+     * @return a {@link PredicateNode} which is a {@link URIReference}
+     */
+    PredicateNode getPredicate();
 
-  /**
-   * Obtains the object of this statement.
-   *
-   * @return a {@link ObjectNode} which is either a {@link BlankNode},
-   *     {@link URIReference} or {@link Literal}
-   */
-  ObjectNode getObject();
+    /**
+     * Obtains the object of this statement.
+     *
+     * @return a {@link ObjectNode} which is either a {@link BlankNode},
+     *     {@link URIReference} or {@link Literal}
+     */
+    ObjectNode getObject();
 
-  /**
-   * Indicates whether some other object is "equal to" this one.
-   *
-   * A triple is equal to another triple if the subject, predicate and object
-   * are all equal.
-   *
-   * @param obj the reference object with which to compare.
-   * @return true if this object is the same as the obj argument; false otherwise.
-   */
-  boolean equals(Object obj);
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * A triple is equal to another triple if the subject, predicate and object
+     * are all equal.
+     *
+     * @param obj the reference object with which to compare.
+     * @return true if this object is the same as the obj argument; false otherwise.
+     */
+    boolean equals(Object obj);
 
-  /**
-   * Returns a hash-code value for this triple. The hash code is based upon
-   * XORing all of the components of a triple i.e. the subject, predicate and
-   * object.
-   *
-   * @return a hash-code value for this triple.
-   */
-  int hashCode();
+    /**
+     * Returns a hash-code value for this triple. The hash code is based upon
+     * XORing all of the components of a triple i.e. the subject, predicate and
+     * object.
+     *
+     * @return a hash-code value for this triple.
+     */
+    int hashCode();
 }

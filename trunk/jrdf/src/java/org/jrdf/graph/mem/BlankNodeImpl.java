@@ -75,125 +75,125 @@ import org.jrdf.graph.BlankNode;
  */
 public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 1573129076314000518L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 1573129076314000518L;
 
-  /** The internal identifier for this node. */
-  private Long id;
+    /** The internal identifier for this node. */
+    private Long id;
 
-  /** Globally Unique Identifier. */
-  private String uid;
+    /** Globally Unique Identifier. */
+    private String uid;
 
-  /**
-   * The constructor for this node.  Package scope so that only NodeFactory and
-   * static methods can call it.
-   *
-   * @param newId The id to be used for this node.
-   * @param newUid String Globally Unique Identifier for external communication.
-   */
-  BlankNodeImpl(Long newId, String newUid) {
-    id = newId;
-    uid = newUid;
-  }
-
-  /**
-   * Retrieves an internal identifier for this node.
-   *
-   * @return A numeric identifier for thisa node.
-   */
-  public Long getId() {
-    return id;
-  }
-
-  /**
-   * Retrieves a Globally Unique Identifier for this node.
-   *
-   * @return A global String identifier for this node.
-   */
-  private String getUID() {
-    return uid;
-  }
-
-  /**
-   * Returns a hash-code value for this BlankNode.  While the implementation
-   * is not defined, if there is a blank node identifier then it should be
-   * the hash code generated from this.  Hash code generation should follow
-   * the normal contract.
-   *
-   * @return a hash-code value for this blank node.
-   */
-  public int hashCode() {
-    return id.hashCode() ^ uid.hashCode();
-  }
-
-  /**
-   * While the internal structure of a BlankNode is not defined equality between
-   * two nodes should be able to be determined.
-   *
-   * @param obj the reference object with which to compare.
-   * @return true if this object is the same as the obj argument; false otherwise.
-   */
-  public boolean equals(Object obj) {
-
-    // Check equal by reference
-    if (this == obj) {
-      return true;
+    /**
+     * The constructor for this node.  Package scope so that only NodeFactory and
+     * static methods can call it.
+     *
+     * @param newId The id to be used for this node.
+     * @param newUid String Globally Unique Identifier for external communication.
+     */
+    BlankNodeImpl(Long newId, String newUid) {
+        id = newId;
+        uid = newUid;
     }
 
-    // Check for null and ensure exactly the same class - not subclass.
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
+    /**
+     * Retrieves an internal identifier for this node.
+     *
+     * @return A numeric identifier for thisa node.
+     */
+    public Long getId() {
+        return id;
     }
 
-    // Cast and check for equality by value. (same class)
-    try {
-      BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
-      return tmpNode.getId().equals(id) && tmpNode.getUID().equals(uid);
-    }
-    catch (ClassCastException cce) {
-      return false;
-    }
-  }
-
-  /**
-   * Returns the String value of this BlankNode as:
-   * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69)
-   *
-   * @return String
-   */
-  public String toString() {
-
-    return uid + "#" + id;
-  }
-
-  /**
-   * Parses a String in the format of:
-   * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69) and creates a new
-   * BlankNodeImpl from it.
-   *
-   * Should only be applied to a value previously returned by toString()
-   *
-   * @param nodeString String previously returned by toString()
-   * @return BlankNodeImpl
-   * @throws IllegalArgumentException
-   */
-  public static BlankNode valueOf(String nodeString) throws
-      IllegalArgumentException {
-
-    String[] split = nodeString.split("#");
-
-    //validate
-    if (null == split || 2 > split.length) {
-      throw new IllegalArgumentException("String: " + nodeString + " is not " +
-          "of the format: uid#id");
+    /**
+     * Retrieves a Globally Unique Identifier for this node.
+     *
+     * @return A global String identifier for this node.
+     */
+    private String getUID() {
+        return uid;
     }
 
-    return new BlankNodeImpl(Long.valueOf(split[1]), split[0]);
-  }
+    /**
+     * Returns a hash-code value for this BlankNode.  While the implementation
+     * is not defined, if there is a blank node identifier then it should be
+     * the hash code generated from this.  Hash code generation should follow
+     * the normal contract.
+     *
+     * @return a hash-code value for this blank node.
+     */
+    public int hashCode() {
+        return id.hashCode() ^ uid.hashCode();
+    }
+
+    /**
+     * While the internal structure of a BlankNode is not defined equality between
+     * two nodes should be able to be determined.
+     *
+     * @param obj the reference object with which to compare.
+     * @return true if this object is the same as the obj argument; false otherwise.
+     */
+    public boolean equals(Object obj) {
+
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
+
+        // Check for null and ensure exactly the same class - not subclass.
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        // Cast and check for equality by value. (same class)
+        try {
+            BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
+            return tmpNode.getId().equals(id) && tmpNode.getUID().equals(uid);
+        }
+        catch (ClassCastException cce) {
+            return false;
+        }
+    }
+
+    /**
+     * Returns the String value of this BlankNode as:
+     * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69)
+     *
+     * @return String
+     */
+    public String toString() {
+
+        return uid + "#" + id;
+    }
+
+    /**
+     * Parses a String in the format of:
+     * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69) and creates a new
+     * BlankNodeImpl from it.
+     *
+     * Should only be applied to a value previously returned by toString()
+     *
+     * @param nodeString String previously returned by toString()
+     * @return BlankNodeImpl
+     * @throws IllegalArgumentException
+     */
+    public static BlankNode valueOf(String nodeString) throws
+        IllegalArgumentException {
+
+        String[] split = nodeString.split("#");
+
+        //validate
+        if (null == split || 2 > split.length) {
+            throw new IllegalArgumentException("String: " + nodeString + " is not " +
+                "of the format: uid#id");
+        }
+
+        return new BlankNodeImpl(Long.valueOf(split[1]), split[0]);
+    }
 
 }

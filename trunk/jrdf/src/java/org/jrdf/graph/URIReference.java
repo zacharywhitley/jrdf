@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 // Java 2 standard packages
+
 import java.net.URI;
 
 /**
@@ -78,29 +79,29 @@ import java.net.URI;
 public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
     TypedNodeVisitable {
 
-  /**
-   * The {@link URI} identifiying this resource.
-   *
-   * @return the {@link URI} identifying this resource.
-   */
-  URI getURI();
+    /**
+     * The {@link URI} identifiying this resource.
+     *
+     * @return the {@link URI} identifying this resource.
+     */
+    URI getURI();
 
-  /**
-   * Returns a hash-code value for this URI Reference. This is the hash code
-   * of the URI.
-   *
-   * @return a hash-code value for this literal.
-   */
-  int hashCode();
+    /**
+     * Returns a hash-code value for this URI Reference. This is the hash code
+     * of the URI.
+     *
+     * @return a hash-code value for this literal.
+     */
+    int hashCode();
 
-  /**
-   * Indicates whether some other object is "equal to" this one.
-   *
-   * A URI Reference is equal to another URI Reference if their URIs are equal
-   * to one another, character by character.
-   *
-   * @param obj the reference object with which to compare.
-   * @return true if this object is the same as the obj argument; false otherwise.
-   */
-  boolean equals(Object obj);
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * A URI Reference is equal to another URI Reference if their URIs are equal
+     * to one another, character by character.
+     *
+     * @param obj the reference object with which to compare.
+     * @return true if this object is the same as the obj argument; false otherwise.
+     */
+    boolean equals(Object obj);
 }

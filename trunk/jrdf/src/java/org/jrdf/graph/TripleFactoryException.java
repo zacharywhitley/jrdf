@@ -67,39 +67,39 @@ package org.jrdf.graph;
  */
 public class TripleFactoryException extends Exception {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 285284678430193536L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 285284678430193536L;
 
-  /**
-   * Create an exception.
-   *
-   * @param message the message to wrap inside this exception.
-   */
-  public TripleFactoryException(String message) {
-    super(message);
-  }
+    /**
+     * Create an exception.
+     *
+     * @param message the message to wrap inside this exception.
+     */
+    public TripleFactoryException(String message) {
+        super(message);
+    }
 
-  /**
-   * Create a wrapper exception.
-   *
-   * @param message the message to wrap inside this exception.
-   * @param newCause the original exception to wrap.
-   */
-  public TripleFactoryException(String message, Throwable newCause) {
-    super(message, newCause);
-  }
+    /**
+     * Create a wrapper exception.
+     *
+     * @param message the message to wrap inside this exception.
+     * @param newCause the original exception to wrap.
+     */
+    public TripleFactoryException(String message, Throwable newCause) {
+        super(message, newCause);
+    }
 
-  /**
-   * Create a wrapper exception.
-   *
-   * @param newCause the original exception to wrap.
-   */
-  public TripleFactoryException(Throwable newCause) {
-    super(newCause);
-  }
+    /**
+     * Create a wrapper exception.
+     *
+     * @param newCause the original exception to wrap.
+     */
+    public TripleFactoryException(Throwable newCause) {
+        super(newCause);
+    }
 }

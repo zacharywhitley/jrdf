@@ -1,6 +1,5 @@
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Node;
 
 /**
@@ -11,8 +10,9 @@ import org.jrdf.graph.Node;
  * @version $Revision$
  */
 public class FalseNode implements Node {
-  public static final Node FALSE_SUBJECT_NODE = new FalseNode();
-  private static final long serialVersionUID = 4580621120190884185L;
-  private FalseNode() {
-  }
+    public static final Node FALSE_SUBJECT_NODE = new FalseNode();
+    private static final long serialVersionUID = 4580621120190884185L;
+
+    private FalseNode() {
+    }
 }

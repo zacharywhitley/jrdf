@@ -74,122 +74,122 @@ import java.net.URI;
 public abstract class AbstractURIReference implements URIReference,
     Serializable {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 8034954863132812197L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 8034954863132812197L;
 
-  /**
-   * The URI of the node.
-   */
-  private URI uri;
+    /**
+     * The URI of the node.
+     */
+    private URI uri;
 
-  /**
-   * Constructor.
-   *
-   * Enforces a non-<code>null</code> and absolute <var>newUri</var> parameter.
-   *
-   * @param newUri the URI to use in creation.
-   * @throws IllegalArgumentException if <var>newUri</var> is <code>null</code> or
-   *     not absolute
-   */
-  protected AbstractURIReference(URI newUri) {
+    /**
+     * Constructor.
+     *
+     * Enforces a non-<code>null</code> and absolute <var>newUri</var> parameter.
+     *
+     * @param newUri the URI to use in creation.
+     * @throws IllegalArgumentException if <var>newUri</var> is <code>null</code> or
+     *     not absolute
+     */
+    protected AbstractURIReference(URI newUri) {
 
-    // Validate "newUri" parameter
-    if (null == newUri) {
-      throw new IllegalArgumentException("Null \"newUri\" parameter");
+        // Validate "newUri" parameter
+        if (null == newUri) {
+            throw new IllegalArgumentException("Null \"newUri\" parameter");
+        }
+
+        if (!newUri.isAbsolute()) {
+            throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
+        }
+
+        // Initialize the field
+        uri = newUri;
     }
 
-    if (!newUri.isAbsolute()) {
-      throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
+    /**
+     * Constructor.
+     *
+     * Enforces a non-<code>null</code> parameter.  Use only for applications
+     * where enforcement of valid URIs is too expensive or not necessary.
+     *
+     * @param newUri the URI to use in creation.
+     * @param validate whether to enforce valid RDF URIs.
+     * @throws IllegalArgumentException if <var>newUri</var> is not absolute and
+     *   validate is true.
+     */
+    protected AbstractURIReference(URI newUri, boolean validate) {
+
+        // Validate "newUri" parameter
+        if (null == newUri) {
+            throw new IllegalArgumentException("Null \"newUri\" parameter");
+        }
+
+        if (validate && !newUri.isAbsolute()) {
+            throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
+        }
+
+        // Initialize the field
+        uri = newUri;
     }
 
-    // Initialize the field
-    uri = newUri;
-  }
-
-  /**
-   * Constructor.
-   *
-   * Enforces a non-<code>null</code> parameter.  Use only for applications
-   * where enforcement of valid URIs is too expensive or not necessary.
-   *
-   * @param newUri the URI to use in creation.
-   * @param validate whether to enforce valid RDF URIs.
-   * @throws IllegalArgumentException if <var>newUri</var> is not absolute and
-   *   validate is true.
-   */
-  protected AbstractURIReference(URI newUri, boolean validate) {
-
-    // Validate "newUri" parameter
-    if (null == newUri) {
-      throw new IllegalArgumentException("Null \"newUri\" parameter");
+    /**
+     * The {@link URI} identifiying this resource.
+     *
+     * @return the {@link URI} identifying this resource.
+     */
+    public URI getURI() {
+        return uri;
     }
 
-    if (validate && !newUri.isAbsolute()) {
-      throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
+    /**
+     * Accept a call from a TypedNodeVisitor.
+     *
+     * @param visitor the object doing the visiting.
+     */
+    public void accept(TypedNodeVisitor visitor) {
+        visitor.visitURIReference(this);
     }
 
-    // Initialize the field
-    uri = newUri;
-  }
+    public boolean equals(Object obj) {
 
-  /**
-   * The {@link URI} identifiying this resource.
-   *
-   * @return the {@link URI} identifying this resource.
-   */
-  public URI getURI() {
-    return uri;
-  }
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
 
-  /**
-   * Accept a call from a TypedNodeVisitor.
-   *
-   * @param visitor the object doing the visiting.
-   */
-  public void accept(TypedNodeVisitor visitor) {
-    visitor.visitURIReference(this);
-  }
+        boolean returnValue = false;
 
-  public boolean equals(Object obj) {
+        // Check for null and ensure exactly the same class - not subclass.
+        if (null != obj) {
 
-    // Check equal by reference
-    if (this == obj) {
-      return true;
+            try {
+                URIReference tmpURIReference = (URIReference) obj;
+                returnValue = getURI().equals(tmpURIReference.getURI());
+            }
+            catch (ClassCastException cce) {
+                // Leave return value to be false.
+            }
+        }
+
+        return returnValue;
     }
 
-    boolean returnValue = false;
-
-    // Check for null and ensure exactly the same class - not subclass.
-    if (null != obj) {
-
-      try {
-        URIReference tmpURIReference = (URIReference) obj;
-        returnValue = getURI().equals(tmpURIReference.getURI());
-      }
-      catch (ClassCastException cce) {
-        // Leave return value to be false.
-      }
+    public int hashCode() {
+        return uri.hashCode();
     }
 
-    return returnValue;
-  }
-
-  public int hashCode() {
-    return uri.hashCode();
-  }
-
-  /**
-   * Provide a legible representation of a URI reference. Currently, just the
-   * URI of the reference.
-   *
-   * @return the <var>uri</var> property called toString() on.
-   */
-  public String toString() {
-    return uri.toString();
-  }
+    /**
+     * Provide a legible representation of a URI reference. Currently, just the
+     * URI of the reference.
+     *
+     * @return the <var>uri</var> property called toString() on.
+     */
+    public String toString() {
+        return uri.toString();
+    }
 }

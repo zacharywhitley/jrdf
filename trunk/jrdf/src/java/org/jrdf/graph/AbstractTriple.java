@@ -104,9 +104,15 @@ public class AbstractTriple implements Triple, Serializable {
      * {@inheritDoc}
      */
     public boolean equals(Object ref) {
-        if (isNull(ref)) return false;
-        if (sameReference(this, ref)) return true;
-        if (differentClasses(this, ref)) return false;
+        if (isNull(ref)) {
+            return false;
+        }
+        if (sameReference(this, ref)) {
+            return true;
+        }
+        if (differentClasses(this, ref)) {
+            return false;
+        }
         return determineEqualityFromFields((Triple) ref);
     }
 
@@ -144,18 +150,24 @@ public class AbstractTriple implements Triple, Serializable {
 
     private boolean determineEqualityFromFields(Triple ref) {
         return nodesEqual(subjectNode, ref.getSubject()) && nodesEqual(predicateNode, ref.getPredicate())
-                && nodesEqual(objectNode, ref.getObject());
+            && nodesEqual(objectNode, ref.getObject());
     }
 
     private boolean nodesEqual(Node node1, Node node2) {
-        if (bothNull(node1, node2)) return true;
-        if (eitherNull(node1, node2)) return false;
+        if (bothNull(node1, node2)) {
+            return true;
+        }
+        if (eitherNull(node1, node2)) {
+            return false;
+        }
         return node1.equals(node2);
     }
 
     // FIXME TJA: Move to utility class
     private boolean eitherNull(Node node1, Node node2) {
-        if (node1 == null || node2 == null) return true;
+        if (node1 == null || node2 == null) {
+            return true;
+        }
         return false;
     }
 
@@ -165,7 +177,9 @@ public class AbstractTriple implements Triple, Serializable {
     }
 
     private int getNodeHashCode(Node node) {
-        if (node == null) return DEFAULT_HASH_VALUE;
+        if (node == null) {
+            return DEFAULT_HASH_VALUE;
+        }
         return node.hashCode();
     }
 }

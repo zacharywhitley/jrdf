@@ -67,39 +67,39 @@ package org.jrdf.graph;
  */
 public class GraphElementFactoryException extends Exception {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = -8660240321973373993L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = -8660240321973373993L;
 
-  /**
-   * Create an exception.
-   *
-   * @param message the message to wrap inside this exception.
-   */
-  public GraphElementFactoryException(String message) {
-    super(message);
-  }
+    /**
+     * Create an exception.
+     *
+     * @param message the message to wrap inside this exception.
+     */
+    public GraphElementFactoryException(String message) {
+        super(message);
+    }
 
-  /**
-   * Create a wrapper exception.
-   *
-   * @param message the message to wrap inside this exception.
-   * @param newCause the original exception to wrap.
-   */
-  public GraphElementFactoryException(String message, Throwable newCause) {
-    super(message, newCause);
-  }
+    /**
+     * Create a wrapper exception.
+     *
+     * @param message the message to wrap inside this exception.
+     * @param newCause the original exception to wrap.
+     */
+    public GraphElementFactoryException(String message, Throwable newCause) {
+        super(message, newCause);
+    }
 
-  /**
-   * Create a wrapper exception.
-   *
-   * @param newCause the original exception to wrap.
-   */
-  public GraphElementFactoryException(Throwable newCause) {
-    super(newCause);
-  }
+    /**
+     * Create a wrapper exception.
+     *
+     * @param newCause the original exception to wrap.
+     */
+    public GraphElementFactoryException(Throwable newCause) {
+        super(newCause);
+    }
 }

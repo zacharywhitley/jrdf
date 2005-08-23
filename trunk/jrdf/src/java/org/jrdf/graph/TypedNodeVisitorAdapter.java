@@ -69,33 +69,33 @@ package org.jrdf.graph;
  */
 
 class TypedNodeVisitorAdapter implements TypedNodeVisitor {
-  public TypedNodeVisitorAdapter() {
-  }
+    public TypedNodeVisitorAdapter() {
+    }
 
-  /**
-   * Visit blank node.
-   *
-   * @param blankNode the blank node to visit.
-   */
-  public void visitBlankNode(BlankNode blankNode) {
-    // this method is left intentionally blank.
-  }
+    /**
+     * Visit blank node.
+     *
+     * @param blankNode the blank node to visit.
+     */
+    public void visitBlankNode(BlankNode blankNode) {
+        // this method is left intentionally blank.
+    }
 
-  /**
-   * Visit URI Reference.
-   *
-   * @param uriReference the URI Reference to visit.
-   */
-  public void visitURIReference(URIReference uriReference) {
-    // this method is left intentionally blank.
-  }
+    /**
+     * Visit URI Reference.
+     *
+     * @param uriReference the URI Reference to visit.
+     */
+    public void visitURIReference(URIReference uriReference) {
+        // this method is left intentionally blank.
+    }
 
-  /**
-   * Visit Literal.
-   *
-   * @param literal the Literal to visit.
-   */
-  public void visitLiteral(Literal literal) {
-    // this method is left intentionally blank.
-  }
+    /**
+     * Visit Literal.
+     *
+     * @param literal the Literal to visit.
+     */
+    public void visitLiteral(Literal literal) {
+        // this method is left intentionally blank.
+    }
 }

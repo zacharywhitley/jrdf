@@ -1,6 +1,5 @@
 package org.jrdf.graph.operation;
 
-import org.jrdf.query.relation.operation.Operation;
 import org.jrdf.graph.Graph;
 
 /**
@@ -12,5 +11,5 @@ import org.jrdf.graph.Graph;
  * @version $Revision$
  */
 public interface Union extends SetOperation {
-  Graph perform(Graph a, Graph b);
+    Graph perform(Graph a, Graph b);
 }

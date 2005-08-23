@@ -60,9 +60,9 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphException;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 /**
  * Handles operations on 120 index.
@@ -74,20 +74,20 @@ import java.util.Iterator;
 public class GraphHandler120 extends AbstractGraphHandler
     implements GraphHandler {
 
-  public GraphHandler120(GraphImpl graph) {
-    this.graph = graph;
-  }
+    public GraphHandler120(GraphImpl graph) {
+        this.graph = graph;
+    }
 
-  public void remove(Long[] currentNodes) throws GraphException {
-    graph.removeFrom120(currentNodes[0], currentNodes[1], currentNodes[2]);
-    graph.removeFrom201(currentNodes[1], currentNodes[2], currentNodes[0]);
-  }
+    public void remove(Long[] currentNodes) throws GraphException {
+        graph.removeFrom120(currentNodes[0], currentNodes[1], currentNodes[2]);
+        graph.removeFrom201(currentNodes[1], currentNodes[2], currentNodes[0]);
+    }
 
-  public void add(Long[] currentNodes) throws GraphException {
-    graph.addTo012(currentNodes[0], currentNodes[1], currentNodes[2]);
-  }
+    public void add(Long[] currentNodes) throws GraphException {
+        graph.addTo012(currentNodes[0], currentNodes[1], currentNodes[2]);
+    }
 
-  public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-    return graph.iterator120();
-  }
+    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+        return graph.iterator120();
+    }
 }

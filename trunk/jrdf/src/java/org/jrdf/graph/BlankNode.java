@@ -71,23 +71,23 @@ package org.jrdf.graph;
  */
 public interface BlankNode extends SubjectNode, ObjectNode, TypedNodeVisitable {
 
-  /**
-   * Returns a hash-code value for this BlankNode.  While the implementation
-   * is not defined, if there is a blank node identifier then it should be
-   * the hash code generated from this.  Hash code generation should follow
-   * the normal contract.
-   *
-   * @return a hash-code value for this blank node.
-   */
-  int hashCode();
+    /**
+     * Returns a hash-code value for this BlankNode.  While the implementation
+     * is not defined, if there is a blank node identifier then it should be
+     * the hash code generated from this.  Hash code generation should follow
+     * the normal contract.
+     *
+     * @return a hash-code value for this blank node.
+     */
+    int hashCode();
 
-  /**
-   * While the internal structure of a BlankNode is not defined equality between
-   * two nodes should be able to be determined.  In some representations this
-   * equality would be defined by a blank node identifier.
-   *
-   * @param obj the reference object with which to compare.
-   * @return true if this object is the same as the obj argument; false otherwise.
-   */
-  boolean equals(Object obj);
+    /**
+     * While the internal structure of a BlankNode is not defined equality between
+     * two nodes should be able to be determined.  In some representations this
+     * equality would be defined by a blank node identifier.
+     *
+     * @param obj the reference object with which to compare.
+     * @return true if this object is the same as the obj argument; false otherwise.
+     */
+    boolean equals(Object obj);
 }

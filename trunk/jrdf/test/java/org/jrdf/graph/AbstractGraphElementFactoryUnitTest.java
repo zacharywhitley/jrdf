@@ -62,12 +62,16 @@ import junit.framework.TestCase;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * Abstract Test case for Graph Element Factories.
  * Implementing packages should extend this class and implement the
  * {@link #newGraph}, {@link #getDefaultLiteralType} and
  * {@link #getDefaultLiteralLanguage} methods.
+ *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
@@ -251,7 +255,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         assertEquals(l1.getEscapedForm(), l3.getEscapedForm());
         assertTrue(graph.contains(ref4, ref5, blank1));
 
-        ClosableIterator iter = graph.find(ref2, ref1, null);
+        ClosableIterator iter = graph.find(ref2, ref1, ANY_OBJECT_NODE);
         while (iter.hasNext()) {
             triple = (Triple) iter.next();
             assertEquals(l1, triple.getObject());
@@ -341,12 +345,12 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));
         assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).hasNext());
 
-        // Test the find(<foo>, null, null) works.
-        ClosableIterator iter = g2.find(g2u3, null, null);
+        // Test the find(<foo>, *, *) works.
+        ClosableIterator iter = g2.find(g2u3, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("Should get back at least one result", iter.hasNext());
 
-        // Test the find(null, null, null) works.
-        iter = g2.find(null, null, null);
+        // Test the find(*, *, *) works.
+        iter = g2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("Should get back at least one result", iter.hasNext());
 
   }

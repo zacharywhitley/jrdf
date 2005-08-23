@@ -84,145 +84,144 @@ import java.util.Set;
  */
 public class TwoFixedIterator implements ClosableIterator<Triple> {
 
-  /** The iterator for the third index. */
-  private Iterator thirdIndexIterator;
+    /** The iterator for the third index. */
+    private Iterator thirdIndexIterator;
 
-  /** The nodeFactory used to create the nodes to be returned in the triples. */
-  private GraphElementFactoryImpl nodeFactory;
+    /** The nodeFactory used to create the nodes to be returned in the triples. */
+    private GraphElementFactoryImpl nodeFactory;
 
-  /** The index of this iterator.  Only needed for initialization and the remove method. */
-  private Map index;
+    /** The index of this iterator.  Only needed for initialization and the remove method. */
+    private Map index;
 
-  /** The subIndex of this iterator.  Only needed for initialization and the remove method. */
-  private Map subIndex;
+    /** The subIndex of this iterator.  Only needed for initialization and the remove method. */
+    private Map subIndex;
 
-  /** The subSubIndex of this iterator.  Only needed for initialization and the remove method. */
-  private Set subGroup;
+    /** The subSubIndex of this iterator.  Only needed for initialization and the remove method. */
+    private Set subGroup;
 
-  /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
-  private Long[] currentNodes;
+    /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
+    private Long[] currentNodes;
 
-  /** The first fixed item. */
-  private Long first;
+    /** The first fixed item. */
+    private Long first;
 
-  /** The second fixed item. */
-  private Long second;
+    /** The second fixed item. */
+    private Long second;
 
-  /** The current third item */
-  private Long third;
+    /** The current third item */
+    private Long third;
 
-  /** If there are anymore items left */
-  private boolean hasNext;
+    /** If there are anymore items left */
+    private boolean hasNext;
 
-  /** The offset for the index. */
-  private int var;
+    /** The offset for the index. */
+    private int var;
 
-  /** Handles the removal of nodes */
-  private GraphHandler handler;
+    /** Handles the removal of nodes */
+    private GraphHandler handler;
 
-  /**
-   * Constructor.  Sets up the internal iterators.
-   */
-  TwoFixedIterator(Map newIndex, int newVar, Long newFirst, Long newSecond,
-      GraphElementFactory newFactory, GraphHandler newHandler, Map newSubIndex) {
+    /**
+     * Constructor.  Sets up the internal iterators.
+     */
+    TwoFixedIterator(Map newIndex, int newVar, Long newFirst, Long newSecond,
+        GraphElementFactory newFactory, GraphHandler newHandler, Map newSubIndex) {
 
-    if (!(newFactory instanceof GraphElementFactoryImpl)) {
-      throw new IllegalArgumentException(
-          "Must use the memory implementation of GraphElementFactory");
+        if (!(newFactory instanceof GraphElementFactoryImpl)) {
+            throw new IllegalArgumentException("Must use the memory implementation of GraphElementFactory");
+        }
+
+        // store the node factory and other starting data
+        nodeFactory = (GraphElementFactoryImpl) newFactory;
+        handler = newHandler;
+        index = newIndex;
+        first = newFirst;
+        second = newSecond;
+        var = newVar;
+        currentNodes = null;
+
+        // find the subIndex from the main index
+        subIndex = newSubIndex;
+
+        // check that data exists
+        if (null != subIndex) {
+            // now find the set from the sub index map
+            subGroup = (Set) subIndex.get(second);
+            if (null != subGroup) {
+                // get an iterator for the set
+                thirdIndexIterator = subGroup.iterator();
+                hasNext = thirdIndexIterator.hasNext();
+            }
+        }
     }
 
-    // store the node factory and other starting data
-    nodeFactory = (GraphElementFactoryImpl) newFactory;
-    handler = newHandler;
-    index = newIndex;
-    first = newFirst;
-    second = newSecond;
-    var = newVar;
-    currentNodes = null;
 
-    // find the subIndex from the main index
-    subIndex = newSubIndex;
+    /**
+     * Returns true if the iteration has more elements.
+     *
+     * @return <code>true</code> If there is an element to be read.
+     */
+    public boolean hasNext() {
+        return hasNext;
+    }
 
-    // check that data exists
-    if (null != subIndex) {
-      // now find the set from the sub index map
-      subGroup = (Set) subIndex.get(second);
-      if (null != subGroup) {
-        // get an iterator for the set
-        thirdIndexIterator = subGroup.iterator();
+
+    /**
+     * Returns the next element in the iteration.
+     *
+     * @return the next element in the iteration.
+     * @throws NoSuchElementException iteration has no more elements.
+     */
+    public Triple next() throws NoSuchElementException {
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
+
+        // Get next node.
+        third = (Long) thirdIndexIterator.next();
         hasNext = thirdIndexIterator.hasNext();
-      }
-    }
-  }
-
-
-  /**
-   * Returns true if the iteration has more elements.
-   *
-   * @return <code>true</code> If there is an element to be read.
-   */
-  public boolean hasNext() {
-    return hasNext;
-  }
-
-
-  /**
-   * Returns the next element in the iteration.
-   *
-   * @return the next element in the iteration.
-   * @throws NoSuchElementException iteration has no more elements.
-   */
-  public Triple next() throws NoSuchElementException {
-    if (!hasNext()) {
-      throw new NoSuchElementException();
+        currentNodes = new Long[]{first, second, third};
+        return new TripleImpl(nodeFactory, var, first, second, third);
     }
 
-    // Get next node.
-    third = (Long) thirdIndexIterator.next();
-    hasNext = thirdIndexIterator.hasNext();
-    currentNodes = new Long[]{first, second, third};
-    return new TripleImpl(nodeFactory, var, first, second, third);
-  }
 
-
-  /**
-   * Implemented for java.util.Iterator.
-   */
-  public void remove() {
-    if (null != third) {
-      try {
-        thirdIndexIterator.remove();
-        handler.remove(currentNodes);
-        cleanIndex();
-      }
-      catch (GraphException ge) {
-        throw new IllegalStateException(ge.getMessage());
-      }
+    /**
+     * Implemented for java.util.Iterator.
+     */
+    public void remove() {
+        if (null != third) {
+            try {
+                thirdIndexIterator.remove();
+                handler.remove(currentNodes);
+                cleanIndex();
+            }
+            catch (GraphException ge) {
+                throw new IllegalStateException(ge.getMessage());
+            }
+        }
+        else {
+            throw new IllegalStateException("Next not called or beyond end of data");
+        }
     }
-    else {
-      throw new IllegalStateException("Next not called or beyond end of data");
-    }
-  }
 
-  private void cleanIndex() {
-    // check if a set was cleaned out
-    if (subGroup.isEmpty()) {
-      // remove the entry for the set
-      subIndex.remove(second);
-      // check if a subindex was cleaned out
-      if (subIndex.isEmpty()) {
-        // remove the subindex
-        index.remove(first);
-      }
+    private void cleanIndex() {
+        // check if a set was cleaned out
+        if (subGroup.isEmpty()) {
+            // remove the entry for the set
+            subIndex.remove(second);
+            // check if a subindex was cleaned out
+            if (subIndex.isEmpty()) {
+                // remove the subindex
+                index.remove(first);
+            }
+        }
     }
-  }
 
-  /**
-   * Closes the iterator by freeing any resources that it current holds.
-   * Nothing to be done for this class.
-   * @return <code>true</code> indicating success.
-   */
-  public boolean close() {
-    return true;
-  }
+    /**
+     * Closes the iterator by freeing any resources that it current holds.
+     * Nothing to be done for this class.
+     * @return <code>true</code> indicating success.
+     */
+    public boolean close() {
+        return true;
+    }
 }

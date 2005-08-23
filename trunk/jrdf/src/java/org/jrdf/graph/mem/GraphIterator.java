@@ -83,194 +83,194 @@ import java.util.Set;
  */
 public final class GraphIterator implements ClosableIterator<Triple> {
 
-  /** The iterator for the first index. */
-  private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
+    /** The iterator for the first index. */
+    private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
 
-  /** The iterator for the second index. */
-  private Iterator subIterator;
+    /** The iterator for the second index. */
+    private Iterator subIterator;
 
-  /** The iterator for the third index. */
-  private Iterator itemIterator;
+    /** The iterator for the third index. */
+    private Iterator itemIterator;
 
-  /** The current element for the iterator on the first index. */
-  private Map.Entry firstEntry;
+    /** The current element for the iterator on the first index. */
+    private Map.Entry firstEntry;
 
-  /** The current element for the iterator on the second index. */
-  private Map.Entry secondEntry;
+    /** The current element for the iterator on the second index. */
+    private Map.Entry secondEntry;
 
-  /**
-   * The current subject predicate and object, last returned from next().
-   * Only needed by the remove method.
-   * */
-  private Long[] currentNodes;
+    /**
+     * The current subject predicate and object, last returned from next().
+     * Only needed by the remove method.
+     * */
+    private Long[] currentNodes;
 
-  /** The nodeFactory used to create the nodes to be returned in the triples. */
-  private GraphElementFactoryImpl nodeFactory;
+    /** The nodeFactory used to create the nodes to be returned in the triples. */
+    private GraphElementFactoryImpl nodeFactory;
 
-  /** Handles the removal of nodes */
-  private GraphHandler handler;
+    /** Handles the removal of nodes */
+    private GraphHandler handler;
 
-  /** True if next has been called */
-  private boolean nextCalled = false;
+    /** True if next has been called */
+    private boolean nextCalled = false;
 
-  /**
-   * Constructor.  Sets up the internal iterators.
-   *
-   * @throws IllegalArgumentException Must be created with implementations from
-   *   the memory package.
-   */
-  GraphIterator(GraphElementFactory newNodeFactory, GraphHandler newHandler) {
-    if (!(newNodeFactory instanceof GraphElementFactoryImpl)) {
-      throw new IllegalArgumentException("Node factory must be a memory " +
-          "implementation");
-    }
-
-    // store the node factory
-    nodeFactory = (GraphElementFactoryImpl) newNodeFactory;
-    handler = newHandler;
-    iterator = handler.getEntries();
-  }
-
-
-  /**
-   * Returns true if the iteration has more elements.
-   *
-   * @return <code>true</code> If there is an element to be read.
-   */
-  public boolean hasNext() {
-    // confirm we still have an item iterator, and that it has data available
-    return null != itemIterator && itemIterator.hasNext() ||
-        null != subIterator && subIterator.hasNext() ||
-        null != iterator && iterator.hasNext();
-  }
-
-
-  /**
-   * Returns the next element in the iteration.
-   *
-   * @return the next element in the iteration.
-   * @throws NoSuchElementException iteration has no more elements.
-   */
-  public Triple next() throws NoSuchElementException {
-    if (null == iterator) {
-      throw new NoSuchElementException();
-    }
-
-    // move to the next position
-    updatePosition();
-
-    if (null == iterator) {
-      throw new NoSuchElementException();
-    }
-
-    nextCalled = true;
-
-    // get the next item
-    Long third = (Long) itemIterator.next();
-
-    // construct the triple
-    Long second = (Long) secondEntry.getKey();
-    Long first = (Long) firstEntry.getKey();
-
-    // get back the nodes for these IDs and uild the triple
-    currentNodes = new Long[]{first, second, third};
-    return new TripleImpl((GraphElementFactoryImpl) nodeFactory, first, second,
-        third);
-  }
-
-
-  /**
-   * Helper method to move the iterators on to the next position.
-   * If there is no next position then {@link #itemIterator itemIterator}
-   * will be set to null, telling {@link #hasNext() hasNext} to return
-   * <code>false</code>.
-   */
-  private void updatePosition() {
-    // progress to the next item if needed
-    if (null == itemIterator || !itemIterator.hasNext()) {
-      // the current iterator been exhausted
-      if (null == subIterator || !subIterator.hasNext()) {
-        // the subiterator has been exhausted
-        if (!iterator.hasNext()) {
-          // the main iterator has been exhausted
-          // tell the iterator to finish
-          iterator = null;
-          return;
+    /**
+     * Constructor.  Sets up the internal iterators.
+     *
+     * @throws IllegalArgumentException Must be created with implementations from
+     *   the memory package.
+     */
+    GraphIterator(GraphElementFactory newNodeFactory, GraphHandler newHandler) {
+        if (!(newNodeFactory instanceof GraphElementFactoryImpl)) {
+            throw new IllegalArgumentException("Node factory must be a memory " +
+                "implementation");
         }
-        // move on the main iterator
-        firstEntry = (Map.Entry) iterator.next();
-        // now get an iterator to the sub index map
-        subIterator = ((Map) firstEntry.getValue()).entrySet().iterator();
-        assert subIterator.hasNext();
-      }
-      // get the next entry of the sub index
-      secondEntry = (Map.Entry) subIterator.next();
-      // get an interator to the next set from the sub index
-      itemIterator = ((Set) secondEntry.getValue()).iterator();
-      assert itemIterator.hasNext();
+
+        // store the node factory
+        nodeFactory = (GraphElementFactoryImpl) newNodeFactory;
+        handler = newHandler;
+        iterator = handler.getEntries();
     }
-  }
 
 
-  /**
-   * Implemented for java.util.Iterator.
-   */
-  public void remove() {
-    if (nextCalled && null != itemIterator) {
-      itemIterator.remove();
-      // clean up the current index after the removal
-      cleanIndex();
-      // now remove from the other 2 indexes
-      removeFromNonCurrentIndex();
+    /**
+     * Returns true if the iteration has more elements.
+     *
+     * @return <code>true</code> If there is an element to be read.
+     */
+    public boolean hasNext() {
+        // confirm we still have an item iterator, and that it has data available
+        return null != itemIterator && itemIterator.hasNext() ||
+            null != subIterator && subIterator.hasNext() ||
+            null != iterator && iterator.hasNext();
     }
-    else {
-      throw new IllegalStateException("Next not called or beyond end of data");
+
+
+    /**
+     * Returns the next element in the iteration.
+     *
+     * @return the next element in the iteration.
+     * @throws NoSuchElementException iteration has no more elements.
+     */
+    public Triple next() throws NoSuchElementException {
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+
+        // move to the next position
+        updatePosition();
+
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+
+        nextCalled = true;
+
+        // get the next item
+        Long third = (Long) itemIterator.next();
+
+        // construct the triple
+        Long second = (Long) secondEntry.getKey();
+        Long first = (Long) firstEntry.getKey();
+
+        // get back the nodes for these IDs and uild the triple
+        currentNodes = new Long[]{first, second, third};
+        return new TripleImpl((GraphElementFactoryImpl) nodeFactory, first, second,
+            third);
     }
-  }
 
 
-  /**
-   * Checks if a removed item is the last of its type, and removes any associated subindexes if appropriate.
-   */
-  private void cleanIndex() {
-    // check if a set was cleaned out
-    Set subGroup = (Set) secondEntry.getValue();
-    Map subIndex = (Map) firstEntry.getValue();
-    if (subGroup.isEmpty()) {
-      // remove the entry for the set
-      subIterator.remove();
-      // check if a subindex was cleaned out
-      if (subIndex.isEmpty()) {
-        // remove the subindex
-        iterator.remove();
-      }
+    /**
+     * Helper method to move the iterators on to the next position.
+     * If there is no next position then {@link #itemIterator itemIterator}
+     * will be set to null, telling {@link #hasNext() hasNext} to return
+     * <code>false</code>.
+     */
+    private void updatePosition() {
+        // progress to the next item if needed
+        if (null == itemIterator || !itemIterator.hasNext()) {
+            // the current iterator been exhausted
+            if (null == subIterator || !subIterator.hasNext()) {
+                // the subiterator has been exhausted
+                if (!iterator.hasNext()) {
+                    // the main iterator has been exhausted
+                    // tell the iterator to finish
+                    iterator = null;
+                    return;
+                }
+                // move on the main iterator
+                firstEntry = (Map.Entry) iterator.next();
+                // now get an iterator to the sub index map
+                subIterator = ((Map) firstEntry.getValue()).entrySet().iterator();
+                assert subIterator.hasNext();
+            }
+            // get the next entry of the sub index
+            secondEntry = (Map.Entry) subIterator.next();
+            // get an interator to the next set from the sub index
+            itemIterator = ((Set) secondEntry.getValue()).iterator();
+            assert itemIterator.hasNext();
+        }
     }
-  }
 
 
-  /**
-   * Helper function for removal.  This removes the current statement from the indexes which
-   * the current iterator is not associated with.
-   */
-  private void removeFromNonCurrentIndex() {
-    try {
-      // can instead use var here to determine how to delete, but this is more intuitive
-      handler.remove(currentNodes);
+    /**
+     * Implemented for java.util.Iterator.
+     */
+    public void remove() {
+        if (nextCalled && null != itemIterator) {
+            itemIterator.remove();
+            // clean up the current index after the removal
+            cleanIndex();
+            // now remove from the other 2 indexes
+            removeFromNonCurrentIndex();
+        }
+        else {
+            throw new IllegalStateException("Next not called or beyond end of data");
+        }
     }
-    catch (GraphException ge) {
-      IllegalStateException illegalStateException = new IllegalStateException();
-      illegalStateException.setStackTrace(ge.getStackTrace());
-      throw illegalStateException;
+
+
+    /**
+     * Checks if a removed item is the last of its type, and removes any associated subindexes if appropriate.
+     */
+    private void cleanIndex() {
+        // check if a set was cleaned out
+        Set subGroup = (Set) secondEntry.getValue();
+        Map subIndex = (Map) firstEntry.getValue();
+        if (subGroup.isEmpty()) {
+            // remove the entry for the set
+            subIterator.remove();
+            // check if a subindex was cleaned out
+            if (subIndex.isEmpty()) {
+                // remove the subindex
+                iterator.remove();
+            }
+        }
     }
-  }
 
 
-  /**
-   * Closes the iterator by freeing any resources that it current holds.
-   * Nothing to be done for this class.
-   * @return <code>true</code> indicating success.
-   */
-  public boolean close() {
-    return true;
-  }
+    /**
+     * Helper function for removal.  This removes the current statement from the indexes which
+     * the current iterator is not associated with.
+     */
+    private void removeFromNonCurrentIndex() {
+        try {
+            // can instead use var here to determine how to delete, but this is more intuitive
+            handler.remove(currentNodes);
+        }
+        catch (GraphException ge) {
+            IllegalStateException illegalStateException = new IllegalStateException();
+            illegalStateException.setStackTrace(ge.getStackTrace());
+            throw illegalStateException;
+        }
+    }
+
+
+    /**
+     * Closes the iterator by freeing any resources that it current holds.
+     * Nothing to be done for this class.
+     * @return <code>true</code> indicating success.
+     */
+    public boolean close() {
+        return true;
+    }
 }

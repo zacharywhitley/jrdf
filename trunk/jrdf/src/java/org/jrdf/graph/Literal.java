@@ -59,6 +59,7 @@
 package org.jrdf.graph;
 
 // Java 2 standard
+
 import java.net.URI;
 
 /**
@@ -71,94 +72,94 @@ import java.net.URI;
  */
 public interface Literal extends ObjectNode, TypedNodeVisitable {
 
-  /**
-   * Obtain the text of this literal.
-   *
-   * @return the text of the literal, never <code>null</code>
-   */
-  String getLexicalForm();
+    /**
+     * Obtain the text of this literal.
+     *
+     * @return the text of the literal, never <code>null</code>
+     */
+    String getLexicalForm();
 
-  /**
-   * Returns the language code of the literal, or <code>null</code> if no
-   *     language specified.
-   *
-   * @return the language code of the literal, or <code>null</code> if no
-   *     language specified.
-   */
-  String getLanguage();
+    /**
+     * Returns the language code of the literal, or <code>null</code> if no
+     *     language specified.
+     *
+     * @return the language code of the literal, or <code>null</code> if no
+     *     language specified.
+     */
+    String getLanguage();
 
-  /**
-   * Whether the literal is well formed XML.
-   *
-   * @return whether the literal is wll formed XML.
-   */
-  boolean isWellFormedXML();
+    /**
+     * Whether the literal is well formed XML.
+     *
+     * @return whether the literal is wll formed XML.
+     */
+    boolean isWellFormedXML();
 
-  /**
-   * Returns the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for an untyped node.
-   *
-   * @return the URI of the RDF datatype of this resource, or <code>null</code>
-   *     for an untyped node.
-   */
-  URI getDatatypeURI();
+    /**
+     * Returns the URI of the RDF datatype of this resource, or <code>null</code>
+     *     for an untyped node.
+     *
+     * @return the URI of the RDF datatype of this resource, or <code>null</code>
+     *     for an untyped node.
+     */
+    URI getDatatypeURI();
 
-  /**
-   * Indicates whether some other object is "equal to" this one.
-   *
-   * A literal is equal to another literal if:
-   * <ul>
-   * <li> The strings of the two lexical forms compare equal, character by
-   * character.
-   * <li> Either both or neither have language tags.
-   * <li> The language tags, if any, compare equal.
-   * <li> Either both or neither have datatype URIs.
-   * <li> The two datatype URIs, if any, compare equal, character by character.
-   * </ul>
-   *
-   * @param obj the reference object with which to compare.
-   * @return true if this object is the same as the obj argument; false otherwise.
-   */
-  boolean equals(Object obj);
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * A literal is equal to another literal if:
+     * <ul>
+     * <li> The strings of the two lexical forms compare equal, character by
+     * character.
+     * <li> Either both or neither have language tags.
+     * <li> The language tags, if any, compare equal.
+     * <li> Either both or neither have datatype URIs.
+     * <li> The two datatype URIs, if any, compare equal, character by character.
+     * </ul>
+     *
+     * @param obj the reference object with which to compare.
+     * @return true if this object is the same as the obj argument; false otherwise.
+     */
+    boolean equals(Object obj);
 
-  /**
-   * Returns a hash-code value for this literal. The hash code is based upon
-   * XORing all of the literal's components hash codes including the
-   * lexical form, datatype, and language.
-   *
-   * @return a hash-code value for this literal.
-   */
-  int hashCode();
+    /**
+     * Returns a hash-code value for this literal. The hash code is based upon
+     * XORing all of the literal's components hash codes including the
+     * lexical form, datatype, and language.
+     *
+     * @return a hash-code value for this literal.
+     */
+    int hashCode();
 
-  /**
-   * Provide a legible representation of a literal, following the N-Triples
-   * format defined in
-   * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a>
-   * of the <a href="http://www.w3.org/">
-   * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
-   * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
-   * Cases</a> Recommendation.
-   *
-   * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
-   * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
-   * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.
-   *
-   * @return this instance in N-Triples format
-   */
-  String getEscapedForm();
+    /**
+     * Provide a legible representation of a literal, following the N-Triples
+     * format defined in
+     * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a>
+     * of the <a href="http://www.w3.org/">
+     * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
+     * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
+     * Cases</a> Recommendation.
+     *
+     * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
+     * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
+     * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.
+     *
+     * @return this instance in N-Triples format
+     */
+    String getEscapedForm();
 
-  /**
-   * Returns an escaped lexical form where double quotes and backslashes are
-   * escaped.
-   *
-   * @return String the lexical form.
-   */
-  String getEscapedLexicalForm();
+    /**
+     * Returns an escaped lexical form where double quotes and backslashes are
+     * escaped.
+     *
+     * @return String the lexical form.
+     */
+    String getEscapedLexicalForm();
 
-  /**
-   * Returns the lexical form.
-   *
-   * @return the lexical form.
-   */
-  String toString();
+    /**
+     * Returns the lexical form.
+     *
+     * @return the lexical form.
+     */
+    String toString();
 }
