@@ -8,6 +8,7 @@ package org.jrdf.graph;
  * @version $Revision$
  */
 public final class AnySubjectNode implements SubjectNode {
+    private static final long serialVersionUID = -971680612480915602L;
     public static final AnySubjectNode ANY_SUBJECT_NODE = new AnySubjectNode();
 
     private AnySubjectNode() {
