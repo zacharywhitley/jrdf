@@ -83,7 +83,7 @@ public abstract class RDFS extends Vocabulary {
     /**
      * The URI of the RDFS name space.
      */
-    public static final URI baseURI;
+    public static final URI BASE_URI;
 
     /**
      * The class resource, everything.
@@ -163,27 +163,27 @@ public abstract class RDFS extends Vocabulary {
 
     static {
         try {
-            baseURI = new URI("http://www.w3.org/2000/01/rdf-schema#");
+            BASE_URI = new URI("http://www.w3.org/2000/01/rdf-schema#");
 
             // Classes
-            RESOURCE = new URI(baseURI + "Resource");
-            CLASS = new URI(baseURI + "Class");
-            LITERAL = new URI(baseURI + "Literal");
-            DATATYPE = new URI(baseURI + "Datatype");
-            CONTAINER = new URI(baseURI + "Container");
+            RESOURCE = new URI(BASE_URI + "Resource");
+            CLASS = new URI(BASE_URI + "Class");
+            LITERAL = new URI(BASE_URI + "Literal");
+            DATATYPE = new URI(BASE_URI + "Datatype");
+            CONTAINER = new URI(BASE_URI + "Container");
             CONTAINER_MEMBERSHIP_PROPERTY =
-                new URI(baseURI + "ContainerMembershipProperty");
+                new URI(BASE_URI + "ContainerMembershipProperty");
 
             // Properties
-            RANGE = new URI(baseURI + "range");
-            DOMAIN = new URI(baseURI + "domain");
-            SUB_CLASS_OF = new URI(baseURI + "subClassOf");
-            SUB_PROPERTY_OF = new URI(baseURI + "subPropertyOf");
-            LABEL = new URI(baseURI + "label");
-            COMMENT = new URI(baseURI + "comment");
-            MEMBER = new URI(baseURI + "member");
-            SEE_ALSO = new URI(baseURI + "seeAlso");
-            IS_DEFINED_BY = new URI(baseURI + "isDefinedBy");
+            RANGE = new URI(BASE_URI + "range");
+            DOMAIN = new URI(BASE_URI + "domain");
+            SUB_CLASS_OF = new URI(BASE_URI + "subClassOf");
+            SUB_PROPERTY_OF = new URI(BASE_URI + "subPropertyOf");
+            LABEL = new URI(BASE_URI + "label");
+            COMMENT = new URI(BASE_URI + "comment");
+            MEMBER = new URI(BASE_URI + "member");
+            SEE_ALSO = new URI(BASE_URI + "seeAlso");
+            IS_DEFINED_BY = new URI(BASE_URI + "isDefinedBy");
 
             // Add Classes
             resources.add(RESOURCE);
