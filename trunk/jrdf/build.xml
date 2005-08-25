@@ -42,7 +42,13 @@
                 code.path="test.code.path" code.pattern="test.code.pattern"/>
     </target>
 
-    <target name="dist" depends="compile,-copy-sablecc-resources">
+    <target name="checkstyle" depends="compile">
+      <checkstyle config="conf/checkstyle.xml">
+        <fileset dir="${prod.src.dir}"/>
+      </checkstyle>
+    </target>
+
+    <target name="dist" depends="checkstyle,-copy-sablecc-resources">
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${project.jar}">
             <fileset dir="${prod.classes.dir}"/>
