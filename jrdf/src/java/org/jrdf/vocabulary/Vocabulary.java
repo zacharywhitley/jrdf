@@ -87,6 +87,9 @@ public abstract class Vocabulary implements Serializable {
      */
     protected static Set<URI> resources = new HashSet<URI>();
 
+    /**
+     * Default constructor - as this is a list of constants should not be able to construct it.
+     */
     protected Vocabulary() {
     }
 

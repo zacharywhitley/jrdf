@@ -77,67 +77,67 @@ import java.util.Map;
  */
 public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
 
-  /**
-   * A factory for creating BlankNodes (as well as resources and literals).
-   */
-  private GraphElementFactory valueFactory;
+    /**
+     * A factory for creating BlankNodes (as well as resources and literals).
+     */
+    private GraphElementFactory valueFactory;
 
-  /**
-   * Mapping from bNode ID's as used in the RDF document to the
-   * object created for it by the GraphElementFactory.
-   */
-  private Map<String, BlankNode> bNodeIdMap = new HashMap<String, BlankNode>();
+    /**
+     * Mapping from bNode ID's as used in the RDF document to the
+     * object created for it by the GraphElementFactory.
+     */
+    private Map<String, BlankNode> bNodeIdMap = new HashMap<String, BlankNode>();
 
 
-  /**
-   * Create a new blank node factory with the given value factory.
-   *
-   * @param newValueFactory factory to create nodes with.
-   */
-  public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory) {
-    valueFactory = newValueFactory;
-  }
-
-  /**
-   * Always creates a new BlankNode object from the GraphElementFactory.
-   *
-   * @return the new BlankNode object.
-   * @throws GraphElementFactoryException if it fails to create a new blank node.
-   */
-  public BlankNode createBlankNode() throws GraphElementFactoryException {
-    return valueFactory.createResource();
-  }
-
-  /**
-   * Returns the BlankNode for a <code>nodeID</code> that has not been seen
-   * before or calls the GraphElementFactory to create a new BlankNode
-   * otherwise.
-   *
-   * @param nodeID the node that labels the bNode in the file being parsed.
-   * @return the BlankNode object.
-   * @throws GraphElementFactoryException if it fails to create a new blank node.
-   */
-  public BlankNode createBlankNode(String nodeID)
-      throws GraphElementFactoryException {
-    // Maybe the node ID has been used before:
-    BlankNode result = bNodeIdMap.get(nodeID);
-
-    if (null == result) {
-      // This is a new node ID, create a new BNode object for it
-      result = valueFactory.createResource();
-
-      // Remember it, the nodeID might occur again.
-      bNodeIdMap.put(nodeID, result);
+    /**
+     * Create a new blank node factory with the given value factory.
+     *
+     * @param newValueFactory factory to create nodes with.
+     */
+    public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory) {
+        valueFactory = newValueFactory;
     }
 
-    return result;
-  }
+    /**
+     * Always creates a new BlankNode object from the GraphElementFactory.
+     *
+     * @return the new BlankNode object.
+     * @throws GraphElementFactoryException if it fails to create a new blank node.
+     */
+    public BlankNode createBlankNode() throws GraphElementFactoryException {
+        return valueFactory.createResource();
+    }
 
-  /**
-   * Clears the internal Map.
-   */
-  public void clear() {
-    bNodeIdMap.clear();
-  }
+    /**
+     * Returns the BlankNode for a <code>nodeID</code> that has not been seen
+     * before or calls the GraphElementFactory to create a new BlankNode
+     * otherwise.
+     *
+     * @param nodeID the node that labels the bNode in the file being parsed.
+     * @return the BlankNode object.
+     * @throws GraphElementFactoryException if it fails to create a new blank node.
+     */
+    public BlankNode createBlankNode(String nodeID)
+        throws GraphElementFactoryException {
+        // Maybe the node ID has been used before:
+        BlankNode result = bNodeIdMap.get(nodeID);
+
+        if (null == result) {
+            // This is a new node ID, create a new BNode object for it
+            result = valueFactory.createResource();
+
+            // Remember it, the nodeID might occur again.
+            bNodeIdMap.put(nodeID, result);
+        }
+
+        return result;
+    }
+
+    /**
+     * Clears the internal Map.
+     */
+    public void clear() {
+        bNodeIdMap.clear();
+    }
 
 }

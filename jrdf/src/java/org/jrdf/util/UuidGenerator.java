@@ -70,13 +70,16 @@ import java.security.SecureRandom;
 
 /**
  * Utility class that generates an Unique identifier.
+ *
  * @author Robert Turner
  * @author Tom Adams
  */
 public final class UuidGenerator {
     // FIXME: Split this into a generator and UUID class.
-    // FIXME: Can we make this the default UUID generator, and create another one based on the RFC What about the Java UUID Generator?
-    // FIXME: What format of UUID's should these give back? The standard one? Short form and canonical form (do when a sep. UUID class).
+    // FIXME: Can we make this the default UUID generator, and create another one based on the RFC What about the Java
+    // UUID Generator?
+    // FIXME: What format of UUID's should these give back? The standard one? Short form and canonical form (do when a
+    // sep. UUID class).
     private static final String DIGEST_ALGORITHM = "MD5";
     private static final int SINGLE_DIGIT = 0x10;
     private static final int INT_OFFSET = 0xFF;
@@ -90,6 +93,7 @@ public final class UuidGenerator {
 
     /**
      * Generates an Unique Identifier using the current time and the machines' IP address.
+     *
      * @return A UUID.
      */
     public static synchronized String generateUuid() {
@@ -113,7 +117,9 @@ public final class UuidGenerator {
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < seedDigest.length; ++i) {
             int currentInt = seedDigest[i] & INT_OFFSET;
-            if (currentInt < SINGLE_DIGIT) buffer.append('0');
+            if (currentInt < SINGLE_DIGIT) {
+                buffer.append('0');
+            }
             buffer.append(Integer.toHexString(currentInt));
         }
         return buffer.toString();
@@ -130,7 +136,8 @@ public final class UuidGenerator {
     private static MessageDigest getDigester() {
         try {
             return MessageDigest.getInstance(DIGEST_ALGORITHM);
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Unable to get " + DIGEST_ALGORITHM + " digest algorithm");
         }
     }
@@ -173,7 +180,9 @@ public final class UuidGenerator {
 
     private static synchronized String getIpAddress() {
         try {
-            if (null == ipAddress) ipAddress = InetAddress.getLocalHost().getHostAddress();
+            if (null == ipAddress) {
+                ipAddress = InetAddress.getLocalHost().getHostAddress();
+            }
             return ipAddress;
         }
         catch (UnknownHostException uhe) {
@@ -182,7 +191,9 @@ public final class UuidGenerator {
     }
 
     private static synchronized String getJvmId() {
-        if (null == vmID) vmID = new VMID().toString();
+        if (null == vmID) {
+            vmID = new VMID().toString();
+        }
         return vmID;
     }
 

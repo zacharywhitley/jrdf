@@ -51,86 +51,86 @@ import java.io.PrintWriter;
  **/
 public class StatementHandlerException extends Exception {
 
-  private static final long serialVersionUID = -6755497249260716209L;
+    private static final long serialVersionUID = -6755497249260716209L;
 
-  /**
-   * The source of the exception, i.e. the application specific
-   * error.
-   **/
-  private Exception source;
+    /**
+     * The source of the exception, i.e. the application specific
+     * error.
+     **/
+    private Exception source;
 
-  /**
-   * Creates a new StatementHandlerException.
-   *
-   * @param msg An error message.
-   **/
-  public StatementHandlerException(String msg) {
-    super(msg);
-  }
-
-  /**
-   * Creates a new StatementHandlerException wrapping another exception.
-   *
-   * @param msg An error message.
-   * @param newSource The newSource exception.
-   **/
-  public StatementHandlerException(String msg, Exception newSource) {
-    super(msg);
-    source = newSource;
-  }
-
-  /**
-   * Creates a new StatementHandlerException wrapping another exception. The
-   * StatementHandlerException will inherit its message from the supplied
-   * newSource exception.
-   *
-   * @param newSource The newSource exception.
-   **/
-  public StatementHandlerException(Exception newSource) {
-    super(newSource.getMessage());
-    source = newSource;
-  }
-
-  /**
-   * Gets the source of this exception.
-   *
-   * @return The source of this exception.
-   **/
-  public Exception getSource() {
-    return source;
-  }
-
-  /**
-   * Overrides <tt>Throwable.getCause()</tt> (JDK 1.4 or later).
-   *
-   * @return the source.
-   */
-  public Throwable getCause() {
-    return source;
-  }
-
-  // overrides Trowable.printStackTrace()
-  public void printStackTrace() {
-    printStackTrace(System.err);
-  }
-
-  // overrides Trowable.printStackTrace(PrintStream)
-  public void printStackTrace(PrintStream ps) {
-    super.printStackTrace(ps);
-
-    if (null != source) {
-      ps.println("Source is:");
-      source.printStackTrace(ps);
+    /**
+     * Creates a new StatementHandlerException.
+     *
+     * @param msg An error message.
+     **/
+    public StatementHandlerException(String msg) {
+        super(msg);
     }
-  }
 
-  // overrides Trowable.printStackTrace(PrintWriter)
-  public void printStackTrace(PrintWriter pw) {
-    super.printStackTrace(pw);
-
-    if (null != source) {
-      pw.println("Source is:");
-      source.printStackTrace(pw);
+    /**
+     * Creates a new StatementHandlerException wrapping another exception.
+     *
+     * @param msg An error message.
+     * @param newSource The newSource exception.
+     **/
+    public StatementHandlerException(String msg, Exception newSource) {
+        super(msg);
+        source = newSource;
     }
-  }
+
+    /**
+     * Creates a new StatementHandlerException wrapping another exception. The
+     * StatementHandlerException will inherit its message from the supplied
+     * newSource exception.
+     *
+     * @param newSource The newSource exception.
+     **/
+    public StatementHandlerException(Exception newSource) {
+        super(newSource.getMessage());
+        source = newSource;
+    }
+
+    /**
+     * Gets the source of this exception.
+     *
+     * @return The source of this exception.
+     **/
+    public Exception getSource() {
+        return source;
+    }
+
+    /**
+     * Overrides <tt>Throwable.getCause()</tt> (JDK 1.4 or later).
+     *
+     * @return the source.
+     */
+    public Throwable getCause() {
+        return source;
+    }
+
+    // overrides Trowable.printStackTrace()
+    public void printStackTrace() {
+        printStackTrace(System.err);
+    }
+
+    // overrides Trowable.printStackTrace(PrintStream)
+    public void printStackTrace(PrintStream ps) {
+        super.printStackTrace(ps);
+
+        if (null != source) {
+            ps.println("Source is:");
+            source.printStackTrace(ps);
+        }
+    }
+
+    // overrides Trowable.printStackTrace(PrintWriter)
+    public void printStackTrace(PrintWriter pw) {
+        super.printStackTrace(pw);
+
+        if (null != source) {
+            pw.println("Source is:");
+            source.printStackTrace(pw);
+        }
+    }
 }
