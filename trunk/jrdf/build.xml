@@ -48,7 +48,7 @@
       </checkstyle>
     </target>
 
-    <target name="dist" depends="checkstyle,-copy-sablecc-resources">
+    <target name="dist" depends="-copy-sablecc-resources">
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${project.jar}">
             <fileset dir="${prod.classes.dir}"/>
