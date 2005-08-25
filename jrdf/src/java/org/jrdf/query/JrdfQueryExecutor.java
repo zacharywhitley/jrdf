@@ -67,11 +67,11 @@ import org.jrdf.connection.JrdfConnectionException;
  */
 interface JrdfQueryExecutor {
 
-  /**
-   * Executes a query against a graph.
-   * @param query The query to execute.
-   * @return The answer to the query, will never be <code>null</code>.
-   * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
-   */
-  Answer executeQuery(Query query) throws JrdfConnectionException;
+    /**
+     * Executes a query against a graph.
+     * @param query The query to execute.
+     * @return The answer to the query, will never be <code>null</code>.
+     * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
+     */
+    Answer executeQuery(Query query) throws JrdfConnectionException;
 }

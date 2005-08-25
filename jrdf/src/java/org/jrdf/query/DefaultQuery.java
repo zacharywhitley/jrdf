@@ -58,9 +58,10 @@
 
 package org.jrdf.query;
 
+import org.jrdf.util.param.ParameterUtil;
+
 import java.io.Serializable;
 import java.util.List;
-import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Default implementation of a {@link Query}.
