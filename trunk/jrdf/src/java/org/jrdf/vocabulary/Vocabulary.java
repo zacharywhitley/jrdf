@@ -59,10 +59,11 @@
 package org.jrdf.vocabulary;
 
 // Java 2 standard
+
 import java.io.Serializable;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
-import java.net.URI;
 
 /**
  * A representation of a known vocabulary.
@@ -73,28 +74,28 @@ import java.net.URI;
  */
 public abstract class Vocabulary implements Serializable {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = -3602059929452647818L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = -3602059929452647818L;
 
-  /**
-   * The set of URI references.
-   */
-  protected static Set<URI> resources = new HashSet<URI>();
+    /**
+     * The set of URI references.
+     */
+    protected static Set<URI> resources = new HashSet<URI>();
 
-  protected Vocabulary() {
-  }
+    protected Vocabulary() {
+    }
 
-  /**
-   * Returns the resources in this vocabulary.
-   *
-   * @return the resource in this vocabulary.
-   */
-  public static Set<URI> getResources() {
-    return resources;
-  }
+    /**
+     * Returns the resources in this vocabulary.
+     *
+     * @return the resource in this vocabulary.
+     */
+    public static Set<URI> getResources() {
+        return resources;
+    }
 }

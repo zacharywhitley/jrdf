@@ -59,6 +59,7 @@
 package org.jrdf.vocabulary;
 
 // Java 2 standard
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -71,152 +72,152 @@ import java.net.URISyntaxException;
  */
 public abstract class RDF extends Vocabulary {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 5974585938932893808L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 5974585938932893808L;
 
-  /**
-   * The URI of the RDF name space.
-   */
-  public static final URI baseURI;
+    /**
+     * The URI of the RDF name space.
+     */
+    public static final URI baseURI;
 
-  /**
-   * The class of unordered containers.
-   */
-  public static final URI BAG;
+    /**
+     * The class of unordered containers.
+     */
+    public static final URI BAG;
 
-  /**
-   * The class of ordered containers.
-   */
-  public static final URI SEQ;
+    /**
+     * The class of ordered containers.
+     */
+    public static final URI SEQ;
 
-  /**
-   * The class of containers of alternatives.
-   */
-  public static final URI ALT;
+    /**
+     * The class of containers of alternatives.
+     */
+    public static final URI ALT;
 
-  /**
-   * The class of RDF statements.
-   */
-  public static final URI STATEMENT;
+    /**
+     * The class of RDF statements.
+     */
+    public static final URI STATEMENT;
 
-  /**
-   * The class of RDF properties.
-   */
-  public static final URI PROPERTY;
+    /**
+     * The class of RDF properties.
+     */
+    public static final URI PROPERTY;
 
-  /**
-   * The class of XML literal values.
-   */
-  public static final URI XML_LITERAL;
+    /**
+     * The class of XML literal values.
+     */
+    public static final URI XML_LITERAL;
 
-  /**
-   * The class of RDF Lists.
-   */
-  public static final URI LIST;
+    /**
+     * The class of RDF Lists.
+     */
+    public static final URI LIST;
 
-  /**
-   * A special property element that is equivalent to rdf:_1, rdf:_2 in order.
-   * Only used in RDF/XML as inserting members of containers using li normally
-   * will result in duplicate instances not being recorded.
-   */
-  public static final URI li;
+    /**
+     * A special property element that is equivalent to rdf:_1, rdf:_2 in order.
+     * Only used in RDF/XML as inserting members of containers using li normally
+     * will result in duplicate instances not being recorded.
+     */
+    public static final URI li;
 
-  /**
-   * The empty list, with no items in it. If the rest of a list is nil then
-   * the list has no more items in it.
-   */
-  public static final URI NIL;
+    /**
+     * The empty list, with no items in it. If the rest of a list is nil then
+     * the list has no more items in it.
+     */
+    public static final URI NIL;
 
-  /**
-   * The subject of the subject RDF statement.
-   */
-  public static final URI SUBJECT;
+    /**
+     * The subject of the subject RDF statement.
+     */
+    public static final URI SUBJECT;
 
-  /**
-   * The predicate of the subject RDF statement.
-   */
-  public static final URI PREDICATE;
+    /**
+     * The predicate of the subject RDF statement.
+     */
+    public static final URI PREDICATE;
 
-  /**
-   * The object of the subject RDF statement.
-   */
-  public static final URI OBJECT;
+    /**
+     * The object of the subject RDF statement.
+     */
+    public static final URI OBJECT;
 
-  /**
-   * The subject is an instance of a class.
-   */
-  public static final URI TYPE;
+    /**
+     * The subject is an instance of a class.
+     */
+    public static final URI TYPE;
 
-  /**
-   * Idiomatic property used for structured values.
-   */
-  public static final URI VALUE;
+    /**
+     * Idiomatic property used for structured values.
+     */
+    public static final URI VALUE;
 
-  /**
-   * The first item in the subject RDF list.
-   */
-  public static final URI FIRST;
+    /**
+     * The first item in the subject RDF list.
+     */
+    public static final URI FIRST;
 
-  /**
-   * The rest of the subject RDF list after the first item.
-   */
-  public static final URI REST;
+    /**
+     * The rest of the subject RDF list after the first item.
+     */
+    public static final URI REST;
 
-  static {
-    try {
-      baseURI = new URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+    static {
+        try {
+            baseURI = new URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
-      // Classes
-      SEQ = new URI(baseURI + "Seq");
-      BAG = new URI(baseURI + "Bag");
-      ALT = new URI(baseURI + "Alt");
-      STATEMENT = new URI(baseURI + "Statement");
-      PROPERTY = new URI(baseURI + "Property");
-      XML_LITERAL = new URI(baseURI + "XMLLiteral");
-      LIST = new URI(baseURI + "List");
-      NIL = new URI(baseURI + "nil");
+            // Classes
+            SEQ = new URI(baseURI + "Seq");
+            BAG = new URI(baseURI + "Bag");
+            ALT = new URI(baseURI + "Alt");
+            STATEMENT = new URI(baseURI + "Statement");
+            PROPERTY = new URI(baseURI + "Property");
+            XML_LITERAL = new URI(baseURI + "XMLLiteral");
+            LIST = new URI(baseURI + "List");
+            NIL = new URI(baseURI + "nil");
 
-      li = new URI(baseURI + "li");
+            li = new URI(baseURI + "li");
 
-      // Properties
-      SUBJECT = new URI(baseURI + "subject");
-      PREDICATE = new URI(baseURI + "predicate");
-      OBJECT = new URI(baseURI + "object");
-      TYPE = new URI(baseURI + "type");
-      VALUE = new URI(baseURI + "value");
-      FIRST = new URI(baseURI + "first");
-      REST = new URI(baseURI + "rest");
+            // Properties
+            SUBJECT = new URI(baseURI + "subject");
+            PREDICATE = new URI(baseURI + "predicate");
+            OBJECT = new URI(baseURI + "object");
+            TYPE = new URI(baseURI + "type");
+            VALUE = new URI(baseURI + "value");
+            FIRST = new URI(baseURI + "first");
+            REST = new URI(baseURI + "rest");
 
-      // Add Classes
-      resources.add(SEQ);
-      resources.add(BAG);
-      resources.add(ALT);
-      resources.add(STATEMENT);
-      resources.add(PROPERTY);
-      resources.add(XML_LITERAL);
-      resources.add(LIST);
-      resources.add(NIL);
+            // Add Classes
+            resources.add(SEQ);
+            resources.add(BAG);
+            resources.add(ALT);
+            resources.add(STATEMENT);
+            resources.add(PROPERTY);
+            resources.add(XML_LITERAL);
+            resources.add(LIST);
+            resources.add(NIL);
 
-      resources.add(li);
+            resources.add(li);
 
-      // Add Properties
-      resources.add(SUBJECT);
-      resources.add(PREDICATE);
-      resources.add(OBJECT);
-      resources.add(TYPE);
-      resources.add(VALUE);
-      resources.add(FIRST);
-      resources.add(REST);
+            // Add Properties
+            resources.add(SUBJECT);
+            resources.add(PREDICATE);
+            resources.add(OBJECT);
+            resources.add(TYPE);
+            resources.add(VALUE);
+            resources.add(FIRST);
+            resources.add(REST);
+        }
+        catch (URISyntaxException use) {
+
+            // This should never happen.
+            throw new ExceptionInInitializerError("Failed to create required URIs");
+        }
     }
-    catch (URISyntaxException use) {
-
-      // This should never happen.
-      throw new ExceptionInInitializerError("Failed to create required URIs");
-    }
-  }
 }
