@@ -162,7 +162,7 @@ public class GraphImpl implements Graph, Serializable {
 
         if (null == elementFactory) {
             try {
-                elementFactory = new GraphElementFactoryImpl(this);
+                elementFactory = new GraphElementFactoryImpl();
             }
             catch (TripleFactoryException e) {
                 throw new GraphException(e);
@@ -501,6 +501,7 @@ public class GraphImpl implements Graph, Serializable {
      * @return the number of triples in the graph.
      */
     public long getNumberOfTriples() throws GraphException {
+        // TODO Move this into the LongIndex implementations.
         long size = 0;
         // go over the index map
         Iterator first = index012.values().iterator();
@@ -651,7 +652,7 @@ public class GraphImpl implements Graph, Serializable {
         try {
             // test node factory creation in case the constructor did it
             if (null == elementFactory) {
-                elementFactory = new GraphElementFactoryImpl(this);
+                elementFactory = new GraphElementFactoryImpl();
             }
         }
         catch (TripleFactoryException e) {
@@ -706,7 +707,7 @@ public class GraphImpl implements Graph, Serializable {
         catch (GraphException e) {
             removeFrom120(first, second, third);
             throw e;
-        }
+        }                                    
     }
 
     void addTo201(Long first, Long second, Long third)
