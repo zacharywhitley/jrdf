@@ -96,7 +96,7 @@ public abstract class AbstractURIReference implements URIReference,
      * @throws IllegalArgumentException if <var>newUri</var> is <code>null</code> or
      *     not absolute
      */
-    protected AbstractURIReference(URI newUri) {
+    protected AbstractURIReference(URI newUri) throws IllegalArgumentException {
 
         // Validate "newUri" parameter
         if (null == newUri) {
@@ -122,7 +122,7 @@ public abstract class AbstractURIReference implements URIReference,
      * @throws IllegalArgumentException if <var>newUri</var> is not absolute and
      *   validate is true.
      */
-    protected AbstractURIReference(URI newUri, boolean validate) {
+    protected AbstractURIReference(URI newUri, boolean validate) throws IllegalArgumentException {
 
         // Validate "newUri" parameter
         if (null == newUri) {

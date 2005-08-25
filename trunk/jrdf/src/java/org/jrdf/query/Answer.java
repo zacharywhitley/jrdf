@@ -67,5 +67,5 @@ import org.jrdf.util.ClosableIterator;
  * @version $Revision$
  */
 public interface Answer {
-  ClosableIterator getClosableIterator();
+    ClosableIterator getClosableIterator();
 }

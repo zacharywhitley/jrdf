@@ -58,8 +58,8 @@
 
 package org.jrdf.query;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A variable in a {@link Query} or {@link Answer}.
@@ -70,7 +70,7 @@ public interface Variable {
     /**
      * The list of all possible variables, i.e. wildcard projection.
      */
-    static final List<? extends Variable> ALL_VARIABLES = Collections.emptyList();
+    final List<? extends Variable> ALL_VARIABLES = Collections.emptyList();
 
     /**
      * Returns the name of the variable.

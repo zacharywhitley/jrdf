@@ -12,7 +12,7 @@ import org.jrdf.query.relation.AttributeNameValue;
  *
  * @version $Revision$
  */
-public class TrueAttributeNameValue implements AttributeNameValue {
+public final class TrueAttributeNameValue implements AttributeNameValue {
     private static final Node TRUE_NODE = TrueNode.TRUE;
     public static final AttributeNameValue TRUE_NAME_VALUE =
         new TrueAttributeNameValue();

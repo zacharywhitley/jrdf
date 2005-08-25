@@ -81,9 +81,15 @@ public final class ConstraintTriple implements ConstraintExpression {
     }
 
     public boolean equals(Object obj) {
-        if (isNull(obj)) return false;
-        if (sameReference(this, obj)) return true;
-        if (differentClasses(this, obj)) return false;
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (differentClasses(this, obj)) {
+            return false;
+        }
         return determineEqualityFromFields(this, obj);
     }
 

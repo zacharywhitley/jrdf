@@ -70,5 +70,6 @@ public interface ConstraintExpression {
      * A constraint that matches all triples.
      * <p>i.e. The constraint in a query of the form <code>SELECT { ?subject ?predicate ?object }</code>.</p>
      */
-    ConstraintExpression ALL = new ConstraintExpression() {};
+    ConstraintExpression ALL = new ConstraintExpression() {
+    };
 }
