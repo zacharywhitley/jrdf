@@ -84,11 +84,6 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     private Map<String, Long> stringPool;
 
     /**
-     * The graph that this factory constructs nodes for.
-     */
-    private Graph graph;
-
-    /**
      * The next available node id.
      */
     private long nextNode;
@@ -96,10 +91,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * Package scope constructor.
      *
-     * @param newGraph The GraphImpl that this class is attached to.
      */
-    GraphElementFactoryImpl(Graph newGraph) throws TripleFactoryException {
-        graph = newGraph;
+    GraphElementFactoryImpl() throws TripleFactoryException {
         nodePool = new HashMap<Long, Node>();
         stringPool = new HashMap<String, Long>();
         nextNode = 1;
