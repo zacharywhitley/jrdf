@@ -8,7 +8,7 @@ o Continue refactoring code.
 o Make GraphImpl IoCed.  Take in the constructor GraphHandlers, LongIndexes 
 and TripleFactory.  Then test drive the lot - once the interfaces have
 settled down - currently it's a bit of a spike.
-o Once indices are greaters do Graph operations.
+o Once indices are refactored do indexed Graph operations.
 o Finish Relational operators.
 o Write a push based RDF/XML parser.
 
