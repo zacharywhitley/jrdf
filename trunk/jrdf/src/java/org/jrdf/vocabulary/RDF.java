@@ -83,7 +83,7 @@ public abstract class RDF extends Vocabulary {
     /**
      * The URI of the RDF name space.
      */
-    public static final URI baseURI;
+    public static final URI BASE_URI;
 
     /**
      * The class of unordered containers.
@@ -122,10 +122,10 @@ public abstract class RDF extends Vocabulary {
 
     /**
      * A special property element that is equivalent to rdf:_1, rdf:_2 in order.
-     * Only used in RDF/XML as inserting members of containers using li normally
+     * Only used in RDF/XML as inserting members of containers using LI normally
      * will result in duplicate instances not being recorded.
      */
-    public static final URI li;
+    public static final URI LI;
 
     /**
      * The empty list, with no items in it. If the rest of a list is nil then
@@ -170,28 +170,28 @@ public abstract class RDF extends Vocabulary {
 
     static {
         try {
-            baseURI = new URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+            BASE_URI = new URI("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
             // Classes
-            SEQ = new URI(baseURI + "Seq");
-            BAG = new URI(baseURI + "Bag");
-            ALT = new URI(baseURI + "Alt");
-            STATEMENT = new URI(baseURI + "Statement");
-            PROPERTY = new URI(baseURI + "Property");
-            XML_LITERAL = new URI(baseURI + "XMLLiteral");
-            LIST = new URI(baseURI + "List");
-            NIL = new URI(baseURI + "nil");
+            SEQ = new URI(BASE_URI + "Seq");
+            BAG = new URI(BASE_URI + "Bag");
+            ALT = new URI(BASE_URI + "Alt");
+            STATEMENT = new URI(BASE_URI + "Statement");
+            PROPERTY = new URI(BASE_URI + "Property");
+            XML_LITERAL = new URI(BASE_URI + "XMLLiteral");
+            LIST = new URI(BASE_URI + "List");
+            NIL = new URI(BASE_URI + "nil");
 
-            li = new URI(baseURI + "li");
+            LI = new URI(BASE_URI + "LI");
 
             // Properties
-            SUBJECT = new URI(baseURI + "subject");
-            PREDICATE = new URI(baseURI + "predicate");
-            OBJECT = new URI(baseURI + "object");
-            TYPE = new URI(baseURI + "type");
-            VALUE = new URI(baseURI + "value");
-            FIRST = new URI(baseURI + "first");
-            REST = new URI(baseURI + "rest");
+            SUBJECT = new URI(BASE_URI + "subject");
+            PREDICATE = new URI(BASE_URI + "predicate");
+            OBJECT = new URI(BASE_URI + "object");
+            TYPE = new URI(BASE_URI + "type");
+            VALUE = new URI(BASE_URI + "value");
+            FIRST = new URI(BASE_URI + "first");
+            REST = new URI(BASE_URI + "rest");
 
             // Add Classes
             resources.add(SEQ);
@@ -203,7 +203,7 @@ public abstract class RDF extends Vocabulary {
             resources.add(LIST);
             resources.add(NIL);
 
-            resources.add(li);
+            resources.add(LI);
 
             // Add Properties
             resources.add(SUBJECT);
