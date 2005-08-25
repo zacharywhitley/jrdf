@@ -35,12 +35,12 @@ package org.jrdf.parser;
  **/
 public interface NamespaceListener {
 
-  /**
-   * Called by an RDF parser when it has encountered a new namespace
-   * declaration.
-   *
-   * @param prefix The prefix that is used in the namespace declaration.
-   * @param uri The URI of the namespace.
-   **/
-  void handleNamespace(String prefix, String uri);
+    /**
+     * Called by an RDF parser when it has encountered a new namespace
+     * declaration.
+     *
+     * @param prefix The prefix that is used in the namespace declaration.
+     * @param uri The URI of the namespace.
+     **/
+    void handleNamespace(String prefix, String uri);
 }

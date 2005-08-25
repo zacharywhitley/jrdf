@@ -34,35 +34,35 @@ package org.jrdf.parser.rdfxml;
  **/
 class Att {
 
-  private String _namespace;
-  private String _localName;
-  private String _qName;
-  private String _value;
+    private String _namespace;
+    private String _localName;
+    private String _qName;
+    private String _value;
 
-  Att(String namespace, String localName, String qName, String value) {
-    _namespace = namespace;
-    _localName = localName;
-    _qName = qName;
-    _value = value;
-  }
+    Att(String namespace, String localName, String qName, String value) {
+        _namespace = namespace;
+        _localName = localName;
+        _qName = qName;
+        _value = value;
+    }
 
-  public String getNamespace() {
-    return _namespace;
-  }
+    public String getNamespace() {
+        return _namespace;
+    }
 
-  public String getLocalName() {
-    return _localName;
-  }
+    public String getLocalName() {
+        return _localName;
+    }
 
-  public String getURI() {
-    return _namespace + _localName;
-  }
+    public String getURI() {
+        return _namespace + _localName;
+    }
 
-  public String getQName() {
-    return _qName;
-  }
+    public String getQName() {
+        return _qName;
+    }
 
-  public String getValue() {
-    return _value;
-  }
+    public String getValue() {
+        return _value;
+    }
 }

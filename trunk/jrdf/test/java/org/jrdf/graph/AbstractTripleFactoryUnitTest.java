@@ -541,13 +541,13 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
                 RDF.TYPE);
         PredicateNode rdfOne = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.baseURI + "_1"));
+                new URI(RDF.BASE_URI + "_1"));
         PredicateNode rdfTwo = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.baseURI + "_2"));
+                new URI(RDF.BASE_URI + "_2"));
         PredicateNode rdfThree = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.baseURI + "_3"));
+                new URI(RDF.BASE_URI + "_3"));
         PredicateNode rdfFour = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.baseURI + "_4"));
+                new URI(RDF.BASE_URI + "_4"));
         ObjectNode rdfSequence = (ObjectNode) elementFactory.createResource(
                 RDF.SEQ);
 

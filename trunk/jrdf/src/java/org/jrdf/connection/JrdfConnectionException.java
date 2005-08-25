@@ -8,14 +8,14 @@ package org.jrdf.connection;
  */
 public class JrdfConnectionException extends Exception {
 
-  private static final long serialVersionUID = 8620551289077269764L;
+    private static final long serialVersionUID = 8620551289077269764L;
 
 
-  public JrdfConnectionException(String message) {
-    super(message);
-  }
+    public JrdfConnectionException(String message) {
+        super(message);
+    }
 
-  public JrdfConnectionException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    public JrdfConnectionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

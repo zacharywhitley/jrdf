@@ -80,32 +80,32 @@ import org.jrdf.graph.GraphElementFactoryException;
  */
 public interface ParserBlankNodeFactory {
 
-  /**
-   * Creates a BlankNode that is unique relative to this instance of the
-   * ParserBlankNodeFactory.
-   *
-   * @return the BlankNode.
-   * @throws GraphElementFactoryException if there is a failure to create the
-   *   blank node.
-   */
-  BlankNode createBlankNode() throws GraphElementFactoryException;
+    /**
+     * Creates a BlankNode that is unique relative to this instance of the
+     * ParserBlankNodeFactory.
+     *
+     * @return the BlankNode.
+     * @throws GraphElementFactoryException if there is a failure to create the
+     *   blank node.
+     */
+    BlankNode createBlankNode() throws GraphElementFactoryException;
 
-  /**
-   * Creates a BlankNode that is only distinguished by the nodeID value.
-   *
-   * @param nodeID the nodeID of the blank node - consistently returns the same
-   *   blank node if it exists. 
-   * @return the BlankNode.
-   * @throws GraphElementFactoryException if there is a failure to create the
-   *   blank node.
-   */
-  BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException;
+    /**
+     * Creates a BlankNode that is only distinguished by the nodeID value.
+     *
+     * @param nodeID the nodeID of the blank node - consistently returns the same
+     *   blank node if it exists.
+     * @return the BlankNode.
+     * @throws GraphElementFactoryException if there is a failure to create the
+     *   blank node.
+     */
+    BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException;
 
-  /**
-   * Resets this ParserBlankNodeFactory.  Subsequent calls to
-   * {@link #createBlankNode()} may return BlankNodes that compare equal to
-   * BlankNodes that were created before the call to <code>clear()</code>.
-   */
-  void clear();
+    /**
+     * Resets this ParserBlankNodeFactory.  Subsequent calls to
+     * {@link #createBlankNode()} may return BlankNodes that compare equal to
+     * BlankNodes that were created before the call to <code>clear()</code>.
+     */
+    void clear();
 
 }
