@@ -70,6 +70,8 @@ public class AbstractTriple implements Triple, Serializable {
     private static final int DEFAULT_HASH_VALUE = 0;
     static final long serialVersionUID = 8737092494833012690L;
     // FIXME TJA: Why are these protected?
+    // FIXME AN: Because they are used in constructors.  Maybe the right answer is for at least one construct (with
+    // null check).
     protected SubjectNode subjectNode;
     protected PredicateNode predicateNode;
     protected ObjectNode objectNode;
