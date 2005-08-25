@@ -59,6 +59,7 @@
 package org.jrdf.vocabulary;
 
 // Java 2 standard
+
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -71,142 +72,142 @@ import java.net.URISyntaxException;
  */
 public abstract class RDFS extends Vocabulary {
 
-  /**
-   * Allow newer compiled version of the stub to operate when changes
-   * have not occurred with the class.
-   * NOTE : update this serialVersionUID when a method or a public member is
-   * deleted.
-   */
-  private static final long serialVersionUID = 3344119222366953296L;
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = 3344119222366953296L;
 
-  /**
-   * The URI of the RDFS name space.
-   */
-  public static final URI baseURI;
+    /**
+     * The URI of the RDFS name space.
+     */
+    public static final URI baseURI;
 
-  /**
-   * The class resource, everything.
-   */
-  public static final URI RESOURCE;
+    /**
+     * The class resource, everything.
+     */
+    public static final URI RESOURCE;
 
-  /**
-   * The class of classes.
-   */
-  public static final URI CLASS;
+    /**
+     * The class of classes.
+     */
+    public static final URI CLASS;
 
-  /**
-   * The class of literal values, eg. textual strings and integers.
-   */
-  public static final URI LITERAL;
+    /**
+     * The class of literal values, eg. textual strings and integers.
+     */
+    public static final URI LITERAL;
 
-  /**
-   * The class of RDF datatypes.
-   */
-  public static final URI DATATYPE;
+    /**
+     * The class of RDF datatypes.
+     */
+    public static final URI DATATYPE;
 
-  /**
-   * The class of RDF containers.
-   */
-  public static final URI CONTAINER;
+    /**
+     * The class of RDF containers.
+     */
+    public static final URI CONTAINER;
 
-  /**
-   * The class of container membership properties, rdf:_1, rdf:_2, ...,
-   * all of which are sub-properties of 'member'.
-   */
-  public static final URI CONTAINER_MEMBERSHIP_PROPERTY;
+    /**
+     * The class of container membership properties, rdf:_1, rdf:_2, ...,
+     * all of which are sub-properties of 'member'.
+     */
+    public static final URI CONTAINER_MEMBERSHIP_PROPERTY;
 
-  /**
-   * A range of the subject property.
-   */
-  public static final URI RANGE;
+    /**
+     * A range of the subject property.
+     */
+    public static final URI RANGE;
 
-  /**
-   * A domain of the subject property.
-   */
-  public static final URI DOMAIN;
+    /**
+     * A domain of the subject property.
+     */
+    public static final URI DOMAIN;
 
-  /**
-   * The subject is a subclass of a class.
-   */
-  public static final URI SUB_CLASS_OF;
+    /**
+     * The subject is a subclass of a class.
+     */
+    public static final URI SUB_CLASS_OF;
 
-  /**
-   * The subject is a subproperty of a property.
-   */
-  public static final URI SUB_PROPERTY_OF;
+    /**
+     * The subject is a subproperty of a property.
+     */
+    public static final URI SUB_PROPERTY_OF;
 
-  /**
-   * A human-readable name for the subject.
-   */
-  public static final URI LABEL;
+    /**
+     * A human-readable name for the subject.
+     */
+    public static final URI LABEL;
 
-  /**
-   * A description of the subject resource.
-   */
-  public static final URI COMMENT;
+    /**
+     * A description of the subject resource.
+     */
+    public static final URI COMMENT;
 
-  /**
-   * A member of the subject resource.
-   */
-  public static final URI MEMBER;
+    /**
+     * A member of the subject resource.
+     */
+    public static final URI MEMBER;
 
-  /**
-   * Further information about the subject resource.
-   */
-  public static final URI SEE_ALSO;
+    /**
+     * Further information about the subject resource.
+     */
+    public static final URI SEE_ALSO;
 
-  /**
-   * The defininition of the subject resource.
-   */
-  public static final URI IS_DEFINED_BY;
+    /**
+     * The defininition of the subject resource.
+     */
+    public static final URI IS_DEFINED_BY;
 
-  static {
-    try {
-      baseURI = new URI("http://www.w3.org/2000/01/rdf-schema#");
+    static {
+        try {
+            baseURI = new URI("http://www.w3.org/2000/01/rdf-schema#");
 
-      // Classes
-      RESOURCE = new URI(baseURI + "Resource");
-      CLASS = new URI(baseURI + "Class");
-      LITERAL = new URI(baseURI + "Literal");
-      DATATYPE = new URI(baseURI + "Datatype");
-      CONTAINER = new URI(baseURI + "Container");
-      CONTAINER_MEMBERSHIP_PROPERTY =
-          new URI(baseURI + "ContainerMembershipProperty");
+            // Classes
+            RESOURCE = new URI(baseURI + "Resource");
+            CLASS = new URI(baseURI + "Class");
+            LITERAL = new URI(baseURI + "Literal");
+            DATATYPE = new URI(baseURI + "Datatype");
+            CONTAINER = new URI(baseURI + "Container");
+            CONTAINER_MEMBERSHIP_PROPERTY =
+                new URI(baseURI + "ContainerMembershipProperty");
 
-      // Properties
-      RANGE = new URI(baseURI + "range");
-      DOMAIN = new URI(baseURI + "domain");
-      SUB_CLASS_OF = new URI(baseURI + "subClassOf");
-      SUB_PROPERTY_OF = new URI(baseURI + "subPropertyOf");
-      LABEL = new URI(baseURI + "label");
-      COMMENT = new URI(baseURI + "comment");
-      MEMBER = new URI(baseURI + "member");
-      SEE_ALSO= new URI(baseURI + "seeAlso");
-      IS_DEFINED_BY = new URI(baseURI + "isDefinedBy");
+            // Properties
+            RANGE = new URI(baseURI + "range");
+            DOMAIN = new URI(baseURI + "domain");
+            SUB_CLASS_OF = new URI(baseURI + "subClassOf");
+            SUB_PROPERTY_OF = new URI(baseURI + "subPropertyOf");
+            LABEL = new URI(baseURI + "label");
+            COMMENT = new URI(baseURI + "comment");
+            MEMBER = new URI(baseURI + "member");
+            SEE_ALSO = new URI(baseURI + "seeAlso");
+            IS_DEFINED_BY = new URI(baseURI + "isDefinedBy");
 
-      // Add Classes
-      resources.add(RESOURCE);
-      resources.add(CLASS);
-      resources.add(LITERAL);
-      resources.add(DATATYPE);
-      resources.add(CONTAINER);
-      resources.add(CONTAINER_MEMBERSHIP_PROPERTY);
+            // Add Classes
+            resources.add(RESOURCE);
+            resources.add(CLASS);
+            resources.add(LITERAL);
+            resources.add(DATATYPE);
+            resources.add(CONTAINER);
+            resources.add(CONTAINER_MEMBERSHIP_PROPERTY);
 
-      // Add Properties
-      resources.add(RANGE);
-      resources.add(DOMAIN);
-      resources.add(SUB_CLASS_OF);
-      resources.add(SUB_PROPERTY_OF);
-      resources.add(LABEL);
-      resources.add(COMMENT);
-      resources.add(MEMBER);
-      resources.add(SEE_ALSO);
-      resources.add(IS_DEFINED_BY);
+            // Add Properties
+            resources.add(RANGE);
+            resources.add(DOMAIN);
+            resources.add(SUB_CLASS_OF);
+            resources.add(SUB_PROPERTY_OF);
+            resources.add(LABEL);
+            resources.add(COMMENT);
+            resources.add(MEMBER);
+            resources.add(SEE_ALSO);
+            resources.add(IS_DEFINED_BY);
+        }
+        catch (URISyntaxException use) {
+
+            // This should never happen.
+            throw new ExceptionInInitializerError("Failed to create required URIs");
+        }
     }
-    catch (URISyntaxException use) {
-
-      // This should never happen.
-      throw new ExceptionInInitializerError("Failed to create required URIs");
-    }
-  }
 }
