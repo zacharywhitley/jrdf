@@ -32,7 +32,12 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * A filter on SAX events to make life easier on the RDF parser
@@ -45,177 +50,177 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     /**
      * The transformer handler.
      */
-    private TransformerHandler _th;
+    private TransformerHandler th;
 
     /**
      * Byte array for escaping XML.
      */
-    private ByteArrayOutputStream _os = new ByteArrayOutputStream();
+    private ByteArrayOutputStream os = new ByteArrayOutputStream();
 
     /**
      * The RDF parser to supply the filtered SAX events to.
      **/
-    private RdfXmlParser _rdfParser;
+    private RdfXmlParser rdfParser;
 
     /**
      * A Locator indicating a position in the text that is currently being
      * parsed by the SAX parser.
      **/
-    private Locator _locator;
+    private Locator locator;
 
     /**
      * A listener that is interested in the progress of the SAX parser.
      **/
-    private ParseLocationListener _locListener;
+    private ParseLocationListener locListener;
 
     /**
      * A listener that is interested in the namespaces that are defined in
      * the parsed RDF.
      **/
-    private NamespaceListener _nsListener;
+    private NamespaceListener nsListener;
 
     /**
      * Stack of ElementInfo objects.
      **/
-    private Stack<ElementInfo> _elInfoStack = new Stack<ElementInfo>();
+    private Stack<ElementInfo> elInfoStack = new Stack<ElementInfo>();
 
     /**
      * StringBuffer used to collect text during parsing.
      **/
-    private StringBuffer _charBuf = new StringBuffer(512);
+    private StringBuffer charBuf = new StringBuffer(512);
 
     /**
      * The document's URI.
      **/
-    private String _documentURI;
+    private String documentURI;
 
     /**
      * Flag indicating whether the parser parses stand-alone RDF
      * documents. In stand-alone documents, the rdf:RDF element is
      * optional if it contains just one element.
      **/
-    private boolean _parseStandAloneDocuments;
+    private boolean parseStandAloneDocuments;
 
     /**
      * Variable used to defer reporting of start tags. Reporting start
      * tags is deferred to be able to combine a start tag and an immediately
      * following end tag to a single call to emptyElement().
      **/
-    private ElementInfo _deferredElement;
+    private ElementInfo deferredElement;
 
     /**
      * New namespace mappings that have been reported for the next start tag
      * by the SAX parser, but that are not yet assigned to an ElementInfo
      * object.
      **/
-    private Map<String, String> _newNamespaceMappings =
+    private Map<String, String> newNamespaceMappings =
         new HashMap<String, String>();
 
     /**
      * Flag indicating whether we're currently parsing RDF elements.
      **/
-    private boolean _inRdfContext;
+    private boolean inRdfContext;
 
     /**
      * The number of elements on the stack that are in the RDF context.
      **/
-    private int _rdfContextStackHeight;
+    private int rdfContextStackHeight;
 
     /**
      * Flag indicating whether we're currently parsing an XML literal.
      **/
-    private boolean _parseLiteralMode;
+    private boolean parseLiteralMode;
 
     /**
      * The number of elements on the stack that are part of an XML literal.
      **/
-    private int _xmlLiteralStackHeight;
+    private int xmlLiteralStackHeight;
 
     /**
      * The prefixes that are defined in the XML literal itself (this in
      * contrast to the namespaces from the XML literal's context).
      **/
-    private List<String> _xmlLiteralPrefixes = new ArrayList<String>();
+    private List<String> xmlLiteralPrefixes = new ArrayList<String>();
 
     /**
      * The prefixes that were used in an XML literal, but that were not
      * defined in it (but rather in the XML literal's context).
      **/
-    private List<String> _unknownPrefixesInXmlLiteral = new ArrayList<String>();
+    private List<String> unknownPrefixesInXmlLiteral = new ArrayList<String>();
 
     SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
-        _rdfParser = rdfParser;
-        _th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).
+        this.rdfParser = rdfParser;
+        th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).
             newTransformerHandler();
-        _th.setResult(new StreamResult(_os));
+        th.setResult(new StreamResult(os));
     }
 
     public Locator getLocator() {
-        return _locator;
+        return locator;
     }
 
     public void setParseLocationListener(ParseLocationListener el) {
-        _locListener = el;
+        locListener = el;
 
-        if (null != _locator) {
-            _locListener.parseLocationUpdate(_locator.getLineNumber(),
-                _locator.getColumnNumber());
+        if (null != locator) {
+            locListener.parseLocationUpdate(locator.getLineNumber(),
+                locator.getColumnNumber());
         }
     }
 
     public ParseLocationListener getParseLocationListener() {
-        return _locListener;
+        return locListener;
     }
 
     public void setNamespaceListener(NamespaceListener nl) {
-        _nsListener = nl;
+        nsListener = nl;
     }
 
     public NamespaceListener getNamespaceListener() {
-        return _nsListener;
+        return nsListener;
     }
 
     public void clear() {
-        _locator = null;
-        _elInfoStack.clear();
-        _charBuf.setLength(0);
-        _documentURI = null;
-        _deferredElement = null;
+        locator = null;
+        elInfoStack.clear();
+        charBuf.setLength(0);
+        documentURI = null;
+        deferredElement = null;
 
-        _newNamespaceMappings.clear();
+        newNamespaceMappings.clear();
 
-        _inRdfContext = false;
-        _rdfContextStackHeight = 0;
+        inRdfContext = false;
+        rdfContextStackHeight = 0;
 
-        _parseLiteralMode = false;
-        _xmlLiteralStackHeight = 0;
+        parseLiteralMode = false;
+        xmlLiteralStackHeight = 0;
 
-        _xmlLiteralPrefixes.clear();
-        _unknownPrefixesInXmlLiteral.clear();
+        xmlLiteralPrefixes.clear();
+        unknownPrefixesInXmlLiteral.clear();
     }
 
     public void setDocumentURI(String documentURI) throws SAXException {
-        _documentURI = _createBaseURI(documentURI);
+        this.documentURI = createBaseURI(documentURI);
     }
 
     public void setParseStandAloneDocuments(boolean standAloneDocs) {
-        _parseStandAloneDocuments = standAloneDocs;
+        parseStandAloneDocuments = standAloneDocs;
     }
 
     public boolean getParseStandAloneDocuments() {
-        return _parseStandAloneDocuments;
+        return parseStandAloneDocuments;
     }
 
     public void setDocumentLocator(Locator locator) {
-        _locator = locator;
-        if (null != _locListener) {
-            _locListener.parseLocationUpdate(locator.getLineNumber(),
+        this.locator = locator;
+        if (null != locListener) {
+            locListener.parseLocationUpdate(locator.getLineNumber(),
                 locator.getColumnNumber());
         }
     }
 
     public void startDocument() throws SAXException {
-        _th.startDocument();
+        th.startDocument();
     }
 
     public void endDocument() throws SAXException {
@@ -224,26 +229,26 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
     public void startPrefixMapping(String prefix, String uri)
         throws SAXException {
-        if (null != _deferredElement) {
+        if (null != deferredElement) {
             // This new prefix mapping must come from a new start tag
-            _reportDeferredStartElement();
+            reportDeferredStartElement();
         }
 
-        _newNamespaceMappings.put(prefix, uri);
+        newNamespaceMappings.put(prefix, uri);
 
-        if (_parseLiteralMode) {
+        if (parseLiteralMode) {
             // This namespace is introduced inside an XML literal
-            _xmlLiteralPrefixes.add(prefix);
+            xmlLiteralPrefixes.add(prefix);
         }
 
-        if (null != _nsListener) {
-            _nsListener.handleNamespace(prefix, uri);
+        if (null != nsListener) {
+            nsListener.handleNamespace(prefix, uri);
         }
     }
 
     public void endPrefixMapping(String prefix) throws SAXException {
-        if (_parseLiteralMode) {
-            _xmlLiteralPrefixes.remove(prefix);
+        if (parseLiteralMode) {
+            xmlLiteralPrefixes.remove(prefix);
         }
     }
 
@@ -251,96 +256,96 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         String qName, Attributes attributes) throws SAXException {
 
         // Reset at start of element.
-        _charBuf.setLength(0);
+        charBuf.setLength(0);
 
-        if (null != _deferredElement) {
-            // The next call could set _parseLiteralMode to true!
-            _reportDeferredStartElement();
+        if (null != deferredElement) {
+            // The next call could set parseLiteralMode to true!
+            reportDeferredStartElement();
         }
 
-        if (_parseLiteralMode) {
-            _appendStartTag(qName, attributes);
-            _xmlLiteralStackHeight++;
+        if (parseLiteralMode) {
+            appendStartTag(qName, attributes);
+            xmlLiteralStackHeight++;
         }
         else {
-            ElementInfo parent = _peekStack();
+            ElementInfo parent = peekStack();
             ElementInfo elInfo = new ElementInfo(parent, qName, namespaceURI,
                 localName);
 
-            elInfo.setNamespaceMappings(_newNamespaceMappings);
-            _newNamespaceMappings.clear();
+            elInfo.setNamespaceMappings(newNamespaceMappings);
+            newNamespaceMappings.clear();
 
-            if (!_inRdfContext && _parseStandAloneDocuments &&
+            if (!inRdfContext && parseStandAloneDocuments &&
                 (!"RDF".equals(localName) ||
                 !namespaceURI.equals(RDF.BASE_URI.toString()))) {
                 // Stand-alone document that does not start with an rdf:RDF root
                 // element. Assume this root element is omitted.
-                _inRdfContext = true;
+                inRdfContext = true;
             }
 
-            if (!_inRdfContext) {
+            if (!inRdfContext) {
                 // Check for presence of xml:base and xlm:lang attributes.
                 for (int i = 0; i < attributes.getLength(); i++) {
                     String attQName = attributes.getQName(i);
 
                     if ("xml:base".equals(attQName)) {
-                        elInfo.baseURI = _createBaseURI(attributes.getValue(i));
+                        elInfo.setBaseURI(createBaseURI(attributes.getValue(i)));
                     }
                     else if ("xml:lang".equals(attQName)) {
-                        elInfo.xmlLang = attributes.getValue(i);
+                        elInfo.setXmlLang(attributes.getValue(i));
                     }
                 }
 
                 // If xml:base or xml:lang attribute was not
                 // present, inherit it from context.
-                _inheritXmlAttributes(elInfo);
+                inheritXmlAttributes(elInfo);
 
-                _elInfoStack.push(elInfo);
+                elInfoStack.push(elInfo);
 
                 // Check if we are entering RDF context now.
                 if ("RDF".equals(localName) &&
                     namespaceURI.equals(RDF.BASE_URI.toString())) {
-                    _inRdfContext = true;
-                    _rdfContextStackHeight = 0;
+                    inRdfContext = true;
+                    rdfContextStackHeight = 0;
                 }
             }
             else {
                 // We're parsing RDF elements.
-                _checkAndCopyAttributes(attributes, elInfo);
+                checkAndCopyAttributes(attributes, elInfo);
 
                 // If xml:base or xml:lang attribute was not
                 // present, inherit it from context.
-                _inheritXmlAttributes(elInfo);
+                inheritXmlAttributes(elInfo);
 
                 // Don't report the new element to the RDF parser just yet.
-                _deferredElement = elInfo;
+                deferredElement = elInfo;
             }
         }
     }
 
-    private void _reportDeferredStartElement() throws SAXException {
+    private void reportDeferredStartElement() throws SAXException {
         /*
           // Only useful for debugging.
-          if (_deferredElement == null) {
+          if (deferredElement == null) {
            throw new RuntimeException("no deferred start element available");
           }
          */
 
-        _elInfoStack.push(_deferredElement);
-        _rdfContextStackHeight++;
+        elInfoStack.push(deferredElement);
+        rdfContextStackHeight++;
 
         try {
-            _rdfParser.setBaseURI(new URI(_deferredElement.baseURI));
+            rdfParser.setBaseURI(new URI(deferredElement.getBaseURI()));
         }
         catch (URISyntaxException ex) {
             throw new SAXException("Bad URI", ex);
         }
-        _rdfParser.setXmlLang(_deferredElement.xmlLang);
+        rdfParser.setXmlLang(deferredElement.getXmlLang());
 
-        _rdfParser.startElement(_deferredElement.namespaceURI, _deferredElement.localName,
-            _deferredElement.qName, _deferredElement.atts);
+        rdfParser.startElement(deferredElement.getNamespaceURI(), deferredElement.getLocalName(),
+            deferredElement.getqName(), deferredElement.getAtts());
 
-        _deferredElement = null;
+        deferredElement = null;
     }
 
     public void endElement(String namespaceURI, String localName, String qName)
@@ -348,56 +353,56 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         // FIXME: in parseLiteralMode we should also check
         // if start- and end-tags match.
 
-        if (_rdfParser._verifyData && !_parseLiteralMode) {
+        if (rdfParser.verifyData && !parseLiteralMode) {
             // Verify that the end tag matches the start tag.
             ElementInfo elInfo;
 
-            if (null != _deferredElement) {
-                elInfo = _deferredElement;
+            if (null != deferredElement) {
+                elInfo = deferredElement;
             }
             else {
-                elInfo = _peekStack();
+                elInfo = peekStack();
             }
 
-            if (!qName.equals(elInfo.qName)) {
-                _rdfParser.sendFatalError("expected end tag </'" + elInfo.qName +
+            if (!qName.equals(elInfo.getqName())) {
+                rdfParser.sendFatalError("expected end tag </'" + elInfo.getqName() +
                     ">, " +
                     "found </" + qName + ">");
             }
         }
 
-        if (!_inRdfContext) {
-            _elInfoStack.pop();
-            _charBuf.setLength(0);
+        if (!inRdfContext) {
+            elInfoStack.pop();
+            charBuf.setLength(0);
             return;
         }
 
-        if (null == _deferredElement && 0 == _rdfContextStackHeight) {
+        if (null == deferredElement && 0 == rdfContextStackHeight) {
             // This end tag removes the element that signaled the start
             // of the RDF context (i.e. <rdf:RDF>) from the stack.
-            _inRdfContext = false;
+            inRdfContext = false;
 
-            _elInfoStack.pop();
-            _charBuf.setLength(0);
+            elInfoStack.pop();
+            charBuf.setLength(0);
             return;
         }
 
         // We're still in RDF context.
 
-        if (_parseLiteralMode) {
-            if (0 < _xmlLiteralStackHeight) {
-                _appendEndTag(qName);
-                _xmlLiteralStackHeight--;
+        if (parseLiteralMode) {
+            if (0 < xmlLiteralStackHeight) {
+                appendEndTag(qName);
+                xmlLiteralStackHeight--;
                 return;
             }
             else {
                 // This tag is no longer part of the XML literal
                 // and it ends the parseLiteral mode.
-                _parseLiteralMode = false;
+                parseLiteralMode = false;
 
                 // Insert any used namespace prefixes from the XML literal's
                 // context that are not defined in the XML literal itself.
-                _insertUsedContextPrefixes();
+                insertUsedContextPrefixes();
 
                 // Continue after this if-statement to process
                 // the end tag as a normal end tag
@@ -405,63 +410,63 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         }
 
         // Check for any deferred start elements
-        if (null != _deferredElement) {
+        if (null != deferredElement) {
             // Start element still deferred, this is an empty element
             try {
-                _rdfParser.setBaseURI(new URI(_deferredElement.baseURI));
+                rdfParser.setBaseURI(new URI(deferredElement.getBaseURI()));
             }
             catch (URISyntaxException ex) {
                 throw new SAXException("Bad URI", ex);
             }
-            _rdfParser.setXmlLang(_deferredElement.xmlLang);
+            rdfParser.setXmlLang(deferredElement.getXmlLang());
 
-            _rdfParser.emptyElement(_deferredElement.namespaceURI, _deferredElement.localName,
-                _deferredElement.qName, _deferredElement.atts);
+            rdfParser.emptyElement(deferredElement.getNamespaceURI(), deferredElement.getLocalName(),
+                deferredElement.getqName(), deferredElement.getAtts());
 
-            _deferredElement = null;
+            deferredElement = null;
         }
         else {
-            // Check if any character data has been collected in the _charBuf
-            boolean literalValue = 0 < _charBuf.toString().trim().length();
+            // Check if any character data has been collected in the charBuf
+            boolean literalValue = 0 < charBuf.toString().trim().length();
 
             if (literalValue) {
-                _rdfParser.text(_charBuf.toString());
+                rdfParser.text(charBuf.toString());
             }
 
-            _charBuf.setLength(0);
-            _elInfoStack.pop();
-            _rdfContextStackHeight--;
+            charBuf.setLength(0);
+            elInfoStack.pop();
+            rdfContextStackHeight--;
 
-            _rdfParser.endElement(namespaceURI, localName, qName);
+            rdfParser.endElement(namespaceURI, localName, qName);
         }
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
 
-        if (_inRdfContext) {
-            if (null != _deferredElement) {
-                _reportDeferredStartElement();
+        if (inRdfContext) {
+            if (null != deferredElement) {
+                reportDeferredStartElement();
             }
 
-            _th.characters(ch, start, length);
+            th.characters(ch, start, length);
 
-            if (_parseLiteralMode) {
+            if (parseLiteralMode) {
                 // Characters like '<', '>', and '&' must be escaped to
                 // prevent breaking the XML text.
-                _charBuf.append(_os.toString());
+                charBuf.append(os.toString());
             }
             else {
-                _charBuf.append(ch, start, length);
+                charBuf.append(ch, start, length);
             }
 
-            _os.reset();
+            os.reset();
         }
     }
 
     public void ignorableWhitespace(char[] ch, int start, int length) throws
         SAXException {
-        if (_parseLiteralMode) {
-            _charBuf.append(ch, start, length);
+        if (parseLiteralMode) {
+            charBuf.append(ch, start, length);
         }
     }
 
@@ -474,7 +479,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         // ignore
     }
 
-    private void _checkAndCopyAttributes(Attributes attributes,
+    private void checkAndCopyAttributes(Attributes attributes,
         ElementInfo elInfo) throws SAXException {
         Atts atts = new Atts(attributes.getLength());
 
@@ -488,23 +493,23 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             // xml:base).
             if (qName.startsWith("xml")) {
                 if ("xml:lang".equals(qName)) {
-                    elInfo.xmlLang = value;
+                    elInfo.setXmlLang(value);
                 }
                 else if ("xml:base".equals(qName)) {
-                    elInfo.baseURI = _createBaseURI(value);
+                    elInfo.setBaseURI(createBaseURI(value));
                 }
             }
             else {
                 String namespace = attributes.getURI(i);
                 String localName = attributes.getLocalName(i);
 
-                if (_rdfParser._verifyData) {
+                if (rdfParser.verifyData) {
                     if ("".equals(namespace)) {
-                        _rdfParser.sendError("unqualified attribute '" +
+                        rdfParser.sendError("unqualified attribute '" +
                             qName + "' not allowed");
                     }
                     else if (-1 == qName.indexOf(":")) {
-                        _rdfParser.sendWarning("unqualified attribute '" +
+                        rdfParser.sendWarning("unqualified attribute '" +
                             qName + "' not allowed");
                     }
                 }
@@ -514,20 +519,20 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             }
         }
 
-        elInfo.atts = atts;
+        elInfo.setAtts(atts);
     }
 
     public void setParseLiteralMode() {
-        _parseLiteralMode = true;
-        _xmlLiteralStackHeight = 0;
+        parseLiteralMode = true;
+        xmlLiteralStackHeight = 0;
 
         // All currently known namespace prefixes are
         // new for this XML literal.
-        _xmlLiteralPrefixes.clear();
-        _unknownPrefixesInXmlLiteral.clear();
+        xmlLiteralPrefixes.clear();
+        unknownPrefixesInXmlLiteral.clear();
     }
 
-    private String _createBaseURI(String uriString) throws SAXException {
+    private String createBaseURI(String uriString) throws SAXException {
         try {
             URI tmpURI = new URI(uriString);
             tmpURI.normalize();
@@ -538,74 +543,74 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         }
     }
 
-    private void _inheritXmlAttributes(ElementInfo elInfo) {
+    private void inheritXmlAttributes(ElementInfo elInfo) {
         // If BASE_URI has not been set, inherit it from the context.
-        if (null == elInfo.baseURI) {
-            ElementInfo parent = _peekStack();
+        if (null == elInfo.getBaseURI()) {
+            ElementInfo parent = peekStack();
             if (null == parent) {
-                elInfo.baseURI = _documentURI.toString();
+                elInfo.setBaseURI(documentURI.toString());
             }
             else {
-                elInfo.baseURI = parent.baseURI;
+                elInfo.setBaseURI(parent.getBaseURI());
             }
         }
 
         // If xml:lang attribute has not been set, inherit it from the context.
-        if (null == elInfo.xmlLang) {
-            ElementInfo parent = _peekStack();
+        if (null == elInfo.getXmlLang()) {
+            ElementInfo parent = peekStack();
             if (null == parent) {
-                elInfo.xmlLang = "";
+                elInfo.setXmlLang("");
             }
             else {
-                elInfo.xmlLang = parent.xmlLang;
+                elInfo.setXmlLang(parent.getXmlLang());
             }
         }
     }
 
     /**
-     * Appends a start tag to _charBuf. This method is used during the
+     * Appends a start tag to charBuf. This method is used during the
      * parsing of an XML Literal.
      **/
-    private void _appendStartTag(String qName, Attributes attributes)
+    private void appendStartTag(String qName, Attributes attributes)
         throws SAXException {
         // Write start of start tag
-        _charBuf.append("<" + qName);
+        charBuf.append("<" + qName);
 
         // Write any new namespace prefix definitions
-        Iterator<String> prefixes = _newNamespaceMappings.keySet().iterator();
+        Iterator<String> prefixes = newNamespaceMappings.keySet().iterator();
         while (prefixes.hasNext()) {
             String prefix = prefixes.next();
-            String namespace = _newNamespaceMappings.get(prefix);
-            _appendNamespaceDecl(_charBuf, prefix, namespace);
+            String namespace = newNamespaceMappings.get(prefix);
+            appendNamespaceDecl(charBuf, prefix, namespace);
         }
 
         // Write attributes
         int attCount = attributes.getLength();
         for (int i = 0; i < attCount; i++) {
-            _appendAttribute(_charBuf,
+            appendAttribute(charBuf,
                 attributes.getQName(i), attributes.getValue(i));
         }
 
         // Write end of start tag
-        _charBuf.append(">");
+        charBuf.append(">");
 
         // Check for any used prefixes that are not
         // defined in the XML literal itself
         int colonIdx = qName.indexOf(':');
         String prefix = 0 < colonIdx ? qName.substring(0, colonIdx) : "";
 
-        if (!_xmlLiteralPrefixes.contains(prefix) &&
-            !_unknownPrefixesInXmlLiteral.contains(prefix)) {
-            _unknownPrefixesInXmlLiteral.add(prefix);
+        if (!xmlLiteralPrefixes.contains(prefix) &&
+            !unknownPrefixesInXmlLiteral.contains(prefix)) {
+            unknownPrefixesInXmlLiteral.add(prefix);
         }
     }
 
     /**
-     * Appends an end tag to _charBuf. This method is used during the
+     * Appends an end tag to charBuf. This method is used during the
      * parsing of an XML Literal.
      **/
-    private void _appendEndTag(String qName) {
-        _charBuf.append("</" + qName + ">");
+    private void appendEndTag(String qName) {
+        charBuf.append("</" + qName + ">");
     }
 
     /**
@@ -613,37 +618,37 @@ class SAXFilter implements org.xml.sax.ContentHandler {
      * that are used in the XML Literal and that are not defined in the XML
      * Literal itself.
      **/
-    private void _insertUsedContextPrefixes() throws SAXException {
-        int unknownPrefixesCount = _unknownPrefixesInXmlLiteral.size();
+    private void insertUsedContextPrefixes() throws SAXException {
+        int unknownPrefixesCount = unknownPrefixesInXmlLiteral.size();
 
         if (0 < unknownPrefixesCount) {
             // Create a String with all needed context prefixes
             StringBuffer contextPrefixes = new StringBuffer(1024);
-            ElementInfo topElement = _peekStack();
+            ElementInfo topElement = peekStack();
 
             for (int i = 0; i < unknownPrefixesCount; i++) {
-                String prefix = _unknownPrefixesInXmlLiteral.get(i);
+                String prefix = unknownPrefixesInXmlLiteral.get(i);
                 String namespace = topElement.getNamespace(prefix);
                 if (null != namespace) {
-                    _appendNamespaceDecl(contextPrefixes, prefix, namespace);
+                    appendNamespaceDecl(contextPrefixes, prefix, namespace);
                 }
             }
 
             // Insert this String before the first '>' character
 
             // StringBuffer.indexOf(String) requires JDK1.4 or newer
-            //int endOfFirstStartTag = _charBuf.indexOf(">");
+            //int endOfFirstStartTag = charBuf.indexOf(">");
             int endOfFirstStartTag = 0;
-            while ('>' != _charBuf.charAt(endOfFirstStartTag)) {
+            while ('>' != charBuf.charAt(endOfFirstStartTag)) {
                 endOfFirstStartTag++;
             }
-            _charBuf.insert(endOfFirstStartTag, contextPrefixes.toString());
+            charBuf.insert(endOfFirstStartTag, contextPrefixes.toString());
         }
 
-        _unknownPrefixesInXmlLiteral.clear();
+        unknownPrefixesInXmlLiteral.clear();
     }
 
-    private void _appendNamespaceDecl(StringBuffer sb, String prefix,
+    private void appendNamespaceDecl(StringBuffer sb, String prefix,
         String namespace) throws SAXException {
         String attName = "xmlns";
 
@@ -651,10 +656,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             attName += ":" + prefix;
         }
 
-        _appendAttribute(sb, attName, namespace);
+        appendAttribute(sb, attName, namespace);
     }
 
-    private void _appendAttribute(StringBuffer sb, String name, String value)
+    private void appendAttribute(StringBuffer sb, String name, String value)
         throws SAXException {
         sb.append(" ");
         sb.append(name);
@@ -662,35 +667,35 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
         char[] c = new char[value.length()];
         value.getChars(0, c.length - 1, c, 0);
-        _th.setResult(new StreamResult(_os));
-        _th.characters(c, 0, c.length);
-        sb.append(_os.toString());
-        _os.reset();
+        th.setResult(new StreamResult(os));
+        th.characters(c, 0, c.length);
+        sb.append(os.toString());
+        os.reset();
 
         sb.append("\"");
     }
 
-    private ElementInfo _peekStack() {
+    private ElementInfo peekStack() {
         ElementInfo result = null;
 
-        if (!_elInfoStack.empty()) {
-            result = _elInfoStack.peek();
+        if (!elInfoStack.empty()) {
+            result = elInfoStack.peek();
         }
 
         return result;
     }
 
-    static class ElementInfo {
-        public String qName;
-        public String namespaceURI;
-        public String localName;
-        public Atts atts;
+    private static class ElementInfo {
+        private String qName;
+        private String namespaceURI;
+        private String localName;
+        private Atts atts;
 
-        public ElementInfo parent;
-        private Map<String, String> _namespaceMap;
+        private ElementInfo parent;
+        private Map<String, String> namespaceMap;
 
-        public String baseURI;
-        public String xmlLang;
+        private String baseURI;
+        private String xmlLang;
 
         ElementInfo(String newQName, String newNamespaceURI, String newLocalName) {
             this(null, newQName, newNamespaceURI, newLocalName);
@@ -698,33 +703,97 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
         ElementInfo(ElementInfo newParent, String newQName, String newNamespaceURI,
             String newLocalName) {
-            parent = newParent;
-            qName = newQName;
-            namespaceURI = newNamespaceURI;
-            localName = newLocalName;
+            setParent(newParent);
+            setqName(newQName);
+            setNamespaceURI(newNamespaceURI);
+            setLocalName(newLocalName);
         }
 
         public void setNamespaceMappings(Map<String, String> namespaceMappings) {
             if (namespaceMappings.isEmpty()) {
-                _namespaceMap = null;
+                setNamespaceMap(null);
             }
             else {
-                _namespaceMap = new HashMap<String, String>(namespaceMappings);
+                setNamespaceMap(new HashMap<String, String>(namespaceMappings));
             }
         }
 
         public String getNamespace(String prefix) {
             String result = null;
 
-            if (null != _namespaceMap) {
-                result = _namespaceMap.get(prefix);
+            if (null != getNamespaceMap()) {
+                result = getNamespaceMap().get(prefix);
             }
 
-            if (null == result && null != parent) {
-                result = parent.getNamespace(prefix);
+            if (null == result && null != getParent()) {
+                result = getParent().getNamespace(prefix);
             }
 
             return result;
+        }
+
+        public String getXmlLang() {
+            return xmlLang;
+        }
+
+        public void setXmlLang(String xmlLang) {
+            this.xmlLang = xmlLang;
+        }
+
+        public String getqName() {
+            return qName;
+        }
+
+        public void setqName(String qName) {
+            this.qName = qName;
+        }
+
+        public String getNamespaceURI() {
+            return namespaceURI;
+        }
+
+        public void setNamespaceURI(String namespaceURI) {
+            this.namespaceURI = namespaceURI;
+        }
+
+        public String getLocalName() {
+            return localName;
+        }
+
+        public void setLocalName(String localName) {
+            this.localName = localName;
+        }
+
+        public Atts getAtts() {
+            return atts;
+        }
+
+        public void setAtts(Atts atts) {
+            this.atts = atts;
+        }
+
+        public ElementInfo getParent() {
+            return parent;
+        }
+
+        public void setParent(ElementInfo parent) {
+            this.parent = parent;
+        }
+
+        public Map<String, String> getNamespaceMap() {
+            return namespaceMap;
+        }
+
+        public void setNamespaceMap(Map<String, String> namespaceMap) {
+            this.namespaceMap = namespaceMap;
+        }
+
+        public String getBaseURI() {
+            return baseURI;
+        }
+
+        public void setBaseURI(String baseURI) {
+            this.baseURI = baseURI;
         }
     }
 }

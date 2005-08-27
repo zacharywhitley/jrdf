@@ -58,10 +58,14 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.*;
+import org.jrdf.graph.AbstractTriple;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 
 /**
- * A trivial implementation of an RDF {@link Triple}.
+ * A trivial implementation of an RDF {@link org.jrdf.graph.Triple}.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  *
@@ -76,6 +80,7 @@ public class TripleImpl extends AbstractTriple {
      * deleted.
      */
     private static final long serialVersionUID = 7468341140195609635L;
+    private static final int TRIPLE = 3;
 
     /**
      * Constructor for this Triple, only to be used by the NodeFactory.
@@ -122,7 +127,7 @@ public class TripleImpl extends AbstractTriple {
         Long second, Long third) {
         Long[] nodes = new Long[]{first, second, third};
         subjectNode = (SubjectNode) factory.getNodeById(nodes[var]);
-        predicateNode = (PredicateNode) factory.getNodeById(nodes[(var + 1) % 3]);
-        objectNode = (ObjectNode) factory.getNodeById(nodes[(var + 2) % 3]);
+        predicateNode = (PredicateNode) factory.getNodeById(nodes[(var + 1) % TRIPLE]);
+        objectNode = (ObjectNode) factory.getNodeById(nodes[(var + 2) % TRIPLE]);
     }
 }

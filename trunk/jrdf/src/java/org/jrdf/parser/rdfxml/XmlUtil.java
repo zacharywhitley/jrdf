@@ -2,15 +2,15 @@
  *  Copyright (C) 2001-2004 Aduna
  *
  *  Contact:
- *  	Aduna
- *  	Prinses Julianaplein 14 b
- *  	3817 CS Amersfoort
- *  	The Netherlands
- *  	tel. +33 (0)33 465 99 87
- *  	fax. +33 (0)33 465 99 87
+ *  Aduna
+ *  Prinses Julianaplein 14 b
+ *  3817 CS Amersfoort
+ *  The Netherlands
+ *  tel. +33 (0)33 465 99 87
+ *  fax. +33 (0)33 465 99 87
  *
- *  	http://aduna.biz/
- *  	http://www.openrdf.org/
+ *  http://aduna.biz/
+ *  http://www.openrdf.org/
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -151,7 +151,7 @@ public class XmlUtil {
      * as specified at <a href="http://www.w3.org/TR/REC-xml-names/#NT-NCName">
      * http://www.w3.org/TR/REC-xml-names/#NT-NCName</a>.
      **/
-    public static final boolean isNCName(String name) {
+    public static boolean isNCName(String name) {
         int nameLength = name.length();
 
         if (0 == nameLength) {
@@ -177,7 +177,7 @@ public class XmlUtil {
         return false;
     }
 
-    public static final boolean isNCNameChar(char c) {
+    public static boolean isNCNameChar(char c) {
         return
             isAsciiBaseChar(c) ||
             isAsciiDigit(c) ||
@@ -189,20 +189,20 @@ public class XmlUtil {
             isExtender(c);
     }
 
-    public static final boolean isLetter(char c) {
+    public static boolean isLetter(char c) {
         return
             isAsciiBaseChar(c) ||
             isNonAsciiBaseChar(c) ||
             isIdeographic(c);
     }
 
-    private static final boolean isAsciiBaseChar(char c) {
+    private static boolean isAsciiBaseChar(char c) {
         return
             charInRange(c, 0x0041, 0x005A) ||
             charInRange(c, 0x0061, 0x007A);
     }
 
-    private static final boolean isNonAsciiBaseChar(char c) {
+    private static boolean isNonAsciiBaseChar(char c) {
         return
             charInRange(c, 0x00C0, 0x00D6) ||
             charInRange(c, 0x00D8, 0x00F6) ||
@@ -406,14 +406,14 @@ public class XmlUtil {
             charInRange(c, 0xAC00, 0xD7A3);
     }
 
-    public static final boolean isIdeographic(char c) {
+    public static boolean isIdeographic(char c) {
         return
             charInRange(c, 0x4E00, 0x9FA5) ||
             0x3007 == c ||
             charInRange(c, 0x3021, 0x3029);
     }
 
-    public static final boolean isCombiningChar(char c) {
+    public static boolean isCombiningChar(char c) {
         return
             charInRange(c, 0x0300, 0x0345) ||
             charInRange(c, 0x0360, 0x0361) ||
@@ -512,18 +512,18 @@ public class XmlUtil {
             0x309A == c;
     }
 
-    public static final boolean isDigit(char c) {
+    public static boolean isDigit(char c) {
         return
             isAsciiDigit(c) ||
             isNonAsciiDigit(c);
     }
 
-    private static final boolean isAsciiDigit(char c) {
+    private static boolean isAsciiDigit(char c) {
         return
             charInRange(c, 0x0030, 0x0039);
     }
 
-    private static final boolean isNonAsciiDigit(char c) {
+    private static boolean isNonAsciiDigit(char c) {
         return
             charInRange(c, 0x0660, 0x0669) ||
             charInRange(c, 0x06F0, 0x06F9) ||
@@ -541,7 +541,7 @@ public class XmlUtil {
             charInRange(c, 0x0F20, 0x0F29);
     }
 
-    public static final boolean isExtender(char c) {
+    public static boolean isExtender(char c) {
         return
             0x00B7 == c ||
             0x02D0 == c ||
@@ -556,7 +556,7 @@ public class XmlUtil {
             charInRange(c, 0x30FC, 0x30FE);
     }
 
-    private static final boolean charInRange(char c, int start, int end) {
+    private static boolean charInRange(char c, int start, int end) {
         return c >= start && c <= end;
     }
 }

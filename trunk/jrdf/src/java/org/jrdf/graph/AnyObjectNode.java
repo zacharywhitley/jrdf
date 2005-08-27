@@ -8,9 +8,12 @@ package org.jrdf.graph;
  * @version $Revision$
  */
 public final class AnyObjectNode implements ObjectNode {
-    private static final long serialVersionUID = 8654340032080018169L;
-
+    /**
+     * The any object node constant - represents an unconstrained object node.
+     */
     public static final AnyObjectNode ANY_OBJECT_NODE = new AnyObjectNode();
+
+    private static final long serialVersionUID = 8654340032080018169L;
 
     private AnyObjectNode() {
     }

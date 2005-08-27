@@ -1,7 +1,15 @@
 package org.jrdf.example;
 
-import org.jrdf.graph.*;
 import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
@@ -224,7 +232,7 @@ public class JrdfExample {
     /**
      * Returns an in-memory JRDF Graph implementation.
      *
-     * @throws GraphException
+     * @throws org.jrdf.graph.GraphException
      * @return Graph
      */
     private Graph getGraph() throws GraphException {
@@ -238,7 +246,7 @@ public class JrdfExample {
      * @param message String
      * @param graph Graph
      * @throws IllegalArgumentException
-     * @throws GraphElementFactoryException
+     * @throws org.jrdf.graph.GraphElementFactoryException
      * @throws GraphException
      */
     private void print(String message, Graph graph) throws

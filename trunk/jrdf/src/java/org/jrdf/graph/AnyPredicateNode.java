@@ -8,8 +8,12 @@ package org.jrdf.graph;
  * @version $Revision$
  */
 public final class AnyPredicateNode implements PredicateNode {
-    private static final long serialVersionUID = 1764088613140821732L;
+    /**
+     * The any predicate node constant - represents an unconstrained predicate node.
+     */
     public static final AnyPredicateNode ANY_PREDICATE_NODE = new AnyPredicateNode();
+
+    private static final long serialVersionUID = 1764088613140821732L;
 
     private AnyPredicateNode() {
     }

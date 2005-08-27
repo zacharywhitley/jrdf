@@ -9,7 +9,7 @@ import org.jrdf.graph.Node;
  *
  * @version $Revision$
  */
-public class FalseNode implements Node {
+public final class FalseNode implements Node {
 
     /**
      * The node which represents the boolean logic value "FALSE".

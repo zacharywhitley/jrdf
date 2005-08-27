@@ -254,10 +254,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
                         }
                     }
                     // Data type URIs are equal by their string values.
-                    else if (null != getDatatypeURI() && null !=
-                        tmpLiteral.getDatatypeURI() &&
-                        getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().
-                        toString())) {
+                    else if (equalByStringValue(tmpLiteral)) {
                         returnValue = true;
                     }
                 }
@@ -267,6 +264,12 @@ public abstract class AbstractLiteral implements Literal, Serializable {
             }
         }
         return returnValue;
+    }
+
+    private boolean equalByStringValue(Literal tmpLiteral) {
+        return (null != getDatatypeURI()) &&
+               (null != tmpLiteral.getDatatypeURI()) &&
+               (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
     }
 
     public int hashCode() {

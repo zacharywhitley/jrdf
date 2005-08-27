@@ -2,15 +2,15 @@
  *  Copyright (C) 2001-2004 Aduna
  *
  *  Contact:
- *  	Aduna
- *  	Prinses Julianaplein 14 b
- *  	3817 CS Amersfoort
- *  	The Netherlands
- *  	tel. +33 (0)33 465 99 87
- *  	fax. +33 (0)33 465 99 87
+ *  Aduna
+ *  Prinses Julianaplein 14 b
+ *  3817 CS Amersfoort
+ *  The Netherlands
+ *  tel. +33 (0)33 465 99 87
+ *  fax. +33 (0)33 465 99 87
  *
- *  	http://aduna.biz/
- *  	http://www.openrdf.org/
+ *  http://aduna.biz/
+ *  http://www.openrdf.org/
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -507,7 +507,7 @@ public class XmlDatatypeUtil {
         StringBuffer result = new StringBuffer(decLength + 2);
 
         if (0 == decLength) {
-            _throwIAE(errMsg);
+            throwIAE(errMsg);
         }
 
         boolean isZeroPointZero = true;
@@ -523,7 +523,7 @@ public class XmlDatatypeUtil {
         }
 
         if (idx == decLength) {
-            _throwIAE(errMsg);
+            throwIAE(errMsg);
         }
 
         // skip any leading zeros
@@ -549,8 +549,8 @@ public class XmlDatatypeUtil {
                 if ('.' == c) {
                     break;
                 }
-                if (!_isDigit(c)) {
-                    _throwIAE(errMsg);
+                if (!isDigit(c)) {
+                    throwIAE(errMsg);
                 }
                 result.append(c);
                 idx++;
@@ -582,8 +582,8 @@ public class XmlDatatypeUtil {
 
                 while (idx <= lastIdx) {
                     char c = decimal.charAt(idx);
-                    if (!_isDigit(c)) {
-                        _throwIAE(errMsg);
+                    if (!isDigit(c)) {
+                        throwIAE(errMsg);
                     }
                     result.append(c);
                     idx++;
@@ -611,42 +611,42 @@ public class XmlDatatypeUtil {
      * is not a legal integer.
      **/
     public static String normalizeInteger(String value) {
-        return _normalizeIntegerValue(value, null, null);
+        return normalizeIntegerValue(value, null, null);
     }
 
     /**
      * Normalizes an xsd:negativeInteger.
      **/
     public static String normalizeNegativeInteger(String value) {
-        return _normalizeIntegerValue(value, null, "-1");
+        return normalizeIntegerValue(value, null, "-1");
     }
 
     /**
      * Normalizes an xsd:nonPositiveInteger.
      **/
     public static String normalizeNonPositiveInteger(String value) {
-        return _normalizeIntegerValue(value, null, "0");
+        return normalizeIntegerValue(value, null, "0");
     }
 
     /**
      * Normalizes an xsd:nonNegativeInteger.
      **/
     public static String normalizeNonNegativeInteger(String value) {
-        return _normalizeIntegerValue(value, "0", null);
+        return normalizeIntegerValue(value, "0", null);
     }
 
     /**
      * Normalizes an xsd:positiveInteger.
      **/
     public static String normalizePositiveInteger(String value) {
-        return _normalizeIntegerValue(value, "1", null);
+        return normalizeIntegerValue(value, "1", null);
     }
 
     /**
      * Normalizes an xsd:long.
      **/
     public static String normalizeLong(String value) {
-        return _normalizeIntegerValue(value, "-9223372036854775808",
+        return normalizeIntegerValue(value, "-9223372036854775808",
             "9223372036854775807");
     }
 
@@ -654,62 +654,62 @@ public class XmlDatatypeUtil {
      * Normalizes an xsd:int.
      **/
     public static String normalizeInt(String value) {
-        return _normalizeIntegerValue(value, "-2147483648", "2147483647");
+        return normalizeIntegerValue(value, "-2147483648", "2147483647");
     }
 
     /**
      * Normalizes an xsd:short.
      **/
     public static String normalizeShort(String value) {
-        return _normalizeIntegerValue(value, "-32768", "32767");
+        return normalizeIntegerValue(value, "-32768", "32767");
     }
 
     /**
      * Normalizes an xsd:byte.
      **/
     public static String normalizeByte(String value) {
-        return _normalizeIntegerValue(value, "-128", "127");
+        return normalizeIntegerValue(value, "-128", "127");
     }
 
     /**
      * Normalizes an xsd:unsignedLong.
      **/
     public static String normalizeUnsignedLong(String value) {
-        return _normalizeIntegerValue(value, "0", "18446744073709551615");
+        return normalizeIntegerValue(value, "0", "18446744073709551615");
     }
 
     /**
      * Normalizes an xsd:unsignedInt.
      **/
     public static String normalizeUnsignedInt(String value) {
-        return _normalizeIntegerValue(value, "0", "4294967295");
+        return normalizeIntegerValue(value, "0", "4294967295");
     }
 
     /**
      * Normalizes an xsd:unsignedShort.
      **/
     public static String normalizeUnsignedShort(String value) {
-        return _normalizeIntegerValue(value, "0", "65535");
+        return normalizeIntegerValue(value, "0", "65535");
     }
 
     /**
      * Normalizes an xsd:unsignedByte.
      **/
     public static String normalizeUnsignedByte(String value) {
-        return _normalizeIntegerValue(value, "0", "255");
+        return normalizeIntegerValue(value, "0", "255");
     }
 
     /**
      * Normalizes an integer to its canonical representation and
      * checks that the value is in the range [minValue, maxValue].
      **/
-    private static String _normalizeIntegerValue(String integer, String minValue, String maxValue) {
+    private static String normalizeIntegerValue(String integer, String minValue, String maxValue) {
         String errMsg = "Not a legal integer: " + integer;
 
         int intLength = integer.length();
 
         if (0 == intLength) {
-            _throwIAE(errMsg);
+            throwIAE(errMsg);
         }
 
         int idx = 0;
@@ -725,7 +725,7 @@ public class XmlDatatypeUtil {
         }
 
         if (idx == intLength) {
-            _throwIAE(errMsg);
+            throwIAE(errMsg);
         }
 
         if ('0' == integer.charAt(idx) && idx < intLength - 1) {
@@ -741,8 +741,8 @@ public class XmlDatatypeUtil {
 
         // Check that all characters in 'norm' are digits
         for (int i = 0; i < norm.length(); i++) {
-            if (!_isDigit(norm.charAt(i))) {
-                _throwIAE(errMsg);
+            if (!isDigit(norm.charAt(i))) {
+                throwIAE(errMsg);
             }
         }
 
@@ -753,12 +753,12 @@ public class XmlDatatypeUtil {
         // Check lower and upper bounds, if applicable
         if (null != minValue) {
             if (0 > compareCanonicalIntegers(norm, minValue)) {
-                _throwIAE("Value smaller than minimum value");
+                throwIAE("Value smaller than minimum value");
             }
         }
         if (null != maxValue) {
             if (0 < compareCanonicalIntegers(norm, maxValue)) {
-                _throwIAE("Value larger than maximum value");
+                throwIAE("Value larger than maximum value");
             }
         }
 
@@ -774,7 +774,7 @@ public class XmlDatatypeUtil {
      * is not a legal float.
      **/
     public static String normalizeFloat(String value) {
-        return _normalizeFPNumber(value,
+        return normalizeFPNumber(value,
             "-16777215.0", "16777215.0", "-149", "104");
     }
 
@@ -787,7 +787,7 @@ public class XmlDatatypeUtil {
      * is not a legal double.
      **/
     public static String normalizeDouble(String value) {
-        return _normalizeFPNumber(value,
+        return normalizeFPNumber(value,
             "-9007199254740991.0", "9007199254740991.0", "-1075", "970");
     }
 
@@ -801,7 +801,7 @@ public class XmlDatatypeUtil {
      * is not a legal floating point number.
      **/
     public static String normalizeFPNumber(String value) {
-        return _normalizeFPNumber(value, null, null, null, null);
+        return normalizeFPNumber(value, null, null, null, null);
     }
 
     /**
@@ -821,7 +821,7 @@ public class XmlDatatypeUtil {
      * @throws IllegalArgumentException If the supplied value
      * is not a legal floating point number.
      **/
-    private static String _normalizeFPNumber(String value,
+    private static String normalizeFPNumber(String value,
         String minMantissa, String maxMantissa,
         String minExponent, String maxExponent) {
         // handle special values
@@ -850,22 +850,22 @@ public class XmlDatatypeUtil {
         // Check lower and upper bounds, if applicable
         if (null != minMantissa) {
             if (0 > compareCanonicalDecimals(mantissa, minMantissa)) {
-                _throwIAE("Mantissa smaller than minimum value (" + minMantissa + ")");
+                throwIAE("Mantissa smaller than minimum value (" + minMantissa + ")");
             }
         }
         if (null != maxMantissa) {
             if (0 < compareCanonicalDecimals(mantissa, maxMantissa)) {
-                _throwIAE("Mantissa larger than maximum value (" + maxMantissa + ")");
+                throwIAE("Mantissa larger than maximum value (" + maxMantissa + ")");
             }
         }
         if (null != minExponent) {
             if (0 > compareCanonicalIntegers(exponent, minExponent)) {
-                _throwIAE("Exponent smaller than minimum value (" + minExponent + ")");
+                throwIAE("Exponent smaller than minimum value (" + minExponent + ")");
             }
         }
         if (null != maxExponent) {
             if (0 < compareCanonicalIntegers(exponent, maxExponent)) {
-                _throwIAE("Exponent larger than maximum value (" + maxExponent + ")");
+                throwIAE("Exponent larger than maximum value (" + maxExponent + ")");
             }
         }
 
@@ -1333,7 +1333,7 @@ public class XmlDatatypeUtil {
                 return 0;
             }
             else {
-                _throwIAE("NaN cannot be compared to other floats");
+                throwIAE("NaN cannot be compared to other floats");
             }
         }
 
@@ -1387,7 +1387,7 @@ public class XmlDatatypeUtil {
         return result;
     }
 
-    private static final boolean _isDigit(char c) {
+    private static boolean isDigit(char c) {
         return '0' <= c && '9' >= c;
     }
 
@@ -1395,7 +1395,7 @@ public class XmlDatatypeUtil {
      * Throws an IllegalArgumentException that contains the supplied
      * message.
      **/
-    private static final void _throwIAE(String msg) {
+    private static void throwIAE(String msg) {
         throw new IllegalArgumentException(msg);
     }
 
