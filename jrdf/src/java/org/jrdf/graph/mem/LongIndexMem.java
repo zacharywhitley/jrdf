@@ -3,7 +3,11 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.GraphException;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * An memory version of ${@link LongIndex}.

@@ -58,7 +58,16 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.*;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
@@ -69,6 +78,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
@@ -128,6 +138,7 @@ public class GraphImpl implements Graph, Serializable {
     private static final String CANT_REMOVE_ANY_NODE_MESSAGE = "Cannot remove any node values into the graph";
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
+    private static final int TRIPLE = 3;
 
     /**
      * Default constructor.
@@ -540,13 +551,13 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private void checkForAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object, String message) {
-        if (ANY_SUBJECT_NODE == subject || ANY_PREDICATE_NODE == predicate || ANY_OBJECT_NODE == object ) {
+        if (ANY_SUBJECT_NODE == subject || ANY_PREDICATE_NODE == predicate || ANY_OBJECT_NODE == object) {
             throw new IllegalArgumentException(message);
         }
     }
 
     private void checkForNulls(SubjectNode subject, PredicateNode predicate, ObjectNode object, String message) {
-        if (null == subject || null == predicate || null == object ) {
+        if (null == subject || null == predicate || null == object) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -563,7 +574,7 @@ public class GraphImpl implements Graph, Serializable {
     private Long[] localize(Node first, Node second, Node third) throws
         GraphException {
 
-        Long[] localValues = new Long[3];
+        Long[] localValues = new Long[TRIPLE];
 
         // TODO AN See if we can remove these guard clauses now that we throw an Illegalargumentexception if they
         // are invalid first.
@@ -707,7 +718,7 @@ public class GraphImpl implements Graph, Serializable {
         catch (GraphException e) {
             removeFrom120(first, second, third);
             throw e;
-        }                                    
+        }
     }
 
     void addTo201(Long first, Long second, Long third)

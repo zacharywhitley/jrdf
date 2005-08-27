@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <!-- Easy Fixes -->
+    <suppress checks="MemberName" files="ConstraintTriple.java"/>    
+    <suppress checks="MemberName" files="DefaultAnswer.java"/>
+    <suppress checks="MemberName" files="DefaultSparqlParser.java"/>
+    <suppress checks="MemberName" files="DefaultSparqlAnalyser.java"/>
+    <suppress checks="MemberName" files="DefaultSparqlConnection.java"/>
+    <suppress checks="MemberName" files="DefaultQueryExecutor.java"/>
+    <suppress checks="MemberName" files="DefaultQuery.java"/>
+    <suppress checks="MemberName" files="DefaultVariable.java"/>
+    <suppress checks="MagicNumber" files="EscapeUtil.java"/>    
+    <suppress checks="MagicNumber" files="ConstraintTriple.java"/>    
+
+    <!-- More Complicated Ones -->
+    <suppress checks="CyclomaticComplexity" files="EscapeUtil.java"/>
+    <suppress checks="CyclomaticComplexity" files="GraphImpl.java"/>
+    <suppress checks="CyclomaticComplexity" files="AbstractLiteral.java"/>
+    <suppress checks="EmptyBlock" files="AbstractLiteral.java"/>
+    <suppress checks="EmptyBlock" files="AbstractURIReference.java"/>
+    <suppress checks="EqualsHashCode" files="AlternativeImpl.java"/>
+    <suppress checks="EqualsHashCode" files="BagImpl.java"/>
+
+    <!-- RDF/XML Parser -->
+    <suppress checks="CyclomaticComplexity" files="XmlDatatypeUtil.java"/>
+    <suppress checks="CyclomaticComplexity" files="XmlUtil.java"/>
+    <suppress checks="CyclomaticComplexity" files="RdfXmlParser.java"/>
+    <suppress checks="CyclomaticComplexity" files="SAXFilter.java"/>
+    <suppress checks="EmptyBlock" files="RdfXmlParser.java"/>
+    <suppress checks="JavadocStyle" files="XmlSchema.java"/>
+    <suppress checks="MagicNumber" files="Atts.java"/>
+    <suppress checks="MagicNumber" files="SAXFilter.java"/>
+    <suppress checks="MagicNumber" files="XmlDatatypeUtil.java"/>
+    <suppress checks="MagicNumber" files="XmlUtil.java"/>
+    <suppress checks="MemberName" files="RdfXmlParser.java"/>
+    <suppress checks="MemberName" files="SAXFilter.java"/>
+    <suppress checks="MethodLength" files="XmlUtil.java"/>
+</suppressions>

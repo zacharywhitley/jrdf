@@ -2,15 +2,15 @@
  *  Copyright (C) 2001-2004 Aduna
  *
  *  Contact:
- *  	Aduna
- *  	Prinses Julianaplein 14 b
- *  	3817 CS Amersfoort
- *  	The Netherlands
- *  	tel. +33 (0)33 465 99 87
- *  	fax. +33 (0)33 465 99 87
+ *  Aduna
+ *  Prinses Julianaplein 14 b
+ *  3817 CS Amersfoort
+ *  The Netherlands
+ *  tel. +33 (0)33 465 99 87
+ *  fax. +33 (0)33 465 99 87
  *
- *  	http://aduna.biz/
- *  	http://www.openrdf.org/
+ *  http://aduna.biz/
+ *  http://www.openrdf.org/
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -40,11 +40,11 @@ public class ParseException extends Exception {
 
     private static final long serialVersionUID = -1049335626292093759L;
 
-    private int _lineNo;
+    private int lineNo;
 
-    private int _columnNo;
+    private int columnNo;
 
-    private Exception _source;
+    private Exception source;
 
     /**
      * Creates a new ParseException.
@@ -55,8 +55,8 @@ public class ParseException extends Exception {
      **/
     public ParseException(String msg, int lineNo, int columnNo) {
         super(msg);
-        _lineNo = lineNo;
-        _columnNo = columnNo;
+        this.lineNo = lineNo;
+        this.columnNo = columnNo;
     }
 
     /**
@@ -69,9 +69,9 @@ public class ParseException extends Exception {
      **/
     public ParseException(String msg, Exception source, int lineNo, int columnNo) {
         super(msg);
-        _source = source;
-        _lineNo = lineNo;
-        _columnNo = columnNo;
+        this.source = source;
+        this.lineNo = lineNo;
+        this.columnNo = columnNo;
     }
 
     /**
@@ -85,9 +85,9 @@ public class ParseException extends Exception {
      **/
     public ParseException(Exception source, int lineNo, int columnNo) {
         super(source.getMessage());
-        _source = source;
-        _lineNo = lineNo;
-        _columnNo = columnNo;
+        this.source = source;
+        this.lineNo = lineNo;
+        this.columnNo = columnNo;
     }
 
     public void printStackTrace() {
@@ -97,18 +97,18 @@ public class ParseException extends Exception {
     public void printStackTrace(PrintStream ps) {
         super.printStackTrace(ps);
 
-        if (null != _source) {
+        if (null != source) {
             ps.println("Source is:");
-            _source.printStackTrace(ps);
+            source.printStackTrace(ps);
         }
     }
 
     public void printStackTrace(PrintWriter pw) {
         super.printStackTrace(pw);
 
-        if (null != _source) {
+        if (null != source) {
             pw.println("Source is:");
-            _source.printStackTrace(pw);
+            source.printStackTrace(pw);
         }
     }
 
@@ -118,7 +118,7 @@ public class ParseException extends Exception {
      * or applicable.
      **/
     public int getLineNumber() {
-        return _lineNo;
+        return lineNo;
     }
 
     /**
@@ -127,6 +127,6 @@ public class ParseException extends Exception {
      * or applicable.
      **/
     public int getColumnNumber() {
-        return _columnNo;
+        return columnNo;
     }
 }

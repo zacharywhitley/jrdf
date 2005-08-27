@@ -62,8 +62,8 @@ import java.io.Serializable;
 
 /**
  * RDF Triple. An RDF triple as defined in "Resource Description Framework (RDF):
- * Concepts and Abstract Syntax"
- * <a href="http://www.w3c.org/TR/rdf-concepts/#section-triples"/>6.1 RDF Triples</a>.
+ * Concepts and Abstract Syntax
+ * <a href="http://www.w3c.org/TR/rdf-concepts/#section-triples">6.1 RDF Triples</a>.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman

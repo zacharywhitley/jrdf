@@ -111,7 +111,7 @@ public final class GraphIterator implements ClosableIterator<Triple> {
     private GraphHandler handler;
 
     /** True if next has been called */
-    private boolean nextCalled = false;
+    private boolean nextCalled;
 
     /**
      * Constructor.  Sets up the internal iterators.

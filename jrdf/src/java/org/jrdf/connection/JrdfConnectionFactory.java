@@ -24,10 +24,10 @@ public final class JrdfConnectionFactory {
 
     /**
      * Returns a connection to through which to send SPARQL queries.
-     * <p/>
-     * Note. A new connection is returned for each call, they are not pooled and are not thread safe. Clients should ensure
-     * that they call close on the connection once it is no longer required, the system will not clean the connection up
-     * automatically.
+     * <p>
+     * Note. A new connection is returned for each call, they are not pooled and are not thread safe. Clients should
+     * ensure that they call close on the connection once it is no longer required, the system will not clean the
+     * connection up automatically.
      * </p>
      *
      * @param graph The graph to query.

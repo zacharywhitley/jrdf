@@ -20,7 +20,8 @@ public interface JrdfConnection {
 
     /**
      * Closes the connection to the graph.
-     * <p>Calling this method will close the underlying {@link org.jrdf.graph.Graph}, making it unusable for future use.</p>
+     * <p>Calling this method will close the underlying {@link org.jrdf.graph.Graph}, making it unusable for future
+     * use.</p>
      */
     void close();
 }

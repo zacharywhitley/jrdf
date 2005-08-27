@@ -17,6 +17,7 @@ import java.util.Set;
 public abstract class AbstractGraphHandler implements GraphHandler {
 
     protected GraphImpl graph;
+    private static final int STATEMENT_OFFSET = 5;
 
     /**
      * As 012, 120 and 201 are symmetrical this can be used to reconstruct either
@@ -66,7 +67,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
         while (iterator.hasNext()) {
             Map.Entry<Long, Map<Long, Set<Long>>> subjectEntry = iterator.next();
             Long subject = subjectEntry.getKey();
-            int sWidth = subject.toString().length() + 5;
+            int sWidth = subject.toString().length() + STATEMENT_OFFSET;
             out.print(subject.toString() + " --> ");
 
             Map<Long, Set<Long>> secondIndex = subjectEntry.getValue();
@@ -81,7 +82,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
             while (predIterator.hasNext()) {
                 Map.Entry<Long, Set<Long>> predicateEntry = predIterator.next();
                 Long predicate = predicateEntry.getKey();
-                int pWidth = predicate.toString().length() + 5;
+                int pWidth = predicate.toString().length() + STATEMENT_OFFSET;
                 if (!firstPredicate) {
                     StringBuffer space = new StringBuffer(sWidth);
                     space.setLength(sWidth);

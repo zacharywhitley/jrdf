@@ -2,15 +2,15 @@
  *  Copyright (C) 2001-2004 Aduna
  *
  *  Contact:
- *  	Aduna
- *  	Prinses Julianaplein 14 b
- *  	3817 CS Amersfoort
- *  	The Netherlands
- *  	tel. +33 (0)33 465 99 87
- *  	fax. +33 (0)33 465 99 87
+ *  Aduna
+ *  Prinses Julianaplein 14 b
+ *  3817 CS Amersfoort
+ *  The Netherlands
+ *  tel. +33 (0)33 465 99 87
+ *  fax. +33 (0)33 465 99 87
  *
- *  	http://aduna.biz/
- *  	http://www.openrdf.org/
+ *  http://aduna.biz/
+ *  http://www.openrdf.org/
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -40,8 +40,8 @@ class Atts {
 
     /**
      * List containing Att objects.
-     **/
-    private List<Att> _attributes;
+     */
+    private List<Att> attributes;
 
     /**
      * Creates a new <tt>Atts</tt> object.
@@ -56,14 +56,14 @@ class Atts {
      * @param size The initial size of the array for storing attributes.
      **/
     Atts(int size) {
-        _attributes = new ArrayList<Att>(size);
+        attributes = new ArrayList<Att>(size);
     }
 
     /**
      * Adds an attribute.
      **/
     public void addAtt(Att att) {
-        _attributes.add(att);
+        attributes.add(att);
     }
 
     /**
@@ -71,7 +71,7 @@ class Atts {
      * @return an Iterator over Att objects.
      **/
     public Iterator<Att> iterator() {
-        return _attributes.iterator();
+        return attributes.iterator();
     }
 
     /**
@@ -82,8 +82,8 @@ class Atts {
      * <tt>null</tt> if no such attribute could be found.
      **/
     public Att getAtt(String qName) {
-        for (int i = 0; i < _attributes.size(); i++) {
-            Att att = _attributes.get(i);
+        for (int i = 0; i < attributes.size(); i++) {
+            Att att = attributes.get(i);
 
             if (att.getQName().equals(qName)) {
                 return att;
@@ -102,8 +102,8 @@ class Atts {
      * name, or <tt>null</tt> if no such attribute could be found.
      **/
     public Att getAtt(String namespace, String localName) {
-        for (int i = 0; i < _attributes.size(); i++) {
-            Att att = _attributes.get(i);
+        for (int i = 0; i < attributes.size(); i++) {
+            Att att = attributes.get(i);
 
             if (att.getLocalName().equals(localName) &&
                 att.getNamespace().equals(namespace)) {
@@ -122,11 +122,11 @@ class Atts {
      * with the specified QName could be found.
      **/
     public Att removeAtt(String qName) {
-        for (int i = 0; i < _attributes.size(); i++) {
-            Att att = _attributes.get(i);
+        for (int i = 0; i < attributes.size(); i++) {
+            Att att = attributes.get(i);
 
             if (att.getQName().equals(qName)) {
-                _attributes.remove(i);
+                attributes.remove(i);
                 return att;
             }
         }
@@ -144,12 +144,12 @@ class Atts {
      * with the specified namespace and local name could be found.
      **/
     public Att removeAtt(String namespace, String localName) {
-        for (int i = 0; i < _attributes.size(); i++) {
-            Att att = _attributes.get(i);
+        for (int i = 0; i < attributes.size(); i++) {
+            Att att = attributes.get(i);
 
             if (att.getLocalName().equals(localName) &&
                 att.getNamespace().equals(namespace)) {
-                _attributes.remove(i);
+                attributes.remove(i);
                 return att;
             }
         }
@@ -161,7 +161,7 @@ class Atts {
      * Returns the number of attributes contained in this object.
      **/
     public int size() {
-        return _attributes.size();
+        return attributes.size();
     }
 
     /**
@@ -170,8 +170,8 @@ class Atts {
     public String toString() {
         StringBuffer result = new StringBuffer();
         result.append("Atts[");
-        for (int i = 0; i < _attributes.size(); i++) {
-            Att att = (Att) _attributes.get(i);
+        for (int i = 0; i < attributes.size(); i++) {
+            Att att = (Att) attributes.get(i);
             result.append(att.getQName());
             result.append("=");
             result.append(att.getValue());

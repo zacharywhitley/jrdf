@@ -2,15 +2,15 @@
  *  Copyright (C) 2001-2004 Aduna
  *
  *  Contact:
- *  	Aduna
- *  	Prinses Julianaplein 14 b
- *  	3817 CS Amersfoort
- *  	The Netherlands
- *  	tel. +33 (0)33 465 99 87
- *  	fax. +33 (0)33 465 99 87
+ *  Aduna
+ *  Prinses Julianaplein 14 b
+ *  3817 CS Amersfoort
+ *  The Netherlands
+ *  tel. +33 (0)33 465 99 87
+ *  fax. +33 (0)33 465 99 87
  *
- *  	http://aduna.biz/
- *  	http://www.openrdf.org/
+ *  http://aduna.biz/
+ *  http://www.openrdf.org/
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -34,35 +34,35 @@ package org.jrdf.parser.rdfxml;
  **/
 class Att {
 
-    private String _namespace;
-    private String _localName;
-    private String _qName;
-    private String _value;
+    private String namespace;
+    private String localName;
+    private String qName;
+    private String value;
 
     Att(String namespace, String localName, String qName, String value) {
-        _namespace = namespace;
-        _localName = localName;
-        _qName = qName;
-        _value = value;
+        this.namespace = namespace;
+        this.localName = localName;
+        this.qName = qName;
+        this.value = value;
     }
 
     public String getNamespace() {
-        return _namespace;
+        return namespace;
     }
 
     public String getLocalName() {
-        return _localName;
+        return localName;
     }
 
     public String getURI() {
-        return _namespace + _localName;
+        return namespace + localName;
     }
 
     public String getQName() {
-        return _qName;
+        return qName;
     }
 
     public String getValue() {
-        return _value;
+        return value;
     }
 }

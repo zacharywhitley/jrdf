@@ -151,8 +151,8 @@ public class AbstractTriple implements Triple, Serializable {
     }
 
     private boolean determineEqualityFromFields(Triple ref) {
-        return nodesEqual(subjectNode, ref.getSubject()) && nodesEqual(predicateNode, ref.getPredicate())
-            && nodesEqual(objectNode, ref.getObject());
+        return nodesEqual(subjectNode, ref.getSubject()) && nodesEqual(predicateNode, ref.getPredicate()) &&
+            nodesEqual(objectNode, ref.getObject());
     }
 
     private boolean nodesEqual(Node node1, Node node2) {

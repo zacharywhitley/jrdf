@@ -70,7 +70,7 @@ public interface Variable {
     /**
      * The list of all possible variables, i.e. wildcard projection.
      */
-    final List<? extends Variable> ALL_VARIABLES = Collections.emptyList();
+    List<? extends Variable> ALL_VARIABLES = Collections.emptyList();
 
     /**
      * Returns the name of the variable.
