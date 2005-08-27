@@ -58,7 +58,6 @@
 
 package org.jrdf.sparql;
 
-import java.net.URI;
 import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Answer;
@@ -66,6 +65,8 @@ import org.jrdf.query.DefaultQueryExecutor;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.net.URI;
 
 
 /**
@@ -114,9 +115,12 @@ public final class DefaultSparqlConnection implements SparqlConnection {
      * @throws Throwable An unknown error occurs, possibly in object finalisation.
      */
     protected void finalize() throws Throwable {
-        super.finalize();
         try {
             close();
-        } catch (Throwable ignored) { }
+        }
+        finally {
+            // FIXME: See http://www.janeg.ca/scjp/gc/finalize.html
+            super.finalize();
+        }
     }
 }

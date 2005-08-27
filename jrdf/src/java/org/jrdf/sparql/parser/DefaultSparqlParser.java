@@ -58,19 +58,20 @@
 
 package org.jrdf.sparql.parser;
 
-import java.io.PushbackReader;
-import java.io.StringReader;
-import java.io.IOException;
-import org.jrdf.query.Query;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.util.param.ParameterUtil;
-import org.jrdf.sparql.parser.parser.Parser;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.query.Query;
+import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
+import org.jrdf.sparql.analysis.SparqlAnalyser;
 import org.jrdf.sparql.parser.lexer.Lexer;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.Start;
-import org.jrdf.sparql.analysis.SparqlAnalyser;
-import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
+import org.jrdf.sparql.parser.parser.Parser;
+import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.util.param.ParameterUtil;
+
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.io.StringReader;
 
 /**
  * Default implementation of a {@link SparqlParser}.
@@ -102,11 +103,14 @@ final class DefaultSparqlParser implements SparqlParser {
     private Start parseQuerySyntax(Parser parser) throws InvalidQuerySyntaxException {
         try {
             return parser.parse();
-        } catch (ParserException e) {
+        }
+        catch (ParserException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
-        } catch (LexerException e) {
+        }
+        catch (LexerException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
         }
     }

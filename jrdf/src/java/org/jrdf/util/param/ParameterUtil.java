@@ -64,16 +64,26 @@ package org.jrdf.util.param;
  * @version $Revision$
  */
 public final class ParameterUtil {
+    /**
+     * Create a null checker.
+     */
     private static final ParameterChecker NULL_CHECKER = new NullChecker();
+
+    /**
+     * Create a empty string checker.
+     */
     private static final ParameterChecker EMPTY_STRING_CHECKER = new EmtpyStringChecker();
 
+    /**
+     * This is a collection of static classes - cannot construct.
+     */
     private ParameterUtil() { }
 
     /**
      * Checks if <var>param</var> is <code>null</code> and throws an exception if it is.
      * @param name The name of the parameter to check.
      * @param param The parameter to check.
-     * @throws IllegalArgumentException If <car>param</var> is <code>null</code>.
+     * @throws IllegalArgumentException If <var>param</var> is <code>null</code>.
      */
     public static void checkNotNull(String name, Object param) throws IllegalArgumentException {
         if (!NULL_CHECKER.paramAllowed(param)) {
@@ -85,7 +95,7 @@ public final class ParameterUtil {
      * Checks if <var>param</var> is <code>null</code> or the empty string and throws an exception if it is.
      * @param name The name of the parameter to check.
      * @param param The parameter to check.
-     * @throws IllegalArgumentException If <car>param</var> is <code>null</code> or the empty string.
+     * @throws IllegalArgumentException If <var>param</var> is <code>null</code> or the empty string.
      */
     public static void checkNotEmptyString(String name, String param) throws IllegalArgumentException {
         checkNotNull(name, param);
