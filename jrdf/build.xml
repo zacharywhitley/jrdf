@@ -32,7 +32,7 @@
         </sequential>
     </macrodef>
 
-    <target name="compile" depends="gen-src">
+    <target name="compile" depends="checkstyle, gen-src">
         <compile.macro src.dir="${gen.src.dir}" classpath.ref="gen.class.path" output.dir="${prod.classes.dir}"
                 code.path="gen.code.path" code.pattern="production.code.pattern"
                 compiler.args="-Xlint:-unchecked,-serial"/>
@@ -42,13 +42,13 @@
                 code.path="test.code.path" code.pattern="test.code.pattern"/>
     </target>
 
-    <target name="checkstyle" depends="compile">
+    <target name="checkstyle">
       <checkstyle config="conf/checkstyle.xml">
         <fileset dir="${prod.src.dir}"/>
       </checkstyle>
     </target>
 
-    <target name="dist" depends="-copy-sablecc-resources">
+    <target name="dist" depends="compile,-copy-sablecc-resources">
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${project.jar}">
             <fileset dir="${prod.classes.dir}"/>
