@@ -3,7 +3,7 @@ package org.jrdf.query.relation.operation;
 
 /**
  * Combines two relations attributes if they have common tuple values.  The
- * same as AND in Algebra A.  
+ * same as AND in Algebra A.
  *
  * The general algorithm is:
  * 1. Find all matching attributes on two relations.

@@ -89,7 +89,8 @@ public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements Sp
      * {@inheritDoc}
      */
     public Query getQuery() {
-        // FIXME TJA: Breadcrumb - This will not work if the same analyser is used to parse two queries. May need to use in/outASelectClause.
+        // FIXME TJA: Breadcrumb - This will not work if the same analyser is used to parse two queries. May need to
+        // use in/outASelectClause.
         if (expressionIsInitialised()) {
             query = new DefaultQuery(variables, expression);
         }

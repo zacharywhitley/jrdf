@@ -74,7 +74,7 @@ public interface SparqlAnalyser extends Analysis {
     /**
      * Indicates that this analyser has not processed a query yet.
      */
-    static final Query NO_QUERY = new NoQuery();
+    Query NO_QUERY = new NoQuery();
 
     /**
      * Returns the query processed by this analyser.
@@ -82,7 +82,7 @@ public interface SparqlAnalyser extends Analysis {
      */
     Query getQuery();
 
-    static class NoQuery implements Query {
+    class NoQuery implements Query {
 
         public List<? extends Variable> getProjectedVariables() {
             throw new UnsupportedOperationException("Retrieving the projected variables is not supported");

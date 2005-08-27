@@ -149,13 +149,13 @@ public final class UuidGenerator {
     }
 
     private static void initialiseSeed(StringBuffer seed) {
-        seed.append(getIpAddress());                // location in universe (cyberspace). A JVM running on a particular machine.
+        seed.append(getIpAddress());                // location in universe (cyberspace).
         seed.append(getJvmId());
         seed.append(getTime());                     // time (current millisecond)
-        seed.append(getRandom());                   // random, allows multiple new UUIDs per millisecond. (validated by List)
-        seed.append(UuidGenerator.class.getName()); // another Class could be generating UUIDs the same way within the same JVM
-        seed.append(getCount());                    // two random numbers could (possibly) be generated in the same millisecond
-        seed.append(getClassLoaderId());            // more than one UuidGenerator class may be loaded by different ClassLoaders
+        seed.append(getRandom());                   // random, allows multiple new UUIDs per millisecond.
+        seed.append(UuidGenerator.class.getName()); // another Class could be generating UUIDs within the same JVM
+        seed.append(getCount());                    // two random numbers could be generated in the same millisecond
+        seed.append(getClassLoaderId());            // more than one class loaded by different ClassLoaders
     }
 
     private static char[] convertToChars(StringBuffer seed) {

@@ -58,7 +58,6 @@
 
 package org.jrdf.sparql.builder;
 
-import java.net.URI;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
@@ -76,6 +75,8 @@ import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.net.URI;
 
 /**
  * Constructs {@link org.jrdf.graph.Triple}s from {@link org.jrdf.sparql.parser.node.ATriple}s.
@@ -118,14 +119,16 @@ public final class TripleBuilder {
         PObjectTripleElement object = tripleNode.getObject();
         if (object instanceof AVariableObjectTripleElement) {
             return ANY_VALUE;
-        } else {
+        }
+        else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
             return createLiteral(text);
         }
     }
 
-    // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() & Kowari::ItqlIntepreter::getLiteralText()
+    // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &
+    // Kowari::ItqlIntepreter::getLiteralText()
     // FIXME TJA: Handle datatypes.
     // FIXME TJA: Handle language code.
     private String extractTextFromLiteralNode(PLiteral literal) {
@@ -150,7 +153,8 @@ public final class TripleBuilder {
     private URIReference createResource(String uri) {
         try {
             return getElementFactory().createResource(new URI(uri));
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -158,7 +162,8 @@ public final class TripleBuilder {
     private Literal createLiteral(String lexicalValue) {
         try {
             return getElementFactory().createLiteral(lexicalValue);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -166,7 +171,8 @@ public final class TripleBuilder {
     private Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
             return getElementFactory().createTriple(subject, predicate, object);
-        } catch (GraphElementFactoryException e) {
+        }
+        catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
     }
@@ -178,7 +184,8 @@ public final class TripleBuilder {
     private GraphImpl createGraph() {
         try {
             return new GraphImpl();
-        } catch (GraphException e) {
+        }
+        catch (GraphException e) {
             throw new RuntimeException(e);
         }
     }

@@ -64,6 +64,9 @@ package org.jrdf.util.param;
  * @version $Revision$
  */
 final class EmtpyStringChecker implements ParameterChecker {
+    /**
+     * The expected value to prevent (empty).
+     */
     private static final String EMPTY_STRING = "";
 
     /**
@@ -74,6 +77,9 @@ final class EmtpyStringChecker implements ParameterChecker {
         return (paramAllowed((String) param));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     private boolean paramAllowed(String param) {
         return !param.trim().equals(EMPTY_STRING);
     }
