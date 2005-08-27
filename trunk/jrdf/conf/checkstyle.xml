@@ -24,13 +24,20 @@
         <module name="IllegalInstantiation"/>
         <module name="IllegalThrows"/>
         <module name="InnerAssignment"/>
-        <module name="JavadocMethod"/>
-        <module name="JavadocVariable"/>
+        <module name="JavadocMethod">
+            <property name="scope" value="public"/>
+            <property name="excludeScope" value="protected"/>
+        </module>
+        <module name="JavadocVariable">
+            <property name="scope" value="public"/>
+        </module>
         <module name="JavadocStyle">
             <property name="scope" value="public"/>
         </module>
         <module name="LeftCurly"/>
         <module name="LineLength">
+            <!-- Ignore Header lines -->
+            <property name="ignorePattern" value="^ \* \$Header"/>
             <property name="max" value="120"/>        
         </module>
 
@@ -51,7 +58,9 @@
             <property name="allowLineBreaks" value="true"/>
         </module>
 
-        <module name="OperatorWrap"/>
+        <module name="OperatorWrap">
+            <property name="option" value="eol"/>
+        </module>
         <module name="PackageName"/>
         <module name="ParameterNumber"/>
         <module name="ParenPad"/>
@@ -68,7 +77,10 @@
         <module name="TypeName"/>
         <module name="UnusedImports"/>
         <module name="UpperEll"/>
-        <module name="VisibilityModifier"/>
+        <module name="VisibilityModifier">
+          <property name="packageAllowed" value="true"/>
+          <property name="protectedAllowed" value="true"/>
+        </module>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround">
             <property name="tokens" value="ASSIGN, BAND, BAND_ASSIGN, BOR, 
