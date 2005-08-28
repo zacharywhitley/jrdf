@@ -132,18 +132,6 @@ public final class EscapeUtil {
         return escapeString;
     }
 
-    private static String escape8Bit(String groupString) {
-        assert Character.SURROGATE == Character.getType(groupString.charAt(0));
-        assert Character.SURROGATE == Character.getType(groupString.charAt(1));
-
-        String escapeString = format8BitCharacter(groupString);
-
-        assert CHARACTER_LENGTH_8_BIT == escapeString.length();
-        assert escapeString.startsWith("\\\\U000");
-
-        return escapeString;
-    }
-
     private static String escape16Bit(String groupString) {
         String escapeString;
         switch (groupString.charAt(0)) {
@@ -168,6 +156,18 @@ public final class EscapeUtil {
                 assert escapeString.startsWith("\\\\u");
                 break;
         }
+        return escapeString;
+    }
+
+    private static String escape8Bit(String groupString) {
+        assert Character.SURROGATE == Character.getType(groupString.charAt(0));
+        assert Character.SURROGATE == Character.getType(groupString.charAt(1));
+
+        String escapeString = format8BitCharacter(groupString);
+
+        assert CHARACTER_LENGTH_8_BIT == escapeString.length();
+        assert escapeString.startsWith("\\\\U000");
+
         return escapeString;
     }
 
