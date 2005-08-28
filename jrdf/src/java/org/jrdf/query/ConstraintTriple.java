@@ -63,6 +63,7 @@ import org.jrdf.util.param.ParameterUtil;
 
 /**
  * A constraint expression comprising a single constraint, i.e. a single triple.
+ *
  * @author Tom Adams
  * @version $Revision$
  * @see org.jrdf.graph.Triple
@@ -70,6 +71,7 @@ import org.jrdf.util.param.ParameterUtil;
 public final class ConstraintTriple implements ConstraintExpression {
 
     private Triple triple;
+    private static final int DUMMY_HASHCODE = 47;
 
     public ConstraintTriple(Triple triple) {
         ParameterUtil.checkNotNull("triple", triple);
@@ -95,7 +97,7 @@ public final class ConstraintTriple implements ConstraintExpression {
 
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
-        return 47;
+        return DUMMY_HASHCODE;
     }
 
     /**
