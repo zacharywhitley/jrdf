@@ -4,16 +4,8 @@
 
 <suppressions>
     <!-- Easy Fixes -->
-    <suppress checks="MemberName" files="ConstraintTriple.java"/>    
-    <suppress checks="MemberName" files="DefaultAnswer.java"/>
-    <suppress checks="MemberName" files="DefaultSparqlParser.java"/>
-    <suppress checks="MemberName" files="DefaultSparqlAnalyser.java"/>
-    <suppress checks="MemberName" files="DefaultSparqlConnection.java"/>
-    <suppress checks="MemberName" files="DefaultQueryExecutor.java"/>
-    <suppress checks="MemberName" files="DefaultQuery.java"/>
-    <suppress checks="MemberName" files="DefaultVariable.java"/>
-    <suppress checks="MagicNumber" files="EscapeUtil.java"/>    
-    <suppress checks="MagicNumber" files="ConstraintTriple.java"/>    
+    <suppress checks="MagicNumber" files="EscapeUtil.java"/>
+    <suppress checks="MagicNumber" files="ConstraintTriple.java"/>
 
     <!-- More Complicated Ones -->
     <suppress checks="CyclomaticComplexity" files="EscapeUtil.java"/>
@@ -36,6 +28,5 @@
     <suppress checks="MagicNumber" files="XmlDatatypeUtil.java"/>
     <suppress checks="MagicNumber" files="XmlUtil.java"/>
     <suppress checks="MemberName" files="RdfXmlParser.java"/>
-    <suppress checks="MemberName" files="SAXFilter.java"/>
     <suppress checks="MethodLength" files="XmlUtil.java"/>
 </suppressions>
