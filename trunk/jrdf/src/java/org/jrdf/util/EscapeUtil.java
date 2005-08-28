@@ -23,8 +23,7 @@ public final class EscapeUtil {
      */
     private static final Pattern PATTERN = Pattern.compile("\\p{InHighSurrogates}\\p{InLowSurrogates}" +
         "|" +
-        "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]"
-    );
+        "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
 
     /**
      * The matcher instance used to escape characters from Unicode to ASCII.
@@ -67,20 +66,11 @@ public final class EscapeUtil {
      *
      * @param string  a string to escape, never <code>null</code>.
      * @return a version of the <var>string</var> with N-Triples escapes applied.
+     * @throws IllegalStateException if there is no handler to perform the relevant match.
      */
-    public static String escape(String string) {
+    public static String escape(String string) throws IllegalStateException {
         assert null != string;
-
-        // Obtain a fresh matcher
-        if (null == matcher) {
-            // Lazily initialize the matcher
-            matcher = PATTERN.matcher(string);
-        }
-        else {
-            // Reuse the existing matcher
-            matcher.reset(string);
-        }
-        assert null != matcher;
+        initMatcher(string);
 
         // Try to short-circuit the whole process -- maybe nothing needs escaping?
         if (!matcher.find()) {
@@ -92,53 +82,7 @@ public final class EscapeUtil {
         StringBuffer stringBuffer = new StringBuffer();
         do {
             // The escape text with which to replace the current match
-            String escapeString;
-
-            // Depending of the character sequence we're escaping, determine an
-            // appropriate replacement
-            String groupString = matcher.group();
-            switch (groupString.length()) {
-                case 1: // 16-bit characters requiring escaping
-                    switch (groupString.charAt(0)) {
-                        case '\t': // tab
-                            escapeString = "\\\\t";
-                            break;
-                        case '\n': // newline
-                            escapeString = "\\\\n";
-                            break;
-                        case '\r': // carriage return
-                            escapeString = "\\\\r";
-                            break;
-                        case '"':  // quote
-                            escapeString = "\\\\\\\"";
-                            break;
-                        case '\\': // backslash
-                            escapeString = "\\\\\\\\";
-                            break;
-                        default:   // other characters use 4-digit hex escapes
-                            escapeString = format16BitCharacter(groupString);
-                            assert CHARACTER_LENGTH_16_BIT == escapeString.length();
-                            assert escapeString.startsWith("\\\\u");
-                            break;
-                    }
-                    break;
-
-                case 2: // surrogate pairs are represented as 8-digit hex escapes
-                    assert Character.SURROGATE == Character.getType(groupString.charAt(0));
-                    assert Character.SURROGATE == Character.getType(groupString.charAt(1));
-                    escapeString = format8BitCharacter(groupString);
-                    assert CHARACTER_LENGTH_8_BIT == escapeString.length();
-                    assert escapeString.startsWith("\\\\U000");
-                    break;
-
-                default:
-                    throw new Error("Escape sequence " + groupString + " has no handler");
-            }
-            assert null != escapeString;
-
-            // Having determined an appropriate escapeString, add it to the
-            // stringBuffer
-            matcher.appendReplacement(stringBuffer, escapeString);
+            matcher.appendReplacement(stringBuffer, getReplacementString());
         }
         while (matcher.find());
 
@@ -146,6 +90,85 @@ public final class EscapeUtil {
         // and return the assembled buffer
         matcher.appendTail(stringBuffer);
         return stringBuffer.toString();
+    }
+
+    /**
+     * Lazily initialize the matcher, if not already initialized.
+     *
+     * @param string the string to perform the matching on.
+     */
+    private static void initMatcher(String string) {
+        if (null == matcher) {
+            matcher = PATTERN.matcher(string);
+        }
+        else {
+            matcher.reset(string);
+        }
+        assert null != matcher;
+    }
+
+
+    /**
+     * Depending of the character sequence we're escaping, determine an appropriate replacement.
+     *
+     * @return escaped string value.
+     * @throws IllegalStateException if there is no handler to perform the relevant match.
+     */
+    private static String getReplacementString() throws IllegalStateException {
+        String escapeString;
+        String groupString = matcher.group();
+
+        int numMatches = groupString.length();
+        if (numMatches == 1) {
+            escapeString = escape16Bit(groupString);
+        }
+        else if (numMatches == 2) {
+            escapeString = escape8Bit(groupString);
+        }
+        else {
+            throw new IllegalStateException("Escape sequence " + groupString + " has no handler");
+        }
+        assert null != escapeString;
+        return escapeString;
+    }
+
+    private static String escape8Bit(String groupString) {
+        assert Character.SURROGATE == Character.getType(groupString.charAt(0));
+        assert Character.SURROGATE == Character.getType(groupString.charAt(1));
+
+        String escapeString = format8BitCharacter(groupString);
+
+        assert CHARACTER_LENGTH_8_BIT == escapeString.length();
+        assert escapeString.startsWith("\\\\U000");
+
+        return escapeString;
+    }
+
+    private static String escape16Bit(String groupString) {
+        String escapeString;
+        switch (groupString.charAt(0)) {
+            case '\t': // tab
+                escapeString = "\\\\t";
+                break;
+            case '\n': // newline
+                escapeString = "\\\\n";
+                break;
+            case '\r': // carriage return
+                escapeString = "\\\\r";
+                break;
+            case '"':  // quote
+                escapeString = "\\\\\\\"";
+                break;
+            case '\\': // backslash
+                escapeString = "\\\\\\\\";
+                break;
+            default:   // other characters use 4-digit hex escapes
+                escapeString = format16BitCharacter(groupString);
+                assert CHARACTER_LENGTH_16_BIT == escapeString.length();
+                assert escapeString.startsWith("\\\\u");
+                break;
+        }
+        return escapeString;
     }
 
     private static String format16BitCharacter(String groupString) {

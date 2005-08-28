@@ -75,9 +75,7 @@ import java.util.List;
  *
  * @version $Revision$
  */
-public final class AlternativeImpl
-    extends AbstractUnorderedContainer<ObjectNode>
-    implements Alternative<ObjectNode> {
+public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode> implements Alternative<ObjectNode> {
 
     public boolean containsAll(Collection<?> c) {
         return elements.values().containsAll(c);
