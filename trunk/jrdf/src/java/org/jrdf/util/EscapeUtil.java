@@ -4,7 +4,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A utility which applies N-Triples escaping.
+ * A utility that applies N-Triples escaping.
+ *
+ * For reference:
+ * http://www.echip.com.vn/echiproot/weblh/suutam/2000/uformat.htm
  *
  * @author Simon Raboczi
  * @author Andrew Newman
@@ -36,7 +39,12 @@ public final class EscapeUtil {
     private static final int UTF_BASE_CODEPOINT = 0x10000;
 
     /**
-     * How shift to get UTF-16 to character codes.
+     * Shift value for high surrogates.
+     */
+    private static final int SURROGATE_SHIFT_VALUE = 10;
+
+    /**
+     * The mask to get UTF-16 character codes.
      */
     private static final int CHARACTER_CODE_OFFSET = 0x3FF;
 
@@ -49,6 +57,7 @@ public final class EscapeUtil {
      *  How many characters at a time to decode for 16 bit encoding.
      */
     private static final int CHARACTER_LENGTH_16_BIT = 7;
+
 
     private EscapeUtil() {
     }
@@ -107,13 +116,7 @@ public final class EscapeUtil {
                             escapeString = "\\\\\\\\";
                             break;
                         default:   // other characters use 4-digit hex escapes
-                            String hexString =
-                                Integer.toHexString(groupString.charAt(0)).toUpperCase();
-                            escapeString =
-                                "\\\\u0000".substring(0,
-                                    CHARACTER_LENGTH_16_BIT - hexString.length()) +
-                                hexString;
-
+                            escapeString = format16BitCharacter(groupString);
                             assert CHARACTER_LENGTH_16_BIT == escapeString.length();
                             assert escapeString.startsWith("\\\\u");
                             break;
@@ -121,22 +124,9 @@ public final class EscapeUtil {
                     break;
 
                 case 2: // surrogate pairs are represented as 8-digit hex escapes
-                    assert Character.SURROGATE ==
-                        Character.getType(groupString.charAt(0));
-                    assert Character.SURROGATE ==
-                        Character.getType(groupString.charAt(1));
-
-                    String hexString = Integer.toHexString(((groupString.charAt(0) &
-                        CHARACTER_CODE_OFFSET) <<
-                        10) + // high surrogate
-                        (groupString.charAt(1) & CHARACTER_CODE_OFFSET) + // low surrogate
-                        UTF_BASE_CODEPOINT // base codepoint U+10000
-                    ).toUpperCase();
-                    escapeString =
-                        "\\\\U00000000".substring(0,
-                            CHARACTER_LENGTH_8_BIT - hexString.length()) +
-                        hexString;
-
+                    assert Character.SURROGATE == Character.getType(groupString.charAt(0));
+                    assert Character.SURROGATE == Character.getType(groupString.charAt(1));
+                    escapeString = format8BitCharacter(groupString);
                     assert CHARACTER_LENGTH_8_BIT == escapeString.length();
                     assert escapeString.startsWith("\\\\U000");
                     break;
@@ -156,5 +146,24 @@ public final class EscapeUtil {
         // and return the assembled buffer
         matcher.appendTail(stringBuffer);
         return stringBuffer.toString();
+    }
+
+    private static String format16BitCharacter(String groupString) {
+        String hexString = Integer.toHexString(groupString.charAt(0)).toUpperCase();
+        return "\\\\u0000".substring(0, CHARACTER_LENGTH_16_BIT - hexString.length()) + hexString;
+    }
+
+    private static String format8BitCharacter(String groupString) {
+        int charValue = getHighSurrogate(groupString) + getLowSurrogate(groupString) + UTF_BASE_CODEPOINT;
+        String hexString = Integer.toHexString(charValue).toUpperCase();
+        return "\\\\U00000000".substring(0, CHARACTER_LENGTH_8_BIT - hexString.length()) + hexString;
+    }
+
+    private static int getHighSurrogate(String groupString) {
+        return ((groupString.charAt(0) & CHARACTER_CODE_OFFSET) << SURROGATE_SHIFT_VALUE);
+    }
+
+    private static int getLowSurrogate(String groupString) {
+        return (groupString.charAt(1) & CHARACTER_CODE_OFFSET);
     }
 }

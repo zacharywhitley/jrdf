@@ -3,11 +3,6 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <!-- Easy Fixes -->
-    <suppress checks="MagicNumber" files="EscapeUtil.java"/>
-    <suppress checks="MagicNumber" files="ConstraintTriple.java"/>
-
-    <!-- More Complicated Ones -->
     <suppress checks="CyclomaticComplexity" files="EscapeUtil.java"/>
     <suppress checks="CyclomaticComplexity" files="GraphImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="AbstractLiteral.java"/>
