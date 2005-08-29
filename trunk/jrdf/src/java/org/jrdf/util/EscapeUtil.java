@@ -3,6 +3,8 @@ package org.jrdf.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// TODO  Write a direct unit test for this instead of relying on AbstractLiteralUnitTest.
+
 /**
  * A utility that applies N-Triples escaping.
  *
