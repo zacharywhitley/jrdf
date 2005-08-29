@@ -58,6 +58,8 @@
 
 package org.jrdf.graph;
 
+import org.jrdf.util.EqualsUtil;
+
 import java.io.Serializable;
 
 /**
@@ -105,17 +107,17 @@ public class AbstractTriple implements Triple, Serializable {
     /**
      * {@inheritDoc}
      */
-    public boolean equals(Object ref) {
-        if (isNull(ref)) {
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
             return false;
         }
-        if (sameReference(this, ref)) {
+        if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (differentClasses(this, ref)) {
+        if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
-        return determineEqualityFromFields((Triple) ref);
+        return determineEqualityFromFields((Triple) obj);
     }
 
     /**
@@ -133,21 +135,6 @@ public class AbstractTriple implements Triple, Serializable {
      */
     public String toString() {
         return "[" + subjectNode + ", " + predicateNode + ", " + objectNode + "]";
-    }
-
-    // FIXME TJA: Move to utility class
-    private boolean isNull(Object obj) {
-        return obj == null;
-    }
-
-    // FIXME TJA: Move to utility class
-    private boolean sameReference(Object o1, Object o2) {
-        return o1 == o2;
-    }
-
-    // FIXME TJA: Move to utility class
-    private boolean differentClasses(Object o1, Object o2) {
-        return o1.getClass() != o2.getClass();
     }
 
     private boolean determineEqualityFromFields(Triple ref) {
