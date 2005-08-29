@@ -71,8 +71,7 @@ import java.util.Map;
  *
  * @version $Revision$
  */
-public abstract class AbstractUnorderedContainer <ObjectNode>
-    implements Container<ObjectNode> {
+public abstract class AbstractUnorderedContainer <ObjectNode> implements Container<ObjectNode> {
 
     /**
      * The hashmap containing the elements.
