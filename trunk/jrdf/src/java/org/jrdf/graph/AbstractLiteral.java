@@ -61,6 +61,7 @@ package org.jrdf.graph;
 // Java 2 standard
 
 import org.jrdf.util.EscapeUtil;
+import org.jrdf.util.EqualsUtil;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -227,49 +228,16 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     public boolean equals(Object obj) {
-
-        // Check equal by reference
-        if (this == obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-
-        boolean returnValue = false;
-
-        // Check for null and ensure exactly the same class - not subclass.
-        if (null != obj) {
-
-            try {
-                // Set default return value and cast given obj.
-                Literal tmpLiteral = (Literal) obj;
-
-                // Ensure that the lexical form is equal character by character.
-                if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
-
-                    // If datatype is null then test language equality.
-                    if (null == getDatatypeURI() && null == tmpLiteral.getDatatypeURI()) {
-
-                        // If languages are equal by value then its equal.
-                        if (getLanguage().equals(tmpLiteral.getLanguage())) {
-                            returnValue = true;
-                        }
-                    }
-                    // Data type URIs are equal by their string values.
-                    else if (equalByStringValue(tmpLiteral)) {
-                        returnValue = true;
-                    }
-                }
-            }
-            catch (ClassCastException cce) {
-                // Leave return value to be false.
-            }
+        if (!EqualsUtil.hasSuperClassOrInterface(Literal.class, obj)) {
+            return false;
         }
-        return returnValue;
-    }
-
-    private boolean equalByStringValue(Literal tmpLiteral) {
-        return (null != getDatatypeURI()) &&
-               (null != tmpLiteral.getDatatypeURI()) &&
-               (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
+        return determineEqualityFromFields((Literal) obj);
     }
 
     public int hashCode() {
@@ -318,6 +286,34 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     public String getEscapedLexicalForm() {
         return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"",
             "\\\\\\\"");
+    }
+
+    private boolean determineEqualityFromFields(Literal tmpLiteral) {
+        boolean returnValue = false;
+
+        // Ensure that the lexical form is equal character by character.
+        if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
+
+            // If datatype is null then test language equality.
+            if (null == getDatatypeURI() && null == tmpLiteral.getDatatypeURI()) {
+
+                // If languages are equal by value then its equal.
+                if (getLanguage().equals(tmpLiteral.getLanguage())) {
+                    returnValue = true;
+                }
+            }
+            // Data type URIs are equal by their string values.
+            else if (equalByStringValue(tmpLiteral)) {
+                returnValue = true;
+            }
+        }
+        return returnValue;
+    }
+
+    private boolean equalByStringValue(Literal tmpLiteral) {
+        return (null != getDatatypeURI()) &&
+               (null != tmpLiteral.getDatatypeURI()) &&
+               (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
     }
 
     /**
