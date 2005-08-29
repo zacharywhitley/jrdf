@@ -5,10 +5,7 @@
 <suppressions>
     <suppress checks="CyclomaticComplexity" files="GraphImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="AbstractLiteral.java"/>
-    <suppress checks="EmptyBlock" files="AbstractLiteral.java"/>
     <suppress checks="EmptyBlock" files="AbstractURIReference.java"/>
-    <suppress checks="EqualsHashCode" files="AlternativeImpl.java"/>
-    <suppress checks="EqualsHashCode" files="BagImpl.java"/>
 
     <!-- RDF/XML Parser -->
     <suppress checks="CyclomaticComplexity" files="XmlDatatypeUtil.java"/>
