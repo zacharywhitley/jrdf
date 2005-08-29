@@ -75,8 +75,7 @@ import java.util.List;
  *
  * @version $Revision$
  */
-public final class BagImpl extends AbstractUnorderedContainer<ObjectNode>
-    implements Bag<ObjectNode> {
+public final class BagImpl extends AbstractUnorderedContainer<ObjectNode> implements Bag<ObjectNode> {
 
     public boolean containsAll(Collection<?> c) {
         return elements.values().containsAll(c);
@@ -117,6 +116,10 @@ public final class BagImpl extends AbstractUnorderedContainer<ObjectNode>
         return modified;
     }
 
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public boolean equals(Object obj) {
 
         // Check equal by reference
@@ -125,8 +128,7 @@ public final class BagImpl extends AbstractUnorderedContainer<ObjectNode>
         }
 
         // Check for null and ensure exactly the same class - not subclass.
-        if (null == obj ||
-            getClass() != obj.getClass()) {
+        if (null == obj || getClass() != obj.getClass()) {
             return false;
         }
 
@@ -134,7 +136,6 @@ public final class BagImpl extends AbstractUnorderedContainer<ObjectNode>
 
         boolean returnValue = false;
         if (size() == bag.size()) {
-
             List myValues = Arrays.asList(toArray());
             List altValues = Arrays.asList(bag.toArray());
             returnValue = myValues.equals(altValues);

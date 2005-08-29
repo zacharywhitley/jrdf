@@ -137,6 +137,10 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
         return modified;
     }
 
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public boolean equals(Object obj) {
 
         // Check equal by reference
@@ -145,8 +149,7 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
         }
 
         // Check for null and ensure exactly the same class - not subclass.
-        if (null == obj ||
-            getClass() != obj.getClass()) {
+        if (null == obj || getClass() != obj.getClass()) {
             return false;
         }
 
@@ -154,7 +157,6 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
 
         boolean returnValue = false;
         if (size() == alt.size()) {
-
             List myValues = Arrays.asList(toArray());
             List altValues = Arrays.asList(alt.toArray());
             returnValue = myValues.equals(altValues);
