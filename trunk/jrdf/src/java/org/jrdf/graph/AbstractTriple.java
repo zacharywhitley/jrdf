@@ -114,6 +114,7 @@ public class AbstractTriple implements Triple, Serializable {
         if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
+        // TODO This probably should be EqualsUtil.hasSuperClassOrInterface(Triple.class, obj) instead
         if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
