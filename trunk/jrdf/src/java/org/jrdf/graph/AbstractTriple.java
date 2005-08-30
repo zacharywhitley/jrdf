@@ -64,6 +64,7 @@ import java.io.Serializable;
 
 /**
  * A base implementation of an RDF {@link Triple}.
+ *
  * @author Andrew Newman
  * @version $Revision$
  */
@@ -114,8 +115,7 @@ public class AbstractTriple implements Triple, Serializable {
         if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        // TODO This probably should be EqualsUtil.hasSuperClassOrInterface(Triple.class, obj) instead
-        if (EqualsUtil.differentClasses(this, obj)) {
+        if (!EqualsUtil.hasSuperClassOrInterface(Triple.class, obj)) {
             return false;
         }
         return determineEqualityFromFields((Triple) obj);
