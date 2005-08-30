@@ -10,15 +10,18 @@
     <property name="severity" value="error"/>
     <module name="TreeWalker">
         <property name="tabWidth" value="4" />
-        <module name="GenericIllegalRegexp">
-            <property name="format" value="\s$"/>
-        </module>
+
+        <module name="ArrayTrailingComma"/>
         <module name="AvoidStarImport"/>
         <module name="ConstantName"/>
         <module name="EmptyBlock"/>
         <module name="EmptyForIteratorPad"/>
         <module name="EqualsHashCode"/>
-        <module name="FileLength" />
+        <module name="ExplicitInitialization"/>
+        <module name="FinalClass"/>
+        <module name="GenericIllegalRegexp">
+            <property name="format" value="\s$"/>
+        </module>
 <!--        <module name="Header">
           <property name="headerFile" value="${checkstyle.header.file}"/>
         </module>-->
@@ -26,9 +29,9 @@
         <module name="IllegalImport"/>
         <module name="IllegalInstantiation"/>
         <module name="IllegalThrows">
-            <property name="illegalClassNames" value="java.lang.Error,
-java.lang.RuntimeException"/>
+            <property name="illegalClassNames" value="java.lang.Error, java.lang.RuntimeException"/>
         </module>
+        <module name="Indentation"/>
         <module name="InnerAssignment"/>
         <module name="JavadocMethod">
             <property name="scope" value="public"/>
@@ -44,17 +47,22 @@ java.lang.RuntimeException"/>
         <module name="LineLength">
             <!-- Ignore Header lines -->
             <property name="ignorePattern" value="^ \* \$Header"/>
-            <property name="max" value="120"/>        
+            <property name="max" value="120"/>
         </module>
-
         <module name="LocalFinalVariableName"/>
         <module name="LocalVariableName"/>
+        <module name="MagicNumber"/>
         <module name="MemberName"/>
         <module name="MethodLength"/>
         <module name="MethodName"/>
         <module name="MethodParamPad"/>
+        <module name="MissingSwitchDefault"/>
         <module name="ModifierOrder"/>
         <module name="NeedBraces"/>
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
+        <module name="NestedTryDepth"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
         <module name="NoWhitespaceBefore">
@@ -66,14 +74,13 @@ java.lang.RuntimeException"/>
             <property name="option" value="eol"/>
         </module>
         <module name="PackageName"/>
-        <module name="ParameterNumber"/>
+        <module name="ParameterNumber">
+            <property name="max" value="5"/>
+        </module>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <module name="RedundantImport"/>
         <module name="RedundantModifier"/>
-        <module name="RightCurly">
-            <property name="option" value="alone"/>
-        </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="StaticVariableName"/>
@@ -97,17 +104,15 @@ java.lang.RuntimeException"/>
                 RCURLY, SL, SLIST, SL_ASSIGN, SR, SR_ASSIGN, STAR, 
                 STAR_ASSIGN"/>
         </module>
-        <module name="FinalClass"/>
-        <module name="MissingSwitchDefault"/>
-        <module name="MagicNumber"/>
-        <module name="Indentation"/>
-        <module name="ArrayTrailingComma"/>
 
+        <!-- Metrics -->
+        <module name="BooleanExpressionComplexity"/>
+        <module name="ClassDataAbstractionCoupling"/>
         <module name="CyclomaticComplexity"/>
-        <module name="NestedIfDepth">
-            <property name="max" value="3"/>
+        <module name="JavaNCSS">
+            <property name="methodMaximum" value="50"/>
+            <property name="classMaximum" value="125"/>
+            <property name="fileMaximum" value="150"/>
         </module>
-        <module name="NestedTryDepth"/>
-        <module name="ExplicitInitialization"/>
     </module>
 </module>
