@@ -65,27 +65,57 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
  * Unit test for {@link org.jrdf.graph.AbstractTriple}.
+ *
  * @author Tom Adams
+ * @author Andrew Newman
  * @version $Revision$
  */
-public final class AbstractTripleUnitTest extends TestCase {
+public abstract class AbstractTripleUnitTest extends TestCase {
 
-    private static final Triple TRIPLE_ALL_NULL_1 = NodeTestUtil.createTriple(null, null, null);
-    private static final Triple TRIPLE_ALL_NULL_2 = NodeTestUtil.createTriple(null, null, null);
-    private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
-    private static final Triple TRIPLE_2 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
-    private static final URIReference URI_URN_FOO = NodeTestUtil.createResource("urn:foo");
-    private static final Triple TRIPLE_URI_URN_FOO = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-    private static final Triple TRIPLE_NULL_SUBJECT = NodeTestUtil.createTriple(null, URI_URN_FOO, URI_URN_FOO);
-    private static final Triple TRIPLE_NULL_PREDICATE = NodeTestUtil.createTriple(URI_URN_FOO, null, URI_URN_FOO);
-    private static final Triple TRIPLE_NULL_OBJECT = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, null);
+    private Triple TRIPLE_ALL_NULL_1;
+    private Triple TRIPLE_ALL_NULL_2;
+    private Triple TRIPLE_1;
+    private Triple TRIPLE_2;
+    private URIReference URI_URN_FOO;
+    private Triple TRIPLE_URI_URN_FOO;
+    private Triple TRIPLE_NULL_SUBJECT;
+    private Triple TRIPLE_NULL_PREDICATE;
+    private Triple TRIPLE_NULL_OBJECT;
 
-    public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, AbstractTriple.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractTriple.class);
+    /**
+     * Constructs a new test with the given name.
+     * @param name the name of the test
+     */
+    public AbstractTripleUnitTest(String name) {
+        super(name);
     }
 
-    public void testSerialVersionUid() {
+    public void setUp() throws Exception {
+        TRIPLE_ALL_NULL_1 = createTriple((SubjectNode) null, null, null);
+        TRIPLE_ALL_NULL_2 = createTriple((SubjectNode) null, null, null);
+        TRIPLE_1 = createTriple(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
+        TRIPLE_2 = createTriple(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
+        URI_URN_FOO = createResource("urn:foo");
+        TRIPLE_URI_URN_FOO = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        TRIPLE_NULL_SUBJECT = createTriple(null, URI_URN_FOO, URI_URN_FOO);
+        TRIPLE_NULL_PREDICATE = createTriple(URI_URN_FOO, null, URI_URN_FOO);
+        TRIPLE_NULL_OBJECT = createTriple(URI_URN_FOO, URI_URN_FOO, null);
+    }
+
+    public abstract Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+    public abstract Triple createTriple(String subject, String predicate);
+    public abstract URIReference createResource(String uri);
+
+    public void checkClassProperties(Class newClass) {
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, newClass);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, newClass);
+        ClassPropertiesTestUtil.checkExtensionOf(AbstractTriple.class, newClass);
+        checkAbstractClassProperties();
+    }
+
+    private void checkAbstractClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, AbstractTriple.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractTriple.class);
         assertEquals(8737092494833012690L, AbstractTriple.serialVersionUID);
     }
 
@@ -103,6 +133,7 @@ public final class AbstractTripleUnitTest extends TestCase {
         checkTransitive();
         checkConsistentEquals();
         checkUnequal();
+        checkDifferentImplementationsAreEqual();
     }
 
     private void checkConsistentHashCode() {
@@ -128,24 +159,24 @@ public final class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkSymmetric() {
-        Triple x = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
         checkEquals(x, y);
         checkEquals(y, y);
     }
 
     private void checkTransitive() {
-        Triple x = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple z = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple z = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
         checkEquals(x, y);
         checkEquals(y, z);
         checkEquals(x, z);
     }
 
     private void checkConsistentEquals() {
-        Triple x = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
         checkEquals(x, y);
         checkEquals(x, y);
     }
@@ -162,8 +193,8 @@ public final class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkSameValueDifferentReference() {
-        Triple x = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = NodeTestUtil.createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
         checkEquals(x, y);
     }
 
@@ -185,8 +216,8 @@ public final class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkSameTripleIsEqual(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        Triple triple1 = NodeTestUtil.createTriple(subject, predicate, object);
-        Triple triple2 = NodeTestUtil.createTriple(subject, predicate, object);
+        Triple triple1 = createTriple(subject, predicate, object);
+        Triple triple2 = createTriple(subject, predicate, object);
         checkEquals(triple1, triple2);
     }
 
@@ -207,5 +238,27 @@ public final class AbstractTripleUnitTest extends TestCase {
 
     private void checkNotEquals(Object x, Object y) {
         assertFalse(x.equals(y));
+    }
+
+    private void checkDifferentImplementationsAreEqual() {
+        Triple t1 = new TestTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple t2 = new TestTriple2(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        assertEquals(t1, t2);
+    }
+
+    private class TestTriple extends AbstractTriple {
+        public TestTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+            this.subjectNode = subject;
+            this.predicateNode = predicate;
+            this.objectNode = object;
+        }
+    }
+
+    private class TestTriple2 extends AbstractTriple {
+        public TestTriple2(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+            this.subjectNode = subject;
+            this.predicateNode = predicate;
+            this.objectNode = object;
+        }
     }
 }
