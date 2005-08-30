@@ -3,16 +3,31 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
+    <suppress checks="BooleanExpressionComplexity" files="GraphIterator.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="GraphImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="AbstractLiteral.java"/>
     <suppress checks="EmptyBlock" files="AbstractURIReference.java"/>
+    <suppress checks="JavaNCSS" files="GraphImpl.java"/>
+    <suppress checks="ParameterNumber" files="OneFixedIterator.java"/>
+    <suppress checks="ParameterNumber" files="TwoFixedIterator.java"/>
 
     <!-- RDF/XML Parser -->
+    <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>
+    <suppress checks="BooleanExpressionComplexity" files="SAXFilter.java"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlDatatypeUtil.java"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlUtil.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlParser.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SAXFilter.java"/>
     <suppress checks="CyclomaticComplexity" files="XmlDatatypeUtil.java"/>
     <suppress checks="CyclomaticComplexity" files="XmlUtil.java"/>
     <suppress checks="CyclomaticComplexity" files="RdfXmlParser.java"/>
     <suppress checks="CyclomaticComplexity" files="SAXFilter.java"/>
     <suppress checks="EmptyBlock" files="RdfXmlParser.java"/>
+    <suppress checks="JavaNCSS" files="RdfXmlParser.java"/>
+    <suppress checks="JavaNCSS" files="SAXFilter.java"/>
+    <suppress checks="JavaNCSS" files="XmlDatatypeUtil.java"/>
+    <suppress checks="JavaNCSS" files="XmlUtil.java"/>
     <suppress checks="JavadocStyle" files="XmlSchema.java"/>
     <suppress checks="MagicNumber" files="Atts.java"/>
     <suppress checks="MagicNumber" files="SAXFilter.java"/>
