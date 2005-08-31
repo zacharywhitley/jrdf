@@ -91,8 +91,8 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     public void setUp() throws Exception {
-        TRIPLE_ALL_NULL_1 = createTriple((SubjectNode) null, null, null);
-        TRIPLE_ALL_NULL_2 = createTriple((SubjectNode) null, null, null);
+        TRIPLE_ALL_NULL_1 = createTriple(null, null, null);
+        TRIPLE_ALL_NULL_2 = createTriple(null, null, null);
         TRIPLE_1 = createTriple(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
         TRIPLE_2 = createTriple(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
         URI_URN_FOO = createResource("urn:foo");
