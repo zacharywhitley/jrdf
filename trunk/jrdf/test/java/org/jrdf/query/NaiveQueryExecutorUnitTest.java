@@ -56,57 +56,57 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.query;
 
+import java.net.URI;
 import junit.framework.TestCase;
-import org.jrdf.query.ConstraintExpression;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.connection.JrdfConnectionFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * Integration test for {@link DefaultSparqlParser}.
+ * Unit test for {@link NaiveQueryExecutor}.
  * @author Tom Adams
  * @version $Revision$
  */
-public final class DefaultSparqlParserIntegrationTest extends TestCase {
+public final class NaiveQueryExecutorUnitTest extends TestCase {
 
-    // FIXME TJA: Triangulate on variables.
-    // FIXME TJA: Triangulate on constraint expression.
-    // FIXME TJA: Write failing test for non-wildcard projection lists.
-    // FIXME TJA: Write tests to force trimming of query string.
-    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
+    private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
+    private static final Graph GRAPH_BAD = new MockBadGraph();
 
-    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
-    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
-    private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-
-    public void testNeedThisForIntelliJRunner() {
-        assertTrue(true);
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
     }
 
-    // FIXME TJA: Breadcrumb - Was chasing this down...
-    public void xxxTestSingleConstraint() {
-        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
-        checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
-    }
-
-    private void checkSingleConstraintExpression(String queryString, ConstraintExpression expectedExpression) {
-        Query query = parseQuery(queryString);
-        ConstraintExpression actualExpression = query.getConstraintExpression();
-        assertEquals(expectedExpression, actualExpression);
-    }
-
-    private Query parseQuery(String queryString) {
+    public void testNullSessionInConstructor() {
         try {
-            return createParser().parseQuery(queryString);
-        } catch (InvalidQuerySyntaxException e) {
-            throw new RuntimeException(e);
+            new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN);
+            fail("Null session should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
         }
     }
 
-    private SparqlParser createParser() {
-        return new DefaultSparqlParser();
+    public void testNullSesurityDomainInConstructor() {
+        try {
+            new NaiveQueryExecutor(GRAPH_BAD, null);
+            fail("Null security domain should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
+        }
+    }
+
+    public void testExecuteQuery() throws Exception {
+        NaiveQueryExecutor executor = new NaiveQueryExecutor(createGraph(), NO_SECURITY_DOMAIN);
+        Answer answer = executor.executeQuery(createQuery());
+    }
+
+    private MockGraph createGraph() {
+        // FIXME TJA: Breadcrumb - Implement a mock closableiteraotr with the right content
+        return new MockGraph(null);
+    }
+
+    private Query createQuery() {
+        // FIXME TJA: Breadcrumb - Do this ;)
+        return null;
+//        throw new UnsupportedOperationException("Implement me...");
     }
 }

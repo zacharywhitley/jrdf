@@ -18,6 +18,7 @@
     <property name="test.src.dir" value="${test.dir}/java"/>
     <property name="gen.src.dir" value="${build.dir}/gen"/>
     <property name="sablecc.src.dir" value="${src.dir}/sablecc"/>
+    <property name="javacc.src.dir" value="${src.dir}/javacc"/>
     <property name="prod.classes.dir" value="${build.dir}/prod-classes"/>
     <property name="test.classes.dir" value="${build.dir}/test-classes"/>
     <property name="dist.dir" value="${build.dir}/dist"/>

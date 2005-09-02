@@ -68,9 +68,17 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public final class ConstraintExpressionUnitTest extends TestCase {
 
-    public void testAllConstant() {
+    private static final String FIELD_ALL = "ALL";
+
+    public void testAllConstant() throws Exception {
+        checkAllConstantStaticFinal();
         checkAllConstantImmutable();
         checkAllConstantType();
+    }
+
+    private void checkAllConstantStaticFinal() throws Exception {
+        ClassPropertiesTestUtil.checkFieldFinal(ConstraintExpression.class, FIELD_ALL);
+        ClassPropertiesTestUtil.checkFieldStatic(ConstraintExpression.class, FIELD_ALL);
     }
 
     private void checkAllConstantImmutable() {

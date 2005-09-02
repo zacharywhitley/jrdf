@@ -66,6 +66,7 @@ import java.util.List;
  * @version $Revision$
  */
 public interface Query {
+
     List<? extends Variable> getProjectedVariables();
 
     ConstraintExpression getConstraintExpression();

@@ -62,6 +62,8 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.sparql.parser.DefaultSparqlParser;
 
 /**
  * Builds SPARQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
@@ -70,20 +72,20 @@ import org.jrdf.util.param.ParameterUtil;
  */
 public final class SparqlQueryBuilder implements QueryBuilder {
 
-    // FIXME TJA: Breadcrumb - Waiting for a parser to be written.
+    // FIXME TJA: Use IoC to set the parser to use.
+    SparqlParser parser = new DefaultSparqlParser();
 
     /**
      * {@inheritDoc}
      */
-    public Query buildQuery(String query) throws InvalidQuerySyntaxException {
-        ParameterUtil.checkNotEmptyString("query", query);
+    public Query buildQuery(String queryText) throws InvalidQuerySyntaxException {
+        ParameterUtil.checkNotEmptyString("queryText", queryText);
         try {
-//      return new ItqlInterpreter(new HashMap()).parseQuery(query);
-//        return new SparqlParser().parse(query);
+//            return parser.parseQuery(queryText);
             throw new UnsupportedOperationException("Implement me!");
         }
         catch (Throwable t) {
-            throw new InvalidQuerySyntaxException("Unable to build query from string: " + query, t);
+            throw new InvalidQuerySyntaxException("Unable to build query from string: " + queryText, t);
         }
     }
 }

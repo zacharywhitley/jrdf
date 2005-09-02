@@ -3,6 +3,7 @@ package org.jrdf.connection;
 import junit.framework.TestCase;
 
 import java.net.URI;
+import org.jrdf.query.MockBadGraph;
 
 /**
  * Unit test for {@link JrdfConnectionFactory}.

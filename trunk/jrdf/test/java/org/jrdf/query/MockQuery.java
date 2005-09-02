@@ -58,28 +58,23 @@
 
 package org.jrdf.query;
 
-import java.net.URI;
 import java.util.List;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.NodeTestUtil;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.AnyObjectNode;
 
 /**
  * @author Tom Adams
  * @version $Revision$
  */
 public class MockQuery implements Query {
-    // FIXME TJA: Remove duplicated code into test utilities, or test drive out code in TripleBuilder into utility.
 
     private static final String URI_BOOK_1 = "http://example.org/book/book1";
     private static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";
-    private static final ObjectNode ANY_OBJECT_NODE = null;
+    private static final ObjectNode ANY_OBJECT_NODE = AnyObjectNode.ANY_OBJECT_NODE;
 
     public List<? extends Variable> getProjectedVariables() {
         return Variable.ALL_VARIABLES;
@@ -98,36 +93,8 @@ public class MockQuery implements Query {
     }
 
     private Triple createTripleWithWildcardObject(String subjectUri, String predicateUri) {
-        SubjectNode subject = createResource(subjectUri);
-        PredicateNode predicate = createResource(predicateUri);
-        return createTriple(subject, predicate, ANY_OBJECT_NODE);
-    }
-
-    private URIReference createResource(String uri) {
-        try {
-            return getElementFactory().createResource(new URI(uri));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        try {
-            return getElementFactory().createTriple(subject, predicate, object);
-        } catch (GraphElementFactoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private GraphElementFactory getElementFactory() {
-        return createGraph().getElementFactory();
-    }
-
-    private GraphImpl createGraph() {
-        try {
-            return new GraphImpl();
-        } catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
+        SubjectNode subject = NodeTestUtil.createResource(subjectUri);
+        PredicateNode predicate = NodeTestUtil.createResource(predicateUri);
+        return NodeTestUtil.createTriple(subject, predicate, ANY_OBJECT_NODE);
     }
 }

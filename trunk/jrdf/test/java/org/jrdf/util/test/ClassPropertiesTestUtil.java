@@ -58,6 +58,7 @@
 
 package org.jrdf.util.test;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import junit.framework.Assert;
@@ -73,23 +74,23 @@ public final class ClassPropertiesTestUtil {
         return true;
     }
 
-    public static boolean isClassAbstract(Class cls) {
+    public static boolean isClassAbstract(Class<?> cls) {
         return Modifier.isAbstract(cls.getModifiers());
     }
 
-    public static boolean isClassFinal(Class cls) {
+    public static boolean isClassFinal(Class<?> cls) {
         return Modifier.isFinal(cls.getModifiers());
     }
 
-    public static boolean isClassPublic(Class cls) {
+    public static boolean isClassPublic(Class<?> cls) {
         return Modifier.isPublic(cls.getModifiers());
     }
 
-    public static boolean isClassAnInterface(Class cls) {
+    public static boolean isClassAnInterface(Class<?> cls) {
         return Modifier.isInterface(cls.getModifiers());
     }
 
-    public static boolean isImplementationOf(Class targetInterface, Class cls) {
+    public static boolean isImplementationOf(Class<?> targetInterface, Class<?> cls) {
         return isExtensionOf(targetInterface, cls);
     }
 
@@ -101,37 +102,67 @@ public final class ClassPropertiesTestUtil {
         return Modifier.isFinal(method.getModifiers());
     }
 
-    public static void checkImplementationOfInterfaceAndFinal(Class targetInterface, Class implementationClass) {
+    public static void checkImplementationOfInterfaceAndFinal(Class<?> targetInterface, Class implementationClass) {
         Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
                 + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
         Assert.assertTrue(implementationClass.getSimpleName() + " must be final", isClassFinal(implementationClass));
     }
 
-    public static void checkImplementationOfInterface(Class targetInterface, Class implementationClass) {
+    public static void checkImplementationOfInterface(Class<?> targetInterface, Class implementationClass) {
         Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
                 + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
     }
 
-    public static void checkExtensionOf(Class superClass, Class subClass) {
+    public static void checkExtensionOf(Class<?> superClass, Class subClass) {
         Assert.assertTrue(subClass.getSimpleName() + " is not a subclass of " + superClass.getSimpleName(),
                 isExtensionOf(superClass, subClass));
     }
 
-    public static void checkClassFinal(Class cls) {
+    public static void checkClassFinal(Class<?> cls) {
         Assert.assertTrue(cls.getSimpleName() + " must be final", isClassFinal(cls));
     }
 
-    public static void checkClassPublic(Class cls) {
+    public static void checkClassPublic(Class<?> cls) {
         Assert.assertTrue(cls.getSimpleName() + " must be public", isClassPublic(cls));
     }
 
-    public static void checkInstanceExtendsClass(Class superClass, Object ref) {
+    public static void checkInstanceExtendsClass(Class<?> superClass, Object ref) {
         Assert.assertNotNull(ref);
         checkExtensionOf(superClass, ref.getClass());
     }
 
-    public static void checkInstanceImplementsInterface(Class targetInterface, Object ref) {
+    public static void checkInstanceImplementsInterface(Class<?> targetInterface, Object ref) {
         Assert.assertNotNull(ref);
         checkImplementationOfInterface(targetInterface, ref.getClass());
+    }
+
+    public static boolean isFieldFinal(Class<?> cls, String fieldName) {
+        try {
+            Field field = cls.getDeclaredField(fieldName);
+            int modifiers = field.getModifiers();
+            return Modifier.isFinal(modifiers);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean isFieldStatic(Class<?> cls, String fieldName) {
+        try {
+            Field field = cls.getDeclaredField(fieldName);
+            int modifiers = field.getModifiers();
+            return Modifier.isStatic(modifiers);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void checkFieldFinal(Class<?> cls, String fieldName) {
+        String mesg = "Field " + fieldName + " of class " + cls.getSimpleName() + " must be final";
+        Assert.assertTrue(mesg, isFieldFinal(cls, fieldName));
+    }
+
+    public static void checkFieldStatic(Class<?> cls, String fieldName) {
+        String mesg = "Field " + fieldName + " of class " + cls.getSimpleName() + " must be static";
+        Assert.assertTrue(mesg, isFieldStatic(cls, fieldName));
     }
 }

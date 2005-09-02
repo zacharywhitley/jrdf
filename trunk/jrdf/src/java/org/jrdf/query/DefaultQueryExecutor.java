@@ -58,20 +58,19 @@
 
 package org.jrdf.query;
 
+import java.net.URI;
 import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
 import org.jrdf.util.param.ParameterUtil;
 
-import java.net.URI;
-
 /**
- * Default implementation of a {@link org.jrdf.query.JrdfQueryExecutor}.
- *
+ * Default implementation of a {@link JrdfQueryExecutor}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class DefaultQueryExecutor implements JrdfQueryExecutor {
 
+    // FIXME TJA: Breadcrumb - Implement executeQuery() once the builder is written.
     private Graph graph;
     private URI securityDomain;
 
@@ -89,14 +88,11 @@ public final class DefaultQueryExecutor implements JrdfQueryExecutor {
     }
 
     /**
-     * Executes a query against a graph.
-     *
-     * @param query The query to execute.
-     * @return The answer to the query, will never be <code>null</code>.
-     * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
+     * {@inheritDoc}
      */
     public Answer executeQuery(Query query) throws JrdfConnectionException {
         ParameterUtil.checkNotNull("query", query);
+        // FIXME TJA: Breadcrumb - Delegate to the NaiveQueryExecutor here.
 //    try {
 //      return graph.query(query);
 //    } catch (QueryException qe) {

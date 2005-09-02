@@ -59,6 +59,8 @@
 package org.jrdf.sparql.parser;
 
 import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.sparql.builder.VariableTripleSpec;
+import org.jrdf.sparql.builder.LiteralTripleSpec;
 import org.jrdf.sparql.parser.node.ALiteral;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
@@ -87,17 +89,17 @@ public final class SableCcNodeTestUtil {
     private static final String VARIABLE_PREFIX = SparqlQueryTestUtil.VARIABLE_PREFIX;
     private static final String SPARQL_QUOTE = "'";
 
-    public static ATriple createTripleNodeWithVariable(String subjectUri, String predicateUri, String variableName) {
-        PResourceTripleElement subject = createResourceElement(subjectUri);
-        PResourceTripleElement predicate = createResourceElement(predicateUri);
-        PObjectTripleElement object = createVariableElement(variableName);
+    public static ATriple createTripleNodeWithVariable(VariableTripleSpec tripleSpec) {
+        PResourceTripleElement subject = createResourceElement(tripleSpec.getSubjectUri());
+        PResourceTripleElement predicate = createResourceElement(tripleSpec.getPredicateUri());
+        PObjectTripleElement object = createVariableElement(tripleSpec.getVariableName());
         return new ATriple(subject, predicate, object);
     }
 
-    public static ATriple createTripleNodeWithLiteral(String subjectUri, String predicateUri, String literal) {
-        PResourceTripleElement subject = createResourceElement(subjectUri);
-        PResourceTripleElement predicate = createResourceElement(predicateUri);
-        PObjectTripleElement object = createLiteralElement(literal);
+    public static ATriple createTripleNodeWithLiteral(LiteralTripleSpec tripleSpec) {
+        PResourceTripleElement subject = createResourceElement(tripleSpec.getSubjectUri());
+        PResourceTripleElement predicate = createResourceElement(tripleSpec.getPredicateUri());
+        PObjectTripleElement object = createLiteralElement(tripleSpec.getLiteral());
         return new ATriple(subject, predicate, object);
     }
 

@@ -64,9 +64,10 @@ import java.util.List;
 /**
  * A variable in a {@link Query} or {@link Answer}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public interface Variable {
+
     /**
      * The list of all possible variables, i.e. wildcard projection.
      */

@@ -65,7 +65,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.connection.MockBadGraph;
+import org.jrdf.query.MockBadGraph;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.util.param.ParameterTestUtil;
@@ -78,6 +78,8 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public class DefaultSparqlConnectionUnitTest extends TestCase {
 
+    // FIXME TJA: Breadcrumb - Re-implement this functionality once builder, executor and connection complete.
+
     private static final MockBadGraph BAD_GRAPH = new MockBadGraph();
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
     private static final String EXECUTE_UPDATE_METHOD = "executeUpdate";
@@ -86,10 +88,8 @@ public class DefaultSparqlConnectionUnitTest extends TestCase {
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
 
-    /**
-     * Don't run any of the tests for now.
-     */
     public static Test suite() {
+        // Don't run any of the tests for now.
         return new TestSuite();
     }
 

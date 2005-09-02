@@ -64,5 +64,5 @@ package org.jrdf.sparql.parser;
  * @author Tom Adams
  * @version $Revision$
  */
-interface SparqlParser extends QueryParser {
+public interface SparqlParser extends QueryParser {
 }

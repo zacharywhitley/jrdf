@@ -59,15 +59,14 @@
 package org.jrdf.sparql.analysis;
 
 import java.util.List;
-import org.jrdf.query.Query;
-import org.jrdf.query.ConstraintExpression;
+import org.jrdf.graph.Triple;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultQuery;
+import org.jrdf.query.Query;
 import org.jrdf.query.Variable;
+import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.graph.Triple;
 
 /**
  * Default implementation of {@link SparqlAnalyser}.
@@ -76,33 +75,23 @@ import org.jrdf.graph.Triple;
  */
 public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements SparqlAnalyser {
 
-    // FIXME TJA: Should really be using a ConstraintExpression builder here.
+    // FIXME TJA: Should eventually be using a ConstraintExpression builder here.
 
     private static final TripleBuilder TRIPLE_BUILDER = new TripleBuilder();
     private Query query = SparqlAnalyser.NO_QUERY;
     private List<? extends Variable> variables = Variable.ALL_VARIABLES;
-    // FIXME TJA: Breadcrumb - Test drive out ConstraintExpression.equals().
-    private ConstraintExpression expression = ConstraintExpression.ALL;
 
 
     /**
      * {@inheritDoc}
      */
     public Query getQuery() {
-        // FIXME TJA: Breadcrumb - This will not work if the same analyser is used to parse two queries. May need to
-        // use in/outASelectClause.
-        if (expressionIsInitialised()) {
-            query = new DefaultQuery(variables, expression);
-        }
         return query;
     }
 
+    // FIXME TJA: This implementation will change once we have to parse variable lists.
     public void outATriple(ATriple tripleNode) {
         Triple triple = TRIPLE_BUILDER.build(tripleNode);
-        expression = new ConstraintTriple(triple);
-    }
-
-    private boolean expressionIsInitialised() {
-        return expression != ConstraintExpression.ALL;
+        query = new DefaultQuery(variables, new ConstraintTriple(triple));
     }
 }

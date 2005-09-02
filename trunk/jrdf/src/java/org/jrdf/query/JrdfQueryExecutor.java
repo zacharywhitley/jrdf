@@ -65,7 +65,9 @@ import org.jrdf.connection.JrdfConnectionException;
  * @author Tom Adams
  * @version $Revision$
  */
-interface JrdfQueryExecutor {
+public interface JrdfQueryExecutor {
+
+    // FIXME TJA: Should executeQuery() throw a wrapper exception or just throw the root cause?
 
     /**
      * Executes a query against a graph.

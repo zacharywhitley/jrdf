@@ -58,15 +58,16 @@
 
 package org.jrdf.sparql;
 
+import java.net.URI;
 import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Answer;
 import org.jrdf.query.DefaultQueryExecutor;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.JrdfQueryExecutor;
+import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterUtil;
-
-import java.net.URI;
 
 
 /**
@@ -75,7 +76,13 @@ import java.net.URI;
  * @version $Revision$
  */
 public final class DefaultSparqlConnection implements SparqlConnection {
-    // FIXME: Make connections threadsafe.
+
+    // FIXME TJA: Ensure connections are threadsafe.
+    // FIXME TJA: Set builder using IoC
+    // FIXME TJA: Breadcrumb - Implement once the DefaultQueryExecutor is written.
+
+    private QueryBuilder builder = new SparqlQueryBuilder();
+    private JrdfQueryExecutor executor;
     private Graph graph;
     private URI securityDomain;
 
@@ -87,17 +94,17 @@ public final class DefaultSparqlConnection implements SparqlConnection {
     public DefaultSparqlConnection(Graph graph, URI securityDomain) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
+        executor = new DefaultQueryExecutor(graph, securityDomain);
         this.graph = graph;
-        this.securityDomain = securityDomain;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Answer executeQuery(String query) throws InvalidQuerySyntaxException, JrdfConnectionException {
-        ParameterUtil.checkNotEmptyString("query", query);
-        Query builtQuery = new SparqlQueryBuilder().buildQuery(query);
-        return new DefaultQueryExecutor(graph, securityDomain).executeQuery(builtQuery);
+    public Answer executeQuery(String queryText) throws InvalidQuerySyntaxException, JrdfConnectionException {
+        ParameterUtil.checkNotEmptyString("queryText", queryText);
+        Query builtQuery = builder.buildQuery(queryText);
+        return executor.executeQuery(builtQuery);
     }
 
     /**
