@@ -61,8 +61,8 @@ package org.jrdf.query;
 import java.net.URI;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.connection.MockBadGraph;
 import org.jrdf.graph.Graph;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
  * Unit test for {@link DefaultQueryExecutor}.
@@ -71,22 +71,12 @@ import org.jrdf.graph.Graph;
  */
 public class DefaultQueryExecutorUnitTest extends TestCase {
 
-    private static final Graph BAD_GRAPH = new MockBadGraph();
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
+    private static final Graph BAD_GRAPH = new MockBadGraph();
 
-    public void testNullQueryThrowsException() throws Exception {
-        try {
-            new DefaultQueryExecutor(BAD_GRAPH, NO_SECURITY_DOMAIN).executeQuery(null);
-            fail("Null query should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, DefaultQueryExecutor.class);
     }
-
-//  public void testQueryExceptionWrapped() throws InvalidQuerySyntaxException {
-//    try {
-//      new DefaultQueryExecutor(BAD_GRAPH, NO_SECURITY_DOMAIN).executeQuery(buildQuery());
-//      fail("QueryException should jave been wrapped as JrdfConnectionException");
-//    } catch (JrdfConnectionException expected) { }
-//  }
 
     public void testNullSessionInConstructor() {
         try {
@@ -103,4 +93,18 @@ public class DefaultQueryExecutorUnitTest extends TestCase {
         } catch (IllegalArgumentException expected) {
         }
     }
+
+    public void testNullQueryThrowsException() throws Exception {
+        try {
+            new DefaultQueryExecutor(BAD_GRAPH, NO_SECURITY_DOMAIN).executeQuery(null);
+            fail("Null query should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException expected) { }
+    }
+
+//  public void testQueryExceptionWrapped() throws InvalidQuerySyntaxException {
+//    try {
+//      new DefaultQueryExecutor(BAD_GRAPH, NO_SECURITY_DOMAIN).executeQuery(buildQuery());
+//      fail("QueryException should jave been wrapped as JrdfConnectionException");
+//    } catch (JrdfConnectionException expected) { }
+//  }
 }

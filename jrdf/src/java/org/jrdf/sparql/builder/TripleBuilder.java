@@ -58,6 +58,7 @@
 
 package org.jrdf.sparql.builder;
 
+import java.net.URI;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
@@ -67,6 +68,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
@@ -75,8 +77,6 @@ import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.util.param.ParameterUtil;
-
-import java.net.URI;
 
 /**
  * Constructs {@link org.jrdf.graph.Triple}s from {@link org.jrdf.sparql.parser.node.ATriple}s.
@@ -87,7 +87,7 @@ public final class TripleBuilder {
     // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
 
     private static final String SINGLE_QUOTE = "'";
-    private static final ObjectNode ANY_VALUE = null;
+    private static final ObjectNode ANY_VALUE = AnyObjectNode.ANY_OBJECT_NODE;
 
     /**
      * Builds the given <var>tripleNode</var> into a local Triple.
@@ -96,7 +96,7 @@ public final class TripleBuilder {
      */
     public Triple build(ATriple tripleNode) {
         ParameterUtil.checkNotNull("tripleNode", tripleNode);
-        // FIXME TJA: Check format of triple here.
+        // FIXME TJA: Check format () of triple here (is this done by the grammar now?).
         SubjectNode subject = buildSubject(tripleNode);
         PredicateNode predicate = buildPredicate(tripleNode);
         ObjectNode object = buildObject(tripleNode);

@@ -69,17 +69,20 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * Utility class that generates an Unique identifier.
+ * Generates a unique identifier.
  *
  * @author Robert Turner
  * @author Tom Adams
+ * @version $Id$
  */
 public final class UuidGenerator {
+
     // FIXME: Split this into a generator and UUID class.
     // FIXME: Can we make this the default UUID generator, and create another one based on the RFC What about the Java
     // UUID Generator?
     // FIXME: What format of UUID's should these give back? The standard one? Short form and canonical form (do when a
     // sep. UUID class).
+
     private static final String DIGEST_ALGORITHM = "MD5";
     private static final int SINGLE_DIGIT = 0x10;
     private static final int INT_OFFSET = 0xFF;
@@ -149,8 +152,8 @@ public final class UuidGenerator {
     }
 
     private static void initialiseSeed(StringBuffer seed) {
-        seed.append(getIpAddress());                // location in universe (cyberspace).
-        seed.append(getJvmId());
+        seed.append(getIpAddress());                // location in universe (cyberspace)
+        seed.append(getJvmId());                    // id of the JVM running on this machine.
         seed.append(getTime());                     // time (current millisecond)
         seed.append(getRandom());                   // random, allows multiple new UUIDs per millisecond.
         seed.append(UuidGenerator.class.getName()); // another Class could be generating UUIDs within the same JVM
@@ -205,7 +208,7 @@ public final class UuidGenerator {
      * within the same millisecond.
      */
     private static synchronized int getClassLoaderId() {
-        // FIXME: Why is this not cached liek the others? Why are the others cached?
+        // FIXME TJA: Why is this not cached like the others? Why are the others cached?
         return System.identityHashCode(UuidGenerator.class.getClassLoader());
     }
 }

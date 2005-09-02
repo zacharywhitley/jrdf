@@ -58,6 +58,9 @@
 
 package org.jrdf.sparql.parser;
 
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.io.StringReader;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
@@ -69,16 +72,12 @@ import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.param.ParameterUtil;
 
-import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.StringReader;
-
 /**
  * Default implementation of a {@link SparqlParser}.
  * @author Tom Adams
  * @version $Revision$
  */
-final class DefaultSparqlParser implements SparqlParser {
+public final class DefaultSparqlParser implements SparqlParser {
 
     // FIXME TJA: Test drive out throwing of InvalidQuerySyntaxException.
 

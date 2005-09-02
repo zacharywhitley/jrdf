@@ -1,18 +1,28 @@
-package org.jrdf.connection;
-
-import org.jrdf.graph.*;
-import org.jrdf.util.ClosableIterator;
+package org.jrdf.query;
 
 import java.util.Iterator;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.util.ClosableIterator;
 
 /**
- * Mock &quot;bad&quot; {@link Graph} for unit testing.
+ * Mock {@link Graph} for unit testing.
  * @author Tom Adams
  * @version $Revision$
  */
-public final class MockBadGraph implements Graph {
+final class MockGraph implements Graph {
 
-    private static final long serialVersionUID = 2826041255306224321L;
+    private ClosableIterator expectedIterator;
+
+    public MockGraph(ClosableIterator expectedIterator) {
+        this.expectedIterator = expectedIterator;
+    }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
@@ -22,11 +32,12 @@ public final class MockBadGraph implements Graph {
         throw new UnsupportedOperationException("Implement me...");
     }
 
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+    public ClosableIterator find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
+//        return expectedIterator;
     }
 
-    public ClosableIterator<Triple> find(Triple triple) throws GraphException {
+    public ClosableIterator find(Triple triple) throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
     }
 
@@ -38,7 +49,7 @@ public final class MockBadGraph implements Graph {
         throw new UnsupportedOperationException("Implement me...");
     }
 
-    public void add(Iterator<Triple> triples) throws GraphException {
+    public void add(Iterator triples) throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
     }
 
@@ -54,7 +65,7 @@ public final class MockBadGraph implements Graph {
         throw new UnsupportedOperationException("Implement me...");
     }
 
-    public void remove(Iterator<Triple> triples) throws GraphException {
+    public void remove(Iterator triples) throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
     }
 
