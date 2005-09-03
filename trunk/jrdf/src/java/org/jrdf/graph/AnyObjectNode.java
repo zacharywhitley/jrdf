@@ -13,6 +13,7 @@ public final class AnyObjectNode implements ObjectNode {
      */
     public static final AnyObjectNode ANY_OBJECT_NODE = new AnyObjectNode();
 
+    // TODO Not test driven.
     private static final long serialVersionUID = 8654340032080018169L;
 
     private AnyObjectNode() {
