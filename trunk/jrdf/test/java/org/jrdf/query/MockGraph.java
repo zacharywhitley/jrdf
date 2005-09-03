@@ -17,6 +17,8 @@ import org.jrdf.util.ClosableIterator;
  * @version $Revision$
  */
 final class MockGraph implements Graph {
+    
+    private static final long serialVersionUID = 223166258140602924L;
 
     private ClosableIterator expectedIterator;
 
@@ -32,12 +34,13 @@ final class MockGraph implements Graph {
         throw new UnsupportedOperationException("Implement me...");
     }
 
-    public ClosableIterator find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
 //        return expectedIterator;
     }
 
-    public ClosableIterator find(Triple triple) throws GraphException {
+    public ClosableIterator<Triple> find(Triple triple) throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
     }
 
