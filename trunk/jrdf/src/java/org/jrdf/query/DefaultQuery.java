@@ -75,6 +75,8 @@ public final class DefaultQuery implements Query, Serializable {
 
     static final long serialVersionUID = 409607492370028929L;
     private List<? extends Variable> variables;
+
+    // TODO ConstraintExpression is not serializable - this won't probably work correctly!
     private ConstraintExpression expression;
 
     public DefaultQuery(List<? extends Variable> variables, ConstraintExpression expression) {

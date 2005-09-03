@@ -70,6 +70,8 @@ import java.io.Serializable;
  */
 public final class DefaultAnswer implements Answer, Serializable {
     static final long serialVersionUID = -4724846731215773529L;
+
+    // TODO ClosableIterator is not serializable - this won't probably work correctly!
     private ClosableIterator closableIterator;
 
     public DefaultAnswer(ClosableIterator closableIterator) {
