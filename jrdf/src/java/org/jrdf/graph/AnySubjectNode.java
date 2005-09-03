@@ -13,6 +13,7 @@ public final class AnySubjectNode implements SubjectNode {
      */
     public static final AnySubjectNode ANY_SUBJECT_NODE = new AnySubjectNode();
 
+    // TODO Not test driven.
     private static final long serialVersionUID = -971680612480915602L;
 
     private AnySubjectNode() {

@@ -13,6 +13,7 @@ public final class AnyPredicateNode implements PredicateNode {
      */
     public static final AnyPredicateNode ANY_PREDICATE_NODE = new AnyPredicateNode();
 
+    // TODO Not test driven.
     private static final long serialVersionUID = 1764088613140821732L;
 
     private AnyPredicateNode() {
