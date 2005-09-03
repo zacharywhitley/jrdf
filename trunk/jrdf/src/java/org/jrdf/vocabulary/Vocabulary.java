@@ -85,20 +85,11 @@ public abstract class Vocabulary implements Serializable {
     /**
      * The set of URI references.
      */
-    protected static Set<URI> resources = new HashSet<URI>();
+    protected final static Set<URI> RESOURCES = new HashSet<URI>();
 
     /**
      * Default constructor - as this is a list of constants should not be able to construct it.
      */
     protected Vocabulary() {
-    }
-
-    /**
-     * Returns the resources in this vocabulary.
-     *
-     * @return the resource in this vocabulary.
-     */
-    public static Set<URI> getResources() {
-        return resources;
     }
 }

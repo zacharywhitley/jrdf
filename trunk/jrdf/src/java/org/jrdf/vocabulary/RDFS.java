@@ -186,23 +186,23 @@ public abstract class RDFS extends Vocabulary {
             IS_DEFINED_BY = new URI(BASE_URI + "isDefinedBy");
 
             // Add Classes
-            resources.add(RESOURCE);
-            resources.add(CLASS);
-            resources.add(LITERAL);
-            resources.add(DATATYPE);
-            resources.add(CONTAINER);
-            resources.add(CONTAINER_MEMBERSHIP_PROPERTY);
+            RESOURCES.add(RESOURCE);
+            RESOURCES.add(CLASS);
+            RESOURCES.add(LITERAL);
+            RESOURCES.add(DATATYPE);
+            RESOURCES.add(CONTAINER);
+            RESOURCES.add(CONTAINER_MEMBERSHIP_PROPERTY);
 
             // Add Properties
-            resources.add(RANGE);
-            resources.add(DOMAIN);
-            resources.add(SUB_CLASS_OF);
-            resources.add(SUB_PROPERTY_OF);
-            resources.add(LABEL);
-            resources.add(COMMENT);
-            resources.add(MEMBER);
-            resources.add(SEE_ALSO);
-            resources.add(IS_DEFINED_BY);
+            RESOURCES.add(RANGE);
+            RESOURCES.add(DOMAIN);
+            RESOURCES.add(SUB_CLASS_OF);
+            RESOURCES.add(SUB_PROPERTY_OF);
+            RESOURCES.add(LABEL);
+            RESOURCES.add(COMMENT);
+            RESOURCES.add(MEMBER);
+            RESOURCES.add(SEE_ALSO);
+            RESOURCES.add(IS_DEFINED_BY);
         }
         catch (URISyntaxException use) {
 

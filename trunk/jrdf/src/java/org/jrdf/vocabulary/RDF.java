@@ -194,25 +194,25 @@ public abstract class RDF extends Vocabulary {
             REST = new URI(BASE_URI + "rest");
 
             // Add Classes
-            resources.add(SEQ);
-            resources.add(BAG);
-            resources.add(ALT);
-            resources.add(STATEMENT);
-            resources.add(PROPERTY);
-            resources.add(XML_LITERAL);
-            resources.add(LIST);
-            resources.add(NIL);
+            RESOURCES.add(SEQ);
+            RESOURCES.add(BAG);
+            RESOURCES.add(ALT);
+            RESOURCES.add(STATEMENT);
+            RESOURCES.add(PROPERTY);
+            RESOURCES.add(XML_LITERAL);
+            RESOURCES.add(LIST);
+            RESOURCES.add(NIL);
 
-            resources.add(LI);
+            RESOURCES.add(LI);
 
             // Add Properties
-            resources.add(SUBJECT);
-            resources.add(PREDICATE);
-            resources.add(OBJECT);
-            resources.add(TYPE);
-            resources.add(VALUE);
-            resources.add(FIRST);
-            resources.add(REST);
+            RESOURCES.add(SUBJECT);
+            RESOURCES.add(PREDICATE);
+            RESOURCES.add(OBJECT);
+            RESOURCES.add(TYPE);
+            RESOURCES.add(VALUE);
+            RESOURCES.add(FIRST);
+            RESOURCES.add(REST);
         }
         catch (URISyntaxException use) {
 
