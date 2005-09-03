@@ -54,7 +54,7 @@ public final class EqualsUtil {
      * @param obj the object to test - who was passed into the equals method.
      * @return true if the given object can be cast to the superclass or interface.
      */
-    public static boolean hasSuperClassOrInterface(Class requiredClassOrInterface, Object obj) {
+    public static boolean hasSuperClassOrInterface(Class<?> requiredClassOrInterface, Object obj) {
         return requiredClassOrInterface.isAssignableFrom(obj.getClass());
     }
 }
