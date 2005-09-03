@@ -6,7 +6,6 @@
     <suppress checks="BooleanExpressionComplexity" files="GraphIterator.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="GraphImpl.java"/>
-    <suppress checks="CyclomaticComplexity" files="AbstractLiteral.java"/>
     <suppress checks="EmptyBlock" files="AbstractURIReference.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
     <suppress checks="ParameterNumber" files="OneFixedIterator.java"/>
