@@ -60,6 +60,8 @@ package org.jrdf.graph.mem;
 
 import java.io.Serializable;
 import junit.framework.TestCase;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.graph.Triple;
@@ -98,5 +100,10 @@ public final class TripleImplUnitTest extends AbstractTripleUnitTest {
 
     public URIReference createResource(String uri) {
         return NodeTestUtil.createResource(uri);
+    }
+
+    public void testClassProperties() {
+        this.checkClassProperties(TripleImpl.class);
+        this.checkAbstractClassProperties();
     }
 }
