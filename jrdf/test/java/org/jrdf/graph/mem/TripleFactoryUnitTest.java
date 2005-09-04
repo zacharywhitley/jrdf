@@ -77,7 +77,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
      * Constructs a new test with the given name.
      * @param name the name of the test
      */
-    private TripleFactoryUnitTest(String name) {
+    public TripleFactoryUnitTest(String name) {
         super(name);
     }
 
@@ -94,7 +94,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
      * @return The test suite
      */
     public static Test suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(TripleFactoryUnitTest.class);
         suite.addTest(new TripleFactoryUnitTest("testReification"));
         suite.addTest(new TripleFactoryUnitTest("testCollections"));
         suite.addTest(new TripleFactoryUnitTest("testAlternative"));
@@ -108,7 +108,6 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
      * @param args The command line arguments
      */
     public static void main(String[] args) throws Exception {
-
         TestRunner.run(suite());
     }
 
