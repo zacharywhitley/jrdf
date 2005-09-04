@@ -85,7 +85,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
      * Constructs a new test with the given name.
      * @param name the name of the test
      */
-    private GraphImplUnitTest(String name) {
+    public GraphImplUnitTest(String name) {
         super(name);
     }
 
@@ -102,7 +102,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
      * @return The test suite
      */
     public static Test suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(GraphImplUnitTest.class);
         suite.addTest(new GraphImplUnitTest("testEmpty"));
         suite.addTest(new GraphImplUnitTest("testFactory"));
         suite.addTest(new GraphImplUnitTest("testAddition"));

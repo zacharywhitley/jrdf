@@ -74,14 +74,13 @@ import java.net.URI;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class GraphElementFactoryImplUnitTest
-        extends AbstractGraphElementFactoryUnitTest {
+public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactoryUnitTest {
 
     /**
      * Constructs a new test with the given name.
      * @param name the name of the test
      */
-    private GraphElementFactoryImplUnitTest(String name) {
+    public GraphElementFactoryImplUnitTest(String name) {
         super(name);
     }
 
@@ -98,7 +97,7 @@ public class GraphElementFactoryImplUnitTest
      * @return The test suite
      */
     public static Test suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(GraphElementFactoryImplUnitTest.class);
         suite.addTest(new GraphElementFactoryImplUnitTest("testCreateLiterals"));
         suite.addTest(new GraphElementFactoryImplUnitTest("testCreateResources"));
         suite.addTest(new GraphElementFactoryImplUnitTest("testCreateTriples"));
