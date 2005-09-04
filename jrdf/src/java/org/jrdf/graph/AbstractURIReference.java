@@ -60,6 +60,8 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 
+import org.jrdf.util.EqualsUtil;
+
 import java.io.Serializable;
 import java.net.URI;
 
@@ -80,7 +82,7 @@ public abstract class AbstractURIReference implements URIReference,
      * NOTE : update this serialVersionUID when a method or a public member is
      * deleted.
      */
-    private static final long serialVersionUID = 8034954863132812197L;
+    static final long serialVersionUID = 8034954863132812197L;
 
     /**
      * The URI of the node.
@@ -155,30 +157,6 @@ public abstract class AbstractURIReference implements URIReference,
         visitor.visitURIReference(this);
     }
 
-    public boolean equals(Object obj) {
-
-        // Check equal by reference
-        if (this == obj) {
-            return true;
-        }
-
-        boolean returnValue = false;
-
-        // Check for null and ensure exactly the same class - not subclass.
-        if (null != obj) {
-
-            try {
-                URIReference tmpURIReference = (URIReference) obj;
-                returnValue = getURI().equals(tmpURIReference.getURI());
-            }
-            catch (ClassCastException cce) {
-                // Leave return value to be false.
-            }
-        }
-
-        return returnValue;
-    }
-
     public int hashCode() {
         return uri.hashCode();
     }
@@ -191,5 +169,22 @@ public abstract class AbstractURIReference implements URIReference,
      */
     public String toString() {
         return uri.toString();
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(URIReference.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((URIReference) obj);
+    }
+
+    private boolean determineEqualityFromFields(URIReference uriReference) {
+        return getURI().equals(uriReference.getURI());
     }
 }
