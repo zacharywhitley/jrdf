@@ -105,19 +105,7 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     public abstract Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
     public abstract Triple createTriple(String subject, String predicate);
     public abstract URIReference createResource(String uri);
-
-    public void checkClassProperties(Class newClass) {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, newClass);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, newClass);
-        ClassPropertiesTestUtil.checkExtensionOf(AbstractTriple.class, newClass);
-        checkAbstractClassProperties();
-    }
-
-    private void checkAbstractClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, AbstractTriple.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractTriple.class);
-        assertEquals(8737092494833012690L, AbstractTriple.serialVersionUID);
-    }
+    public abstract void testClassProperties();
 
     public void testHashCode() {
         checkConsistentHashCode();
@@ -141,6 +129,25 @@ public abstract class AbstractTripleUnitTest extends TestCase {
         checkConsistentHashCode(TRIPLE_ALL_NULL_2);
         checkConsistentHashCode(TRIPLE_1);
         checkConsistentHashCode(TRIPLE_2);
+    }
+
+    protected void checkClassProperties(Class newClass) {
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, newClass);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, newClass);
+        ClassPropertiesTestUtil.checkExtensionOf(AbstractTriple.class, newClass);
+    }
+
+    protected void checkAbstractClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, AbstractTriple.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractTriple.class);
+        assertEquals(8737092494833012690L, AbstractTriple.serialVersionUID);
+    }
+
+    private void checkEqualObjectsReturnSameHashCode() {
+        Triple x = TRIPLE_1;
+        Triple y = TRIPLE_2;
+        checkEquals(x, y);
+        assertEquals(x.hashCode(), y.hashCode());
     }
 
     private void checkConsistentHashCode(Triple triple) {
@@ -223,13 +230,6 @@ public abstract class AbstractTripleUnitTest extends TestCase {
 
     private void checkNullComparisonObject() {
         checkNotEquals(TRIPLE_1, null);
-    }
-
-    private void checkEqualObjectsReturnSameHashCode() {
-        Triple x = TRIPLE_1;
-        Triple y = TRIPLE_2;
-        checkEquals(x, y);
-        assertEquals(x.hashCode(), y.hashCode());
     }
 
     private void checkEquals(Triple x, Triple y) {
