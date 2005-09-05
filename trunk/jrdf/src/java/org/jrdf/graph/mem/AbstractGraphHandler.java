@@ -88,8 +88,8 @@ public abstract class AbstractGraphHandler implements GraphHandler {
         printByPredicates(predIterator, firstPredicate, sWidth, out);
     }
 
-    private void printByPredicates(Iterator<Map.Entry<Long, Set<Long>>> predIterator, boolean firstPredicate, int sWidth,
-        PrintStream out) {
+    private void printByPredicates(Iterator<Map.Entry<Long, Set<Long>>> predIterator, boolean firstPredicate,
+            int sWidth, PrintStream out) {
         while (predIterator.hasNext()) {
             Map.Entry<Long, Set<Long>> predicateEntry = predIterator.next();
             Long predicate = predicateEntry.getKey();
@@ -120,7 +120,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
     }
 
     private void printByObjects(Iterator<Long> objIterator, boolean firstObject, int sWidth, int pWidth,
-        PrintStream out) {
+            PrintStream out) {
         while (objIterator.hasNext()) {
             Long object = objIterator.next();
             if (!firstObject) {
