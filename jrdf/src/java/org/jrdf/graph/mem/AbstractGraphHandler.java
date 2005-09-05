@@ -63,63 +63,78 @@ public abstract class AbstractGraphHandler implements GraphHandler {
      * Debug method to see the current state of the first index.
      */
     public void dumpIndex(PrintStream out) {
+        // TODO Now this is smaller test drive.
         Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator = getEntries();
         while (iterator.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> subjectEntry = iterator.next();
-            Long subject = subjectEntry.getKey();
-            int sWidth = subject.toString().length() + STATEMENT_OFFSET;
-            out.print(subject.toString() + " --> ");
+            printBySubjects(iterator, out);
+        }
+    }
 
-            Map<Long, Set<Long>> secondIndex = subjectEntry.getValue();
-            if (secondIndex.isEmpty()) {
+    private void printBySubjects(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator, PrintStream out) {
+        Map.Entry<Long, Map<Long, Set<Long>>> subjectEntry = iterator.next();
+        Long subject = subjectEntry.getKey();
+        int sWidth = subject.toString().length() + STATEMENT_OFFSET;
+        out.print(subject.toString() + " --> ");
+
+        Map<Long, Set<Long>> secondIndex = subjectEntry.getValue();
+        if (secondIndex.isEmpty()) {
+            out.println("X");
+            return;
+        }
+        boolean firstPredicate = true;
+
+        Iterator<Map.Entry<Long, Set<Long>>> predIterator =
+            secondIndex.entrySet().iterator();
+        printByPredicates(predIterator, firstPredicate, sWidth, out);
+    }
+
+    private void printByPredicates(Iterator<Map.Entry<Long, Set<Long>>> predIterator, boolean firstPredicate, int sWidth,
+        PrintStream out) {
+        while (predIterator.hasNext()) {
+            Map.Entry<Long, Set<Long>> predicateEntry = predIterator.next();
+            Long predicate = predicateEntry.getKey();
+            int pWidth = predicate.toString().length() + STATEMENT_OFFSET;
+            if (!firstPredicate) {
+                StringBuffer space = new StringBuffer(sWidth);
+                space.setLength(sWidth);
+                for (int c = 0; c < sWidth; c++) {
+                    space.setCharAt(c, ' ');
+                }
+                out.print(space.toString());
+            }
+            else {
+                firstPredicate = false;
+            }
+            out.print(predicate.toString() + " --> ");
+
+            Set<Long> thirdIndex = predicateEntry.getValue();
+            if (thirdIndex.isEmpty()) {
                 out.println("X");
                 continue;
             }
-            boolean firstPredicate = true;
+            boolean firstObject = true;
 
-            Iterator<Map.Entry<Long, Set<Long>>> predIterator =
-                secondIndex.entrySet().iterator();
-            while (predIterator.hasNext()) {
-                Map.Entry<Long, Set<Long>> predicateEntry = predIterator.next();
-                Long predicate = predicateEntry.getKey();
-                int pWidth = predicate.toString().length() + STATEMENT_OFFSET;
-                if (!firstPredicate) {
-                    StringBuffer space = new StringBuffer(sWidth);
-                    space.setLength(sWidth);
-                    for (int c = 0; c < sWidth; c++) {
-                        space.setCharAt(c, ' ');
-                    }
-                    out.print(space.toString());
-                }
-                else {
-                    firstPredicate = false;
-                }
-                out.print(predicate.toString() + " --> ");
+            Iterator<Long> objIterator = thirdIndex.iterator();
+            printByObjects(objIterator, firstObject, sWidth, pWidth, out);
+        }
+    }
 
-                Set<Long> thirdIndex = predicateEntry.getValue();
-                if (thirdIndex.isEmpty()) {
-                    out.println("X");
-                    continue;
+    private void printByObjects(Iterator<Long> objIterator, boolean firstObject, int sWidth, int pWidth,
+        PrintStream out) {
+        while (objIterator.hasNext()) {
+            Long object = objIterator.next();
+            if (!firstObject) {
+                StringBuffer sp2 = new StringBuffer(sWidth + pWidth);
+                sp2.setLength(sWidth + pWidth);
+                for (int d = 0; d < sWidth + pWidth; d++) {
+                    sp2.setCharAt(d, ' ');
                 }
-                boolean firstObject = true;
-
-                Iterator<Long> objIterator = thirdIndex.iterator();
-                while (objIterator.hasNext()) {
-                    Long object = objIterator.next();
-                    if (!firstObject) {
-                        StringBuffer sp2 = new StringBuffer(sWidth + pWidth);
-                        sp2.setLength(sWidth + pWidth);
-                        for (int d = 0; d < sWidth + pWidth; d++) {
-                            sp2.setCharAt(d, ' ');
-                        }
-                        out.print(sp2.toString());
-                    }
-                    else {
-                        firstObject = false;
-                    }
-                    out.println(object);
-                }
+                out.print(sp2.toString());
             }
+            else {
+                firstObject = false;
+            }
+            out.println(object);
         }
     }
 }
