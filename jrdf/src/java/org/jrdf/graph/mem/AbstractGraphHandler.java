@@ -66,75 +66,67 @@ public abstract class AbstractGraphHandler implements GraphHandler {
         // TODO Now this is smaller test drive.
         Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator = getEntries();
         while (iterator.hasNext()) {
-            printBySubjects(iterator, out);
+            printSubjects(out, iterator.next());
         }
     }
 
-    private void printBySubjects(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator, PrintStream out) {
-        Map.Entry<Long, Map<Long, Set<Long>>> subjectEntry = iterator.next();
-        Long subject = subjectEntry.getKey();
-        int sWidth = subject.toString().length() + STATEMENT_OFFSET;
-        out.print(subject.toString() + " --> ");
-
+    private void printSubjects(PrintStream out, Map.Entry<Long, Map<Long, Set<Long>>> subjectEntry) {
         Map<Long, Set<Long>> secondIndex = subjectEntry.getValue();
-        if (secondIndex.isEmpty()) {
+
+        String subject = subjectEntry.getKey().toString();
+        Iterator<Map.Entry<Long, Set<Long>>> predIterator = secondIndex.entrySet().iterator();
+
+        out.print(subject + " --> ");
+
+        if (!predIterator.hasNext()) {
             out.println("X");
             return;
         }
-        boolean firstPredicate = true;
-
-        Iterator<Map.Entry<Long, Set<Long>>> predIterator =
-            secondIndex.entrySet().iterator();
-        printByPredicates(predIterator, firstPredicate, sWidth, out);
+        else {
+            int sWidth = subject.length() + STATEMENT_OFFSET;
+            printPredicates(out, predIterator, createSpaces(sWidth));
+        }
     }
 
-    private void printByPredicates(Iterator<Map.Entry<Long, Set<Long>>> predIterator, boolean firstPredicate,
-            int sWidth, PrintStream out) {
+    private void printPredicates(PrintStream out, Iterator<Map.Entry<Long, Set<Long>>> predIterator, String spaces) {
+        int numberOfPredicates = 0;
         while (predIterator.hasNext()) {
             Map.Entry<Long, Set<Long>> predicateEntry = predIterator.next();
-            Long predicate = predicateEntry.getKey();
-            int pWidth = predicate.toString().length() + STATEMENT_OFFSET;
-            if (!firstPredicate) {
-                StringBuffer space = new StringBuffer(sWidth);
-                space.setLength(sWidth);
-                for (int c = 0; c < sWidth; c++) {
-                    space.setCharAt(c, ' ');
-                }
-                out.print(space.toString());
-            }
-            else {
-                firstPredicate = false;
-            }
-            out.print(predicate.toString() + " --> ");
 
-            Set<Long> thirdIndex = predicateEntry.getValue();
-            if (thirdIndex.isEmpty()) {
+            String predicate = predicateEntry.getKey().toString();
+            Iterator<Long> objIterator = predicateEntry.getValue().iterator();
+
+            if (++numberOfPredicates > 1) {
+                out.print(spaces);
+            }
+            out.print(predicate + " --> ");
+
+            if (!objIterator.hasNext()) {
                 out.println("X");
                 continue;
             }
-            boolean firstObject = true;
-
-            Iterator<Long> objIterator = thirdIndex.iterator();
-            printByObjects(objIterator, firstObject, sWidth, pWidth, out);
+            else {
+                int pWidth = predicate.length() + STATEMENT_OFFSET;
+                printObjects(out, objIterator, spaces + createSpaces(pWidth));
+            }
         }
     }
 
-    private void printByObjects(Iterator<Long> objIterator, boolean firstObject, int sWidth, int pWidth,
-            PrintStream out) {
-        while (objIterator.hasNext()) {
-            Long object = objIterator.next();
-            if (!firstObject) {
-                StringBuffer sp2 = new StringBuffer(sWidth + pWidth);
-                sp2.setLength(sWidth + pWidth);
-                for (int d = 0; d < sWidth + pWidth; d++) {
-                    sp2.setCharAt(d, ' ');
-                }
-                out.print(sp2.toString());
+    private void printObjects(PrintStream out, Iterator<Long> objIterator, String spaces) {
+        if (objIterator.hasNext()) {
+            out.println(objIterator.next());
+            while (objIterator.hasNext()) {
+                out.println(spaces + objIterator.next());
             }
-            else {
-                firstObject = false;
-            }
-            out.println(object);
         }
+    }
+
+    private String createSpaces(int numberOfSpaces) {
+        StringBuffer space = new StringBuffer(numberOfSpaces);
+        space.setLength(numberOfSpaces);
+        for (int c = 0; c < numberOfSpaces; c++) {
+            space.setCharAt(c, ' ');
+        }
+        return space.toString();
     }
 }
