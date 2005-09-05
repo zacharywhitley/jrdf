@@ -139,9 +139,19 @@ public final class GraphIterator implements ClosableIterator<Triple> {
      */
     public boolean hasNext() {
         // confirm we still have an item iterator, and that it has data available
-        return null != itemIterator && itemIterator.hasNext() ||
-            null != subIterator && subIterator.hasNext() ||
-            null != iterator && iterator.hasNext();
+        return (itemIteratorHasNext() || (subIteratorHasNext()) || (iteratorHasNext()));
+    }
+
+    private boolean iteratorHasNext() {
+        return null != iterator && iterator.hasNext();
+    }
+
+    private boolean subIteratorHasNext() {
+        return null != subIterator && subIterator.hasNext();
+    }
+
+    private boolean itemIteratorHasNext() {
+        return (null != itemIterator && itemIterator.hasNext());
     }
 
 
