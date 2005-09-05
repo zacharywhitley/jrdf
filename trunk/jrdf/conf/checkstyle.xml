@@ -108,7 +108,9 @@
         <!-- Metrics -->
         <module name="BooleanExpressionComplexity"/>
         <module name="ClassDataAbstractionCoupling"/>
-        <module name="CyclomaticComplexity"/>
+        <module name="CyclomaticComplexity">
+            <property name="max" value="7"/>
+        </module>
         <module name="JavaNCSS">
             <property name="methodMaximum" value="50"/>
             <property name="classMaximum" value="125"/>
