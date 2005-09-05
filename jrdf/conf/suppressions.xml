@@ -3,9 +3,7 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <suppress checks="BooleanExpressionComplexity" files="GraphIterator.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
-    <suppress checks="CyclomaticComplexity" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
     <suppress checks="ParameterNumber" files="OneFixedIterator.java"/>
     <suppress checks="ParameterNumber" files="TwoFixedIterator.java"/>
