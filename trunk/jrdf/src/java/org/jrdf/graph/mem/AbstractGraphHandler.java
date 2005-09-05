@@ -80,7 +80,6 @@ public abstract class AbstractGraphHandler implements GraphHandler {
 
         if (!predIterator.hasNext()) {
             out.println("X");
-            return;
         }
         else {
             int sWidth = subject.length() + STATEMENT_OFFSET;
@@ -103,7 +102,6 @@ public abstract class AbstractGraphHandler implements GraphHandler {
 
             if (!objIterator.hasNext()) {
                 out.println("X");
-                continue;
             }
             else {
                 int pWidth = predicate.length() + STATEMENT_OFFSET;
