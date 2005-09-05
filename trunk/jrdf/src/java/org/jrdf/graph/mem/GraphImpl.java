@@ -190,11 +190,15 @@ public class GraphImpl implements Graph, Serializable {
             triple.getObject());
     }
 
-    public boolean contains(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException {
+    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, CONTAIN_CANT_USE_NULLS);
+
+        // Return true if all are any AnyNodes and size is greater than zero.
+        if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
+            return 0 < index012.size();
+        }
 
         // Get local node values
         Long[] values;
@@ -208,85 +212,91 @@ public class GraphImpl implements Graph, Serializable {
             return false;
         }
 
-        // Return true if all are any AnyNodes and size is greater than zero.
-        if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
-            return 0 < index012.size();
-        }
-
         // AnySubjectNode.
         if (ANY_SUBJECT_NODE == subject) {
-
-            // AnySubjectNode, AnyPredicateNode, obj.
-            if (ANY_PREDICATE_NODE == predicate) {
-                Map<Long, Set<Long>> objIndex = index201.get(values[2]);
-                return null != objIndex;
-            }
-            // Predicate is not null.  Could be null, pred, null or null, pred, obj.
-            else {
-                Map<Long, Set<Long>> predIndex = index120.get(values[1]);
-
-                // If predicate not found return false.
-                if (null == predIndex) {
-                    return false;
-                }
-
-                // If the object is any object node and we found the predicate return true.
-                if (ANY_OBJECT_NODE == object) {
-                    return true;
-                }
-                // Was null, pred, obj
-                else {
-                    Set group = predIndex.get(values[2]);
-                    return null != group;
-                }
-            }
+            return containsAnySubject(predicate, values, object);
         }
-        // Subject is not null.
+        // Subject is not anything.
         else {
-            Map<Long, Set<Long>> subIndex = index012.get(values[0]);
+            return containsFixedSubject(values, predicate, object);
 
-            // If subject not found return false.
-            if (null == subIndex) {
+        }
+    }
+
+    private boolean containsFixedSubject(Long[] values, PredicateNode predicate, ObjectNode object) {
+        Map<Long, Set<Long>> subIndex = index012.get(values[0]);
+
+        // If subject not found return false.
+        if (null == subIndex) {
+            return false;
+        }
+
+        // AnyPredicateNode.  Could be subj, AnyPredicateNode, AnyObjectNode or subj, AnyPredicateNode, obj.
+        if (ANY_PREDICATE_NODE == predicate) {
+            return containsAnyPredicate(object, values);
+        }
+        // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
+        else {
+
+            // look up the predicate
+            Set group = subIndex.get(values[1]);
+            if (null == group) {
                 return false;
             }
 
-            // AnyPredicateNode.  Could be subj, AnyPredicateNode, AnyObjectNode or subj, AnyPredicateNode, obj.
-            if (ANY_PREDICATE_NODE == predicate) {
-
-                // If its AnyObjectNode then we've found all we need to find.
-                if (ANY_OBJECT_NODE == object) {
-                    return true;
-                }
-                // If the object is not any node we need to find subj, AnyObjectNode, obj
-                else {
-                    Map<Long, Set<Long>> objIndex = index201.get(values[2]);
-
-                    if (null == objIndex) {
-                        return false;
-                    }
-
-                    Set group = objIndex.get(values[0]);
-                    return null != group;
-                }
+            // Object not null.  Must be subj, pred, obj.
+            if (ANY_OBJECT_NODE != object) {
+                return group.contains(values[2]);
             }
-            // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
+            // Was subj, pred, AnyObjectNode - must be true if we get this far.
             else {
-
-                // look up the predicate
-                Set group = subIndex.get(values[1]);
-                if (null == group) {
-                    return false;
-                }
-
-                // Object not null.  Must be subj, pred, obj.
-                if (ANY_OBJECT_NODE != object) {
-                    return group.contains(values[2]);
-                }
-                // Was subj, pred, AnyObjectNode - must be true if we get this far.
-                else {
-                    return true;
-                }
+                return true;
             }
+        }
+    }
+
+    private boolean containsAnySubject(PredicateNode predicate, Long[] values, ObjectNode object) {
+        // AnySubjectNode, AnyPredicateNode, obj.
+        if (ANY_PREDICATE_NODE == predicate) {
+            Map<Long, Set<Long>> objIndex = index201.get(values[2]);
+            return null != objIndex;
+        }
+        // Predicate is not null.  Could be null, pred, null or null, pred, obj.
+        else {
+            Map<Long, Set<Long>> predIndex = index120.get(values[1]);
+
+            // If predicate not found return false.
+            if (null == predIndex) {
+                return false;
+            }
+
+            // If the object is any object node and we found the predicate return true.
+            if (ANY_OBJECT_NODE == object) {
+                return true;
+            }
+            // Was null, pred, obj
+            else {
+                Set group = predIndex.get(values[2]);
+                return null != group;
+            }
+        }
+    }
+
+    private boolean containsAnyPredicate(ObjectNode object, Long[] values) {
+        // If its AnyObjectNode then we've found all we need to find.
+        if (ANY_OBJECT_NODE == object) {
+            return true;
+        }
+        // If the object is not any node we need to find subj, AnyObjectNode, obj
+        else {
+            Map<Long, Set<Long>> objIndex = index201.get(values[2]);
+
+            if (null == objIndex) {
+                return false;
+            }
+
+            Set group = objIndex.get(values[0]);
+            return null != group;
         }
     }
 
@@ -300,8 +310,8 @@ public class GraphImpl implements Graph, Serializable {
      * @param object ObjectNode The object to find or null to indicate any object.
      * @throws GraphException If there was an error accessing the graph.
      */
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException {
+    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphException {
 
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
@@ -323,16 +333,7 @@ public class GraphImpl implements Graph, Serializable {
             // test for {sp*}
             if (ANY_PREDICATE_NODE != predicate) {
                 // test for {spo}
-                if (ANY_OBJECT_NODE != object) {
-                    // got {spo}
-                    return new ThreeFixedIterator(this, subject, predicate, object);
-                }
-                else {
-                    // got {sp*}
-                    return new TwoFixedIterator(index012, 0, values[0], values[1],
-                        elementFactory, new GraphHandler012(this),
-                        (Map) index012.get(values[0]));
-                }
+                return fixedSubjectAndPredicate(values, object, subject, predicate);
             }
             else {
                 // test for {s**}
@@ -345,37 +346,59 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (ANY_PREDICATE_NODE != predicate) {
-            // test for {*po}
-            if (ANY_OBJECT_NODE != object) {
-                return new TwoFixedIterator(index120, 2, values[1], values[2],
-                    elementFactory, new GraphHandler120(this),
-                    (Map) index120.get(values[1]));
-            }
-            else {
-                // test for {*p*}.  {sp*} should have been picked up above
-                assert ANY_SUBJECT_NODE == subject;
-                return new OneFixedIterator(index120, 2, values[1], elementFactory,
-                    new GraphHandler120(this), (Map) index120.get(values[1]));
-            }
+            return fixedPredicateIterator(values, object, subject);
         }
 
         if (ANY_OBJECT_NODE != object) {
-            // test for {s*o}
-            if (ANY_SUBJECT_NODE != subject) {
-                return new TwoFixedIterator(index201, 1, values[2], values[0],
-                    elementFactory, new GraphHandler201(this),
-                    (Map) index201.get(values[2]));
-            }
-            else {
-                // test for {**o}.  {*po} should have been picked up above
-                assert ANY_PREDICATE_NODE == predicate;
-                return new OneFixedIterator(index201, 1, values[2], elementFactory,
-                    new GraphHandler201(this), (Map) index201.get(values[2]));
-            }
+            return fixedObjectIterator(values, subject, predicate);
         }
 
         // {***} so return entire graph
         return new GraphIterator(elementFactory, new GraphHandler012(this));
+    }
+
+    private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object, SubjectNode subject,
+        PredicateNode predicate) throws GraphException {
+        if (ANY_OBJECT_NODE != object) {
+            // got {spo}
+            return new ThreeFixedIterator(this, subject, predicate, object);
+        }
+        else {
+            // got {sp*}
+            return new TwoFixedIterator(index012, 0, values[0], values[1],
+                elementFactory, new GraphHandler012(this),
+                (Map) index012.get(values[0]));
+        }
+    }
+
+    private ClosableIterator<Triple> fixedObjectIterator(Long[] values, SubjectNode subject, PredicateNode predicate) {
+        // test for {s*o}
+        if (ANY_SUBJECT_NODE != subject) {
+            return new TwoFixedIterator(index201, 1, values[2], values[0],
+                elementFactory, new GraphHandler201(this),
+                (Map) index201.get(values[2]));
+        }
+        else {
+            // test for {**o}.  {*po} should have been picked up above
+            assert ANY_PREDICATE_NODE == predicate;
+            return new OneFixedIterator(index201, 1, values[2], elementFactory,
+                new GraphHandler201(this), (Map) index201.get(values[2]));
+        }
+    }
+
+    private ClosableIterator<Triple> fixedPredicateIterator(Long[] values, ObjectNode object, SubjectNode subject) {
+        // test for {*po}
+        if (ANY_OBJECT_NODE != object) {
+            return new TwoFixedIterator(index120, 2, values[1], values[2],
+                elementFactory, new GraphHandler120(this),
+                (Map) index120.get(values[1]));
+        }
+        else {
+            // test for {*p*}.  {sp*} should have been picked up above
+            assert ANY_SUBJECT_NODE == subject;
+            return new OneFixedIterator(index120, 2, values[1], elementFactory,
+                new GraphHandler120(this), (Map) index120.get(values[1]));
+        }
     }
 
     /**
@@ -571,8 +594,7 @@ public class GraphImpl implements Graph, Serializable {
      * @param third The last node.
      * @throws GraphException If there was an error adding the statement.
      */
-    private Long[] localize(Node first, Node second, Node third) throws
-        GraphException {
+    private Long[] localize(Node first, Node second, Node third) throws GraphException {
 
         Long[] localValues = new Long[TRIPLE];
 
@@ -580,48 +602,62 @@ public class GraphImpl implements Graph, Serializable {
         // are invalid first.
 
         // convert the nodes to local memory nodes for convenience
+        localValues[0] = convertSubject(first);
+        localValues[1] = convertPredicate(second);
+        localValues[2] = convertObject(third);
+        return localValues;
+    }
+
+    private Long convertSubject(Node first) throws GraphException {
+        Long subjectValue = null;
         if (ANY_SUBJECT_NODE != first) {
             if (first instanceof BlankNodeImpl) {
-                localValues[0] = ((BlankNodeImpl) first).getId();
+                subjectValue = ((BlankNodeImpl) first).getId();
             }
             else {
-                localValues[0] =
-                    elementFactory.getNodeIdByString(String.valueOf(first));
+                subjectValue = elementFactory.getNodeIdByString(String.valueOf(first));
             }
 
-            if (null == localValues[0]) {
+            if (null == subjectValue) {
                 throw new GraphException("Subject does not exist in graph");
             }
         }
 
-        if (ANY_PREDICATE_NODE != second) {
-            localValues[1] =
-                elementFactory.getNodeIdByString(String.valueOf(second));
+        return subjectValue;
+    }
 
-            if (null == localValues[1]) {
+    private Long convertPredicate(Node second) throws GraphException {
+        Long predicateValue = null;
+        if (ANY_PREDICATE_NODE != second) {
+            predicateValue = elementFactory.getNodeIdByString(String.valueOf(second));
+
+            if (null == predicateValue) {
                 throw new GraphException("Predicate does not exist in graph");
             }
         }
 
+        return predicateValue;
+    }
+
+    private Long convertObject(Node third) throws GraphException {
+        Long objectValue = null;
         if (ANY_OBJECT_NODE != third) {
             if (third instanceof BlankNodeImpl) {
-                localValues[2] = ((BlankNodeImpl) third).getId();
+                objectValue = ((BlankNodeImpl) third).getId();
             }
             else if (third instanceof LiteralImpl) {
-                localValues[2] = elementFactory.getNodeIdByString(((LiteralImpl)
-                    third).getEscapedForm());
+                objectValue = elementFactory.getNodeIdByString(((LiteralImpl) third).getEscapedForm());
             }
             else {
-                localValues[2] =
-                    elementFactory.getNodeIdByString(String.valueOf(third));
+                objectValue = elementFactory.getNodeIdByString(String.valueOf(third));
             }
 
-            if (null == localValues[2]) {
+            if (null == objectValue) {
                 throw new GraphException("Object does not exist in graph");
             }
         }
 
-        return localValues;
+        return objectValue;
     }
 
     /**
