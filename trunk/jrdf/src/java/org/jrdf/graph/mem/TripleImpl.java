@@ -107,6 +107,7 @@ public class TripleImpl extends AbstractTriple {
      */
     TripleImpl(GraphElementFactory factory, Long subject, Long predicate,
         Long object) {
+        // TODO Create an interface out of getNodeById
         GraphElementFactoryImpl graphFactory = (GraphElementFactoryImpl) factory;
         subjectNode = (SubjectNode) graphFactory.getNodeById(subject);
         predicateNode = (PredicateNode) graphFactory.getNodeById(predicate);
