@@ -58,7 +58,7 @@
 
 package org.jrdf.query;
 
-import org.jrdf.connection.JrdfConnectionException;
+import org.jrdf.graph.GraphException;
 
 /**
  * Executes queries against a graph.
@@ -73,7 +73,7 @@ public interface JrdfQueryExecutor {
      * Executes a query against a graph.
      * @param query The query to execute.
      * @return The answer to the query, will never be <code>null</code>.
-     * @throws org.jrdf.connection.JrdfConnectionException If an error occurs while executing the query.
+     * @throws GraphException If an error occurs while executing the query.
      */
-    Answer executeQuery(Query query) throws JrdfConnectionException;
+    Answer executeQuery(Query query) throws GraphException;
 }

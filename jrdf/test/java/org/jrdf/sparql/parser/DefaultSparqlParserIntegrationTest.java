@@ -86,8 +86,7 @@ public final class DefaultSparqlParserIntegrationTest extends TestCase {
         assertTrue(true);
     }
 
-    // FIXME TJA: Breadcrumb - Was chasing this down...
-    public void xxxTestSingleConstraint() {
+    public void testSingleConstraint() {
         checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
         checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
     }

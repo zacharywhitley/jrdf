@@ -63,9 +63,9 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.ConstraintTriple;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * SPARQL artefacts used in tests.
@@ -93,7 +93,6 @@ public final class SparqlQueryTestUtil {
     public static final Triple TRIPLE_BOOK_3_DC_TITLE = createDcTitleTriple(URI_BOOK_3);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = createDcSubjectTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = createDcSubjectTriple(URI_BOOK_1, LITERAL_BOOK_TITLE);
-    private static final ObjectNode ANY_OBJECT_NODE = AnyObjectNode.ANY_OBJECT_NODE;
 
     private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {
         return "SELECT * WHERE  { " +
@@ -110,7 +109,6 @@ public final class SparqlQueryTestUtil {
 
     private static Triple createDcTitleTriple(String bookUri) {
         Triple object = createTripleWithVariableObject(bookUri, URI_DC_TITLE);
-        System.out.println("object = " + object);
         return object;
     }
 
@@ -134,7 +132,7 @@ public final class SparqlQueryTestUtil {
     private static Triple createTriple(String subjectUri, String predicateUri, ObjectNode object) {
         SubjectNode subject = NodeTestUtil.createResource(subjectUri);
         PredicateNode predicate = NodeTestUtil.createResource(predicateUri);
-        return createTriple(subject,  predicate, object);
+        return createTriple(subject, predicate, object);
     }
 
     private static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {

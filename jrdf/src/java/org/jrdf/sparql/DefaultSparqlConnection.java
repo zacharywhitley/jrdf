@@ -59,13 +59,13 @@
 package org.jrdf.sparql;
 
 import java.net.URI;
-import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.DefaultQueryExecutor;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
 import org.jrdf.query.JrdfQueryExecutor;
+import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterUtil;
 
@@ -101,7 +101,7 @@ public final class DefaultSparqlConnection implements SparqlConnection {
     /**
      * {@inheritDoc}
      */
-    public Answer executeQuery(String queryText) throws InvalidQuerySyntaxException, JrdfConnectionException {
+    public Answer executeQuery(String queryText) throws InvalidQuerySyntaxException, GraphException {
         ParameterUtil.checkNotEmptyString("queryText", queryText);
         Query builtQuery = builder.buildQuery(queryText);
         return executor.executeQuery(builtQuery);

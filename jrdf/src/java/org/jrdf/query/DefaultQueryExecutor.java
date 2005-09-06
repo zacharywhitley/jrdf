@@ -59,8 +59,8 @@
 package org.jrdf.query;
 
 import java.net.URI;
-import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.util.param.ParameterUtil;
 
 /**
@@ -70,34 +70,24 @@ import org.jrdf.util.param.ParameterUtil;
  */
 public final class DefaultQueryExecutor implements JrdfQueryExecutor {
 
-    // FIXME TJA: Breadcrumb - Implement executeQuery() once the builder is written.
-    private Graph graph;
-    private URI securityDomain;
+    private NaiveQueryExecutor executor;
 
     /**
      * Creates executor to execute queries.
-     *
      * @param graph The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
     public DefaultQueryExecutor(Graph graph, URI securityDomain) {
         ParameterUtil.checkNotNull("session", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        this.graph = graph;
-        this.securityDomain = securityDomain;
+        executor = new NaiveQueryExecutor(graph, securityDomain);
     }
 
     /**
      * {@inheritDoc}
      */
-    public Answer executeQuery(Query query) throws JrdfConnectionException {
+    public Answer executeQuery(Query query) throws GraphException {
         ParameterUtil.checkNotNull("query", query);
-        // FIXME TJA: Breadcrumb - Delegate to the NaiveQueryExecutor here.
-//    try {
-//      return graph.query(query);
-//    } catch (QueryException qe) {
-//      throw new JrdfConnectionException("Unable to execute query - " + query.toString(), qe);
-//    }
-        throw new UnsupportedOperationException("Implement me!");
+        return executor.executeQuery(query);
     }
 }

@@ -58,20 +58,18 @@
 
 package org.jrdf.graph.mem;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Literal;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import junit.framework.Test;
+import junit.framework.TestSuite;
+import junit.textui.TestRunner;
+import org.jrdf.graph.AbstractGraphUnitTest;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Literal;
 
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
@@ -127,7 +125,6 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Implementation method for testing serialization of the graph.
-     *
      * @throws Exception When a problem is found.
      */
     public void testSerializing() throws Exception {
@@ -179,6 +176,6 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         assertTrue(graph2.contains(ref3, ref3, ref3));
         assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE));
         assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, l3));
-  }
+    }
 
 }

@@ -2,12 +2,11 @@ package org.jrdf.graph;
 
 /**
  * A node which represents any object - unconstrained.
- *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class AnyObjectNode implements ObjectNode {
+
     /**
      * The any object node constant - represents an unconstrained object node.
      */

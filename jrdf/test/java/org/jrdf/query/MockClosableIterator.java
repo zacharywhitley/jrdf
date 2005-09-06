@@ -58,28 +58,37 @@
 
 package org.jrdf.query;
 
+import java.util.Collection;
+import java.util.Iterator;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.Triple;
 
 /**
- * Mock {@link ClosableIterator}.
+ * Mock {@link ClosableIterator} for use in testing.
  * @author Tom Adams
  * @version $Revision$
  */
-class MockClosableIterator implements ClosableIterator {
+class MockClosableIterator implements ClosableIterator<Triple> {
+
+    private Iterator<Triple> iterator;
+
+    public MockClosableIterator(Collection<Triple> triples) {
+        this.iterator = triples.iterator();
+    }
 
     public boolean close() {
-        throw new UnsupportedOperationException("Implement me...");
+        throw new UnsupportedOperationException("Sorry, nothing to see here...");
     }
 
     public boolean hasNext() {
-        throw new UnsupportedOperationException("Implement me...");
+        return iterator.hasNext();
     }
 
-    public Object next() {
-        throw new UnsupportedOperationException("Implement me...");
+    public Triple next() {
+        return iterator.next();
     }
 
     public void remove() {
-        throw new UnsupportedOperationException("Implement me...");
+        iterator.remove();
     }
 }

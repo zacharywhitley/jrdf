@@ -29,11 +29,11 @@ public final class MockBadGraph implements Graph {
     }
 
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-        throw new UnsupportedOperationException("Implement me...");
+        throw new GraphException("Don't care about the message, I'm sure it will be meaningful");
     }
 
     public ClosableIterator<Triple> find(Triple triple) throws GraphException {
-        throw new UnsupportedOperationException("Implement me...");
+        throw new GraphException("Don't care about the message, I'm sure it will be meaningful");
     }
 
     public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
