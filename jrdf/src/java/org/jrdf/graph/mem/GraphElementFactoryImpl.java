@@ -82,6 +82,7 @@ import java.util.Map;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
+// TODO Create an interface out of getNodeById
 public class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * The pool of all nodes, mapped from their ids.
@@ -312,8 +313,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @return the newly created triple object.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Triple createTriple(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphElementFactoryException {
+    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphElementFactoryException {
         return new TripleImpl(subject, predicate, object);
     }
 
