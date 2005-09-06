@@ -13,12 +13,6 @@ o Finish Relational operators.
 o Write a push based RDF/XML parser.
 
 TJA: Done
-o Minor work on getting analyser to handle more than one query. Tightened up tests on static final members.
-o Completed SPARQL parser for non-projection single constraint queries.
-o Completed implementation of query executor.
-o Replace all nulls (representing wildcards) with Any*Node.ANY*NODE constants.
-o Added LiteralTripleSpec & VariableTripleSpec to make unit test simpler.
-o Checkstyle
-  o Remove need for {} on single line ifs
-  o Allow catch to be on same line as }
-  o Empty catch's OK in unit tests, e.g. catch(Exception expected) { }
+o Made new code work with Any*Node calls (static import hackery)
+o Added naive query executor - iterates over all triples
+o Moved some tests to AssertThrows.assertThrows().

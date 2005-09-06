@@ -61,7 +61,9 @@ package org.jrdf.query;
 import java.net.URI;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
@@ -71,40 +73,51 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public class DefaultQueryExecutorUnitTest extends TestCase {
 
+    private static final String URI_BOOK_1 = SparqlQueryTestUtil.URI_BOOK_1;
+    private static final String URI_DC_TITLE = SparqlQueryTestUtil.URI_DC_TITLE;
+    private static final MockQuery QUERY_BOOK_1_DC_TITLE = new MockQuery(URI_BOOK_1, URI_DC_TITLE);
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final Graph BAD_GRAPH = new MockBadGraph();
+    private static final JrdfQueryExecutor EXECUTOR_BAD = new DefaultQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN);
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, DefaultQueryExecutor.class);
     }
 
     public void testNullSessionInConstructor() {
-        try {
-            new DefaultQueryExecutor(null, NO_SECURITY_DOMAIN);
-            fail("Null session should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-        }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new DefaultQueryExecutor(null, NO_SECURITY_DOMAIN);
+            }
+        });
     }
 
     public void testNullSesurityDomainInConstructor() {
-        try {
-            new DefaultQueryExecutor(BAD_GRAPH, null);
-            fail("Null security domain should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-        }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new DefaultQueryExecutor(GraphFixture.GRAPH_BAD, null);
+            }
+        });
     }
 
     public void testNullQueryThrowsException() throws Exception {
-        try {
-            new DefaultQueryExecutor(BAD_GRAPH, NO_SECURITY_DOMAIN).executeQuery(null);
-            fail("Null query should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new DefaultQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN).executeQuery(null);
+            }
+        });
     }
 
-//  public void testQueryExceptionWrapped() throws InvalidQuerySyntaxException {
-//    try {
-//      new DefaultQueryExecutor(BAD_GRAPH, NO_SECURITY_DOMAIN).executeQuery(buildQuery());
-//      fail("QueryException should jave been wrapped as JrdfConnectionException");
-//    } catch (JrdfConnectionException expected) { }
-//  }
+    public void testBadGraphThrowsException() {
+        AssertThrows.assertThrows(GraphException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                EXECUTOR_BAD.executeQuery(QUERY_BOOK_1_DC_TITLE);
+            }
+        });
+    }
+
+    public void testExecuteGoodQuery() throws GraphException {
+        JrdfQueryExecutor executor = new DefaultQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN);
+        Answer answer = executor.executeQuery(GraphFixture.createQuery());
+        GraphFixture.checkAnswer(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
+    }
 }

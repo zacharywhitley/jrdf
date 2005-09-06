@@ -62,14 +62,14 @@ import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
 import org.jrdf.query.MockQuery;
+import org.jrdf.query.Query;
 import org.jrdf.query.Variable;
+import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.sparql.analysis.MockSparqlAnalyser;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.sparql.SparqlQueryTestUtil;
-import org.jrdf.sparql.analysis.MockSparqlAnalyser;
 
 /**
  * Unit test for {@link DefaultSparqlParser}.
@@ -85,7 +85,7 @@ public final class DefaultSparqlParserUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlParser.class, DefaultSparqlParser.class);
     }
 
-    // FIXME TJA: Breadcrumb - Triangulate to force parsing of the variable list (requires non-wildcard variable projection in grammar).
+    // FIXME TJA: Triangulate to force parsing of the variable list (requires non-wildcard variable projection in grammar).
     public void testProjectedVariables() {
         checkVariablesOnParsedQuery(QUERY_BOOK_1_DC_TITLE, Variable.ALL_VARIABLES);
     }
@@ -96,8 +96,7 @@ public final class DefaultSparqlParserUnitTest extends TestCase {
         checkBadInput(ParameterTestUtil.SINGLE_SPACE);
     }
 
-    // FIXME TJA: Breadcrumb - Was chasing this down...
-    public void xxxTestSingleTriplePatternExpression() {
+    public void testSingleTriplePatternExpression() {
         checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
     }
 
@@ -141,7 +140,11 @@ public final class DefaultSparqlParserUnitTest extends TestCase {
 
     private MockSparqlAnalyser createMockSparqlAnalyser() {
         MockSparqlAnalyser mockAnalyser = new MockSparqlAnalyser();
-        mockAnalyser.prepare(new MockQuery());
+        mockAnalyser.prepare(createQuery());
         return mockAnalyser;
+    }
+
+    private MockQuery createQuery() {
+        return new MockQuery(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
     }
 }

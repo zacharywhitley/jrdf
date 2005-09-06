@@ -59,7 +59,10 @@
 package org.jrdf.query;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 import junit.framework.TestCase;
+import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -87,9 +90,13 @@ public final class DefaultAnswerUnitTest extends TestCase {
     }
 
     public void testGetAnswer() {
-        MockClosableIterator expected = new MockClosableIterator();
+        MockClosableIterator expected = new MockClosableIterator(createTriples());
         Answer answer = new DefaultAnswer(expected);
         ClosableIterator actual = answer.getClosableIterator();
         assertEquals(expected, actual);
+    }
+
+    private Collection<Triple> createTriples() {
+        return Collections.emptyList();
     }
 }

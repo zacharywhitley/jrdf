@@ -59,8 +59,10 @@
 package org.jrdf.query;
 
 import java.net.URI;
-import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
 /**
@@ -76,7 +78,7 @@ import org.jrdf.util.param.ParameterUtil;
  */
 final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
-    // FIXME TJA: Use an iterator-based approach to finding triples.
+    // TODO: Filter out the variables in the projection list.
 
     private Graph graph;
     private URI securityDomain;
@@ -96,9 +98,15 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
     /**
      * {@inheritDoc}
      */
-    public Answer executeQuery(Query query) throws JrdfConnectionException {
-        // FIXME TJA: Breadcrumb - Was implementing this after chasing down the null issue...
-        return null;
-//        throw new UnsupportedOperationException("Implement me...");
+    public Answer executeQuery(Query query) throws GraphException {
+        ClosableIterator<Triple> triples = findTriples(query);
+        return new DefaultAnswer(triples);
+    }
+
+    // TODO: When the tests (& grammar) force it, get all the triples and iterate over them :)
+    private ClosableIterator<Triple> findTriples(Query query) throws GraphException {
+        ConstraintExpression constraints = query.getConstraintExpression();
+        Triple triple = ((ConstraintTriple) constraints).getTriple();
+        return graph.find(triple);
     }
 }

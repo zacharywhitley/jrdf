@@ -16,14 +16,14 @@ import org.jrdf.util.ClosableIterator;
  * @author Tom Adams
  * @version $Revision$
  */
-final class MockGraph implements Graph {
-    
+public final class MockGraph implements Graph {
+
     private static final long serialVersionUID = 223166258140602924L;
 
-    private ClosableIterator expectedIterator;
+    private ClosableIterator<Triple> triples;
 
-    public MockGraph(ClosableIterator expectedIterator) {
-        this.expectedIterator = expectedIterator;
+    public MockGraph(ClosableIterator<Triple> expectedIterator) {
+        this.triples = expectedIterator;
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
@@ -34,14 +34,12 @@ final class MockGraph implements Graph {
         throw new UnsupportedOperationException("Implement me...");
     }
 
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-        throws GraphException {
-        throw new UnsupportedOperationException("Implement me...");
-//        return expectedIterator;
+    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return triples;
     }
 
     public ClosableIterator<Triple> find(Triple triple) throws GraphException {
-        throw new UnsupportedOperationException("Implement me...");
+        return triples;
     }
 
     public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
@@ -57,7 +55,7 @@ final class MockGraph implements Graph {
     }
 
     public void close() {
-        throw new UnsupportedOperationException("Implement me...");
+        // do nothing
     }
 
     public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {

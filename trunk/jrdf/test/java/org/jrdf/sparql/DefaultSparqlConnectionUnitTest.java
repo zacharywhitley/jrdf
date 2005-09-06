@@ -59,16 +59,16 @@
 package org.jrdf.sparql;
 
 import java.net.URI;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import org.jrdf.connection.JrdfConnectionException;
 import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.query.MockBadGraph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.MockBadGraph;
+import org.jrdf.query.GraphFixture;
+import org.jrdf.query.MockGraph;
 import org.jrdf.util.param.ParameterTestUtil;
+import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
@@ -78,61 +78,62 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public class DefaultSparqlConnectionUnitTest extends TestCase {
 
-    // FIXME TJA: Breadcrumb - Re-implement this functionality once builder, executor and connection complete.
+    // FIXME TJA: Breadcrumb - Re-implement this functionality once builder & executor are complete.
 
-    private static final MockBadGraph BAD_GRAPH = new MockBadGraph();
+    private static final MockBadGraph GRAPH_BAD = new MockBadGraph();
+    private static final MockGraph GRAPH_GOOD = GraphFixture.createGraph();
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final String EXECUTE_UPDATE_METHOD = "executeUpdate";
     private static final String EXECUTE_QUERY_METHOD = "executeQuery";
     private static final String NULL = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
-
-    public static Test suite() {
-        // Don't run any of the tests for now.
-        return new TestSuite();
-    }
+    private static final String QUERY_ITQL = "select $s $p $o from <rmi://localhost/server1#> where $s $p $o ;";
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(SparqlConnection.class, DefaultSparqlConnection.class);
     }
 
     public void testNullSessionInConstructor() {
-        try {
-            new DefaultSparqlConnection(null, NO_SECURITY_DOMAIN);
-            fail("Null session should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new DefaultSparqlConnection(null, NO_SECURITY_DOMAIN);
+            }
+        });
     }
 
     public void testNullSesurityDomainInConstructor() {
-        try {
-            new DefaultSparqlConnection(BAD_GRAPH, null);
-            fail("Null security domain should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new DefaultSparqlConnection(GRAPH_BAD, null);
+            }
+        });
     }
 
     public void testClose() {
-        new DefaultSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN).close();
+        new DefaultSparqlConnection(GRAPH_GOOD, NO_SECURITY_DOMAIN).close();
     }
 
     public void testExecuteSimpleBadQuery() throws Exception {
-        DefaultSparqlConnection connection = new DefaultSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN);
-        checkBadParam(connection, EXECUTE_UPDATE_METHOD, NULL);
-        checkBadParam(connection, EXECUTE_UPDATE_METHOD, EMPTY_STRING);
-        checkBadParam(connection, EXECUTE_UPDATE_METHOD, SINGLE_SPACE);
-    }
-
-    public void testExecuteSimpleBadUpdate() throws Exception {
-        DefaultSparqlConnection connection = new DefaultSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN);
+        DefaultSparqlConnection connection = new DefaultSparqlConnection(GRAPH_BAD, NO_SECURITY_DOMAIN);
         checkBadParam(connection, EXECUTE_QUERY_METHOD, NULL);
         checkBadParam(connection, EXECUTE_QUERY_METHOD, EMPTY_STRING);
         checkBadParam(connection, EXECUTE_QUERY_METHOD, SINGLE_SPACE);
     }
 
-    public void testExecuteQuery() throws JrdfConnectionException, InvalidQuerySyntaxException {
-        DefaultSparqlConnection connection = new DefaultSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN);
-        String query = "select $s $p $o from <rmi://localhost/server1#> where $s $p $o ;";
-        Answer answer = connection.executeQuery(query);
+    // FIXME TJA: Breadcrumb - Was trying to prove passthrough here.
+    public void xxxTestGraphExceptionPassthrough() {
+        AssertThrows.assertThrows(GraphException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                DefaultSparqlConnection connection = new DefaultSparqlConnection(GRAPH_BAD, NO_SECURITY_DOMAIN);
+                connection.executeQuery(SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE);
+            }
+        });
+    }
+
+    // FIXME TJA: Breadcrumb - Need to get this going next, after above...
+    public void xxxTestExecuteQuery() throws InvalidQuerySyntaxException, GraphException {
+        DefaultSparqlConnection connection = new DefaultSparqlConnection(GRAPH_BAD, NO_SECURITY_DOMAIN);
+        Answer answer = connection.executeQuery(QUERY_ITQL);
         assertNotNull(answer);
     }
 

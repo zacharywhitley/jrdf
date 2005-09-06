@@ -60,11 +60,10 @@ package org.jrdf.util.param;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import junit.framework.Assert;
+import org.jrdf.util.test.AssertThrows;
 
 /**
- * Test utility for checking parameters bad to methods.
+ * Test utility for checking bad parameters to methods.
  * @author Tom Adams
  * @version $Revision$
  */
@@ -79,12 +78,12 @@ public final class ParameterTestUtil {
     private ParameterTestUtil() {
     }
 
-    public static void checkBadStringParam(Object ref, String methodName, String param) throws Exception {
-        try {
-            invokeMethod(ref, methodName, String.class, param);
-            Assert.fail("Bad argument should have throw IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-        }
+    public static void checkBadStringParam(final Object ref, final String methodName, final String param) throws Exception {
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                invokeMethod(ref, methodName, String.class, param);
+            }
+        });
     }
 
     private static void invokeMethod(Object cls, String methodName, Class paramClass, String paramValue) throws Exception {

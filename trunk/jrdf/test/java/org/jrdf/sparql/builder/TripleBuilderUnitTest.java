@@ -97,10 +97,8 @@ public final class TripleBuilderUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilder.class);
     }
 
-    // FIXME TJA: Breadcrumb - Was chasing this down...
-    public void xxxTestBuildTripleFromParserNode() {
+    public void testBuildTripleFromParserNode() {
         Triple variable = TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
-        System.out.println("variable = " + variable);
         checkBuiltTripleWithVariable(variable, TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE);
         checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE);
         checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE);

@@ -58,48 +58,50 @@
 
 package org.jrdf.query;
 
-import java.util.List;
-import org.jrdf.graph.NodeTestUtil;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
+import java.util.Collection;
+import java.util.ArrayList;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.Graph;
+import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.ClosableIterator;
+import junit.framework.Assert;
 
 /**
+ * Test fixture for creating graphs and queries that execute against those graphs.
  * @author Tom Adams
  * @version $Revision$
  */
-public class MockQuery implements Query {
+public final class GraphFixture {
 
-    private static final ObjectNode ANY_OBJECT_NODE = AnyObjectNode.ANY_OBJECT_NODE;
-    private String subjectUri;
-    private String predicateUri;
+    static final Graph GRAPH_BAD = new MockBadGraph();
+    static final MockGraph GRAPH_GOOD = createGraph();
+    private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
 
-    public MockQuery(String subjectUri, String predicateUri) {
-        this.subjectUri = subjectUri;
-        this.predicateUri = predicateUri;
+    public static MockGraph createGraph() {
+        Collection<Triple> triples = createTriples();
+        ClosableIterator<Triple> iterator = new MockClosableIterator(triples);
+        return new MockGraph(iterator);
     }
 
-    public List<? extends Variable> getProjectedVariables() {
-        return Variable.ALL_VARIABLES;
+    public static Query createQuery() {
+        return new MockQuery(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
     }
 
-    public ConstraintExpression getConstraintExpression() {
-        return createBook1DcTitleExpression();
+    static void checkAnswer(Triple expectedTriple, Answer actualAnswer) {
+        ClosableIterator iterator = actualAnswer.getClosableIterator();
+        Triple actualTriple = (Triple) iterator.next();
+        checkTriple(expectedTriple, actualTriple);
     }
 
-    private ConstraintExpression createBook1DcTitleExpression() {
-        return new ConstraintTriple(createDcTitleTriple(subjectUri));
+    private static void checkTriple(Triple expectedTriple, Triple actualTriple) {
+        Assert.assertEquals(expectedTriple.getSubject(), actualTriple.getSubject());
+        Assert.assertEquals(expectedTriple.getPredicate(), actualTriple.getPredicate());
+        Assert.assertEquals(expectedTriple.getObject(), actualTriple.getObject());
     }
 
-    private Triple createDcTitleTriple(String bookUri) {
-        return createTripleWithWildcardObject(bookUri, predicateUri);
-    }
-
-    private Triple createTripleWithWildcardObject(String subjectUri, String predicateUri) {
-        SubjectNode subject = NodeTestUtil.createResource(subjectUri);
-        PredicateNode predicate = NodeTestUtil.createResource(predicateUri);
-        return NodeTestUtil.createTriple(subject, predicate, ANY_OBJECT_NODE);
+    private static Collection<Triple> createTriples() {
+        Collection<Triple> triples = new ArrayList<Triple>();
+        triples.add(TRIPLE_1);
+        return triples;
     }
 }

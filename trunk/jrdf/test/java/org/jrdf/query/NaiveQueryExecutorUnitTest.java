@@ -61,8 +61,9 @@ package org.jrdf.query;
 import java.net.URI;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.graph.Graph;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.AssertThrows;
+import org.jrdf.sparql.SparqlQueryTestUtil;
 
 /**
  * Unit test for {@link NaiveQueryExecutor}.
@@ -72,41 +73,30 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 public final class NaiveQueryExecutorUnitTest extends TestCase {
 
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final Graph GRAPH_BAD = new MockBadGraph();
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
     }
 
     public void testNullSessionInConstructor() {
-        try {
-            new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN);
-            fail("Null session should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-        }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN);
+            }
+        });
     }
 
     public void testNullSesurityDomainInConstructor() {
-        try {
-            new NaiveQueryExecutor(GRAPH_BAD, null);
-            fail("Null security domain should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-        }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null);
+            }
+        });
     }
 
     public void testExecuteQuery() throws Exception {
-        NaiveQueryExecutor executor = new NaiveQueryExecutor(createGraph(), NO_SECURITY_DOMAIN);
-        Answer answer = executor.executeQuery(createQuery());
-    }
-
-    private MockGraph createGraph() {
-        // FIXME TJA: Breadcrumb - Implement a mock closableiteraotr with the right content
-        return new MockGraph(null);
-    }
-
-    private Query createQuery() {
-        // FIXME TJA: Breadcrumb - Do this ;)
-        return null;
-//        throw new UnsupportedOperationException("Implement me...");
+        JrdfQueryExecutor executor = new NaiveQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN);
+        Answer answer = executor.executeQuery(GraphFixture.createQuery());
+        GraphFixture.checkAnswer(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
     }
 }
