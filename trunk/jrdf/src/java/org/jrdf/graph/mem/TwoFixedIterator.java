@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
@@ -72,75 +73,92 @@ import java.util.Set;
  * An iterator that iterates over a group with a two fixed nodes.
  * Relies on an internal iterator which iterates over all entries in
  * a set, found in a subIndex.
- *
+ * <p/>
  * The thirdIndexIterator is used to indicate the current position.
  * It will always be set to return the next value until it reaches
  * the end of the group.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class TwoFixedIterator implements ClosableIterator<Triple> {
 
-    /** The iterator for the third index. */
+    /**
+     * The iterator for the third index.
+     */
     private Iterator thirdIndexIterator;
 
-    /** The nodeFactory used to create the nodes to be returned in the triples. */
-    private GraphElementFactoryImpl nodeFactory;
+    /**
+     * The factory used to create the nodes to be returned in the triples.
+     */
+    private GraphElementFactoryImpl factory;
 
-    /** The index of this iterator.  Only needed for initialization and the remove method. */
+    /**
+     * The index of this iterator.  Only needed for initialization and the remove method.
+     */
     private Map index;
 
-    /** The subIndex of this iterator.  Only needed for initialization and the remove method. */
+    /**
+     * The subIndex of this iterator.  Only needed for initialization and the remove method.
+     */
     private Map subIndex;
 
-    /** The subSubIndex of this iterator.  Only needed for initialization and the remove method. */
+    /**
+     * The subSubIndex of this iterator.  Only needed for initialization and the remove method.
+     */
     private Set subGroup;
 
-    /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
+    /**
+     * The current subject predicate and object, last returned from next().  Only needed by the remove method.
+     */
     private Long[] currentNodes;
 
-    /** The first fixed item. */
+    /**
+     * The first fixed item.
+     */
     private Long first;
 
-    /** The second fixed item. */
+    /**
+     * The second fixed item.
+     */
     private Long second;
 
-    /** The current third item */
+    /**
+     * The current third item
+     */
     private Long third;
 
-    /** If there are anymore items left */
+    /**
+     * If there are anymore items left
+     */
     private boolean hasNext;
 
-    /** The offset for the index. */
-    private int var;
-
-    /** Handles the removal of nodes */
+    /**
+     * Handles the removal of nodes
+     */
     private GraphHandler handler;
 
     /**
      * Constructor.  Sets up the internal iterators.
      */
-    TwoFixedIterator(Map newIndex, int newVar, Long newFirst, Long newSecond,
-        GraphElementFactory newFactory, GraphHandler newHandler, Map newSubIndex) {
+    TwoFixedIterator(Map newIndex, Long newFirst, Long newSecond, GraphElementFactory newFactory,
+            GraphHandler newHandler) {
 
         if (!(newFactory instanceof GraphElementFactoryImpl)) {
             throw new IllegalArgumentException("Must use the memory implementation of GraphElementFactory");
         }
 
         // store the node factory and other starting data
-        nodeFactory = (GraphElementFactoryImpl) newFactory;
+        factory = (GraphElementFactoryImpl) newFactory;
         handler = newHandler;
         index = newIndex;
         first = newFirst;
         second = newSecond;
-        var = newVar;
         currentNodes = null;
 
         // find the subIndex from the main index
-        subIndex = newSubIndex;
+        subIndex = (Map) newIndex.get(newFirst);
 
         // check that data exists
         if (null != subIndex) {
@@ -180,9 +198,13 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
         third = (Long) thirdIndexIterator.next();
         hasNext = thirdIndexIterator.hasNext();
         currentNodes = new Long[]{first, second, third};
-        return new TripleImpl(nodeFactory, var, first, second, third);
+        try {
+            return handler.createTriple(factory, factory.createNodes(first, second, third));
+        }
+        catch (GraphElementFactoryException e) {
+            throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
+        }
     }
-
 
     /**
      * Implemented for java.util.Iterator.
@@ -197,8 +219,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
             catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());
             }
-        }
-        else {
+        } else {
             throw new IllegalStateException("Next not called or beyond end of data");
         }
     }
@@ -219,6 +240,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
     /**
      * Closes the iterator by freeing any resources that it current holds.
      * Nothing to be done for this class.
+     *
      * @return <code>true</code> indicating success.
      */
     public boolean close() {

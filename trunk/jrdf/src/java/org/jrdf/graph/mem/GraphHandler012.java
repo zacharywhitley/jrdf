@@ -58,7 +58,14 @@
 
 package org.jrdf.graph.mem;
 
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -68,11 +75,9 @@ import java.util.Set;
  * Handles operations on 012 index.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public class GraphHandler012 extends AbstractGraphHandler
-    implements GraphHandler {
+public class GraphHandler012 extends AbstractGraphHandler implements GraphHandler {
 
     public GraphHandler012(GraphImpl graph) {
         this.graph = graph;
@@ -89,5 +94,9 @@ public class GraphHandler012 extends AbstractGraphHandler
 
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
         return graph.iterator012();
+    }
+
+    public Triple createTriple(GraphElementFactory factory, Node[] nodes) throws GraphElementFactoryException {
+        return factory.createTriple((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
     }
 }

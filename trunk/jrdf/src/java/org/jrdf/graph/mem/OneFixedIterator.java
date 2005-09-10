@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
@@ -78,49 +79,62 @@ import java.util.Set;
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class OneFixedIterator implements ClosableIterator<Triple> {
 
-    /** The iterator for the second index. */
+    /**
+     * The iterator for the second index.
+     */
     private Iterator secondIndexIterator;
 
-    /** The iterator for the third index. */
+    /**
+     * The iterator for the third index.
+     */
     private Iterator thirdIndexIterator;
 
-    /** The current element for the iterator on the second index. */
+    /**
+     * The current element for the iterator on the second index.
+     */
     private Map.Entry secondEntry;
 
-    /** The factory used to create the nodes to be returned in the triples. */
+    /**
+     * The factory used to create the nodes to be returned in the triples.
+     */
     private GraphElementFactoryImpl factory;
 
-    /** The index of this iterator.  Only needed for initialization and the remove method. */
+    /**
+     * The index of this iterator.  Only needed for initialization and the remove method.
+     */
     private Map index;
 
-    /** The subIndex of this iterator.  Only needed for initialization and the remove method. */
+    /**
+     * The subIndex of this iterator.  Only needed for initialization and the remove method.
+     */
     private Map subIndex;
 
-    /** The fixed item. */
+    /**
+     * The fixed item.
+     */
     private Long first;
 
-    /** The offset for the index. */
-    private int var;
-
-    /** The current subject predicate and object, last returned from next().  Only needed by the remove method. */
+    /**
+     * The current subject predicate and object, last returned from next().  Only needed by the remove method.
+     */
     private Long[] currentNodes;
 
-    /** Handles the removal of nodes */
+    /**
+     * Handles the removal of nodes
+     */
     private GraphHandler handler;
 
     /**
      * Constructor.  Sets up the internal iterators.
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory
-     *   implementation.
+     *                                  implementation.
      */
-    OneFixedIterator(Map newIndex, int newVar, Long newFirst,
-        GraphElementFactory newFactory, GraphHandler newHandler) {
+    OneFixedIterator(Map newIndex, Long newFirst, GraphElementFactory newFactory, GraphHandler newHandler) {
         if (!(newFactory instanceof GraphElementFactoryImpl)) {
             throw new IllegalArgumentException("Must use the memory implementation of GraphElementFactory");
         }
@@ -130,7 +144,6 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
         handler = newHandler;
 
         first = newFirst;
-        var = newVar;
         index = newIndex;
         currentNodes = null;
         // initialise the iterators to empty
@@ -156,7 +169,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     public boolean hasNext() {
         // confirm we still have an item iterator, and that it has data available
         return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
-            null != secondIndexIterator && secondIndexIterator.hasNext();
+                null != secondIndexIterator && secondIndexIterator.hasNext();
     }
 
 
@@ -181,7 +194,12 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
         Long second = (Long) secondEntry.getKey();
         // get back the nodes for these IDs and build the triple
         currentNodes = new Long[]{first, second, third};
-        return new TripleImpl(factory, var, first, second, third);
+
+        try {
+            return handler.createTriple(factory, factory.createNodes(first, second, third));
+        } catch (GraphElementFactoryException e) {
+            throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
+        }
     }
 
 
@@ -224,8 +242,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
             catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());
             }
-        }
-        else {
+        } else {
             throw new IllegalStateException("Next not called or beyond end of data");
         }
     }
@@ -249,6 +266,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     /**
      * Closes the iterator by freeing any resources that it current holds.
      * Nothing to be done for this class.
+     *
      * @return <code>true</code> indicating success.
      */
     public boolean close() {
