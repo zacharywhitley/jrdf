@@ -280,8 +280,7 @@ public final class GraphIterator implements ClosableIterator<Triple> {
         try {
             // can instead use var here to determine how to delete, but this is more intuitive
             handler.remove(currentNodes);
-        }
-        catch (GraphException ge) {
+        } catch (GraphException ge) {
             IllegalStateException illegalStateException = new IllegalStateException();
             illegalStateException.setStackTrace(ge.getStackTrace());
             throw illegalStateException;

@@ -127,8 +127,7 @@ public final class DefaultSparqlConnection implements SparqlConnection {
     protected void finalize() throws Throwable {
         try {
             close();
-        }
-        finally {
+        } finally {
             // FIXME: See http://www.janeg.ca/scjp/gc/finalize.html
             super.finalize();
         }

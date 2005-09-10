@@ -300,9 +300,8 @@ public abstract class AbstractLiteral implements Literal, Serializable {
                 if (getLanguage().equals(tmpLiteral.getLanguage())) {
                     returnValue = true;
                 }
-            }
-            // Data type URIs are equal by their string values.
-            else if (equalByStringValue(tmpLiteral)) {
+            } else if (equalByStringValue(tmpLiteral)) {
+                // Data type URIs are equal by their string values.
                 returnValue = true;
             }
         }
@@ -311,8 +310,8 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     private boolean equalByStringValue(Literal tmpLiteral) {
         return (null != getDatatypeURI()) &&
-                (null != tmpLiteral.getDatatypeURI()) &&
-                (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
+               (null != tmpLiteral.getDatatypeURI()) &&
+               (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
     }
 
     /**

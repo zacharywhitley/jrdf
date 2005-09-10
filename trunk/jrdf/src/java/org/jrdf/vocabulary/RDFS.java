@@ -202,8 +202,7 @@ public abstract class RDFS extends Vocabulary {
             RESOURCES.add(MEMBER);
             RESOURCES.add(SEE_ALSO);
             RESOURCES.add(IS_DEFINED_BY);
-        }
-        catch (URISyntaxException use) {
+        } catch (URISyntaxException use) {
 
             // This should never happen.
             throw new ExceptionInInitializerError("Failed to create required URIs");

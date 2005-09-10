@@ -23,8 +23,7 @@ public class RdfXmlParserExample {
             public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
                 try {
                     jrdfMem.add(subject, predicate, object);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

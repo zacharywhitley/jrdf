@@ -154,8 +154,7 @@ public final class TripleBuilder {
     private URIReference createResource(String uri) {
         try {
             return getElementFactory().createResource(new URI(uri));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -163,8 +162,7 @@ public final class TripleBuilder {
     private Literal createLiteral(String lexicalValue) {
         try {
             return getElementFactory().createLiteral(lexicalValue);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -172,8 +170,7 @@ public final class TripleBuilder {
     private Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
             return getElementFactory().createTriple(subject, predicate, object);
-        }
-        catch (GraphElementFactoryException e) {
+        } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
     }

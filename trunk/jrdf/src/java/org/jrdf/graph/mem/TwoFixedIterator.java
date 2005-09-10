@@ -200,8 +200,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
         currentNodes = new Long[]{first, second, third};
         try {
             return handler.createTriple(factory, factory.createNodes(first, second, third));
-        }
-        catch (GraphElementFactoryException e) {
+        } catch (GraphElementFactoryException e) {
             throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
         }
     }
@@ -215,8 +214,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
                 thirdIndexIterator.remove();
                 handler.remove(currentNodes);
                 cleanIndex();
-            }
-            catch (GraphException ge) {
+            } catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());
             }
         } else {

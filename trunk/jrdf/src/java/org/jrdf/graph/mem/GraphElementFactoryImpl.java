@@ -127,11 +127,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
         String uid;
         try {
             uid = UuidGenerator.generateUuid();
-        }
-        catch (Exception exception) {
-            throw new GraphElementFactoryException("Could not generate Unique " +
-                    "Identifier for BlankNode.",
-                    exception);
+        } catch (Exception exception) {
+            throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.", exception);
         }
 
         // create the new node

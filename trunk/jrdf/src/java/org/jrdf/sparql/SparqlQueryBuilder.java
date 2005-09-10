@@ -84,8 +84,7 @@ public final class SparqlQueryBuilder implements QueryBuilder {
         try {
 //            return parser.parseQuery(queryText);
             throw new UnsupportedOperationException("Implement me!");
-        }
-        catch (Throwable t) {
+        } catch (Throwable t) {
             throw new InvalidQuerySyntaxException("Unable to build query from string: " + queryText, t);
         }
     }

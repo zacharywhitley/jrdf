@@ -245,8 +245,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
                         ObjectNode object) {
                 }
             });
-        }
-        catch (TransformerConfigurationException tce) {
+        } catch (TransformerConfigurationException tce) {
             throw new GraphException(tce);
         }
     }
@@ -268,8 +267,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             RDF_FIRST = this.valueFactory.createResource(RDF.FIRST);
             RDF_REST = this.valueFactory.createResource(RDF.REST);
             RDF_NIL = this.valueFactory.createResource(RDF.NIL);
-        }
-        catch (GraphElementFactoryException ex) {
+        } catch (GraphElementFactoryException ex) {
             throw new GraphException(ex);
         }
 
@@ -411,18 +409,15 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             XMLReader xmlReader = factory.newSAXParser().getXMLReader();
             xmlReader.setContentHandler(saxFilter);
             xmlReader.parse(inputSource);
-        }
-        catch (ParserConfigurationException pce) {
+        } catch (ParserConfigurationException pce) {
             throw new ParseException(pce, -1, -1);
-        }
-        catch (SAXParseException e) {
+        } catch (SAXParseException e) {
             Exception wrappedExc = e.getException();
             if (null == wrappedExc) {
                 wrappedExc = e;
             }
             throw new ParseException(wrappedExc, e.getLineNumber(), e.getColumnNumber());
-        }
-        catch (SAXException e) {
+        } catch (SAXException e) {
             Exception wrappedExc = e.getException();
             if (null == wrappedExc) {
                 wrappedExc = e;
@@ -432,8 +427,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             } else {
                 throw new ParseException(wrappedExc, -1, -1);
             }
-        }
-        finally {
+        } finally {
             // Clean up
             saxFilter.clear();
             baseURI = null;
@@ -756,9 +750,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
                     saxFilter.setParseLiteralMode();
                 }
             }
-        }
-        // parseType == null
-        else if (isEmptyElt) {
+        } else if (isEmptyElt) {
             // empty element without an rdf:parseType attribute
 
             if (0 == atts.size()) {
@@ -931,8 +923,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             }
             String uriString = baseURI.resolve(relUri).toString();
             return createURI(uriString);
-        }
-        catch (URISyntaxException ex) {
+        } catch (URISyntaxException ex) {
             throw new SAXException(ex);
         }
     }
@@ -940,8 +931,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     private URIReference createURI(String uri) throws SAXException {
         try {
             return valueFactory.createResource(new URI(uri));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SAXException(e);
         }
     }
@@ -949,8 +939,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     private BlankNode createBNode() throws SAXException {
         try {
             return bNodeFactory.createBlankNode();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SAXException(e);
         }
     }
@@ -965,8 +954,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
         try {
             return bNodeFactory.createBlankNode(nodeID);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SAXException(e);
         }
     }
@@ -990,8 +978,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             } else {
                 return valueFactory.createLiteral(label);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new SAXException(e);
         }
     }
@@ -1187,8 +1174,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             ObjectNode object) throws SAXException {
         try {
             statementHandler.handleStatement(subject, predicate, object);
-        }
-        catch (StatementHandlerException e) {
+        } catch (StatementHandlerException e) {
             // Wrap exception in a SAXException, it will be unwrapped in the
             // parse() method
             throw new SAXException(e);

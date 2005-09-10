@@ -143,8 +143,7 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
             try {
                 graph.remove(removeTriple);
                 removeTriple = null;
-            }
-            catch (GraphException ge) {
+            } catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());
             }
         } else {

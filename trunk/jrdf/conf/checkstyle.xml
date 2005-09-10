@@ -81,7 +81,7 @@
         <module name="TypecastParenPad"/>
         <module name="RedundantImport"/>
         <module name="RedundantModifier"/>
-        <!--<module name="RightCurly"/>-->
+        <module name="RightCurly"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="StaticVariableName"/>

@@ -212,8 +212,7 @@ public abstract class RDF extends Vocabulary {
             RESOURCES.add(VALUE);
             RESOURCES.add(FIRST);
             RESOURCES.add(REST);
-        }
-        catch (URISyntaxException use) {
+        } catch (URISyntaxException use) {
 
             // This should never happen.
             throw new ExceptionInInitializerError("Failed to create required URIs");
