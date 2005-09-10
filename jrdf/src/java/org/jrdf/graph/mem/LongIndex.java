@@ -44,4 +44,7 @@ public interface LongIndex {
      *         This prevents any duplication.
      */
     Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator();
+
+    Map<Long, Set<Long>> getSubIndex(Long first);
+    Map<Long,Set<Long>> removeSubIndex(Long first);
 }

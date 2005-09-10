@@ -315,7 +315,8 @@ public class GraphImpl implements Graph, Serializable {
             } else {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
-                    return new OneFixedIterator(index012, values[0], elementFactory, new GraphHandler012(this));
+                    return new OneFixedIterator(values[0], new LongIndexMem(index012), elementFactory,
+                            new GraphHandler012(this));
                 }
                 // {s*o} so fall through
             }
@@ -351,7 +352,8 @@ public class GraphImpl implements Graph, Serializable {
         } else {
             // test for {**o}.  {*po} should have been picked up above
             assert ANY_PREDICATE_NODE == predicate;
-            return new OneFixedIterator(index201, values[2], elementFactory, new GraphHandler201(this));
+            return new OneFixedIterator(values[2], new LongIndexMem(index201), elementFactory,
+                    new GraphHandler201(this));
         }
     }
 
@@ -362,7 +364,8 @@ public class GraphImpl implements Graph, Serializable {
         } else {
             // test for {*p*}.  {sp*} should have been picked up above
             assert ANY_SUBJECT_NODE == subject;
-            return new OneFixedIterator(index120, values[1], elementFactory, new GraphHandler120(this));
+            return new OneFixedIterator(values[1], new LongIndexMem(index120), elementFactory,
+                    new GraphHandler120(this));
         }
     }
 
@@ -409,8 +412,7 @@ public class GraphImpl implements Graph, Serializable {
      * @param object    The object.
      * @throws GraphException If the statement can't be made.
      */
-    public void add(SubjectNode subject, PredicateNode predicate,
-            ObjectNode object) throws GraphException {
+    public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_ADD_NULL_MESSAGE, CANT_ADD_ANY_NODE_MESSAGE);
@@ -456,8 +458,7 @@ public class GraphImpl implements Graph, Serializable {
      * @throws GraphException If there was an error revoking the statement, for
      *                        example if it didn't exist.
      */
-    public void remove(SubjectNode subject, PredicateNode predicate,
-            ObjectNode object) throws GraphException {
+    public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
