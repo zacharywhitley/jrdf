@@ -5,8 +5,6 @@
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
-    <suppress checks="ParameterNumber" files="OneFixedIterator.java"/>
-    <suppress checks="ParameterNumber" files="TwoFixedIterator.java"/>
 
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>

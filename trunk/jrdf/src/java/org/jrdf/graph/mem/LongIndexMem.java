@@ -82,12 +82,8 @@ public class LongIndexMem implements LongIndex, Serializable {
         return index.get(first);
     }
 
-    public Map<Long,Set<Long>> removeSubIndex(Long first) {
-        return index.remove(first);
-    }
-
-    // TODO Remove this.
-    public Map<Long, Map<Long, Set<Long>>> getIndex() {
-        return index;
+    public boolean removeSubIndex(Long first) {
+        index.remove(first);
+        return index.containsKey(first);
     }
 }
