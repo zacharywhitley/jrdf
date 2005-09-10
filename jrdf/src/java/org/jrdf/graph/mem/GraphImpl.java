@@ -74,10 +74,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Set;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -88,7 +88,6 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class GraphImpl implements Graph, Serializable {
@@ -187,7 +186,7 @@ public class GraphImpl implements Graph, Serializable {
 
     public boolean contains(Triple triple) throws GraphException {
         return contains(triple.getSubject(), triple.getPredicate(),
-            triple.getObject());
+                triple.getObject());
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
@@ -305,9 +304,9 @@ public class GraphImpl implements Graph, Serializable {
      * predicate and object.  A null value for any of the parts of a triple are
      * treated as unconstrained, any values will be returned.
      *
-     * @param subject The subject to find or null to indicate any subject.
+     * @param subject   The subject to find or null to indicate any subject.
      * @param predicate The predicate to find or null to indicate any predicate.
-     * @param object ObjectNode The object to find or null to indicate any object.
+     * @param object    ObjectNode The object to find or null to indicate any object.
      * @throws GraphException If there was an error accessing the graph.
      */
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
@@ -334,12 +333,11 @@ public class GraphImpl implements Graph, Serializable {
             if (ANY_PREDICATE_NODE != predicate) {
                 // test for {spo}
                 return fixedSubjectAndPredicate(values, object, subject, predicate);
-            }
-            else {
+            } else {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
                     return new OneFixedIterator(index012, 0, values[0], elementFactory,
-                        new GraphHandler012(this), (Map) index012.get(values[0]));
+                            new GraphHandler012(this));
                 }
                 // {s*o} so fall through
             }
@@ -358,16 +356,15 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object, SubjectNode subject,
-        PredicateNode predicate) throws GraphException {
+                                                              PredicateNode predicate) throws GraphException {
         if (ANY_OBJECT_NODE != object) {
             // got {spo}
             return new ThreeFixedIterator(this, subject, predicate, object);
-        }
-        else {
+        } else {
             // got {sp*}
             return new TwoFixedIterator(index012, 0, values[0], values[1],
-                elementFactory, new GraphHandler012(this),
-                (Map) index012.get(values[0]));
+                    elementFactory, new GraphHandler012(this),
+                    index012.get(values[0]));
         }
     }
 
@@ -375,14 +372,13 @@ public class GraphImpl implements Graph, Serializable {
         // test for {s*o}
         if (ANY_SUBJECT_NODE != subject) {
             return new TwoFixedIterator(index201, 1, values[2], values[0],
-                elementFactory, new GraphHandler201(this),
-                (Map) index201.get(values[2]));
-        }
-        else {
+                    elementFactory, new GraphHandler201(this),
+                    index201.get(values[2]));
+        } else {
             // test for {**o}.  {*po} should have been picked up above
             assert ANY_PREDICATE_NODE == predicate;
             return new OneFixedIterator(index201, 1, values[2], elementFactory,
-                new GraphHandler201(this), (Map) index201.get(values[2]));
+                    new GraphHandler201(this));
         }
     }
 
@@ -390,14 +386,13 @@ public class GraphImpl implements Graph, Serializable {
         // test for {*po}
         if (ANY_OBJECT_NODE != object) {
             return new TwoFixedIterator(index120, 2, values[1], values[2],
-                elementFactory, new GraphHandler120(this),
-                (Map) index120.get(values[1]));
-        }
-        else {
+                    elementFactory, new GraphHandler120(this),
+                    index120.get(values[1]));
+        } else {
             // test for {*p*}.  {sp*} should have been picked up above
             assert ANY_SUBJECT_NODE == subject;
             return new OneFixedIterator(index120, 2, values[1], elementFactory,
-                new GraphHandler120(this), (Map) index120.get(values[1]));
+                    new GraphHandler120(this));
         }
     }
 
@@ -439,13 +434,13 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Adds a triple to the graph.
      *
-     * @param subject The subject.
+     * @param subject   The subject.
      * @param predicate The predicate.
-     * @param object The object.
+     * @param object    The object.
      * @throws GraphException If the statement can't be made.
      */
     public void add(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException {
+                    ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_ADD_NULL_MESSAGE, CANT_ADD_ANY_NODE_MESSAGE);
@@ -476,7 +471,7 @@ public class GraphImpl implements Graph, Serializable {
      *
      * @param triple The triple.
      * @throws GraphException If there was an error revoking the statement, for
-     *     example if it didn't exist.
+     *                        example if it didn't exist.
      */
     public void remove(Triple triple) throws GraphException {
         remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
@@ -485,14 +480,14 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Removes a triple from the graph.
      *
-     * @param subject The subject.
+     * @param subject   The subject.
      * @param predicate The predicate.
-     * @param object The object.
+     * @param object    The object.
      * @throws GraphException If there was an error revoking the statement, for
-     *     example if it didn't exist.
+     *                        example if it didn't exist.
      */
     public void remove(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException {
+                       ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
@@ -538,13 +533,11 @@ public class GraphImpl implements Graph, Serializable {
         // TODO Move this into the LongIndex implementations.
         long size = 0;
         // go over the index map
-        Iterator first = index012.values().iterator();
-        while (first.hasNext()) {
+        for (Map<Long, Set<Long>> map : index012.values()) {
             // go over the sub indexes
-            Iterator second = ((Map) first.next()).values().iterator();
-            while (second.hasNext()) {
+            for (Set<Long> s : map.values()) {
                 // accumulate the sizes of the groups
-                size += ((java.util.Collection) second.next()).size();
+                size += s.size();
             }
         }
         return size;
@@ -568,7 +561,7 @@ public class GraphImpl implements Graph, Serializable {
 
     // TODO AN Move this to a helper utility perhaps.
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
-        String nullMessage, String anyNodeMessage) {
+                                          String nullMessage, String anyNodeMessage) {
         checkForNulls(subject, predicate, object, nullMessage);
         checkForAnyNodes(subject, predicate, object, anyNodeMessage);
     }
@@ -586,12 +579,13 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     // TODO AN Break this out into its own class and test drive.
+
     /**
      * Adds a triple to a single index.
      *
-     * @param first The first node.
+     * @param first  The first node.
      * @param second The second node.
-     * @param third The last node.
+     * @param third  The last node.
      * @throws GraphException If there was an error adding the statement.
      */
     private Long[] localize(Node first, Node second, Node third) throws GraphException {
@@ -613,8 +607,7 @@ public class GraphImpl implements Graph, Serializable {
         if (ANY_SUBJECT_NODE != first) {
             if (first instanceof BlankNodeImpl) {
                 subjectValue = ((BlankNodeImpl) first).getId();
-            }
-            else {
+            } else {
                 subjectValue = elementFactory.getNodeIdByString(String.valueOf(first));
             }
 
@@ -644,11 +637,9 @@ public class GraphImpl implements Graph, Serializable {
         if (ANY_OBJECT_NODE != third) {
             if (third instanceof BlankNodeImpl) {
                 objectValue = ((BlankNodeImpl) third).getId();
-            }
-            else if (third instanceof LiteralImpl) {
+            } else if (third instanceof LiteralImpl) {
                 objectValue = elementFactory.getNodeIdByString(((LiteralImpl) third).getEscapedForm());
-            }
-            else {
+            } else {
                 objectValue = elementFactory.getNodeIdByString(String.valueOf(third));
             }
 
@@ -681,8 +672,7 @@ public class GraphImpl implements Graph, Serializable {
      * @param in The stream to read from.
      * @throws IOException If an I/O error occurs while reading.
      */
-    private void readObject(ObjectInputStream in) throws IOException,
-        ClassNotFoundException {
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         // read in the first index with the default reader
         in.defaultReadObject();
         // initialize the fields not yet done by the constructor
@@ -706,8 +696,8 @@ public class GraphImpl implements Graph, Serializable {
             throw new ClassNotFoundException("Unable to build NodeFactory", e);
         }
         // populate the node factory with these nodes
-        for (int n = 0; n < nodes.length; n++) {
-            elementFactory.registerNode((MemNode) nodes[n]);
+        for (Object node : nodes) {
+            elementFactory.registerNode((MemNode) node);
         }
 
         // fill in the other indexes
@@ -720,23 +710,19 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    void removeFrom012(Long first, Long second, Long third)
-        throws GraphException {
+    void removeFrom012(Long first, Long second, Long third) throws GraphException {
         longIndex012.remove(first, second, third);
     }
 
-    void removeFrom120(Long first, Long second, Long third)
-        throws GraphException {
+    void removeFrom120(Long first, Long second, Long third) throws GraphException {
         longIndex120.remove(first, second, third);
     }
 
-    void removeFrom201(Long first, Long second, Long third)
-        throws GraphException {
+    void removeFrom201(Long first, Long second, Long third) throws GraphException {
         longIndex201.remove(first, second, third);
     }
 
-    void addTo012(Long first, Long second, Long third)
-        throws GraphException {
+    void addTo012(Long first, Long second, Long third) throws GraphException {
         try {
             longIndex012.add(first, second, third);
         }
@@ -746,8 +732,7 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    void addTo120(Long first, Long second, Long third)
-        throws GraphException {
+    void addTo120(Long first, Long second, Long third) throws GraphException {
         try {
             longIndex120.add(first, second, third);
         }
@@ -757,8 +742,7 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    void addTo201(Long first, Long second, Long third)
-        throws GraphException {
+    void addTo201(Long first, Long second, Long third) throws GraphException {
         longIndex201.add(first, second, third);
     }
 

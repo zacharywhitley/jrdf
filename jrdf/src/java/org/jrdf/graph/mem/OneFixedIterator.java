@@ -120,7 +120,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
      *   implementation.
      */
     OneFixedIterator(Map newIndex, int newVar, Long newFirst,
-        GraphElementFactory newFactory, GraphHandler newHandler, Map newSubIndex) {
+        GraphElementFactory newFactory, GraphHandler newHandler) {
         if (!(newFactory instanceof GraphElementFactoryImpl)) {
             throw new IllegalArgumentException("Must use the memory implementation of GraphElementFactory");
         }
@@ -137,7 +137,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
         thirdIndexIterator = null;
         secondIndexIterator = null;
         // find the subIndex from the main index
-        subIndex = newSubIndex;
+        subIndex = (Map) index.get(first);
         // check that data exists
         if (null != subIndex) {
             // now get an iterator to the sub index map
