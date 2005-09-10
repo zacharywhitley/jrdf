@@ -67,7 +67,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.UuidGenerator;
 
@@ -80,10 +79,17 @@ import java.util.Map;
  * It is tied to a specific instance of GraphImpl.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @author Andrew Newman
  * @version $Revision$
  */
 // TODO Create an interface out of getNodeById
 public class GraphElementFactoryImpl implements GraphElementFactory {
+
+    /**
+     * The number on nodes in a triple.
+     */
+    private static final int TRIPLE = 3;
+
     /**
      * The pool of all nodes, mapped from their ids.
      */
@@ -101,9 +107,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
 
     /**
      * Package scope constructor.
-     *
      */
-    GraphElementFactoryImpl() throws TripleFactoryException {
+    GraphElementFactoryImpl() {
         nodePool = new HashMap<Long, Node>();
         stringPool = new HashMap<String, Long>();
         nextNode = 1;
@@ -117,24 +122,23 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @throws GraphElementFactoryException If anonymous resources can't be generated.
      */
     public BlankNode createResource() throws GraphElementFactoryException {
-        Long id = new Long(nextNode);
 
         //get an Unique Identifier
-        String uid = "";
+        String uid;
         try {
             uid = UuidGenerator.generateUuid();
         }
         catch (Exception exception) {
             throw new GraphElementFactoryException("Could not generate Unique " +
-                "Identifier for BlankNode.",
-                exception);
+                    "Identifier for BlankNode.",
+                    exception);
         }
 
         // create the new node
-        BlankNode node = new BlankNodeImpl(id, uid);
+        BlankNode node = new BlankNodeImpl(nextNode, uid);
 
         // put the node in the pool
-        nodePool.put(id, node);
+        nodePool.put(nextNode, node);
 
         // go on to the next node id
         nextNode++;
@@ -148,8 +152,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @return the newly created URI reference value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public URIReference createResource(URI uri)
-        throws GraphElementFactoryException {
+    public URIReference createResource(URI uri) throws GraphElementFactoryException {
         if (null == uri) {
             throw new GraphElementFactoryException("URI may not be null for a URIReference");
         }
@@ -162,7 +165,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
         }
 
         // create the node identifier and increment the node
-        nodeid = new Long(nextNode++);
+        nodeid = nextNode++;
 
         // create the new node
         URIReference node = new URIReferenceImpl(uri, nodeid);
@@ -180,13 +183,12 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * Create a URI reference without checking if the URI given is a valid RDF
      * URI, currently if the URI is absolute.
      *
-     * @param uri The URI of the resource.
+     * @param uri      The URI of the resource.
      * @param validate true if we disbale checking to see if the URI is valid.
      * @return The newly created URI reference value.
      * @throws GraphElementFactoryException
      */
-    public URIReference createResource(URI uri, boolean validate)
-        throws GraphElementFactoryException {
+    public URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException {
 
         if (null == uri) {
             throw new GraphElementFactoryException("URI may not be null for a URIReference");
@@ -199,7 +201,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
         }
 
         // create the node identifier and increment the node
-        nodeid = new Long(nextNode++);
+        nodeid = nextNode++;
 
         // create the new node
         URIReference node = new URIReferenceImpl(uri, validate, nodeid);
@@ -222,8 +224,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @return the newly created literal value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Literal createLiteral(String lexicalValue)
-        throws GraphElementFactoryException {
+    public Literal createLiteral(String lexicalValue) throws GraphElementFactoryException {
         LiteralImpl literal = new LiteralImpl(lexicalValue);
         addNodeId(literal);
         return literal;
@@ -239,8 +240,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * @return the newly created literal value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Literal createLiteral(String lexicalValue, String languageType)
-        throws GraphElementFactoryException {
+    public Literal createLiteral(String lexicalValue, String languageType) throws GraphElementFactoryException {
         LiteralImpl newLiteral = new LiteralImpl(lexicalValue, languageType);
         addNodeId(newLiteral);
         return newLiteral;
@@ -251,13 +251,12 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * Creates a new literal with the given lexical value and given datatype.
      *
      * @param lexicalValue The lexical value for the literal.  Cannot be null.
-     * @param datatypeURI The URI of the datatype of the literal or null if not
-     * required.
+     * @param datatypeURI  The URI of the datatype of the literal or null if not
+     *                     required.
      * @return the newly created literal value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Literal createLiteral(String lexicalValue, URI datatypeURI)
-        throws GraphElementFactoryException {
+    public Literal createLiteral(String lexicalValue, URI datatypeURI) throws GraphElementFactoryException {
         // create the node identifier
         LiteralImpl newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
         addNodeId(newLiteral);
@@ -277,25 +276,22 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
         String strId = newLiteral.getEscapedForm();
 
         // check if the node already exists in the string pool
-        Long tmpNodeId = (Long) stringPool.get(strId);
+        Long tmpNodeId = stringPool.get(strId);
 
         if (null != tmpNodeId) {
 
             // return the existing node instead
             newLiteral.setId(tmpNodeId);
-            return;
-        }
-        else {
+        } else {
 
             // create the node identifier
-            Long nodeId = new Long(nextNode);
-            newLiteral.setId(nodeId);
+            newLiteral.setId(nextNode);
 
             // put the node in the pool
-            nodePool.put(nodeId, newLiteral);
+            nodePool.put(nextNode, newLiteral);
 
             // put the URI string into the pool
-            stringPool.put(strId, nodeId);
+            stringPool.put(strId, nextNode);
 
             // increment the node, since we used it
             nextNode++;
@@ -307,14 +303,14 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      * Creates a new triple to be used in the graph.  Does not add it to the
      * graph.  Use @see Graph#add.
      *
-     * @param subject The subject of the statement.
+     * @param subject   The subject of the statement.
      * @param predicate The predicate of the statement.
-     * @param object The object of the statement.
+     * @param object    The object of the statement.
      * @return the newly created triple object.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-        throws GraphElementFactoryException {
+    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
+            GraphElementFactoryException {
         return new TripleImpl(subject, predicate, object);
     }
 
@@ -348,15 +344,14 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
 
             if (node instanceof Literal) {
                 stringPool.put(((Literal) node).getEscapedForm(), node.getId());
-            }
-            else {
+            } else {
                 stringPool.put(node.toString(), node.getId());
             }
         }
 
         // update the nextNode counter to a unique number
-        if (id.longValue() >= nextNode) {
-            nextNode = id.longValue() + 1;
+        if (!(id < nextNode)) {
+            nextNode = id + 1;
         }
     }
 
@@ -394,4 +389,11 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
         return stringPool.get(str);
     }
 
+    public Node[] createNodes(Long first, Long second, Long third) {
+        Node[] nodes = new Node[TRIPLE];
+        nodes[0] = getNodeById(first);
+        nodes[1] = getNodeById(second);
+        nodes[2] = getNodeById(third);
+        return nodes;
+    }
 }

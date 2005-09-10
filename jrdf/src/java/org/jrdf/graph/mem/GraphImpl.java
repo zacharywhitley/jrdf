@@ -58,6 +58,9 @@
 
 package org.jrdf.graph.mem;
 
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -67,21 +70,16 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A memory based RDF Graph.
@@ -141,19 +139,15 @@ public class GraphImpl implements Graph, Serializable {
 
     /**
      * Default constructor.
-     *
-     * @throws GraphException There was an error creating the factory.
      */
-    public GraphImpl() throws GraphException {
+    public GraphImpl() {
         init();
     }
 
     /**
      * Initialization method used by the constructor and the deserializer.
-     *
-     * @throws GraphException There was an error creating the factory.
      */
-    private void init() throws GraphException {
+    private void init() {
 
         // protect each field allocation with a test for null
         if (null == index012) {
@@ -171,12 +165,7 @@ public class GraphImpl implements Graph, Serializable {
         longIndex201 = new LongIndexMem(index201);
 
         if (null == elementFactory) {
-            try {
-                elementFactory = new GraphElementFactoryImpl();
-            }
-            catch (TripleFactoryException e) {
-                throw new GraphException(e);
-            }
+            elementFactory = new GraphElementFactoryImpl();
         }
 
         if (null == tripleFactory) {
@@ -309,8 +298,8 @@ public class GraphImpl implements Graph, Serializable {
      * @param object    ObjectNode The object to find or null to indicate any object.
      * @throws GraphException If there was an error accessing the graph.
      */
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-        throws GraphException {
+    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
+            GraphException {
 
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
@@ -336,8 +325,7 @@ public class GraphImpl implements Graph, Serializable {
             } else {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
-                    return new OneFixedIterator(index012, 0, values[0], elementFactory,
-                            new GraphHandler012(this));
+                    return new OneFixedIterator(index012, values[0], elementFactory, new GraphHandler012(this));
                 }
                 // {s*o} so fall through
             }
@@ -356,43 +344,35 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object, SubjectNode subject,
-                                                              PredicateNode predicate) throws GraphException {
+            PredicateNode predicate) throws GraphException {
         if (ANY_OBJECT_NODE != object) {
             // got {spo}
             return new ThreeFixedIterator(this, subject, predicate, object);
         } else {
             // got {sp*}
-            return new TwoFixedIterator(index012, 0, values[0], values[1],
-                    elementFactory, new GraphHandler012(this),
-                    index012.get(values[0]));
+            return new TwoFixedIterator(index012, values[0], values[1], elementFactory, new GraphHandler012(this));
         }
     }
 
     private ClosableIterator<Triple> fixedObjectIterator(Long[] values, SubjectNode subject, PredicateNode predicate) {
         // test for {s*o}
         if (ANY_SUBJECT_NODE != subject) {
-            return new TwoFixedIterator(index201, 1, values[2], values[0],
-                    elementFactory, new GraphHandler201(this),
-                    index201.get(values[2]));
+            return new TwoFixedIterator(index201, values[2], values[0], elementFactory, new GraphHandler201(this));
         } else {
             // test for {**o}.  {*po} should have been picked up above
             assert ANY_PREDICATE_NODE == predicate;
-            return new OneFixedIterator(index201, 1, values[2], elementFactory,
-                    new GraphHandler201(this));
+            return new OneFixedIterator(index201, values[2], elementFactory, new GraphHandler201(this));
         }
     }
 
     private ClosableIterator<Triple> fixedPredicateIterator(Long[] values, ObjectNode object, SubjectNode subject) {
         // test for {*po}
         if (ANY_OBJECT_NODE != object) {
-            return new TwoFixedIterator(index120, 2, values[1], values[2],
-                    elementFactory, new GraphHandler120(this),
-                    index120.get(values[1]));
+            return new TwoFixedIterator(index120, values[1], values[2], elementFactory, new GraphHandler120(this));
         } else {
             // test for {*p*}.  {sp*} should have been picked up above
             assert ANY_SUBJECT_NODE == subject;
-            return new OneFixedIterator(index120, 2, values[1], elementFactory,
-                    new GraphHandler120(this));
+            return new OneFixedIterator(index120, values[1], elementFactory, new GraphHandler120(this));
         }
     }
 
@@ -440,7 +420,7 @@ public class GraphImpl implements Graph, Serializable {
      * @throws GraphException If the statement can't be made.
      */
     public void add(SubjectNode subject, PredicateNode predicate,
-                    ObjectNode object) throws GraphException {
+            ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_ADD_NULL_MESSAGE, CANT_ADD_ANY_NODE_MESSAGE);
@@ -487,7 +467,7 @@ public class GraphImpl implements Graph, Serializable {
      *                        example if it didn't exist.
      */
     public void remove(SubjectNode subject, PredicateNode predicate,
-                       ObjectNode object) throws GraphException {
+            ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
@@ -561,7 +541,7 @@ public class GraphImpl implements Graph, Serializable {
 
     // TODO AN Move this to a helper utility perhaps.
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
-                                          String nullMessage, String anyNodeMessage) {
+            String nullMessage, String anyNodeMessage) {
         checkForNulls(subject, predicate, object, nullMessage);
         checkForAnyNodes(subject, predicate, object, anyNodeMessage);
     }
@@ -676,25 +656,16 @@ public class GraphImpl implements Graph, Serializable {
         // read in the first index with the default reader
         in.defaultReadObject();
         // initialize the fields not yet done by the constructor
-        try {
-            init();
-        }
-        catch (GraphException e) {
-            throw new ClassNotFoundException("Unable to initialize a new graph", e);
-        }
+        init();
 
         // read all the nodes as well
         Object[] nodes = (Object[]) in.readObject();
 
-        try {
-            // test node factory creation in case the constructor did it
-            if (null == elementFactory) {
-                elementFactory = new GraphElementFactoryImpl();
-            }
+        // test node factory creation in case the constructor did it
+        if (null == elementFactory) {
+            elementFactory = new GraphElementFactoryImpl();
         }
-        catch (TripleFactoryException e) {
-            throw new ClassNotFoundException("Unable to build NodeFactory", e);
-        }
+
         // populate the node factory with these nodes
         for (Object node : nodes) {
             elementFactory.registerNode((MemNode) node);

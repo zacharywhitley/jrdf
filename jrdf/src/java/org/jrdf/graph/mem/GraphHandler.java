@@ -58,7 +58,11 @@
 
 package org.jrdf.graph.mem;
 
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.Triple;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -68,7 +72,6 @@ import java.util.Set;
  * Handles the modification of an index as we iterate through.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface GraphHandler {
@@ -78,7 +81,7 @@ public interface GraphHandler {
 
     Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
 
-    void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex,
-        LongIndex thirdIndex)
-        throws GraphException;
+    void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
+
+    Triple createTriple(GraphElementFactory factory, Node[] nodes) throws GraphElementFactoryException;
 }
