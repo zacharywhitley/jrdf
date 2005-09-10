@@ -84,34 +84,9 @@ import java.util.Set;
 public class OneFixedIterator implements ClosableIterator<Triple> {
 
     /**
-     * The iterator for the second index.
-     */
-    private Iterator secondIndexIterator;
-
-    /**
-     * The iterator for the third index.
-     */
-    private Iterator thirdIndexIterator;
-
-    /**
-     * The current element for the iterator on the second index.
-     */
-    private Map.Entry secondEntry;
-
-    /**
-     * The factory used to create the nodes to be returned in the triples.
-     */
-    private GraphElementFactoryImpl factory;
-
-    /**
-     * The subIndex of this iterator.  Only needed for initialization and the remove method.
-     */
-    private Map<Long, Set<Long>> subIndex;
-
-    /**
      * The fixed item.
      */
-    private Long first;
+    private final Long first;
 
     /**
      * Allows access to a particular part of the index.
@@ -119,9 +94,29 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     private LongIndex longIndex;
 
     /**
-     * The current subject predicate and object, last returned from next().  Only needed by the remove method.
+     * The subIndex of this iterator.  Only needed for initialization and the remove method.
      */
-    private Long[] currentNodes;
+    private Map<Long, Set<Long>> subIndex;
+
+    /**
+     * The iterator for the second index.
+     */
+    private Iterator<Map.Entry<Long, Set<Long>>> secondIndexIterator;
+
+    /**
+     * The current element for the iterator on the second index.
+     */
+    private Map.Entry<Long, Set<Long>> secondEntry;
+
+    /**
+     * The iterator for the third index.
+     */
+    private Iterator<Long> thirdIndexIterator;
+
+    /**
+     * The factory used to create the nodes to be returned in the triples.
+     */
+    private GraphElementFactoryImpl factory;
 
     /**
      * Handles the removal of nodes
@@ -129,11 +124,17 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     private GraphHandler handler;
 
     /**
+     * The current subject predicate and object, last returned from next().  Only needed by the remove method.
+     */
+    private Long[] currentNodes;
+
+    /**
      * Constructor.  Sets up the internal iterators.
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
-    OneFixedIterator(Long newFirst, LongIndex newLongIndex, GraphElementFactory newFactory, GraphHandler newHandler) {
+    OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, GraphElementFactory newFactory,
+            GraphHandler newHandler) {
         if (!(newFactory instanceof GraphElementFactoryImpl)) {
             throw new IllegalArgumentException("Must use the memory implementation of GraphElementFactory");
         }
@@ -142,7 +143,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
         factory = (GraphElementFactoryImpl) newFactory;
         handler = newHandler;
 
-        first = newFirst;
+        first = fixedFirstNode;
         longIndex = newLongIndex;
 
         // initialise the iterators to empty
@@ -190,9 +191,9 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
             throw new NoSuchElementException();
         }
         // get the next item
-        Long third = (Long) thirdIndexIterator.next();
+        Long third = thirdIndexIterator.next();
         // construct the triple
-        Long second = (Long) secondEntry.getKey();
+        Long second = secondEntry.getKey();
         // get back the nodes for these IDs and build the triple
         currentNodes = new Long[]{first, second, third};
 
@@ -221,9 +222,9 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
                 return;
             }
             // get the next entry of the sub index
-            secondEntry = (Map.Entry) secondIndexIterator.next();
+            secondEntry = secondIndexIterator.next();
             // get an iterator to the next set from the sub index
-            thirdIndexIterator = ((Set) secondEntry.getValue()).iterator();
+            thirdIndexIterator = secondEntry.getValue().iterator();
             assert thirdIndexIterator.hasNext();
         }
     }
@@ -249,7 +250,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
 
     private void cleanIndex() {
         // check if a set was cleaned out
-        Set subGroup = (Set) secondEntry.getValue();
+        Set subGroup = secondEntry.getValue();
         if (subGroup.isEmpty()) {
             // remove the entry for the set
             secondIndexIterator.remove();

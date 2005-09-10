@@ -85,9 +85,34 @@ import java.util.Set;
 public class TwoFixedIterator implements ClosableIterator<Triple> {
 
     /**
+     * The first fixed item.
+     */
+    private final Long first;
+
+    /**
+     * The second fixed item.
+     */
+    private final Long second;
+
+    /**
+     * Allows access to a particular part of the index.
+     */
+    private LongIndex longIndex;
+
+    /**
+     * The subIndex of this iterator.  Only needed for initialization and the remove method.
+     */
+    private Map<Long, Set<Long>> subIndex;
+
+    /**
+     * The subSubIndex of this iterator.  Only needed for initialization and the remove method.
+     */
+    private Set<Long> subGroup;
+
+    /**
      * The iterator for the third index.
      */
-    private Iterator thirdIndexIterator;
+    private Iterator<Long> thirdIndexIterator;
 
     /**
      * The factory used to create the nodes to be returned in the triples.
@@ -95,19 +120,9 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
     private GraphElementFactoryImpl factory;
 
     /**
-     * The index of this iterator.  Only needed for initialization and the remove method.
+     * Handles the removal of nodes
      */
-    private Map index;
-
-    /**
-     * The subIndex of this iterator.  Only needed for initialization and the remove method.
-     */
-    private Map subIndex;
-
-    /**
-     * The subSubIndex of this iterator.  Only needed for initialization and the remove method.
-     */
-    private Set subGroup;
+    private GraphHandler handler;
 
     /**
      * The current subject predicate and object, last returned from next().  Only needed by the remove method.
@@ -115,34 +130,14 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
     private Long[] currentNodes;
 
     /**
-     * The first fixed item.
-     */
-    private Long first;
-
-    /**
-     * The second fixed item.
-     */
-    private Long second;
-
-    /**
-     * The current third item
-     */
-    private Long third;
-
-    /**
      * If there are anymore items left
      */
     private boolean hasNext;
 
     /**
-     * Handles the removal of nodes
-     */
-    private GraphHandler handler;
-
-    /**
      * Constructor.  Sets up the internal iterators.
      */
-    TwoFixedIterator(Map newIndex, Long newFirst, Long newSecond, GraphElementFactory newFactory,
+    TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, GraphElementFactory newFactory,
             GraphHandler newHandler) {
 
         if (!(newFactory instanceof GraphElementFactoryImpl)) {
@@ -150,20 +145,19 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
         }
 
         // store the node factory and other starting data
+        first = fixedFirstNode;
+        second = fixedSecondNode;
+        longIndex = newLongIndex;
         factory = (GraphElementFactoryImpl) newFactory;
         handler = newHandler;
-        index = newIndex;
-        first = newFirst;
-        second = newSecond;
-        currentNodes = null;
 
         // find the subIndex from the main index
-        subIndex = (Map) newIndex.get(newFirst);
+        subIndex = longIndex.getSubIndex(first);
 
         // check that data exists
         if (null != subIndex) {
             // now find the set from the sub index map
-            subGroup = (Set) subIndex.get(second);
+            subGroup = subIndex.get(second);
             if (null != subGroup) {
                 // get an iterator for the set
                 thirdIndexIterator = subGroup.iterator();
@@ -195,7 +189,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
         }
 
         // Get next node.
-        third = (Long) thirdIndexIterator.next();
+        Long third = thirdIndexIterator.next();
         hasNext = thirdIndexIterator.hasNext();
         currentNodes = new Long[]{first, second, third};
         try {
@@ -209,7 +203,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
      * Implemented for java.util.Iterator.
      */
     public void remove() {
-        if (null != third) {
+        if (null != currentNodes && null != currentNodes[2]) {
             try {
                 thirdIndexIterator.remove();
                 handler.remove(currentNodes);
@@ -230,7 +224,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
             // check if a subindex was cleaned out
             if (subIndex.isEmpty()) {
                 // remove the subindex
-                index.remove(first);
+                longIndex.removeSubIndex(first);
             }
         }
     }
