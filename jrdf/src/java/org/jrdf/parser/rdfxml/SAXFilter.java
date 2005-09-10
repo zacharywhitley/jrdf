@@ -332,8 +332,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
         try {
             rdfParser.setBaseURI(new URI(deferredElement.getBaseURI()));
-        }
-        catch (URISyntaxException ex) {
+        } catch (URISyntaxException ex) {
             throw new SAXException("Bad URI", ex);
         }
         rdfParser.setXmlLang(deferredElement.getXmlLang());
@@ -407,8 +406,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             // Start element still deferred, this is an empty element
             try {
                 rdfParser.setBaseURI(new URI(deferredElement.getBaseURI()));
-            }
-            catch (URISyntaxException ex) {
+            } catch (URISyntaxException ex) {
                 throw new SAXException("Bad URI", ex);
             }
             rdfParser.setXmlLang(deferredElement.getXmlLang());
@@ -525,8 +523,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             URI tmpURI = new URI(uriString);
             tmpURI.normalize();
             return tmpURI.toString();
-        }
-        catch (URISyntaxException use) {
+        } catch (URISyntaxException use) {
             throw new SAXException("Base URI", use);
         }
     }

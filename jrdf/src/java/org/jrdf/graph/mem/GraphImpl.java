@@ -192,8 +192,7 @@ public class GraphImpl implements Graph, Serializable {
         Long[] values;
         try {
             values = localize(subject, predicate, object);
-        }
-        catch (GraphException ge) {
+        } catch (GraphException ge) {
 
             // Graph exception on localize implies that the subject, predicate or
             // object did not exist in the graph.
@@ -203,9 +202,8 @@ public class GraphImpl implements Graph, Serializable {
         // AnySubjectNode.
         if (ANY_SUBJECT_NODE == subject) {
             return containsAnySubject(predicate, values, object);
-        }
-        // Subject is not anything.
-        else {
+        } else {
+            // Subject is not anything.
             return containsFixedSubject(values, predicate, object);
 
         }
@@ -222,10 +220,8 @@ public class GraphImpl implements Graph, Serializable {
         // AnyPredicateNode.  Could be subj, AnyPredicateNode, AnyObjectNode or subj, AnyPredicateNode, obj.
         if (ANY_PREDICATE_NODE == predicate) {
             return containsAnyPredicate(object, values);
-        }
-        // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
-        else {
-
+        } else {
+            // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
             // look up the predicate
             Set group = subIndex.get(values[1]);
             if (null == group) {
@@ -235,9 +231,8 @@ public class GraphImpl implements Graph, Serializable {
             // Object not null.  Must be subj, pred, obj.
             if (ANY_OBJECT_NODE != object) {
                 return group.contains(values[2]);
-            }
-            // Was subj, pred, AnyObjectNode - must be true if we get this far.
-            else {
+            } else {
+                // Was subj, pred, AnyObjectNode - must be true if we get this far.
                 return true;
             }
         }
@@ -248,9 +243,8 @@ public class GraphImpl implements Graph, Serializable {
         if (ANY_PREDICATE_NODE == predicate) {
             Map<Long, Set<Long>> objIndex = index201.get(values[2]);
             return null != objIndex;
-        }
-        // Predicate is not null.  Could be null, pred, null or null, pred, obj.
-        else {
+        } else {
+            // Predicate is not null.  Could be null, pred, null or null, pred, obj.
             Map<Long, Set<Long>> predIndex = index120.get(values[1]);
 
             // If predicate not found return false.
@@ -261,9 +255,8 @@ public class GraphImpl implements Graph, Serializable {
             // If the object is any object node and we found the predicate return true.
             if (ANY_OBJECT_NODE == object) {
                 return true;
-            }
-            // Was null, pred, obj
-            else {
+            } else {
+                // Was null, pred, obj
                 Set group = predIndex.get(values[2]);
                 return null != group;
             }
@@ -274,9 +267,8 @@ public class GraphImpl implements Graph, Serializable {
         // If its AnyObjectNode then we've found all we need to find.
         if (ANY_OBJECT_NODE == object) {
             return true;
-        }
-        // If the object is not any node we need to find subj, AnyObjectNode, obj
-        else {
+        } else {
+            // If the object is not any node we need to find subj, AnyObjectNode, obj
             Map<Long, Set<Long>> objIndex = index201.get(values[2]);
 
             if (null == objIndex) {
@@ -308,9 +300,7 @@ public class GraphImpl implements Graph, Serializable {
         Long[] values;
         try {
             values = localize(subject, predicate, object);
-        }
-        catch (GraphException ge) {
-
+        } catch (GraphException ge) {
             // A graph exception implies that the subject, predicate or object does
             // not exist in the graph.
             return new EmptyClosableIterator();
@@ -480,8 +470,7 @@ public class GraphImpl implements Graph, Serializable {
         // if the first one succeeded then try and attempt removal on both of the others
         try {
             removeFrom120(values[1], values[2], values[0]);
-        }
-        finally {
+        } finally {
             removeFrom201(values[2], values[0], values[1]);
         }
     }
@@ -675,8 +664,7 @@ public class GraphImpl implements Graph, Serializable {
         try {
             GraphHandler012 graphHandler012 = new GraphHandler012(this);
             graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             throw new ClassNotFoundException("Unable to add to a graph index", e);
         }
     }
@@ -696,8 +684,7 @@ public class GraphImpl implements Graph, Serializable {
     void addTo012(Long first, Long second, Long third) throws GraphException {
         try {
             longIndex012.add(first, second, third);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             removeFrom012(first, second, third);
             throw e;
         }
@@ -706,8 +693,7 @@ public class GraphImpl implements Graph, Serializable {
     void addTo120(Long first, Long second, Long third) throws GraphException {
         try {
             longIndex120.add(first, second, third);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             removeFrom120(first, second, third);
             throw e;
         }

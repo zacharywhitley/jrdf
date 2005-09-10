@@ -105,14 +105,11 @@ public final class DefaultSparqlParser implements SparqlParser {
     private Start parseQuerySyntax(Parser parser) throws InvalidQuerySyntaxException {
         try {
             return parser.parse();
-        }
-        catch (ParserException e) {
+        } catch (ParserException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
-        }
-        catch (LexerException e) {
+        } catch (LexerException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
         }
     }

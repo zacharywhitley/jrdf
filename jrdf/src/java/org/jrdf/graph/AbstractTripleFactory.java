@@ -103,8 +103,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
             reallyReifyTriple(subjectNode, predicateNode, objectNode,
                     reificationNode);
-        }
-        catch (GraphElementFactoryException gefe) {
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -125,8 +124,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
             reallyReifyTriple(triple.getSubject(), triple.getPredicate(),
                     triple.getObject(), reificationNode);
-        }
-        catch (GraphElementFactoryException gefe) {
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -171,8 +169,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             graph.add(reificationNode, hasSubject, (ObjectNode) subjectNode);
             graph.add(reificationNode, hasPredicate, (ObjectNode) predicateNode);
             graph.add(reificationNode, hasObject, objectNode);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
 
@@ -185,11 +182,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
             graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.ALT));
             addContainer(subjectNode, alternative);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             throw new TripleFactoryException(e);
-        }
-        catch (GraphElementFactoryException e) {
+        } catch (GraphElementFactoryException e) {
             throw new TripleFactoryException(e);
         }
     }
@@ -198,11 +193,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
             graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.BAG));
             addContainer(subjectNode, bag);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             throw new TripleFactoryException(e);
-        }
-        catch (GraphElementFactoryException e) {
+        } catch (GraphElementFactoryException e) {
             throw new TripleFactoryException(e);
         }
     }
@@ -211,11 +204,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
             graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.SEQ));
             addContainer(subjectNode, sequence);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             throw new TripleFactoryException(e);
-        }
-        catch (GraphElementFactoryException e) {
+        } catch (GraphElementFactoryException e) {
             throw new TripleFactoryException(e);
         }
     }
@@ -236,20 +227,15 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
             // Insert statements from colletion.
             long counter = 1;
-            Iterator<ObjectNode> iter = container.iterator();
 
-            while (iter.hasNext()) {
-                ObjectNode object = iter.next();
+            for (ObjectNode object : container) {
                 graph.add(subjectNode, elementFactory.createResource(new URI(RDF.BASE_URI + "_" + counter++)), object);
             }
-        }
-        catch (URISyntaxException e) {
+        } catch (URISyntaxException e) {
             throw new TripleFactoryException(e);
-        }
-        catch (GraphElementFactoryException e) {
+        } catch (GraphElementFactoryException e) {
             throw new TripleFactoryException(e);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             throw new TripleFactoryException(e);
         }
     }
@@ -288,11 +274,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
                     graph.add(subject, rdfRest, rdfNil);
                 }
             }
-        }
-        catch (GraphElementFactoryException e) {
+        } catch (GraphElementFactoryException e) {
             throw new TripleFactoryException(e);
-        }
-        catch (GraphException e) {
+        } catch (GraphException e) {
             throw new TripleFactoryException(e);
         }
     }

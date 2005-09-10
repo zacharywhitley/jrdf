@@ -157,8 +157,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
         try {
             BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
             return tmpNode.getId().equals(id) && tmpNode.getUID().equals(uid);
-        }
-        catch (ClassCastException cce) {
+        } catch (ClassCastException cce) {
             return false;
         }
     }

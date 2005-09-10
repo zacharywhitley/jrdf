@@ -205,8 +205,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeDecimal(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -215,8 +214,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeInteger(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -225,8 +223,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeNegativeInteger(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -235,8 +232,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeNonPositiveInteger(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -245,8 +241,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeNonNegativeInteger(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -255,8 +250,7 @@ public class XmlDatatypeUtil {
         try {
             normalizePositiveInteger(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -265,8 +259,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeLong(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -275,8 +268,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeInt(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -285,8 +277,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeShort(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -295,8 +286,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeByte(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -305,8 +295,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeUnsignedLong(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -315,8 +304,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeUnsignedInt(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -325,8 +313,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeUnsignedShort(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -335,8 +322,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeUnsignedByte(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -345,8 +331,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeFloat(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -355,8 +340,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeDouble(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -365,8 +349,7 @@ public class XmlDatatypeUtil {
         try {
             normalizeBoolean(value);
             return true;
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return false;
         }
     }
@@ -897,8 +880,7 @@ public class XmlDatatypeUtil {
             try {
                 int exp = Integer.parseInt(exponent);
                 exponent = String.valueOf(exp - shift);
-            }
-            catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new RuntimeException("NumberFormatException: " + e.getMessage());
             }
         }

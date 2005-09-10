@@ -238,8 +238,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
                 thirdIndexIterator.remove();
                 handler.remove(currentNodes);
                 cleanIndex();
-            }
-            catch (GraphException ge) {
+            } catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());
             }
         } else {

@@ -139,8 +139,7 @@ public final class UuidGenerator {
     private static MessageDigest getDigester() {
         try {
             return MessageDigest.getInstance(DIGEST_ALGORITHM);
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Unable to get " + DIGEST_ALGORITHM + " digest algorithm");
         }
     }
@@ -187,8 +186,7 @@ public final class UuidGenerator {
                 ipAddress = InetAddress.getLocalHost().getHostAddress();
             }
             return ipAddress;
-        }
-        catch (UnknownHostException uhe) {
+        } catch (UnknownHostException uhe) {
             throw new RuntimeException("Unable to determine IP Address of machine", uhe);
         }
     }
