@@ -104,19 +104,19 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     private GraphElementFactoryImpl factory;
 
     /**
-     * The index of this iterator.  Only needed for initialization and the remove method.
-     */
-    private Map index;
-
-    /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
      */
-    private Map subIndex;
+    private Map<Long, Set<Long>> subIndex;
 
     /**
      * The fixed item.
      */
     private Long first;
+
+    /**
+     * Allows access to a particular part of the index.
+     */
+    private LongIndex longIndex;
 
     /**
      * The current subject predicate and object, last returned from next().  Only needed by the remove method.
@@ -131,10 +131,9 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     /**
      * Constructor.  Sets up the internal iterators.
      *
-     * @throws IllegalArgumentException Must pass in a GraphElementFactory memory
-     *                                  implementation.
+     * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
-    OneFixedIterator(Map newIndex, Long newFirst, GraphElementFactory newFactory, GraphHandler newHandler) {
+    OneFixedIterator(Long newFirst, LongIndex newLongIndex, GraphElementFactory newFactory, GraphHandler newHandler) {
         if (!(newFactory instanceof GraphElementFactoryImpl)) {
             throw new IllegalArgumentException("Must use the memory implementation of GraphElementFactory");
         }
@@ -144,13 +143,15 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
         handler = newHandler;
 
         first = newFirst;
-        index = newIndex;
-        currentNodes = null;
+        longIndex = newLongIndex;
+
         // initialise the iterators to empty
         thirdIndexIterator = null;
         secondIndexIterator = null;
+
         // find the subIndex from the main index
-        subIndex = (Map) index.get(first);
+        subIndex = longIndex.getSubIndex(first);
+
         // check that data exists
         if (null != subIndex) {
             // now get an iterator to the sub index map
@@ -169,7 +170,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     public boolean hasNext() {
         // confirm we still have an item iterator, and that it has data available
         return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
-                null != secondIndexIterator && secondIndexIterator.hasNext();
+               null != secondIndexIterator && secondIndexIterator.hasNext();
     }
 
 
@@ -255,7 +256,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
             // check if a subindex was cleaned out
             if (subIndex.isEmpty()) {
                 // remove the subindex
-                index.remove(first);
+                longIndex.removeSubIndex(first);
                 subIndex = null;
             }
         }
@@ -271,5 +272,4 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     public boolean close() {
         return true;
     }
-
 }
