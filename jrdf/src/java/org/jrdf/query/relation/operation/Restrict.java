@@ -9,7 +9,6 @@ import java.util.Set;
  * Returns the list of relations with the same set of attributes.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Restrict extends Operation {

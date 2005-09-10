@@ -63,7 +63,6 @@ package org.jrdf.graph;
  * {@link Literal} are able to be visited.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface TypedNodeVisitable {

@@ -13,7 +13,6 @@ import java.util.Set;
  * An memory version of ${@link LongIndex}.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class LongIndexMem implements LongIndex, Serializable {
@@ -48,8 +47,7 @@ public class LongIndexMem implements LongIndex, Serializable {
         group.add(third);
     }
 
-    public void remove(Long first, Long second, Long third)
-        throws GraphException {
+    public void remove(Long first, Long second, Long third) throws GraphException {
 
         // find the sub index
         Map<Long, Set<Long>> subIndex = index.get(first);

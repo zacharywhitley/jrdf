@@ -64,6 +64,7 @@ import java.io.Serializable;
 
 /**
  * Default implementation of {@link Variable}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

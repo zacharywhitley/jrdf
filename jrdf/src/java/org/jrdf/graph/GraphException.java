@@ -60,6 +60,7 @@ package org.jrdf.graph;
 
 /**
  * Exception from an {@link Graph} operation.
+ *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @version $Revision$
  */
@@ -75,6 +76,7 @@ public class GraphException extends Exception {
 
     /**
      * Create an exception.
+     *
      * @param message the message to wrap inside this exception.
      */
     public GraphException(String message) {
@@ -83,7 +85,8 @@ public class GraphException extends Exception {
 
     /**
      * Create a wrapper exception.
-     * @param message the message to wrap inside this exception.
+     *
+     * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
     public GraphException(String message, Throwable newCause) {
@@ -92,6 +95,7 @@ public class GraphException extends Exception {
 
     /**
      * Create a wrapper exception.
+     *
      * @param newCause the original exception to wrap.
      */
     public GraphException(Throwable newCause) {

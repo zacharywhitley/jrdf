@@ -68,10 +68,9 @@ import java.util.Map;
  * The base class for the implementation of Bag and Alternative.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public abstract class AbstractUnorderedContainer <ObjectNode> implements Container<ObjectNode> {
+public abstract class AbstractUnorderedContainer<ObjectNode> implements Container<ObjectNode> {
 
     /**
      * The hashmap containing the elements.

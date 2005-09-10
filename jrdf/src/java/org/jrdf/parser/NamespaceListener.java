@@ -32,7 +32,7 @@ package org.jrdf.parser;
 /**
  * An interface defining methods for receiving namespace declarations from
  * an RDF parser.
- **/
+ */
 public interface NamespaceListener {
 
     /**
@@ -40,7 +40,7 @@ public interface NamespaceListener {
      * declaration.
      *
      * @param prefix The prefix that is used in the namespace declaration.
-     * @param uri The URI of the namespace.
-     **/
+     * @param uri    The URI of the namespace.
+     */
     void handleNamespace(String prefix, String uri);
 }

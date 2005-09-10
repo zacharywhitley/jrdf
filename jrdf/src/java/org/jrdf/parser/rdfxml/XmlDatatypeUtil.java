@@ -31,73 +31,73 @@ package org.jrdf.parser.rdfxml;
 
 /**
  * Provides methods for handling the standard XML Schema datatypes.
- **/
+ */
 public class XmlDatatypeUtil {
 
     /**
      * Checks whether the supplied datatype is a primitive XML Schema
      * datatype.
-     **/
+     */
     public static boolean isPrimitiveDatatype(String datatype) {
         return
-            datatype.equals(XmlSchema.DURATION) ||
-            datatype.equals(XmlSchema.DATETIME) ||
-            datatype.equals(XmlSchema.TIME) ||
-            datatype.equals(XmlSchema.DATE) ||
-            datatype.equals(XmlSchema.GYEARMONTH) ||
-            datatype.equals(XmlSchema.GYEAR) ||
-            datatype.equals(XmlSchema.GMONTHDAY) ||
-            datatype.equals(XmlSchema.GDAY) ||
-            datatype.equals(XmlSchema.GMONTH) ||
-            datatype.equals(XmlSchema.STRING) ||
-            datatype.equals(XmlSchema.BOOLEAN) ||
-            datatype.equals(XmlSchema.BASE64BINARY) ||
-            datatype.equals(XmlSchema.HEXBINARY) ||
-            datatype.equals(XmlSchema.FLOAT) ||
-            datatype.equals(XmlSchema.DECIMAL) ||
-            datatype.equals(XmlSchema.DOUBLE) ||
-            datatype.equals(XmlSchema.ANYURI) ||
-            datatype.equals(XmlSchema.QNAME) ||
-            datatype.equals(XmlSchema.NOTATION);
+                datatype.equals(XmlSchema.DURATION) ||
+                        datatype.equals(XmlSchema.DATETIME) ||
+                        datatype.equals(XmlSchema.TIME) ||
+                        datatype.equals(XmlSchema.DATE) ||
+                        datatype.equals(XmlSchema.GYEARMONTH) ||
+                        datatype.equals(XmlSchema.GYEAR) ||
+                        datatype.equals(XmlSchema.GMONTHDAY) ||
+                        datatype.equals(XmlSchema.GDAY) ||
+                        datatype.equals(XmlSchema.GMONTH) ||
+                        datatype.equals(XmlSchema.STRING) ||
+                        datatype.equals(XmlSchema.BOOLEAN) ||
+                        datatype.equals(XmlSchema.BASE64BINARY) ||
+                        datatype.equals(XmlSchema.HEXBINARY) ||
+                        datatype.equals(XmlSchema.FLOAT) ||
+                        datatype.equals(XmlSchema.DECIMAL) ||
+                        datatype.equals(XmlSchema.DOUBLE) ||
+                        datatype.equals(XmlSchema.ANYURI) ||
+                        datatype.equals(XmlSchema.QNAME) ||
+                        datatype.equals(XmlSchema.NOTATION);
     }
 
     /**
      * Checks whether the supplied datatype is a derived XML Schema
      * datatype.
-     **/
+     */
     public static boolean isDerivedDatatype(String datatype) {
         return
-            datatype.equals(XmlSchema.NORMALIZEDSTRING) ||
-            datatype.equals(XmlSchema.TOKEN) ||
-            datatype.equals(XmlSchema.LANGUAGE) ||
-            datatype.equals(XmlSchema.NMTOKEN) ||
-            datatype.equals(XmlSchema.NMTOKENS) ||
-            datatype.equals(XmlSchema.NAME) ||
-            datatype.equals(XmlSchema.NCNAME) ||
-            datatype.equals(XmlSchema.ID) ||
-            datatype.equals(XmlSchema.IDREF) ||
-            datatype.equals(XmlSchema.IDREFS) ||
-            datatype.equals(XmlSchema.ENTITY) ||
-            datatype.equals(XmlSchema.ENTITIES) ||
-            datatype.equals(XmlSchema.INTEGER) ||
-            datatype.equals(XmlSchema.LONG) ||
-            datatype.equals(XmlSchema.INT) ||
-            datatype.equals(XmlSchema.SHORT) ||
-            datatype.equals(XmlSchema.BYTE) ||
-            datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
-            datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
-            datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
-            datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
-            datatype.equals(XmlSchema.UNSIGNED_LONG) ||
-            datatype.equals(XmlSchema.UNSIGNED_INT) ||
-            datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
-            datatype.equals(XmlSchema.UNSIGNED_BYTE);
+                datatype.equals(XmlSchema.NORMALIZEDSTRING) ||
+                        datatype.equals(XmlSchema.TOKEN) ||
+                        datatype.equals(XmlSchema.LANGUAGE) ||
+                        datatype.equals(XmlSchema.NMTOKEN) ||
+                        datatype.equals(XmlSchema.NMTOKENS) ||
+                        datatype.equals(XmlSchema.NAME) ||
+                        datatype.equals(XmlSchema.NCNAME) ||
+                        datatype.equals(XmlSchema.ID) ||
+                        datatype.equals(XmlSchema.IDREF) ||
+                        datatype.equals(XmlSchema.IDREFS) ||
+                        datatype.equals(XmlSchema.ENTITY) ||
+                        datatype.equals(XmlSchema.ENTITIES) ||
+                        datatype.equals(XmlSchema.INTEGER) ||
+                        datatype.equals(XmlSchema.LONG) ||
+                        datatype.equals(XmlSchema.INT) ||
+                        datatype.equals(XmlSchema.SHORT) ||
+                        datatype.equals(XmlSchema.BYTE) ||
+                        datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.UNSIGNED_LONG) ||
+                        datatype.equals(XmlSchema.UNSIGNED_INT) ||
+                        datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
+                        datatype.equals(XmlSchema.UNSIGNED_BYTE);
     }
 
     /**
      * Checks whether the supplied datatype is a built-in XML Schema
      * datatype.
-     **/
+     */
     public static boolean isBuiltInDatatype(String datatype) {
         return isPrimitiveDatatype(datatype) || isDerivedDatatype(datatype);
     }
@@ -105,54 +105,54 @@ public class XmlDatatypeUtil {
     /**
      * Checks whether the supplied datatype is equal to xsd:decimal or
      * one of the built-in datatypes that is derived from xsd:decimal.
-     **/
+     */
     public static boolean isDecimalDatatype(String datatype) {
         return
-            datatype.equals(XmlSchema.DECIMAL) ||
-            isIntegerDatatype(datatype);
+                datatype.equals(XmlSchema.DECIMAL) ||
+                        isIntegerDatatype(datatype);
     }
 
     /**
      * Checks whether the supplied datatype is equal to xsd:integer
      * or one of the built-in datatypes that is derived from
      * xsd:integer.
-     **/
+     */
     public static boolean isIntegerDatatype(String datatype) {
         return
-            datatype.equals(XmlSchema.INTEGER) ||
-            datatype.equals(XmlSchema.LONG) ||
-            datatype.equals(XmlSchema.INT) ||
-            datatype.equals(XmlSchema.SHORT) ||
-            datatype.equals(XmlSchema.BYTE) ||
-            datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
-            datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
-            datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
-            datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
-            datatype.equals(XmlSchema.UNSIGNED_LONG) ||
-            datatype.equals(XmlSchema.UNSIGNED_INT) ||
-            datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
-            datatype.equals(XmlSchema.UNSIGNED_BYTE);
+                datatype.equals(XmlSchema.INTEGER) ||
+                        datatype.equals(XmlSchema.LONG) ||
+                        datatype.equals(XmlSchema.INT) ||
+                        datatype.equals(XmlSchema.SHORT) ||
+                        datatype.equals(XmlSchema.BYTE) ||
+                        datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
+                        datatype.equals(XmlSchema.UNSIGNED_LONG) ||
+                        datatype.equals(XmlSchema.UNSIGNED_INT) ||
+                        datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
+                        datatype.equals(XmlSchema.UNSIGNED_BYTE);
     }
 
     /**
      * Checks whether the supplied datatype is equal to xsd:float or
      * xsd:double.
-     **/
+     */
     public static boolean isFloatingPointDatatype(String datatype) {
         return
-            datatype.equals(XmlSchema.FLOAT) ||
-            datatype.equals(XmlSchema.DOUBLE);
+                datatype.equals(XmlSchema.FLOAT) ||
+                        datatype.equals(XmlSchema.DOUBLE);
     }
 
     /**
      * Checks whether the supplied datatype is ordered. The values of
      * an ordered datatype can be compared to eachother using
      * operators like <tt>&lt;</tt> and <tt>&gt;</tt>.
-     **/
+     */
     public static boolean isOrderedDatatype(String datatype) {
         return
-            isDecimalDatatype(datatype) ||
-            isFloatingPointDatatype(datatype);
+                isDecimalDatatype(datatype) ||
+                        isFloatingPointDatatype(datatype);
     }
 
     /*--------------------+
@@ -164,53 +164,37 @@ public class XmlDatatypeUtil {
 
         if (datatype.equals(XmlSchema.DECIMAL)) {
             result = isValidDecimal(value);
-        }
-        else if (datatype.equals(XmlSchema.INTEGER)) {
+        } else if (datatype.equals(XmlSchema.INTEGER)) {
             result = isValidInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.NEGATIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NEGATIVE_INTEGER)) {
             result = isValidNegativeInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.NON_POSITIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NON_POSITIVE_INTEGER)) {
             result = isValidNonPositiveInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER)) {
             result = isValidNonNegativeInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.POSITIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.POSITIVE_INTEGER)) {
             result = isValidPositiveInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.LONG)) {
+        } else if (datatype.equals(XmlSchema.LONG)) {
             result = isValidLong(value);
-        }
-        else if (datatype.equals(XmlSchema.INT)) {
+        } else if (datatype.equals(XmlSchema.INT)) {
             result = isValidInt(value);
-        }
-        else if (datatype.equals(XmlSchema.SHORT)) {
+        } else if (datatype.equals(XmlSchema.SHORT)) {
             result = isValidShort(value);
-        }
-        else if (datatype.equals(XmlSchema.BYTE)) {
+        } else if (datatype.equals(XmlSchema.BYTE)) {
             result = isValidByte(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_LONG)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_LONG)) {
             result = isValidUnsignedLong(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_INT)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_INT)) {
             result = isValidUnsignedInt(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_SHORT)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_SHORT)) {
             result = isValidUnsignedShort(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_BYTE)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_BYTE)) {
             result = isValidUnsignedByte(value);
-        }
-        else if (datatype.equals(XmlSchema.FLOAT)) {
+        } else if (datatype.equals(XmlSchema.FLOAT)) {
             result = isValidFloat(value);
-        }
-        else if (datatype.equals(XmlSchema.DOUBLE)) {
+        } else if (datatype.equals(XmlSchema.DOUBLE)) {
             result = isValidDouble(value);
-        }
-        else if (datatype.equals(XmlSchema.BOOLEAN)) {
+        } else if (datatype.equals(XmlSchema.BOOLEAN)) {
             result = isValidBoolean(value);
         }
 
@@ -395,66 +379,50 @@ public class XmlDatatypeUtil {
      * Normalizes the supplied value according to the normalization
      * rules for the supplied datatype.
      *
-     * @param value The value to normalize.
+     * @param value    The value to normalize.
      * @param datatype The value's datatype.
      * @return The normalized value if there are any (supported)
-     * normalization rules for the supplied datatype, or the original
-     * supplied value otherwise.
-     * @exception IllegalArgumentException If the supplied value is
-     * illegal considering the supplied datatype.
-     **/
+     *         normalization rules for the supplied datatype, or the original
+     *         supplied value otherwise.
+     * @throws IllegalArgumentException If the supplied value is
+     *                                  illegal considering the supplied datatype.
+     */
     public static String normalize(String value, String datatype) {
         String result = value;
 
         if (datatype.equals(XmlSchema.DECIMAL)) {
             result = normalizeDecimal(value);
-        }
-        else if (datatype.equals(XmlSchema.INTEGER)) {
+        } else if (datatype.equals(XmlSchema.INTEGER)) {
             result = normalizeInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.NEGATIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NEGATIVE_INTEGER)) {
             result = normalizeNegativeInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.NON_POSITIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NON_POSITIVE_INTEGER)) {
             result = normalizeNonPositiveInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER)) {
             result = normalizeNonNegativeInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.POSITIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.POSITIVE_INTEGER)) {
             result = normalizePositiveInteger(value);
-        }
-        else if (datatype.equals(XmlSchema.LONG)) {
+        } else if (datatype.equals(XmlSchema.LONG)) {
             result = normalizeLong(value);
-        }
-        else if (datatype.equals(XmlSchema.INT)) {
+        } else if (datatype.equals(XmlSchema.INT)) {
             result = normalizeInt(value);
-        }
-        else if (datatype.equals(XmlSchema.SHORT)) {
+        } else if (datatype.equals(XmlSchema.SHORT)) {
             result = normalizeShort(value);
-        }
-        else if (datatype.equals(XmlSchema.BYTE)) {
+        } else if (datatype.equals(XmlSchema.BYTE)) {
             result = normalizeByte(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_LONG)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_LONG)) {
             result = normalizeUnsignedLong(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_INT)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_INT)) {
             result = normalizeUnsignedInt(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_SHORT)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_SHORT)) {
             result = normalizeUnsignedShort(value);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_BYTE)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_BYTE)) {
             result = normalizeUnsignedByte(value);
-        }
-        else if (datatype.equals(XmlSchema.FLOAT)) {
+        } else if (datatype.equals(XmlSchema.FLOAT)) {
             result = normalizeFloat(value);
-        }
-        else if (datatype.equals(XmlSchema.DOUBLE)) {
+        } else if (datatype.equals(XmlSchema.DOUBLE)) {
             result = normalizeDouble(value);
-        }
-        else if (datatype.equals(XmlSchema.BOOLEAN)) {
+        } else if (datatype.equals(XmlSchema.BOOLEAN)) {
             result = normalizeBoolean(value);
         }
 
@@ -470,20 +438,17 @@ public class XmlDatatypeUtil {
      *
      * @param value The boolean value to normalize.
      * @return The normalized value.
-     * @exception IllegalArgumentException If the supplied value is
-     * not a legal boolean.
-     **/
+     * @throws IllegalArgumentException If the supplied value is
+     *                                  not a legal boolean.
+     */
     public static String normalizeBoolean(String value) {
         if ("1".equals(value)) {
             return "true";
-        }
-        else if ("0".equals(value)) {
+        } else if ("0".equals(value)) {
             return "false";
-        }
-        else if ("true".equals(value) || "false".equals(value)) {
+        } else if ("true".equals(value) || "false".equals(value)) {
             return value;
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Not a legal boolean value: " + value);
         }
     }
@@ -498,8 +463,8 @@ public class XmlDatatypeUtil {
      * @param decimal The decimal to normalize.
      * @return The canonical representation of <tt>decimal</tt>.
      * @throws IllegalArgumentException If one of the supplied strings
-     * is not a legal decimal.
-     **/
+     *                                  is not a legal decimal.
+     */
     public static String normalizeDecimal(String decimal) {
         String errMsg = "Not a legal decimal: " + decimal;
 
@@ -517,8 +482,7 @@ public class XmlDatatypeUtil {
         if ('-' == decimal.charAt(idx)) {
             result.append('-');
             idx++;
-        }
-        else if ('+' == decimal.charAt(idx)) {
+        } else if ('+' == decimal.charAt(idx)) {
             idx++;
         }
 
@@ -535,12 +499,10 @@ public class XmlDatatypeUtil {
         if (idx == decLength) {
             // decimal consists of zeros only
             result.append('0');
-        }
-        else if (idx < decLength && '.' == decimal.charAt(idx)) {
+        } else if (idx < decLength && '.' == decimal.charAt(idx)) {
             // no non-zero digit before the dot
             result.append('0');
-        }
-        else {
+        } else {
             isZeroPointZero = false;
 
             // Copy any digits before the dot
@@ -563,8 +525,7 @@ public class XmlDatatypeUtil {
         if (idx == decLength) {
             // No dot was found in the decimal
             result.append('0');
-        }
-        else {
+        } else {
             idx++;
 
             // search last non-zero digit
@@ -576,8 +537,7 @@ public class XmlDatatypeUtil {
             if (idx > lastIdx) {
                 // No non-zero digits found
                 result.append('0');
-            }
-            else {
+            } else {
                 isZeroPointZero = false;
 
                 while (idx <= lastIdx) {
@@ -594,8 +554,7 @@ public class XmlDatatypeUtil {
         if (isZeroPointZero) {
             // Make sure we don't return "-0.0"
             return "0.0";
-        }
-        else {
+        } else {
             return result.toString();
         }
     }
@@ -608,93 +567,93 @@ public class XmlDatatypeUtil {
      * @param value The value to normalize.
      * @return The canonical representation of <tt>value</tt>.
      * @throws IllegalArgumentException If the supplied value
-     * is not a legal integer.
-     **/
+     *                                  is not a legal integer.
+     */
     public static String normalizeInteger(String value) {
         return normalizeIntegerValue(value, null, null);
     }
 
     /**
      * Normalizes an xsd:negativeInteger.
-     **/
+     */
     public static String normalizeNegativeInteger(String value) {
         return normalizeIntegerValue(value, null, "-1");
     }
 
     /**
      * Normalizes an xsd:nonPositiveInteger.
-     **/
+     */
     public static String normalizeNonPositiveInteger(String value) {
         return normalizeIntegerValue(value, null, "0");
     }
 
     /**
      * Normalizes an xsd:nonNegativeInteger.
-     **/
+     */
     public static String normalizeNonNegativeInteger(String value) {
         return normalizeIntegerValue(value, "0", null);
     }
 
     /**
      * Normalizes an xsd:positiveInteger.
-     **/
+     */
     public static String normalizePositiveInteger(String value) {
         return normalizeIntegerValue(value, "1", null);
     }
 
     /**
      * Normalizes an xsd:long.
-     **/
+     */
     public static String normalizeLong(String value) {
         return normalizeIntegerValue(value, "-9223372036854775808",
-            "9223372036854775807");
+                "9223372036854775807");
     }
 
     /**
      * Normalizes an xsd:int.
-     **/
+     */
     public static String normalizeInt(String value) {
         return normalizeIntegerValue(value, "-2147483648", "2147483647");
     }
 
     /**
      * Normalizes an xsd:short.
-     **/
+     */
     public static String normalizeShort(String value) {
         return normalizeIntegerValue(value, "-32768", "32767");
     }
 
     /**
      * Normalizes an xsd:byte.
-     **/
+     */
     public static String normalizeByte(String value) {
         return normalizeIntegerValue(value, "-128", "127");
     }
 
     /**
      * Normalizes an xsd:unsignedLong.
-     **/
+     */
     public static String normalizeUnsignedLong(String value) {
         return normalizeIntegerValue(value, "0", "18446744073709551615");
     }
 
     /**
      * Normalizes an xsd:unsignedInt.
-     **/
+     */
     public static String normalizeUnsignedInt(String value) {
         return normalizeIntegerValue(value, "0", "4294967295");
     }
 
     /**
      * Normalizes an xsd:unsignedShort.
-     **/
+     */
     public static String normalizeUnsignedShort(String value) {
         return normalizeIntegerValue(value, "0", "65535");
     }
 
     /**
      * Normalizes an xsd:unsignedByte.
-     **/
+     */
     public static String normalizeUnsignedByte(String value) {
         return normalizeIntegerValue(value, "0", "255");
     }
@@ -702,7 +661,7 @@ public class XmlDatatypeUtil {
     /**
      * Normalizes an integer to its canonical representation and
      * checks that the value is in the range [minValue, maxValue].
-     **/
+     */
     private static String normalizeIntegerValue(String integer, String minValue, String maxValue) {
         String errMsg = "Not a legal integer: " + integer;
 
@@ -719,8 +678,7 @@ public class XmlDatatypeUtil {
         if ('-' == integer.charAt(idx)) {
             isNegative = true;
             idx++;
-        }
-        else if ('+' == integer.charAt(idx)) {
+        } else if ('+' == integer.charAt(idx)) {
             idx++;
         }
 
@@ -771,11 +729,11 @@ public class XmlDatatypeUtil {
      * @param value The value to normalize.
      * @return The canonical representation of <tt>value</tt>.
      * @throws IllegalArgumentException If the supplied value
-     * is not a legal float.
-     **/
+     *                                  is not a legal float.
+     */
     public static String normalizeFloat(String value) {
         return normalizeFPNumber(value,
-            "-16777215.0", "16777215.0", "-149", "104");
+                "-16777215.0", "16777215.0", "-149", "104");
     }
 
     /**
@@ -784,11 +742,11 @@ public class XmlDatatypeUtil {
      * @param value The value to normalize.
      * @return The canonical representation of <tt>value</tt>.
      * @throws IllegalArgumentException If the supplied value
-     * is not a legal double.
-     **/
+     *                                  is not a legal double.
+     */
     public static String normalizeDouble(String value) {
         return normalizeFPNumber(value,
-            "-9007199254740991.0", "9007199254740991.0", "-1075", "970");
+                "-9007199254740991.0", "9007199254740991.0", "-1075", "970");
     }
 
     /**
@@ -798,8 +756,8 @@ public class XmlDatatypeUtil {
      * @param value The value to normalize.
      * @return The canonical representation of <tt>value</tt>.
      * @throws IllegalArgumentException If the supplied value
-     * is not a legal floating point number.
-     **/
+     *                                  is not a legal floating point number.
+     */
     public static String normalizeFPNumber(String value) {
         return normalizeFPNumber(value, null, null, null, null);
     }
@@ -808,22 +766,22 @@ public class XmlDatatypeUtil {
      * Normalizes a floating point number to its canonical
      * representation.
      *
-     * @param value The value to normalize.
+     * @param value       The value to normalize.
      * @param minMantissa A normalized decimal indicating the lowest
-     * value that the mantissa may have.
+     *                    value that the mantissa may have.
      * @param maxMantissa A normalized decimal indicating the highest
-     * value that the mantissa may have.
+     *                    value that the mantissa may have.
      * @param minExponent A normalized integer indicating the lowest
-     * value that the exponent may have.
+     *                    value that the exponent may have.
      * @param maxExponent A normalized integer indicating the highest
-     * value that the exponent may have.
+     *                    value that the exponent may have.
      * @return The canonical representation of <tt>value</tt>.
      * @throws IllegalArgumentException If the supplied value
-     * is not a legal floating point number.
-     **/
+     *                                  is not a legal floating point number.
+     */
     private static String normalizeFPNumber(String value,
-        String minMantissa, String maxMantissa,
-        String minExponent, String maxExponent) {
+            String minMantissa, String maxMantissa,
+            String minExponent, String maxExponent) {
         // handle special values
         if ("INF".equals(value) || "-INF".equals(value) || "NaN".equals(value)) {
             return value;
@@ -841,8 +799,7 @@ public class XmlDatatypeUtil {
         if (-1 == eIdx) {
             mantissa = normalizeDecimal(value);
             exponent = "0";
-        }
-        else {
+        } else {
             mantissa = normalizeDecimal(value.substring(0, eIdx));
             exponent = normalizeInteger(value.substring(eIdx + 1));
         }
@@ -910,13 +867,12 @@ public class XmlDatatypeUtil {
             }
 
             shift = 1 - digitCount;
-        }
-        else if (mantissa.startsWith("0.") || mantissa.startsWith("-0.")) {
+        } else if (mantissa.startsWith("0.") || mantissa.startsWith("-0.")) {
             // Example mantissas: 0.0, -0.1, 0.00345 and 0.09
             // search first non-zero digit
             int nonZeroIdx = 2;
             while (nonZeroIdx < mantissa.length() &&
-                '0' == mantissa.charAt(nonZeroIdx)) {
+                    '0' == mantissa.charAt(nonZeroIdx)) {
                 nonZeroIdx++;
             }
 
@@ -928,8 +884,7 @@ public class XmlDatatypeUtil {
                 if (nonZeroIdx == mantissa.length() - 1) {
                     // There was only one non-zero digit, e.g. as in 0.09
                     buf.append('0');
-                }
-                else {
+                } else {
                     buf.append(mantissa.substring(nonZeroIdx + 1));
                 }
 
@@ -958,53 +913,37 @@ public class XmlDatatypeUtil {
     public static int compare(String value1, String value2, String datatype) {
         if (datatype.equals(XmlSchema.DECIMAL)) {
             return compareDecimals(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.INTEGER)) {
+        } else if (datatype.equals(XmlSchema.INTEGER)) {
             return compareIntegers(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.NEGATIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NEGATIVE_INTEGER)) {
             return compareNegativeIntegers(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.NON_POSITIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NON_POSITIVE_INTEGER)) {
             return compareNonPositiveIntegers(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER)) {
             return compareNonNegativeIntegers(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.POSITIVE_INTEGER)) {
+        } else if (datatype.equals(XmlSchema.POSITIVE_INTEGER)) {
             return comparePositiveIntegers(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.LONG)) {
+        } else if (datatype.equals(XmlSchema.LONG)) {
             return compareLongs(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.INT)) {
+        } else if (datatype.equals(XmlSchema.INT)) {
             return compareInts(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.SHORT)) {
+        } else if (datatype.equals(XmlSchema.SHORT)) {
             return compareShorts(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.BYTE)) {
+        } else if (datatype.equals(XmlSchema.BYTE)) {
             return compareBytes(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_LONG)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_LONG)) {
             return compareUnsignedLongs(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_INT)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_INT)) {
             return compareUnsignedInts(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_SHORT)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_SHORT)) {
             return compareUnsignedShorts(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.UNSIGNED_BYTE)) {
+        } else if (datatype.equals(XmlSchema.UNSIGNED_BYTE)) {
             return compareUnsignedBytes(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.FLOAT)) {
+        } else if (datatype.equals(XmlSchema.FLOAT)) {
             return compareFloats(value1, value2);
-        }
-        else if (datatype.equals(XmlSchema.DOUBLE)) {
+        } else if (datatype.equals(XmlSchema.DOUBLE)) {
             return compareDoubles(value1, value2);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("datatype is not ordered");
         }
     }
@@ -1013,11 +952,11 @@ public class XmlDatatypeUtil {
      * Compares two decimals to eachother.
      *
      * @return A negative number if <tt>dec1</tt> is smaller than
-     * <tt>dec2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>dec1</tt> is larger than <tt>dec2</tt>.
+     *         <tt>dec2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>dec1</tt> is larger than <tt>dec2</tt>.
      * @throws IllegalArgumentException If one of the supplied strings is
-     * not a legal decimal.
-     **/
+     *                                  not a legal decimal.
+     */
     public static int compareDecimals(String dec1, String dec2) {
         dec1 = normalizeDecimal(dec1);
         dec2 = normalizeDecimal(dec2);
@@ -1029,13 +968,13 @@ public class XmlDatatypeUtil {
      * Compares two canonical decimals to eachother.
      *
      * @return A negative number if <tt>dec1</tt> is smaller than
-     * <tt>dec2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>dec1</tt> is larger than <tt>dec2</tt>. The
-     * result is undefined when one or both of the arguments is not
-     * a canonical decimal.
+     *         <tt>dec2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>dec1</tt> is larger than <tt>dec2</tt>. The
+     *         result is undefined when one or both of the arguments is not
+     *         a canonical decimal.
      * @throws IllegalArgumentException If one of the supplied strings is
-     * not a legal decimal.
-     **/
+     *                                  not a legal decimal.
+     */
     public static int compareCanonicalDecimals(String dec1, String dec2) {
         if (dec1.equals(dec2)) {
             return 0;
@@ -1090,11 +1029,11 @@ public class XmlDatatypeUtil {
      * Compares two integers to eachother.
      *
      * @return A negative number if <tt>int1</tt> is smaller than
-     * <tt>int2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>int1</tt> is larger than <tt>int2</tt>.
+     *         <tt>int2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>int1</tt> is larger than <tt>int2</tt>.
      * @throws IllegalArgumentException If one of the supplied strings is
-     * not a legal integer.
-     **/
+     *                                  not a legal integer.
+     */
     public static int compareIntegers(String int1, String int2) {
         int1 = normalizeInteger(int1);
         int2 = normalizeInteger(int2);
@@ -1106,13 +1045,13 @@ public class XmlDatatypeUtil {
      * Compares two canonical integers to eachother.
      *
      * @return A negative number if <tt>int1</tt> is smaller than
-     * <tt>int2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>int1</tt> is larger than <tt>int2</tt>. The
-     * result is undefined when one or both of the arguments is not
-     * a canonical integer.
+     *         <tt>int2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>int1</tt> is larger than <tt>int2</tt>. The
+     *         result is undefined when one or both of the arguments is not
+     *         a canonical integer.
      * @throws IllegalArgumentException If one of the supplied strings is
-     * not a legal integer.
-     **/
+     *                                  not a legal integer.
+     */
     public static int compareCanonicalIntegers(String int1, String int2) {
         if (int1.equals(int2)) {
             return 0;
@@ -1234,12 +1173,12 @@ public class XmlDatatypeUtil {
      * Compares two floats to eachother.
      *
      * @return A negative number if <tt>float1</tt> is smaller than
-     * <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>.
+     *         <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>.
      * @throws IllegalArgumentException If one of the supplied strings
-     * is not a legal float or if <tt>NaN</tt> is compared to a float
-     * other than <tt>NaN</tt>.
-     **/
+     *                                  is not a legal float or if <tt>NaN</tt> is compared to a float
+     *                                  other than <tt>NaN</tt>.
+     */
     public static int compareFloats(String float1, String float2) {
         float1 = normalizeFloat(float1);
         float2 = normalizeFloat(float2);
@@ -1251,14 +1190,14 @@ public class XmlDatatypeUtil {
      * Compares two canonical floats to eachother.
      *
      * @return A negative number if <tt>float1</tt> is smaller than
-     * <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>. The
-     * result is undefined when one or both of the arguments is not
-     * a canonical float.
+     *         <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>. The
+     *         result is undefined when one or both of the arguments is not
+     *         a canonical float.
      * @throws IllegalArgumentException If one of the supplied strings
-     * is not a legal float or if <tt>NaN</tt> is compared to a
-     * float other than <tt>NaN</tt>.
-     **/
+     *                                  is not a legal float or if <tt>NaN</tt> is compared to a
+     *                                  float other than <tt>NaN</tt>.
+     */
     public static int compareCanonicalFloats(String float1, String float2) {
         return compareCanonicalFPNumbers(float1, float2);
     }
@@ -1267,12 +1206,12 @@ public class XmlDatatypeUtil {
      * Compares two doubles to eachother.
      *
      * @return A negative number if <tt>double1</tt> is smaller than
-     * <tt>double2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>double1</tt> is larger than <tt>double2</tt>.
+     *         <tt>double2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>double1</tt> is larger than <tt>double2</tt>.
      * @throws IllegalArgumentException If one of the supplied strings
-     * is not a legal double or if <tt>NaN</tt> is compared to a
-     * double other than <tt>NaN</tt>.
-     **/
+     *                                  is not a legal double or if <tt>NaN</tt> is compared to a
+     *                                  double other than <tt>NaN</tt>.
+     */
     public static int compareDoubles(String double1, String double2) {
         double1 = normalizeDouble(double1);
         double2 = normalizeDouble(double2);
@@ -1284,14 +1223,14 @@ public class XmlDatatypeUtil {
      * Compares two canonical doubles to eachother.
      *
      * @return A negative number if <tt>double1</tt> is smaller than
-     * <tt>double2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>double1</tt> is larger than <tt>double2</tt>. The
-     * result is undefined when one or both of the arguments is not
-     * a canonical double.
+     *         <tt>double2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>double1</tt> is larger than <tt>double2</tt>. The
+     *         result is undefined when one or both of the arguments is not
+     *         a canonical double.
      * @throws IllegalArgumentException If one of the supplied strings
-     * is not a legal double or if <tt>NaN</tt> is compared to a
-     * double other than <tt>NaN</tt>.
-     **/
+     *                                  is not a legal double or if <tt>NaN</tt> is compared to a
+     *                                  double other than <tt>NaN</tt>.
+     */
     public static int compareCanonicalDoubles(String double1, String double2) {
         return compareCanonicalFPNumbers(double1, double2);
     }
@@ -1300,12 +1239,12 @@ public class XmlDatatypeUtil {
      * Compares two floating point numbers to eachother.
      *
      * @return A negative number if <tt>float1</tt> is smaller than
-     * <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>.
+     *         <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>.
      * @throws IllegalArgumentException If one of the supplied strings
-     * is not a legal floating point number or if <tt>NaN</tt> is
-     * compared to a floating point number other than <tt>NaN</tt>.
-     **/
+     *                                  is not a legal floating point number or if <tt>NaN</tt> is
+     *                                  compared to a floating point number other than <tt>NaN</tt>.
+     */
     public static int compareFPNumbers(String fp1, String fp2) {
         fp1 = normalizeFPNumber(fp1);
         fp2 = normalizeFPNumber(fp2);
@@ -1317,22 +1256,21 @@ public class XmlDatatypeUtil {
      * Compares two canonical floating point numbers to eachother.
      *
      * @return A negative number if <tt>float1</tt> is smaller than
-     * <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
-     * (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>. The
-     * result is undefined when one or both of the arguments is not
-     * a canonical floating point number.
+     *         <tt>float2</tt>, <tt>0</tt> if they are equal, or positive
+     *         (&gt;0) if <tt>float1</tt> is larger than <tt>float2</tt>. The
+     *         result is undefined when one or both of the arguments is not
+     *         a canonical floating point number.
      * @throws IllegalArgumentException If one of the supplied strings
-     * is not a legal floating point number or if <tt>NaN</tt> is
-     * compared to a floating point number other than <tt>NaN</tt>.
-     **/
+     *                                  is not a legal floating point number or if <tt>NaN</tt> is
+     *                                  compared to a floating point number other than <tt>NaN</tt>.
+     */
     public static int compareCanonicalFPNumbers(String float1, String float2) {
         // Handle special case NaN
         if ("NaN".equals(float1) || "NaN".equals(float2)) {
             if (float1.equals(float2)) {
                 // NaN is equal to itself
                 return 0;
-            }
-            else {
+            } else {
                 throwIAE("NaN cannot be compared to other floats");
             }
         }
@@ -1340,16 +1278,14 @@ public class XmlDatatypeUtil {
         // Handle special case INF
         if ("INF".equals(float1)) {
             return "INF".equals(float2) ? 0 : 1;
-        }
-        else if ("INF".equals(float2)) {
+        } else if ("INF".equals(float2)) {
             return -1;
         }
 
         // Handle special case -INF
         if ("-INF".equals(float1)) {
             return "-INF".equals(float2) ? 0 : -1;
-        }
-        else if ("-INF".equals(float2)) {
+        } else if ("-INF".equals(float2)) {
             return 1;
         }
 
@@ -1394,7 +1330,7 @@ public class XmlDatatypeUtil {
     /**
      * Throws an IllegalArgumentException that contains the supplied
      * message.
-     **/
+     */
     private static void throwIAE(String msg) {
         throw new IllegalArgumentException(msg);
     }

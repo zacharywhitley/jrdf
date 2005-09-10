@@ -6,7 +6,6 @@ import org.jrdf.graph.Node;
  * A class which simply contains the True Node constant.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class TrueNode implements Node {

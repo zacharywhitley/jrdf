@@ -67,7 +67,6 @@ import java.net.URI;
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Literal extends ObjectNode, TypedNodeVisitable {
@@ -81,10 +80,10 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
 
     /**
      * Returns the language code of the literal, or <code>null</code> if no
-     *     language specified.
+     * language specified.
      *
      * @return the language code of the literal, or <code>null</code> if no
-     *     language specified.
+     *         language specified.
      */
     String getLanguage();
 
@@ -97,16 +96,16 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
 
     /**
      * Returns the URI of the RDF datatype of this resource, or <code>null</code>
-     *     for an untyped node.
+     * for an untyped node.
      *
      * @return the URI of the RDF datatype of this resource, or <code>null</code>
-     *     for an untyped node.
+     *         for an untyped node.
      */
     URI getDatatypeURI();
 
     /**
      * Indicates whether some other object is "equal to" this one.
-     *
+     * <p/>
      * A literal is equal to another literal if:
      * <ul>
      * <LI> The strings of the two lexical forms compare equal, character by
@@ -139,7 +138,7 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
      * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
      * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
      * Cases</a> Recommendation.
-     *
+     * <p/>
      * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
      * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
      * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.

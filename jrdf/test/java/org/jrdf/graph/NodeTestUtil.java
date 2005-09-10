@@ -100,10 +100,6 @@ public final class NodeTestUtil {
 
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     private static GraphImpl createGraph() {
-        try {
-            return new GraphImpl();
-        } catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
+        return new GraphImpl();
     }
 }

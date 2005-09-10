@@ -62,7 +62,6 @@ package org.jrdf.graph;
  * Exception from a {@link TripleFactory} operation.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class TripleFactoryException extends Exception {
@@ -87,7 +86,7 @@ public class TripleFactoryException extends Exception {
     /**
      * Create a wrapper exception.
      *
-     * @param message the message to wrap inside this exception.
+     * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
     public TripleFactoryException(String message, Throwable newCause) {

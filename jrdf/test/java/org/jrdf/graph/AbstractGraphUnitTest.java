@@ -825,10 +825,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Tests full iterative removal.
-     * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     public void testFullIterativeRemoval() throws Exception {
+        // TODO AN Add a test for fulliterative add.
         // add some test data
         graph.add(blank1, ref1, blank2);
         graph.add(blank1, ref2, blank2);

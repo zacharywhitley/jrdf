@@ -6,7 +6,6 @@ import org.jrdf.graph.Graph;
  * The set of all object which appear in both graphs.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Intersection extends SetOperation {

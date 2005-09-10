@@ -14,7 +14,6 @@ import java.util.Set;
  * Dum is a relation with no tuples and is the base relation for FALSE.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class RelationDUM implements Relation {

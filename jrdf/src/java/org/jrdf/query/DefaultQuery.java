@@ -65,6 +65,7 @@ import java.util.List;
 
 /**
  * Default implementation of a {@link Query}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

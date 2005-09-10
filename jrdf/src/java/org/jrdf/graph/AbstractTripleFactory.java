@@ -70,7 +70,6 @@ import java.util.Iterator;
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public abstract class AbstractTripleFactory implements TripleFactory {
@@ -89,23 +88,21 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * Reifies a triple.  A triple made up of the first three nodes is added to
      * graph and the reificationNode is used to reify the triple.
      *
-     * @param subjectNode the subject of the triple.
-     * @param predicateNode the predicate of the triple.
-     * @param objectNode the object of the triple.
+     * @param subjectNode     the subject of the triple.
+     * @param predicateNode   the predicate of the triple.
+     * @param objectNode      the object of the triple.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException If the resource failed to be created.
+     * @throws TripleFactoryException  If the resource failed to be created.
      * @throws AlreadyReifiedException If there was already a triple URI for
-     *     the given triple.
+     *                                 the given triple.
      */
-    public void reifyTriple(SubjectNode subjectNode,
-        PredicateNode predicateNode, ObjectNode objectNode,
-        SubjectNode reificationNode) throws TripleFactoryException,
-        AlreadyReifiedException {
+    public void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
+            SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException {
 
         // create the reification node
         try {
             reallyReifyTriple(subjectNode, predicateNode, objectNode,
-                reificationNode);
+                    reificationNode);
         }
         catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
@@ -116,18 +113,18 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * Creates a reification of a triple.  The triple added to the graph and the
      * reificationNode is used to reify the triple.
      *
-     * @param triple the triple to be reified.
+     * @param triple          the triple to be reified.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException If the resource failed to be created.
+     * @throws TripleFactoryException  If the resource failed to be created.
      * @throws AlreadyReifiedException If there was already a triple URI for
-     *     the given triple.
+     *                                 the given triple.
      */
-    public void reifyTriple(Triple triple, SubjectNode reificationNode)
-        throws TripleFactoryException, AlreadyReifiedException {
+    public void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException,
+            AlreadyReifiedException {
 
         try {
             reallyReifyTriple(triple.getSubject(), triple.getPredicate(),
-                triple.getObject(), reificationNode);
+                    triple.getObject(), reificationNode);
         }
         catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
@@ -137,17 +134,16 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     /**
      * Creates a reification of a triple.
      *
-     * @param subjectNode the subject of the triple.
-     * @param predicateNode the predicate of the triple.
-     * @param objectNode the object of the triple.
+     * @param subjectNode     the subject of the triple.
+     * @param predicateNode   the predicate of the triple.
+     * @param objectNode      the object of the triple.
+     * @param reificationNode
      * @return a node denoting the reified triple.
      * @throws GraphElementFactoryException If the resource failed to be created.
-     * @throws AlreadyReifiedException If there was already a triple URI for
-     *     the given triple.
+     * @throws AlreadyReifiedException      If there was already a triple URI for  the given triple.
      */
-    private Node reallyReifyTriple(SubjectNode subjectNode,
-        PredicateNode predicateNode, ObjectNode objectNode, Node ru)
-        throws GraphElementFactoryException, AlreadyReifiedException {
+    private SubjectNode reallyReifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
+            SubjectNode reificationNode) throws GraphElementFactoryException, AlreadyReifiedException {
 
         // get the nodes used for reification
         PredicateNode hasSubject = elementFactory.createResource(RDF.SUBJECT);
@@ -160,38 +156,34 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
 
             // An error if ru already reifies anything but the given s, p, o.
-            if (graph.contains((SubjectNode) ru, rdfType, rdfStatement) &&
-                !(graph.contains((SubjectNode) ru, hasSubject,
-                    (ObjectNode) subjectNode) &&
-                graph.contains((SubjectNode) ru, hasPredicate,
-                    (ObjectNode) predicateNode) &&
-                graph.contains((SubjectNode) ru, hasObject, objectNode))) {
+            if (graph.contains(reificationNode, rdfType, rdfStatement) &&
+                    !(graph.contains(reificationNode, hasSubject, (ObjectNode) subjectNode) &&
+                            graph.contains(reificationNode, hasPredicate, (ObjectNode) predicateNode) &&
+                            graph.contains(reificationNode, hasObject, objectNode))) {
 
-                throw new AlreadyReifiedException("SkipListNode: " + ru +
-                    " already used in " +
-                    "reification");
+                throw new AlreadyReifiedException("SkipListNode: " + reificationNode +
+                        " already used in " +
+                        "reification");
             }
 
             // insert the reification statements
-            graph.add((SubjectNode) ru, rdfType, rdfStatement);
-            graph.add((SubjectNode) ru, hasSubject, (ObjectNode) subjectNode);
-            graph.add((SubjectNode) ru, hasPredicate, (ObjectNode) predicateNode);
-            graph.add((SubjectNode) ru, hasObject, (ObjectNode) objectNode);
+            graph.add(reificationNode, rdfType, rdfStatement);
+            graph.add(reificationNode, hasSubject, (ObjectNode) subjectNode);
+            graph.add(reificationNode, hasPredicate, (ObjectNode) predicateNode);
+            graph.add(reificationNode, hasObject, objectNode);
         }
         catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
 
         // return the ru to make it easier for returning the value from this method
-        return ru;
+        return reificationNode;
     }
 
-    public void addAlternative(SubjectNode subjectNode,
-        Alternative<ObjectNode> alternative) throws TripleFactoryException {
+    public void addAlternative(SubjectNode subjectNode, Alternative<ObjectNode> alternative) throws
+            TripleFactoryException {
         try {
-            graph.add(subjectNode,
-                (PredicateNode) elementFactory.createResource(RDF.TYPE),
-                (ObjectNode) elementFactory.createResource(RDF.ALT));
+            graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.ALT));
             addContainer(subjectNode, alternative);
         }
         catch (GraphException e) {
@@ -202,14 +194,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    public void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag)
-        throws TripleFactoryException {
+    public void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag) throws TripleFactoryException {
         try {
-
-            graph.add(subjectNode,
-                (PredicateNode) elementFactory.createResource(RDF.TYPE),
-                (ObjectNode) elementFactory.createResource(RDF.BAG));
-
+            graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.BAG));
             addContainer(subjectNode, bag);
         }
         catch (GraphException e) {
@@ -220,14 +207,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    public void addSequence(SubjectNode subjectNode,
-        Sequence<ObjectNode> sequence) throws TripleFactoryException {
+    public void addSequence(SubjectNode subjectNode, Sequence<ObjectNode> sequence) throws TripleFactoryException {
         try {
-
-            graph.add(subjectNode,
-                (PredicateNode) elementFactory.createResource(RDF.TYPE),
-                (ObjectNode) elementFactory.createResource(RDF.SEQ));
-
+            graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.SEQ));
             addContainer(subjectNode, sequence);
         }
         catch (GraphException e) {
@@ -242,13 +224,12 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * Creates a container.
      *
      * @param subjectNode the subject of the triple.
-     * @param container the container to add.
-     * @throws TripleFactoryException If the resource failed to be created.
+     * @param container   the container to add.
+     * @throws TripleFactoryException  If the resource failed to be created.
      * @throws AlreadyReifiedException If there was already a triple URI for
-     *     the given triple.
+     *                                 the given triple.
      */
-    private void addContainer(SubjectNode subjectNode,
-        Container<ObjectNode> container) throws TripleFactoryException {
+    private void addContainer(SubjectNode subjectNode, Container<ObjectNode> container) throws TripleFactoryException {
 
         // assert that the statement is not already reified
         try {
@@ -259,9 +240,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
             while (iter.hasNext()) {
                 ObjectNode object = iter.next();
-                graph.add(subjectNode,
-                    (PredicateNode) elementFactory.createResource(new URI(RDF.BASE_URI + "_" + counter++)),
-                    object);
+                graph.add(subjectNode, elementFactory.createResource(new URI(RDF.BASE_URI + "_" + counter++)), object);
             }
         }
         catch (URISyntaxException e) {
@@ -276,12 +255,12 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     public void addCollection(SubjectNode firstNode,
-        Collection<ObjectNode> collection) throws TripleFactoryException {
+            Collection<ObjectNode> collection) throws TripleFactoryException {
         try {
             // Constants.
-            PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(RDF.FIRST);
-            PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(RDF.REST);
-            ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
+            PredicateNode rdfFirst = elementFactory.createResource(RDF.FIRST);
+            PredicateNode rdfRest = elementFactory.createResource(RDF.REST);
+            ObjectNode rdfNil = elementFactory.createResource(RDF.NIL);
 
             // Insert statements from the Colletion using the first given node.
             SubjectNode subject = firstNode;
@@ -299,11 +278,10 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
                     // Create a new blank node, link the existing subject to it using
                     // the REST predicate.
-                    ObjectNode newSubject = (ObjectNode) elementFactory.createResource();
+                    ObjectNode newSubject = elementFactory.createResource();
                     graph.add(subject, rdfRest, newSubject);
                     subject = (SubjectNode) newSubject;
-                }
-                else {
+                } else {
 
                     // If we are at the end of the list link the existing subject to NIL
                     // using the REST predicate.

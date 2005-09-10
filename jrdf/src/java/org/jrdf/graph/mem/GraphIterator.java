@@ -78,51 +78,66 @@ import java.util.Set;
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class GraphIterator implements ClosableIterator<Triple> {
 
-    /** The iterator for the first index. */
+    /**
+     * The iterator for the first index.
+     */
     private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
 
-    /** The iterator for the second index. */
+    /**
+     * The iterator for the second index.
+     */
     private Iterator subIterator;
 
-    /** The iterator for the third index. */
+    /**
+     * The iterator for the third index.
+     */
     private Iterator itemIterator;
 
-    /** The current element for the iterator on the first index. */
+    /**
+     * The current element for the iterator on the first index.
+     */
     private Map.Entry firstEntry;
 
-    /** The current element for the iterator on the second index. */
+    /**
+     * The current element for the iterator on the second index.
+     */
     private Map.Entry secondEntry;
 
     /**
      * The current subject predicate and object, last returned from next().
      * Only needed by the remove method.
-     * */
+     */
     private Long[] currentNodes;
 
-    /** The nodeFactory used to create the nodes to be returned in the triples. */
+    /**
+     * The nodeFactory used to create the nodes to be returned in the triples.
+     */
     private GraphElementFactoryImpl nodeFactory;
 
-    /** Handles the removal of nodes */
+    /**
+     * Handles the removal of nodes
+     */
     private GraphHandler handler;
 
-    /** True if next has been called */
+    /**
+     * True if next has been called
+     */
     private boolean nextCalled;
 
     /**
      * Constructor.  Sets up the internal iterators.
      *
      * @throws IllegalArgumentException Must be created with implementations from
-     *   the memory package.
+     *                                  the memory package.
      */
     GraphIterator(GraphElementFactory newNodeFactory, GraphHandler newHandler) {
         if (!(newNodeFactory instanceof GraphElementFactoryImpl)) {
             throw new IllegalArgumentException("Node factory must be a memory " +
-                "implementation");
+                    "implementation");
         }
 
         // store the node factory
@@ -185,7 +200,7 @@ public final class GraphIterator implements ClosableIterator<Triple> {
         // get back the nodes for these IDs and uild the triple
         currentNodes = new Long[]{first, second, third};
         return new TripleImpl((GraphElementFactoryImpl) nodeFactory, first, second,
-            third);
+                third);
     }
 
 
@@ -232,8 +247,7 @@ public final class GraphIterator implements ClosableIterator<Triple> {
             cleanIndex();
             // now remove from the other 2 indexes
             removeFromNonCurrentIndex();
-        }
-        else {
+        } else {
             throw new IllegalStateException("Next not called or beyond end of data");
         }
     }
@@ -278,6 +292,7 @@ public final class GraphIterator implements ClosableIterator<Triple> {
     /**
      * Closes the iterator by freeing any resources that it current holds.
      * Nothing to be done for this class.
+     *
      * @return <code>true</code> indicating success.
      */
     public boolean close() {

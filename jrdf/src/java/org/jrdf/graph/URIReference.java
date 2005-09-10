@@ -67,17 +67,16 @@ import java.net.URI;
  * not always possible to say whether a resource is a property or not until
  * it's used as a predicate, because we don't always have access to an RDF
  * Schema that defines the property.
- *
+ * <p/>
  * A URI Reference can be any part of an RDF Triple: subject, predicate or
  * object.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
-    TypedNodeVisitable {
+        TypedNodeVisitable {
 
     /**
      * The {@link URI} identifiying this resource.
@@ -96,7 +95,7 @@ public interface URIReference extends SubjectNode, PredicateNode, ObjectNode,
 
     /**
      * Indicates whether some other object is "equal to" this one.
-     *
+     * <p/>
      * A URI Reference is equal to another URI Reference if their URIs are equal
      * to one another, character by character.
      *

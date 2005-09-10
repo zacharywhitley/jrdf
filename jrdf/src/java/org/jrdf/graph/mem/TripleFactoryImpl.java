@@ -66,7 +66,6 @@ import org.jrdf.graph.GraphElementFactory;
  * A Triple Factory which is tied to a specific instance of GraphImpl.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- *
  * @version $Revision$
  */
 class TripleFactoryImpl extends AbstractTripleFactory {

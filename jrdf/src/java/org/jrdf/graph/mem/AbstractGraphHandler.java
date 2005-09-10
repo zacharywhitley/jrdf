@@ -11,7 +11,6 @@ import java.util.Set;
  * Turn this into delegation rather than inheritance?
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public abstract class AbstractGraphHandler implements GraphHandler {
@@ -28,20 +27,19 @@ public abstract class AbstractGraphHandler implements GraphHandler {
      *
      * @param firstIndex
      * @param secondIndex the second index.
-     * @param thirdIndex the third index.
+     * @param thirdIndex  the third index.
      * @throws org.jrdf.graph.GraphException if the adds fail.
      */
     public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex,
-        LongIndex thirdIndex) throws GraphException {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries =
-            firstIndex.iterator();
+            LongIndex thirdIndex) throws GraphException {
+        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = firstIndex.iterator();
         while (firstEntries.hasNext()) {
             Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
             Long first = firstEntry.getKey();
 
             // now iterate over the second column
             Iterator<Map.Entry<Long, Set<Long>>> secondEntries =
-                firstEntry.getValue().entrySet().iterator();
+                    firstEntry.getValue().entrySet().iterator();
             while (secondEntries.hasNext()) {
                 Map.Entry<Long, Set<Long>> secondEntry = secondEntries.next();
                 Long second = secondEntry.getKey();
@@ -80,8 +78,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
 
         if (!predIterator.hasNext()) {
             out.println("X");
-        }
-        else {
+        } else {
             int sWidth = subject.length() + STATEMENT_OFFSET;
             printPredicates(out, predIterator, createSpaces(sWidth));
         }
@@ -102,8 +99,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
 
             if (!objIterator.hasNext()) {
                 out.println("X");
-            }
-            else {
+            } else {
                 int pWidth = predicate.length() + STATEMENT_OFFSET;
                 printObjects(out, objIterator, spaces + createSpaces(pWidth));
             }

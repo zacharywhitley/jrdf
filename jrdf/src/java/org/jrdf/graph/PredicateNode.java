@@ -64,7 +64,6 @@ package org.jrdf.graph;
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface PredicateNode extends Node {

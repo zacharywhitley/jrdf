@@ -7,29 +7,28 @@ import java.util.regex.Pattern;
 
 /**
  * A utility that applies N-Triples escaping.
- *
+ * <p/>
  * For reference:
  * http://www.echip.com.vn/echiproot/weblh/suutam/2000/uformat.htm
  *
  * @author Simon Raboczi
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class EscapeUtil {
     /**
      * A regular expression to pick out characters needing escape from Unicode to
      * ASCII.  Accepts surrogate pairs or all other escaped chars.
-     *
+     * <p/>
      * This is used by the {@link #escape} method.
      */
     private static final Pattern PATTERN = Pattern.compile("\\p{InHighSurrogates}\\p{InLowSurrogates}" +
-        "|" +
-        "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
+            "|" +
+            "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
 
     /**
      * The matcher instance used to escape characters from Unicode to ASCII.
-     *
+     * <p/>
      * This is lazily initialized and used by the {@link #escape} method.
      */
     private static Matcher matcher;
@@ -50,12 +49,12 @@ public final class EscapeUtil {
     private static final int CHARACTER_CODE_OFFSET = 0x3FF;
 
     /**
-     *  How many characters at a time to decode for 8 bit encoding.
+     * How many characters at a time to decode for 8 bit encoding.
      */
     private static final int CHARACTER_LENGTH_8_BIT = 11;
 
     /**
-     *  How many characters at a time to decode for 16 bit encoding.
+     * How many characters at a time to decode for 16 bit encoding.
      */
     private static final int CHARACTER_LENGTH_16_BIT = 7;
 
@@ -66,7 +65,7 @@ public final class EscapeUtil {
     /**
      * Escapes a string literal to a string that is N-Triple escaped.
      *
-     * @param string  a string to escape, never <code>null</code>.
+     * @param string a string to escape, never <code>null</code>.
      * @return a version of the <var>string</var> with N-Triples escapes applied.
      * @throws IllegalStateException if there is no handler to perform the relevant match.
      */
@@ -102,8 +101,7 @@ public final class EscapeUtil {
     private static void initMatcher(String string) {
         if (null == matcher) {
             matcher = PATTERN.matcher(string);
-        }
-        else {
+        } else {
             matcher.reset(string);
         }
         assert null != matcher;
@@ -123,11 +121,9 @@ public final class EscapeUtil {
         int numMatches = groupString.length();
         if (numMatches == 1) {
             escapeString = escape16Bit(groupString);
-        }
-        else if (numMatches == 2) {
+        } else if (numMatches == 2) {
             escapeString = escape8Bit(groupString);
-        }
-        else {
+        } else {
             throw new IllegalStateException("Escape sequence " + groupString + " has no handler");
         }
         assert null != escapeString;

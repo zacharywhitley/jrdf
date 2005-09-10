@@ -48,7 +48,7 @@ import java.io.PrintWriter;
  *   ...
  * }
  * </pre>
- **/
+ */
 public class StatementHandlerException extends Exception {
 
     private static final long serialVersionUID = -6755497249260716209L;
@@ -56,14 +56,14 @@ public class StatementHandlerException extends Exception {
     /**
      * The source of the exception, i.e. the application specific
      * error.
-     **/
+     */
     private Exception source;
 
     /**
      * Creates a new StatementHandlerException.
      *
      * @param msg An error message.
-     **/
+     */
     public StatementHandlerException(String msg) {
         super(msg);
     }
@@ -71,9 +71,9 @@ public class StatementHandlerException extends Exception {
     /**
      * Creates a new StatementHandlerException wrapping another exception.
      *
-     * @param msg An error message.
+     * @param msg       An error message.
      * @param newSource The newSource exception.
-     **/
+     */
     public StatementHandlerException(String msg, Exception newSource) {
         super(msg);
         source = newSource;
@@ -85,7 +85,7 @@ public class StatementHandlerException extends Exception {
      * newSource exception.
      *
      * @param newSource The newSource exception.
-     **/
+     */
     public StatementHandlerException(Exception newSource) {
         super(newSource.getMessage());
         source = newSource;
@@ -95,7 +95,7 @@ public class StatementHandlerException extends Exception {
      * Gets the source of this exception.
      *
      * @return The source of this exception.
-     **/
+     */
     public Exception getSource() {
         return source;
     }

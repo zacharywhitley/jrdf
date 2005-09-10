@@ -63,7 +63,6 @@ package org.jrdf.graph;
  * triples.  This includes reification, containers and collections.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface TripleFactory {
@@ -72,31 +71,28 @@ public interface TripleFactory {
      * Reifies a triple.  A triple made up of the first three nodes is added to
      * graph and the reificationNode is used to reify the triple.
      *
-     * @param subjectNode the subject of the triple.
-     * @param predicateNode the predicate of the triple.
-     * @param objectNode the object of the triple.
+     * @param subjectNode     the subject of the triple.
+     * @param predicateNode   the predicate of the triple.
+     * @param objectNode      the object of the triple.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException If the resource failed to be added.
+     * @throws TripleFactoryException  If the resource failed to be added.
      * @throws AlreadyReifiedException If there was already a triple URI for
-     *     the given triple.
+     *                                 the given triple.
      */
-    void reifyTriple(SubjectNode subjectNode,
-        PredicateNode predicateNode, ObjectNode objectNode,
-        SubjectNode reificationNode) throws TripleFactoryException,
-        AlreadyReifiedException;
+    void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
+            SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException;
 
     /**
      * Reifies a triple.  The triple added to the graph and the
      * reificationNode is used to reify the triple.
      *
-     * @param triple the triple to be reified.
+     * @param triple          the triple to be reified.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException If the resource failed to be added.
+     * @throws TripleFactoryException  If the resource failed to be added.
      * @throws AlreadyReifiedException If there was already a triple URI for
-     *     the given triple.
+     *                                 the given triple.
      */
-    void reifyTriple(Triple triple, SubjectNode reificationNode)
-        throws TripleFactoryException, AlreadyReifiedException;
+    void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException;
 
     /**
      * Inserts a alternative using the given subject.  The subject is also
@@ -106,39 +102,35 @@ public interface TripleFactory {
      * @param alternative the alternative to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addAlternative(SubjectNode subjectNode,
-        Alternative<ObjectNode> alternative) throws TripleFactoryException;
+    void addAlternative(SubjectNode subjectNode, Alternative<ObjectNode> alternative) throws TripleFactoryException;
 
     /**
      * Inserts a bag using the given subject.  The subject is also
      * the object of a proceeding statement that identifies the container.
      *
      * @param subjectNode the subject node of the triple.
-     * @param bag the bag to add.
+     * @param bag         the bag to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag)
-        throws TripleFactoryException;
+    void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag) throws TripleFactoryException;
 
     /**
      * Inserts a sequence using the given subject.  The subject is also
      * the object of a proceeding statement that identifies the container.
      *
      * @param subjectNode the subject node of the triple.
-     * @param sequence the sequence to add.
+     * @param sequence    the sequence to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addSequence(SubjectNode subjectNode, Sequence<ObjectNode> sequence)
-        throws TripleFactoryException;
+    void addSequence(SubjectNode subjectNode, Sequence<ObjectNode> sequence) throws TripleFactoryException;
 
     /**
      * Inserts a collection using the given subject.  The subject is also
      * the object of a proceeding statement that identifies the collection.
      *
-     * @param firstNode the subject node of the triple.
+     * @param firstNode  the subject node of the triple.
      * @param collection the collection to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addCollection(SubjectNode firstNode, Collection<ObjectNode> collection)
-        throws TripleFactoryException;
+    void addCollection(SubjectNode firstNode, Collection<ObjectNode> collection) throws TripleFactoryException;
 }

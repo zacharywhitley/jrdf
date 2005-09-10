@@ -32,7 +32,7 @@ package org.jrdf.parser;
 /**
  * An interface defining methods for receiving warning and error messages
  * from an RDF parser.
- **/
+ */
 public interface ParseErrorListener {
 
     /**
@@ -42,12 +42,12 @@ public interface ParseErrorListener {
      * or deprecated RDF URIs, e.g. <tt>rdfs:Property</tt> instead of
      * <tt>rdf:Property</tt>.
      *
-     * @param msg A warning message.
+     * @param msg    A warning message.
      * @param lineNo A line number related to the warning, or -1 if not
-     * available or applicable.
-     * @param colNo A column number related to the warning, or -1 if not
-     * available or applicable.
-     **/
+     *               available or applicable.
+     * @param colNo  A column number related to the warning, or -1 if not
+     *               available or applicable.
+     */
     void warning(String msg, int lineNo, int colNo);
 
     /**
@@ -57,12 +57,12 @@ public interface ParseErrorListener {
      * parsing when <tt>stopAtFirstError</tt> has been set to
      * <tt>false</tt>.
      *
-     * @param msg A error message.
+     * @param msg    A error message.
      * @param lineNo A line number related to the error, or -1 if not
-     * available or applicable.
-     * @param colNo A column number related to the error, or -1 if not
-     * available or applicable.
-     **/
+     *               available or applicable.
+     * @param colNo  A column number related to the error, or -1 if not
+     *               available or applicable.
+     */
     void error(String msg, int lineNo, int colNo);
 
     /**
@@ -71,11 +71,11 @@ public interface ParseErrorListener {
      * directly after it reported the fatal error. Example fatal errors are
      * unbalanced start- and end-tags in an XML-encoded RDF document.
      *
-     * @param msg A error message.
+     * @param msg    A error message.
      * @param lineNo A line number related to the error, or -1 if not
-     * available or applicable.
-     * @param colNo A column number related to the error, or -1 if not
-     * available or applicable.
-     **/
+     *               available or applicable.
+     * @param colNo  A column number related to the error, or -1 if not
+     *               available or applicable.
+     */
     void fatalError(String msg, int lineNo, int colNo);
 }

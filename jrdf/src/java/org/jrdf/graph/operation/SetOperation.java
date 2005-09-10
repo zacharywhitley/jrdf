@@ -7,7 +7,6 @@ import org.jrdf.graph.Graph;
  * returns a new one.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface SetOperation {

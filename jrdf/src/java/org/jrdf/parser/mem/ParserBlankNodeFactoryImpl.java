@@ -72,7 +72,6 @@ import java.util.Map;
  * same BlankNode object can be returned for a given <code>nodeID</code>.
  *
  * @author David Makepeace
- *
  * @version $Revision$
  */
 public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
@@ -117,8 +116,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
      * @return the BlankNode object.
      * @throws GraphElementFactoryException if it fails to create a new blank node.
      */
-    public BlankNode createBlankNode(String nodeID)
-        throws GraphElementFactoryException {
+    public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
         // Maybe the node ID has been used before:
         BlankNode result = bNodeIdMap.get(nodeID);
 

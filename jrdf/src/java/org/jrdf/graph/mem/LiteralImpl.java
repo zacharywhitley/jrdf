@@ -68,7 +68,6 @@ import java.net.URI;
  * RDF literal node.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- *
  * @version $Revision$
  */
 public class LiteralImpl extends AbstractLiteral implements MemNode {
@@ -94,7 +93,7 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
     /**
      * Construct a literal.
      *
-     * @param newLexicalForm  the text part of the literal
+     * @param newLexicalForm the text part of the literal
      * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
      */
     LiteralImpl(String newLexicalForm) {
@@ -105,11 +104,11 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
     /**
      * Construct a fully general literal.
      *
-     * @param newLexicalForm  the text part of the literal
-     * @param newLanguage  the language code, possibly the empty string but not
-     *    <code>null</code>
+     * @param newLexicalForm the text part of the literal
+     * @param newLanguage    the language code, possibly the empty string but not
+     *                       <code>null</code>
      * @throws IllegalArgumentException if <var>lexicalForm</var> or
-     *    <var>lang</var> are <code>null</code>
+     *                                  <var>lang</var> are <code>null</code>
      */
     LiteralImpl(String newLexicalForm, String newLanguage) {
         super(newLexicalForm, newLanguage);
@@ -120,11 +119,11 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
     /**
      * Construct a fully general literal.
      *
-     * @param newLexicalForm  the text part of the literal
-     * @param datatype  the URI for a datatyped literal, or <code>null</code> for
-     *     an untyped literal
+     * @param newLexicalForm the text part of the literal
+     * @param datatype       the URI for a datatyped literal, or <code>null</code> for
+     *                       an untyped literal
      * @throws IllegalArgumentException if <var>newLexicalForm</var> or
-     *     <var>lang</var> are <code>null</code>
+     *                                  <var>lang</var> are <code>null</code>
      */
     LiteralImpl(String newLexicalForm, URI datatype) {
         super(newLexicalForm, datatype);
@@ -155,7 +154,7 @@ public class LiteralImpl extends AbstractLiteral implements MemNode {
      * so it gets mapped efficiently.
      *
      * @return the <var>lexicalForm</var> property, enclosed in <code>"</code>
-     *     characters.
+     *         characters.
      */
     public String toString() {
         return thisString;

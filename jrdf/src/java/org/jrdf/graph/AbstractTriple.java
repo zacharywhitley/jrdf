@@ -81,6 +81,7 @@ public class AbstractTriple implements Triple, Serializable {
 
     /**
      * Obtains the subject of this statement.
+     *
      * @return an {@link SubjectNode} which is either a {@link BlankNode} or
      *         {@link URIReference}
      */
@@ -90,6 +91,7 @@ public class AbstractTriple implements Triple, Serializable {
 
     /**
      * Obtains the predicate of this statement.
+     *
      * @return a {@link PredicateNode} which is a {@link URIReference}
      */
     public PredicateNode getPredicate() {
@@ -98,6 +100,7 @@ public class AbstractTriple implements Triple, Serializable {
 
     /**
      * Obtains the object of this statement.
+     *
      * @return a {@link ObjectNode} which is either a {@link BlankNode},
      *         {@link URIReference} or {@link Literal}
      */
@@ -131,6 +134,7 @@ public class AbstractTriple implements Triple, Serializable {
     /**
      * Provide a legible representation of a triple.
      * <p>Currently, square brackets with toString values of the parts of the triple.</p>
+     *
      * @return the string value of the subject, predicate and object in square
      *         brackets.
      */
@@ -140,7 +144,7 @@ public class AbstractTriple implements Triple, Serializable {
 
     private boolean determineEqualityFromFields(Triple ref) {
         return nodesEqual(subjectNode, ref.getSubject()) && nodesEqual(predicateNode, ref.getPredicate()) &&
-            nodesEqual(objectNode, ref.getObject());
+                nodesEqual(objectNode, ref.getObject());
     }
 
     private boolean nodesEqual(Node node1, Node node2) {

@@ -62,6 +62,7 @@ import org.jrdf.graph.GraphException;
 
 /**
  * Executes queries against a graph.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -71,6 +72,7 @@ public interface JrdfQueryExecutor {
 
     /**
      * Executes a query against a graph.
+     *
      * @param query The query to execute.
      * @return The answer to the query, will never be <code>null</code>.
      * @throws GraphException If an error occurs while executing the query.

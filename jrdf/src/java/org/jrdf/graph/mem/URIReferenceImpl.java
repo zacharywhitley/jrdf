@@ -69,12 +69,11 @@ import java.net.URI;
  * not always possible to say whether a resource is a property or not until
  * it's used as a predicate, because we don't always have access to an RDF
  * Schema that defines the property.
- *
+ * <p/>
  * A URI Reference can be any part of an RDF Triple: subject, predicate or
  * object.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- *
  * @version $Revision$
  */
 public class URIReferenceImpl extends AbstractURIReference implements MemNode {
@@ -87,7 +86,9 @@ public class URIReferenceImpl extends AbstractURIReference implements MemNode {
      */
     private static final long serialVersionUID = -4120822410726711976L;
 
-    /** The internal identifier for this node. */
+    /**
+     * The internal identifier for this node.
+     */
     private Long id;
 
 
@@ -95,7 +96,7 @@ public class URIReferenceImpl extends AbstractURIReference implements MemNode {
      * Constructor for use by GraphElementFactory only.
      *
      * @param newUri The newUri of this node.
-     * @param newId The internal identifier for this node.
+     * @param newId  The internal identifier for this node.
      */
     URIReferenceImpl(URI newUri, Long newId) {
         super(newUri);
@@ -105,9 +106,9 @@ public class URIReferenceImpl extends AbstractURIReference implements MemNode {
     /**
      * Constructor for use by GraphElementFactory only.
      *
-     * @param newUri The uri of this node.
+     * @param newUri   The uri of this node.
      * @param validate whether to enforce valid RDF URIs.
-     * @param newId The internal identifier for this node.
+     * @param newId    The internal identifier for this node.
      */
     URIReferenceImpl(URI newUri, boolean validate, Long newId) {
         super(newUri, validate);

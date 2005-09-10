@@ -64,7 +64,6 @@ package org.jrdf.graph;
  * need to implement all methods.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 

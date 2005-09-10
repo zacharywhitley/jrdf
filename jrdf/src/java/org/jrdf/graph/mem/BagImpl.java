@@ -72,7 +72,6 @@ import java.util.List;
  * An implementation of {@link Bag}.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class BagImpl extends AbstractUnorderedContainer<ObjectNode> implements Bag<ObjectNode> {

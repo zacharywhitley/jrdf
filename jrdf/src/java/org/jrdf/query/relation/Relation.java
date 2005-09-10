@@ -11,11 +11,10 @@ import java.util.Set;
  * the tuple, the predicates to the attribute names (or column names),
  * the object nodes to tuples, and the combination of all three values can be
  * retrieved as triples.
- *
+ * <p/>
  * Unsure how operations are going to be implemented - this interface may change.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Relation {

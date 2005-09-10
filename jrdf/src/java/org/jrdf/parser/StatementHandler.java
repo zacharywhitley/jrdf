@@ -36,7 +36,7 @@ import org.jrdf.graph.SubjectNode;
 /**
  * An interface defining methods for receiving RDF statements from an RDF
  * parser.
- **/
+ */
 public interface StatementHandler {
 
     /**
@@ -44,12 +44,12 @@ public interface StatementHandler {
      * subject, predicate and object is determined by the ValueFactory that
      * the parser uses.
      *
-     * @param subject A URI or bNode.
+     * @param subject   A URI or bNode.
      * @param predicate A URI.
-     * @param object A URI, bNode or literal.
-     * @exception StatementHandlerException If the statement handler has
-     * encountered an unrecoverable error.
-     **/
+     * @param object    A URI, bNode or literal.
+     * @throws StatementHandlerException If the statement handler has
+     *                                   encountered an unrecoverable error.
+     */
     void handleStatement(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws StatementHandlerException;
+            ObjectNode object) throws StatementHandlerException;
 }

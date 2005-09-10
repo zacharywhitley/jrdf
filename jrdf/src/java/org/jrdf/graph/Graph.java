@@ -72,7 +72,6 @@ import java.util.Iterator;
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Graph extends Serializable {
@@ -82,14 +81,14 @@ public interface Graph extends Serializable {
      * of the parts of a triple are treated as unconstrained, any values will be
      * returned.
      *
-     * @param subject The subject to find or AnySubjectNode to indicate any subject.
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
      * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
-     * @param object The object to find or AnyObjectNode to indicate any object.
+     * @param object    The object to find or AnyObjectNode to indicate any object.
      * @return True if the statement is found in the model, otherwise false.
      * @throws GraphException If there was an error accessing the graph.
      */
     boolean contains(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException;
+            ObjectNode object) throws GraphException;
 
     /**
      * Test the graph for the occurrence of the triple.  An AnyNode value for any
@@ -108,14 +107,14 @@ public interface Graph extends Serializable {
      * the parts of a triple are treated as unconstrained, any values will be
      * returned.
      *
-     * @param subject The subject to find or AnySubjectNode to indicate any subject.
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
      * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
-     * @param object ObjectNode The object to find or AnyObjectNode to indicate any object.
+     * @param object    ObjectNode The object to find or AnyObjectNode to indicate any object.
      * @return an iterator containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
      */
     ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException;
+            ObjectNode object) throws GraphException;
 
     /**
      * Returns an iterator of {@link Triple}s to a set of statements that
@@ -133,13 +132,12 @@ public interface Graph extends Serializable {
      * Adds a triple to the graph.  The nodes must have already been created
      * using {@link GraphElementFactory}.
      *
-     * @param subject The subject.
+     * @param subject   The subject.
      * @param predicate The predicate.
-     * @param object The object.
+     * @param object    The object.
      * @throws GraphException If the statement can't be made.
      */
-    void add(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-        throws GraphException;
+    void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created
@@ -168,14 +166,12 @@ public interface Graph extends Serializable {
      * Removes a triple from the graph.  The nodes must have already been
      * created using {@link GraphElementFactory}.
      *
-     * @param subject The subject.
+     * @param subject   The subject.
      * @param predicate The predicate.
-     * @param object The object.
-     * @throws GraphException If there was an error revoking the statement, For
-     *     example if it didn't exist.
+     * @param object    The object.
+     * @throws GraphException If there was an error revoking the statement, For example if it didn't exist.
      */
-    void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-        throws GraphException;
+    void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
 
     /**
      * Removes a triple from the graph.  The nodes must have already been
@@ -183,7 +179,7 @@ public interface Graph extends Serializable {
      *
      * @param triple The triple.
      * @throws GraphException If there was an error revoking the statement, For
-     *     example if it didn't exist.
+     *                        example if it didn't exist.
      */
     void remove(Triple triple) throws GraphException;
 
@@ -215,7 +211,7 @@ public interface Graph extends Serializable {
      *
      * @return the number of triples in the graph.
      * @throws GraphException If the statements number of statements in the graph
-     *   fails to be found.
+     *                        fails to be found.
      */
     long getNumberOfTriples() throws GraphException;
 
@@ -224,7 +220,7 @@ public interface Graph extends Serializable {
      *
      * @return true if the graph is empty i.e. the number of triples is 0.
      * @throws GraphException If the statements number of statements in the graph
-     *   fails to be found.
+     *                        fails to be found.
      */
     boolean isEmpty() throws GraphException;
 }

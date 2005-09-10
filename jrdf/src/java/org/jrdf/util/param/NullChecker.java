@@ -61,6 +61,7 @@ package org.jrdf.util.param;
 
 /**
  * Checks that nulls are not passed to methods.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

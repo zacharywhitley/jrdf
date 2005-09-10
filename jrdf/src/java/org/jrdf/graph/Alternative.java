@@ -68,17 +68,15 @@ import java.util.Collection;
  * objects go in may not be the order in which they are returned.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public interface Alternative <ObjectNode> extends Container<ObjectNode> {
+public interface Alternative<ObjectNode> extends Container<ObjectNode> {
 
     /**
      * {@inheritDoc}
+     *
      * @param c {@inheritDoc}
-     * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Alternative.
+     * @throws IllegalArgumentException if the given object is not the correct type, Alternative.
      */
-    boolean addAll(Collection<? extends ObjectNode> c)
-        throws IllegalArgumentException;
+    boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException;
 }

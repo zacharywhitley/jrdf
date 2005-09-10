@@ -58,17 +58,15 @@
 
 package org.jrdf.sparql.builder;
 
-import java.net.URI;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
@@ -78,8 +76,11 @@ import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.util.param.ParameterUtil;
 
+import java.net.URI;
+
 /**
  * Constructs {@link org.jrdf.graph.Triple}s from {@link org.jrdf.sparql.parser.node.ATriple}s.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -91,6 +92,7 @@ public final class TripleBuilder {
 
     /**
      * Builds the given <var>tripleNode</var> into a local Triple.
+     *
      * @param tripleNode The tripleNode to build into a JRDF class instance.
      * @return The local version of the given <var>tripleNode</var>
      */
@@ -119,8 +121,7 @@ public final class TripleBuilder {
         PObjectTripleElement object = tripleNode.getObject();
         if (object instanceof AVariableObjectTripleElement) {
             return ANY_VALUE;
-        }
-        else {
+        } else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
             return createLiteral(text);
@@ -182,11 +183,6 @@ public final class TripleBuilder {
     }
 
     private GraphImpl createGraph() {
-        try {
-            return new GraphImpl();
-        }
-        catch (GraphException e) {
-            throw new RuntimeException(e);
-        }
+        return new GraphImpl();
     }
 }

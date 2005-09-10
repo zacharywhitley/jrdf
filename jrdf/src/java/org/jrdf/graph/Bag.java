@@ -68,17 +68,16 @@ import java.util.Collection;
  * in which they are returned.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public interface Bag <ObjectNode> extends Container<ObjectNode> {
+public interface Bag<ObjectNode> extends Container<ObjectNode> {
 
     /**
      * {@inheritDoc}
      *
      * @param c {@inheritDoc}
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Bag.
+     *                                  type, Bag.
      */
     boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException;
 }

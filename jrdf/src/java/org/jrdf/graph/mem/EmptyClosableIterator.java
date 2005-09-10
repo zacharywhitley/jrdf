@@ -67,7 +67,6 @@ import java.util.NoSuchElementException;
  * An iterator that returns no triples.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class EmptyClosableIterator implements ClosableIterator<Triple> {
