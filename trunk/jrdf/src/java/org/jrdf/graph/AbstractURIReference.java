@@ -70,11 +70,10 @@ import java.net.URI;
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public abstract class AbstractURIReference implements URIReference,
-    Serializable {
+        Serializable {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -91,12 +90,12 @@ public abstract class AbstractURIReference implements URIReference,
 
     /**
      * Constructor.
-     *
+     * <p/>
      * Enforces a non-<code>null</code> and absolute <var>newUri</var> parameter.
      *
      * @param newUri the URI to use in creation.
      * @throws IllegalArgumentException if <var>newUri</var> is <code>null</code> or
-     *     not absolute
+     *                                  not absolute
      */
     protected AbstractURIReference(URI newUri) throws IllegalArgumentException {
 
@@ -115,14 +114,14 @@ public abstract class AbstractURIReference implements URIReference,
 
     /**
      * Constructor.
-     *
+     * <p/>
      * Enforces a non-<code>null</code> parameter.  Use only for applications
      * where enforcement of valid URIs is too expensive or not necessary.
      *
-     * @param newUri the URI to use in creation.
+     * @param newUri   the URI to use in creation.
      * @param validate whether to enforce valid RDF URIs.
      * @throws IllegalArgumentException if <var>newUri</var> is not absolute and
-     *   validate is true.
+     *                                  validate is true.
      */
     protected AbstractURIReference(URI newUri, boolean validate) throws IllegalArgumentException {
 

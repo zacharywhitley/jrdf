@@ -68,7 +68,6 @@ import java.net.URI;
  * specific graph.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface GraphElementFactory {
@@ -94,13 +93,12 @@ public interface GraphElementFactory {
      * Create a URI reference without checking if the URI given is a valid RDF
      * URI, currently if the URI is absolute.
      *
-     * @param uri The URI of the resource.
+     * @param uri      The URI of the resource.
      * @param validate true if we disbale checking to see if the URI is valid.
      * @return The newly created URI reference value.
      * @throws GraphElementFactoryException
      */
-    URIReference createResource(URI uri, boolean validate)
-        throws GraphElementFactoryException;
+    URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException;
 
     /**
      * Creates a new literal with the given lexical value, with no language or
@@ -110,8 +108,7 @@ public interface GraphElementFactory {
      * @return the newly created literal value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    Literal createLiteral(String lexicalValue)
-        throws GraphElementFactoryException;
+    Literal createLiteral(String lexicalValue) throws GraphElementFactoryException;
 
     /**
      * Creates a new literal with the given lexical value, with a given language
@@ -122,31 +119,29 @@ public interface GraphElementFactory {
      * @return the newly created literal value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    Literal createLiteral(String lexicalValue, String languageType)
-        throws GraphElementFactoryException;
+    Literal createLiteral(String lexicalValue, String languageType) throws GraphElementFactoryException;
 
     /**
      * Creates a new literal with the given lexical value and given datatype.
      *
      * @param lexicalValue The lexical value for the literal.  Cannot be null.
-     * @param datatypeURI The URI of the datatype of the literal or null if not
-     *     required.
+     * @param datatypeURI  The URI of the datatype of the literal or null if not
+     *                     required.
      * @return the newly created literal value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    Literal createLiteral(String lexicalValue, URI datatypeURI)
-        throws GraphElementFactoryException;
+    Literal createLiteral(String lexicalValue, URI datatypeURI) throws GraphElementFactoryException;
 
     /**
      * Creates a new triple to be used in the graph.  Does not add it to an
      * associated graph.  Use @see Graph#add.
      *
-     * @param subject The subject of the statement.
+     * @param subject   The subject of the statement.
      * @param predicate The predicate of the statement.
-     * @param object The object of the statement.
+     * @param object    The object of the statement.
      * @return the newly created triple object.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    Triple createTriple(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphElementFactoryException;
+    Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
+            GraphElementFactoryException;
 }

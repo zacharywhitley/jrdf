@@ -60,6 +60,7 @@ package org.jrdf.util.param;
 
 /**
  * Checks that empty strings are not passed to methods.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

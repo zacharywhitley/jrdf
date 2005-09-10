@@ -35,7 +35,7 @@ import java.io.PrintWriter;
 /**
  * A parse exception that can be thrown by a parser when it encounters
  * an error from which it cannot or doesn't want to recover.
- **/
+ */
 public class ParseException extends Exception {
 
     private static final long serialVersionUID = -1049335626292093759L;
@@ -49,10 +49,10 @@ public class ParseException extends Exception {
     /**
      * Creates a new ParseException.
      *
-     * @param msg An error message.
-     * @param lineNo A line number associated with the message.
+     * @param msg      An error message.
+     * @param lineNo   A line number associated with the message.
      * @param columnNo A column number associated with the message.
-     **/
+     */
     public ParseException(String msg, int lineNo, int columnNo) {
         super(msg);
         this.lineNo = lineNo;
@@ -62,11 +62,11 @@ public class ParseException extends Exception {
     /**
      * Creates a new ParseException wrapping another exception.
      *
-     * @param msg An error message.
-     * @param source The source exception.
-     * @param lineNo A line number associated with the message.
+     * @param msg      An error message.
+     * @param source   The source exception.
+     * @param lineNo   A line number associated with the message.
      * @param columnNo A column number associated with the message.
-     **/
+     */
     public ParseException(String msg, Exception source, int lineNo, int columnNo) {
         super(msg);
         this.source = source;
@@ -79,10 +79,10 @@ public class ParseException extends Exception {
      * ParseException will inherit its message from the supplied
      * source exception.
      *
-     * @param source The source exception.
-     * @param lineNo A line number associated with the message.
+     * @param source   The source exception.
+     * @param lineNo   A line number associated with the message.
      * @param columnNo A column number associated with the message.
-     **/
+     */
     public ParseException(Exception source, int lineNo, int columnNo) {
         super(source.getMessage());
         this.source = source;
@@ -114,18 +114,20 @@ public class ParseException extends Exception {
 
     /**
      * Gets the line number associated with this parse exception.
+     *
      * @return A line number, or -1 if no line number is available
-     * or applicable.
-     **/
+     *         or applicable.
+     */
     public int getLineNumber() {
         return lineNo;
     }
 
     /**
      * Gets the column number associated with this parse exception.
+     *
      * @return A column number, or -1 if no column number is available
-     * or applicable.
-     **/
+     *         or applicable.
+     */
     public int getColumnNumber() {
         return columnNo;
     }

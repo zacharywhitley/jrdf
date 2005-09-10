@@ -58,9 +58,6 @@
 
 package org.jrdf.sparql.parser;
 
-import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.StringReader;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
@@ -72,8 +69,13 @@ import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.param.ParameterUtil;
 
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.io.StringReader;
+
 /**
  * Default implementation of a {@link SparqlParser}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -87,6 +89,7 @@ public final class DefaultSparqlParser implements SparqlParser {
 
     /**
      * Parses a textual query into a {@link org.jrdf.query.Query} object.
+     *
      * @param queryText The textual query to applyAnalyser.
      * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.

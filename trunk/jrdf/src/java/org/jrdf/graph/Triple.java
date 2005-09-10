@@ -67,7 +67,6 @@ import java.io.Serializable;
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Triple extends Serializable {
@@ -76,7 +75,7 @@ public interface Triple extends Serializable {
      * Obtains the subject of this statement.
      *
      * @return an {@link SubjectNode} which is either a {@link BlankNode} or
-     *     {@link URIReference}
+     *         {@link URIReference}
      */
     SubjectNode getSubject();
 
@@ -91,13 +90,13 @@ public interface Triple extends Serializable {
      * Obtains the object of this statement.
      *
      * @return a {@link ObjectNode} which is either a {@link BlankNode},
-     *     {@link URIReference} or {@link Literal}
+     *         {@link URIReference} or {@link Literal}
      */
     ObjectNode getObject();
 
     /**
      * Indicates whether some other object is "equal to" this one.
-     *
+     * <p/>
      * A triple is equal to another triple if the subject, predicate and object
      * are all equal.
      *

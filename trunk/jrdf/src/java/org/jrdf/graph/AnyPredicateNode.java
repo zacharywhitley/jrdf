@@ -4,7 +4,6 @@ package org.jrdf.graph;
  * A node which represents any predicate - unconstrained.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class AnyPredicateNode implements PredicateNode {

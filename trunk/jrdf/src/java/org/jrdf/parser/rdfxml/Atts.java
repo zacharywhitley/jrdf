@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * A collection of XML attributes.
- **/
+ */
 class Atts {
 
     /**
@@ -45,7 +45,7 @@ class Atts {
 
     /**
      * Creates a new <tt>Atts</tt> object.
-     **/
+     */
     Atts() {
         this(4);
     }
@@ -54,22 +54,23 @@ class Atts {
      * Creates a new <tt>Atts</tt> object.
      *
      * @param size The initial size of the array for storing attributes.
-     **/
+     */
     Atts(int size) {
         attributes = new ArrayList<Att>(size);
     }
 
     /**
      * Adds an attribute.
-     **/
+     */
     public void addAtt(Att att) {
         attributes.add(att);
     }
 
     /**
      * Get an iterator on the attributes.
+     *
      * @return an Iterator over Att objects.
-     **/
+     */
     public Iterator<Att> iterator() {
         return attributes.iterator();
     }
@@ -79,8 +80,8 @@ class Atts {
      *
      * @param qName The QName of an attribute.
      * @return The attribute with the specified QName, or
-     * <tt>null</tt> if no such attribute could be found.
-     **/
+     *         <tt>null</tt> if no such attribute could be found.
+     */
     public Att getAtt(String qName) {
         for (int i = 0; i < attributes.size(); i++) {
             Att att = attributes.get(i);
@@ -99,14 +100,14 @@ class Atts {
      * @param namespace The namespace of an attribute.
      * @param localName The local name of an attribute.
      * @return The attribute with the specified namespace and local
-     * name, or <tt>null</tt> if no such attribute could be found.
-     **/
+     *         name, or <tt>null</tt> if no such attribute could be found.
+     */
     public Att getAtt(String namespace, String localName) {
         for (int i = 0; i < attributes.size(); i++) {
             Att att = attributes.get(i);
 
             if (att.getLocalName().equals(localName) &&
-                att.getNamespace().equals(namespace)) {
+                    att.getNamespace().equals(namespace)) {
                 return att;
             }
         }
@@ -119,8 +120,8 @@ class Atts {
      *
      * @param qName The QName of an attribute.
      * @return The removed attribute, or <tt>null</tt> if no attribute
-     * with the specified QName could be found.
-     **/
+     *         with the specified QName could be found.
+     */
     public Att removeAtt(String qName) {
         for (int i = 0; i < attributes.size(); i++) {
             Att att = attributes.get(i);
@@ -141,14 +142,14 @@ class Atts {
      * @param namespace The namespace of an attribute.
      * @param localName The local name of an attribute.
      * @return The removed attribute, or <tt>null</tt> if no attribute
-     * with the specified namespace and local name could be found.
-     **/
+     *         with the specified namespace and local name could be found.
+     */
     public Att removeAtt(String namespace, String localName) {
         for (int i = 0; i < attributes.size(); i++) {
             Att att = attributes.get(i);
 
             if (att.getLocalName().equals(localName) &&
-                att.getNamespace().equals(namespace)) {
+                    att.getNamespace().equals(namespace)) {
                 attributes.remove(i);
                 return att;
             }
@@ -159,14 +160,14 @@ class Atts {
 
     /**
      * Returns the number of attributes contained in this object.
-     **/
+     */
     public int size() {
         return attributes.size();
     }
 
     /**
      * Produces a String-representation of this object.
-     **/
+     */
     public String toString() {
         StringBuffer result = new StringBuffer();
         result.append("Atts[");

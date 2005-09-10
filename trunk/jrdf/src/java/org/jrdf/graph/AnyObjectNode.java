@@ -2,6 +2,7 @@ package org.jrdf.graph;
 
 /**
  * A node which represents any object - unconstrained.
+ *
  * @author Andrew Newman
  * @version $Revision$
  */

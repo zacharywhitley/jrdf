@@ -35,18 +35,18 @@ import java.io.Reader;
 
 /**
  * A general interface for RDF parsers.
- **/
+ */
 public interface Parser {
 
     /**
      * Constant indicating that datatypes semantics should be ignored.
-     **/
+     */
     int DT_IGNORE = 10;
 
     /**
      * Constant indicating that values of datatyped literals should be
      * verified.
-     **/
+     */
     int DT_VERIFY = 20;
 
     /**
@@ -123,8 +123,8 @@ public interface Parser {
      * canonical representation. The default value is <em>verify</em>.
      *
      * @param datatypeHandling One of the constants
-     * <tt>DT_IGNORE</tt>, <tt>DT_VERIFY</tt> or
-     * <tt>DT_NORMALIZE</tt>.
+     *                         <tt>DT_IGNORE</tt>, <tt>DT_VERIFY</tt> or
+     *                         <tt>DT_NORMALIZE</tt>.
      * @see #DT_IGNORE
      * @see #DT_VERIFY
      * @see #DT_NORMALIZE
@@ -135,31 +135,31 @@ public interface Parser {
      * Parses the data from the supplied InputStream, using the supplied
      * BASE_URI to resolve any relative URI references.
      *
-     * @param in The InputStream from which to read the data.
+     * @param in      The InputStream from which to read the data.
      * @param baseURI The URI associated with the data in the InputStream.
-     * @exception IOException If an I/O error occurred while data was read
-     * from the InputStream.
-     * @exception ParseException If the parser has found an unrecoverable
-     * parse error.
-     * @exception StatementHandlerException If the configured statement handler
-     * has encountered an unrecoverable error.
+     * @throws IOException               If an I/O error occurred while data was read
+     *                                   from the InputStream.
+     * @throws ParseException            If the parser has found an unrecoverable
+     *                                   parse error.
+     * @throws StatementHandlerException If the configured statement handler
+     *                                   has encountered an unrecoverable error.
      */
     void parse(InputStream in, String baseURI) throws IOException,
-        ParseException, StatementHandlerException;
+            ParseException, StatementHandlerException;
 
     /**
      * Parses the data from the supplied Reader, using the supplied
      * BASE_URI to resolve any relative URI references.
      *
-     * @param reader The Reader from which to read the data.
+     * @param reader  The Reader from which to read the data.
      * @param baseURI The URI associated with the data in the InputStream.
-     * @exception IOException If an I/O error occurred while data was read
-     * from the InputStream.
-     * @exception ParseException If the parser has found an unrecoverable
-     * parse error.
-     * @exception StatementHandlerException If the configured statement handler
-     * has encountered an unrecoverable error.
+     * @throws IOException               If an I/O error occurred while data was read
+     *                                   from the InputStream.
+     * @throws ParseException            If the parser has found an unrecoverable
+     *                                   parse error.
+     * @throws StatementHandlerException If the configured statement handler
+     *                                   has encountered an unrecoverable error.
      */
     void parse(Reader reader, String baseURI) throws IOException,
-        ParseException, StatementHandlerException;
+            ParseException, StatementHandlerException;
 }

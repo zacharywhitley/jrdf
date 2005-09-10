@@ -66,11 +66,10 @@ import org.jrdf.graph.BlankNode;
 /**
  * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying
  * attributes.
- *
+ * <p/>
  * Blank nodes, can either be subjects or objects.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- *
  * @version $Revision$
  */
 public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
@@ -83,17 +82,21 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
      */
     private static final long serialVersionUID = 1573129076314000518L;
 
-    /** The internal identifier for this node. */
+    /**
+     * The internal identifier for this node.
+     */
     private Long id;
 
-    /** Globally Unique Identifier. */
+    /**
+     * Globally Unique Identifier.
+     */
     private String uid;
 
     /**
      * The constructor for this node.  Package scope so that only NodeFactory and
      * static methods can call it.
      *
-     * @param newId The id to be used for this node.
+     * @param newId  The id to be used for this node.
      * @param newUid String Globally Unique Identifier for external communication.
      */
     BlankNodeImpl(Long newId, String newUid) {
@@ -175,7 +178,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
      * Parses a String in the format of:
      * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69) and creates a new
      * BlankNodeImpl from it.
-     *
+     * <p/>
      * Should only be applied to a value previously returned by toString()
      *
      * @param nodeString String previously returned by toString()
@@ -183,14 +186,14 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
      * @throws IllegalArgumentException
      */
     public static BlankNode valueOf(String nodeString) throws
-        IllegalArgumentException {
+            IllegalArgumentException {
 
         String[] split = nodeString.split("#");
 
         //validate
         if (null == split || 2 > split.length) {
             throw new IllegalArgumentException("String: " + nodeString + " is not " +
-                "of the format: uid#id");
+                    "of the format: uid#id");
         }
 
         return new BlankNodeImpl(Long.valueOf(split[1]), split[0]);

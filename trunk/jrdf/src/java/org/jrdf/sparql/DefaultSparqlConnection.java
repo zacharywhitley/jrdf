@@ -58,7 +58,6 @@
 
 package org.jrdf.sparql;
 
-import java.net.URI;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
@@ -69,9 +68,12 @@ import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterUtil;
 
+import java.net.URI;
+
 
 /**
- * Default implementation of a {@link org.jrdf.sparql.SparqlConnection}.
+ * Default implementation of a {@link SparqlConnection}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -88,7 +90,8 @@ public final class DefaultSparqlConnection implements SparqlConnection {
 
     /**
      * Creates a new SPARQL connection.
-     * @param graph The graph to query.
+     *
+     * @param graph          The graph to query.
      * @param securityDomain The security domain of the graph.
      */
     public DefaultSparqlConnection(Graph graph, URI securityDomain) {

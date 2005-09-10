@@ -4,7 +4,6 @@ package org.jrdf.graph;
  * A node which represents any subject - unconstrained.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class AnySubjectNode implements SubjectNode {

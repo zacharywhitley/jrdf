@@ -64,6 +64,7 @@ import java.util.Iterator;
  * An that intializes objects from a graph one at a time.  The close method
  * indicates that the resources being held by the iterator should be freed.
  * Based on Jena's CloseableIterator class.
+ *
  * @author Andrew Newman
  * @version $Revision$
  */
@@ -73,6 +74,7 @@ public interface ClosableIterator<Triple> extends Iterator<Triple> {
      * Closes the iterator by freeing any resources that it current holds.  This
      * must be done as soon as possible.  Once an iterator is closed none of the
      * operations on a iterator will operate i.e. they will throw an exception.
+     *
      * @return true if it was successfully closed.
      */
     boolean close();

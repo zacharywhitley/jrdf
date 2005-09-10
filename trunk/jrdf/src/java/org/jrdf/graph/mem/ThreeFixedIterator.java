@@ -73,7 +73,6 @@ import java.util.NoSuchElementException;
  * An iterator that returns only a single triple, if any exists.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- *
  * @version $Revision$
  */
 public class ThreeFixedIterator implements ClosableIterator<Triple> {
@@ -97,14 +96,13 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
     /**
      * Constructor.
      */
-    ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object)
-        throws GraphException {
+    ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object) throws GraphException {
         graph = newGraph;
         if (newGraph.contains((SubjectNode) subject, (PredicateNode) predicate,
-            (ObjectNode) object)) {
+                (ObjectNode) object)) {
             triple =
-                new TripleImpl((SubjectNode) subject, (PredicateNode) predicate,
-                    (ObjectNode) object);
+                    new TripleImpl((SubjectNode) subject, (PredicateNode) predicate,
+                            (ObjectNode) object);
         }
         removeTriple = null;
     }
@@ -149,8 +147,7 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
             catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());
             }
-        }
-        else {
+        } else {
             throw new IllegalStateException("Next not called or beyond end of data");
         }
     }
@@ -159,6 +156,7 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
     /**
      * Closes the iterator by freeing any resources that it current holds.
      * Nothing to be done for this class.
+     *
      * @return <code>true</code> indicating success.
      */
     public boolean close() {

@@ -1,15 +1,15 @@
 package org.jrdf.example;
 
-import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
@@ -87,8 +87,8 @@ public class JrdfExample {
     /**
      * Creates Nodes and Triples used by the Example.
      *
-     * @throws Exception
      * @param graph Graph
+     * @throws Exception
      */
     private void initializeData(Graph graph) throws Exception {
 
@@ -232,8 +232,8 @@ public class JrdfExample {
     /**
      * Returns an in-memory JRDF Graph implementation.
      *
-     * @throws org.jrdf.graph.GraphException
      * @return Graph
+     * @throws org.jrdf.graph.GraphException
      */
     private Graph getGraph() throws GraphException {
 
@@ -244,14 +244,15 @@ public class JrdfExample {
      * Prints the entire contents of a Graph to System.out
      *
      * @param message String
-     * @param graph Graph
+     * @param graph   Graph
      * @throws IllegalArgumentException
      * @throws org.jrdf.graph.GraphElementFactoryException
+     *
      * @throws GraphException
      */
     private void print(String message, Graph graph) throws
-        IllegalArgumentException,
-        GraphElementFactoryException, GraphException {
+            IllegalArgumentException,
+            GraphElementFactoryException, GraphException {
 
         //validate
         if (null == graph) {
@@ -273,12 +274,12 @@ public class JrdfExample {
     /**
      * Prints the contents of an Iterator to System.out
      *
-     * @param message String
+     * @param message  String
      * @param iterator Iterator
      * @throws IllegalArgumentException
      */
     private void print(String message, Iterator iterator) throws
-        IllegalArgumentException {
+            IllegalArgumentException {
 
         //validate
         if (null == iterator) {
@@ -310,8 +311,7 @@ public class JrdfExample {
 
             JrdfExample example = new JrdfExample();
             example.runExample();
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
 
             //print an exception if one occurs
             exception.printStackTrace();

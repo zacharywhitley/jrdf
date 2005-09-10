@@ -58,7 +58,6 @@
 
 package org.jrdf.sparql.analysis;
 
-import java.util.List;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultQuery;
@@ -68,8 +67,11 @@ import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
 
+import java.util.List;
+
 /**
  * Default implementation of {@link SparqlAnalyser}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

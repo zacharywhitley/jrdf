@@ -61,12 +61,13 @@ package org.jrdf.sparql;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.util.param.ParameterUtil;
-import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.sparql.parser.DefaultSparqlParser;
+import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Builds SPARQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

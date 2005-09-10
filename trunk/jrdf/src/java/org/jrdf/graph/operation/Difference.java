@@ -7,7 +7,6 @@ import org.jrdf.graph.Graph;
  * the first graph that do not belong in the second.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Difference extends SetOperation {

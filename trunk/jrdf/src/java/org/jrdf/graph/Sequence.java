@@ -70,11 +70,10 @@ import java.util.ListIterator;
  * In, First Out manner.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public interface Sequence <ObjectNode> extends Container<ObjectNode>,
-    List<ObjectNode> {
+public interface Sequence<ObjectNode> extends Container<ObjectNode>,
+        List<ObjectNode> {
 
     /**
      * {@inheritDoc}
@@ -100,7 +99,7 @@ public interface Sequence <ObjectNode> extends Container<ObjectNode>,
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     int indexOf(Object o) throws IllegalArgumentException;
 
@@ -108,7 +107,7 @@ public interface Sequence <ObjectNode> extends Container<ObjectNode>,
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     int lastIndexOf(Object o) throws IllegalArgumentException;
 
@@ -145,7 +144,7 @@ public interface Sequence <ObjectNode> extends Container<ObjectNode>,
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     ObjectNode set(int index, ObjectNode element) throws IllegalArgumentException;
 
@@ -153,7 +152,7 @@ public interface Sequence <ObjectNode> extends Container<ObjectNode>,
      * {@inheritDoc}
      *
      * @param fromIndex {@inheritDoc}
-     * @param toIndex {@inheritDoc}
+     * @param toIndex   {@inheritDoc}
      * @return {@inheritDoc}
      */
     List<ObjectNode> subList(int fromIndex, int toIndex);

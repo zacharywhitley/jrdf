@@ -14,19 +14,18 @@ import java.util.Set;
  * Dee is a relation with one tuple and is the base relation for TRUE.  It is
  * also the identity with respect to JOIN i.e. JOIN {r, RelationDEE} is DEE and
  * JOIN {} is RelationDEE.
- *
+ * <p/>
  * Again, this is going to change when operations are more properly filled out.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class RelationDEE implements Relation {
     private static final Node TRUE_NODE = TrueNode.TRUE;
     private static final Set<AttributeNameValue> TRUE_NAME_VALUE_SET =
-        Collections.singleton(TrueAttributeNameValue.TRUE_NAME_VALUE);
+            Collections.singleton(TrueAttributeNameValue.TRUE_NAME_VALUE);
     private static final Map<SubjectNode, Set<AttributeNameValue>> TRUE_TUPLE =
-        Collections.singletonMap((SubjectNode) TRUE_NODE, TRUE_NAME_VALUE_SET);
+            Collections.singletonMap((SubjectNode) TRUE_NODE, TRUE_NAME_VALUE_SET);
 
     public Set<SubjectNode> getTupleNames() {
         return Collections.singleton((SubjectNode) TRUE_NODE);

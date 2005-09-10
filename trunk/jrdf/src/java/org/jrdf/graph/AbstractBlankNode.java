@@ -64,7 +64,6 @@ import java.io.Serializable;
  * A base implementation of an RDF {@link BlankNode}.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public abstract class AbstractBlankNode implements BlankNode, Serializable {

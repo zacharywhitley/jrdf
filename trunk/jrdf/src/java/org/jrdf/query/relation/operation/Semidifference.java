@@ -6,7 +6,6 @@ package org.jrdf.query.relation.operation;
  * (Not and Join for instance).
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Semidifference extends Operation {

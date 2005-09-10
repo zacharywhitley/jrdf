@@ -69,7 +69,6 @@ import java.util.Set;
  * A representation of a known vocabulary.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public abstract class Vocabulary implements Serializable {

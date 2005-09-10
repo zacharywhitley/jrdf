@@ -62,6 +62,7 @@ import org.jrdf.sparql.parser.node.Node;
 
 /**
  * Build instances of local (JRDF) classes from SableCC nodes.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -71,6 +72,7 @@ interface LocalObjectBuilder<L, S extends Node> {
 
     /**
      * Builds the given <var>parserNode</var> into its local equivalent.
+     *
      * @param parserNode The parserNode to build into a JRDF class instance.
      * @return The local version of the given <var>parserNode</var>
      */

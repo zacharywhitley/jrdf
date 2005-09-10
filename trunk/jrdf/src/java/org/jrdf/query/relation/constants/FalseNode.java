@@ -6,7 +6,6 @@ import org.jrdf.graph.Node;
  * A class which simply contains the False Node constant.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class FalseNode implements Node {

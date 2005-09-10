@@ -58,14 +58,16 @@
 
 package org.jrdf.sparql.analysis;
 
-import java.util.List;
-import org.jrdf.sparql.parser.analysis.Analysis;
+import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.Query;
 import org.jrdf.query.Variable;
-import org.jrdf.query.ConstraintExpression;
+import org.jrdf.sparql.parser.analysis.Analysis;
+
+import java.util.List;
 
 /**
  * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -78,6 +80,7 @@ public interface SparqlAnalyser extends Analysis {
 
     /**
      * Returns the query processed by this analyser.
+     *
      * @return The query processed by this analyser, or {@link SparqlAnalyser.NO_QUERY} if no query has been processed.
      */
     Query getQuery();

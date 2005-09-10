@@ -31,7 +31,7 @@ package org.jrdf.parser;
 
 /**
  * A listener interface for listening to the parser's progress.
- **/
+ */
 public interface ParseLocationListener {
 
     /**
@@ -39,8 +39,8 @@ public interface ParseLocationListener {
      * and column number. Both line and column number start with value 1
      * for the first line or column.
      *
-     * @param lineNo The line number, or -1 if none is available.
+     * @param lineNo   The line number, or -1 if none is available.
      * @param columnNo The column number, or -1 if none is available.
-     **/
+     */
     void parseLocationUpdate(int lineNo, int columnNo);
 }

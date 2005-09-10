@@ -63,7 +63,6 @@ package org.jrdf.graph;
  * of a statement - if the statement already has a reified triple.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public class AlreadyReifiedException extends TripleFactoryException {
@@ -88,7 +87,7 @@ public class AlreadyReifiedException extends TripleFactoryException {
     /**
      * Create a wrapper exception.
      *
-     * @param message the message to wrap inside this exception.
+     * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
     public AlreadyReifiedException(String message, Throwable newCause) {

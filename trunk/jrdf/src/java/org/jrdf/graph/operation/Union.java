@@ -7,7 +7,6 @@ import org.jrdf.graph.Graph;
  * added to the second graph (no duplicates).
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Union extends SetOperation {

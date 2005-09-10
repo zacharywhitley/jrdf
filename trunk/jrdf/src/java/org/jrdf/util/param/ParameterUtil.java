@@ -60,6 +60,7 @@ package org.jrdf.util.param;
 
 /**
  * Utility for checking parameters to methods.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -77,11 +78,13 @@ public final class ParameterUtil {
     /**
      * This is a collection of static classes - cannot construct.
      */
-    private ParameterUtil() { }
+    private ParameterUtil() {
+    }
 
     /**
      * Checks if <var>param</var> is <code>null</code> and throws an exception if it is.
-     * @param name The name of the parameter to check.
+     *
+     * @param name  The name of the parameter to check.
      * @param param The parameter to check.
      * @throws IllegalArgumentException If <var>param</var> is <code>null</code>.
      */
@@ -93,7 +96,8 @@ public final class ParameterUtil {
 
     /**
      * Checks if <var>param</var> is <code>null</code> or the empty string and throws an exception if it is.
-     * @param name The name of the parameter to check.
+     *
+     * @param name  The name of the parameter to check.
      * @param param The parameter to check.
      * @throws IllegalArgumentException If <var>param</var> is <code>null</code> or the empty string.
      */

@@ -63,6 +63,7 @@ import java.util.List;
 
 /**
  * A variable in a {@link Query} or {@link Answer}.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -76,6 +77,7 @@ public interface Variable {
     /**
      * Returns the name of the variable.
      * <p>Note. The variable is returned without a variable prefix, e.g. ?, $ etc.</p>
+     *
      * @return The name of the variable.
      */
     String getName();

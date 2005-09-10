@@ -75,7 +75,6 @@ import org.jrdf.graph.GraphElementFactoryException;
  * <code>nodeID</code>.
  *
  * @author David Makepeace
- *
  * @version $Revision$
  */
 public interface ParserBlankNodeFactory {
@@ -86,7 +85,7 @@ public interface ParserBlankNodeFactory {
      *
      * @return the BlankNode.
      * @throws GraphElementFactoryException if there is a failure to create the
-     *   blank node.
+     *                                      blank node.
      */
     BlankNode createBlankNode() throws GraphElementFactoryException;
 
@@ -94,10 +93,10 @@ public interface ParserBlankNodeFactory {
      * Creates a BlankNode that is only distinguished by the nodeID value.
      *
      * @param nodeID the nodeID of the blank node - consistently returns the same
-     *   blank node if it exists.
+     *               blank node if it exists.
      * @return the BlankNode.
      * @throws GraphElementFactoryException if there is a failure to create the
-     *   blank node.
+     *                                      blank node.
      */
     BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException;
 

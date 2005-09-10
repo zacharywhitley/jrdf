@@ -65,6 +65,7 @@ import java.io.Serializable;
 
 /**
  * Default implementation of {@link Answer}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

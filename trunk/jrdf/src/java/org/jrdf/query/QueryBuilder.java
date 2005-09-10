@@ -59,16 +59,18 @@
 package org.jrdf.query;
 
 /**
- * Builds queries in {@link String} form into {@link org.jrdf.query.Query} objects.
+ * Builds queries in {@link String} form into {@link Query} objects.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
 public interface QueryBuilder {
     /**
-     * Builds a query in {@link String} form into a {@link org.jrdf.query.Query}.
+     * Builds a query in {@link String} form into a {@link Query}.
+     *
      * @param queryText The query in {@link String} form of the query.
-     * @return The <code>queryText</code> in {@link org.jrdf.query.Query} form.
-     * @throws org.jrdf.query.InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
+     * @return The <code>queryText</code> in {@link Query} form.
+     * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
      */
     Query buildQuery(String queryText) throws InvalidQuerySyntaxException;
 }

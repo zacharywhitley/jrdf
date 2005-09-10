@@ -60,8 +60,8 @@ package org.jrdf.graph;
 
 // Java 2 standard
 
-import org.jrdf.util.EscapeUtil;
 import org.jrdf.util.EqualsUtil;
+import org.jrdf.util.EscapeUtil;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -71,7 +71,6 @@ import java.net.URI;
  *
  * @author Andrew Newman
  * @author Simon Raboczi
- *
  * @version $Revision$
  */
 public abstract class AbstractLiteral implements Literal, Serializable {
@@ -107,7 +106,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * Construct a plain literal.
      *
-     * @param newLexicalForm  the text part of the literal
+     * @param newLexicalForm the text part of the literal
      * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
      */
     protected AbstractLiteral(String newLexicalForm) {
@@ -126,11 +125,11 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * Construct a literal with language.
      *
-     * @param newLexicalForm  the text part of the literal
-     * @param newLanguage  the language code, possibly the empty string but not
-     *    <code>null</code>
+     * @param newLexicalForm the text part of the literal
+     * @param newLanguage    the language code, possibly the empty string but not
+     *                       <code>null</code>
      * @throws IllegalArgumentException if <var>lexicalForm</var> or
-     *    <var>lang</var> are <code>null</code>
+     *                                  <var>lang</var> are <code>null</code>
      */
     protected AbstractLiteral(String newLexicalForm, String newLanguage) {
 
@@ -153,10 +152,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * Construct a datatyped literal.
      *
-     * @param newLexicalForm  the text part of the literal
-     * @param newDatatypeURI  the URI for a datatyped literal
+     * @param newLexicalForm the text part of the literal
+     * @param newDatatypeURI the URI for a datatyped literal
      * @throws IllegalArgumentException if <var>lexicalForm</var> or
-     *     <var>datatype</var> are <code>null</code>
+     *                                  <var>datatype</var> are <code>null</code>
      */
     protected AbstractLiteral(String newLexicalForm, URI newDatatypeURI) {
 
@@ -187,12 +186,12 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     /**
      * Returns the language code of the literal.
-     *
+     * <p/>
      * When no language is specified for a plain literal, this field contains a
      * zero-length {@link String}.  Otherwise, this will be <code>null</code>.
      *
      * @return the language code of the literal or <code>null</code> in the case
-     *   of a datatyped literal.
+     *         of a datatyped literal.
      */
     public String getLanguage() {
         return language;
@@ -209,10 +208,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     /**
      * Returns the URI of the RDF datatype of this resource, or <code>null</code>
-     *     for a plain literal.
+     * for a plain literal.
      *
      * @return the URI of the RDF datatype of this resource, or <code>null</code>
-     *     for a plain literal.
+     *         for a plain literal.
      */
     public URI getDatatypeURI() {
         return datatypeURI;
@@ -262,7 +261,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
      * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
      * Cases</a> Recommendation.
-     *
+     * <p/>
      * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
      * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
      * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.
@@ -285,7 +284,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     public String getEscapedLexicalForm() {
         return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"",
-            "\\\\\\\"");
+                "\\\\\\\"");
     }
 
     private boolean determineEqualityFromFields(Literal tmpLiteral) {
@@ -312,23 +311,22 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     private boolean equalByStringValue(Literal tmpLiteral) {
         return (null != getDatatypeURI()) &&
-               (null != tmpLiteral.getDatatypeURI()) &&
-               (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
+                (null != tmpLiteral.getDatatypeURI()) &&
+                (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
     }
 
     /**
      * Appends the datatype URI or language code of a literal.
      *
      * @return String the datatype URI in the form ^^<->, or language code @- or
-     *   an empty string.
+     *         an empty string.
      */
     private String appendType() {
         String appendString = "";
 
         if (null != getDatatypeURI()) {
             appendString = "^^<" + getDatatypeURI() + '>';
-        }
-        else if (!"".equals(language)) {
+        } else if (!"".equals(language)) {
             appendString = '@' + language;
         }
 

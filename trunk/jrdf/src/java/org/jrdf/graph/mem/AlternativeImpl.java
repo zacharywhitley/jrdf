@@ -72,7 +72,6 @@ import java.util.List;
  * An implementation of {@link Alternative}.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode> implements Alternative<ObjectNode> {
@@ -90,8 +89,7 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
 
     // TODO This should be test drive - probably wrong.  Shouldn't add existing
     // elements twice.
-    public boolean addAll(Collection<? extends ObjectNode> c)
-        throws IllegalArgumentException {
+    public boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException {
 //    if (!(c instanceof Alternative)) {
 //      throw new IllegalArgumentException("Can only add alternatives to other " +
 //          "alternatives");
@@ -119,8 +117,7 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
 
 
     // TODO Turned to use Object - also remove IllegalArgument check.
-    public boolean retainAll(Collection<?> c)
-        throws IllegalArgumentException {
+    public boolean retainAll(Collection<?> c) throws IllegalArgumentException {
 //    if (!(c instanceof Alternative)) {
 //      throw new IllegalArgumentException("Can only add alternatives to other " +
 //          "alternatives");

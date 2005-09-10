@@ -7,7 +7,6 @@ package org.jrdf.util;
  * 3/ Test if different class names (prevents subclasses from being equal) OR test if they have a different super class.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class EqualsUtil {
@@ -29,7 +28,7 @@ public final class EqualsUtil {
      * Return true if the two objects are of the same reference.
      *
      * @param thisObject the object to test - whose equals method we are in.
-     * @param obj the object to test - who was passed into the equals method.
+     * @param obj        the object to test - who was passed into the equals method.
      * @return true if the two objects are of the same reference.
      */
     public static boolean sameReference(Object thisObject, Object obj) {
@@ -40,7 +39,7 @@ public final class EqualsUtil {
      * Returns true if the two objects have classes with different values (unequal).
      *
      * @param thisObject the object to test - whose equals method we are in.
-     * @param obj the object to test - who was passed into the equals method.
+     * @param obj        the object to test - who was passed into the equals method.
      * @return true if the two object are are different classes.
      */
     public static boolean differentClasses(Object thisObject, Object obj) {
@@ -51,7 +50,7 @@ public final class EqualsUtil {
      * Returns true if the given object can be cast to the superclass or interface.
      *
      * @param requiredClassOrInterface the required superclass or interface.
-     * @param obj the object to test - who was passed into the equals method.
+     * @param obj                      the object to test - who was passed into the equals method.
      * @return true if the given object can be cast to the superclass or interface.
      */
     public static boolean hasSuperClassOrInterface(Class<?> requiredClassOrInterface, Object obj) {

@@ -67,7 +67,6 @@ import java.net.URISyntaxException;
  * A set of constants for the standard RDF vocabulary.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public abstract class RDF extends Vocabulary {

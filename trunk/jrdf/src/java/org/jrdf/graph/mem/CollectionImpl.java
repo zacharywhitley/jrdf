@@ -69,11 +69,9 @@ import java.util.LinkedList;
  * A Collection all the statements of a particular group.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public final class CollectionImpl extends LinkedList<ObjectNode>
-    implements Collection<ObjectNode> {
+public final class CollectionImpl extends LinkedList<ObjectNode> implements Collection<ObjectNode> {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -87,8 +85,7 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
     }
 
     // TODO Turned to use Object - also remove IllegalArgument check.
-    public boolean addAll(java.util.Collection<? extends ObjectNode> c)
-        throws IllegalArgumentException {
+    public boolean addAll(java.util.Collection<? extends ObjectNode> c) throws IllegalArgumentException {
 
 //    if (Collections.checkedCollection(c, Collection.class);
 //    if (!(c instanceof Collection)) {
@@ -99,8 +96,7 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
     }
 
     // TODO Turned to use Object - also remove IllegalArgument check.
-    public boolean addAll(int index, java.util.Collection<? extends ObjectNode> c)
-        throws IllegalArgumentException {
+    public boolean addAll(int index, java.util.Collection<? extends ObjectNode> c) throws IllegalArgumentException {
 //    if (!(c instanceof Collection)) {
 //      throw new IllegalArgumentException("Can only add sequences to other " +
 //          "sequences");
@@ -136,7 +132,7 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     // TODO Turned to use Object - also remove IllegalArgument check.
     public int indexOf(Object o) throws IllegalArgumentException {
@@ -149,7 +145,7 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     // TODO Turned to use Object - also remove IllegalArgument check.
     public int lastIndexOf(Object o) throws IllegalArgumentException {
@@ -161,7 +157,7 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type.
+     *                                  type.
      */
     public boolean remove(Object o) throws IllegalArgumentException {
 //    if (!(o instanceof ObjectNode)) {
@@ -172,7 +168,7 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Collection.
+     *                                  type, Collection.
      */
     public boolean containsAll(java.util.Collection<?> c) {
 //    if (!(c instanceof Collection)) {
@@ -184,10 +180,9 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Collection.
+     *                                  type, Collection.
      */
-    public boolean removeAll(java.util.Collection<?> c)
-        throws IllegalArgumentException {
+    public boolean removeAll(java.util.Collection<?> c) throws IllegalArgumentException {
 //    if (!(c instanceof Bag)) {
 //      throw new IllegalArgumentException("Can only add bags to other bags");
 //    }
@@ -198,10 +193,9 @@ public final class CollectionImpl extends LinkedList<ObjectNode>
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Collection.
+     *                                  type, Collection.
      */
-    public boolean retainAll(java.util.Collection<?> c)
-        throws IllegalArgumentException {
+    public boolean retainAll(java.util.Collection<?> c) throws IllegalArgumentException {
 //    if (!(c instanceof Bag)) {
 //      throw new IllegalArgumentException("Can only add bags to other bags");
 //    }

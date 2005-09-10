@@ -66,22 +66,21 @@ import java.util.Iterator;
 /**
  * A Container is a grouping of statements.  A container can either be a
  * {@link Alternative}, {@link Bag}, or {@link Sequence}.
- *
+ * <p/>
  * See <A HREF="http://www.w3.org/TR/rdf-primer/#containers">4.1 RDF Containers</A>.
- *
+ * <p/>
  * Alternatives are unordered lists that do not allow duplicates.  Bags are
  * unordered lists that allow duplicates.  Sequences are ordered lists that
  * allows duplicates.
- *
+ * <p/>
  * Currently, this is just an extension of java.util.Collection that throws
  * exceptions when inappropriate objects are used, for example non-ObjectNodes
  * are added.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public interface Container <ObjectNode> extends Collection<ObjectNode> {
+public interface Container<ObjectNode> extends Collection<ObjectNode> {
 
     /**
      * {@inheritDoc}
@@ -100,7 +99,7 @@ public interface Container <ObjectNode> extends Collection<ObjectNode> {
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     boolean contains(Object o);
 
@@ -108,7 +107,7 @@ public interface Container <ObjectNode> extends Collection<ObjectNode> {
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Sequence.
+     *                                  type, Sequence.
      */
     boolean containsAll(Collection<?> c) throws IllegalArgumentException;
 
@@ -124,7 +123,7 @@ public interface Container <ObjectNode> extends Collection<ObjectNode> {
      *
      * @param o {@inheritDoc}
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     boolean remove(Object o) throws IllegalArgumentException;
 
@@ -132,7 +131,7 @@ public interface Container <ObjectNode> extends Collection<ObjectNode> {
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Sequence.
+     *                                  type, Sequence.
      */
     boolean removeAll(Collection<?> c) throws IllegalArgumentException;
 
@@ -140,7 +139,7 @@ public interface Container <ObjectNode> extends Collection<ObjectNode> {
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Sequence.
+     *                                  type, Sequence.
      */
     boolean retainAll(Collection<?> c) throws IllegalArgumentException;
 

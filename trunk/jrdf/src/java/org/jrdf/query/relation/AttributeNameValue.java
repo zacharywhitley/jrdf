@@ -7,7 +7,6 @@ import org.jrdf.graph.PredicateNode;
  * An attribute name/value consists of the predicate and object of a relation.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface AttributeNameValue {

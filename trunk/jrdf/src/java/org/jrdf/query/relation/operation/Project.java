@@ -11,7 +11,6 @@ import java.util.Set;
  * exclude.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface Project {

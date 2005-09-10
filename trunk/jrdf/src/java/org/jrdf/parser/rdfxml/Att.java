@@ -31,7 +31,7 @@ package org.jrdf.parser.rdfxml;
 
 /**
  * An XML attribute.
- **/
+ */
 class Att {
 
     private String namespace;

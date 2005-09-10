@@ -67,7 +67,6 @@ import java.io.Serializable;
  * Extends {@link Serializable} so all nodes will be serializable.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- *
  * @version $Revision$
  */
 public interface MemNode extends Node, Serializable {

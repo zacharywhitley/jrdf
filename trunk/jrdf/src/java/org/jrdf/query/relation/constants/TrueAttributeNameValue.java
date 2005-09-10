@@ -9,7 +9,6 @@ import org.jrdf.query.relation.AttributeNameValue;
  * A class which simply contains the True Name Value constant.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public final class TrueAttributeNameValue implements AttributeNameValue {
@@ -17,7 +16,7 @@ public final class TrueAttributeNameValue implements AttributeNameValue {
      * Represents an attribute name value pair, or TRUE.
      */
     public static final AttributeNameValue TRUE_NAME_VALUE =
-        new TrueAttributeNameValue();
+            new TrueAttributeNameValue();
 
     private static final Node TRUE_NODE = TrueNode.TRUE;
 

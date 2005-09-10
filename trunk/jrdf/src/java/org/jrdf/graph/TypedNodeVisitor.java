@@ -63,7 +63,6 @@ package org.jrdf.graph;
  * {@link Literal}.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
 public interface TypedNodeVisitor {

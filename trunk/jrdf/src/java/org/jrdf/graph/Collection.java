@@ -67,15 +67,14 @@ import java.util.Queue;
  * is created by using pointer statements (REST) to the next item in the
  * collection.  The group is closed, where the last statement in the group
  * points to a NIL entry.
- *
+ * <p/>
  * See <A HREF="http://www.w3.org/TR/rdf-primer/#collections">4.1 RDF Collections</A>.
  *
  * @author Andrew Newman
- *
  * @version $Revision$
  */
-public interface Collection <ObjectNode> extends List<ObjectNode>,
-    Queue<ObjectNode> {
+public interface Collection<ObjectNode> extends List<ObjectNode>,
+        Queue<ObjectNode> {
 
     /**
      * Add an ${@link ObjectNode} to the collection.
@@ -88,7 +87,7 @@ public interface Collection <ObjectNode> extends List<ObjectNode>,
     /**
      * Add an ${@link ObjectNode} to the collection at the given position.
      *
-     * @param index the index into the collection to add.
+     * @param index   the index into the collection to add.
      * @param element the object to add.
      */
     void add(int index, ObjectNode element);
@@ -106,7 +105,7 @@ public interface Collection <ObjectNode> extends List<ObjectNode>,
      * index.
      *
      * @param index the index into the collection to start adding.
-     * @param c the collection to add.
+     * @param c     the collection to add.
      * @return true if the object was added successfully.
      */
     boolean addAll(int index, java.util.Collection<? extends ObjectNode> c);
@@ -120,7 +119,7 @@ public interface Collection <ObjectNode> extends List<ObjectNode>,
      *
      * @return true of the object was found.
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     boolean contains(Object o) throws IllegalArgumentException;
 
@@ -130,19 +129,19 @@ public interface Collection <ObjectNode> extends List<ObjectNode>,
      * @param c the collection containing the elements to search.
      * @return true if all of the given objects were found.
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, Collection.
+     *                                  type, Collection.
      */
     boolean containsAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     int indexOf(Object element) throws IllegalArgumentException;
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     int lastIndexOf(Object element) throws IllegalArgumentException;
 
@@ -150,19 +149,19 @@ public interface Collection <ObjectNode> extends List<ObjectNode>,
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     boolean remove(Object element) throws IllegalArgumentException;
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     boolean removeAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
     /**
      * @throws IllegalArgumentException if the given object is not the correct
-     *   type, ObjectNode.
+     *                                  type, ObjectNode.
      */
     boolean retainAll(java.util.Collection<?> c) throws IllegalArgumentException;
 
