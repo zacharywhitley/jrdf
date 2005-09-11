@@ -82,13 +82,7 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision$
  */
-// TODO Create an interface out of getNodeById
-public class GraphElementFactoryImpl implements GraphElementFactory {
-
-    /**
-     * The number on nodes in a triple.
-     */
-    private static final int TRIPLE = 3;
+public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
 
     /**
      * The pool of all nodes, mapped from their ids.
@@ -311,6 +305,14 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
         return new TripleImpl(subject, predicate, object);
     }
 
+    public Node getNodeById(Long id) {
+        return nodePool.get(id);
+    }
+
+
+    public Long getNodeIdByString(String str) {
+        return stringPool.get(str);
+    }
 
     /**
      * Package method for adding in a node that was not created by this factory.
@@ -360,37 +362,5 @@ public class GraphElementFactoryImpl implements GraphElementFactory {
      */
     java.util.Collection<Node> getNodePool() {
         return nodePool.values();
-    }
-
-
-    /**
-     * Package method to find a node in the node pool by its id.
-     *
-     * @param id The id of the node to search for.
-     * @return The node referred to by the id, null if not found.
-     */
-    // TODO Comeback and make this a different interface.
-    public Node getNodeById(Long id) {
-        return nodePool.get(id);
-    }
-
-
-    /**
-     * Package method to find a node id based on its string representation.
-     *
-     * @param str The string representation of a node.
-     * @return The id of the node with the given string.
-     */
-    // TODO Comeback and make this a different interface.
-    public Long getNodeIdByString(String str) {
-        return stringPool.get(str);
-    }
-
-    public Node[] createNodes(Long first, Long second, Long third) {
-        Node[] nodes = new Node[TRIPLE];
-        nodes[0] = getNodeById(first);
-        nodes[1] = getNodeById(second);
-        nodes[2] = getNodeById(third);
-        return nodes;
     }
 }

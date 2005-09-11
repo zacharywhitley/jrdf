@@ -316,7 +316,7 @@ public class GraphImpl implements Graph, Serializable {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
                     return new OneFixedIterator(values[0], new LongIndexMem(index012), elementFactory,
-                            new GraphHandler012(this));
+                            new GraphHandler012(this, elementFactory));
                 }
                 // {s*o} so fall through
             }
@@ -331,7 +331,7 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         // {***} so return entire graph
-        return new GraphIterator(elementFactory, new GraphHandler012(this));
+        return new GraphIterator(elementFactory, new GraphHandler012(this, elementFactory));
     }
 
     private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object, SubjectNode subject,
@@ -342,7 +342,7 @@ public class GraphImpl implements Graph, Serializable {
         } else {
             // got {sp*}
             return new TwoFixedIterator(values[0], values[1], new LongIndexMem(index012), elementFactory,
-                    new GraphHandler012(this));
+                    new GraphHandler012(this, elementFactory));
         }
     }
 
@@ -350,12 +350,12 @@ public class GraphImpl implements Graph, Serializable {
         // test for {s*o}
         if (ANY_SUBJECT_NODE != subject) {
             return new TwoFixedIterator(values[2], values[0], new LongIndexMem(index201), elementFactory,
-                    new GraphHandler201(this));
+                    new GraphHandler201(this, elementFactory));
         } else {
             // test for {**o}.  {*po} should have been picked up above
             assert ANY_PREDICATE_NODE == predicate;
             return new OneFixedIterator(values[2], new LongIndexMem(index201), elementFactory,
-                    new GraphHandler201(this));
+                    new GraphHandler201(this, elementFactory));
         }
     }
 
@@ -363,12 +363,12 @@ public class GraphImpl implements Graph, Serializable {
         // test for {*po}
         if (ANY_OBJECT_NODE != object) {
             return new TwoFixedIterator(values[1], values[2], new LongIndexMem(index120), elementFactory,
-                    new GraphHandler120(this));
+                    new GraphHandler120(this, elementFactory));
         } else {
             // test for {*p*}.  {sp*} should have been picked up above
             assert ANY_SUBJECT_NODE == subject;
             return new OneFixedIterator(values[1], new LongIndexMem(index120), elementFactory,
-                    new GraphHandler120(this));
+                    new GraphHandler120(this, elementFactory));
         }
     }
 
@@ -666,7 +666,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // fill in the other indexes
         try {
-            GraphHandler012 graphHandler012 = new GraphHandler012(this);
+            GraphHandler012 graphHandler012 = new GraphHandler012(this, elementFactory);
             graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
         } catch (GraphException e) {
             throw new ClassNotFoundException("Unable to add to a graph index", e);
