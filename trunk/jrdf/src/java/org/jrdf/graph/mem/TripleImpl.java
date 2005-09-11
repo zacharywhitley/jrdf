@@ -59,7 +59,6 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.AbstractTriple;
-import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -91,24 +90,5 @@ public class TripleImpl extends AbstractTriple {
         subjectNode = subject;
         predicateNode = predicate;
         objectNode = object;
-    }
-
-
-    /**
-     * Constructor for this Triple, only to be used by the iterators.
-     *
-     * @param factory   the factory to use to get the nodes that make up this
-     *                  triple.
-     * @param subject   The subject node id of this triple.
-     * @param predicate The predicate node id of this triple.
-     * @param object    The object node id of this triple.
-     */
-    TripleImpl(GraphElementFactory factory, Long subject, Long predicate,
-            Long object) {
-        // TODO Create an interface out of getNodeById
-        GraphElementFactoryImpl graphFactory = (GraphElementFactoryImpl) factory;
-        subjectNode = (SubjectNode) graphFactory.getNodeById(subject);
-        predicateNode = (PredicateNode) graphFactory.getNodeById(predicate);
-        objectNode = (ObjectNode) graphFactory.getNodeById(object);
     }
 }

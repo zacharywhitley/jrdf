@@ -144,10 +144,6 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
     TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, GraphElementFactory newFactory,
             GraphHandler newHandler) {
 
-        if (!(newFactory instanceof GraphElementFactoryImpl)) {
-            throw new IllegalArgumentException("Must use the memory implementation of GraphElementFactory");
-        }
-
         // store the node factory and other starting data
         first = fixedFirstNode;
         second = fixedSecondNode;
