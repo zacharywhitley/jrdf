@@ -61,6 +61,10 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
@@ -117,7 +121,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
     /**
      * The factory used to create the nodes to be returned in the triples.
      */
-    private GraphElementFactoryImpl factory;
+    private GraphElementFactory factory;
 
     /**
      * Handles the removal of nodes
@@ -148,7 +152,8 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
         first = fixedFirstNode;
         second = fixedSecondNode;
         longIndex = newLongIndex;
-        factory = (GraphElementFactoryImpl) newFactory;
+
+        factory = newFactory;
         handler = newHandler;
 
         // find the subIndex from the main index
@@ -193,7 +198,8 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
         hasNext = thirdIndexIterator.hasNext();
         currentNodes = new Long[]{first, second, third};
         try {
-            return handler.createTriple(factory, factory.createNodes(first, second, third));
+            Node[] triple = handler.createTriple(currentNodes);
+            return factory.createTriple((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
         } catch (GraphElementFactoryException e) {
             throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
         }
