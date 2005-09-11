@@ -109,7 +109,7 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
     }
 
     public boolean add(ObjectNode o) {
-        elements.put(new Long(key++), o);
+        elements.put(key++, o);
         return true;
     }
 

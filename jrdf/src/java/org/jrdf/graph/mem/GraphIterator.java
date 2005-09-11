@@ -61,6 +61,11 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -90,22 +95,22 @@ public final class GraphIterator implements ClosableIterator<Triple> {
     /**
      * The iterator for the second index.
      */
-    private Iterator subIterator;
+    private Iterator<Map.Entry<Long, Set<Long>>> subIterator;
 
     /**
      * The iterator for the third index.
      */
-    private Iterator itemIterator;
+    private Iterator<Long> itemIterator;
 
     /**
      * The current element for the iterator on the first index.
      */
-    private Map.Entry firstEntry;
+    private Map.Entry<Long, Map<Long, Set<Long>>> firstEntry;
 
     /**
      * The current element for the iterator on the second index.
      */
-    private Map.Entry secondEntry;
+    private Map.Entry<Long, Set<Long>> secondEntry;
 
     /**
      * The current subject predicate and object, last returned from next().
@@ -114,9 +119,9 @@ public final class GraphIterator implements ClosableIterator<Triple> {
     private Long[] currentNodes;
 
     /**
-     * The nodeFactory used to create the nodes to be returned in the triples.
+     * The factory used to create the nodes to be returned in the triples.
      */
-    private GraphElementFactoryImpl nodeFactory;
+    private GraphElementFactory factory;
 
     /**
      * Handles the removal of nodes
@@ -134,14 +139,10 @@ public final class GraphIterator implements ClosableIterator<Triple> {
      * @throws IllegalArgumentException Must be created with implementations from
      *                                  the memory package.
      */
-    GraphIterator(GraphElementFactory newNodeFactory, GraphHandler newHandler) {
-        if (!(newNodeFactory instanceof GraphElementFactoryImpl)) {
-            throw new IllegalArgumentException("Node factory must be a memory " +
-                    "implementation");
-        }
+    GraphIterator(GraphElementFactory newFactory, GraphHandler newHandler) {
 
         // store the node factory
-        nodeFactory = (GraphElementFactoryImpl) newNodeFactory;
+        factory = newFactory;
         handler = newHandler;
         iterator = handler.getEntries();
     }
@@ -191,16 +192,20 @@ public final class GraphIterator implements ClosableIterator<Triple> {
         nextCalled = true;
 
         // get the next item
-        Long third = (Long) itemIterator.next();
+        Long third = itemIterator.next();
 
         // construct the triple
-        Long second = (Long) secondEntry.getKey();
-        Long first = (Long) firstEntry.getKey();
+        Long second = secondEntry.getKey();
+        Long first = firstEntry.getKey();
 
         // get back the nodes for these IDs and uild the triple
         currentNodes = new Long[]{first, second, third};
-        return new TripleImpl((GraphElementFactoryImpl) nodeFactory, first, second,
-                third);
+        try {
+            Node[] triple = handler.createTriple(currentNodes);
+            return factory.createTriple((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
+        } catch (GraphElementFactoryException e) {
+            throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
+        }
     }
 
 
@@ -223,15 +228,16 @@ public final class GraphIterator implements ClosableIterator<Triple> {
                     return;
                 }
                 // move on the main iterator
-                firstEntry = (Map.Entry) iterator.next();
+                firstEntry = iterator.next();
+
                 // now get an iterator to the sub index map
-                subIterator = ((Map) firstEntry.getValue()).entrySet().iterator();
+                subIterator = firstEntry.getValue().entrySet().iterator();
                 assert subIterator.hasNext();
             }
             // get the next entry of the sub index
-            secondEntry = (Map.Entry) subIterator.next();
+            secondEntry = subIterator.next();
             // get an interator to the next set from the sub index
-            itemIterator = ((Set) secondEntry.getValue()).iterator();
+            itemIterator = secondEntry.getValue().iterator();
             assert itemIterator.hasNext();
         }
     }
@@ -258,8 +264,8 @@ public final class GraphIterator implements ClosableIterator<Triple> {
      */
     private void cleanIndex() {
         // check if a set was cleaned out
-        Set subGroup = (Set) secondEntry.getValue();
-        Map subIndex = (Map) firstEntry.getValue();
+        Set subGroup = secondEntry.getValue();
+        Map subIndex = firstEntry.getValue();
         if (subGroup.isEmpty()) {
             // remove the entry for the set
             subIterator.remove();

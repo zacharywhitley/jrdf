@@ -60,9 +60,8 @@ package org.jrdf.graph.mem;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import junit.textui.TestRunner;
-import org.jrdf.graph.*;
-import org.jrdf.vocabulary.RDF;
+import org.jrdf.graph.AbstractURIReferenceUnitTest;
+import org.jrdf.graph.URIReference;
 
 import java.net.URI;
 
@@ -86,11 +85,11 @@ public final class URIReferenceImplUnitTest extends AbstractURIReferenceUnitTest
     }
 
     public URIReference createResource(URI uri) throws Exception {
-        return new URIReferenceImpl(uri, new Long(1));
+        return new URIReferenceImpl(uri, 1l);
     }
 
     public URIReference createResource(URI uri, boolean validate) throws Exception {
-        return new URIReferenceImpl(uri, validate, new Long(1));
+        return new URIReferenceImpl(uri, validate, 1l);
     }
 
     public void testClassProperties() {
