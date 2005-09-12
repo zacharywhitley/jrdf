@@ -68,6 +68,10 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphException;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.util.UuidGenerator;
 
 import java.net.URI;
@@ -83,6 +87,11 @@ import java.util.Map;
  * @version $Revision$
  */
 public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
+
+    /**
+     * Three being the number, and the number being 3.
+     */
+    private static final int TRIPLE = 3;
 
     /**
      * The pool of all nodes, mapped from their ids.
@@ -360,7 +369,66 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
      *
      * @return The node pool.
      */
-    java.util.Collection<Node> getNodePool() {
+    java.util.Collection<Node> getNodePoolValues() {
         return nodePool.values();
+    }
+
+    public Long[] localize(Node first, Node second, Node third) throws GraphException {
+        Long[] localValues = new Long[TRIPLE];
+
+        // convert the nodes to local memory nodes for convenience
+        localValues[0] = convertSubject(first);
+        localValues[1] = convertPredicate(second);
+        localValues[2] = convertObject(third);
+        return localValues;
+    }
+
+    private Long convertSubject(Node first) throws GraphException {
+        Long subjectValue = null;
+        if (ANY_SUBJECT_NODE != first) {
+            if (first instanceof BlankNodeImpl) {
+                subjectValue = ((BlankNodeImpl) first).getId();
+            } else {
+                subjectValue = getNodeIdByString(String.valueOf(first));
+            }
+
+            if (null == subjectValue) {
+                throw new GraphException("Subject does not exist in graph");
+            }
+        }
+
+        return subjectValue;
+    }
+
+    private Long convertPredicate(Node second) throws GraphException {
+        Long predicateValue = null;
+        if (ANY_PREDICATE_NODE != second) {
+            predicateValue = getNodeIdByString(String.valueOf(second));
+
+            if (null == predicateValue) {
+                throw new GraphException("Predicate does not exist in graph");
+            }
+        }
+
+        return predicateValue;
+    }
+
+    private Long convertObject(Node third) throws GraphException {
+        Long objectValue = null;
+        if (ANY_OBJECT_NODE != third) {
+            if (third instanceof BlankNodeImpl) {
+                objectValue = ((BlankNodeImpl) third).getId();
+            } else if (third instanceof LiteralImpl) {
+                objectValue = getNodeIdByString(((LiteralImpl) third).getEscapedForm());
+            } else {
+                objectValue = getNodeIdByString(String.valueOf(third));
+            }
+
+            if (null == objectValue) {
+                throw new GraphException("Object does not exist in graph");
+            }
+        }
+
+        return objectValue;
     }
 }
