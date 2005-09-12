@@ -58,7 +58,8 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
@@ -67,7 +68,9 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
  * An iterator that returns only a single triple, if any exists.
@@ -77,34 +80,63 @@ import java.util.NoSuchElementException;
  */
 public class ThreeFixedIterator implements ClosableIterator<Triple> {
 
+    private Long[] nodes;
     /**
-     * The graph this iterator will operate on.  Only needed by the remove
-     * method.
+     * Allows access to a particular part of the index.
      */
-    private Graph graph;
+    private LongIndex longIndex;
 
     /**
-     * The triple to return on
+     * Handles the removal of nodes.
      */
-    private TripleImpl triple;
+    private GraphHandler handler;
 
     /**
-     * The triple to remove
+     * The triple to return on.
      */
-    private TripleImpl removeTriple;
+    private Triple triple;
+
+    /**
+     * The triple to remove.
+     */
+    private Triple removeTriple;
+
+    /**
+     * Contains the exception to throw if not null when next is called.
+     */
+    private GraphElementFactoryException exception;
 
     /**
      * Constructor.
      */
-    ThreeFixedIterator(Graph newGraph, Node subject, Node predicate, Node object) throws GraphException {
-        graph = newGraph;
-        if (newGraph.contains((SubjectNode) subject, (PredicateNode) predicate,
-                (ObjectNode) object)) {
-            triple =
-                    new TripleImpl((SubjectNode) subject, (PredicateNode) predicate,
-                            (ObjectNode) object);
+    ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphElementFactory factory, GraphHandler newHandler) {
+        nodes = newNodes;
+        longIndex = newLongIndex;
+        handler = newHandler;
+        createTriple(nodes, newHandler, factory);
+    }
+
+    private void createTriple(Long[] longNodes, GraphHandler handler,
+            GraphElementFactory factory) {
+        if (contains(longNodes)) {
+            try {
+                Node[] nodes = handler.createTriple(longNodes);
+                triple = factory.createTriple((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
+            } catch (GraphElementFactoryException e) {
+                exception = e;
+            }
         }
-        removeTriple = null;
+    }
+
+    private boolean contains(Long[] longNodes) {
+        Map<Long, Set<Long>> subIndex = longIndex.getSubIndex(longNodes[0]);
+        if (subIndex != null) {
+            Set<Long> predicates = subIndex.get(longNodes[1]);
+            if (predicates.contains(longNodes[2])) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -126,8 +158,13 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
      */
     public Triple next() throws NoSuchElementException {
         if (null == triple) {
-            throw new NoSuchElementException();
+            if (exception != null) {
+                throw new NoSuchElementException(exception.getMessage());
+            } else {
+                throw new NoSuchElementException();
+            }
         }
+
         // return the triple, clearing it first so next will fail on a subsequent call
         removeTriple = triple;
         triple = null;
@@ -141,7 +178,8 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
     public void remove() {
         if (null != removeTriple) {
             try {
-                graph.remove(removeTriple);
+                longIndex.remove(nodes);
+                handler.remove(nodes);
                 removeTriple = null;
             } catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());

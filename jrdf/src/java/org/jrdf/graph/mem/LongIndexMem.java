@@ -24,6 +24,10 @@ public class LongIndexMem implements LongIndex, Serializable {
         index = newIndex;
     }
 
+    public void add(Long[] triple) throws GraphException {
+        add(triple[0], triple[1], triple[2]);
+    }
+
     public void add(Long first, Long second, Long third) throws GraphException {
         // find the sub index
         Map<Long, Set<Long>> subIndex = index.get(first);
@@ -45,6 +49,10 @@ public class LongIndexMem implements LongIndex, Serializable {
 
         // Add the final node to the group
         group.add(third);
+    }
+
+    public void remove(Long[] triple) throws GraphException {
+        remove(triple[0], triple[1], triple[2]);
     }
 
     public void remove(Long first, Long second, Long third) throws GraphException {

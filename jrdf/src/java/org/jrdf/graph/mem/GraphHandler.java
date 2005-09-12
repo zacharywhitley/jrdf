@@ -75,8 +75,6 @@ import java.util.Set;
 public interface GraphHandler {
     void remove(Long[] currentNodes) throws GraphException;
 
-    void add(Long[] currentNodes) throws GraphException;
-
     Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
 
     void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
