@@ -126,9 +126,9 @@ public class GraphImpl implements Graph, Serializable {
      * Triple Element Factory.  This caches the element factory.
      */
     private transient TripleFactoryImpl tripleFactory;
-    private LongIndexMem longIndex012;
-    private LongIndexMem longIndex120;
-    private LongIndexMem longIndex201;
+    private LongIndex longIndex012;
+    private LongIndex longIndex120;
+    private LongIndex longIndex201;
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
     private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
@@ -210,7 +210,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private boolean containsFixedSubject(Long[] values, PredicateNode predicate, ObjectNode object) {
-        Map<Long, Set<Long>> subIndex = index012.get(values[0]);
+        Map<Long, Set<Long>> subIndex = longIndex012.getSubIndex(values[0]);
 
         // If subject not found return false.
         if (null == subIndex) {
@@ -315,8 +315,8 @@ public class GraphImpl implements Graph, Serializable {
             } else {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
-                    return new OneFixedIterator(values[0], new LongIndexMem(index012), elementFactory,
-                            new GraphHandler012(this, elementFactory));
+                    return new OneFixedIterator(values[0], longIndex012, elementFactory,
+                            new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
                 }
                 // {s*o} so fall through
             }
@@ -331,7 +331,8 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         // {***} so return entire graph
-        return new GraphIterator(elementFactory, new GraphHandler012(this, elementFactory));
+        return new GraphIterator(elementFactory, new GraphHandler012(longIndex012, longIndex120, longIndex201,
+                elementFactory));
     }
 
     private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object, SubjectNode subject,
@@ -341,34 +342,34 @@ public class GraphImpl implements Graph, Serializable {
             return new ThreeFixedIterator(this, subject, predicate, object);
         } else {
             // got {sp*}
-            return new TwoFixedIterator(values[0], values[1], new LongIndexMem(index012), elementFactory,
-                    new GraphHandler012(this, elementFactory));
+            return new TwoFixedIterator(values[0], values[1], longIndex012, elementFactory,
+                    new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
         }
     }
 
     private ClosableIterator<Triple> fixedObjectIterator(Long[] values, SubjectNode subject, PredicateNode predicate) {
         // test for {s*o}
         if (ANY_SUBJECT_NODE != subject) {
-            return new TwoFixedIterator(values[2], values[0], new LongIndexMem(index201), elementFactory,
-                    new GraphHandler201(this, elementFactory));
+            return new TwoFixedIterator(values[2], values[0], longIndex201, elementFactory,
+                    new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory));
         } else {
             // test for {**o}.  {*po} should have been picked up above
             assert ANY_PREDICATE_NODE == predicate;
-            return new OneFixedIterator(values[2], new LongIndexMem(index201), elementFactory,
-                    new GraphHandler201(this, elementFactory));
+            return new OneFixedIterator(values[2], longIndex201, elementFactory,
+                    new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory));
         }
     }
 
     private ClosableIterator<Triple> fixedPredicateIterator(Long[] values, ObjectNode object, SubjectNode subject) {
         // test for {*po}
         if (ANY_OBJECT_NODE != object) {
-            return new TwoFixedIterator(values[1], values[2], new LongIndexMem(index120), elementFactory,
-                    new GraphHandler120(this, elementFactory));
+            return new TwoFixedIterator(values[1], values[2], longIndex120, elementFactory,
+                    new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory));
         } else {
             // test for {*p*}.  {sp*} should have been picked up above
             assert ANY_SUBJECT_NODE == subject;
-            return new OneFixedIterator(values[1], new LongIndexMem(index120), elementFactory,
-                    new GraphHandler120(this, elementFactory));
+            return new OneFixedIterator(values[1], longIndex120, elementFactory,
+                    new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory));
         }
     }
 
@@ -423,9 +424,9 @@ public class GraphImpl implements Graph, Serializable {
         // Get local node values also tests that it's a valid subject, predicate
         // and object.
         Long[] values = localize(subject, predicate, object);
-        addTo012(values[0], values[1], values[2]);
-        addTo120(values[1], values[2], values[0]);
-        addTo201(values[2], values[0], values[1]);
+        longIndex012.add(values[0], values[1], values[2]);
+        longIndex120.add(values[1], values[2], values[0]);
+        longIndex201.add(values[2], values[0], values[1]);
     }
 
     /**
@@ -470,12 +471,12 @@ public class GraphImpl implements Graph, Serializable {
         // and object.
         Long[] values = localize(subject, predicate, object);
 
-        removeFrom012(values[0], values[1], values[2]);
+        longIndex012.remove(values[0], values[1], values[2]);
         // if the first one succeeded then try and attempt removal on both of the others
         try {
-            removeFrom120(values[1], values[2], values[0]);
+            longIndex120.remove(values[1], values[2], values[0]);
         } finally {
-            removeFrom201(values[2], values[0], values[1]);
+            longIndex201.remove(values[2], values[0], values[1]);
         }
     }
 
@@ -666,56 +667,11 @@ public class GraphImpl implements Graph, Serializable {
 
         // fill in the other indexes
         try {
-            GraphHandler012 graphHandler012 = new GraphHandler012(this, elementFactory);
+            GraphHandler012 graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201,
+                    elementFactory);
             graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
         } catch (GraphException e) {
             throw new ClassNotFoundException("Unable to add to a graph index", e);
         }
-    }
-
-    void removeFrom012(Long first, Long second, Long third) throws GraphException {
-        longIndex012.remove(first, second, third);
-    }
-
-    void removeFrom120(Long first, Long second, Long third) throws GraphException {
-        longIndex120.remove(first, second, third);
-    }
-
-    void removeFrom201(Long first, Long second, Long third) throws GraphException {
-        longIndex201.remove(first, second, third);
-    }
-
-    void addTo012(Long first, Long second, Long third) throws GraphException {
-        try {
-            longIndex012.add(first, second, third);
-        } catch (GraphException e) {
-            removeFrom012(first, second, third);
-            throw e;
-        }
-    }
-
-    void addTo120(Long first, Long second, Long third) throws GraphException {
-        try {
-            longIndex120.add(first, second, third);
-        } catch (GraphException e) {
-            removeFrom120(first, second, third);
-            throw e;
-        }
-    }
-
-    void addTo201(Long first, Long second, Long third) throws GraphException {
-        longIndex201.add(first, second, third);
-    }
-
-    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012() {
-        return longIndex012.iterator();
-    }
-
-    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator120() {
-        return longIndex120.iterator();
-    }
-
-    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201() {
-        return longIndex201.iterator();
     }
 }
