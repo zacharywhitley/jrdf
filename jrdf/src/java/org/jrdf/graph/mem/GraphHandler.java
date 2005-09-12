@@ -79,5 +79,6 @@ public interface GraphHandler {
 
     void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
 
+    // TODO AN Does this belong in NodePool instead?
     Node[] createTriple(Long[] nodes) throws GraphElementFactoryException;
 }
