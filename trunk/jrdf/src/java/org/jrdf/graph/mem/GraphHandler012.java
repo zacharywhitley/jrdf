@@ -73,23 +73,28 @@ import java.util.Set;
  * @version $Revision$
  */
 public class GraphHandler012 extends AbstractGraphHandler implements GraphHandler {
+    private LongIndex index012;
+    private LongIndex index120;
+    private LongIndex index201;
 
-    public GraphHandler012(GraphImpl graph, NodePool nodePool) {
-        this.graph = graph;
+    public GraphHandler012(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
+        this.index012 = index012;
+        this.index120 = index120;
+        this.index201 = index201;
         this.nodePool = nodePool;
     }
 
     public void remove(Long[] currentNodes) throws GraphException {
-        graph.removeFrom120(currentNodes[1], currentNodes[2], currentNodes[0]);
-        graph.removeFrom201(currentNodes[2], currentNodes[0], currentNodes[1]);
+        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
+        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
     }
 
     public void add(Long[] currentNodes) throws GraphException {
-        graph.addTo012(currentNodes[0], currentNodes[1], currentNodes[2]);
+        index012.add(currentNodes[0], currentNodes[1], currentNodes[2]);
     }
 
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return graph.iterator012();
+        return index012.iterator();
     }
 
     public Node[] createTriple(Long[] nodes) throws GraphElementFactoryException {

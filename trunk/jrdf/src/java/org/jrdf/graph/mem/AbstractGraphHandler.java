@@ -15,7 +15,6 @@ import java.util.Set;
  */
 public abstract class AbstractGraphHandler implements GraphHandler {
 
-    protected GraphImpl graph;
     protected NodePool nodePool;
     private static final int STATEMENT_OFFSET = 5;
 
