@@ -105,17 +105,17 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * First index.
      */
-    private Map<Long, Map<Long, Set<Long>>> index012;
+    private LongIndex longIndex012;
 
     /**
      * Second index.
      */
-    private transient Map<Long, Map<Long, Set<Long>>> index120;
+    private transient LongIndex longIndex120;
 
     /**
      * Third index.
      */
-    private transient Map<Long, Map<Long, Set<Long>>> index201;
+    private transient LongIndex longIndex201;
 
     /**
      * Graph Element Factory.  This caches the node factory.
@@ -126,9 +126,6 @@ public class GraphImpl implements Graph, Serializable {
      * Triple Element Factory.  This caches the element factory.
      */
     private transient TripleFactoryImpl tripleFactory;
-    private LongIndex longIndex012;
-    private LongIndex longIndex120;
-    private LongIndex longIndex201;
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
     private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
@@ -149,20 +146,17 @@ public class GraphImpl implements Graph, Serializable {
      */
     private void init() {
 
+        // TODO AN Replace these with IOC!
         // protect each field allocation with a test for null
-        if (null == index012) {
-            index012 = new HashMap<Long, Map<Long, Set<Long>>>();
+        if (null == longIndex012) {
+            longIndex012 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
         }
-        if (null == index120) {
-            index120 = new HashMap<Long, Map<Long, Set<Long>>>();
+        if (null == longIndex120) {
+            longIndex120 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
         }
-        if (null == index201) {
-            index201 = new HashMap<Long, Map<Long, Set<Long>>>();
+        if (null == longIndex201) {
+            longIndex201 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
         }
-
-        longIndex012 = new LongIndexMem(index012);
-        longIndex120 = new LongIndexMem(index120);
-        longIndex201 = new LongIndexMem(index201);
 
         if (null == elementFactory) {
             elementFactory = new GraphElementFactoryImpl();
@@ -174,8 +168,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public boolean contains(Triple triple) throws GraphException {
-        return contains(triple.getSubject(), triple.getPredicate(),
-                triple.getObject());
+        return contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
@@ -185,7 +178,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // Return true if all are any AnyNodes and size is greater than zero.
         if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
-            return 0 < index012.size();
+            return 0 < longIndex012.getSize();
         }
 
         // Get local node values
@@ -241,11 +234,11 @@ public class GraphImpl implements Graph, Serializable {
     private boolean containsAnySubject(PredicateNode predicate, Long[] values, ObjectNode object) {
         // AnySubjectNode, AnyPredicateNode, obj.
         if (ANY_PREDICATE_NODE == predicate) {
-            Map<Long, Set<Long>> objIndex = index201.get(values[2]);
+            Map<Long, Set<Long>> objIndex = longIndex201.getSubIndex(values[2]);
             return null != objIndex;
         } else {
             // Predicate is not null.  Could be null, pred, null or null, pred, obj.
-            Map<Long, Set<Long>> predIndex = index120.get(values[1]);
+            Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
 
             // If predicate not found return false.
             if (null == predIndex) {
@@ -269,7 +262,7 @@ public class GraphImpl implements Graph, Serializable {
             return true;
         } else {
             // If the object is not any node we need to find subj, AnyObjectNode, obj
-            Map<Long, Set<Long>> objIndex = index201.get(values[2]);
+            Map<Long, Set<Long>> objIndex = longIndex201.getSubIndex(values[2]);
 
             if (null == objIndex) {
                 return false;
@@ -467,8 +460,7 @@ public class GraphImpl implements Graph, Serializable {
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
 
-        // Get local node values also tests that it's a valid subject, predicate
-        // and object.
+        // Get local node values also tests that it's a valid subject, predicate and object.
         Long[] values = localize(subject, predicate, object);
 
         longIndex012.remove(values[0], values[1], values[2]);
@@ -504,17 +496,7 @@ public class GraphImpl implements Graph, Serializable {
      * @return the number of triples in the graph.
      */
     public long getNumberOfTriples() throws GraphException {
-        // TODO Move this into the LongIndex implementations.
-        long size = 0;
-        // go over the index map
-        for (Map<Long, Set<Long>> map : index012.values()) {
-            // go over the sub indexes
-            for (Set<Long> s : map.values()) {
-                // accumulate the sizes of the groups
-                size += s.size();
-            }
-        }
-        return size;
+        return longIndex012.getSize();
     }
 
     /**
@@ -523,7 +505,7 @@ public class GraphImpl implements Graph, Serializable {
      * @return true if the graph is empty i.e. the number of triples is 0.
      */
     public boolean isEmpty() throws GraphException {
-        return index012.isEmpty();
+        return longIndex012.getSize() == 0;
     }
 
     /**
