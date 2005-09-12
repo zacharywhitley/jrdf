@@ -64,7 +64,6 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -132,7 +131,6 @@ public class GraphImpl implements Graph, Serializable {
     private static final String CANT_REMOVE_ANY_NODE_MESSAGE = "Cannot remove any node values into the graph";
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
-    private static final int TRIPLE = 3;
 
     /**
      * Default constructor.
@@ -184,7 +182,7 @@ public class GraphImpl implements Graph, Serializable {
         // Get local node values
         Long[] values;
         try {
-            values = localize(subject, predicate, object);
+            values = elementFactory.localize(subject, predicate, object);
         } catch (GraphException ge) {
 
             // Graph exception on localize implies that the subject, predicate or
@@ -292,7 +290,7 @@ public class GraphImpl implements Graph, Serializable {
         // Get local node values
         Long[] values;
         try {
-            values = localize(subject, predicate, object);
+            values = elementFactory.localize(subject, predicate, object);
         } catch (GraphException ge) {
             // A graph exception implies that the subject, predicate or object does
             // not exist in the graph.
@@ -416,7 +414,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // Get local node values also tests that it's a valid subject, predicate
         // and object.
-        Long[] values = localize(subject, predicate, object);
+        Long[] values = elementFactory.localize(subject, predicate, object);
         longIndex012.add(values[0], values[1], values[2]);
         longIndex120.add(values[1], values[2], values[0]);
         longIndex201.add(values[2], values[0], values[1]);
@@ -461,7 +459,7 @@ public class GraphImpl implements Graph, Serializable {
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
 
         // Get local node values also tests that it's a valid subject, predicate and object.
-        Long[] values = localize(subject, predicate, object);
+        Long[] values = elementFactory.localize(subject, predicate, object);
 
         longIndex012.remove(values[0], values[1], values[2]);
         // if the first one succeeded then try and attempt removal on both of the others
@@ -534,79 +532,6 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    // TODO AN Break this out into its own class and test drive.
-
-    /**
-     * Adds a triple to a single index.
-     *
-     * @param first  The first node.
-     * @param second The second node.
-     * @param third  The last node.
-     * @throws GraphException If there was an error adding the statement.
-     */
-    private Long[] localize(Node first, Node second, Node third) throws GraphException {
-
-        Long[] localValues = new Long[TRIPLE];
-
-        // TODO AN See if we can remove these guard clauses now that we throw an Illegalargumentexception if they
-        // are invalid first.
-
-        // convert the nodes to local memory nodes for convenience
-        localValues[0] = convertSubject(first);
-        localValues[1] = convertPredicate(second);
-        localValues[2] = convertObject(third);
-        return localValues;
-    }
-
-    private Long convertSubject(Node first) throws GraphException {
-        Long subjectValue = null;
-        if (ANY_SUBJECT_NODE != first) {
-            if (first instanceof BlankNodeImpl) {
-                subjectValue = ((BlankNodeImpl) first).getId();
-            } else {
-                subjectValue = elementFactory.getNodeIdByString(String.valueOf(first));
-            }
-
-            if (null == subjectValue) {
-                throw new GraphException("Subject does not exist in graph");
-            }
-        }
-
-        return subjectValue;
-    }
-
-    private Long convertPredicate(Node second) throws GraphException {
-        Long predicateValue = null;
-        if (ANY_PREDICATE_NODE != second) {
-            predicateValue = elementFactory.getNodeIdByString(String.valueOf(second));
-
-            if (null == predicateValue) {
-                throw new GraphException("Predicate does not exist in graph");
-            }
-        }
-
-        return predicateValue;
-    }
-
-    private Long convertObject(Node third) throws GraphException {
-        Long objectValue = null;
-        if (ANY_OBJECT_NODE != third) {
-            if (third instanceof BlankNodeImpl) {
-                objectValue = ((BlankNodeImpl) third).getId();
-            } else if (third instanceof LiteralImpl) {
-                objectValue = elementFactory.getNodeIdByString(((LiteralImpl) third).getEscapedForm());
-            } else {
-                objectValue = elementFactory.getNodeIdByString(String.valueOf(third));
-            }
-
-            if (null == objectValue) {
-                throw new GraphException("Object does not exist in graph");
-            }
-        }
-
-        return objectValue;
-    }
-
     /**
      * Serializes the current object to a stream.
      *
@@ -617,7 +542,7 @@ public class GraphImpl implements Graph, Serializable {
         // write out the first index with the default writer
         out.defaultWriteObject();
         // write all the nodes as well
-        out.writeObject(elementFactory.getNodePool().toArray());
+        out.writeObject(elementFactory.getNodePoolValues().toArray());
         // TODO: Consider writing these nodes individually.  Converting to an array
         // may take up unnecessary memory
     }
