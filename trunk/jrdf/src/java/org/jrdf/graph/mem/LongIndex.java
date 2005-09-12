@@ -62,4 +62,11 @@ public interface LongIndex {
      * @return true if the entry set was non-null.
      */
     boolean removeSubIndex(Long first);
+
+    /**
+     * Returns the number of triples in the index.
+     *
+     * @return the number of triples in the index.
+     */
+    long getSize();
 }

@@ -86,4 +86,17 @@ public class LongIndexMem implements LongIndex, Serializable {
         index.remove(first);
         return index.containsKey(first);
     }
+
+    public long getSize() {
+        long size = 0;
+        // go over the index map
+        for (Map<Long, Set<Long>> map : index.values()) {
+            // go over the sub indexes
+            for (Set<Long> s : map.values()) {
+                // accumulate the sizes of the groups
+                size += s.size();
+            }
+        }
+        return size;
+    }
 }
