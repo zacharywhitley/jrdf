@@ -93,6 +93,7 @@ public class GraphHandler201 extends AbstractGraphHandler implements GraphHandle
         return index201.iterator();
     }
 
+    // TODO AN Not tested.
     public Node[] createTriple(Long[] nodes) throws GraphElementFactoryException {
         return new Node[] {nodePool.getNodeById(nodes[1]), nodePool.getNodeById(nodes[2]),
                 nodePool.getNodeById(nodes[0])};
