@@ -297,12 +297,17 @@ public class GraphImpl implements Graph, Serializable {
             return new EmptyClosableIterator();
         }
 
+        return findNonEmptyIterator(subject, predicate, values, object);
+    }
+
+    private ClosableIterator<Triple> findNonEmptyIterator(SubjectNode subject, PredicateNode predicate, Long[] values,
+            ObjectNode object) {
         // test which index to use
         if (ANY_SUBJECT_NODE != subject) {
             // test for {sp*}
             if (ANY_PREDICATE_NODE != predicate) {
                 // test for {spo}
-                return fixedSubjectAndPredicate(values, object, subject, predicate);
+                return fixedSubjectAndPredicate(values, object);
             } else {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
@@ -326,11 +331,11 @@ public class GraphImpl implements Graph, Serializable {
                 elementFactory));
     }
 
-    private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object, SubjectNode subject,
-            PredicateNode predicate) throws GraphException {
+    private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object) {
         if (ANY_OBJECT_NODE != object) {
             // got {spo}
-            return new ThreeFixedIterator(this, subject, predicate, object);
+            return new ThreeFixedIterator(values, longIndex012, elementFactory,
+                    new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
         } else {
             // got {sp*}
             return new TwoFixedIterator(values[0], values[1], longIndex012, elementFactory,
@@ -415,7 +420,7 @@ public class GraphImpl implements Graph, Serializable {
         // Get local node values also tests that it's a valid subject, predicate
         // and object.
         Long[] values = elementFactory.localize(subject, predicate, object);
-        longIndex012.add(values[0], values[1], values[2]);
+        longIndex012.add(values);
         longIndex120.add(values[1], values[2], values[0]);
         longIndex201.add(values[2], values[0], values[1]);
     }

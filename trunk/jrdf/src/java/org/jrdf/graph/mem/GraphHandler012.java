@@ -89,10 +89,6 @@ public class GraphHandler012 extends AbstractGraphHandler implements GraphHandle
         index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
     }
 
-    public void add(Long[] currentNodes) throws GraphException {
-        index012.add(currentNodes[0], currentNodes[1], currentNodes[2]);
-    }
-
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
         return index012.iterator();
     }
