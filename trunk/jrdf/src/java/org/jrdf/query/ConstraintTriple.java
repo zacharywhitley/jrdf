@@ -60,6 +60,7 @@ package org.jrdf.query;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.util.EqualsUtil;
 
 /**
  * A constraint expression comprising a single constraint, i.e. a single triple.
@@ -83,13 +84,13 @@ public final class ConstraintTriple implements ConstraintExpression {
     }
 
     public boolean equals(Object obj) {
-        if (isNull(obj)) {
+        if (EqualsUtil.isNull(obj)) {
             return false;
         }
-        if (sameReference(this, obj)) {
+        if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (differentClasses(this, obj)) {
+        if (EqualsUtil.differentClasses(this, obj)) {
             return false;
         }
         return determineEqualityFromFields(this, obj);
@@ -111,20 +112,5 @@ public final class ConstraintTriple implements ConstraintExpression {
         Triple triple1 = ((ConstraintTriple) o1).getTriple();
         Triple triple2 = ((ConstraintTriple) o2).getTriple();
         return triple1.equals(triple2);
-    }
-
-    // FIXME TJA: Move to utility class
-    private boolean isNull(Object obj) {
-        return obj == null;
-    }
-
-    // FIXME TJA: Move to utility class
-    private boolean sameReference(Object o1, Object o2) {
-        return o1 == o2;
-    }
-
-    // FIXME TJA: Move to utility class
-    private boolean differentClasses(Object o1, Object o2) {
-        return o1.getClass() != o2.getClass();
     }
 }
