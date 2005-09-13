@@ -75,7 +75,7 @@ import org.jrdf.util.param.ParameterUtil;
 /**
  * SableCC implementation of a {@link SparqlParser}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class SableCcSparqlParser implements SparqlParser {
 

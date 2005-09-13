@@ -78,7 +78,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 /**
  * Integration test for {@link org.jrdf.sparql.DefaultSparqlConnection}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
