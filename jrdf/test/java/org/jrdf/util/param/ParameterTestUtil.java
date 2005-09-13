@@ -75,8 +75,7 @@ public final class ParameterTestUtil {
     public static final String NON_EMPTY_STRING = "FOO";
     public static final Object NON_NULL_OBJECT = new Object();
 
-    private ParameterTestUtil() {
-    }
+    private ParameterTestUtil() { }
 
     public static void checkBadStringParam(final Object ref, final String methodName, final String param) throws Exception {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {

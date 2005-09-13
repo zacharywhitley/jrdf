@@ -59,11 +59,14 @@
 package org.jrdf.query;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
@@ -72,6 +75,19 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  * @version $Revision$
  */
 public final class DefaultAnswerUnitTest extends TestCase {
+
+    private static final String NEW_LINE = "\n";
+    private static final String INDENT = "  ";
+    private static final String STRING_FORM_NO_ELEMENTS = "{}";
+    private static final String STRING_FORM_SINGLE_ELEMENT =
+            "{" + NEW_LINE +
+            INDENT + SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
+            "}";
+    private static final String STRING_FORM_MULTIPLE_ELEMENTS =
+            "{" + NEW_LINE +
+            INDENT + SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
+            INDENT + SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE + NEW_LINE +
+            "}";
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Answer.class, DefaultAnswer.class);
@@ -83,20 +99,46 @@ public final class DefaultAnswerUnitTest extends TestCase {
     }
 
     public void testConstructorFailsWithNull() {
-        try {
-            new DefaultAnswer(null);
-            fail("new DefaultAnswer(null) should have failed");
-        } catch (IllegalArgumentException expected) {}
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new DefaultAnswer(null);
+            }
+        });
     }
 
     public void testGetAnswer() {
-        MockClosableIterator expected = new MockClosableIterator(createTriples());
+        MockClosableIterator expected = new MockClosableIterator(createEmptyTripleList());
         Answer answer = new DefaultAnswer(expected);
-        ClosableIterator actual = answer.getClosableIterator();
+        Iterator<Triple> actual = answer.getSolutions();
         assertEquals(expected, actual);
     }
 
-    private Collection<Triple> createTriples() {
+    public void testToString() {
+        checkStringForm(STRING_FORM_NO_ELEMENTS, createEmptyTripleList());
+        checkStringForm(STRING_FORM_SINGLE_ELEMENT, createSingleTripleList());
+        checkStringForm(STRING_FORM_MULTIPLE_ELEMENTS, createMultipleTripleList());
+    }
+
+
+    private void checkStringForm(String expectedStringForm, Collection<Triple> content) {
+        Answer answer = new DefaultAnswer(new MockClosableIterator(content));
+        assertEquals(expectedStringForm, answer.toString());
+    }
+
+    private Collection<Triple> createEmptyTripleList() {
         return Collections.emptyList();
+    }
+
+    private Collection<Triple> createSingleTripleList() {
+        Collection<Triple> triples = new ArrayList<Triple>();
+        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+        return triples;
+    }
+
+    private Collection<Triple> createMultipleTripleList() {
+        Collection<Triple> triples = new ArrayList<Triple>();
+        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE);
+        return triples;
     }
 }

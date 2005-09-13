@@ -68,6 +68,8 @@ import org.jrdf.graph.mem.GraphImpl;
  */
 public final class NodeTestUtil {
 
+    private NodeTestUtil() { }
+
     public static URIReference createResource(String uri) {
         try {
             return getElementFactory().createResource(new URI(uri));

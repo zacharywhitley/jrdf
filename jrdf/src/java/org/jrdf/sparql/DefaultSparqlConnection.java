@@ -58,6 +58,7 @@
 
 package org.jrdf.sparql;
 
+import java.net.URI;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
@@ -68,25 +69,20 @@ import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterUtil;
 
-import java.net.URI;
-
 
 /**
  * Default implementation of a {@link SparqlConnection}.
- *
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class DefaultSparqlConnection implements SparqlConnection {
 
     // FIXME TJA: Ensure connections are threadsafe.
     // FIXME TJA: Set builder using IoC
-    // FIXME TJA: Breadcrumb - Implement once the DefaultQueryExecutor is written.
 
     private QueryBuilder builder = new SparqlQueryBuilder();
     private JrdfQueryExecutor executor;
     private Graph graph;
-    private URI securityDomain;
 
     /**
      * Creates a new SPARQL connection.
@@ -121,14 +117,13 @@ public final class DefaultSparqlConnection implements SparqlConnection {
      * Attempt to close the underlying session in case the client did not.
      * <p><strong>Clients should not rely on this method being called, it is only here as a last minute check to see if
      * any cleanup can be performed. This method is not guarenteed to be executed by the JVM.</strong></p>
-     *
      * @throws Throwable An unknown error occurs, possibly in object finalisation.
      */
     protected void finalize() throws Throwable {
         try {
             close();
         } finally {
-            // FIXME: See http://www.janeg.ca/scjp/gc/finalize.html
+            // FIXME TJA: See http://www.janeg.ca/scjp/gc/finalize.html
             super.finalize();
         }
     }

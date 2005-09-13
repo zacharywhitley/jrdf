@@ -90,9 +90,11 @@ public final class SparqlQueryTestUtil {
     public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = createBookDcTitleExpression(URI_BOOK_2);
     public static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_2);
-    public static final Triple TRIPLE_BOOK_3_DC_TITLE = createDcTitleTriple(URI_BOOK_3);
+    public static final Triple TRIPLE_BOOK_3_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_3);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = createDcSubjectTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = createDcSubjectTriple(URI_BOOK_1, LITERAL_BOOK_TITLE);
+
+    private SparqlQueryTestUtil() { }
 
     private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {
         return "SELECT * WHERE  { " +

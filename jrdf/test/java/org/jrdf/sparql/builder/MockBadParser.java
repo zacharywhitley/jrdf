@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,24 +56,20 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util;
+package org.jrdf.sparql.builder;
 
-import java.util.Iterator;
+import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.query.Query;
+import org.jrdf.query.InvalidQuerySyntaxException;
 
 /**
- * An that intializes objects from a graph one at a time.
- * <p>The close method indicates that the resources being held by the iterator should be freed.
- * Based on Jena's CloseableIterator class.</p>
- * @author Andrew Newman
- * @version $Id$
+ * This parser always throws an exception when invoked.
+ * @author Tom Adams
+ * @version $Revision$
  */
-public interface ClosableIterator<Triple> extends Iterator<Triple> {
+final class MockBadParser implements SparqlParser {
 
-    /**
-     * Closes the iterator by freeing any resources that it current holds.
-     * <p>This must be done as soon as possible.  Once an iterator is closed none of the
-     * operations on a iterator will operate i.e. they will throw an exception.</p>
-     * @return true if it was successfully closed.
-     */
-    boolean close();
+    public Query parseQuery(String queryText) throws InvalidQuerySyntaxException {
+        throw new InvalidQuerySyntaxException("HUZAH!");
+    }
 }

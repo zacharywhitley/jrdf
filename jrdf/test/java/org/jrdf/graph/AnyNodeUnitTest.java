@@ -6,15 +6,21 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
  * Test the properties of the AnyNode.
- *
  * @author Andrew Newman
- *
- * @version $Revision$
+ * @author Tom Adams
+ * @version $Id$
  */
 public class AnyNodeUnitTest extends TestCase {
+
+    private static final String EXPECTED_TO_STRING = "ANY";
+    private static final boolean WHO_KNOWS_WHAT_THIS_MEANS = true;
+
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Node.class,
-            AnyNode.class);
-        TestUtil.testSerialization(AnyObjectNode.ANY_OBJECT_NODE, true);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Node.class, AnyNode.class);
+        TestUtil.testSerialization(AnyObjectNode.ANY_OBJECT_NODE, WHO_KNOWS_WHAT_THIS_MEANS);
+    }
+
+    public void testToString() {
+        assertEquals(EXPECTED_TO_STRING, AnyNode.ANY_NODE.toString());
     }
 }

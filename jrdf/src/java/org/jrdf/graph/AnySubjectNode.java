@@ -12,13 +12,18 @@ public final class AnySubjectNode implements SubjectNode {
      */
     public static final AnySubjectNode ANY_SUBJECT_NODE = new AnySubjectNode();
 
-    // TODO Not test driven.
+    // TODO serialVersionUID not test driven.
     private static final long serialVersionUID = -971680612480915602L;
+    private static final String STRING_FORM = "ANY_SUBJECT";
 
     private AnySubjectNode() {
     }
 
     Object readResolve() throws java.io.ObjectStreamException {
         return ANY_SUBJECT_NODE;
+    }
+
+    public String toString() {
+        return STRING_FORM;
     }
 }

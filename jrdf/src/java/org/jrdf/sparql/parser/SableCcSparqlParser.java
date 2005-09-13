@@ -56,61 +56,71 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.sparql.parser;
 
-import java.io.Serializable;
-import java.util.Iterator;
-import org.jrdf.graph.Triple;
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.io.StringReader;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
+import org.jrdf.sparql.analysis.SparqlAnalyser;
+import org.jrdf.sparql.parser.lexer.Lexer;
+import org.jrdf.sparql.parser.lexer.LexerException;
+import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.sparql.parser.parser.Parser;
+import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.param.ParameterUtil;
 
 /**
- * Default implementation of {@link Answer}.
+ * SableCC implementation of a {@link SparqlParser}.
  * @author Tom Adams
  * @version $Revision$
  */
-public final class DefaultAnswer implements Answer, Serializable {
+public final class SableCcSparqlParser implements SparqlParser {
 
-    static final long serialVersionUID = -4724846731215773529L;
-    private static final String DELIMITER_OPEN = "{";
-    private static final String DELIMITER_CLOSE = "}";
-    private static final String INDENT = "  ";
-    private static final String NEW_LINE = "\n";
-    private Iterator<Triple> solutions;
+    // FIXME TJA: Test drive out throwing of InvalidQuerySyntaxException.
 
-    // FIXME TJA: ClosableIterator is not serializable - this won't probably work correctly!
-    // FIXME TJA: Figure out something better other than ClosableIterator to back an answer ;)
-    // FIXME TJA: Should this take a List<Triple>? Needs to be sortable for SPARQL support.
-    public DefaultAnswer(Iterator<Triple> solutions) {
-        ParameterUtil.checkNotNull("solutions", solutions);
-        this.solutions = solutions;
+    private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
+    private static final int PUSHBACK_BUFFER_SIZE = 256;
+    private SparqlAnalyser analyser = new DefaultSparqlAnalyser();
+
+    /**
+     * Parses a textual query into a {@link org.jrdf.query.Query} object.
+     * @param queryText The textual query to applyAnalyser.
+     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
+     * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
+     */
+    public Query parseQuery(String queryText) throws InvalidQuerySyntaxException {
+        ParameterUtil.checkNotEmptyString("queryText", queryText);
+        Parser parser = createParser(queryText);
+        Start syntaxTree = parseQuerySyntax(parser);
+        applyAnalyser(syntaxTree);
+        return analyser.getQuery();
     }
 
-    public Iterator<Triple> getSolutions() {
-        return solutions;
-    }
-
-    public String toString() {
-        StringBuffer stringForm = new StringBuffer();
-        stringForm.append(DELIMITER_OPEN);
-        stringForm.append(getTriplesAsString(solutions));
-        stringForm.append(DELIMITER_CLOSE);
-        return stringForm.toString();
-    }
-
-    private String getTriplesAsString(Iterator<Triple> triples) {
-        StringBuffer stringForm = new StringBuffer();
-        while (triples.hasNext()) {
-            String tripleString = getTripleAsString(triples.next(), !triples.hasNext());
-            stringForm.append(tripleString);
+    private Start parseQuerySyntax(Parser parser) throws InvalidQuerySyntaxException {
+        try {
+            return parser.parse();
+        } catch (ParserException e) {
+            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
+        } catch (LexerException e) {
+            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
+        } catch (IOException e) {
+            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
         }
-        return stringForm.toString();
     }
 
-    private String getTripleAsString(Triple triple, boolean lastTriple) {
-        String stringForm = NEW_LINE + INDENT + triple.toString();
-        if (lastTriple) {
-            stringForm += NEW_LINE;
-        }
-        return stringForm;
+    private Parser createParser(String queryText) {
+        PushbackReader reader = createPushbackReader(queryText);
+        return new Parser(new Lexer(reader));
+    }
+
+    private PushbackReader createPushbackReader(String queryText) {
+        return new PushbackReader(new StringReader(queryText), PUSHBACK_BUFFER_SIZE);
+    }
+
+    private void applyAnalyser(Start start) {
+        start.apply(analyser);
     }
 }

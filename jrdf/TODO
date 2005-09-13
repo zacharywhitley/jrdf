@@ -11,8 +11,12 @@ settled down - currently it's a bit of a spike.
 o Once indices are refactored do indexed Graph operations.
 o Finish Relational operators.
 o Write a push based RDF/XML parser.
+o Add toString to Any*Nodes
 
 TJA: Done
-o Made new code work with Any*Node calls (static import hackery)
-o Added naive query executor - iterates over all triples
-o Moved some tests to AssertThrows.assertThrows().
+o Can now send simple (wildcard projection, single constraint) SPARQL queries to connections and get a result back.
+o Completed SparqlQueryBuilder.
+o Hooked the builder into the connection.
+o Gave all static utilities private constructors.
+o Added SparqlQueryBuilderIntegrationTest to hook all the connection, builder, executor, parser, analyser, etc. up.
+o Cleaned up javadoc on some classes.
