@@ -20,6 +20,9 @@ public final class MockBadGraph implements Graph {
 
     private static final long serialVersionUID = 2826041255306224321L;
 
+    public MockBadGraph() {
+    }
+
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         throw new UnsupportedOperationException("Implement me...");
     }

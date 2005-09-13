@@ -58,13 +58,14 @@
 
 package org.jrdf.query;
 
-import java.util.Collection;
 import java.util.ArrayList;
-import org.jrdf.graph.Triple;
+import java.util.Collection;
+import java.util.Iterator;
+import junit.framework.Assert;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
 import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.ClosableIterator;
-import junit.framework.Assert;
 
 /**
  * Test fixture for creating graphs and queries that execute against those graphs.
@@ -75,7 +76,8 @@ public final class GraphFixture {
 
     static final Graph GRAPH_BAD = new MockBadGraph();
     static final MockGraph GRAPH_GOOD = createGraph();
-    private static final Triple TRIPLE_1 = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
+
+    private GraphFixture() { }
 
     public static MockGraph createGraph() {
         Collection<Triple> triples = createTriples();
@@ -84,11 +86,11 @@ public final class GraphFixture {
     }
 
     public static Query createQuery() {
-        return new MockQuery(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
+        return new MockQuery(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_SUBJECT);
     }
 
-    static void checkAnswer(Triple expectedTriple, Answer actualAnswer) {
-        ClosableIterator iterator = actualAnswer.getClosableIterator();
+    public static void checkAnswer(Triple expectedTriple, Answer actualAnswer) {
+        Iterator<Triple> iterator = actualAnswer.getSolutions();
         Triple actualTriple = (Triple) iterator.next();
         checkTriple(expectedTriple, actualTriple);
     }
@@ -101,7 +103,7 @@ public final class GraphFixture {
 
     private static Collection<Triple> createTriples() {
         Collection<Triple> triples = new ArrayList<Triple>();
-        triples.add(TRIPLE_1);
+        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
         return triples;
     }
 }

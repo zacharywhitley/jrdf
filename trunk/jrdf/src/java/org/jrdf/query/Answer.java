@@ -58,14 +58,15 @@
 
 package org.jrdf.query;
 
-import org.jrdf.util.ClosableIterator;
+import java.util.Iterator;
+import org.jrdf.graph.Triple;
 
 /**
  * An answer to a query.
- *
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public interface Answer {
-    ClosableIterator getClosableIterator();
+
+    Iterator<Triple> getSolutions();
 }

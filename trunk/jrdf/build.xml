@@ -70,23 +70,30 @@
     </target>
 
     <macrodef name="test.macro">
-        <attribute name="failure.property"/>
+        <attribute name="type"/>
         <sequential>
             <mkdir dir="${test.results.dir}"/>
-            <junit failureproperty="@{failure.property}" fork="true" forkmode="perBatch">
+            <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
                 <classpath refid="test.class.path"/>
                 <formatter type="brief" usefile="false"/>
                 <batchtest todir="${test.results.dir}">
                     <fileset refid="test.code.fileset"/>
                 </batchtest>
-                <!--<sysproperty key="log4j.configuration" value="file:${conf.dir}/log4j.test.properties"/>-->
             </junit>
         </sequential>
     </macrodef>
 
-    <!-- FIXME: Add integration test target! -->
+    <macrodef name="call.test.macro">
+        <attribute name="type"/>
+        <sequential>
+            <test.macro type="@{type}"/>
+            <fail if="@{type}.test.failed" message="@{type} tests failed."/>
+        </sequential>
+    </macrodef>
+
+    <!-- FIXME TJA: Add integration test target! -->
     <target name="test" depends="dist">
-        <test.macro failure.property="unit.test.failed"/>
-        <fail if="unit.test.failed" message="Tests failed."/>
+        <call.test.macro type="unit"/>
+        <!--<call.test.macro type="integration"/>-->
     </target>
 </project>

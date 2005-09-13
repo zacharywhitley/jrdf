@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,24 +56,56 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util;
+package org.jrdf.sparql.parser;
 
-import java.util.Iterator;
+import junit.framework.TestCase;
+import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.sparql.SparqlQueryTestUtil;
 
 /**
- * An that intializes objects from a graph one at a time.
- * <p>The close method indicates that the resources being held by the iterator should be freed.
- * Based on Jena's CloseableIterator class.</p>
- * @author Andrew Newman
- * @version $Id$
+ * Integration test for {@link SableCcSparqlParser}.
+ * @author Tom Adams
+ * @version $Revision$
  */
-public interface ClosableIterator<Triple> extends Iterator<Triple> {
+public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
-    /**
-     * Closes the iterator by freeing any resources that it current holds.
-     * <p>This must be done as soon as possible.  Once an iterator is closed none of the
-     * operations on a iterator will operate i.e. they will throw an exception.</p>
-     * @return true if it was successfully closed.
-     */
-    boolean close();
+    // FIXME TJA: Triangulate on variables.
+    // FIXME TJA: Triangulate on constraint expression.
+    // FIXME TJA: Write failing test for non-wildcard projection lists.
+    // FIXME TJA: Write tests to force trimming of query string.
+    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
+
+    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
+    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
+    private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
+    private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+
+    public void testNeedThisForIntelliJRunner() {
+        assertTrue(true);
+    }
+
+    public void testSingleConstraint() {
+        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
+        checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
+    }
+
+    private void checkSingleConstraintExpression(String queryString, ConstraintExpression expectedExpression) {
+        Query query = parseQuery(queryString);
+        ConstraintExpression actualExpression = query.getConstraintExpression();
+        assertEquals(expectedExpression, actualExpression);
+    }
+
+    private Query parseQuery(String queryString) {
+        try {
+            return createParser().parseQuery(queryString);
+        } catch (InvalidQuerySyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private SparqlParser createParser() {
+        return new SableCcSparqlParser();
+    }
 }

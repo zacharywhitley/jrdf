@@ -1,49 +1,57 @@
 package org.jrdf.connection;
 
-import junit.framework.TestCase;
-
 import java.net.URI;
+import junit.framework.TestCase;
 import org.jrdf.query.MockBadGraph;
+import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.util.test.AssertThrows;
 
 /**
  * Unit test for {@link JrdfConnectionFactory}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public class JrdfConnectionFactoryUnitTest extends TestCase {
 
+    private static final String EXPECTED_NO_SECURITY_DOMAIN = "http://jrdf.sf.net/connection#NO_SECURITY";
     private static final MockBadGraph BAD_GRAPH = new MockBadGraph();
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
 
     public void testNoSecurityConstant() {
-        assertEquals(URI.create("http://jrdf.sf.net/connection#NO_SECURITY"), JrdfConnectionFactory.NO_SECURITY_DOMAIN);
+        assertEquals(URI.create(EXPECTED_NO_SECURITY_DOMAIN), JrdfConnectionFactory.NO_SECURITY_DOMAIN);
     }
 
     public void testNullSessionThrowsException() {
-        JrdfConnectionFactory factory = new JrdfConnectionFactory();
-        try {
-            factory.getSparqlConnection(null, NO_SECURITY_DOMAIN);
-            fail("Null session should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                createFactory().createSparqlConnection(null, NO_SECURITY_DOMAIN);
+            }
+        });
     }
 
     public void testNullSecurityDomainThrowsException() {
-        JrdfConnectionFactory factory = new JrdfConnectionFactory();
-        try {
-            factory.getSparqlConnection(BAD_GRAPH, null);
-            fail("Null security domain should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                createFactory().createSparqlConnection(BAD_GRAPH, null);
+            }
+        });
     }
 
     public void testGeSparqlConnection() {
-        JrdfConnectionFactory factory = new JrdfConnectionFactory();
-        assertNotNull(factory.getSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN));
+        assertNotNull(createConnectionWithBadGraph());
     }
 
-//  public void testBadSessionPassthrough() {
-//    try {
-//      new JrdfConnectionFactory().getSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN).close();
-//      fail("Closing connection with bad session should have thrown exception");
-//    } catch (JrdfConnectionException expected) { }
-//  }
+    public void testCreateConnectionReturnsNewConnectionEachTime() {
+        SparqlConnection connection1 = createConnectionWithBadGraph();
+        SparqlConnection connection2 = createConnectionWithBadGraph();
+        assertNotSame(connection1, connection2);
+    }
+
+    private SparqlConnection createConnectionWithBadGraph() {
+        return createFactory().createSparqlConnection(BAD_GRAPH, NO_SECURITY_DOMAIN);
+    }
+
+    private JrdfConnectionFactory createFactory() {
+        return new JrdfConnectionFactory();
+    }
 }

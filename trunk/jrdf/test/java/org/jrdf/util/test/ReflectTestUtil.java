@@ -67,11 +67,21 @@ import java.lang.reflect.Field;
  */
 public final class ReflectTestUtil {
 
-    private ReflectTestUtil() {}
+    private ReflectTestUtil() { }
 
     public static void insertFieldValue(Object ref, String fieldName, Object fieldValue) {
         Field field = getField(ref, fieldName);
         setFieldValue(ref, field, fieldValue);
+    }
+
+    public static Object createInstance(Class<?> cls) {
+        try {
+            return cls.newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static Field getField(Object ref, String fieldName) {

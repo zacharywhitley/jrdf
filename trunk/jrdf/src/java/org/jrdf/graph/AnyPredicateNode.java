@@ -12,13 +12,18 @@ public final class AnyPredicateNode implements PredicateNode {
      */
     public static final AnyPredicateNode ANY_PREDICATE_NODE = new AnyPredicateNode();
 
-    // TODO Not test driven.
+    // TODO serialVersionUID not test driven.
     private static final long serialVersionUID = 1764088613140821732L;
+    private static final String STRING_FORM = "ANY_PREDICATE";
 
     private AnyPredicateNode() {
     }
 
     Object readResolve() throws java.io.ObjectStreamException {
         return ANY_PREDICATE_NODE;
+    }
+
+    public String toString() {
+        return STRING_FORM;
     }
 }

@@ -13,13 +13,18 @@ public final class AnyObjectNode implements ObjectNode {
      */
     public static final AnyObjectNode ANY_OBJECT_NODE = new AnyObjectNode();
 
-    // TODO Not test driven.
+    // TODO serialVersionUID not test driven.
     private static final long serialVersionUID = 8654340032080018169L;
+    private static final String STRING_FORM = "ANY_OBJECT";
 
     private AnyObjectNode() {
     }
 
     Object readResolve() throws java.io.ObjectStreamException {
         return ANY_OBJECT_NODE;
+    }
+
+    public String toString() {
+        return STRING_FORM;
     }
 }

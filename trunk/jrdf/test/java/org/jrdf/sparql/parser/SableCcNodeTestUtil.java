@@ -89,6 +89,8 @@ public final class SableCcNodeTestUtil {
     private static final String VARIABLE_PREFIX = SparqlQueryTestUtil.VARIABLE_PREFIX;
     private static final String SPARQL_QUOTE = "'";
 
+    private SableCcNodeTestUtil() {}
+
     public static ATriple createTripleNodeWithVariable(VariableTripleSpec tripleSpec) {
         PResourceTripleElement subject = createResourceElement(tripleSpec.getSubjectUri());
         PResourceTripleElement predicate = createResourceElement(tripleSpec.getPredicateUri());

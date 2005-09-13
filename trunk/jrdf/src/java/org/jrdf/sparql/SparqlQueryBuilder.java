@@ -61,31 +61,25 @@ package org.jrdf.sparql;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.sparql.parser.DefaultSparqlParser;
+import org.jrdf.sparql.parser.SableCcSparqlParser;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Builds SPARQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
- *
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class SparqlQueryBuilder implements QueryBuilder {
 
     // FIXME TJA: Use IoC to set the parser to use.
-    SparqlParser parser = new DefaultSparqlParser();
+    SparqlParser parser = new SableCcSparqlParser();
 
     /**
      * {@inheritDoc}
      */
     public Query buildQuery(String queryText) throws InvalidQuerySyntaxException {
         ParameterUtil.checkNotEmptyString("queryText", queryText);
-        try {
-//            return parser.parseQuery(queryText);
-            throw new UnsupportedOperationException("Implement me!");
-        } catch (Throwable t) {
-            throw new InvalidQuerySyntaxException("Unable to build query from string: " + queryText, t);
-        }
+        return parser.parseQuery(queryText);
     }
 }
