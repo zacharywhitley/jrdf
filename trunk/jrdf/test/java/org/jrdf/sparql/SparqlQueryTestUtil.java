@@ -110,8 +110,7 @@ public final class SparqlQueryTestUtil {
     }
 
     private static Triple createDcTitleTriple(String bookUri) {
-        Triple object = createTripleWithVariableObject(bookUri, URI_DC_TITLE);
-        return object;
+        return createTripleWithVariableObject(bookUri, URI_DC_TITLE);
     }
 
     private static Triple createDcSubjectTriple(String bookUri) {
