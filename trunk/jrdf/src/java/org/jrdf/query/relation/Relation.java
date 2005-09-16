@@ -42,5 +42,5 @@ public interface Relation {
      * @param tupleNames the subject nodes (tuple names) to get.
      * @return a map containing tuples.
      */
-    Map<SubjectNode, Set<AttributeNameValue>> getTuples(Set<SubjectNode> tupleNames);
+    Map<? super SubjectNode, Set<AttributeNameValue>> getTuples(Set<SubjectNode> tupleNames);
 }

@@ -24,8 +24,8 @@ public class RelationDEE implements Relation {
     private static final Node TRUE_NODE = TrueNode.TRUE;
     private static final Set<AttributeNameValue> TRUE_NAME_VALUE_SET =
             Collections.singleton(TrueAttributeNameValue.TRUE_NAME_VALUE);
-    private static final Map<SubjectNode, Set<AttributeNameValue>> TRUE_TUPLE =
-            Collections.singletonMap((SubjectNode) TRUE_NODE, TRUE_NAME_VALUE_SET);
+    private static final Map<? super SubjectNode, Set<AttributeNameValue>> TRUE_TUPLE =
+            Collections.singletonMap(TRUE_NODE, TRUE_NAME_VALUE_SET);
 
     public Set<SubjectNode> getTupleNames() {
         return Collections.singleton((SubjectNode) TRUE_NODE);
@@ -35,7 +35,7 @@ public class RelationDEE implements Relation {
         return Collections.singleton((PredicateNode) TRUE_NODE);
     }
 
-    public Map<SubjectNode, Set<AttributeNameValue>> getTuples(Set<SubjectNode> tupleNames) {
+    public Map<? super SubjectNode, Set<AttributeNameValue>> getTuples(Set<SubjectNode> tupleNames) {
         return TRUE_TUPLE;
     }
 
