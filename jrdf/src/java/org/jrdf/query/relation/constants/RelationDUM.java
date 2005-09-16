@@ -28,8 +28,8 @@ public class RelationDUM implements Relation {
         return Collections.emptySet();
     }
 
-    public Map<SubjectNode, Set<AttributeNameValue>> getTuples(Set<SubjectNode> tupleNames) {
-        return Collections.singletonMap((SubjectNode) FALSE_SUBJECT_NODE, EMPTY);
+    public Map<? super SubjectNode, Set<AttributeNameValue>> getTuples(Set<SubjectNode> tupleNames) {
+        return Collections.singletonMap(FALSE_SUBJECT_NODE, EMPTY);
     }
 
 }
