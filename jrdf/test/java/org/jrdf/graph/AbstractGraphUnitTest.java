@@ -59,6 +59,9 @@
 package org.jrdf.graph;
 
 import junit.framework.TestCase;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 
@@ -67,10 +70,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * Abstract test case for graph implementations.
@@ -91,6 +90,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     private GraphElementFactory elementFactory;
 
     /**
+     * Instance of the triple factory for the graph.
+     */
+    private TripleFactory tripleFactory;
+
+    /**
      * Blank node 1.
      */
     protected BlankNode blank1;
@@ -100,9 +104,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      */
     protected BlankNode blank2;
 
-    private URI uri1;
-    private URI uri2;
-    private URI uri3;
     protected URIReference ref1;
     protected URIReference ref2;
     protected URIReference ref3;
@@ -149,13 +150,14 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     public void setUp() throws Exception {
         graph = newGraph();
         elementFactory = graph.getElementFactory();
+        tripleFactory = graph.getTripleFactory();
 
         blank1 = elementFactory.createResource();
         blank2 = elementFactory.createResource();
 
-        uri1 = new URI("http://namespace#somevalue");
-        uri2 = new URI("http://namespace#someothervalue");
-        uri3 = new URI("http://namespace#yetanothervalue");
+        URI uri1 = new URI("http://namespace#somevalue");
+        URI uri2 = new URI("http://namespace#someothervalue");
+        URI uri3 = new URI("http://namespace#yetanothervalue");
         ref1 = elementFactory.createResource(uri1);
         ref2 = elementFactory.createResource(uri2);
         ref3 = elementFactory.createResource(uri3);
@@ -212,7 +214,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(1, graph.getNumberOfTriples());
 
         // add in a whole triple
-        Triple triple2 = elementFactory.createTriple(blank2, ref1, blank2);
+        Triple triple2 = tripleFactory.createTriple(blank2, ref1, blank2);
         graph.add(triple2);
 
         assertFalse(graph.isEmpty());
@@ -225,7 +227,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(2, graph.getNumberOfTriples());
 
         // add in the second whole triple again
-        Triple triple2b = elementFactory.createTriple(blank2, ref1, blank2);
+        Triple triple2b = tripleFactory.createTriple(blank2, ref1, blank2);
         graph.add(triple2b);
         assertFalse(graph.isEmpty());
         assertEquals(2, graph.getNumberOfTriples());
@@ -237,8 +239,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
         // Add using iterator
         List<Triple> list = new ArrayList<Triple>();
-        list.add(elementFactory.createTriple(ref1, ref1, ref1));
-        list.add(elementFactory.createTriple(ref2, ref2, ref2));
+        list.add(tripleFactory.createTriple(ref1, ref1, ref1));
+        list.add(tripleFactory.createTriple(ref2, ref2, ref2));
 
         graph.add(list.iterator());
         assertFalse(graph.isEmpty());
@@ -289,11 +291,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(blank1, ref1, blank2);
         graph.add(blank1, ref2, blank2);
         graph.add(ref1, ref2, l2);
-        Triple t1 = elementFactory.createTriple(blank2, ref1, blank1);
+        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
         graph.add(t1);
-        Triple t2 = elementFactory.createTriple(blank2, ref2, blank1);
+        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
         graph.add(t2);
-        Triple t3 = elementFactory.createTriple(blank2, ref1, l1);
+        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
         graph.add(t3);
 
         // check that all is well
@@ -309,7 +311,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(4, graph.getNumberOfTriples());
 
         // delete the next last statement with a new "triple object"
-        t2 = elementFactory.createTriple(blank2, ref2, blank1);
+        t2 = tripleFactory.createTriple(blank2, ref2, blank1);
         graph.remove(t2);
         assertEquals(3, graph.getNumberOfTriples());
 
@@ -340,7 +342,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(1, graph.getNumberOfTriples());
 
         // and delete with a triple object
-        t1 = elementFactory.createTriple(blank2, ref1, blank1);
+        t1 = tripleFactory.createTriple(blank2, ref1, blank1);
         try {
             graph.remove(t1);
             assertTrue(false);
@@ -366,12 +368,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(0, graph.getNumberOfTriples());
 
         // Check removal using iterator
-        graph.add(elementFactory.createTriple(ref1, ref1, ref1));
-        graph.add(elementFactory.createTriple(ref2, ref2, ref2));
+        graph.add(tripleFactory.createTriple(ref1, ref1, ref1));
+        graph.add(tripleFactory.createTriple(ref2, ref2, ref2));
 
         List<Triple> list = new ArrayList<Triple>();
-        list.add(elementFactory.createTriple(ref1, ref1, ref1));
-        list.add(elementFactory.createTriple(ref2, ref2, ref2));
+        list.add(tripleFactory.createTriple(ref1, ref1, ref1));
+        list.add(tripleFactory.createTriple(ref2, ref2, ref2));
         graph.remove(list.iterator());
 
         // check that we can't still remove things
@@ -434,29 +436,29 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(blank1, ref1, blank2);
         graph.add(blank1, ref2, blank2);
         graph.add(ref1, ref2, l2);
-        Triple t1 = elementFactory.createTriple(blank2, ref1, blank1);
+        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
         graph.add(t1);
-        Triple t2 = elementFactory.createTriple(blank2, ref2, blank1);
+        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
         graph.add(t2);
-        Triple t3 = elementFactory.createTriple(blank2, ref1, l1);
+        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
         graph.add(t3);
 
         // test containership
         assertTrue(graph.contains(blank1, ref1, blank2));
         // test with existing and built triples
         assertTrue(graph.contains(t1));
-        t1 = elementFactory.createTriple(blank2, ref2, blank1);
+        t1 = tripleFactory.createTriple(blank2, ref2, blank1);
         assertTrue(graph.contains(t1));
 
         // test non containership
         assertFalse(graph.contains(blank1, ref1, blank1));
-        t1 = elementFactory.createTriple(blank2, ref2, ref1);
+        t1 = tripleFactory.createTriple(blank2, ref2, ref1);
         assertFalse(graph.contains(t1));
 
         // test containership after removal
         graph.remove(blank1, ref1, blank2);
         assertFalse(graph.contains(blank1, ref1, blank2));
-        t1 = elementFactory.createTriple(blank1, ref1, blank2);
+        t1 = tripleFactory.createTriple(blank1, ref1, blank2);
         assertFalse(graph.contains(t1));
 
         // put it back in and test again
@@ -472,8 +474,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         GraphElementFactory newElementFactory = newGraph.getElementFactory();
         blank1 = newElementFactory.createResource();
         blank2 = newElementFactory.createResource();
-        ref1 = newElementFactory.createResource(uri1);
-        t1 = newElementFactory.createTriple(blank1, ref1, blank2);
+        ref1 = newElementFactory.createResource(URI.create("http://something/here"));
+        t1 = tripleFactory.createTriple(blank1, ref1, blank2);
         newGraph.add(t1);
 
         // Check for existance
@@ -582,69 +584,69 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         // do it all again with triples
 
         // look for the first triple and check that one is returned
-        Triple t = elementFactory.createTriple(blank1, ref1, blank2);
+        Triple t = tripleFactory.createTriple(blank1, ref1, blank2);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent triple
-        t = elementFactory.createTriple(ref1, ref1, blank1);
+        t = tripleFactory.createTriple(ref1, ref1, blank1);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
 
         // look for doubles and check that there is data there
-        t = elementFactory.createTriple(blank1, ref1, ANY_OBJECT_NODE);
+        t = tripleFactory.createTriple(blank1, ref1, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(blank1, ANY_PREDICATE_NODE, blank2);
+        t = tripleFactory.createTriple(blank1, ANY_PREDICATE_NODE, blank2);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref1, blank2);
+        t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref1, blank2);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
 
         // look for a non-existent double
-        t = elementFactory.createTriple(ref1, ref1, ANY_OBJECT_NODE);
+        t = tripleFactory.createTriple(ref1, ref1, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ref1, ANY_PREDICATE_NODE, blank2);
+        t = tripleFactory.createTriple(ref1, ANY_PREDICATE_NODE, blank2);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref3, blank2);
+        t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref3, blank2);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
 
         // look for singles
-        t = elementFactory.createTriple(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        t = tripleFactory.createTriple(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE);
+        t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, l1);
+        t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, l1);
         it = graph.find(t);
         assertTrue(it.hasNext());
         it.close();
 
         // look for non-existent singles
-        t = elementFactory.createTriple(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        t = tripleFactory.createTriple(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE);
+        t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
-        t = elementFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1);
+        t = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ref1);
         it = graph.find(t);
         assertFalse(it.hasNext());
         it.close();
@@ -686,22 +688,22 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
         //create some statements
         Triple[] triples = new Triple[16];
-        triples[0] = factory.createTriple(bNode1, testUri1, literal1);
-        triples[1] = factory.createTriple(bNode1, testUri1, literal2);
-        triples[2] = factory.createTriple(bNode1, testUri2, literal1);
-        triples[3] = factory.createTriple(bNode1, testUri2, literal2);
-        triples[4] = factory.createTriple(bNode2, testUri1, literal1);
-        triples[5] = factory.createTriple(bNode2, testUri1, literal2);
-        triples[6] = factory.createTriple(bNode2, testUri2, literal1);
-        triples[7] = factory.createTriple(bNode2, testUri2, literal2);
-        triples[8] = factory.createTriple(bNode1, testUri1, bNode2);
-        triples[9] = factory.createTriple(bNode1, testUri2, bNode2);
-        triples[10] = factory.createTriple(bNode1, testUri1, testUri2);
-        triples[11] = factory.createTriple(bNode1, testUri2, testUri1);
-        triples[12] = factory.createTriple(testUri1, testUri2, bNode1);
-        triples[13] = factory.createTriple(testUri2, testUri1, bNode1);
-        triples[14] = factory.createTriple(testUri1, testUri2, bNode2);
-        triples[15] = factory.createTriple(testUri2, testUri1, bNode2);
+        triples[0] = tripleFactory.createTriple(bNode1, testUri1, literal1);
+        triples[1] = tripleFactory.createTriple(bNode1, testUri1, literal2);
+        triples[2] = tripleFactory.createTriple(bNode1, testUri2, literal1);
+        triples[3] = tripleFactory.createTriple(bNode1, testUri2, literal2);
+        triples[4] = tripleFactory.createTriple(bNode2, testUri1, literal1);
+        triples[5] = tripleFactory.createTriple(bNode2, testUri1, literal2);
+        triples[6] = tripleFactory.createTriple(bNode2, testUri2, literal1);
+        triples[7] = tripleFactory.createTriple(bNode2, testUri2, literal2);
+        triples[8] = tripleFactory.createTriple(bNode1, testUri1, bNode2);
+        triples[9] = tripleFactory.createTriple(bNode1, testUri2, bNode2);
+        triples[10] = tripleFactory.createTriple(bNode1, testUri1, testUri2);
+        triples[11] = tripleFactory.createTriple(bNode1, testUri2, testUri1);
+        triples[12] = tripleFactory.createTriple(testUri1, testUri2, bNode1);
+        triples[13] = tripleFactory.createTriple(testUri2, testUri1, bNode1);
+        triples[14] = tripleFactory.createTriple(testUri1, testUri2, bNode2);
+        triples[15] = tripleFactory.createTriple(testUri2, testUri1, bNode2);
 
         //add them
         for (int i = 0; i < triples.length; i++) {
@@ -740,11 +742,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(blank1, ref1, blank2);
         graph.add(blank1, ref2, blank2);
         graph.add(ref1, ref2, l2);
-        Triple t1 = elementFactory.createTriple(blank2, ref1, blank1);
+        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
         graph.add(t1);
-        Triple t2 = elementFactory.createTriple(blank2, ref2, blank1);
+        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
         graph.add(t2);
-        Triple t3 = elementFactory.createTriple(blank2, ref1, l1);
+        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
         graph.add(t3);
 
         // check that all is well
@@ -834,11 +836,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(blank1, ref1, blank2);
         graph.add(blank1, ref2, blank2);
         graph.add(ref1, ref2, l2);
-        Triple t1 = elementFactory.createTriple(blank2, ref1, blank1);
+        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
         graph.add(t1);
-        Triple t2 = elementFactory.createTriple(blank2, ref2, blank1);
+        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
         graph.add(t2);
-        Triple t3 = elementFactory.createTriple(blank2, ref1, l1);
+        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
         graph.add(t3);
 
         // check that all is well

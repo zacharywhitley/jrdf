@@ -71,6 +71,7 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
@@ -171,8 +172,8 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     private Triple createTriple(Graph graph, SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
-            return graph.getElementFactory().createTriple(subject, predicate, object);
-        } catch (GraphElementFactoryException e) {
+            return graph.getTripleFactory().createTriple(subject, predicate, object);
+        } catch (TripleFactoryException e) {
             throw new RuntimeException(e);
         }
     }

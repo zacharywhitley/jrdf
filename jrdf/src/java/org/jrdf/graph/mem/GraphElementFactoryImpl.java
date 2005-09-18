@@ -58,20 +58,16 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.GraphException;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
 import org.jrdf.util.UuidGenerator;
 
 import java.net.URI;
@@ -298,21 +294,6 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         }
     }
 
-
-    /**
-     * Creates a new triple to be used in the graph.  Does not add it to the
-     * graph.  Use @see Graph#add.
-     *
-     * @param subject   The subject of the statement.
-     * @param predicate The predicate of the statement.
-     * @param object    The object of the statement.
-     * @return the newly created triple object.
-     * @throws GraphElementFactoryException If the resource failed to be created.
-     */
-    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-            GraphElementFactoryException {
-        return new TripleImpl(subject, predicate, object);
-    }
 
     public Node getNodeById(Long id) {
         return nodePool.get(id);

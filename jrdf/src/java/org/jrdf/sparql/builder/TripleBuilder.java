@@ -60,12 +60,13 @@ package org.jrdf.sparql.builder;
 
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
@@ -169,10 +170,14 @@ public final class TripleBuilder {
 
     private Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
-            return getElementFactory().createTriple(subject, predicate, object);
-        } catch (GraphElementFactoryException e) {
+            return getTripleFactory().createTriple(subject, predicate, object);
+        } catch (TripleFactoryException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private TripleFactory getTripleFactory() {
+        return createGraph().getTripleFactory();
     }
 
     private GraphElementFactory getElementFactory() {

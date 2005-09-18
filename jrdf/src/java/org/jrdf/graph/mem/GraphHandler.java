@@ -58,9 +58,9 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.TripleFactoryException;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -80,5 +80,5 @@ public interface GraphHandler {
     void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
 
     // TODO AN Does this belong in NodePool instead?
-    Node[] createTriple(Long[] nodes) throws GraphElementFactoryException;
+    Node[] createTriple(Long[] nodes) throws TripleFactoryException;
 }
