@@ -59,12 +59,12 @@
 package org.jrdf.graph;
 
 import junit.framework.TestCase;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * Abstract Test case for Graph Element Factories.
@@ -81,6 +81,11 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      * Instance of a graph element factory.
      */
     private GraphElementFactory elementFactory;
+
+    /**
+     * Instance of a graph triple factory.
+     */
+    private TripleFactory tripleFactory;
 
     /**
      * Global graph object.
@@ -103,6 +108,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
     public void setUp() throws Exception {
         graph = newGraph();
         elementFactory = graph.getElementFactory();
+        tripleFactory = graph.getTripleFactory();
     }
 
     //
@@ -222,24 +228,24 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         Literal l2 = elementFactory.createLiteral(TEST_STR2);
 
         // test ordinary creation
-        Triple triple = elementFactory.createTriple(blank1, ref1, blank2);
+        Triple triple = tripleFactory.createTriple(blank1, ref1, blank2);
         assertEquals(blank1, triple.getSubject());
         assertEquals(ref1, triple.getPredicate());
         assertEquals(blank2, triple.getObject());
 
         // test inequality, particularly against differing blank nodes
-        Triple triple2 = elementFactory.createTriple(blank2, ref1, blank2);
+        Triple triple2 = tripleFactory.createTriple(blank2, ref1, blank2);
         assertFalse(triple.equals(triple2));
 
         // test equality
-        triple2 = elementFactory.createTriple(blank1, ref1, blank2);
+        triple2 = tripleFactory.createTriple(blank1, ref1, blank2);
         assertEquals(triple, triple2);
 
         // test all types of statement creation
-        triple = elementFactory.createTriple(blank1, ref1, l1);
-        triple = elementFactory.createTriple(blank1, ref1, l1);
-        triple = elementFactory.createTriple(ref1, ref2, l1);
-        triple = elementFactory.createTriple(ref1, ref2, blank1);
+        triple = tripleFactory.createTriple(blank1, ref1, l1);
+        triple = tripleFactory.createTriple(blank1, ref1, l1);
+        triple = tripleFactory.createTriple(ref1, ref2, l1);
+        triple = tripleFactory.createTriple(ref1, ref2, blank1);
 
         // Test that the node exists from a newly created predicate - the same
         // as an already existing predicate

@@ -68,6 +68,19 @@ package org.jrdf.graph;
 public interface TripleFactory {
 
     /**
+     * Creates a new triple to be used in the graph.  Does not add it to an
+     * associated graph.  Use @see Graph#add.
+     *
+     * @param subject   The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object    The object of the statement.
+     * @return the newly created triple object.
+     * @throws TripleFactoryException If the resource failed to be created.
+     */
+    Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
+            TripleFactoryException;
+
+    /**
      * Reifies a triple.  A triple made up of the first three nodes is added to
      * graph and the reificationNode is used to reify the triple.
      *

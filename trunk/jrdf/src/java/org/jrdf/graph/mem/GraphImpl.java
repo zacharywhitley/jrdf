@@ -311,7 +311,7 @@ public class GraphImpl implements Graph, Serializable {
             } else {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
-                    return new OneFixedIterator(values[0], longIndex012, elementFactory,
+                    return new OneFixedIterator(values[0], longIndex012, tripleFactory,
                             new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
                 }
                 // {s*o} so fall through
@@ -327,18 +327,18 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         // {***} so return entire graph
-        return new GraphIterator(elementFactory, new GraphHandler012(longIndex012, longIndex120, longIndex201,
+        return new GraphIterator(tripleFactory, new GraphHandler012(longIndex012, longIndex120, longIndex201,
                 elementFactory));
     }
 
     private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object) {
         if (ANY_OBJECT_NODE != object) {
             // got {spo}
-            return new ThreeFixedIterator(values, longIndex012, elementFactory,
+            return new ThreeFixedIterator(values, longIndex012, tripleFactory,
                     new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
         } else {
             // got {sp*}
-            return new TwoFixedIterator(values[0], values[1], longIndex012, elementFactory,
+            return new TwoFixedIterator(values[0], values[1], longIndex012, tripleFactory,
                     new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
         }
     }
@@ -346,12 +346,12 @@ public class GraphImpl implements Graph, Serializable {
     private ClosableIterator<Triple> fixedObjectIterator(Long[] values, SubjectNode subject, PredicateNode predicate) {
         // test for {s*o}
         if (ANY_SUBJECT_NODE != subject) {
-            return new TwoFixedIterator(values[2], values[0], longIndex201, elementFactory,
+            return new TwoFixedIterator(values[2], values[0], longIndex201, tripleFactory,
                     new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory));
         } else {
             // test for {**o}.  {*po} should have been picked up above
             assert ANY_PREDICATE_NODE == predicate;
-            return new OneFixedIterator(values[2], longIndex201, elementFactory,
+            return new OneFixedIterator(values[2], longIndex201, tripleFactory,
                     new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory));
         }
     }
@@ -359,12 +359,12 @@ public class GraphImpl implements Graph, Serializable {
     private ClosableIterator<Triple> fixedPredicateIterator(Long[] values, ObjectNode object, SubjectNode subject) {
         // test for {*po}
         if (ANY_OBJECT_NODE != object) {
-            return new TwoFixedIterator(values[1], values[2], longIndex120, elementFactory,
+            return new TwoFixedIterator(values[1], values[2], longIndex120, tripleFactory,
                     new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory));
         } else {
             // test for {*p*}.  {sp*} should have been picked up above
             assert ANY_SUBJECT_NODE == subject;
-            return new OneFixedIterator(values[1], longIndex120, elementFactory,
+            return new OneFixedIterator(values[1], longIndex120, tripleFactory,
                     new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory));
         }
     }

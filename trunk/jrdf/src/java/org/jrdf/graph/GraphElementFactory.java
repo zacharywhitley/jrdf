@@ -131,17 +131,4 @@ public interface GraphElementFactory {
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
     Literal createLiteral(String lexicalValue, URI datatypeURI) throws GraphElementFactoryException;
-
-    /**
-     * Creates a new triple to be used in the graph.  Does not add it to an
-     * associated graph.  Use @see Graph#add.
-     *
-     * @param subject   The subject of the statement.
-     * @param predicate The predicate of the statement.
-     * @param object    The object of the statement.
-     * @return the newly created triple object.
-     * @throws GraphElementFactoryException If the resource failed to be created.
-     */
-    Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-            GraphElementFactoryException;
 }

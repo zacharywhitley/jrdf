@@ -61,6 +61,11 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.AbstractTripleFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactoryException;
 
 /**
  * A Triple Factory which is tied to a specific instance of GraphImpl.
@@ -79,4 +84,10 @@ class TripleFactoryImpl extends AbstractTripleFactory {
         graph = newGraph;
         elementFactory = newElementFactory;
     }
+
+    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+            throws TripleFactoryException {
+        return new TripleImpl(subject, predicate, object);
+    }
+
 }

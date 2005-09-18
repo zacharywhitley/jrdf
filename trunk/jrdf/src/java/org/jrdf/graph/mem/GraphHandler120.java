@@ -58,9 +58,9 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.TripleFactoryException;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -94,7 +94,7 @@ public class GraphHandler120 extends AbstractGraphHandler implements GraphHandle
     }
 
     // TODO AN Not tested - can change first and last values and tests still pass.
-    public Node[] createTriple(Long[] nodes) throws GraphElementFactoryException {
+    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
         return new Node[] {nodePool.getNodeById(nodes[2]), nodePool.getNodeById(nodes[0]),
                 nodePool.getNodeById(nodes[1])};
     }

@@ -61,13 +61,13 @@ package org.jrdf.graph;
 // Java packages
 
 import junit.framework.TestCase;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 
 /**
  * Abstract test case for graph implementations.
@@ -235,7 +235,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue(graph.contains(u, reifyObject, blank2));
 
         // Make a reification about a triple that does exist in the graph.
-        Triple t = elementFactory.createTriple(blank1, ref2, blank2);
+        Triple t = tripleFactory.createTriple(blank1, ref2, blank2);
         u = elementFactory.createResource(uri2);
         graph.add(t);
         tripleFactory.reifyTriple(t, u);
@@ -270,7 +270,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertEquals(13, graph.getNumberOfTriples());
 
         // test for insertion of a new triple with an existing reference
-        testCantInsert(elementFactory.createTriple(blank2, ref2, blank2), uri2);
+        testCantInsert(tripleFactory.createTriple(blank2, ref2, blank2), uri2);
         assertEquals(13, graph.getNumberOfTriples());
 
         // do it all again for blank nodes
@@ -285,7 +285,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
         // Make a reification using a blank node for a statement that does exist
         // in the graph.
-        t = elementFactory.createTriple(blank1, ref2, l2);
+        t = tripleFactory.createTriple(blank1, ref2, l2);
         graph.add(t);
         b = elementFactory.createResource();
         tripleFactory.reifyTriple(t, b);
@@ -306,7 +306,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         // test for double insertion
         testCanInsert(t);
         // test for insertion with a a used blank reference
-        testCantInsert(elementFactory.createTriple(blank1, ref3, blank2),
+        testCantInsert(tripleFactory.createTriple(blank1, ref3, blank2),
                 u.getURI());
         // test that the graph did not change with the invalid insertions
         assertEquals(30, graph.getNumberOfTriples());
@@ -332,30 +332,22 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue(graph.isEmpty());
 
         // Create initial statement
-        SubjectNode s = (SubjectNode) elementFactory.createResource(
-                new URI("http://example.org/basket"));
-        PredicateNode p = (PredicateNode) elementFactory.createResource(
-                new URI("http://example.org/stuff/1.0/hasFruit"));
-        ObjectNode o = (ObjectNode)
-                elementFactory.createResource();
+        SubjectNode s = elementFactory.createResource(new URI("http://example.org/basket"));
+        PredicateNode p = elementFactory.createResource(new URI("http://example.org/stuff/1.0/hasFruit"));
+        ObjectNode o = elementFactory.createResource();
 
         // Add to graph
         graph.add(s, p, o);
 
         // Create collection object.
         ObjectNode[] fruit = new ObjectNode[3];
-        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/banana"));
-        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/kiwi"));
-        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/pineapple"));
+        fruit[0] = elementFactory.createResource(new URI("http://example.org/banana"));
+        fruit[1] = elementFactory.createResource(new URI("http://example.org/kiwi"));
+        fruit[2] = elementFactory.createResource(new URI("http://example.org/pineapple"));
 
-        PredicateNode rdfFirst = (PredicateNode) elementFactory.createResource(
-                RDF.FIRST);
-        PredicateNode rdfRest = (PredicateNode) elementFactory.createResource(
-                RDF.REST);
-        ObjectNode rdfNil = (ObjectNode) elementFactory.createResource(RDF.NIL);
+        PredicateNode rdfFirst = elementFactory.createResource(RDF.FIRST);
+        PredicateNode rdfRest = elementFactory.createResource(RDF.REST);
+        ObjectNode rdfNil = elementFactory.createResource(RDF.NIL);
 
         // Create collection and add
         Collection<ObjectNode> collection = createCollection(fruit);
@@ -418,24 +410,17 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue(graph.isEmpty());
 
         // Create initial statement
-        SubjectNode s = (SubjectNode) elementFactory.createResource(
-                new URI("http://example.org/favourite-bananas"));
+        SubjectNode s = elementFactory.createResource(new URI("http://example.org/favourite-bananas"));
 
         // Create collection object.
         ObjectNode[] fruit = new ObjectNode[4];
-        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/banana"));
-        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/cavendish"));
-        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/ladyfinger"));
-        fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/banana"));
+        fruit[0] = elementFactory.createResource(new URI("http://example.org/banana"));
+        fruit[1] = elementFactory.createResource(new URI("http://example.org/cavendish"));
+        fruit[2] = elementFactory.createResource(new URI("http://example.org/ladyfinger"));
+        fruit[3] = elementFactory.createResource(new URI("http://example.org/banana"));
 
-        PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
-                RDF.TYPE);
-        ObjectNode rdfAlternative = (ObjectNode) elementFactory.createResource(
-                RDF.ALT);
+        PredicateNode rdfType = elementFactory.createResource(RDF.TYPE);
+        ObjectNode rdfAlternative = elementFactory.createResource(RDF.ALT);
 
         // Create collection and add
         Alternative<ObjectNode> alt = createAlternative(fruit);
@@ -471,25 +456,18 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue(graph.isEmpty());
 
         // Create initial statement
-        SubjectNode s = (SubjectNode) elementFactory.createResource(
-                new URI("http://example.org/favourite-fruit"));
+        SubjectNode s = elementFactory.createResource(new URI("http://example.org/favourite-fruit"));
 
         // Create collection object.
         ObjectNode[] fruit = new ObjectNode[5];
-        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/banana"));
-        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/kiwi"));
-        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/pineapple"));
-        fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/pineapple"));
-        fruit[4] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/banana"));
+        fruit[0] = elementFactory.createResource(new URI("http://example.org/banana"));
+        fruit[1] = elementFactory.createResource(new URI("http://example.org/kiwi"));
+        fruit[2] = elementFactory.createResource(new URI("http://example.org/pineapple"));
+        fruit[3] = elementFactory.createResource(new URI("http://example.org/pineapple"));
+        fruit[4] = elementFactory.createResource(new URI("http://example.org/banana"));
 
-        PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
-                RDF.TYPE);
-        ObjectNode rdfBag = (ObjectNode) elementFactory.createResource(RDF.BAG);
+        PredicateNode rdfType = elementFactory.createResource(RDF.TYPE);
+        ObjectNode rdfBag = elementFactory.createResource(RDF.BAG);
 
         // Create collection and add
         Bag<ObjectNode> bag = createBag(fruit);
@@ -524,32 +502,21 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue(graph.isEmpty());
 
         // Create initial statement
-        SubjectNode s = (SubjectNode) elementFactory.createResource(
-                new URI("http://example.org/favourite-fruit"));
+        SubjectNode s = elementFactory.createResource(new URI("http://example.org/favourite-fruit"));
 
         // Create collection object.
         ObjectNode[] fruit = new ObjectNode[4];
-        fruit[0] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/banana"));
-        fruit[1] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/kiwi"));
-        fruit[2] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/pineapple"));
-        fruit[3] = (ObjectNode) elementFactory.createResource(new URI(
-                "http://example.org/kiwi"));
+        fruit[0] = elementFactory.createResource(new URI("http://example.org/banana"));
+        fruit[1] = elementFactory.createResource(new URI("http://example.org/kiwi"));
+        fruit[2] = elementFactory.createResource(new URI("http://example.org/pineapple"));
+        fruit[3] = elementFactory.createResource(new URI("http://example.org/kiwi"));
 
-        PredicateNode rdfType = (PredicateNode) elementFactory.createResource(
-                RDF.TYPE);
-        PredicateNode rdfOne = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.BASE_URI + "_1"));
-        PredicateNode rdfTwo = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.BASE_URI + "_2"));
-        PredicateNode rdfThree = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.BASE_URI + "_3"));
-        PredicateNode rdfFour = (PredicateNode) elementFactory.createResource(
-                new URI(RDF.BASE_URI + "_4"));
-        ObjectNode rdfSequence = (ObjectNode) elementFactory.createResource(
-                RDF.SEQ);
+        PredicateNode rdfType = elementFactory.createResource(RDF.TYPE);
+        PredicateNode rdfOne = elementFactory.createResource(new URI(RDF.BASE_URI + "_1"));
+        PredicateNode rdfTwo = elementFactory.createResource(new URI(RDF.BASE_URI + "_2"));
+        PredicateNode rdfThree = elementFactory.createResource(new URI(RDF.BASE_URI + "_3"));
+        PredicateNode rdfFour = elementFactory.createResource(new URI(RDF.BASE_URI + "_4"));
+        ObjectNode rdfSequence = elementFactory.createResource(RDF.SEQ);
 
         // Create collection and add
         Sequence<ObjectNode> sequence = createSequence(fruit);

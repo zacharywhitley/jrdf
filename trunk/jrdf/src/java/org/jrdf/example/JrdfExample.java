@@ -3,11 +3,11 @@ package org.jrdf.example;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.util.ClosableIterator;
@@ -97,6 +97,7 @@ public class JrdfExample {
 
         //get the Factory
         GraphElementFactory elementFactory = graph.getElementFactory();
+        TripleFactory tripleFactory = graph.getTripleFactory();
 
         //create resources
         person = elementFactory.createResource(new URI("http://example.org/staffid#85740"));
@@ -116,11 +117,11 @@ public class JrdfExample {
         postCode = elementFactory.createLiteral("01730");
 
         //create statements
-        addressStatement = elementFactory.createTriple(person, hasAddress, address);
-        streetStatement = elementFactory.createTriple(address, hasStreet, street);
-        cityStatement = elementFactory.createTriple(address, hasCity, city);
-        stateStatement = elementFactory.createTriple(address, hasState, state);
-        postCodeStatement = elementFactory.createTriple(address, hasPostCode, postCode);
+        addressStatement = tripleFactory.createTriple(person, hasAddress, address);
+        streetStatement = tripleFactory.createTriple(address, hasStreet, street);
+        cityStatement = tripleFactory.createTriple(address, hasCity, city);
+        stateStatement = tripleFactory.createTriple(address, hasState, state);
+        postCodeStatement = tripleFactory.createTriple(address, hasPostCode, postCode);
     }
 
     /**
@@ -155,28 +156,28 @@ public class JrdfExample {
         System.out.println("Searching Graph...");
 
         //get the Factory
-        GraphElementFactory elementFactory = graph.getElementFactory();
+        TripleFactory tripleFactory = graph.getTripleFactory();
 
         //get all Triples
-        Triple findAll = elementFactory.createTriple(null, null, null);
+        Triple findAll = tripleFactory.createTriple(null, null, null);
         ClosableIterator allTriples = graph.find(findAll);
         print("Search for all triples: ", allTriples);
         allTriples.close();
 
         //search for address (as a subject)
-        Triple findAddress = elementFactory.createTriple(address, null, null);
+        Triple findAddress = tripleFactory.createTriple(address, null, null);
         ClosableIterator addressSubject = graph.find(findAddress);
         print("Search for address as a subject: ", addressSubject);
         addressSubject.close();
 
         //search for the city: "Bedford"
-        Triple findCity = elementFactory.createTriple(null, null, city);
+        Triple findCity = tripleFactory.createTriple(null, null, city);
         ClosableIterator bedfordCity = graph.find(findCity);
         print("Search for city ('Bedford'): ", bedfordCity);
         bedfordCity.close();
 
         //search for any subject that has an address
-        Triple findAddresses = elementFactory.createTriple(null, hasAddress, null);
+        Triple findAddresses = tripleFactory.createTriple(null, hasAddress, null);
         ClosableIterator addresses = graph.find(findAddresses);
         print("Search for subjects that have an address: ", addresses);
         addresses.close();
@@ -205,7 +206,7 @@ public class JrdfExample {
         //insert a statement about the original statement
         URIReference manager = elementFactory.createResource(new URI("http://example.org/managerid#65"));
         URIReference hasConfirmed = elementFactory.createResource(new URI("http://example.org/terms#hasConfirmed"));
-        Triple confirmationStatement = elementFactory.createTriple(manager, hasConfirmed, statement);
+        Triple confirmationStatement = tripleFactory.createTriple(manager, hasConfirmed, statement);
         graph.add(confirmationStatement);
 
         //print the contents
@@ -235,8 +236,7 @@ public class JrdfExample {
      * @return Graph
      * @throws org.jrdf.graph.GraphException
      */
-    private Graph getGraph() throws GraphException {
-
+    private Graph getGraph() {
         return new GraphImpl();
     }
 
@@ -246,13 +246,11 @@ public class JrdfExample {
      * @param message String
      * @param graph   Graph
      * @throws IllegalArgumentException
-     * @throws org.jrdf.graph.GraphElementFactoryException
      *
      * @throws GraphException
      */
-    private void print(String message, Graph graph) throws
-            IllegalArgumentException,
-            GraphElementFactoryException, GraphException {
+    private void print(String message, Graph graph) throws IllegalArgumentException, GraphException,
+            TripleFactoryException {
 
         //validate
         if (null == graph) {
@@ -261,7 +259,7 @@ public class JrdfExample {
         }
 
         //find all statements
-        Triple findAll = graph.getElementFactory().createTriple(null, null, null);
+        Triple findAll = graph.getTripleFactory().createTriple(null, null, null);
         ClosableIterator allTriples = graph.find(findAll);
 
         //print them

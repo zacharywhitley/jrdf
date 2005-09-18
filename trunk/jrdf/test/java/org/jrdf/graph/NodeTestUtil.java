@@ -58,8 +58,9 @@
 
 package org.jrdf.graph;
 
-import java.net.URI;
 import org.jrdf.graph.mem.GraphImpl;
+
+import java.net.URI;
 
 /**
  * Utility for creating nodes, etc.
@@ -89,8 +90,8 @@ public final class NodeTestUtil {
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     public static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
-            return getElementFactory().createTriple(subject, predicate, object);
-        } catch (GraphElementFactoryException e) {
+            return getTripleFactory().createTriple(subject, predicate, object);
+        } catch (TripleFactoryException e) {
             throw new RuntimeException(e);
         }
     }
@@ -98,6 +99,10 @@ public final class NodeTestUtil {
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     private static GraphElementFactory getElementFactory() {
         return createGraph().getElementFactory();
+    }
+
+    private static TripleFactory getTripleFactory() {
+        return createGraph().getTripleFactory();
     }
 
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
