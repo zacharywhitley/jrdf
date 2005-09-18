@@ -20,8 +20,8 @@ public interface Comparison {
     /**
      * Return true if both graphs are equivalent (isomorphic) to one another.  That is, that the nodes in one graph map
      * equivalently to nodes in the other.  In a non-grounded graph (ones with blank nodes) nodes can map to other
-     * nodes with different values but are equivalent.  For example, <a>, <b>, <c> is equivalient to _x, <b>, <c>, where
-     * _x is a blank node.
+     * nodes with different values but are equivalent.  For example, &lt;a&gt;, &lt;b&gt;, &lt;c&gt; is equivalient
+     * to _x, &lt;b&gt;, &lt;c&gt;, where _x is a blank node.
      *
      * @param g1 The first graph to test.
      * @param g2 The second graph to test.

@@ -71,6 +71,7 @@ import org.jrdf.graph.TripleFactoryException;
  * A Triple Factory which is tied to a specific instance of GraphImpl.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @author Andrew Newman
  * @version $Revision$
  */
 class TripleFactoryImpl extends AbstractTripleFactory {
@@ -85,8 +86,8 @@ class TripleFactoryImpl extends AbstractTripleFactory {
         elementFactory = newElementFactory;
     }
 
-    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-            throws TripleFactoryException {
+    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
+            TripleFactoryException {
         return new TripleImpl(subject, predicate, object);
     }
 
