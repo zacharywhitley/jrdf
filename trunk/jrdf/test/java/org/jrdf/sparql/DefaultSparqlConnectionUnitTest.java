@@ -59,10 +59,13 @@
 package org.jrdf.sparql;
 
 import java.net.URI;
+import java.lang.reflect.Modifier;
+
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.mem.operation.ComparisonImpl;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.MockBadGraph;
@@ -73,6 +76,7 @@ import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 
 /**
  * Unit test for {@link DefaultSparqlConnection}.
@@ -92,6 +96,8 @@ public class DefaultSparqlConnectionUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(SparqlConnection.class, DefaultSparqlConnection.class);
+        ClassPropertiesTestUtil.checkConstructor(DefaultSparqlConnection.class, Modifier.PUBLIC, Graph.class,
+                URI.class);
     }
 
     public void testNullSessionInConstructor() {
