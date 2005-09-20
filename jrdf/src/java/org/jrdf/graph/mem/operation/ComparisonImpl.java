@@ -56,45 +56,31 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.operation;
+package org.jrdf.graph.mem.operation;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.operation.Comparison;
 
 /**
- * Provides the ability to compare two graph with one another.
+ * Default in memory Comparison.
+ *
+ * Currently, only implements grounded isomorphism.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Comparison {
-    /**
-     * Returns true if the graph is grounded (does not contain blank nodes).
-     *
-     * @param g the graph to test.
-     * @return true if the graph is grounded (does not contain blank nodes).
-     */
-    boolean isGrounded(Graph g) throws GraphException;
+public final class ComparisonImpl implements Comparison {
 
-    /**
-     * Return true if both graphs are equivalent (isomorphic) to one another.  That is, that the nodes in one graph map
-     * equivalently to nodes in the other.  In a non-grounded graph (ones with blank nodes) nodes can map to other
-     * nodes with different values but are equivalent.  For example, &lt;a&gt;, &lt;b&gt;, &lt;c&gt; is equivalient
-     * to _x, &lt;b&gt;, &lt;c&gt;, where _x is a blank node.
-     *
-     * @param g1 The first graph to test.
-     * @param g2 The second graph to test.
-     * @return true if they are equivalent.
-     */
-    boolean areIsomorphic(Graph g1, Graph g2);
+    public boolean isGrounded(Graph g) throws GraphException {
+        return g.isEmpty();
+    }
 
-    /**
-     * Return true if both graphs are equivalent (isomophic) to one another.  These graphs must contain only labelled
-     * nodes i.e. no blank nodes.
-     *
-     * @param g1 The first graph to test.
-     * @param g2 The second graph to test.
-     * @return true if they are equivalent.
-     */
-    boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2);
+    public boolean areIsomorphic(Graph g1, Graph g2) {
+        return false;
+    }
+
+    public boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2) {
+        return false;
+    }
 }
