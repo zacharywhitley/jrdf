@@ -1,6 +1,7 @@
 /*  Sesame - Storage and Querying architecture for RDF and RDF Schema
  *  Copyright (C) 2001-2004 Aduna
- *  Copyright (C) 2005 Andrew Newman
+ *  Copyright (C) 2005 Andrew Newman - Conversion to JRDF, bugs fixed,
+ *    modified blank node handling.
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -16,7 +17,6 @@
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package org.jrdf.parser.rdfxml;
 
 import org.jrdf.graph.BlankNode;
