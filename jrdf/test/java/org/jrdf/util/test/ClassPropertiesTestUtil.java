@@ -58,12 +58,16 @@
 
 package org.jrdf.util.test;
 
+import junit.framework.Assert;
+
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import junit.framework.Assert;
+import java.util.Arrays;
 
 public final class ClassPropertiesTestUtil {
+    public static final Class[] NO_ARG_CONSTRUCTOR = (Class[]) null;
 
     private ClassPropertiesTestUtil() {}
 
@@ -164,5 +168,21 @@ public final class ClassPropertiesTestUtil {
     public static void checkFieldStatic(Class<?> cls, String fieldName) {
         String mesg = "Field " + fieldName + " of class " + cls.getSimpleName() + " must be static";
         Assert.assertTrue(mesg, isFieldStatic(cls, fieldName));
+    }
+
+    public static void checkConstructor(Class cls, int expectedModifier, Class... parameters) {
+        try {
+            Constructor constructor = cls.getDeclaredConstructor(parameters);
+            Assert.assertTrue(null != constructor);
+            int constructorModifier = constructor.getModifiers();
+            Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
+                    " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+        } catch (NoSuchMethodException e) {
+            if (parameters != null) {
+                Assert.fail("No such constructor found with types: " + Arrays.asList(parameters));
+            } else {
+                Assert.fail("No null constructor found");
+            }
+        }
     }
 }

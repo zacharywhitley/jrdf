@@ -58,10 +58,13 @@
 
 package org.jrdf.graph;
 
-import java.io.Serializable;
 import junit.framework.TestCase;
 import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
 
 /**
  * Unit test for {@link org.jrdf.graph.AbstractTriple}.
@@ -140,6 +143,7 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     protected void checkAbstractClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(Triple.class, AbstractTriple.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractTriple.class);
+        ClassPropertiesTestUtil.checkConstructor(AbstractTriple.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
         assertEquals(8737092494833012690L, AbstractTriple.serialVersionUID);
     }
 

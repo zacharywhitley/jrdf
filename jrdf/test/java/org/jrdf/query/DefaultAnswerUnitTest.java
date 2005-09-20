@@ -63,6 +63,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.lang.reflect.Modifier;
+
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import org.jrdf.sparql.SparqlQueryTestUtil;
@@ -92,6 +94,7 @@ public final class DefaultAnswerUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Answer.class, DefaultAnswer.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, DefaultAnswer.class);
+        ClassPropertiesTestUtil.checkConstructor(DefaultAnswer.class, Modifier.PUBLIC, Iterator.class);
     }
 
     public void testSerialVersionUid() {

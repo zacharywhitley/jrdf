@@ -63,6 +63,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
+import java.lang.reflect.Modifier;
+
 /**
  * Unit test for {@link ConstraintTriple}.
  * @author Tom Adams
@@ -77,6 +79,7 @@ public final class ConstraintTripleUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ConstraintExpression.class, ConstraintTriple.class);
+        ClassPropertiesTestUtil.checkConstructor(ConstraintTriple.class, Modifier.PUBLIC, Triple.class);
     }
 
     public void testNullToConstructorThrowsException() {

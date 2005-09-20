@@ -59,11 +59,14 @@
 package org.jrdf.query;
 
 import java.net.URI;
+import java.lang.reflect.Modifier;
+
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.graph.Graph;
 
 /**
  * Unit test for {@link NaiveQueryExecutor}.
@@ -76,6 +79,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
+        ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, Graph.class, URI.class);
     }
 
     public void testNullSessionInConstructor() {
