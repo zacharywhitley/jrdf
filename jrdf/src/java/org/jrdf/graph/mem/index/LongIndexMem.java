@@ -1,6 +1,7 @@
-package org.jrdf.graph.mem;
+package org.jrdf.graph.mem.index;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.index.LongIndex;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An memory version of ${@link LongIndex}.
+ * An memory version of ${@link org.jrdf.graph.index.LongIndex}.
  *
  * @author Andrew Newman
  * @version $Revision$

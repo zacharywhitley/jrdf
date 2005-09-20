@@ -66,6 +66,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;

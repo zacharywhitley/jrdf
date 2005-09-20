@@ -1,6 +1,9 @@
-package org.jrdf.graph.mem;
+package org.jrdf.graph.index;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.index.NodePool;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.GraphHandler;
 
 import java.io.PrintStream;
 import java.util.Iterator;
