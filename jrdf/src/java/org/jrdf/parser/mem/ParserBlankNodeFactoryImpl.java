@@ -87,7 +87,6 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
      */
     private Map<String, BlankNode> bNodeIdMap = new HashMap<String, BlankNode>();
 
-
     /**
      * Create a new blank node factory with the given value factory.
      *
