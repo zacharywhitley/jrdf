@@ -56,45 +56,41 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.operation;
+package org.jrdf.graph.mem.operation;
 
+import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.operation.Comparison;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.expectLastCall;
+
+import java.lang.reflect.Modifier;
 
 /**
- * Provides the ability to compare two graph with one another.
+ * Tests {@see org.jrdf.graph.mem.operation.ComparisonImpl}.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Comparison {
-    /**
-     * Returns true if the graph is grounded (does not contain blank nodes).
-     *
-     * @param g the graph to test.
-     * @return true if the graph is grounded (does not contain blank nodes).
-     */
-    boolean isGrounded(Graph g) throws GraphException;
+public class ComparisonImplUnitTest extends TestCase {
 
-    /**
-     * Return true if both graphs are equivalent (isomorphic) to one another.  That is, that the nodes in one graph map
-     * equivalently to nodes in the other.  In a non-grounded graph (ones with blank nodes) nodes can map to other
-     * nodes with different values but are equivalent.  For example, &lt;a&gt;, &lt;b&gt;, &lt;c&gt; is equivalient
-     * to _x, &lt;b&gt;, &lt;c&gt;, where _x is a blank node.
-     *
-     * @param g1 The first graph to test.
-     * @param g2 The second graph to test.
-     * @return true if they are equivalent.
-     */
-    boolean areIsomorphic(Graph g1, Graph g2);
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkClassFinal(ComparisonImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Comparison.class, ComparisonImpl.class);
+        ClassPropertiesTestUtil.checkConstructor(ComparisonImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+    }
 
-    /**
-     * Return true if both graphs are equivalent (isomophic) to one another.  These graphs must contain only labelled
-     * nodes i.e. no blank nodes.
-     *
-     * @param g1 The first graph to test.
-     * @param g2 The second graph to test.
-     * @return true if they are equivalent.
-     */
-    boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2);
+    public void testIsGroundedEmptyGraph() throws Exception {
+        Graph mockGraph = createMock(Graph.class);
+        Comparison comparison = new ComparisonImpl();
+        mockGraph.isEmpty();
+        expectLastCall().andReturn(true);
+        replay(mockGraph);
+        assertTrue(comparison.isGrounded(mockGraph));
+        verify(mockGraph);
+    }
 }
