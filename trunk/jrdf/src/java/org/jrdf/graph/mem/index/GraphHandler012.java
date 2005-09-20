@@ -56,11 +56,15 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph.mem.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.index.NodePool;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.GraphHandler;
+import org.jrdf.graph.index.AbstractGraphHandler;
 
 import java.util.Iterator;
 import java.util.Map;

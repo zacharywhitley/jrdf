@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
@@ -67,35 +67,18 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Handles operations on 120 index.
+ * Handles the modification of an index as we iterate through.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphHandler120 extends AbstractGraphHandler implements GraphHandler {
-    private LongIndex index012;
-    private LongIndex index120;
-    private LongIndex index201;
+public interface GraphHandler {
+    void remove(Long[] currentNodes) throws GraphException;
 
-    public GraphHandler120(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
-        this.index012 = index012;
-        this.index120 = index120;
-        this.index201 = index201;
-        this.nodePool = nodePool;
-    }
+    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
 
-    public void remove(Long[] currentNodes) throws GraphException {
-        index012.remove(currentNodes[0], currentNodes[1], currentNodes[2]);
-        index201.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-    }
+    void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
 
-    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return index120.iterator();
-    }
-
-    // TODO AN Not tested - can change first and last values and tests still pass.
-    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
-        return new Node[] {nodePool.getNodeById(nodes[2]), nodePool.getNodeById(nodes[0]),
-                nodePool.getNodeById(nodes[1])};
-    }
+    // TODO AN Does this belong in NodePool instead?
+    Node[] createTriple(Long[] nodes) throws TripleFactoryException;
 }

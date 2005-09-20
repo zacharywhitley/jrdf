@@ -68,6 +68,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.index.NodePool;
 import org.jrdf.util.UuidGenerator;
 
 import java.net.URI;

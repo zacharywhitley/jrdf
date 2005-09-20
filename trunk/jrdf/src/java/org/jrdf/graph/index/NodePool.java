@@ -1,4 +1,4 @@
-package org.jrdf.graph.mem;
+package org.jrdf.graph.index;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.GraphException;
