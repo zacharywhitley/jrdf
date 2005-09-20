@@ -59,9 +59,14 @@
 package org.jrdf.query;
 
 import java.net.URI;
+import java.util.Iterator;
+import java.lang.reflect.Modifier;
+
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.Graph;
 import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -81,6 +86,7 @@ public class DefaultQueryExecutorUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, DefaultQueryExecutor.class);
+        ClassPropertiesTestUtil.checkConstructor(DefaultQueryExecutor.class, Modifier.PUBLIC, Graph.class, URI.class);
     }
 
     public void testNullSessionInConstructor() {

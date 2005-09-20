@@ -59,6 +59,9 @@
 package org.jrdf.query;
 
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.List;
+
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -75,6 +78,7 @@ public final class DefaultVariableUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, DefaultVariable.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Variable.class, DefaultVariable.class);
+        ClassPropertiesTestUtil.checkConstructor(DefaultVariable.class, Modifier.PUBLIC, String.class);
     }
 
     public void testConstants() {

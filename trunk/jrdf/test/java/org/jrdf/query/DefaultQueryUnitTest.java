@@ -61,9 +61,13 @@ package org.jrdf.query;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Arrays;
+import java.lang.reflect.Modifier;
+import java.net.URI;
+
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.graph.Graph;
 
 /**
  * Unit test for {@link DefaultQuery}.
@@ -81,6 +85,8 @@ public final class DefaultQueryUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, DefaultQuery.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, DefaultQuery.class);
+        ClassPropertiesTestUtil.checkConstructor(DefaultQuery.class, Modifier.PUBLIC, List.class,
+                ConstraintExpression.class);
     }
 
     public void testSerialVersionUid() {
