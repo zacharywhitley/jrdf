@@ -59,6 +59,8 @@
 package org.jrdf.sparql.parser;
 
 import java.util.List;
+import java.lang.reflect.Modifier;
+
 import junit.framework.TestCase;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.InvalidQuerySyntaxException;
@@ -70,6 +72,8 @@ import org.jrdf.sparql.analysis.MockSparqlAnalyser;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.graph.mem.operation.ComparisonImpl;
 
 /**
  * Unit test for {@link SableCcSparqlParser}.
@@ -83,6 +87,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
+        ClassPropertiesTestUtil.checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
     }
 
     // FIXME TJA: Triangulate to force parsing of the variable list (requires non-wildcard variable projection in grammar).

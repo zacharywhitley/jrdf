@@ -68,6 +68,10 @@ import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.graph.mem.operation.ComparisonImpl;
+
+import java.lang.reflect.Modifier;
 
 /**
  * Unit test for {@link org.jrdf.sparql.SparqlQueryBuilder}.
@@ -87,6 +91,7 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(QueryBuilder.class, SparqlQueryBuilder.class);
+        ClassPropertiesTestUtil.checkConstructor(SparqlQueryBuilder.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
     }
 
     public void testBadParams() throws Exception {

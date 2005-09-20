@@ -60,10 +60,14 @@ package org.jrdf.sparql.builder;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.mem.operation.ComparisonImpl;
 import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.SableCcNodeTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+
+import java.lang.reflect.Modifier;
 
 /**
  * Unit test for {@link TripleBuilder}.
@@ -95,6 +99,7 @@ public final class TripleBuilderUnitTest extends TestCase {
         // FIXME TJA: Reenable this if we figure out how to do it generically.
         //ClassPropertiesTestUtil.checkExtensionOf(LocalObjectBuilder.class, TripleBuilder.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilder.class);
+        ClassPropertiesTestUtil.checkConstructor(TripleBuilder.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
     }
 
     public void testBuildTripleFromParserNode() {
