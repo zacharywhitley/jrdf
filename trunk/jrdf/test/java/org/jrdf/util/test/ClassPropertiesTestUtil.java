@@ -171,18 +171,27 @@ public final class ClassPropertiesTestUtil {
     }
 
     public static void checkConstructor(Class cls, int expectedModifier, Class... parameters) {
+        Constructor constructor = tryGetConstructor(cls, parameters);
+        Assert.assertTrue(null != constructor);
+        int constructorModifier = constructor.getModifiers();
+        Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
+                " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+    }
+
+    private static Constructor tryGetConstructor(Class cls, Class... parameters) {
         try {
-            Constructor constructor = cls.getDeclaredConstructor(parameters);
-            Assert.assertTrue(null != constructor);
-            int constructorModifier = constructor.getModifiers();
-            Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
-                    " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+            return cls.getDeclaredConstructor(parameters);
         } catch (NoSuchMethodException e) {
-            if (parameters != null) {
-                Assert.fail("No such constructor found with types: " + Arrays.asList(parameters));
-            } else {
-                Assert.fail("No null constructor found");
-            }
+            assertParameters(parameters);
+            return null;
+        }
+    }
+
+    private static void assertParameters(Class... parameters) {
+        if (parameters != null) {
+            Assert.fail("No such constructor found with types: " + Arrays.asList(parameters));
+        } else {
+            Assert.fail("No null constructor found");
         }
     }
 }
