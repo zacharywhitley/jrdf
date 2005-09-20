@@ -1,6 +1,6 @@
 /*  Sesame - Storage and Querying architecture for RDF and RDF Schema
  *  Copyright (C) 2001-2004 Aduna
- *  Copyright (C) 2005 Andrew Newman
+ *  Copyright (C) 2004-2005 Andrew Newman - Conversion to JRDF
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
