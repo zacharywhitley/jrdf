@@ -159,10 +159,7 @@ public class AbstractTriple implements Triple, Serializable {
 
     // FIXME TJA: Move to utility class
     private boolean eitherNull(Node node1, Node node2) {
-        if (node1 == null || node2 == null) {
-            return true;
-        }
-        return false;
+        return node1 == null || node2 == null;
     }
 
     // FIXME TJA: Move to utility class
