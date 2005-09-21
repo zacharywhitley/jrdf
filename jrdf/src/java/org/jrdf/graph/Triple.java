@@ -72,6 +72,11 @@ import java.io.Serializable;
 public interface Triple extends Serializable {
 
     /**
+     * Serial UID.
+     */
+    long serialVersionUID = 833569221232497968L;
+
+    /**
      * Obtains the subject of this statement.
      *
      * @return an {@link SubjectNode} which is either a {@link BlankNode} or

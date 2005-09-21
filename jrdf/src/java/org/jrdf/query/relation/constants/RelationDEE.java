@@ -1,21 +1,19 @@
 package org.jrdf.query.relation.constants;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.query.relation.AttributeNameValue;
 import org.jrdf.query.relation.Relation;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-
 /**
- * Dee is a relation with one tuple and is the base relation for TRUE.  It is
- * also the identity with respect to JOIN i.e. JOIN {r, RelationDEE} is DEE and
- * JOIN {} is RelationDEE.
- * <p/>
- * Again, this is going to change when operations are more properly filled out.
+ * Dee is a relation with one tuple and is the base relation for TRUE.
+ * <p>It is also the identity with respect to JOIN i.e. JOIN {r, RelationDEE} is DEE and
+ * JOIN {} is RelationDEE.</p>
+ * <p>Again, this is going to change when operations are more properly filled out.</p>
  *
  * @author Andrew Newman
  * @version $Revision$

@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,30 +56,18 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.util.test.filter;
 
-import java.io.Serializable;
-import org.jrdf.graph.Node;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * Memory node.  This is an additional interface for nodes so they can be accessed by id.
- * Extends {@link Serializable} so all nodes will be serializable.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * Accepts classes that are marked as being {@link java.io.Serializable}.
+ * @author Tom Adams
  * @version $Revision$
  */
-public interface MemNode extends Node, Serializable {
+public final class MarkedAsSerializableClassFilter implements ClassFilter {
 
-    /**
-     * Serial UID.
-     */
-    long serialVersionUID = -3340761272302468154L;
-
-    /**
-     * Retrieves an internal identifier for a node.
-     *
-     * @return A numeric identifier for a node.
-     */
-    Long getId();
-
+    public boolean accept(Class cls) {
+        return ClassPropertiesTestUtil.isImplicitlyMarkedAsSerializable(cls);
+    }
 }

@@ -62,10 +62,14 @@ import java.io.Serializable;
 
 /**
  * RDF node.  This includes all things in the graph.
- *
- * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
+ * @author Simon Raboczi
  * @author Andrew Newman
  * @version $Revision$
  */
 public interface Node extends Serializable {
+
+    /**
+     * Serial UID.
+     */
+    long serialVersionUID = -9031232254076464056L;
 }

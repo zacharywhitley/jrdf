@@ -58,15 +58,19 @@
 
 package org.jrdf.util.test;
 
-import junit.framework.Assert;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.io.Serializable;
+import junit.framework.Assert;
 
 public final class ClassPropertiesTestUtil {
+
+    // FIXME TJA: This needs genericising ;)
     public static final Class[] NO_ARG_CONSTRUCTOR = (Class[]) null;
 
     private ClassPropertiesTestUtil() {}
@@ -106,6 +110,20 @@ public final class ClassPropertiesTestUtil {
         return Modifier.isFinal(method.getModifiers());
     }
 
+    // FIXME TJA: This smells. Can we do something else? We can iterate over getDeclaredFields()
+    public static boolean containsField(Class<?> cls, String fieldName) {
+        try {
+            Field field = cls.getDeclaredField(fieldName);
+            return true;
+        } catch (NoSuchFieldException e) {
+            return false;
+        }
+    }
+
+    public static void checkContainsField(Class<?> cls, String fieldName) {
+        Assert.assertTrue(cls.getSimpleName() + " must contain the field " + fieldName, containsField(cls, fieldName));
+    }
+
     public static void checkImplementationOfInterfaceAndFinal(Class<?> targetInterface, Class implementationClass) {
         Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
                 + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
@@ -140,29 +158,40 @@ public final class ClassPropertiesTestUtil {
         checkImplementationOfInterface(targetInterface, ref.getClass());
     }
 
-    public static boolean isFieldFinal(Class<?> cls, String fieldName) {
-        try {
-            Field field = cls.getDeclaredField(fieldName);
-            int modifiers = field.getModifiers();
-            return Modifier.isFinal(modifiers);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
+    public static boolean isDirectlyMarkedAsSerializable(Class<?> cls) {
+        Class[] interfaces = cls.getInterfaces();
+        for (Class actualInterface : interfaces) {
+            if (actualInterface.equals(Serializable.class)) return true;
         }
+        return false;
     }
 
-    public static boolean isFieldStatic(Class<?> cls, String fieldName) {
-        try {
-            Field field = cls.getDeclaredField(fieldName);
-            int modifiers = field.getModifiers();
-            return Modifier.isStatic(modifiers);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
+    public static boolean isImplicitlyMarkedAsSerializable(Class<?> cls) {
+        Collection<Class<?>> parentClasses = new ArrayList<Class<?>>();
+        parentClasses.addAll(findParentClasses(cls));
+        for (Class<?> parent : parentClasses) {
+            if (parent.equals(Serializable.class)) return true;
         }
+        return false;
+    }
+
+    public static void checkMarkedAsSerializable(Class<?> cls) {
+        Assert.assertTrue(cls.getSimpleName() + " implement/extend java.io.Serializable", isDirectlyMarkedAsSerializable(cls));
+    }
+
+    public static boolean isFieldFinal(Class<?> cls, String fieldName) {
+        Field field = getField(cls, fieldName);
+        return Modifier.isFinal(field.getModifiers());
     }
 
     public static void checkFieldFinal(Class<?> cls, String fieldName) {
         String mesg = "Field " + fieldName + " of class " + cls.getSimpleName() + " must be final";
         Assert.assertTrue(mesg, isFieldFinal(cls, fieldName));
+    }
+
+    public static boolean isFieldStatic(Class<?> cls, String fieldName) {
+        Field field = getField(cls, fieldName);
+        return Modifier.isStatic(field.getModifiers());
     }
 
     public static void checkFieldStatic(Class<?> cls, String fieldName) {
@@ -176,6 +205,30 @@ public final class ClassPropertiesTestUtil {
         int constructorModifier = constructor.getModifiers();
         Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
                 " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+    }
+
+    public static boolean isFieldOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
+        Field field = getField(cls, fieldName);
+        return field.getType().equals(expectedType);
+    }
+
+    public static void checkFieldIsOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
+        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must be of type " +
+                expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
+    }
+
+    private static Field getField(Class<?> cls, String fieldName) {
+        return ReflectTestUtil.getField(cls, fieldName);
+    }
+
+    private static Collection<? extends Class<?>> findParentClasses(Class<?> cls) {
+        Collection<Class<?>> parentClasses = new ArrayList<Class<?>>();
+        Class[] parents = cls.getInterfaces();
+        for (int i = 0; i < parents.length; i++) {
+            parentClasses.addAll(findParentClasses(parents[i]));
+        }
+        parentClasses.add(cls);
+        return parentClasses;
     }
 
     private static Constructor tryGetConstructor(Class cls, Class... parameters) {

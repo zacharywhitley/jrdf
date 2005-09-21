@@ -1,10 +1,9 @@
 package org.jrdf.graph;
 
-import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-
 import java.lang.reflect.Modifier;
 
 /**
@@ -15,12 +14,11 @@ import java.lang.reflect.Modifier;
 public class AnyObjectNodeUnitTest extends TestCase {
 
     private static final String EXPECTED_TO_STRING = "ANY_OBJECT";
-    private static final boolean WHO_KNOWS_WHAT_THIS_MEANS = true;
 
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ObjectNode.class, AnyObjectNode.class);
         ClassPropertiesTestUtil.checkConstructor(AnyObjectNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
-        TestUtil.testSerialization(AnyObjectNode.ANY_OBJECT_NODE, WHO_KNOWS_WHAT_THIS_MEANS);
+        SerializationTestUtil.checkSerialization(AnyObjectNode.ANY_OBJECT_NODE);
     }
 
     public void testToString() {
