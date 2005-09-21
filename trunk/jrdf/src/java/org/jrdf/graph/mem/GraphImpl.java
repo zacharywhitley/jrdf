@@ -94,6 +94,8 @@ import java.util.Set;
  */
 public class GraphImpl implements Graph, Serializable {
 
+    // FIXME TJA: Test-drive toString()
+
     /**
      * Allow newer compiled version of the stub to operate when changes
      * have not occurred with the class.

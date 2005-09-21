@@ -58,12 +58,14 @@
 
 package org.jrdf.util.test;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Test utilities that use relection.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class ReflectTestUtil {
 
@@ -74,22 +76,31 @@ public final class ReflectTestUtil {
         setFieldValue(ref, field, fieldValue);
     }
 
-    public static Object createInstance(Class<?> cls) {
+    public static Object newInstance(Class<?> cls) {
         try {
             return cls.newInstance();
         } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to instantiate " + cls.getSimpleName(), e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static Field getField(Object ref, String fieldName) {
+    public static Field getField(Class<?> cls, String fieldName) {
         try {
-            return ref.getClass().getDeclaredField(fieldName);
+            return cls.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static Object createInstanceUsingConstructor(Class<?> cls, ParamSpec params) {
+        Constructor<?> constructor = getConstructor(cls, params);
+        return invokeConstructor(constructor, params);
+    }
+
+    private static Field getField(Object ref, String fieldName) {
+        return getField(ref.getClass(), fieldName);
     }
 
     private static void setFieldValue(Object ref, Field field, Object fieldValue) {
@@ -98,6 +109,67 @@ public final class ReflectTestUtil {
             field.set(ref, fieldValue);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static Object invokeConstructor(Constructor<?> constructor, ParamSpec params) {
+        try {
+            return constructor.newInstance(params.getParams());
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Constructor<?> getConstructor(Class<?> cls, ParamSpec params) {
+        try {
+            Constructor<?> constructor = cls.getDeclaredConstructor(params.getTypes());
+            constructor.setAccessible(true);
+            return constructor;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static final class ParamSpec {
+
+        private Object[] params;
+        private Class[] types;
+
+        public ParamSpec(Object ...  params) {
+            this.params = params;
+            setTypes(this.params);
+        }
+
+        public ParamSpec(Object[] params, Class[] types) {
+            if (params.length != types.length) {
+                throw new IllegalArgumentException("params and types arrays must be of same length");
+            }
+            this.params = params;
+            this.types = types;
+        }
+
+        public Object[] getParams() {
+            return params;
+        }
+
+        public Class[] getTypes() {
+            return types;
+        }
+
+        private void setTypes(Object ... params) {
+            types = guessParameterTypes(params);
+        }
+
+        private static Class<?>[] guessParameterTypes(Object ... params) {
+            Class<?>[] types = new Class<?>[params.length];
+            for (int i = 0; i < params.length; i++) {
+                types[i] = params[i].getClass();
+            }
+            return types;
         }
     }
 }

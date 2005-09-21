@@ -58,10 +58,9 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.util.ClosableIterator;
-
 import java.io.Serializable;
 import java.util.Iterator;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * An RDF Graph. As defined by the
@@ -75,6 +74,11 @@ import java.util.Iterator;
  * @version $Revision$
  */
 public interface Graph extends Serializable {
+
+    /**
+     * Serial UID.
+     */
+    long serialVersionUID = 9000992358266233219L;
 
     /**
      * Test the graph for the occurrence of a statement.  An AnyNode value for any

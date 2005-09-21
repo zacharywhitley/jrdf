@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,30 +56,57 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.util.test;
 
+import java.io.IOException;
 import java.io.Serializable;
-import org.jrdf.graph.Node;
+import java.lang.reflect.Modifier;
+import com.gargoylesoftware.base.testing.TestUtil;
+import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 /**
- * Memory node.  This is an additional interface for nodes so they can be accessed by id.
- * Extends {@link Serializable} so all nodes will be serializable.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @version $Revision$
+ * Test utilities for checking serializability.
+ * @author Tom Adams
+ * @version $Id$
  */
-public interface MemNode extends Node, Serializable {
+public final class SerializationTestUtil {
 
-    /**
-     * Serial UID.
-     */
-    long serialVersionUID = -3340761272302468154L;
+    private static final String FIELD_SERIAL_VERSION_UID = "serialVersionUID";
+    private static final Class<Long> CLASS_LONG_PRIMITIVE = long.class;
+    private static final boolean WHO_KNOWS_WHAT_THIS_MEANS = true;
 
-    /**
-     * Retrieves an internal identifier for a node.
-     *
-     * @return A numeric identifier for a node.
-     */
-    Long getId();
+    public static void checkSerializability(Class<? extends Serializable> cls) {
+        checkContainsSerialVersionUid(cls);
+        checkCanBeSerialized(cls);
+    }
 
+    // FIXME TJA: What are the access modifier requirements, public/private/package/protected?
+    // FIXME TJA: Do interfaces need serialVersionUID fields?
+    private static void checkContainsSerialVersionUid(Class<?> cls) {
+        ClassPropertiesTestUtil.checkContainsField(cls, FIELD_SERIAL_VERSION_UID);
+        ClassPropertiesTestUtil.checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
+        ClassPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
+        ClassPropertiesTestUtil.checkFieldIsOfType(cls, FIELD_SERIAL_VERSION_UID, CLASS_LONG_PRIMITIVE);
+    }
+
+    // Note. This method will not attempt to serialize interfaces.
+    public static void checkCanBeSerialized(Class<?> cls) {
+        if (canBeInstantiated(cls)) checkSerialization(instantiate(cls));
+    }
+
+    private static boolean canBeInstantiated(Class<?> cls) {
+        return !cls.isInterface() && !Modifier.isAbstract(cls.getModifiers());
+    }
+
+    public static void checkSerialization(Object ref) {
+        try {
+            TestUtil.testSerialization(ref, WHO_KNOWS_WHAT_THIS_MEANS);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Object instantiate(Class<?> cls) {
+        return new ArnoldTheInstantiator().instantiate(cls);
+    }
 }

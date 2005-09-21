@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,30 +56,50 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.util.test.filter;
 
-import java.io.Serializable;
-import org.jrdf.graph.Node;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
- * Memory node.  This is an additional interface for nodes so they can be accessed by id.
- * Extends {@link Serializable} so all nodes will be serializable.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * Given a directory, find all files matching a given criteria under that directory.
+ * @author Tom Adams
  * @version $Revision$
  */
-public interface MemNode extends Node, Serializable {
+public final class RecursiveFileFinder {
 
-    /**
-     * Serial UID.
-     */
-    long serialVersionUID = -3340761272302468154L;
+    public Collection<File> findFiles(File searchBase, FileFilter filter) {
+        return depthFirstRecurseIntoSubDirectories(searchBase, filter);
+    }
 
-    /**
-     * Retrieves an internal identifier for a node.
-     *
-     * @return A numeric identifier for a node.
-     */
-    Long getId();
+    private Collection<File> depthFirstRecurseIntoSubDirectories(File searchBase, FileFilter filter) {
+        Collection<File> files = new ArrayList<File>();
+        File[] dirs = searchBase.listFiles(new DirectoryFileFilter());
+        for (File file : dirs) {
+            files.addAll(getFiles(file, filter));
+        }
+        return files;
+    }
 
+    private Collection<File> getFiles(File searchBase, FileFilter filter) {
+        Collection<File> subdirFiles = depthFirstRecurseIntoSubDirectories(searchBase, filter);
+        Collection<File> currentDirFiles = getFilesInCurrentDirectory(searchBase, filter);
+        subdirFiles.addAll(currentDirFiles);
+        return subdirFiles;
+    }
+
+    private Collection<File> getFilesInCurrentDirectory(File searchBase, FileFilter filter) {
+        File[] filesInDir = searchBase.listFiles(filter);
+        return toCollection(filesInDir);
+    }
+
+    private Collection<File> toCollection(File[] filesInDir) {
+        Collection<File> files = new ArrayList<File>();
+        for (File file : filesInDir) {
+            files.add(file);
+        }
+        return files;
+    }
 }

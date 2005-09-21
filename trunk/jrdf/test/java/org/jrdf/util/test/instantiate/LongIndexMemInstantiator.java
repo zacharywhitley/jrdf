@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,30 +56,29 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.util.test.instantiate;
 
-import java.io.Serializable;
-import org.jrdf.graph.Node;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashMap;
+import org.jrdf.graph.mem.index.LongIndexMem;
+import org.jrdf.util.test.ReflectTestUtil;
 
 /**
- * Memory node.  This is an additional interface for nodes so they can be accessed by id.
- * Extends {@link Serializable} so all nodes will be serializable.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @version $Revision$
+ * {@link Instantiator} for {@link org.jrdf.graph.mem.index.LongIndexMem}.
+ * @author Tom Adams
+ * @version $Id$
  */
-public interface MemNode extends Node, Serializable {
+final class LongIndexMemInstantiator implements Instantiator {
 
-    /**
-     * Serial UID.
-     */
-    long serialVersionUID = -3340761272302468154L;
+    private static final Class<LongIndexMem> CLASS_LONG_INDEX_MEM = LongIndexMem.class;
+    private static final Map<Long, Map<Long, Set<Long>>> INDEX = new HashMap<Long, Map<Long, Set<Long>>>();
 
-    /**
-     * Retrieves an internal identifier for a node.
-     *
-     * @return A numeric identifier for a node.
-     */
-    Long getId();
+    public Object instantiate() {
+        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_LONG_INDEX_MEM, createParams());
+    }
 
+    private ReflectTestUtil.ParamSpec createParams() {
+        return new ReflectTestUtil.ParamSpec(new Object[]{INDEX}, new Class[]{Map.class});
+    }
 }
