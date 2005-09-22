@@ -10,7 +10,7 @@ and TripleFactory.  Then test drive the lot - once the interfaces have
 settled down - currently it's a bit of a spike.
 o Once indices are refactored do indexed Graph operations.
 o Finish Relational operators.
-o Write a push based RDF/XML parser.
+o Write a pull based RDF/XML parser.
 o Add toString to Any*Nodes
 
 TJA: Done
