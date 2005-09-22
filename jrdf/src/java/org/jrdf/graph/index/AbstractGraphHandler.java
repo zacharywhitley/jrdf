@@ -174,7 +174,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
     }
 
     private String createSpaces(int numberOfSpaces) {
-        StringBuffer space = new StringBuffer(numberOfSpaces);
+        StringBuilder space = new StringBuilder(numberOfSpaces);
         space.setLength(numberOfSpaces);
         for (int c = 0; c < numberOfSpaces; c++) {
             space.setCharAt(c, ' ');

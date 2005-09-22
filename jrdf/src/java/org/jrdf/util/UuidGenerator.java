@@ -117,7 +117,7 @@ public final class UuidGenerator {
     }
 
     private static String toHexString(byte[] seedDigest) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         for (int i = 0; i < seedDigest.length; ++i) {
             int currentInt = seedDigest[i] & INT_OFFSET;
             if (currentInt < SINGLE_DIGIT) {

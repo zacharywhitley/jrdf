@@ -27,13 +27,6 @@ public final class EscapeUtil {
             "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
 
     /**
-     * The matcher instance used to escape characters from Unicode to ASCII.
-     * <p/>
-     * This is lazily initialized and used by the {@link #escape} method.
-     */
-    private static Matcher matcher;
-
-    /**
      * Base UTF Code point.
      */
     private static final int UTF_BASE_CODEPOINT = 0x10000;
@@ -71,7 +64,7 @@ public final class EscapeUtil {
      */
     public static String escape(String string) throws IllegalStateException {
         assert null != string;
-        initMatcher(string);
+        Matcher matcher = PATTERN.matcher(string);
 
         // Try to short-circuit the whole process -- maybe nothing needs escaping?
         if (!matcher.find()) {
@@ -83,7 +76,7 @@ public final class EscapeUtil {
         StringBuffer stringBuffer = new StringBuffer();
         do {
             // The escape text with which to replace the current match
-            matcher.appendReplacement(stringBuffer, getReplacementString());
+            matcher.appendReplacement(stringBuffer, getReplacementString(matcher));
         }
         while (matcher.find());
 
@@ -94,27 +87,12 @@ public final class EscapeUtil {
     }
 
     /**
-     * Lazily initialize the matcher, if not already initialized.
-     *
-     * @param string the string to perform the matching on.
-     */
-    private static void initMatcher(String string) {
-        if (null == matcher) {
-            matcher = PATTERN.matcher(string);
-        } else {
-            matcher.reset(string);
-        }
-        assert null != matcher;
-    }
-
-
-    /**
      * Depending of the character sequence we're escaping, determine an appropriate replacement.
      *
      * @return escaped string value.
      * @throws IllegalStateException if there is no handler to perform the relevant match.
      */
-    private static String getReplacementString() throws IllegalStateException {
+    private static String getReplacementString(Matcher matcher) throws IllegalStateException {
         String escapeString;
         String groupString = matcher.group();
 

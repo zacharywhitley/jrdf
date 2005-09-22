@@ -19,7 +19,7 @@ public final class AnySubjectNode implements SubjectNode {
     private AnySubjectNode() {
     }
 
-    Object readResolve() throws java.io.ObjectStreamException {
+    protected Object readResolve() throws java.io.ObjectStreamException {
         return ANY_SUBJECT_NODE;
     }
 

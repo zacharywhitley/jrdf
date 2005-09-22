@@ -68,7 +68,7 @@ package org.jrdf.graph;
  */
 
 class TypedNodeVisitorAdapter implements TypedNodeVisitor {
-    public TypedNodeVisitorAdapter() {
+    TypedNodeVisitorAdapter() {
     }
 
     /**

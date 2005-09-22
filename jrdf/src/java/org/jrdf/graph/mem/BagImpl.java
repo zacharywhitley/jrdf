@@ -85,7 +85,7 @@ public final class BagImpl extends AbstractUnorderedContainer<ObjectNode> implem
         boolean modified = iter.hasNext();
         while (iter.hasNext()) {
             ObjectNode obj = iter.next();
-            elements.put(new Long(key++), obj);
+            elements.put(key++, obj);
         }
 
         return modified;

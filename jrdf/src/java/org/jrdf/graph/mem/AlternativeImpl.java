@@ -82,7 +82,7 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
 
     public boolean add(ObjectNode o) {
         if (!elements.containsValue(o)) {
-            elements.put(new Long(key++), o);
+            elements.put(key++, o);
         }
         return true;
     }
@@ -98,7 +98,7 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
         boolean modified = iter.hasNext();
         while (iter.hasNext()) {
             ObjectNode obj = iter.next();
-            elements.put(new Long(key++), obj);
+            elements.put(key++, obj);
         }
 
         return modified;
@@ -106,7 +106,7 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
 
     // TODO Test allowing any type of Collection through.
     public boolean removeAll(Collection<?> c) {
-        Iterator iter = c.iterator();
+        Iterator<?> iter = c.iterator();
         boolean modified = iter.hasNext();
         while (iter.hasNext()) {
             remove(iter.next());

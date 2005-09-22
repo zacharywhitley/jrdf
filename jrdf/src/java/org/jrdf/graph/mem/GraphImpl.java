@@ -183,7 +183,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // Return true if all are any AnyNodes and size is greater than zero.
         if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
-            return 0 < longIndex012.getSize();
+            return 0L < longIndex012.getSize();
         }
 
         // Get local node values
@@ -515,7 +515,7 @@ public class GraphImpl implements Graph, Serializable {
      * @return true if the graph is empty i.e. the number of triples is 0.
      */
     public boolean isEmpty() throws GraphException {
-        return longIndex012.getSize() == 0;
+        return longIndex012.getSize() == 0L;
     }
 
     /**

@@ -22,7 +22,7 @@ public final class AnyNode implements ObjectNode {
     private AnyNode() {
     }
 
-    Object readResolve() throws java.io.ObjectStreamException {
+    protected Object readResolve() throws java.io.ObjectStreamException {
         return ANY_NODE;
     }
 
