@@ -111,7 +111,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
     GraphElementFactoryImpl() {
         nodePool = new HashMap<Long, Node>();
         stringPool = new HashMap<String, Long>();
-        nextNode = 1;
+        nextNode = 1L;
     }
 
 
@@ -155,24 +155,24 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         }
 
         // check if the node already exists in the string pool
-        Long nodeid = getNodeIdByString(uri.toString());
+        Long nodeId = getNodeIdByString(uri.toString());
 
-        if (null != nodeid) {
-            return (URIReference) getNodeById(nodeid);
+        if (null != nodeId) {
+            return (URIReference) getNodeById(nodeId);
         }
 
         // create the node identifier and increment the node
-        nodeid = nextNode++;
+        nodeId = nextNode++;
 
         // create the new node
-        URIReference node = new URIReferenceImpl(uri, nodeid);
+        URIReference node = new URIReferenceImpl(uri, nodeId);
 
         // put the node in the pool
-        nodePool.put(nodeid, node);
+        nodePool.put(nodeId, node);
 
         // put the URI string into the pool
         // TODO: This could conflict with a literal
-        stringPool.put(uri.toString(), nodeid);
+        stringPool.put(uri.toString(), nodeId);
         return node;
     }
 
@@ -192,23 +192,23 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         }
 
         // check if the node already exists in the string pool
-        Long nodeid = getNodeIdByString(uri.toString());
-        if (null != nodeid) {
-            return (URIReference) getNodeById(nodeid);
+        Long nodeId = getNodeIdByString(uri.toString());
+        if (null != nodeId) {
+            return (URIReference) getNodeById(nodeId);
         }
 
         // create the node identifier and increment the node
-        nodeid = nextNode++;
+        nodeId = nextNode++;
 
         // create the new node
-        URIReference node = new URIReferenceImpl(uri, validate, nodeid);
+        URIReference node = new URIReferenceImpl(uri, validate, nodeId);
 
         // put the node in the pool
-        nodePool.put(nodeid, node);
+        nodePool.put(nodeId, node);
 
         // put the URI string into the pool
         // TODO: This could conflict with a literal
-        stringPool.put(uri.toString(), nodeid);
+        stringPool.put(uri.toString(), nodeId);
         return node;
     }
 
@@ -341,7 +341,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
 
         // update the nextNode counter to a unique number
         if (!(id < nextNode)) {
-            nextNode = id + 1;
+            nextNode = id + 1L;
         }
     }
 

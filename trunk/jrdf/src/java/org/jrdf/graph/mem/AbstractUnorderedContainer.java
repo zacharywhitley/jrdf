@@ -130,7 +130,7 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
     }
 
     public void clear() {
-        key = 0;
+        key = 0L;
         elements.clear();
     }
 

@@ -43,7 +43,7 @@ public final class EqualsUtil {
      * @return true if the two object are are different classes.
      */
     public static boolean differentClasses(Object thisObject, Object obj) {
-        return thisObject.getClass() != obj.getClass();
+        return !thisObject.getClass().equals(obj.getClass());
     }
 
     /**

@@ -19,7 +19,7 @@ public final class AnyPredicateNode implements PredicateNode {
     private AnyPredicateNode() {
     }
 
-    Object readResolve() throws java.io.ObjectStreamException {
+    protected Object readResolve() throws java.io.ObjectStreamException {
         return ANY_PREDICATE_NODE;
     }
 

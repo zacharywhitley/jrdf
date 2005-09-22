@@ -226,7 +226,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         try {
 
             // Insert statements from colletion.
-            long counter = 1;
+            long counter = 1L;
 
             for (ObjectNode object : container) {
                 graph.add(subjectNode, elementFactory.createResource(new URI(RDF.BASE_URI + "_" + counter++)), object);

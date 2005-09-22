@@ -20,7 +20,7 @@ public final class AnyObjectNode implements ObjectNode {
     private AnyObjectNode() {
     }
 
-    Object readResolve() throws java.io.ObjectStreamException {
+    protected Object readResolve() throws java.io.ObjectStreamException {
         return ANY_OBJECT_NODE;
     }
 
