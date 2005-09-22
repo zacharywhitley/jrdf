@@ -56,39 +56,18 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.util.test.instantiate;
 
-import java.util.Collection;
-import java.util.Iterator;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.graph.Triple;
+import org.jrdf.query.relation.constants.TrueNode;
 
 /**
- * Mock {@link ClosableIterator} for use in testing.
+ * {@link Instantiator} for {@link org.jrdf.query.relation.constants.TrueNode}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-public class MockClosableIterator implements ClosableIterator<Triple> {
+final class TrueNodeInstantiator implements Instantiator {
 
-    private Iterator<Triple> iterator;
-
-    public MockClosableIterator(Collection<Triple> triples) {
-        this.iterator = triples.iterator();
-    }
-
-    public boolean close() {
-        throw new UnsupportedOperationException("Sorry, nothing to see here...");
-    }
-
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    public Triple next() {
-        return iterator.next();
-    }
-
-    public void remove() {
-        iterator.remove();
+    public Object instantiate() {
+        return TrueNode.TRUE;
     }
 }

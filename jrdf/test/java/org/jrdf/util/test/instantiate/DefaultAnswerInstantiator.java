@@ -56,39 +56,30 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.util.test.instantiate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.Triple;
+import org.jrdf.query.DefaultAnswer;
+import org.jrdf.util.test.ReflectTestUtil;
 
 /**
- * Mock {@link ClosableIterator} for use in testing.
+ * {@link org.jrdf.util.test.instantiate.Instantiator} for {@link org.jrdf.query.DefaultAnswer}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-public class MockClosableIterator implements ClosableIterator<Triple> {
+final class DefaultAnswerInstantiator implements Instantiator {
 
-    private Iterator<Triple> iterator;
+    private static final Class<DefaultAnswer> CLASS_DEFAULT_ANSWER = DefaultAnswer.class;
 
-    public MockClosableIterator(Collection<Triple> triples) {
-        this.iterator = triples.iterator();
+    public Object instantiate() {
+        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_ANSWER, createParams());
     }
 
-    public boolean close() {
-        throw new UnsupportedOperationException("Sorry, nothing to see here...");
-    }
-
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    public Triple next() {
-        return iterator.next();
-    }
-
-    public void remove() {
-        iterator.remove();
+    private ReflectTestUtil.ParamSpec createParams() {
+        Collection<Triple> triples = new ArrayList<Triple>();
+        return new ReflectTestUtil.ParamSpec(new Object[]{triples.iterator()}, new Class[]{Iterator.class});
     }
 }

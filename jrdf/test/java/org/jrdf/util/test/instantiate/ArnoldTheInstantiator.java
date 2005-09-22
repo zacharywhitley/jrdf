@@ -60,8 +60,16 @@ package org.jrdf.util.test.instantiate;
 
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralImpl;
+import org.jrdf.graph.mem.URIReferenceImpl;
 import org.jrdf.graph.mem.index.LongIndexMem;
+import org.jrdf.graph.AnyNode;
+import org.jrdf.graph.AnySubjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.query.relation.constants.FalseNode;
+import org.jrdf.query.relation.constants.TrueNode;
+import org.jrdf.query.DefaultAnswer;
 
 /**
  * Instantiates instances of objects for use in testing.
@@ -73,11 +81,28 @@ public final class ArnoldTheInstantiator {
     private static final Class<BlankNodeImpl> CLASS_BLANK_NODE_IMPL = BlankNodeImpl.class;
     private static final Class<LiteralImpl> CLASS_LITERAL_IMPL = LiteralImpl.class;
     private static final Class<LongIndexMem> CLASS_LONG_INDEX_MEM = LongIndexMem.class;
+    private static final Class<URIReferenceImpl> CLASS_URI_REFERENCE_IMPL = URIReferenceImpl.class;
+    private static final Class<FalseNode> CLASS_FALSE_NODE = FalseNode.class;
+    private static final Class<TrueNode> CLASS_TRUE_NODE = TrueNode.class;
+    private static final Class<AnyNode> CLASS_ANY_NODE = AnyNode.class;
+    private static final Class<AnySubjectNode> CLASS_ANY_SUBJECT_NODE = AnySubjectNode.class;
+    private static final Class<AnyPredicateNode> CLASS_ANY_PREDICATE_NODE = AnyPredicateNode.class;
+    private static final Class<AnyObjectNode> CLASS_ANY_OBJECT_NODE = AnyObjectNode.class;
+    private static final Class<DefaultAnswer> CLASS_DEFAULT_ANSWER = DefaultAnswer.class;
 
+    // TODO: Improve this nest of ifs below
     public Object instantiate(Class<?> cls) {
         if (cls.equals(CLASS_BLANK_NODE_IMPL)) return new BlankNodeImplInstantiator().instantiate();
         if (cls.equals(CLASS_LITERAL_IMPL)) return new LiteralImplInstantiator().instantiate();
         if (cls.equals(CLASS_LONG_INDEX_MEM)) return new LongIndexMemInstantiator().instantiate();
+        if (cls.equals(CLASS_URI_REFERENCE_IMPL)) return new URIReferenceImplInstantiator().instantiate();
+        if (cls.equals(CLASS_FALSE_NODE)) return new FalseNodeInstantiator().instantiate();
+        if (cls.equals(CLASS_TRUE_NODE)) return new TrueNodeInstantiator().instantiate();
+        if (cls.equals(CLASS_ANY_NODE)) return new AnyNodeInstantiator().instantiate();
+        if (cls.equals(CLASS_ANY_SUBJECT_NODE)) return new AnySubjectNodeInstantiator().instantiate();
+        if (cls.equals(CLASS_ANY_PREDICATE_NODE)) return new AnyPredicateNodeInstantiator().instantiate();
+        if (cls.equals(CLASS_ANY_OBJECT_NODE)) return new AnyObjectNodeInstantiator().instantiate();
+        if (cls.equals(CLASS_DEFAULT_ANSWER)) return new DefaultAnswerInstantiator().instantiate();
         return newInstance(cls);
     }
 

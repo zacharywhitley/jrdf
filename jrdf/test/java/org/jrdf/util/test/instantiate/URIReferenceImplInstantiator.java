@@ -56,39 +56,28 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.util.test.instantiate;
 
-import java.util.Collection;
-import java.util.Iterator;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.graph.Triple;
+import java.net.URI;
+import org.jrdf.graph.mem.URIReferenceImpl;
+import org.jrdf.util.test.ReflectTestUtil;
 
 /**
- * Mock {@link ClosableIterator} for use in testing.
+ * {@link Instantiator} for {@link org.jrdf.graph.mem.URIReferenceImpl}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-public class MockClosableIterator implements ClosableIterator<Triple> {
+final class URIReferenceImplInstantiator implements Instantiator {
 
-    private Iterator<Triple> iterator;
+    private static final Class<URIReferenceImpl> CLASS_URI_REFERENCE_IMPL = URIReferenceImpl.class;
+    private static final String NODE_ID = "0";
+    private static final URI A_URI = URI.create("urn:foo");
 
-    public MockClosableIterator(Collection<Triple> triples) {
-        this.iterator = triples.iterator();
+    public Object instantiate() {
+        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_URI_REFERENCE_IMPL, createParams());
     }
 
-    public boolean close() {
-        throw new UnsupportedOperationException("Sorry, nothing to see here...");
-    }
-
-    public boolean hasNext() {
-        return iterator.hasNext();
-    }
-
-    public Triple next() {
-        return iterator.next();
-    }
-
-    public void remove() {
-        iterator.remove();
+    private ReflectTestUtil.ParamSpec createParams() {
+        return new ReflectTestUtil.ParamSpec(A_URI, new Long(NODE_ID));
     }
 }

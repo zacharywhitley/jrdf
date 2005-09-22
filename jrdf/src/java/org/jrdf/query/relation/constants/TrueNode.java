@@ -1,5 +1,6 @@
 package org.jrdf.query.relation.constants;
 
+import java.io.ObjectStreamException;
 import org.jrdf.graph.Node;
 
 /**
@@ -17,5 +18,9 @@ public final class TrueNode implements Node {
     private static final long serialVersionUID = 1808216129525892255L;
 
     private TrueNode() {
+    }
+
+    private Object readResolve() throws ObjectStreamException {
+        return TRUE;
     }
 }

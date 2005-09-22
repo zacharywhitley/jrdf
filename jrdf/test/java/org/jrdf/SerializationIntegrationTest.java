@@ -63,17 +63,19 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.graph.mem.URIReferenceImpl;
 import org.jrdf.graph.mem.index.LongIndexMem;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.filter.JavaClassFileFilter;
 import org.jrdf.util.test.filter.MarkedAsSerializableClassFilter;
 import org.jrdf.util.test.filter.RecursiveFileFinder;
 import org.jrdf.vocabulary.Vocabulary;
+import org.jrdf.query.relation.constants.FalseNode;
+import org.jrdf.query.relation.constants.TrueNode;
 
 /**
  * Checks that all classes that claim to be {@link java.io.Serializable} can actually be serialized and contain a
@@ -104,20 +106,26 @@ public final class SerializationIntegrationTest extends TestCase {
 
     // FIXME TJA: Remove excluded classes once all classes serialize
     private void checkSerializability(Collection<Class<? extends Serializable>> serializables) {
-        Collection<Class<?>> excludedClasses = getExcludedClasses();
         for (Class<? extends Serializable> cls : serializables) {
-            if (!excludedClasses.contains(cls)) {
+            if (!excuseFromSerializationCheck(cls)) {
                 SerializationTestUtil.checkSerializability(cls);
             }
         }
     }
 
-    // FIXME TJA: Remove excluded classes once all classes serialize
+    // FIXME TJA: Excuse interfaces for now until we figure out how to deal with them
+    private boolean excuseFromSerializationCheck(Class<? extends Serializable> cls) {
+        Collection<Class<?>> excludedClasses = getExcludedClasses();
+        return excludedClasses.contains(cls) || ClassPropertiesTestUtil.isClassAnInterface(cls);
+    }
+
+    // FIXME TJA: Remove excluded classes once all classes serialize properly
     private Collection<Class<?>> getExcludedClasses() {
         Collection<Class<?>> excludedClasses = new ArrayList<Class<?>>();
         excludedClasses.add(GraphImpl.class);
         excludedClasses.add(LongIndexMem.class);
-        excludedClasses.add(URIReferenceImpl.class); // FIXME TJA: Breadcrumb - Create an instantiator.
+        excludedClasses.add(FalseNode.class);
+        excludedClasses.add(TrueNode.class);
         return excludedClasses;
     }
 

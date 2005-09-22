@@ -32,6 +32,14 @@
     <property name="compile.optimize" value="true"/>
     <property name="java.src.version" value="1.5"/>
     <property name="web.site.url" value="http://jrdf.sourceforge.net/"/>
+    <property name="unit.test.src.dir" value="${test.src.dir}"/>
+    <property name="unit.test.classes.dir" value="${test.classes.dir}"/>
+    <property name="unit.test.results.dir" value="${build.dir}/unit-test-results"/>
+    <property name="unit.test.results" value="${unit.test.results.dir}/Unit-Tests.xml"/>
+    <property name="integration.test.src.dir" value="${test.src.dir}"/>
+    <property name="integration.test.classes.dir" value="${test.classes.dir}"/>
+    <property name="integration.test.results.dir" value="${build.dir}/integration-test-results"/>
+    <property name="integration.test.results" value="${integration.test.results.dir}/Integration-Tests.xml"/>
 
     <patternset id="production.code.pattern">
         <include name="**/*.java"/>
@@ -45,6 +53,19 @@
         <exclude name="**/*Mock*.java"/>
         <exclude name="**/Abstract*"/>
     </patternset>
+    <patternset id="unit.test.code.pattern">
+        <!-- FIXME TJA: Why do we need to exclude all these, why not just included *UnitTest? -->
+        <!--<include name="**/*UnitTest.java"/>-->
+        <include name="**/*Test*.java"/>
+        <exclude name="**/*IntegrationTest.java"/>
+        <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*TestRunner*.java"/>
+        <exclude name="**/*Mock*.java"/>
+        <exclude name="**/Abstract*"/>
+    </patternset>
+    <patternset id="integration.test.code.pattern">
+        <include name="**/*IntegrationTest.java"/>
+    </patternset>
     <patternset id="all.code.pattern">
         <include name="**/*.java"/>
     </patternset>
@@ -55,7 +76,6 @@
         <exclude name="**/Abstract*"/>
     </patternset>
 
-    <!-- Note. Put other test code patterns here (integration, load, etc.) -->
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
         <patternset refid="production.code.pattern"/>
     </fileset>
@@ -64,6 +84,12 @@
     </fileset>
     <fileset id="test.code.fileset" dir="${test.src.dir}">
         <patternset refid="test.code.pattern"/>
+    </fileset>
+    <fileset id="unit.test.code.fileset" dir="${unit.test.src.dir}">
+        <patternset refid="unit.test.code.pattern"/>
+    </fileset>
+    <fileset id="integration.test.code.fileset" dir="${integration.test.src.dir}">
+        <patternset refid="integration.test.code.pattern"/>
     </fileset>
     <fileset id="all.code.fileset" dir="${prod.src.dir}">
         <patternset refid="all.code.pattern"/>
@@ -74,16 +100,22 @@
     </path>
     <path id="production.code.path">
         <pathelement location="${prod.src.dir}"/>
-        <!--<path refid="gen.code.path"/>--> <!-- FIXME: REMOVE THIS -->
     </path>
     <path id="test.code.path">
         <pathelement location="${test.src.dir}"/>
+    </path>
+    <path id="unit.test.code.path">
+        <path refid="test.code.path"/>
+    </path>
+    <path id="integration.test.code.path">
+        <path refid="test.code.path"/>
     </path>
     <path id="all.code.path">
         <path refid="production.code.path"/>
         <path refid="test.code.path"/>
         <path refid="gen.code.path"/>
     </path>
+
     <path id="gen.class.path"/>
     <path id="production.class.path"/>
     <path id="test.class.path">
@@ -93,6 +125,12 @@
         <pathelement location="${lib.dir}/easymock-2.1.0pre.jar"/>
         <pathelement location="${prod.classes.dir}"/>
         <pathelement location="${test.classes.dir}"/>
+    </path>
+    <path id="unit.test.class.path">
+        <path refid="test.class.path"/>
+    </path>
+    <path id="integration.test.class.path">
+        <path refid="test.class.path"/>
     </path>
 
     <taskdef resource="checkstyletask.properties"
