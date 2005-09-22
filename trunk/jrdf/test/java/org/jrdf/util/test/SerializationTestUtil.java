@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import com.gargoylesoftware.base.testing.TestUtil;
+import junit.framework.AssertionFailedError;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 /**
@@ -80,10 +81,10 @@ public final class SerializationTestUtil {
         checkCanBeSerialized(cls);
     }
 
-    // FIXME TJA: What are the access modifier requirements, public/private/package/protected?
     // FIXME TJA: Do interfaces need serialVersionUID fields?
     private static void checkContainsSerialVersionUid(Class<?> cls) {
         ClassPropertiesTestUtil.checkContainsField(cls, FIELD_SERIAL_VERSION_UID);
+        ClassPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
         ClassPropertiesTestUtil.checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
         ClassPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
         ClassPropertiesTestUtil.checkFieldIsOfType(cls, FIELD_SERIAL_VERSION_UID, CLASS_LONG_PRIMITIVE);
@@ -101,9 +102,15 @@ public final class SerializationTestUtil {
     public static void checkSerialization(Object ref) {
         try {
             TestUtil.testSerialization(ref, WHO_KNOWS_WHAT_THIS_MEANS);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (AssertionFailedError afe) {
+            throw new AssertionFailedError("Class " + getClassName(ref) + ", " + afe.getMessage());
+        } catch (IOException ioe) {
+            throw new RuntimeException("Exception while checking serialization of " + getClassName(ref), ioe);
         }
+    }
+
+    private static String getClassName(Object ref) {
+        return ref.getClass().getSimpleName();
     }
 
     private static Object instantiate(Class<?> cls) {

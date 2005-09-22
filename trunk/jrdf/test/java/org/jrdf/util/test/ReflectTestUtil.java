@@ -69,6 +69,8 @@ import java.lang.reflect.InvocationTargetException;
  */
 public final class ReflectTestUtil {
 
+    private static final ParamSpec PARAMS_NONE = new ParamSpec();
+
     private ReflectTestUtil() { }
 
     public static void insertFieldValue(Object ref, String fieldName, Object fieldValue) {
@@ -77,13 +79,7 @@ public final class ReflectTestUtil {
     }
 
     public static Object newInstance(Class<?> cls) {
-        try {
-            return cls.newInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException("Unable to instantiate " + cls.getSimpleName(), e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return createInstanceUsingConstructor(cls, PARAMS_NONE);
     }
 
     public static Field getField(Class<?> cls, String fieldName) {
