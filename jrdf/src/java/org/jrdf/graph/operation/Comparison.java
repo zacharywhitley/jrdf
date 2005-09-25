@@ -96,5 +96,5 @@ public interface Comparison {
      * @param g2 The second graph to test.
      * @return true if they are equivalent.
      */
-    boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2);
+    boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2) throws GraphException;
 }

@@ -60,6 +60,7 @@ package org.jrdf.graph.mem.operation;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
@@ -93,4 +94,58 @@ public class ComparisonImplUnitTest extends TestCase {
         assertTrue(comparison.isGrounded(mockGraph));
         verify(mockGraph);
     }
+
+    public void testEmptyGraphEquality() throws Exception {
+        checkEmptyGroundedGraphs(true, true, true);
+        checkEmptyGroundedGraphs(false, true, false);
+        checkEmptyGroundedGraphs(true, false, false);
+    }
+
+    public void testSameSizedGraphsAreIsomorphic() throws Exception {
+        checkSameSizeGraphsAreIsomorphic(1L, 123L, false);
+        checkSameSizeGraphsAreIsomorphic(12L, 1L, false);
+        checkSameSizeGraphsAreIsomorphic(12123L, 12123L, true);
+    }
+
+    private void checkSameSizeGraphsAreIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws GraphException {
+        Graph mockGraph1 = createMock(Graph.class);
+        Graph mockGraph2 = createMock(Graph.class);
+        Comparison comparison = new ComparisonImpl();
+        setUpEmptyCalls(mockGraph1, false, mockGraph2, false);
+        setUpNumberOfTripleCalls(mockGraph1, graph1Size, mockGraph2, graph2Size);
+        replay(mockGraph1);
+        replay(mockGraph2);
+        assertEquals("Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size, areEqual,
+                comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
+        verify(mockGraph1);
+        verify(mockGraph2);
+    }
+
+    private void checkEmptyGroundedGraphs(boolean graph1Empty, boolean graph2Empty, boolean areEqual) throws GraphException {
+        Graph mockGraph1 = createMock(Graph.class);
+        Graph mockGraph2 = createMock(Graph.class);
+        Comparison comparison = new ComparisonImpl();
+        setUpEmptyCalls(mockGraph1, graph1Empty, mockGraph2, graph2Empty);
+        replay(mockGraph1);
+        replay(mockGraph2);
+        assertEquals("Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty, areEqual,
+                comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
+        verify(mockGraph1);
+        verify(mockGraph2);
+    }
+
+    private void setUpEmptyCalls(Graph mockGraph1, boolean graph1Empty, Graph mockGraph2, boolean graph2Empty) throws GraphException {
+        mockGraph1.isEmpty();
+        expectLastCall().andReturn(graph1Empty);
+        mockGraph2.isEmpty();
+        expectLastCall().andReturn(graph2Empty);
+    }
+
+    private void setUpNumberOfTripleCalls(Graph mockGraph1, long graph1Size, Graph mockGraph2, long graphSize2) throws GraphException {
+        mockGraph1.getNumberOfTriples();
+        expectLastCall().andReturn(graph1Size);
+        mockGraph2.getNumberOfTriples();
+        expectLastCall().andReturn(graphSize2);
+    }
+
 }
