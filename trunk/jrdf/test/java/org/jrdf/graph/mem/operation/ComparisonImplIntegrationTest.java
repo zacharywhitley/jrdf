@@ -58,42 +58,49 @@
 
 package org.jrdf.graph.mem.operation;
 
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.operation.Comparison;
 
+import java.net.URI;
+
+import junit.framework.TestCase;
+
+
 /**
- * Default in memory Comparison.
- * <p/>
- * Currently, only implements grounded isomorphism.
+ * Integration tests {@see org.jrdf.graph.mem.operation.ComparisonImpl}.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class ComparisonImpl implements Comparison {
+public class ComparisonImplIntegrationTest extends TestCase {
+    private static final URI URI1 = URI.create("http://foo/bar");
+    private static final URI URI2 = URI.create("http://foo/bar/baz");
 
-    public boolean isGrounded(Graph g) throws GraphException {
-        return g.isEmpty();
+    public void testMemGraphEquality() throws Exception {
+        checkGraph(URI1, URI1, true);
+        checkGraph(URI2, URI2, true);
+        // TODO AN Uncomment - driving this out.
+//        checkGraph(URI1, URI2, false);
     }
 
-    public boolean areIsomorphic(Graph g1, Graph g2) {
-        return false;
+    private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {
+        GraphImpl graph1 = new GraphImpl();
+        addTriple(graph1, resource1);
+        GraphImpl graph2 = new GraphImpl();
+        addTriple(graph2, resource2);
+        Comparison comparison = new ComparisonImpl();
+        assertEquals(areEqual, comparison.groundedGraphsAreIsomorphic(graph1, graph2));
     }
 
-    public boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2) throws GraphException {
-        boolean g1IsEmpty = g1.isEmpty();
-        boolean g2IsEmpty = g2.isEmpty();
-        if (g1IsEmpty && g2IsEmpty) {
-            return true;
-        } else if (!g1IsEmpty && !g2IsEmpty) {
-            return compareNonEmptyGraphs(g1, g2);
-        }
-        return false;
-    }
-
-    private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {
-        long g1Size = g1.getNumberOfTriples();
-        long g2Size = g2.getNumberOfTriples();
-        return (g1Size == g2Size);
+    private void addTriple(GraphImpl graph, URI uri) throws GraphElementFactoryException, TripleFactoryException,
+            GraphException {
+        URIReference resource = graph.getElementFactory().createResource(uri);
+        Triple triple = graph.getTripleFactory().createTriple(resource, resource, resource);
+        graph.add(triple);
     }
 }
