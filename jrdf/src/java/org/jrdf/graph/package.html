@@ -16,16 +16,18 @@
 </p>
 
 <p>
-    An RDF Graph is made from RDF triples. Triples consist of a subject,
-    predicate and object. Triples are made of nodes. Nodes can either be resources
-    or literals. Resources can either be labelled with a URI, called URI
+    An RDF Graph is made from RDF triples. Triples consist of a subject, predicate and object. Triples are made of 
+    nodes. Nodes can either be resources or literals. Resources can either be labelled with a URI, called URI
     references, or be blank.
 </p>
 
 <p>
     To construct nodes you use a GraphElementFactory which allows you to create any of the
-    nodes individually. This allows a separation between the implementation of the
-    Graphs and of Node storage and handling.
+    nodes individually.   You can then create Triples using the TripleFactory.  Triples can then be added to the
+    graph using the add method.
+</p>
+<p>
+    This design allows a separation between the implementation of the Graphs and of Node storage and handling.
 </p>
 </body>
 </html>
