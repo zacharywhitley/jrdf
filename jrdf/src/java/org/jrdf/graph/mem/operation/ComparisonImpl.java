@@ -77,7 +77,7 @@ public final class ComparisonImpl implements Comparison {
     }
 
     public boolean areIsomorphic(Graph g1, Graph g2) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     public boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2) throws GraphException {
