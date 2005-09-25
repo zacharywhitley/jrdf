@@ -78,6 +78,8 @@ import java.lang.reflect.Modifier;
  * @version $Revision$
  */
 public class ComparisonImplUnitTest extends TestCase {
+    private static final boolean GRAPH_EMPTY = true;
+    private static final boolean GRAPH_CONTAINS_NODES = false;
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkClassFinal(ComparisonImpl.class);
@@ -89,29 +91,29 @@ public class ComparisonImplUnitTest extends TestCase {
         Graph mockGraph = createMock(Graph.class);
         Comparison comparison = new ComparisonImpl();
         mockGraph.isEmpty();
-        expectLastCall().andReturn(true);
+        expectLastCall().andReturn(GRAPH_EMPTY);
         replay(mockGraph);
         assertTrue(comparison.isGrounded(mockGraph));
         verify(mockGraph);
     }
 
     public void testEmptyGraphEquality() throws Exception {
-        checkEmptyGroundedGraphs(true, true, true);
-        checkEmptyGroundedGraphs(false, true, false);
-        checkEmptyGroundedGraphs(true, false, false);
+        checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_EMPTY, GRAPH_EMPTY);
+        checkEmptyGroundedGraphs(GRAPH_CONTAINS_NODES, GRAPH_EMPTY, GRAPH_CONTAINS_NODES);
+        checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
     }
 
     public void testSameSizedGraphsAreIsomorphic() throws Exception {
-        checkSameSizeGraphsAreIsomorphic(1L, 123L, false);
-        checkSameSizeGraphsAreIsomorphic(12L, 1L, false);
-        checkSameSizeGraphsAreIsomorphic(12123L, 12123L, true);
+        checkSameSizeGraphsAreIsomorphic(1L, 123L, GRAPH_CONTAINS_NODES);
+        checkSameSizeGraphsAreIsomorphic(12L, 1L, GRAPH_CONTAINS_NODES);
+        checkSameSizeGraphsAreIsomorphic(12123L, 12123L, GRAPH_EMPTY);
     }
 
     private void checkSameSizeGraphsAreIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws GraphException {
         Graph mockGraph1 = createMock(Graph.class);
         Graph mockGraph2 = createMock(Graph.class);
         Comparison comparison = new ComparisonImpl();
-        setUpEmptyCalls(mockGraph1, false, mockGraph2, false);
+        setUpEmptyCalls(mockGraph1, GRAPH_CONTAINS_NODES, mockGraph2, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(mockGraph1, graph1Size, mockGraph2, graph2Size);
         replay(mockGraph1);
         replay(mockGraph2);
