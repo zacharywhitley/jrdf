@@ -59,8 +59,8 @@
 package org.jrdf.graph;
 
 /**
- * A Triple Factory is a class which defines the creation of certain sets of
- * triples.  This includes reification, containers and collections.
+ * A Triple Factory is a class which defines the creation of triples and certain sets of triples.  This includes
+ * generating triples for reification, containers and collections.
  *
  * @author Andrew Newman
  * @version $Revision$
@@ -68,8 +68,7 @@ package org.jrdf.graph;
 public interface TripleFactory {
 
     /**
-     * Creates a new triple to be used in the graph.  Does not add it to an
-     * associated graph.  Use @see Graph#add.
+     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
      *
      * @param subject   The subject of the statement.
      * @param predicate The predicate of the statement.
@@ -77,12 +76,11 @@ public interface TripleFactory {
      * @return the newly created triple object.
      * @throws TripleFactoryException If the resource failed to be created.
      */
-    Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-            TripleFactoryException;
+    Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws TripleFactoryException;
 
     /**
-     * Reifies a triple.  A triple made up of the first three nodes is added to
-     * graph and the reificationNode is used to reify the triple.
+     * Reifies a triple.  A triple made up of the first three nodes is added to graph and the reificationNode is used
+     * to reify the triple.
      *
      * @param subjectNode     the subject of the triple.
      * @param predicateNode   the predicate of the triple.
@@ -96,8 +94,7 @@ public interface TripleFactory {
             SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException;
 
     /**
-     * Reifies a triple.  The triple added to the graph and the
-     * reificationNode is used to reify the triple.
+     * Reifies a triple.  The triple added to the graph and the reificationNode is used to reify the triple.
      *
      * @param triple          the triple to be reified.
      * @param reificationNode a node denoting the reified triple.
@@ -108,8 +105,8 @@ public interface TripleFactory {
     void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException;
 
     /**
-     * Inserts a alternative using the given subject.  The subject is also
-     * the object of a proceeding statement that identifies the container.
+     * Inserts a alternative using the given subject.  The subject is also the object of a proceeding statement that
+     * identifies the container.
      *
      * @param subjectNode the subject node of the triple.
      * @param alternative the alternative to add.

@@ -64,8 +64,8 @@ import java.net.URI;
 
 /**
  * A Graph Element Factory is a class which creates the various components of a
- * graph including: resources, literals and triples.  It is generally tied to a
- * specific graph.
+ * graph including: resources, literals and blank nodes.  It is generally tied to a
+ * specific graph (in the case of blank nodes it must be).
  *
  * @author Andrew Newman
  * @version $Revision$
