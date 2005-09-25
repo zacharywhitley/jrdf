@@ -80,6 +80,8 @@ import java.lang.reflect.Modifier;
 public class ComparisonImplUnitTest extends TestCase {
     private static final boolean GRAPH_EMPTY = true;
     private static final boolean GRAPH_CONTAINS_NODES = false;
+    private static final boolean ARE_UNEQUAL = false;
+    private static final boolean ARE_EQUAL = true;
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkClassFinal(ComparisonImpl.class);
@@ -98,15 +100,15 @@ public class ComparisonImplUnitTest extends TestCase {
     }
 
     public void testEmptyGraphEquality() throws Exception {
-        checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_EMPTY, GRAPH_EMPTY);
-        checkEmptyGroundedGraphs(GRAPH_CONTAINS_NODES, GRAPH_EMPTY, GRAPH_CONTAINS_NODES);
-        checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
+        checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_EMPTY, ARE_EQUAL);
+        checkEmptyGroundedGraphs(GRAPH_CONTAINS_NODES, GRAPH_EMPTY, ARE_UNEQUAL);
+        checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_CONTAINS_NODES, ARE_UNEQUAL);
     }
 
     public void testSameSizedGraphsAreIsomorphic() throws Exception {
-        checkSameSizeGraphsAreIsomorphic(1L, 123L, GRAPH_CONTAINS_NODES);
-        checkSameSizeGraphsAreIsomorphic(12L, 1L, GRAPH_CONTAINS_NODES);
-        checkSameSizeGraphsAreIsomorphic(12123L, 12123L, GRAPH_EMPTY);
+        checkSameSizeGraphsAreIsomorphic(1L, 123L, ARE_UNEQUAL);
+        checkSameSizeGraphsAreIsomorphic(12L, 1L, ARE_UNEQUAL);
+        checkSameSizeGraphsAreIsomorphic(12123L, 12123L, ARE_EQUAL);
     }
 
     private void checkSameSizeGraphsAreIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws GraphException {
