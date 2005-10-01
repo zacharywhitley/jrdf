@@ -84,8 +84,7 @@ public class ComparisonImplIntegrationTest extends TestCase {
     public void testMemGraphEquality() throws Exception {
         checkGraph(URI1, URI1, true);
         checkGraph(URI2, URI2, true);
-        // TODO AN Uncomment - driving this out.
-//        checkGraph(URI1, URI2, false);
+        checkGraph(URI1, URI2, false);
     }
 
     private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {

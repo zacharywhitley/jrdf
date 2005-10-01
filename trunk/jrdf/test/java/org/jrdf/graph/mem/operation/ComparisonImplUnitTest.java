@@ -62,19 +62,20 @@ import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.AnySubjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.util.ClosableIterator;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.easymock.EasyMock.expectLastCall;
 
 import java.lang.reflect.Modifier;
-import java.util.Iterator;
-import java.util.Arrays;
 
 /**
  * Tests {@see org.jrdf.graph.mem.operation.ComparisonImpl}.
@@ -111,21 +112,37 @@ public class ComparisonImplUnitTest extends TestCase {
     }
 
     public void testSameSizedGraphsAreIsomorphic() throws Exception {
-        checkSameSizeGraphsAreIsomorphic(1L, 123L, ARE_UNEQUAL);
-        checkSameSizeGraphsAreIsomorphic(12L, 1L, ARE_UNEQUAL);
-        checkSameSizeGraphsAreIsomorphic(12123L, 12123L, ARE_EQUAL);
+        checkDifferentSizeGraphsAreIsomorphic(1L, 123L, ARE_UNEQUAL);
+        checkDifferentSizeGraphsAreIsomorphic(12L, 1L, ARE_UNEQUAL);
     }
 
-//    public void testSameSizeGraphsDifferentContent() throws Exception {
-//        TripleFactory factory;
-//        Triple[] triples1 = new Triple[]{factory.createTriple(uri1, uri1, uri1)};
-//        Iterator<Triple> iterator1 = Arrays.asList(triples1).iterator();
-//        Graph mockGraph1 = createMock(Graph.class);
-//        Graph mockGraph2 = createMock(Graph.class);
-//        Comparison comparison = new ComparisonImpl();
-//    }
+    public void testGraphContent() throws Exception {
+        Triple tripleAllSame1 = TripleTestUtil.createTripleAllSame(TripleTestUtil.URI_BOOK_1);
+        Triple tripleAllSame2 = TripleTestUtil.createTripleAllSame(TripleTestUtil.URI_BOOK_2);
+        Triple tripleAllSame3 = TripleTestUtil.createTripleAllSame(TripleTestUtil.URI_BOOK_3);
+        Triple[] triples1 = new Triple[]{tripleAllSame1, tripleAllSame2};
+        Triple[] triples2 = new Triple[]{tripleAllSame2, tripleAllSame3};
+        checkGraphContent(triples1, triples2, ARE_UNEQUAL);
+        checkGraphContent(triples1, triples1, ARE_EQUAL);
+        checkGraphContent(triples2, triples2, ARE_EQUAL);
+    }
 
-    private void checkSameSizeGraphsAreIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws GraphException {
+    private void checkGraphContent(Triple[] triples1, Triple[] triples2, boolean areEqual) throws GraphException {
+        Graph mockGraph1 = createMock(Graph.class);
+        Graph mockGraph2 = createMock(Graph.class);
+        Comparison comparison = new ComparisonImpl();
+        setUpEmptyCalls(mockGraph1, GRAPH_CONTAINS_NODES, mockGraph2,  GRAPH_CONTAINS_NODES);
+        setUpNumberOfTripleCalls(mockGraph1, triples1.length, mockGraph2, triples2.length);
+        setUpIteratorCalls(mockGraph1, mockGraph2, triples1, triples2);
+        replay(mockGraph1);
+        replay(mockGraph2);
+        assertEquals("Graph 1 size: " + triples1.length + " Graph 2 size: " + triples2.length, areEqual,
+                comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
+        verify(mockGraph1);
+        verify(mockGraph2);
+    }
+
+    private void checkDifferentSizeGraphsAreIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws GraphException {
         Graph mockGraph1 = createMock(Graph.class);
         Graph mockGraph2 = createMock(Graph.class);
         Comparison comparison = new ComparisonImpl();
@@ -164,5 +181,20 @@ public class ComparisonImplUnitTest extends TestCase {
         expectLastCall().andReturn(graph1Size);
         mockGraph2.getNumberOfTriples();
         expectLastCall().andReturn(graphSize2);
+    }
+
+    private void setUpIteratorCalls(Graph mockGraph1, Graph mockGraph2, Triple[] triples1, Triple[] triples2) throws GraphException {
+        mockGraph1.find(AnySubjectNode.ANY_SUBJECT_NODE, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
+        expectLastCall().andReturn(TripleTestUtil.createTripleIterator(triples1));
+        ClosableIterator<Triple> iterator1 = TripleTestUtil.createTripleIterator(triples1);
+        ClosableIterator<Triple> iterator2 = TripleTestUtil.createTripleIterator(triples2);
+        while (iterator1.hasNext()) {
+            Triple triple1 = iterator1.next();
+            Triple triple2 = iterator2.next();
+            mockGraph2.contains(triple1);
+            boolean b = triple1.equals(triple2);
+            expectLastCall().andReturn(b);
+            if (!b) break;
+        }
     }
 }

@@ -65,8 +65,11 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.ConstraintTriple;
+import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
+import java.util.Iterator;
+import java.util.Arrays;
 
 
 /**
@@ -91,6 +94,18 @@ public class TripleTestUtil {
 
     public static ConstraintExpression createBookDcTitleExpression(URI bookUri) {
         return new ConstraintTriple(createDcTitleTriple(bookUri));
+    }
+
+    public static Triple createTripleAllSame(URI uri) {
+        SubjectNode subject = NodeTestUtil.createResource(uri);
+        PredicateNode predicate = NodeTestUtil.createResource(uri);
+        ObjectNode object = NodeTestUtil.createResource(uri);
+        return createTriple(subject, predicate, object);
+    }
+
+    public static ClosableIterator<Triple> createTripleIterator(Triple[] triples) {
+        Iterator<Triple> iterator = Arrays.asList(triples).iterator();
+        return new SimpleClosableIterator(iterator);
     }
 
     private static Triple createDcTitleTriple(URI bookUri) {
@@ -122,5 +137,29 @@ public class TripleTestUtil {
 
     private static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         return NodeTestUtil.createTriple(subject, predicate, object);
+    }
+
+    private static class SimpleClosableIterator implements ClosableIterator {
+        private Iterator iter;
+
+        private SimpleClosableIterator(Iterator<Triple> iter) {
+            this.iter = iter;
+        }
+
+        public boolean close() {
+            return true;
+        }
+
+        public boolean hasNext() {
+            return iter.hasNext();
+        }
+
+        public Object next() {
+            return iter.next();
+        }
+
+        public void remove() {
+            iter.remove();
+        }
     }
 }
