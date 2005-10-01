@@ -64,7 +64,7 @@ import java.util.Iterator;
 import junit.framework.Assert;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 import org.jrdf.util.ClosableIterator;
 
 /**
@@ -86,7 +86,7 @@ public final class GraphFixture {
     }
 
     public static Query createQuery() {
-        return new MockQuery(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_SUBJECT);
+        return new MockQuery(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_SUBJECT);
     }
 
     public static void checkAnswer(Triple expectedTriple, Answer actualAnswer) {
@@ -103,7 +103,7 @@ public final class GraphFixture {
 
     private static Collection<Triple> createTriples() {
         Collection<Triple> triples = new ArrayList<Triple>();
-        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+        triples.add(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
         return triples;
     }
 }

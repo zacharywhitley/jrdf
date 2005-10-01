@@ -62,12 +62,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Arrays;
 import java.lang.reflect.Modifier;
-import java.net.URI;
 
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.sparql.SparqlQueryTestUtil;
-import org.jrdf.graph.Graph;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 
 /**
  * Unit test for {@link DefaultQuery}.

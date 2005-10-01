@@ -56,14 +56,24 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph;
+package org.jrdf.util.test;
 
 import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.TripleFactory;
 
 import java.net.URI;
 
 /**
  * Utility for creating nodes, etc.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -71,9 +81,9 @@ public final class NodeTestUtil {
 
     private NodeTestUtil() { }
 
-    public static URIReference createResource(String uri) {
+    public static URIReference createResource(URI uri) {
         try {
-            return getElementFactory().createResource(new URI(uri));
+            return getElementFactory().createResource(uri);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

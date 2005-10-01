@@ -67,9 +67,9 @@ import java.lang.reflect.Modifier;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
-import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 /**
  * Unit test for {@link DefaultAnswer}.
@@ -83,12 +83,12 @@ public final class DefaultAnswerUnitTest extends TestCase {
     private static final String STRING_FORM_NO_ELEMENTS = "{}";
     private static final String STRING_FORM_SINGLE_ELEMENT =
             "{" + NEW_LINE +
-            INDENT + SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
+            INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
             "}";
     private static final String STRING_FORM_MULTIPLE_ELEMENTS =
             "{" + NEW_LINE +
-            INDENT + SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
-            INDENT + SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE + NEW_LINE +
+            INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
+            INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE + NEW_LINE +
             "}";
 
     public void testClassProperties() {
@@ -134,14 +134,14 @@ public final class DefaultAnswerUnitTest extends TestCase {
 
     private Collection<Triple> createSingleTripleList() {
         Collection<Triple> triples = new ArrayList<Triple>();
-        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+        triples.add(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
         return triples;
     }
 
     private Collection<Triple> createMultipleTripleList() {
         Collection<Triple> triples = new ArrayList<Triple>();
-        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
-        triples.add(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE);
+        triples.add(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+        triples.add(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE);
         return triples;
     }
 }

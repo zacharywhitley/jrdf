@@ -62,7 +62,7 @@ import junit.framework.TestCase;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 
 /**
  * Integration test for {@link DefaultSparqlParser}.
