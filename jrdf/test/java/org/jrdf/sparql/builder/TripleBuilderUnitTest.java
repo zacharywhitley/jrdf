@@ -60,14 +60,15 @@ package org.jrdf.sparql.builder;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.mem.operation.ComparisonImpl;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.SableCcNodeTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 
 import java.lang.reflect.Modifier;
+import java.net.URI;
 
 /**
  * Unit test for {@link TripleBuilder}.
@@ -78,17 +79,17 @@ public final class TripleBuilderUnitTest extends TestCase {
 
     // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined way.
 
-    private static final String URI_DC_TITLE = SparqlQueryTestUtil.URI_DC_TITLE;
-    private static final String URI_DC_SUBJECT = SparqlQueryTestUtil.URI_DC_SUBJECT;
-    private static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
-    private static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = SparqlQueryTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
-    private static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE;
-    private static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
+    private static final URI URI_DC_TITLE = TripleTestUtil.URI_DC_TITLE;
+    private static final URI URI_DC_SUBJECT = TripleTestUtil.URI_DC_SUBJECT;
+    private static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = TripleTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
+    private static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = TripleTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
+    private static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE;
+    private static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
     private static final String VARIABLE_NAME_TITLE = SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
     private static final String VARIABLE_NAME_SUBJECT = SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
-    private static final String LITERAL_BOOK_TITLE = SparqlQueryTestUtil.LITERAL_BOOK_TITLE;
-    private static final String URI_BOOK_1 = SparqlQueryTestUtil.URI_BOOK_1;
-    private static final String URI_BOOK_2 = SparqlQueryTestUtil.URI_BOOK_2;
+    private static final String LITERAL_BOOK_TITLE = TripleTestUtil.LITERAL_BOOK_TITLE;
+    private static final URI URI_BOOK_1 = TripleTestUtil.URI_BOOK_1;
+    private static final URI URI_BOOK_2 = TripleTestUtil.URI_BOOK_2;
     private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE = new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
     private static final VariableTripleSpec TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE = new VariableTripleSpec(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
     private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE = new VariableTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);

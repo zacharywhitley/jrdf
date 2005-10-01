@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,81 +56,65 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.util.test;
 
-import org.jrdf.graph.NodeTestUtil;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.ConstraintTriple;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+
+import java.net.URI;
+
 
 /**
- * SPARQL artefacts used in tests.
+ * Artefacts used in tests.
+ *
  * @author Tom Adams
+ * @author Andrew Newman
  * @version $Revision$
  */
-public final class SparqlQueryTestUtil {
-
-    public static final String URI_BOOK_1 = "http://example.org/book/book1";
-    public static final String URI_BOOK_2 = "http://example.org/book/book2";
-    public static final String URI_BOOK_3 = "http://example.org/book/book3";
-    public static final String URI_DC_TITLE = "http://purl.org/dc/elements/1.1/title";
-    public static final String URI_DC_SUBJECT = "http://purl.org/dc/elements/1.1/subject";
-    public static final String VARIABLE_PREFIX = "?";
-    public static final String VARIABLE_NAME_TITLE = "title";
-    public static final String VARIABLE_NAME_SUBJECT = "subject";
+public class TripleTestUtil {
+    public static final URI URI_BOOK_1 = URI.create("http://example.org/book/book1");
+    public static final URI URI_BOOK_2 = URI.create("http://example.org/book/book2");
+    public static final URI URI_BOOK_3 = URI.create("http://example.org/book/book3");
+    public static final URI URI_DC_TITLE = URI.create("http://purl.org/dc/elements/1.1/title");
+    public static final URI URI_DC_SUBJECT = URI.create("http://purl.org/dc/elements/1.1/subject");
     public static final String LITERAL_BOOK_TITLE = "The Pragmatic Programmer";
-    public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
-    public static final String QUERY_BOOK_1_DC_TITLE = createQueryString(URI_BOOK_1, URI_DC_TITLE, VARIABLE_TITLE);
-    public static final String QUERY_BOOK_2_DC_TITLE = createQueryString(URI_BOOK_2, URI_DC_TITLE, VARIABLE_TITLE);
-    public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = createBookDcTitleExpression(URI_BOOK_1);
-    public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = createBookDcTitleExpression(URI_BOOK_2);
     public static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_2);
     public static final Triple TRIPLE_BOOK_3_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_3);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = createDcSubjectTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = createDcSubjectTriple(URI_BOOK_1, LITERAL_BOOK_TITLE);
 
-    private SparqlQueryTestUtil() { }
-
-    private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {
-        return "SELECT * WHERE  { " +
-                delimitUri(subjectUri) + " " + delimitUri(predicateUri) + " " + objectVariable + " }";
-    }
-
-    public static String delimitUri(String uri) {
-        return "<" + uri + ">";
-    }
-
-    private static ConstraintExpression createBookDcTitleExpression(String bookUri) {
+    public static ConstraintExpression createBookDcTitleExpression(URI bookUri) {
         return new ConstraintTriple(createDcTitleTriple(bookUri));
     }
 
-    private static Triple createDcTitleTriple(String bookUri) {
+    private static Triple createDcTitleTriple(URI bookUri) {
         return createTripleWithVariableObject(bookUri, URI_DC_TITLE);
     }
 
-    private static Triple createDcSubjectTriple(String bookUri) {
+    private static Triple createDcSubjectTriple(URI bookUri) {
         return createTripleWithVariableObject(bookUri, URI_DC_SUBJECT);
     }
 
-    private static Triple createDcSubjectTriple(String bookUri, String literal) {
+    private static Triple createDcSubjectTriple(URI bookUri, String literal) {
         return createTripleWithLiteralObject(bookUri, URI_DC_SUBJECT, literal);
     }
 
-    private static Triple createTripleWithVariableObject(String subjectUri, String predicateUri) {
-        return createTriple(subjectUri, predicateUri, ANY_OBJECT_NODE);
+    private static Triple createTripleWithVariableObject(URI subjectUri, URI predicateUri) {
+        return createTriple(subjectUri, predicateUri, AnyObjectNode.ANY_OBJECT_NODE);
     }
 
-    private static Triple createTripleWithLiteralObject(String subjectUri, String predicateUri, String literal) {
+    private static Triple createTripleWithLiteralObject(URI subjectUri, URI predicateUri, String literal) {
         ObjectNode object = NodeTestUtil.createLiteral(literal);
         return createTriple(subjectUri, predicateUri, object);
     }
 
-    private static Triple createTriple(String subjectUri, String predicateUri, ObjectNode object) {
+    private static Triple createTriple(URI subjectUri, URI predicateUri, ObjectNode object) {
         SubjectNode subject = NodeTestUtil.createResource(subjectUri);
         PredicateNode predicate = NodeTestUtil.createResource(predicateUri);
         return createTriple(subject, predicate, object);

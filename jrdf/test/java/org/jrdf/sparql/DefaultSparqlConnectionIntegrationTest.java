@@ -75,6 +75,8 @@ import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.util.test.SparqlQueryTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 /**
  * Integration test for {@link org.jrdf.sparql.DefaultSparqlConnection}.
@@ -88,9 +90,9 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
     private static final String QUERY_SHOULD_RETURN_ONE_SOLUTION = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final String QUERY_SHOULD_RETURN_NOTHING = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-    private static final String URI_SUBJECT = SparqlQueryTestUtil.URI_BOOK_1;
-    private static final String URI_PREDICATE = SparqlQueryTestUtil.URI_DC_TITLE;
-    private static final String LITERAL_TITLE = SparqlQueryTestUtil.LITERAL_BOOK_TITLE;
+    private static final URI URI_SUBJECT = TripleTestUtil.URI_BOOK_1;
+    private static final URI URI_PREDICATE = TripleTestUtil.URI_DC_TITLE;
+    private static final String LITERAL_TITLE = TripleTestUtil.LITERAL_BOOK_TITLE;
 
     public void testCreateSparqlConnection() {
         checkConnectionReturnsOneSolution(createRawConnection());
@@ -135,12 +137,14 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
         checkLiteralObject(triple);
     }
 
+    // TODO AN Why do we need to call toString should they be equal?
     private void checkSubject(Triple triple) {
-        assertEquals(URI_SUBJECT, triple.getSubject().toString());
+        assertEquals(URI_SUBJECT.toString(), triple.getSubject().toString());
     }
 
+    // TODO AN Why do we need to call toString should they be equal?
     private void checkPredicate(Triple triple) {
-        assertEquals(URI_PREDICATE, triple.getPredicate().toString());
+        assertEquals(URI_PREDICATE.toString(), triple.getPredicate().toString());
     }
 
     private void checkLiteralObject(Triple triple) {
@@ -164,8 +168,8 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     }
 
     private Triple createTriple(Graph graph) {
-        SubjectNode subject = createResource(graph, createUri(URI_SUBJECT));
-        PredicateNode predicate = createResource(graph, createUri(URI_PREDICATE));
+        SubjectNode subject = createResource(graph, URI_SUBJECT);
+        PredicateNode predicate = createResource(graph, URI_PREDICATE);
         ObjectNode object = createLiteral(graph, LITERAL_TITLE);
         return createTriple(graph, subject, predicate, object);
     }

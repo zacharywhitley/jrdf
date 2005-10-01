@@ -67,13 +67,13 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.MockQuery;
 import org.jrdf.query.Query;
 import org.jrdf.query.Variable;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.sparql.analysis.MockSparqlAnalyser;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import org.jrdf.graph.mem.operation.ComparisonImpl;
 
 /**
  * Unit test for {@link SableCcSparqlParser}.
@@ -150,6 +150,6 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private MockQuery createQuery() {
-        return new MockQuery(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
+        return new MockQuery(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
     }
 }

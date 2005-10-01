@@ -58,27 +58,29 @@
 
 package org.jrdf.sparql.builder;
 
+import java.net.URI;
+
 /**
  * @author Tom Adams
  * @version $Revision$
  */
 public final class LiteralTripleSpec {
 
-    private String subjectUri;
-    private String predicateUri;
+    private URI subjectUri;
+    private URI predicateUri;
     private String literal;
 
-    public LiteralTripleSpec(String subjectUri, String predicateUri, String literal) {
+    public LiteralTripleSpec(URI subjectUri, URI predicateUri, String literal) {
         this.subjectUri = subjectUri;
         this.predicateUri = predicateUri;
         this.literal = literal;
     }
 
-    public String getSubjectUri() {
+    public URI getSubjectUri() {
         return subjectUri;
     }
 
-    public String getPredicateUri() {
+    public URI getPredicateUri() {
         return predicateUri;
     }
 

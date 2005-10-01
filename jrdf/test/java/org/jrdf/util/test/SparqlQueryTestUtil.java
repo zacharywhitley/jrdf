@@ -56,48 +56,39 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.util.test;
 
-import org.jrdf.graph.AbstractTripleUnitTest;
-import org.jrdf.util.test.NodeTestUtil;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
+import org.jrdf.query.ConstraintExpression;
 
 import java.net.URI;
 
 /**
- * Unit test for {@link TripleImpl}.
+ * Artefacts used in tests.
+ *
  * @author Tom Adams
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class TripleImplUnitTest extends AbstractTripleUnitTest {
+public final class SparqlQueryTestUtil {
 
-    /**
-     * Constructs a new test with the given name.
-     * @param name the name of the test
-     */
-    public TripleImplUnitTest(String name) {
-        super(name);
+    public static final String VARIABLE_PREFIX = "?";
+    public static final String VARIABLE_NAME_TITLE = "title";
+    public static final String VARIABLE_NAME_SUBJECT = "subject";
+    public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
+    public static final String QUERY_BOOK_1_DC_TITLE = createQueryString(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
+    public static final String QUERY_BOOK_2_DC_TITLE = createQueryString(TripleTestUtil.URI_BOOK_2, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
+    public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_1);
+    public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_2);
+
+    private SparqlQueryTestUtil() { }
+
+    private static String createQueryString(URI subjectUri, URI predicateUri, String objectVariable) {
+        return "SELECT * WHERE  { " +
+                delimitUri(subjectUri) + " " + delimitUri(predicateUri) + " " + objectVariable + " }";
     }
 
-    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return NodeTestUtil.createTriple(subject, predicate, object);
+    public static String delimitUri(URI uri) {
+        return "<" + uri + ">";
     }
 
-    public Triple createTriple(URI subject, URI predicate) {
-        return NodeTestUtil.createTriple(createResource(subject), createResource(predicate), null);
-    }
-
-    public URIReference createResource(URI uri) {
-        return NodeTestUtil.createResource(uri);
-    }
-
-    public void testClassProperties() {
-        this.checkClassProperties(TripleImpl.class);
-        this.checkAbstractClassProperties();
-    }
 }

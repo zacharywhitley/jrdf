@@ -58,7 +58,7 @@
 
 package org.jrdf.sparql.parser;
 
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.sparql.builder.VariableTripleSpec;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
 import org.jrdf.sparql.parser.node.ALiteral;
@@ -78,6 +78,8 @@ import org.jrdf.sparql.parser.node.TText;
 import org.jrdf.sparql.parser.node.TVariableprefix;
 import org.jrdf.sparql.parser.node.X2PStrand;
 import org.jrdf.sparql.parser.node.XPStrand;
+
+import java.net.URI;
 
 /**
  * Utilities for creating SableCC nodes.
@@ -105,8 +107,8 @@ public final class SableCcNodeTestUtil {
         return new ATriple(subject, predicate, object);
     }
 
-    public static PResourceTripleElement createResourceElement(String subjectUri) {
-        return new AResourceResourceTripleElement(new TResource(subjectUri));
+    public static PResourceTripleElement createResourceElement(URI subjectUri) {
+        return new AResourceResourceTripleElement(new TResource(subjectUri.toString()));
     }
 
     public static AVariableObjectTripleElement createVariableElement(String variableName) {

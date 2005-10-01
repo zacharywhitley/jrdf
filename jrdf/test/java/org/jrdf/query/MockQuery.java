@@ -59,7 +59,9 @@
 package org.jrdf.query;
 
 import java.util.List;
-import org.jrdf.graph.NodeTestUtil;
+import java.net.URI;
+
+import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -73,10 +75,10 @@ import org.jrdf.graph.AnyObjectNode;
 public class MockQuery implements Query {
 
     private static final ObjectNode ANY_OBJECT_NODE = AnyObjectNode.ANY_OBJECT_NODE;
-    private String subjectUri;
-    private String predicateUri;
+    private URI subjectUri;
+    private URI predicateUri;
 
-    public MockQuery(String subjectUri, String predicateUri) {
+    public MockQuery(URI subjectUri, URI predicateUri) {
         this.subjectUri = subjectUri;
         this.predicateUri = predicateUri;
     }
@@ -93,11 +95,11 @@ public class MockQuery implements Query {
         return new ConstraintTriple(createDcTitleTriple(subjectUri));
     }
 
-    private Triple createDcTitleTriple(String bookUri) {
+    private Triple createDcTitleTriple(URI bookUri) {
         return createTripleWithWildcardObject(bookUri, predicateUri);
     }
 
-    private Triple createTripleWithWildcardObject(String subjectUri, String predicateUri) {
+    private Triple createTripleWithWildcardObject(URI subjectUri, URI predicateUri) {
         SubjectNode subject = NodeTestUtil.createResource(subjectUri);
         PredicateNode predicate = NodeTestUtil.createResource(predicateUri);
         return NodeTestUtil.createTriple(subject, predicate, ANY_OBJECT_NODE);

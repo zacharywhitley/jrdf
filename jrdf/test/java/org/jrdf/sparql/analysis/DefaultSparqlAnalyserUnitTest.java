@@ -66,7 +66,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.Query;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
 import org.jrdf.sparql.builder.VariableTripleSpec;
 import org.jrdf.sparql.parser.SableCcNodeTestUtil;
@@ -76,6 +76,7 @@ import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.TResource;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 /**
  * Unit test for {@link DefaultSparqlAnalyser}.
@@ -84,12 +85,12 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 
-    private static final String URI_BOOK_1 = SparqlQueryTestUtil.URI_BOOK_1;
-    private static final String URI_DC_TITLE = SparqlQueryTestUtil.URI_DC_TITLE;
+    private static final URI URI_BOOK_1 = TripleTestUtil.URI_BOOK_1;
+    private static final URI URI_DC_TITLE = TripleTestUtil.URI_DC_TITLE;
     private static final String VARIABLE_NAME_TITLE = SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
     private static final Object EXPECTED_PARSED_VARIABLE = AnyObjectNode.ANY_OBJECT_NODE;
     private static final String FIELD_NO_QUERY = "NO_QUERY";
-    private static final String LITERAL_BOOK_TITLE = SparqlQueryTestUtil.LITERAL_BOOK_TITLE;
+    private static final String LITERAL_BOOK_TITLE = TripleTestUtil.LITERAL_BOOK_TITLE;
     private static final String EXPECTED_PARSED_LITERAL = LITERAL_BOOK_TITLE;
     private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE = new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
     private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_LITERAL = new LiteralTripleSpec(URI_BOOK_1, URI_DC_TITLE, LITERAL_BOOK_TITLE);

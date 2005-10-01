@@ -65,7 +65,6 @@ import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.mem.operation.ComparisonImpl;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.MockBadGraph;
@@ -76,7 +75,8 @@ import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.util.test.SparqlQueryTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 /**
  * Unit test for {@link DefaultSparqlConnection}.
@@ -148,7 +148,7 @@ public class DefaultSparqlConnectionUnitTest extends TestCase {
     public void testExecuteQuery() throws InvalidQuerySyntaxException, GraphException {
         SparqlConnection connection = createConnection(GRAPH_GOOD, new MockQueryBuilder());
         Answer answer = connection.executeQuery(QUERY_ITQL);
-        GraphFixture.checkAnswer(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
+        GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
     }
 
     private SparqlConnection createConnection(Graph graph, QueryBuilder builder) {

@@ -59,12 +59,13 @@
 package org.jrdf.graph;
 
 import junit.framework.TestCase;
-import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 
 /**
  * Unit test for {@link org.jrdf.graph.AbstractTriple}.
@@ -96,9 +97,9 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     public void setUp() throws Exception {
         TRIPLE_ALL_NULL_1 = createTriple(null, null, null);
         TRIPLE_ALL_NULL_2 = createTriple(null, null, null);
-        TRIPLE_1 = createTriple(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
-        TRIPLE_2 = createTriple(SparqlQueryTestUtil.URI_BOOK_1, SparqlQueryTestUtil.URI_DC_TITLE);
-        URI_URN_FOO = createResource("urn:foo");
+        TRIPLE_1 = createTriple(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
+        TRIPLE_2 = createTriple(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
+        URI_URN_FOO = createResource(URI.create("urn:foo"));
         TRIPLE_URI_URN_FOO = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
         TRIPLE_NULL_SUBJECT = createTriple(null, URI_URN_FOO, URI_URN_FOO);
         TRIPLE_NULL_PREDICATE = createTriple(URI_URN_FOO, null, URI_URN_FOO);
@@ -106,8 +107,8 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     public abstract Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
-    public abstract Triple createTriple(String subject, String predicate);
-    public abstract URIReference createResource(String uri);
+    public abstract Triple createTriple(URI subject, URI predicate);
+    public abstract URIReference createResource(URI uri);
     public abstract void testClassProperties();
 
     public void testHashCode() {

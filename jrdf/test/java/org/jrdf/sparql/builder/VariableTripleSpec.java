@@ -58,27 +58,29 @@
 
 package org.jrdf.sparql.builder;
 
+import java.net.URI;
+
 /**
  * @author Tom Adams
  * @version $Revision$
  */
 public final class VariableTripleSpec {
 
-    private String subjectUri;
-    private String predicateUri;
+    private URI subjectUri;
+    private URI predicateUri;
     private String variableName;
 
-    public VariableTripleSpec(String subjectUri, String predicateUri, String variableName) {
+    public VariableTripleSpec(URI subjectUri, URI predicateUri, String variableName) {
         this.subjectUri = subjectUri;
         this.predicateUri = predicateUri;
         this.variableName = variableName;
     }
 
-    public String getSubjectUri() {
+    public URI getSubjectUri() {
         return subjectUri;
     }
 
-    public String getPredicateUri() {
+    public URI getPredicateUri() {
         return predicateUri;
     }
 

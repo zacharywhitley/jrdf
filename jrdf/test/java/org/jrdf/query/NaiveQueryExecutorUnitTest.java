@@ -65,7 +65,7 @@ import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.AssertThrows;
-import org.jrdf.sparql.SparqlQueryTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 import org.jrdf.graph.Graph;
 
 /**
@@ -101,6 +101,6 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testExecuteQuery() throws Exception {
         JrdfQueryExecutor executor = new NaiveQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN);
         Answer answer = executor.executeQuery(GraphFixture.createQuery());
-        GraphFixture.checkAnswer(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
+        GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
     }
 }

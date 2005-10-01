@@ -61,6 +61,9 @@ package org.jrdf.graph.mem.operation;
 import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
@@ -70,6 +73,8 @@ import static org.easymock.EasyMock.verify;
 import static org.easymock.EasyMock.expectLastCall;
 
 import java.lang.reflect.Modifier;
+import java.util.Iterator;
+import java.util.Arrays;
 
 /**
  * Tests {@see org.jrdf.graph.mem.operation.ComparisonImpl}.
@@ -111,6 +116,15 @@ public class ComparisonImplUnitTest extends TestCase {
         checkSameSizeGraphsAreIsomorphic(12123L, 12123L, ARE_EQUAL);
     }
 
+//    public void testSameSizeGraphsDifferentContent() throws Exception {
+//        TripleFactory factory;
+//        Triple[] triples1 = new Triple[]{factory.createTriple(uri1, uri1, uri1)};
+//        Iterator<Triple> iterator1 = Arrays.asList(triples1).iterator();
+//        Graph mockGraph1 = createMock(Graph.class);
+//        Graph mockGraph2 = createMock(Graph.class);
+//        Comparison comparison = new ComparisonImpl();
+//    }
+
     private void checkSameSizeGraphsAreIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws GraphException {
         Graph mockGraph1 = createMock(Graph.class);
         Graph mockGraph2 = createMock(Graph.class);
@@ -151,5 +165,4 @@ public class ComparisonImplUnitTest extends TestCase {
         mockGraph2.getNumberOfTriples();
         expectLastCall().andReturn(graphSize2);
     }
-
 }

@@ -59,17 +59,15 @@
 package org.jrdf.query;
 
 import java.net.URI;
-import java.util.Iterator;
 import java.lang.reflect.Modifier;
 
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.Graph;
-import org.jrdf.sparql.SparqlQueryTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 /**
  * Unit test for {@link DefaultQueryExecutor}.
@@ -78,8 +76,8 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
  */
 public class DefaultQueryExecutorUnitTest extends TestCase {
 
-    private static final String URI_BOOK_1 = SparqlQueryTestUtil.URI_BOOK_1;
-    private static final String URI_DC_TITLE = SparqlQueryTestUtil.URI_DC_TITLE;
+    private static final URI URI_BOOK_1 = TripleTestUtil.URI_BOOK_1;
+    private static final URI URI_DC_TITLE = TripleTestUtil.URI_DC_TITLE;
     private static final MockQuery QUERY_BOOK_1_DC_TITLE = new MockQuery(URI_BOOK_1, URI_DC_TITLE);
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
     private static final JrdfQueryExecutor EXECUTOR_BAD = new DefaultQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN);
@@ -124,6 +122,6 @@ public class DefaultQueryExecutorUnitTest extends TestCase {
     public void testExecuteGoodQuery() throws GraphException {
         JrdfQueryExecutor executor = new DefaultQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN);
         Answer answer = executor.executeQuery(GraphFixture.createQuery());
-        GraphFixture.checkAnswer(SparqlQueryTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
+        GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
     }
 }
