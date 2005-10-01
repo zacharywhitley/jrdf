@@ -99,7 +99,6 @@ public class ComparisonImplUnitTest extends TestCase {
 
     public void setUp() throws Exception {
         comparison = new ComparisonImpl();
-        resetGraphMocks();
     }
 
     public void testClassProperties() {
@@ -109,6 +108,7 @@ public class ComparisonImplUnitTest extends TestCase {
     }
 
     public void testIsGroundedEmptyGraph() throws Exception {
+        resetGraphMocks();
         mockGraph1.isEmpty();
         expectLastCall().andReturn(GRAPH_EMPTY);
         replay(mockGraph1);
