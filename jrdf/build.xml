@@ -10,6 +10,14 @@
 
     <target name="gen-src" depends="gen-sparql-parser"/>
 
+    <target name="checkstyle">
+        <checkstyle config="conf/checkstyle.xml">
+            <fileset dir="${prod.src.dir}"/>
+        </checkstyle>
+    </target>
+
+    <target name="compile" depends="checkstyle, gen-src, -compile"/>
+    
     <macrodef name="compile.macro">
         <attribute name="src.dir"/>
         <attribute name="output.dir"/>
@@ -32,7 +40,7 @@
         </sequential>
     </macrodef>
 
-    <target name="compile" depends="checkstyle, gen-src">
+    <target name="-compile">
         <compile.macro src.dir="${gen.src.dir}" classpath.ref="gen.class.path" output.dir="${prod.classes.dir}"
                        code.path="gen.code.path" code.pattern="production.code.pattern"
                        compiler.args="-Xlint:-unchecked,-serial"/>
@@ -42,12 +50,6 @@
                        code.path="test.code.path" code.pattern="test.code.pattern"/>
     </target>
 
-    <target name="checkstyle">
-        <checkstyle config="conf/checkstyle.xml">
-            <fileset dir="${prod.src.dir}"/>
-        </checkstyle>
-    </target>
-
     <target name="dist" depends="compile,-copy-sablecc-resources">
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${project.jar}">
@@ -55,17 +57,19 @@
         </jar>
     </target>
 
-    <target name="javadoc" depends="gen-src">
+    <target name="javadoc" depends="-compile">
         <mkdir dir="${javadoc.dir}"/>
         <javadoc destdir="${javadoc.dir}" author="true" version="true"
-                 additionalparam="-breakiterator" Use="true"
-                 classpathref="production.class.path" source="${java.src.version}"
-                 windowtitle="${project.longname} Framework ${project.version.full}"
-                 doctitle="${project.longname} Framework ${project.version.full}"
                  packagenames="org.jrdf.*"
-                 link="http://java.sun.com/j2se/1.5.0/docs/api">
-            <fileset refid="production.code.fileset"/>
-            <fileset refid="gen.code.fileset"/>
+                 sourcepath="${prod.src.dir}"
+                 classpath="${prod.classes.dir}"
+                 failonerror="true"
+                 additionalparam="-breakiterator" Use="true"
+                 source="${java.src.version}"
+                 windowtitle="${project.longname} Framework ${project.version.full}"
+                 doctitle="${project.longname} Framework ${project.version.full}">
+            <excludepackage name="org.jrdf.sparql.parser.analysis"/>
+            <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
         </javadoc>
     </target>
 
