@@ -156,7 +156,7 @@ public class ComparisonImplUnitTest extends TestCase {
         resetGraphMocks();
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(triples1.length, triples2.length);
-        setUpIteratorCalls(triples1, triples2);
+        setUpFindAndIteratorCalls(triples1, triples2);
         replayAssertAndVerify("Graph 1 size: " + triples1.length + " Graph 2 size: " + triples2.length, areEqual, mockGraph1, mockGraph2);
     }
 
@@ -174,7 +174,7 @@ public class ComparisonImplUnitTest extends TestCase {
         expectLastCall().andReturn(graphSize2);
     }
 
-    private void setUpIteratorCalls(Triple[] triples1, Triple[] triples2) throws GraphException {
+    private void setUpFindAndIteratorCalls(Triple[] triples1, Triple[] triples2) throws GraphException {
         mockGraph1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         expectLastCall().andReturn(createTripleIterator(triples1));
         ClosableIterator<Triple> iterator1 = createTripleIterator(triples1);
