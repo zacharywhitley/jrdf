@@ -58,9 +58,14 @@
 
 package org.jrdf.graph.mem.operation;
 
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.operation.Comparison;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * Default in memory Comparison.
@@ -94,6 +99,19 @@ public final class ComparisonImpl implements Comparison {
     private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {
         long g1Size = g1.getNumberOfTriples();
         long g2Size = g2.getNumberOfTriples();
-        return (g1Size == g2Size);
+        if (g1Size == g2Size) {
+            return compareGraphContents(g1, g2);
+        }
+        return false;
+    }
+
+    private boolean compareGraphContents(Graph g1, Graph g2) throws GraphException {
+        ClosableIterator<Triple> iterator = g1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        while (iterator.hasNext()) {
+            if (!g2.contains(iterator.next())) {
+                return false;
+            }
+        }
+        return true;
     }
 }
