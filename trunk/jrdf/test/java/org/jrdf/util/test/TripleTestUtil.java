@@ -108,16 +108,16 @@ public class TripleTestUtil {
         return new SimpleClosableIterator(iterator);
     }
 
+    public static Triple createDcSubjectTriple(URI bookUri, String literal) {
+        return createTripleWithLiteralObject(bookUri, URI_DC_SUBJECT, literal);
+    }
+
     private static Triple createDcTitleTriple(URI bookUri) {
         return createTripleWithVariableObject(bookUri, URI_DC_TITLE);
     }
 
     private static Triple createDcSubjectTriple(URI bookUri) {
         return createTripleWithVariableObject(bookUri, URI_DC_SUBJECT);
-    }
-
-    private static Triple createDcSubjectTriple(URI bookUri, String literal) {
-        return createTripleWithLiteralObject(bookUri, URI_DC_SUBJECT, literal);
     }
 
     private static Triple createTripleWithVariableObject(URI subjectUri, URI predicateUri) {

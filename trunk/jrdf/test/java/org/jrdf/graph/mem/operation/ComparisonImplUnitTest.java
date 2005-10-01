@@ -58,16 +58,16 @@
 
 package org.jrdf.graph.mem.operation;
 
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.util.test.TripleTestUtil.*;
 import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import org.jrdf.util.ClosableIterator;
 import static org.easymock.EasyMock.createMock;
@@ -88,6 +88,19 @@ public class ComparisonImplUnitTest extends TestCase {
     private static final boolean GRAPH_CONTAINS_NODES = false;
     private static final boolean ARE_UNEQUAL = false;
     private static final boolean ARE_EQUAL = true;
+    private static final Triple TRIPLE_1 = createTripleAllSame(URI_BOOK_1);
+    private static final Triple TRIPLE_2 = createTripleAllSame(URI_BOOK_2);
+    private static final Triple TRIPLE_3 = TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
+    private static final Triple[] TRIPLES_1 = new Triple[]{TRIPLE_1, TRIPLE_2};
+    private static final Triple[] TRIPLES_2 = new Triple[]{TRIPLE_1, TRIPLE_3};
+    private Comparison comparison;
+    private Graph mockGraph1;
+    private Graph mockGraph2;
+
+    public void setUp() throws Exception {
+        comparison = new ComparisonImpl();
+        resetGraphMocks();
+    }
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkClassFinal(ComparisonImpl.class);
@@ -96,13 +109,11 @@ public class ComparisonImplUnitTest extends TestCase {
     }
 
     public void testIsGroundedEmptyGraph() throws Exception {
-        Graph mockGraph = createMock(Graph.class);
-        Comparison comparison = new ComparisonImpl();
-        mockGraph.isEmpty();
+        mockGraph1.isEmpty();
         expectLastCall().andReturn(GRAPH_EMPTY);
-        replay(mockGraph);
-        assertTrue(comparison.isGrounded(mockGraph));
-        verify(mockGraph);
+        replay(mockGraph1);
+        assertTrue(comparison.isGrounded(mockGraph1));
+        verify(mockGraph1);
     }
 
     public void testEmptyGraphEquality() throws Exception {
@@ -111,83 +122,63 @@ public class ComparisonImplUnitTest extends TestCase {
         checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_CONTAINS_NODES, ARE_UNEQUAL);
     }
 
-    public void testSameSizedGraphsAreIsomorphic() throws Exception {
-        checkDifferentSizeGraphsAreIsomorphic(1L, 123L, ARE_UNEQUAL);
-        checkDifferentSizeGraphsAreIsomorphic(12L, 1L, ARE_UNEQUAL);
+    public void testDifferentSizedGraphsAreNotIsomorphic() throws Exception {
+        checkDifferentSizeGraphsAreNotIsomorphic(1L, 123L, ARE_UNEQUAL);
+        checkDifferentSizeGraphsAreNotIsomorphic(21L, 1L, ARE_UNEQUAL);
     }
 
     public void testGraphContent() throws Exception {
-        Triple tripleAllSame1 = TripleTestUtil.createTripleAllSame(TripleTestUtil.URI_BOOK_1);
-        Triple tripleAllSame2 = TripleTestUtil.createTripleAllSame(TripleTestUtil.URI_BOOK_2);
-        Triple tripleAllSame3 = TripleTestUtil.createTripleAllSame(TripleTestUtil.URI_BOOK_3);
-        Triple[] triples1 = new Triple[]{tripleAllSame1, tripleAllSame2};
-        Triple[] triples2 = new Triple[]{tripleAllSame2, tripleAllSame3};
-        checkGraphContent(triples1, triples2, ARE_UNEQUAL);
-        checkGraphContent(triples1, triples1, ARE_EQUAL);
-        checkGraphContent(triples2, triples2, ARE_EQUAL);
+        checkGraphContent(TRIPLES_1, TRIPLES_2, ARE_UNEQUAL);
+        checkGraphContent(TRIPLES_2, TRIPLES_1, ARE_UNEQUAL);
+        checkGraphContent(TRIPLES_1, TRIPLES_1, ARE_EQUAL);
+        checkGraphContent(TRIPLES_2, TRIPLES_2, ARE_EQUAL);
     }
 
-    private void checkGraphContent(Triple[] triples1, Triple[] triples2, boolean areEqual) throws GraphException {
-        Graph mockGraph1 = createMock(Graph.class);
-        Graph mockGraph2 = createMock(Graph.class);
-        Comparison comparison = new ComparisonImpl();
-        setUpEmptyCalls(mockGraph1, GRAPH_CONTAINS_NODES, mockGraph2,  GRAPH_CONTAINS_NODES);
-        setUpNumberOfTripleCalls(mockGraph1, triples1.length, mockGraph2, triples2.length);
-        setUpIteratorCalls(mockGraph1, mockGraph2, triples1, triples2);
-        replay(mockGraph1);
-        replay(mockGraph2);
-        assertEquals("Graph 1 size: " + triples1.length + " Graph 2 size: " + triples2.length, areEqual,
-                comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
-        verify(mockGraph1);
-        verify(mockGraph2);
+    private void resetGraphMocks() {
+        mockGraph1 = createMock(Graph.class);
+        mockGraph2 = createMock(Graph.class);
     }
 
-    private void checkDifferentSizeGraphsAreIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws GraphException {
-        Graph mockGraph1 = createMock(Graph.class);
-        Graph mockGraph2 = createMock(Graph.class);
-        Comparison comparison = new ComparisonImpl();
-        setUpEmptyCalls(mockGraph1, GRAPH_CONTAINS_NODES, mockGraph2, GRAPH_CONTAINS_NODES);
-        setUpNumberOfTripleCalls(mockGraph1, graph1Size, mockGraph2, graph2Size);
-        replay(mockGraph1);
-        replay(mockGraph2);
-        assertEquals("Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size, areEqual,
-                comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
-        verify(mockGraph1);
-        verify(mockGraph2);
+    private void checkEmptyGroundedGraphs(boolean graph1Empty, boolean graph2Empty, boolean areEqual) throws Exception {
+        resetGraphMocks();
+        setUpEmptyCalls(graph1Empty, graph2Empty);
+        replayAssertAndVerify(mockGraph1, mockGraph2, areEqual, "Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty);
     }
 
-    private void checkEmptyGroundedGraphs(boolean graph1Empty, boolean graph2Empty, boolean areEqual) throws GraphException {
-        Graph mockGraph1 = createMock(Graph.class);
-        Graph mockGraph2 = createMock(Graph.class);
-        Comparison comparison = new ComparisonImpl();
-        setUpEmptyCalls(mockGraph1, graph1Empty, mockGraph2, graph2Empty);
-        replay(mockGraph1);
-        replay(mockGraph2);
-        assertEquals("Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty, areEqual,
-                comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
-        verify(mockGraph1);
-        verify(mockGraph2);
+    private void checkDifferentSizeGraphsAreNotIsomorphic(long graph1Size, long graph2Size, boolean areEqual) throws Exception {
+        resetGraphMocks();
+        setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
+        setUpNumberOfTripleCalls(graph1Size, graph2Size);
+        replayAssertAndVerify(mockGraph1, mockGraph2, areEqual, "Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size);
     }
 
-    private void setUpEmptyCalls(Graph mockGraph1, boolean graph1Empty, Graph mockGraph2, boolean graph2Empty) throws GraphException {
+    private void checkGraphContent(Triple[] triples1, Triple[] triples2, boolean areEqual) throws Exception {
+        resetGraphMocks();
+        setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
+        setUpNumberOfTripleCalls(triples1.length, triples2.length);
+        setUpIteratorCalls(triples1, triples2);
+        replayAssertAndVerify(mockGraph1, mockGraph2, areEqual, "Graph 1 size: " + triples1.length + " Graph 2 size: " + triples2.length);
+    }
+
+    private void setUpEmptyCalls(boolean graph1Empty, boolean graph2Empty) throws Exception {
         mockGraph1.isEmpty();
         expectLastCall().andReturn(graph1Empty);
         mockGraph2.isEmpty();
         expectLastCall().andReturn(graph2Empty);
     }
 
-    private void setUpNumberOfTripleCalls(Graph mockGraph1, long graph1Size, Graph mockGraph2, long graphSize2) throws GraphException {
+    private void setUpNumberOfTripleCalls(long graph1Size, long graphSize2) throws Exception {
         mockGraph1.getNumberOfTriples();
         expectLastCall().andReturn(graph1Size);
         mockGraph2.getNumberOfTriples();
         expectLastCall().andReturn(graphSize2);
     }
 
-    private void setUpIteratorCalls(Graph mockGraph1, Graph mockGraph2, Triple[] triples1, Triple[] triples2) throws GraphException {
-        mockGraph1.find(AnySubjectNode.ANY_SUBJECT_NODE, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
-        expectLastCall().andReturn(TripleTestUtil.createTripleIterator(triples1));
-        ClosableIterator<Triple> iterator1 = TripleTestUtil.createTripleIterator(triples1);
-        ClosableIterator<Triple> iterator2 = TripleTestUtil.createTripleIterator(triples2);
+    private void setUpIteratorCalls(Triple[] triples1, Triple[] triples2) throws GraphException {
+        mockGraph1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        expectLastCall().andReturn(createTripleIterator(triples1));
+        ClosableIterator<Triple> iterator1 = createTripleIterator(triples1);
+        ClosableIterator<Triple> iterator2 = createTripleIterator(triples2);
         while (iterator1.hasNext()) {
             Triple triple1 = iterator1.next();
             Triple triple2 = iterator2.next();
@@ -196,5 +187,13 @@ public class ComparisonImplUnitTest extends TestCase {
             expectLastCall().andReturn(b);
             if (!b) break;
         }
+    }
+
+    private void replayAssertAndVerify(Graph mockGraph1, Graph mockGraph2, boolean areEqual, String message) throws GraphException {
+        replay(mockGraph1);
+        replay(mockGraph2);
+        assertEquals(message, areEqual, comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
+        verify(mockGraph1);
+        verify(mockGraph2);
     }
 }
