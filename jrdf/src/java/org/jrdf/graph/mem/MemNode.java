@@ -58,8 +58,9 @@
 
 package org.jrdf.graph.mem;
 
-import java.io.Serializable;
 import org.jrdf.graph.Node;
+
+import java.io.Serializable;
 
 /**
  * Memory node.  This is an additional interface for nodes so they can be accessed by id.

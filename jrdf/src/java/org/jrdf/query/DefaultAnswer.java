@@ -58,10 +58,11 @@
 
 package org.jrdf.query;
 
-import java.io.Serializable;
-import java.util.Iterator;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  * Default implementation of {@link Answer}.

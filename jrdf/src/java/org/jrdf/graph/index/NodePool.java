@@ -58,8 +58,8 @@
 
 package org.jrdf.graph.index;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
 
 /**
  * Maps between the Long identifier and a Node (globalized value) or from a String to a Long (local value).

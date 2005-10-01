@@ -58,10 +58,8 @@
 
 package org.jrdf.graph.index.operation;
 
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.operation.*;
 
 /**
  * The set union of two graphs - all of the items in the first graph are

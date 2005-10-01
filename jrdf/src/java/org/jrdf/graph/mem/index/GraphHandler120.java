@@ -61,10 +61,10 @@ package org.jrdf.graph.mem.index;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.index.NodePool;
-import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.AbstractGraphHandler;
+import org.jrdf.graph.index.GraphHandler;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.NodePool;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -240,8 +240,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    public void addCollection(SubjectNode firstNode,
-            Collection<ObjectNode> collection) throws TripleFactoryException {
+    public void addCollection(SubjectNode firstNode, Collection<ObjectNode> collection) throws TripleFactoryException {
         try {
             // Constants.
             PredicateNode rdfFirst = elementFactory.createResource(RDF.FIRST);
@@ -249,35 +248,39 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             ObjectNode rdfNil = elementFactory.createResource(RDF.NIL);
 
             // Insert statements from the Colletion using the first given node.
-            SubjectNode subject = firstNode;
-
-            // Iterate through all elements in the Collection.
-            Iterator<ObjectNode> iter = collection.iterator();
-            while (iter.hasNext()) {
-
-                // Get the next object and create the new FIRST statement.
-                ObjectNode object = iter.next();
-                graph.add(subject, rdfFirst, object);
-
-                // Check if there are any more elements in the Collection.
-                if (iter.hasNext()) {
-
-                    // Create a new blank node, link the existing subject to it using
-                    // the REST predicate.
-                    ObjectNode newSubject = elementFactory.createResource();
-                    graph.add(subject, rdfRest, newSubject);
-                    subject = (SubjectNode) newSubject;
-                } else {
-
-                    // If we are at the end of the list link the existing subject to NIL
-                    // using the REST predicate.
-                    graph.add(subject, rdfRest, rdfNil);
-                }
-            }
+            addElementsToCollection(collection, firstNode, rdfFirst, rdfRest, rdfNil);
         } catch (GraphElementFactoryException e) {
             throw new TripleFactoryException(e);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
+        }
+    }
+
+    private void addElementsToCollection(Collection<ObjectNode> collection, SubjectNode subject,
+            PredicateNode rdfFirst, PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException,
+            GraphElementFactoryException {
+        // Iterate through all elements in the Collection.
+        Iterator<ObjectNode> iter = collection.iterator();
+        while (iter.hasNext()) {
+
+            // Get the next object and create the new FIRST statement.
+            ObjectNode object = iter.next();
+            graph.add(subject, rdfFirst, object);
+
+            // Check if there are any more elements in the Collection.
+            if (iter.hasNext()) {
+
+                // Create a new blank node, link the existing subject to it using
+                // the REST predicate.
+                ObjectNode newSubject = elementFactory.createResource();
+                graph.add(subject, rdfRest, newSubject);
+                subject = (SubjectNode) newSubject;
+            } else {
+
+                // If we are at the end of the list link the existing subject to NIL
+                // using the REST predicate.
+                graph.add(subject, rdfRest, rdfNil);
+            }
         }
     }
 }

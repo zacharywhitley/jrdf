@@ -69,11 +69,11 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.mem.index.GraphHandler012;
 import org.jrdf.graph.mem.index.GraphHandler120;
 import org.jrdf.graph.mem.index.GraphHandler201;
 import org.jrdf.graph.mem.index.LongIndexMem;
-import org.jrdf.graph.index.LongIndex;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;

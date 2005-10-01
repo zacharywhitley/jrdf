@@ -58,15 +58,15 @@
 
 package org.jrdf.graph.mem.index.operation;
 
-import org.jrdf.graph.index.operation.Union;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.operation.Union;
 import org.jrdf.graph.mem.index.LongIndexMem;
 import static org.jrdf.graph.mem.index.operation.BasicOperations.copyEntriesToIndex;
-import org.jrdf.graph.GraphException;
 
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 /**

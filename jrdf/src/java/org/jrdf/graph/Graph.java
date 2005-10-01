@@ -58,9 +58,10 @@
 
 package org.jrdf.graph;
 
+import org.jrdf.util.ClosableIterator;
+
 import java.io.Serializable;
 import java.util.Iterator;
-import org.jrdf.util.ClosableIterator;
 
 /**
  * An RDF Graph. As defined by the
