@@ -58,12 +58,12 @@
 
 package org.jrdf.graph.mem.index.operation;
 
-import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.index.LongIndex;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 
 /**
@@ -80,13 +80,23 @@ public class BasicOperations {
             Long subject = entry.getKey();
             Map<Long, Set<Long>> predicateMap = entry.getValue();
             Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries = predicateMap.entrySet();
-            for (Map.Entry<Long, Set<Long>> predicateObjectSet : predicateObjectEntries) {
-                Long predicate = predicateObjectSet.getKey();
-                Set<Long> objectSet = predicateObjectSet.getValue();
-                for (Long object : objectSet) {
-                    newIndex.add(subject, predicate, object);
-                }
-            }
+            addPredicates(predicateObjectEntries, newIndex, subject);
+        }
+    }
+
+    private static void addPredicates(Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries, LongIndex newIndex,
+            Long subject) throws GraphException {
+        for (Map.Entry<Long, Set<Long>> predicateObjectSet : predicateObjectEntries) {
+            Long predicate = predicateObjectSet.getKey();
+            Set<Long> objectSet = predicateObjectSet.getValue();
+            addObjects(objectSet, newIndex, subject, predicate);
+        }
+    }
+
+    private static void addObjects(Set<Long> objectSet, LongIndex newIndex, Long subject, Long predicate) throws
+            GraphException {
+        for (Long object : objectSet) {
+            newIndex.add(subject, predicate, object);
         }
     }
 
@@ -96,19 +106,28 @@ public class BasicOperations {
             Map.Entry<Long, Map<Long, Set<Long>>> entry = subjectIterator.next();
             Long subject = entry.getKey();
             Map<Long, Set<Long>> newIndexPredicateMap = newIndex.getSubIndex(subject);
-            if (newIndexPredicateMap != null) {
-                Map<Long, Set<Long>> predicateMap = entry.getValue();
-                Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries = predicateMap.entrySet();
-                for (Map.Entry<Long, Set<Long>> predicateObjectSet : predicateObjectEntries) {
-                    Long predicate = predicateObjectSet.getKey();
-                    Set<Long> newIndexObjectSet = newIndexPredicateMap.get(predicate);
-                    if (newIndexObjectSet != null) {
-                        Set<Long> objectSet = predicateObjectSet.getValue();
-                        for (Long object : objectSet) {
-                            newIndexObjectSet.remove(object);
-                        }
-                    }
-                }
+            removePredicates(newIndexPredicateMap, entry);
+        }
+    }
+
+    private static void removePredicates(Map<Long, Set<Long>> newIndexPredicateMap, Map.Entry<Long, Map<Long,
+            Set<Long>>> entry) {
+        if (newIndexPredicateMap != null) {
+            Map<Long, Set<Long>> predicateMap = entry.getValue();
+            Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries = predicateMap.entrySet();
+            for (Map.Entry<Long, Set<Long>> predicateObjectSet : predicateObjectEntries) {
+                Long predicate = predicateObjectSet.getKey();
+                Set<Long> newIndexObjectSet = newIndexPredicateMap.get(predicate);
+                removeObjects(newIndexObjectSet, predicateObjectSet);
+            }
+        }
+    }
+
+    private static void removeObjects(Set<Long> newIndexObjectSet, Map.Entry<Long, Set<Long>> predicateObjectSet) {
+        if (newIndexObjectSet != null) {
+            Set<Long> objectSet = predicateObjectSet.getValue();
+            for (Long object : objectSet) {
+                newIndexObjectSet.remove(object);
             }
         }
     }

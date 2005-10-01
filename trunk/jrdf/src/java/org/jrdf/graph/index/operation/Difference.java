@@ -58,10 +58,8 @@
 
 package org.jrdf.graph.index.operation;
 
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.operation.*;
 
 /**
  * The set difference between two graphs - all the elements that belong in the first graph that do not belong in the

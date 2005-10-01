@@ -5,6 +5,11 @@
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
+    <suppress checks="JavaNCSS" files="EscapeUtil.java"/>
+    <suppress checks="JavaNCSS" files="RDF.java"/>
+    <suppress checks="JavaNCSS" files="RDFS.java"/>
+    <suppress checks="JavaNCSS" files="JrdfExample.java"/>
+    <suppress checks="JavaNCSS" files="RdfXmlParserExample.java"/>
 
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>

@@ -1,10 +1,11 @@
 package org.jrdf.connection;
 
-import java.net.URI;
 import org.jrdf.graph.Graph;
 import org.jrdf.sparql.DefaultSparqlConnection;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.net.URI;
 
 /**
  * Returns queriable connections to a graph.

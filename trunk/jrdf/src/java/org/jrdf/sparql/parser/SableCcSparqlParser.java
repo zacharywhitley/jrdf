@@ -58,9 +58,6 @@
 
 package org.jrdf.sparql.parser;
 
-import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.StringReader;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
@@ -71,6 +68,10 @@ import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.io.IOException;
+import java.io.PushbackReader;
+import java.io.StringReader;
 
 /**
  * SableCC implementation of a {@link SparqlParser}.

@@ -1,7 +1,8 @@
 package org.jrdf.query.relation.constants;
 
-import java.io.ObjectStreamException;
 import org.jrdf.graph.Node;
+
+import java.io.ObjectStreamException;
 
 /**
  * A class which simply contains the True Node constant.

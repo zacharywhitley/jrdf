@@ -59,11 +59,11 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.GraphHandler;

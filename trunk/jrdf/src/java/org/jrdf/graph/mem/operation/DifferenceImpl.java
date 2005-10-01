@@ -58,8 +58,8 @@
 
 package org.jrdf.graph.mem.operation;
 
-import org.jrdf.graph.operation.Difference;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.operation.Difference;
 
 
 /**

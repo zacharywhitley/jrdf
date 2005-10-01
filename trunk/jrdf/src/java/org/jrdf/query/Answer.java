@@ -58,8 +58,9 @@
 
 package org.jrdf.query;
 
-import java.util.Iterator;
 import org.jrdf.graph.Triple;
+
+import java.util.Iterator;
 
 /**
  * An answer to a query.
