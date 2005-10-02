@@ -73,6 +73,8 @@ import java.util.Set;
  * @version $Revision$
  */
 public class BasicOperations {
+    // TODO AN Refactor and bring in the AbstractGraphHandler operation.
+
     public static void copyEntriesToIndex(LongIndex index1, LongIndex newIndex) throws GraphException {
         Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> subjectIterator = index1.iterator();
         while (subjectIterator.hasNext()) {
