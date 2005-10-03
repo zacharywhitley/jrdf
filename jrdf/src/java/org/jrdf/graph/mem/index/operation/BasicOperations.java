@@ -73,63 +73,147 @@ import java.util.Set;
  * @version $Revision$
  */
 public class BasicOperations {
-    // TODO AN Refactor and bring in the AbstractGraphHandler operation.
 
-    public static void copyEntriesToIndex(LongIndex index1, LongIndex newIndex) throws GraphException {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> subjectIterator = index1.iterator();
-        while (subjectIterator.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> entry = subjectIterator.next();
-            Long subject = entry.getKey();
-            Map<Long, Set<Long>> predicateMap = entry.getValue();
-            Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries = predicateMap.entrySet();
-            addPredicates(predicateObjectEntries, newIndex, subject);
-        }
+    // TODO AN Finish making things small and common - then test drive.
+
+    public static void copyEntriesToIndex(LongIndex existingIndex, LongIndex newIndex) throws GraphException {
+        DoTripleStuff doCopyTripleStuff = new DoCopyTripleStuff(newIndex);
+        goOverIndex(existingIndex, doCopyTripleStuff);
     }
 
-    private static void addPredicates(Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries, LongIndex newIndex,
-            Long subject) throws GraphException {
-        for (Map.Entry<Long, Set<Long>> predicateObjectSet : predicateObjectEntries) {
-            Long predicate = predicateObjectSet.getKey();
-            Set<Long> objectSet = predicateObjectSet.getValue();
-            addObjects(objectSet, newIndex, subject, predicate);
-        }
-    }
-
-    private static void addObjects(Set<Long> objectSet, LongIndex newIndex, Long subject, Long predicate) throws
+    public static void reconstruct(LongIndex existingIndex, LongIndex firstNewIndex, LongIndex secondNewIndex) throws
             GraphException {
-        for (Long object : objectSet) {
-            newIndex.add(subject, predicate, object);
-        }
+        DoTripleStuff doReconstructTripleStuff = new DoReconstructTripleStuff(firstNewIndex, secondNewIndex);
+        goOverIndex(existingIndex, doReconstructTripleStuff);
     }
 
-    public static void removeEntriesFromIndex(LongIndex index1, LongIndex newIndex) {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> subjectIterator = index1.iterator();
-        while (subjectIterator.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> entry = subjectIterator.next();
-            Long subject = entry.getKey();
-            Map<Long, Set<Long>> newIndexPredicateMap = newIndex.getSubIndex(subject);
-            removePredicates(newIndexPredicateMap, entry);
-        }
-    }
-
-    private static void removePredicates(Map<Long, Set<Long>> newIndexPredicateMap, Map.Entry<Long, Map<Long,
-            Set<Long>>> entry) {
-        if (newIndexPredicateMap != null) {
-            Map<Long, Set<Long>> predicateMap = entry.getValue();
-            Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries = predicateMap.entrySet();
-            for (Map.Entry<Long, Set<Long>> predicateObjectSet : predicateObjectEntries) {
-                Long predicate = predicateObjectSet.getKey();
-                Set<Long> newIndexObjectSet = newIndexPredicateMap.get(predicate);
-                removeObjects(newIndexObjectSet, predicateObjectSet);
+    private static void goOverIndex(LongIndex existingIndex, DoTripleStuff doTripleStuff) throws GraphException {
+        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
+        while (firstEntries.hasNext()) {
+            Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
+            Long first = firstEntry.getKey();
+            for (Map.Entry<Long, Set<Long>> secondEntry : firstEntry.getValue().entrySet()) {
+                Long second = secondEntry.getKey();
+                for (Long third : secondEntry.getValue()) {
+                    doTripleStuff.doStuff(first, second, third);
+                }
             }
         }
     }
 
-    private static void removeObjects(Set<Long> newIndexObjectSet, Map.Entry<Long, Set<Long>> predicateObjectSet) {
-        if (newIndexObjectSet != null) {
-            Set<Long> objectSet = predicateObjectSet.getValue();
-            for (Long object : objectSet) {
-                newIndexObjectSet.remove(object);
+    public static void removeEntriesFromIndex(LongIndex existingIndex, LongIndex newIndex) throws GraphException {
+        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = existingIndex.iterator();
+        while (firstEntries.hasNext()) {
+            Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
+            Long first = firstEntry.getKey();
+
+            // Do stuff
+            Map<Long, Set<Long>> newSecondMap = newIndex.getSubIndex(first);
+            if (newSecondMap != null) {
+
+                for (Map.Entry<Long, Set<Long>> secondEntry : firstEntry.getValue().entrySet()) {
+                    Long second = secondEntry.getKey();
+
+                    // Do stuff
+                    Set<Long> newThirdSet = newSecondMap.get(second);
+                    if (newThirdSet != null) {
+
+                        // Common
+                        DoTripleStuff doRemoveTripleStuff = new DoRemoveTripleStuff(newThirdSet);
+                        for (Long third : secondEntry.getValue()) {
+                            doRemoveTripleStuff.doStuff(first, second, third);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static void performIntersection(LongIndex firstExistingIndex, LongIndex secondExistingIndex,
+            LongIndex newIndex) throws GraphException {
+        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = firstExistingIndex.iterator();
+        while (firstEntries.hasNext()) {
+            Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
+            Long first = firstEntry.getKey();
+
+            // Do stuff
+            Map<Long, Set<Long>> existingSecondIndexEntryMap = secondExistingIndex.getSubIndex(first);
+            if (existingSecondIndexEntryMap != null) {
+
+                for (Map.Entry<Long, Set<Long>> secondEntry : firstEntry.getValue().entrySet()) {
+                    Long second = secondEntry.getKey();
+
+                    // Do stuff
+                    Set<Long> existingSecondIndexLongSet = existingSecondIndexEntryMap.get(second);
+                    if (existingSecondIndexLongSet != null) {
+
+                        // Common
+                        DoTripleStuff doIntersectionTripleStuff = new DoIntersectionTripleStuff(newIndex,
+                                existingSecondIndexLongSet);
+                        for (Long third : secondEntry.getValue()) {
+                            doIntersectionTripleStuff.doStuff(first, second, third);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    interface DoTripleStuff {
+        void doStuff(Long first, Long second, Long third) throws GraphException;
+    }
+
+    public static class DoCopyTripleStuff implements DoTripleStuff {
+        private LongIndex newIndex;
+
+        public DoCopyTripleStuff(LongIndex newIndex) {
+            this.newIndex = newIndex;
+        }
+
+        public void doStuff(Long first, Long second, Long third) throws GraphException {
+            newIndex.add(first, second, third);
+        }
+    }
+
+    public static class DoReconstructTripleStuff implements DoTripleStuff {
+        private LongIndex newIndex1;
+        private LongIndex newIndex2;
+
+        public DoReconstructTripleStuff(LongIndex newIndex1, LongIndex newIndex2) {
+            this.newIndex1 = newIndex1;
+            this.newIndex2 = newIndex2;
+        }
+
+        public void doStuff(Long first, Long second, Long third) throws GraphException {
+            newIndex1.add(second, third, first);
+            newIndex2.add(third, first, second);
+        }
+    }
+
+    public static class DoRemoveTripleStuff implements DoTripleStuff {
+        private Set<Long> longSet;
+
+        public DoRemoveTripleStuff(Set<Long> longSet) {
+            this.longSet = longSet;
+        }
+
+        public void doStuff(Long first, Long second, Long third) throws GraphException {
+            longSet.remove(third);
+        }
+    }
+
+    public static class DoIntersectionTripleStuff implements DoTripleStuff {
+        private LongIndex newIndex;
+        private Set<Long> longSet;
+
+        public DoIntersectionTripleStuff(LongIndex newIndex, Set<Long> longSet) {
+            this.newIndex = newIndex;
+            this.longSet = longSet;
+        }
+
+        public void doStuff(Long first, Long second, Long third) throws GraphException {
+            if (longSet.contains(third)) {
+                newIndex.add(first, second, third);
             }
         }
     }

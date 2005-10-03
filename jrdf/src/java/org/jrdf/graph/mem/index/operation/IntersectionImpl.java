@@ -64,7 +64,6 @@ import org.jrdf.graph.index.operation.Intersection;
 import org.jrdf.graph.mem.index.LongIndexMem;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -79,43 +78,7 @@ public class IntersectionImpl implements Intersection {
     public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
         HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
         LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
-        performIntersection(index1, index2, newIndex);
+        BasicOperations.performIntersection(index1, index2, newIndex);
         return newIndex;
-    }
-
-    public static void performIntersection(LongIndex index1, LongIndex longIndex2, LongIndex newIndex) throws
-            GraphException {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> subjectIterator = index1.iterator();
-        while (subjectIterator.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> entry = subjectIterator.next();
-            Long subject = entry.getKey();
-            Map<Long, Set<Long>> newIndexPredicateMap = longIndex2.getSubIndex(subject);
-            intersectPredicates(newIndexPredicateMap, entry, newIndex, subject);
-        }
-    }
-
-    private static void intersectPredicates(Map<Long, Set<Long>> newIndexPredicateMap, Map.Entry<Long, Map<Long,
-            Set<Long>>> entry, LongIndex newIndex, Long subject) throws GraphException {
-        if (newIndexPredicateMap != null) {
-            Map<Long, Set<Long>> predicateMap = entry.getValue();
-            Set<Map.Entry<Long, Set<Long>>> predicateObjectEntries = predicateMap.entrySet();
-            for (Map.Entry<Long, Set<Long>> predicateObjectSet : predicateObjectEntries) {
-                Long predicate = predicateObjectSet.getKey();
-                Set<Long> newIndexObjectSet = newIndexPredicateMap.get(predicate);
-                intersectObjects(newIndexObjectSet, predicateObjectSet, newIndex, subject, predicate);
-            }
-        }
-    }
-
-    private static void intersectObjects(Set<Long> newIndexObjectSet, Map.Entry<Long, Set<Long>> predicateObjectSet,
-            LongIndex newIndex, Long subject, Long predicate) throws GraphException {
-        if (newIndexObjectSet != null) {
-            Set<Long> objectSet = predicateObjectSet.getValue();
-            for (Long object : objectSet) {
-                if (newIndexObjectSet.contains(object)) {
-                    newIndex.add(subject, predicate, object);
-                }
-            }
-        }
     }
 }
