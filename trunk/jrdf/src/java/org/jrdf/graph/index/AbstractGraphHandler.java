@@ -59,6 +59,7 @@
 package org.jrdf.graph.index;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.mem.index.operation.BasicOperations;
 
 import java.io.PrintStream;
 import java.util.Iterator;
@@ -88,38 +89,16 @@ public abstract class AbstractGraphHandler implements GraphHandler {
      * @param thirdIndex  the third index.
      * @throws org.jrdf.graph.GraphException if the adds fail.
      */
-    public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex,
-            LongIndex thirdIndex) throws GraphException {
-        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = firstIndex.iterator();
-        while (firstEntries.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
-            Long first = firstEntry.getKey();
-
-            // now iterate over the second column
-            Iterator<Map.Entry<Long, Set<Long>>> secondEntries =
-                    firstEntry.getValue().entrySet().iterator();
-            while (secondEntries.hasNext()) {
-                Map.Entry<Long, Set<Long>> secondEntry = secondEntries.next();
-                Long second = secondEntry.getKey();
-
-                // now iterate over the third column
-                Iterator<Long> thirdValues = secondEntry.getValue().iterator();
-                while (thirdValues.hasNext()) {
-                    Long third = thirdValues.next();
-
-                    // now add the row to the other two indexes
-                    secondIndex.add(second, third, first);
-                    thirdIndex.add(third, first, second);
-                }
-            }
-        }
+    public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws
+            GraphException {
+        BasicOperations.reconstruct(firstIndex, secondIndex, thirdIndex);
     }
 
     /**
      * Debug method to see the current state of the first index.
      */
     public void dumpIndex(PrintStream out) {
-        // TODO Now this is smaller test drive.
+        // TODO AN Now this is smaller test drive.
         Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator = getEntries();
         while (iterator.hasNext()) {
             printSubjects(out, iterator.next());
