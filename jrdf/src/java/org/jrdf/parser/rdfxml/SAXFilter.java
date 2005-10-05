@@ -1,5 +1,5 @@
 /*  Sesame - Storage and Querying architecture for RDF and RDF Schema
- *  Copyright (C) 2001-2004 Aduna
+ *  Copyright (C) 2001-2005 Aduna
  *  Copyright (C) 2005 Andrew Newman - Conversion to JRDF.
  *
  *  This library is free software; you can redistribute it and/or
@@ -93,7 +93,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     /**
      * The document's URI.
      */
-    private String documentURI;
+    private URI documentURI;
 
     /**
      * Flag indicating whether the parser parses stand-alone RDF
@@ -200,7 +200,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         unknownPrefixesInXmlLiteral.clear();
     }
 
-    public void setDocumentURI(String documentURI) throws SAXException {
+    public void setDocumentURI(String documentURI) {
         this.documentURI = createBaseURI(documentURI);
     }
 
@@ -288,15 +288,11 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                     String attQName = attributes.getQName(i);
 
                     if ("xml:base".equals(attQName)) {
-                        elInfo.setBaseURI(createBaseURI(attributes.getValue(i)));
+                        elInfo.setBaseURI(attributes.getValue(i));
                     } else if ("xml:lang".equals(attQName)) {
                         elInfo.setXmlLang(attributes.getValue(i));
                     }
                 }
-
-                // If xml:base or xml:lang attribute was not
-                // present, inherit it from context.
-                inheritXmlAttributes(elInfo);
 
                 elInfoStack.push(elInfo);
 
@@ -309,10 +305,6 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             } else {
                 // We're parsing RDF elements.
                 checkAndCopyAttributes(attributes, elInfo);
-
-                // If xml:base or xml:lang attribute was not
-                // present, inherit it from context.
-                inheritXmlAttributes(elInfo);
 
                 // Don't report the new element to the RDF parser just yet.
                 deferredElement = elInfo;
@@ -331,11 +323,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         elInfoStack.push(deferredElement);
         rdfContextStackHeight++;
 
-        try {
-            rdfParser.setBaseURI(new URI(deferredElement.getBaseURI()));
-        } catch (URISyntaxException ex) {
-            throw new SAXException("Bad URI", ex);
-        }
+        rdfParser.setBaseURI(deferredElement.getBaseURI());
         rdfParser.setXmlLang(deferredElement.getXmlLang());
 
         rdfParser.startElement(deferredElement.getNamespaceURI(), deferredElement.getLocalName(),
@@ -405,11 +393,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         // Check for any deferred start elements
         if (null != deferredElement) {
             // Start element still deferred, this is an empty element
-            try {
-                rdfParser.setBaseURI(new URI(deferredElement.getBaseURI()));
-            } catch (URISyntaxException ex) {
-                throw new SAXException("Bad URI", ex);
-            }
+            rdfParser.setBaseURI(deferredElement.getBaseURI());
             rdfParser.setXmlLang(deferredElement.getXmlLang());
 
             rdfParser.emptyElement(deferredElement.getNamespaceURI(), deferredElement.getLocalName(),
@@ -485,7 +469,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 if ("xml:lang".equals(qName)) {
                     elInfo.setXmlLang(value);
                 } else if ("xml:base".equals(qName)) {
-                    elInfo.setBaseURI(createBaseURI(value));
+                    elInfo.setBaseURI(value);
                 }
             } else {
                 String namespace = attributes.getURI(i);
@@ -519,36 +503,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         unknownPrefixesInXmlLiteral.clear();
     }
 
-    private String createBaseURI(String uriString) throws SAXException {
-        try {
-            URI tmpURI = new URI(uriString);
-            tmpURI.normalize();
-            return tmpURI.toString();
-        } catch (URISyntaxException use) {
-            throw new SAXException("Base URI", use);
-        }
-    }
-
-    private void inheritXmlAttributes(ElementInfo elInfo) {
-        // If BASE_URI has not been set, inherit it from the context.
-        if (null == elInfo.getBaseURI()) {
-            ElementInfo parent = peekStack();
-            if (null == parent) {
-                elInfo.setBaseURI(documentURI.toString());
-            } else {
-                elInfo.setBaseURI(parent.getBaseURI());
-            }
-        }
-
-        // If xml:lang attribute has not been set, inherit it from the context.
-        if (null == elInfo.getXmlLang()) {
-            ElementInfo parent = peekStack();
-            if (null == parent) {
-                elInfo.setXmlLang("");
-            } else {
-                elInfo.setXmlLang(parent.getXmlLang());
-            }
-        }
+    private URI createBaseURI(String uriString) {
+        return URI.create(uriString).normalize();
     }
 
     /**
@@ -557,7 +513,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
      */
     private void appendStartTag(String qName, Attributes attributes) throws SAXException {
         // Write start of start tag
-        charBuf.append("<" + qName);
+        charBuf.append("<").append(qName);
 
         // Write any new namespace prefix definitions
         Iterator<String> prefixes = newNamespaceMappings.keySet().iterator();
@@ -593,7 +549,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
      * parsing of an XML Literal.
      */
     private void appendEndTag(String qName) {
-        charBuf.append("</" + qName + ">");
+        charBuf.append("</").append(qName).append(">");
     }
 
     /**
@@ -667,7 +623,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         return result;
     }
 
-    private static class ElementInfo {
+    private class ElementInfo {
         private String qName;
         private String namespaceURI;
         private String localName;
@@ -676,7 +632,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         private ElementInfo parent;
         private Map<String, String> namespaceMap;
 
-        private String baseURI;
+        private URI baseURI;
         private String xmlLang;
 
         ElementInfo(String newQName, String newNamespaceURI, String newLocalName) {
@@ -685,10 +641,18 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
         ElementInfo(ElementInfo newParent, String newQName, String newNamespaceURI,
                 String newLocalName) {
-            setParent(newParent);
-            setqName(newQName);
-            setNamespaceURI(newNamespaceURI);
-            setLocalName(newLocalName);
+            parent = newParent;
+            qName = newQName;
+            namespaceURI = newNamespaceURI;
+            localName = newLocalName;
+
+            if (parent != null) {
+                baseURI = parent.baseURI;
+                xmlLang = parent.xmlLang;
+            } else {
+                baseURI = documentURI;
+                xmlLang = "";
+            }
         }
 
         public void setNamespaceMappings(Map<String, String> namespaceMappings) {
@@ -769,12 +733,12 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             this.namespaceMap = namespaceMap;
         }
 
-        public String getBaseURI() {
+        public URI getBaseURI() {
             return baseURI;
         }
 
-        public void setBaseURI(String baseURI) {
-            this.baseURI = baseURI;
+        public void setBaseURI(String uriString) {
+            this.baseURI = baseURI.resolve(createBaseURI(uriString));
         }
     }
 }
