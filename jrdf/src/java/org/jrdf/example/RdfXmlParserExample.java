@@ -1,9 +1,15 @@
 package org.jrdf.example;
 
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.AnySubjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
@@ -14,7 +20,7 @@ import java.util.Iterator;
 
 public class RdfXmlParserExample {
     public static void main(String[] args) throws Exception {
-        String baseURI = "file:///Users/andrew/kowari-sf/kowari-1.1/data/examples/camera.owl";
+        String baseURI = "http://rss.slashdot.org/Slashdot/slashdot";
         URL url = new URL(baseURI);
         InputStream is = url.openStream();
         final Graph jrdfMem = new GraphImpl();
@@ -29,7 +35,7 @@ public class RdfXmlParserExample {
             }
         });
         parser.parse(is, baseURI);
-        Iterator iter = jrdfMem.find(null, null, null);
+        Iterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         while (iter.hasNext()) {
             System.err.println("Graph: " + iter.next());
         }
