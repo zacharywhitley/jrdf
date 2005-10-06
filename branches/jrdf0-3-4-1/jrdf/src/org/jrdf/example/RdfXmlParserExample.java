@@ -11,7 +11,7 @@ import org.jrdf.parser.rdfxml.*;
 
 public class RdfXmlParserExample {
     public static void main(String[] args) throws Exception {
-        String baseURI = "http://slashdot.org/Slashdot/slashdot";
+        String baseURI = "http://rss.slashdot.org/Slashdot/slashdot";
         URL url = new URL(baseURI);
         InputStream is = url.openStream();
         final Graph jrdfMem = new GraphImpl();
