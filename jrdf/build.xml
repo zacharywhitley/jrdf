@@ -11,7 +11,8 @@
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac source="${java.src.version}" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="production.class.path"
+        <javac source="${java.src.version}" srcdir="${src.dir}" destdir="${classes.dir}"
+               classpathref="production.class.path"
                debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
                optimize="${compile.optimize}">
             <src>
@@ -24,7 +25,7 @@
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${project.jar}">
-            <fileset refid="production.code.fileset"/>
+            <fileset dir="${prod.classes.dir}"/>
         </jar>
     </target>
 
@@ -35,7 +36,8 @@
                  classpathref="production.class.path" source="${java.src.version}"
                  windowtitle="${project.longname} Framework ${project.version.full}"
                  doctitle="${project.longname} Framework ${project.version.full}"
-                 packagenames="org.jrdf.*">
+                 packagenames="org.jrdf.*"
+                 link="http://java.sun.com/j2se/1.4.2/docs/api">
             <fileset refid="production.code.fileset"/>
         </javadoc>
     </target>
