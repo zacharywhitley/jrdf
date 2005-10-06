@@ -17,7 +17,7 @@
     <property name="doc.dir" value="doc"/>
     <property name="javadoc.dir" value="doc/javadoc"/>
     <property name="test.results.dir" value="${build.dir}/test"/>
-    <property name="prod.classes.dir" value="${build.dir}/prod-classes"/>
+    <property name="prod.classes.dir" value="${build.dir}/classes"/>
     <property name="test.results" value="${test.results.dir}/All-Tests.xml"/>
     <property name="compile.debug" value="true"/>
     <property name="compile.debuglevel" value="source,lines"/>
