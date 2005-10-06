@@ -1,9 +1,0 @@
-[Jar files]
-./build/dist/jrdf-0.4.jar
-[Source dirs]
-./src/java
-./test/java
-[Aux classpath entries]
-./lib/junit-3.8.1.jar
-./lib/gsbase-2.0.1.jar
-./lib/sablecc-2.18.2.jar

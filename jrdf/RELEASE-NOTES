@@ -1,21 +1,3 @@
-JRDF Release 0.3.4
-==================
-
-* Initial work on remote querying and SPARQL support (RFE 1236476).
-* Added port of Sesame's RIO RDF/XML parser and associated interfaces (RFE
-1075768).
-* Added protected constructor to Literals (RFE 1075771).
-* Added close method to graphs (RFE 1075740).
-* Added ability to generate globally unique IDs for blank nodes (RFE 1048971).
-* No exception thrown when calling remove before next. (Bug 1231518).
-* Parsing RDF/XML literals removes spaces (Bug 1116687).
-* Literals should return n3 when toString is called, getEscapedForm return
-properly escape n3.  (Bug 1077343).
-* Serial version (Bug 1048968) and protected constructors added to
-AbstractLiteral (Bug 1059228).
-* Javadoc enhanced, general style improved, build files refactored and
-preparation for move to Java 1.5 (Generics and Concurrency).
-
 JRDF Release 0.3.3
 ==================
 * Reification prevented from existing statements (Bug 1034837).  Reification
@@ -26,7 +8,7 @@ JRDF Release 0.3.2
 * Bug fixes to the in memory implementation including
 serialization/deserialization (Bug 1020911) and Literal equality (Bug 1016576).
 * All nodes for the in memory implementation are now localized (RFE 1016579)
-allowing any JRDF object to be added/removed or used in a find/contains.
+allowing any JRDF object to be added/removed or used in a find/contains. 
 This should be the semantics for all implementations of Graph.
 * The iterators returned by the in memory Graph implementation can now have
 remove called on them (RFE 1027563).
@@ -34,7 +16,7 @@ remove called on them (RFE 1027563).
 JRDF Release 0.3.1
 ==================
 * Bug fixes to the in memory implementation: creating the same Literal by
-value resulted in a different node ID (1014115) and preventing one in
+value resulted in a different node ID (1014115) and preventing one in 
 memory graph adding nodes to another in memory graph (1014054).
 * Updated javadoc for Graph.
 

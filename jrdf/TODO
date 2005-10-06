@@ -1,23 +1,4 @@
 JRDF TODO List
 
-o Implement SPARQL parser.
-o Finish of generics conversion.
-o Fix up javadoc (again sorry!!).
-o Continue refactoring code.
-o Make GraphImpl IoCed.  Take in the constructor GraphHandlers, LongIndexes and TripleFactory.  Then test drive the lot - once the interfaces have settled down - currently it's a bit of a spike.
-o Once indices are refactored do indexed Graph operations.
-o Finish Relational operators.
-o Write a pull based RDF/XML parser.
-o Fix serialization of:
-  o
-o Implement toString() on:
-  o FalseNode
-  o TrueNode
-o Unit tests for:
-  o FalseNode
-  o TrueNode
-
-TJA: Done
-o Implemented SerializationIntegrationTest and fixed all marked as serializable classes to pass test: Triple, MemNode, Node & Graph.
-o Add test target for only running integration tests (as is done for unit tests now).
-o Implemented readResolve() on FalseNode, TrueNode
+o Implement SPARQL parser o Add build.cmd and build.sh scripts for command
+line building without adding libs to ant bootstrap classpath 
