@@ -274,7 +274,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
             if (!inRdfContext && parseStandAloneDocuments &&
                     (!"RDF".equals(localName) ||
-                            !namespaceURI.equals(RDF.BASE_URI.toString()))) {
+                            !namespaceURI.equals(RDF.baseURI.toString()))) {
                 // Stand-alone document that does not start with an rdf:RDF root
                 // element. Assume this root element is omitted.
                 inRdfContext = true;
@@ -296,7 +296,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
                 // Check if we are entering RDF context now.
                 if ("RDF".equals(localName) &&
-                        namespaceURI.equals(RDF.BASE_URI.toString())) {
+                        namespaceURI.equals(RDF.baseURI.toString())) {
                     inRdfContext = true;
                     rdfContextStackHeight = 0;
                 }
@@ -334,7 +334,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         // FIXME: in parseLiteralMode we should also check
         // if start- and end-tags match.
 
-        if (rdfParser.verifyData && !parseLiteralMode) {
+        if (rdfParser._verifyData && !parseLiteralMode) {
             // Verify that the end tag matches the start tag.
             ElementInfo elInfo;
 
@@ -473,7 +473,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 String namespace = attributes.getURI(i);
                 String localName = attributes.getLocalName(i);
 
-                if (rdfParser.verifyData) {
+                if (rdfParser._verifyData) {
                     if ("".equals(namespace)) {
                         rdfParser.sendError("unqualified attribute '" +
                                 qName + "' not allowed");
@@ -516,8 +516,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         // Write any new namespace prefix definitions
         Iterator prefixes = newNamespaceMappings.keySet().iterator();
         while (prefixes.hasNext()) {
-            String prefix = prefixes.next();
-            String namespace = newNamespaceMappings.get(prefix);
+            String prefix = (String) prefixes.next();
+            String namespace = (String) newNamespaceMappings.get(prefix);
             appendNamespaceDecl(charBuf, prefix, namespace);
         }
 
@@ -564,7 +564,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             ElementInfo topElement = peekStack();
 
             for (int i = 0; i < unknownPrefixesCount; i++) {
-                String prefix = unknownPrefixesInXmlLiteral.get(i);
+                String prefix = (String) unknownPrefixesInXmlLiteral.get(i);
                 String namespace = topElement.getNamespace(prefix);
                 if (null != namespace) {
                     appendNamespaceDecl(contextPrefixes, prefix, namespace);
@@ -615,7 +615,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         ElementInfo result = null;
 
         if (!elInfoStack.empty()) {
-            result = elInfoStack.peek();
+            result = (ElementInfo) elInfoStack.peek();
         }
 
         return result;
@@ -665,7 +665,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             String result = null;
 
             if (null != getNamespaceMap()) {
-                result = getNamespaceMap().get(prefix);
+                result = (String) getNamespaceMap().get(prefix);
             }
 
             if (null == result && null != getParent()) {
