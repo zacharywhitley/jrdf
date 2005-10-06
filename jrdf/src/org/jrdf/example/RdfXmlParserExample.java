@@ -11,7 +11,7 @@ import org.jrdf.parser.rdfxml.*;
 
 public class RdfXmlParserExample {
     public static void main(String[] args) throws Exception {
-        String baseURI = "file:///Users/andrew/kowari-sf/kowari-1.1/data/examples/camera.owl";
+        String baseURI = "http://slashdot.org/Slashdot/slashdot";
         URL url = new URL(baseURI);
         InputStream is = url.openStream();
         final Graph jrdfMem = new GraphImpl();
