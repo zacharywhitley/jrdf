@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jrdf" default="dist" basedir=".">
+
+    <import file="build-setup.xml"/>
+    <import file="build-sparql.xml"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${javadoc.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac source="${java.src.version}" srcdir="${src.dir}" destdir="${classes.dir}" classpathref="production.class.path"
+               debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
+               optimize="${compile.optimize}">
+            <src>
+                <path refid="all.code.path"/>
+            </src>
+            <patternset refid="all.code.pattern"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/${project.jar}">
+            <fileset refid="production.code.fileset"/>
+        </jar>
+    </target>
+
+    <target name="javadoc">
+        <mkdir dir="${javadoc.dir}"/>
+        <javadoc destdir="${javadoc.dir}" author="true" version="true"
+                 additionalparam="-breakiterator" Use="true"
+                 classpathref="production.class.path" source="${java.src.version}"
+                 windowtitle="${project.longname} Framework ${project.version.full}"
+                 doctitle="${project.longname} Framework ${project.version.full}"
+                 packagenames="org.jrdf.*">
+            <fileset refid="production.code.fileset"/>
+        </javadoc>
+    </target>
+
+    <macrodef name="test.macro">
+        <attribute name="failure.property"/>
+        <sequential>
+            <mkdir dir="${test.results.dir}"/>
+            <junit failureproperty="@{failure.property}" fork="true" forkmode="perBatch">
+                <classpath refid="test.class.path"/>
+                <formatter type="brief" usefile="false"/>
+                <batchtest todir="${test.results.dir}">
+                    <fileset refid="test.code.fileset"/>
+                </batchtest>
+                <!--<sysproperty key="log4j.configuration" value="file:${conf.dir}/log4j.test.properties"/>-->
+            </junit>
+        </sequential>
+    </macrodef>
+
+    <target name="test" depends="dist">
+        <test.macro failure.property="unit.test.failed"/>
+        <fail if="unit.test.failed" message="Tests failed."/>
+    </target>
+</project>

@@ -1,0 +1,55 @@
+JRDF Release 0.3.3
+==================
+* Reification prevented from existing statements (Bug 1034837).  Reification
+should not add the statement being reified.
+
+JRDF Release 0.3.2
+==================
+* Bug fixes to the in memory implementation including
+serialization/deserialization (Bug 1020911) and Literal equality (Bug 1016576).
+* All nodes for the in memory implementation are now localized (RFE 1016579)
+allowing any JRDF object to be added/removed or used in a find/contains. 
+This should be the semantics for all implementations of Graph.
+* The iterators returned by the in memory Graph implementation can now have
+remove called on them (RFE 1027563).
+
+JRDF Release 0.3.1
+==================
+* Bug fixes to the in memory implementation: creating the same Literal by
+value resulted in a different node ID (1014115) and preventing one in 
+memory graph adding nodes to another in memory graph (1014054).
+* Updated javadoc for Graph.
+
+JRDF Release 0.3
+================
+* New memory implementation by Paul Gearon.
+* Abstract unit tests to test implementations.
+* Split out NodeFactory into TripleFactory and GraphElementFactory.
+* Added Container (Bag, Alternative and Sequence support) and Collection
+support.
+* Added visitor pattern for typed nodes (URIReference, BlankNode and
+Literals).
+* Creating literals is restricted to only valid construction: lexical value,
+lexical value and datatype or lexical value and language.
+* AbstractLiteral now has a getEscapedForm which returns an N-Triples
+escaped version of the Literal.  The toString now simply returns
+getLexicalValue (no escaping).
+* Modified AbstractURIReference to allow unchecked URIs to be added.
+* Added AbstractBlankNode.
+
+JRDF Release 0.2.1
+==================
+* AbstractLiteral has improved toString.
+* AbstractURIReference has a constructor that enforces a non-null URI.
+* Graph now has find, getNumberOfTriples and isEmpty methods.
+* Triple and Nodes are now Serializable.
+* NodeFactory now supports reification.
+* Added ClosableIterator for results.
+* Added RDF and RDFS vocabularies.
+
+JRDF Release 0.2
+================
+* Node, SubjectNode, PredicateNode and ObjectNode marker interfaces.
+* Renaming of Statement to Triple and other renaming.
+* Defining hashCode and equals.
+* Refication added to NodeFactory.
