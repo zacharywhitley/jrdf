@@ -918,8 +918,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             if (!_usedIDs.add(uriString)) {
                 // uriString was not added because the set already contained
                 // an equal string.
-                sendError("'" + id +
-                        "' already used as ID value, values of rdf:ID attributes should be unique");
+                sendError("'" + id + "' already used as ID value, values of rdf:ID attributes should be unique");
             }
         }
 
@@ -942,7 +941,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
                 }
             }
             if ("".equals(uriReference)) {
-                return _createURI(_baseURI); 
+                return _createURI(_baseURI);
             }
             return _createURI(_baseURI.resolve(relUri));
         }
