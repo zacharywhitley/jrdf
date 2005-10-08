@@ -533,8 +533,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
                 if (null == lastListRes) {
                     // first element in the list
-                    reportStatement(subject.getResource(),
-                            predicate.getURI(), newListRes);
+                    reportStatement(subject.getResource(), predicate.getURI(), newListRes);
 
                     handleReification(newListRes);
                 } else {
