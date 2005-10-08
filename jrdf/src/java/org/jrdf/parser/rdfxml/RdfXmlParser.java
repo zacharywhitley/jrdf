@@ -50,7 +50,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -167,13 +166,6 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     private URI baseURI;
 
     /**
-     * The base URI of the document. This variable is set when
-     * <tt>parse(inputStream, BASE_URI)</tt> is called and will not be changed
-     * during parsing.
-     */
-    private String documentURI;
-
-    /**
      * The language of literal values as can be specified using xml:lang
      * attributes. This variable is set/modified by the SAXFilter during
      * parsing such that it always represents the language of the context
@@ -190,7 +182,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
      * A set containing URIs that have been generated as a result of rdf:ID
      * attributes. These URIs should be unique within a single document.
      */
-    private Set<String> usedIDs = new HashSet<String>();
+    private Set<URI> usedIDs = new HashSet<URI>();
 
     /**
      * Flag indicating whether the parser should check the data it parses.
@@ -223,8 +215,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
      * @param graphElementFactory A GraphElementFactory.
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory) throws GraphException {
-        this(graphElementFactory,
-                new ParserBlankNodeFactoryImpl(graphElementFactory));
+        this(graphElementFactory, new ParserBlankNodeFactoryImpl(graphElementFactory));
     }
 
     /**
@@ -241,8 +232,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
             // Initialize the statement handler to empty.
             setStatementHandler(new StatementHandler() {
-                public void handleStatement(SubjectNode subject, PredicateNode predicate,
-                        ObjectNode object) {
+                public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
                 }
             });
         } catch (TransformerConfigurationException tce) {
@@ -350,8 +340,8 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
      * @throws IllegalArgumentException  If the supplied input stream or
      *                                   base URI is <tt>null</tt>.
      */
-    public synchronized void parse(InputStream in, String baseURI) throws
-            IOException, ParseException, StatementHandlerException {
+    public synchronized void parse(InputStream in, String baseURI) throws IOException, ParseException,
+            StatementHandlerException {
         if (null == in) {
             throw new IllegalArgumentException("Input stream cannot be 'null'");
         }
@@ -398,10 +388,8 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     private void parse(InputSource inputSource) throws IOException,
             ParseException, StatementHandlerException {
         try {
-            documentURI = inputSource.getSystemId();
-
             //saxFilter.clear();
-            saxFilter.setDocumentURI(documentURI);
+            saxFilter.setDocumentURI(inputSource.getSystemId());
 
             SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setFeature("http://xml.org/sax/features/namespaces", true);
@@ -450,8 +438,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
         }
     }
 
-    void startElement(String namespaceURI, String localName, String qName,
-            Atts atts) throws SAXException {
+    void startElement(String namespaceURI, String localName, String qName, Atts atts) throws SAXException {
         if (topIsProperty()) {
 
             // this element represents the subject and/or object of a statement
@@ -463,8 +450,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
         }
     }
 
-    void endElement(String namespaceURI, String localName,
-            String qName) throws SAXException {
+    void endElement(String namespaceURI, String localName, String qName) throws SAXException {
         Object topElement = peekStack(0);
 
         if (topElement instanceof NodeElement) {
@@ -498,8 +484,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
         elementStack.pop();
     }
 
-    void emptyElement(String namespaceURI, String localName, String qName,
-            Atts atts) throws SAXException {
+    void emptyElement(String namespaceURI, String localName, String qName, Atts atts) throws SAXException {
         if (topIsProperty()) {
             // this element represents the subject and/or object of a statement
             processNodeElt(namespaceURI, localName, qName, atts, true);
@@ -527,8 +512,8 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     }
 
     /* Process a node element (can be both subject and object) */
-    private void processNodeElt(String namespaceURI, String localName, String qName, Atts atts,
-            boolean isEmptyElt) throws SAXException {
+    private void processNodeElt(String namespaceURI, String localName, String qName, Atts atts, boolean isEmptyElt)
+        throws SAXException {
         if (verifyData) {
             // Check the element name
             checkNodeEltName(namespaceURI, localName, qName);
@@ -557,26 +542,22 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
                     reportStatement(lastListRes, RDF_REST, newListRes);
                 }
 
-                reportStatement((SubjectNode) newListRes, (PredicateNode) RDF_FIRST,
-                        (ObjectNode) nodeResource);
+                reportStatement(newListRes, RDF_FIRST, (ObjectNode) nodeResource);
                 predicate.setLastListResource(newListRes);
             } else {
-                reportStatement(subject.getResource(),
-                        (PredicateNode) predicate.getURI(), (ObjectNode) nodeResource);
-
+                reportStatement(subject.getResource(), predicate.getURI(), (ObjectNode) nodeResource);
                 handleReification((ObjectNode) nodeResource);
             }
         }
 
-        if (!"Description".equals(localName) ||
-                !namespaceURI.equals(RDF.BASE_URI.toString())) {
+        if (!"Description".equals(localName) || !namespaceURI.equals(RDF.BASE_URI.toString())) {
             // element name is uri's type
-            URIReference className = null;
+            URIReference className;
             if ("".equals(namespaceURI)) {
                 // No namespace, use base URI
                 className = buildResourceFromLocalName(localName);
             } else {
-                className = createURI(namespaceURI + localName);
+                className = createURIReference(namespaceURI + localName);
             }
             reportStatement(nodeResource, RDF_TYPE, className);
         }
@@ -585,7 +566,6 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
         if (null != type) {
             // rdf:type attribute, value is a URI-reference
             URIReference className = buildURIFromReference(type.getValue());
-
             reportStatement(nodeResource, RDF_TYPE, className);
         }
 
@@ -630,8 +610,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             }
         }
 
-        SubjectNode result = null;
-
+        SubjectNode result;
         if (null != id) {
             result = buildURIFromID(id.getValue());
         } else if (null != about) {
@@ -657,34 +636,33 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
         while (iter.hasNext()) {
             Att att = (Att) iter.next();
-            URIReference predicate = createURI(att.getURI());
+            URIReference predicate = createURIReference(att.getURI());
             Literal lit = createLiteral(att.getValue(), xmlLang, null);
-
             reportStatement(subject, predicate, lit);
         }
     }
 
-    private void processPropertyElt(String namespaceURI, String localName, String qName, Atts atts,
-            boolean isEmptyElt) throws SAXException {
+    private void processPropertyElt(String namespaceURI, String localName, String qName, Atts atts, boolean isEmptyElt)
+        throws SAXException {
         if (verifyData) {
             checkPropertyEltName(namespaceURI, localName, qName);
         }
 
         // Get the URI of the property
-        URIReference propURI = null;
+        URIReference propURI;
         if ("".equals(namespaceURI)) {
             // no namespace URI
             sendError("unqualified property element <" + qName + "> not allowed");
             // Use base URI as namespace:
             propURI = buildResourceFromLocalName(localName);
         } else {
-            propURI = createURI(namespaceURI + localName);
+            propURI = createURIReference(namespaceURI + localName);
         }
 
         // List expansion rule
         if (propURI.equals(RDF_LI)) {
             NodeElement subject = (NodeElement) peekStack(0);
-            propURI = createURI(RDF.BASE_URI.toString() + "_" + subject.getNextLiCounter());
+            propURI = createURIReference(RDF.BASE_URI.toString() + "_" + subject.getNextLiCounter());
         }
 
         // Push the property on the stack.
@@ -771,15 +749,13 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
                 NodeElement resourceElt = new NodeElement(resourceRes);
                 NodeElement subject = (NodeElement) peekStack(1);
 
-                reportStatement((SubjectNode) subject.getResource(),
-                        (PredicateNode) propURI, (ObjectNode) resourceRes);
+                reportStatement(subject.getResource(), propURI, (ObjectNode) resourceRes);
                 handleReification((ObjectNode) resourceRes);
 
                 Att type = atts.removeAtt(RDF.BASE_URI.toString(), "type");
                 if (null != type) {
                     // rdf:type attribute, value is a URI-reference
                     URIReference className = buildURIFromReference(type.getValue());
-
                     reportStatement(resourceRes, RDF_TYPE, className);
                 }
 
@@ -829,7 +805,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
             }
         }
 
-        SubjectNode result = null;
+        SubjectNode result;
 
         if (null != resource) {
             result = buildURIFromReference(resource.getValue());
@@ -854,26 +830,25 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
         if (predicate.isReified()) {
             NodeElement subject = (NodeElement) peekStack(1);
             URIReference reifRes = predicate.getReificationURI();
-            reifyStatement((SubjectNode) reifRes, subject.getResource(), predicate.getURI(), value);
+            reifyStatement(reifRes, subject.getResource(), predicate.getURI(), value);
         }
     }
 
     private void reifyStatement(SubjectNode reifNode, SubjectNode subj,
             PredicateNode pred, ObjectNode obj) throws SAXException {
         reportStatement(reifNode, RDF_TYPE, RDF_STATEMENT);
-        reportStatement(reifNode, (PredicateNode) RDF_SUBJECT, (ObjectNode) subj);
-        reportStatement(reifNode, (PredicateNode) RDF_PREDICATE, (ObjectNode) pred);
+        reportStatement(reifNode, RDF_SUBJECT, (ObjectNode) subj);
+        reportStatement(reifNode, RDF_PREDICATE, (ObjectNode) pred);
         reportStatement(reifNode, RDF_OBJECT, obj);
     }
 
     /**
      * Builds a Resource from a non-qualified localname.
      */
-    private URIReference buildResourceFromLocalName(String localName) throws
-            SAXException {
+    private URIReference buildResourceFromLocalName(String localName) throws SAXException {
         // Resolve the relative URI against the base URI
-        String uriString = baseURI.resolve("#" + localName).toString();
-        return createURI(uriString);
+        URI uri = baseURI.resolve("#" + localName);
+        return createURIReference(uri);
     }
 
     /**
@@ -888,50 +863,49 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
         }
 
         // Resolve the relative URI against the base URI
-        String uriString = baseURI.resolve("#" + id).toString();
+        URI uri = baseURI.resolve("#" + id);
 
         if (verifyData) {
             // uriString should be unique in the current document
 
-            if (!usedIDs.add(uriString)) {
+            if (!usedIDs.add(uri)) {
                 // uriString was not added because the set already contained
                 // an equal string.
-                sendError("'" + id +
-                        "' already used as ID value, values of rdf:ID attributes should be unique");
+                sendError("'" + id + "' already used as ID value, values of rdf:ID attributes should be unique");
             }
         }
 
-        return createURI(uriString);
+        return createURIReference(uri);
     }
 
-    private URIReference buildURIFromReference(String uriReference) throws
-            SAXException {
-        try {
-            URI relUri = new URI(uriReference);
-
-            if (verifyData) {
-                if (null == relUri.getScheme() && // Relative URI that is not a self-reference
-                        !(null == relUri.getScheme() &&
-                                null == relUri.getAuthority() &&
-                                null == relUri.getQuery() &&
-                                0 == relUri.getPath().length()) &&
-                        baseURI.isOpaque()) {
-                    sendError("Relative URI '" + uriReference +
-                            "' cannot be resolved using the opaque base URI '" + baseURI +
-                            "'");
-                }
+    private URIReference buildURIFromReference(String uriReference) throws SAXException {
+        URI relUri = URI.create(uriReference);
+        if (verifyData) {
+            if (null == relUri.getScheme() && // Relative URI that is not a self-reference
+                    !(null == relUri.getScheme() &&
+                            null == relUri.getAuthority() &&
+                            null == relUri.getQuery() &&
+                            0 == relUri.getPath().length()) &&
+                    baseURI.isOpaque()) {
+                sendError("Relative URI '" + uriReference + "' cannot be resolved using the opaque base URI '" +
+                        baseURI + "'");
             }
-            String uriString = baseURI.resolve(relUri).toString();
-            return createURI(uriString);
-        } catch (URISyntaxException ex) {
-            throw new SAXException(ex);
+        }
+        if ("".equals(uriReference)) {
+            return createURIReference(baseURI);
+        } else {
+            return createURIReference(baseURI.resolve(relUri));
         }
     }
 
-    private URIReference createURI(String uri) throws SAXException {
+    private URIReference createURIReference(String uri) throws SAXException {
+        return createURIReference(URI.create(uri));
+    }
+
+    private URIReference createURIReference(URI uri) throws SAXException {
         try {
-            return valueFactory.createResource(new URI(uri));
-        } catch (Exception e) {
+            return valueFactory.createResource(uri);
+        } catch (GraphElementFactoryException e) {
             throw new SAXException(e);
         }
     }
@@ -939,7 +913,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     private BlankNode createBNode() throws SAXException {
         try {
             return bNodeFactory.createBlankNode();
-        } catch (Exception e) {
+        } catch (GraphElementFactoryException e) {
             throw new SAXException(e);
         }
     }
@@ -954,7 +928,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
 
         try {
             return bNodeFactory.createBlankNode(nodeID);
-        } catch (Exception e) {
+        } catch (GraphElementFactoryException e) {
             throw new SAXException(e);
         }
     }
@@ -988,9 +962,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
     }
 
     private boolean topIsProperty() {
-        return
-                elementStack.isEmpty() ||
-                        peekStack(0) instanceof PropertyElement;
+        return elementStack.isEmpty() || peekStack(0) instanceof PropertyElement;
     }
 
     /**
@@ -1150,7 +1122,7 @@ public class RdfXmlParser implements org.jrdf.parser.Parser {
      * Checks whether 'atts' is empty. If this is not the case, a warning is generated
      * for each attribute that is still present.
      */
-    private void checkNoMoreAtts(Atts atts) throws SAXException {
+    private void checkNoMoreAtts(Atts atts) {
         if (0 < atts.size()) {
             Iterator<Att> iter = atts.iterator();
 

@@ -346,9 +346,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             }
 
             if (!qName.equals(elInfo.getqName())) {
-                rdfParser.sendFatalError("expected end tag </'" + elInfo.getqName() +
-                        ">, " +
-                        "found </" + qName + ">");
+                rdfParser.sendFatalError("expected end tag </'" + elInfo.getqName() + ">, found </" + qName + ">");
             }
         }
 
@@ -436,15 +434,13 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         }
     }
 
-    public void ignorableWhitespace(char[] ch, int start, int length) throws
-            SAXException {
+    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
         if (parseLiteralMode) {
             charBuf.append(ch, start, length);
         }
     }
 
-    public void processingInstruction(String target, String data) throws
-            SAXException {
+    public void processingInstruction(String target, String data) throws SAXException {
         // ignore
     }
 
