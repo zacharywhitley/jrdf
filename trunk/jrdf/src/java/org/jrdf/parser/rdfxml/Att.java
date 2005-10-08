@@ -19,6 +19,8 @@
 
 package org.jrdf.parser.rdfxml;
 
+import java.net.URI;
+
 /**
  * An XML attribute.
  */
@@ -28,12 +30,14 @@ class Att {
     private String localName;
     private String qName;
     private String value;
+    private URI uri;
 
     Att(String namespace, String localName, String qName, String value) {
         this.namespace = namespace;
         this.localName = localName;
         this.qName = qName;
         this.value = value;
+        this.uri = URI.create(namespace + localName);
     }
 
     public String getNamespace() {
@@ -44,8 +48,8 @@ class Att {
         return localName;
     }
 
-    public String getURI() {
-        return namespace + localName;
+    public URI getURI() {
+        return uri;
     }
 
     public String getQName() {
