@@ -1,7 +1,8 @@
 JRDF Release 0.4
 ================
 * Does not resolve relative URIs correctly (Bug 1315291).
-* Stacked xml:base directives with relative URIs not processed (Bug 1314147).
+* Stacked xml:base directives with relative URIs not processed
+(Bug 1314147).
 * The createTriple method should be on TripleFactory (Bug 1294602).
 * Remove the use of nulls as valid parameters (Bug 1265743).
 * MemNode doesn't extend Node (Bug 1243510).
@@ -9,7 +10,8 @@ JRDF Release 0.4
 JRDF Release 0.3.4.1
 ====================
 * Fixed build problems (Bug 1314770).
-* Back ported stack xml:base directives with relative URIs not processed (Bug 1314750).
+* Back ported stack xml:base directives with relative URIs not processed
+(Bug 1314750).
 * Does not resolve relative URIs correctly (Bug 1315285).
 
 JRDF Release 0.3.4
