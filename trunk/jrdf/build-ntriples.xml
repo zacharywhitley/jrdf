@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jrdf-ntriples" default="gen-ntriples-parser" basedir=".">
+
+    <import file="build-setup.xml"/>
+
+    <target name="gen-ntriples-parser" depends="-ntriples-parser-uptodate" unless="ntriples-parser-uptodate">
+        <sablecc.macro grammar.file="ntriples.grammar"/>
+    </target>
+    <target name="-ntriples-parser-uptodate">
+        <uptodate property="ntriples-parser-uptodate"
+                  targetfile="${gen.src.dir}/org/jrdf/parser/ntriples/analysis/DepthFirstAdapter.java">
+            <srcfiles dir="${sablecc.src.dir}" includes="ntriples.grammar"/>
+        </uptodate>
+    </target>
+
+    <!-- FIXME TJA: Is there a better way to do this? Maybe specify in the classpath? -->
+    <target name="-copy-ntriples-sablecc-resources">
+        <copy file="${gen.src.dir}/org/jrdf/parser/ntriples/lexer/lexer.dat"
+                tofile="${prod.classes.dir}/org/jrdf/parser/ntriples/lexer/lexer.dat"/>
+        <copy file="${gen.src.dir}/org/jrdf/parser/ntriples/parser/parser.dat"
+                tofile="${prod.classes.dir}/org/jrdf/parser/ntriples/parser/parser.dat"/>
+    </target>
+
+</project>

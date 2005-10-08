@@ -1,0 +1,88 @@
+Package org.jrdf.parser.ntriples;
+
+/*
+ * NTriples SableCC grammar.
+ * $Id$
+ */
+
+Helpers
+  tab          = 9;
+  lf           = 10;
+  cr           = 13;
+  space        = 32;
+  digit        = ['0'..'9'];
+  lowercase    = ['a'..'z'];
+  uppercase    = ['A'..'Z'];
+  character    = [32..126];
+  letter       = lowercase | uppercase;
+  whitespace   = space | tab;
+  blank        = whitespace+;
+
+States
+  def,     /* default state */
+  com;     /* comment */
+
+Tokens
+  {def}                whitespace  = whitespace;
+  {def}                eoln        = cr | lf | cr lf;
+  {def}                dot         = '.';
+  {def}                lessthan    = '<';
+  {def}                greaterthan = '>';
+  {def}                langsuffix  = '@';
+  {def}                doublequote = '"';
+  {def}                nodeprefix  = '_:';
+  {def}                datatypesuffix = '^^';
+  {def}                absoluteuri = character+;
+  {def}                string      = character*;
+  {def}                language    = (lowercase)+('-'(letter)+)*;
+  {def}                nodename    = (letter)(letter|digit)*;
+
+  {def->com}           hash        = '#';
+  {com}                comment     = [character - [cr + lf]];
+  {com->def}           endcomment  = (cr | lf)+;
+
+Ignored Tokens
+  blank, comment, endcomment;
+
+Productions
+  document = line*;
+
+  line =
+    triple? eoln;
+
+  triple =
+    subject [subjectspace]:whitespace+
+    predicate [predicatespace]:whitespace+
+    object [objectspace]:whitespace*
+    dot [dotspace]:whitespace*;
+
+  subject =
+    {subject} uriref | nodeid;
+
+  predicate =
+    {predicate} uriref;
+
+  object =
+    {uriref} uriref |
+    {nodeid} nodeid |
+    {literal} literal;
+
+  uriref =
+    {uriref} lessthan absoluteuri greaterthan;
+
+  nodeid =
+    {nodeid} nodeprefix nodename;
+
+  literal =
+    {literal} langstring | datatypestring;
+
+  langstring =
+    {langstring} [first]:doublequote string [second]:doublequote langlangsuffix?;
+
+  langlangsuffix =
+    {langlangsuffix} langsuffix language;
+
+  datatypestring =
+    {datetypestring} [first]:doublequote string [second]:doublequote datatypesuffix uriref;
+
+
