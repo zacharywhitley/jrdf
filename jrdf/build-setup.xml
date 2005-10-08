@@ -140,4 +140,19 @@
         <echo message="Nothing to see here..."/>
     </target>
 
+    <path id="sablecc.class.path">
+        <pathelement location="${lib.dir}/sablecc-2.18.2.jar"/>
+    </path>
+    
+    <macrodef name="sablecc.macro">
+        <attribute name="grammar.file"/>
+        <sequential>
+            <taskdef name="sablecc" classname="org.sablecc.ant.taskdef.Sablecc" classpathref="sablecc.class.path"/>
+            <mkdir dir="${gen.src.dir}"/>
+            <sablecc src="${sablecc.src.dir}" outputdirectory="${gen.src.dir}">
+                <include name="@{grammar.file}"/>
+            </sablecc>
+        </sequential>
+    </macrodef>
+
 </project>
