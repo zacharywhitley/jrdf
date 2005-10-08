@@ -48,14 +48,14 @@ import java.util.Stack;
 class SAXFilter implements org.xml.sax.ContentHandler {
 
     /**
-     * The transformer handler.
+     * The transformer handler used to escape XML.
      */
     private TransformerHandler th;
 
     /**
      * Byte array for escaping XML.
      */
-    private ByteArrayOutputStream os = new ByteArrayOutputStream();
+    private ByteArrayOutputStream escapedXmlOutputStream = new ByteArrayOutputStream();
 
     /**
      * The RDF parser to supply the filtered SAX events to.
@@ -113,8 +113,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
      * by the SAX parser, but that are not yet assigned to an ElementInfo
      * object.
      */
-    private Map<String, String> newNamespaceMappings =
-            new HashMap<String, String>();
+    private Map<String, String> newNamespaceMappings = new HashMap<String, String>();
 
     /**
      * Flag indicating whether we're currently parsing RDF elements.
@@ -150,9 +149,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
     SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
         this.rdfParser = rdfParser;
-        th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).
-                newTransformerHandler();
-        th.setResult(new StreamResult(os));
+        th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()). newTransformerHandler();
+        th.setResult(new StreamResult(escapedXmlOutputStream));
     }
 
     public Locator getLocator() {
@@ -163,8 +161,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         locListener = el;
 
         if (null != locator) {
-            locListener.parseLocationUpdate(locator.getLineNumber(),
-                    locator.getColumnNumber());
+            locListener.parseLocationUpdate(locator.getLineNumber(), locator.getColumnNumber());
         }
     }
 
@@ -267,15 +264,13 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             xmlLiteralStackHeight++;
         } else {
             ElementInfo parent = peekStack();
-            ElementInfo elInfo = new ElementInfo(parent, qName, namespaceURI,
-                    localName);
+            ElementInfo elInfo = new ElementInfo(parent, qName, namespaceURI, localName);
 
             elInfo.setNamespaceMappings(newNamespaceMappings);
             newNamespaceMappings.clear();
 
             if (!inRdfContext && parseStandAloneDocuments &&
-                    (!"RDF".equals(localName) ||
-                            !namespaceURI.equals(RDF.BASE_URI.toString()))) {
+                    (!"RDF".equals(localName) || !namespaceURI.equals(RDF.BASE_URI.toString()))) {
                 // Stand-alone document that does not start with an rdf:RDF root
                 // element. Assume this root element is omitted.
                 inRdfContext = true;
@@ -296,8 +291,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 elInfoStack.push(elInfo);
 
                 // Check if we are entering RDF context now.
-                if ("RDF".equals(localName) &&
-                        namespaceURI.equals(RDF.BASE_URI.toString())) {
+                if ("RDF".equals(localName) && namespaceURI.equals(RDF.BASE_URI.toString())) {
                     inRdfContext = true;
                     rdfContextStackHeight = 0;
                 }
@@ -414,23 +408,23 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     public void characters(char[] ch, int start, int length) throws SAXException {
-
         if (inRdfContext) {
             if (null != deferredElement) {
                 reportDeferredStartElement();
             }
 
+            // Send new set of characters to transformerhandler to escape xml.
             th.characters(ch, start, length);
 
             if (parseLiteralMode) {
                 // Characters like '<', '>', and '&' must be escaped to
                 // prevent breaking the XML text.
-                charBuf.append(os.toString());
+                charBuf.append(escapedXmlOutputStream.toString());
             } else {
                 charBuf.append(ch, start, length);
             }
 
-            os.reset();
+            escapedXmlOutputStream.reset();
         }
     }
 
@@ -600,10 +594,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
         char[] c = new char[value.length()];
         value.getChars(0, c.length - 1, c, 0);
-        th.setResult(new StreamResult(os));
+        th.setResult(new StreamResult(escapedXmlOutputStream));
         th.characters(c, 0, c.length);
-        sb.append(os.toString());
-        os.reset();
+        sb.append(escapedXmlOutputStream.toString());
+        escapedXmlOutputStream.reset();
 
         sb.append("\"");
     }
