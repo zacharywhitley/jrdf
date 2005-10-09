@@ -192,7 +192,7 @@ public class ComparisonImplUnitTest extends TestCase {
     private void replayAssertAndVerify(String message, boolean areEqual, Graph mockGraph1, Graph mockGraph2) throws GraphException {
         replay(mockGraph1);
         replay(mockGraph2);
-        assertEquals(message, areEqual, comparison.groundedGraphsAreIsomorphic(mockGraph1,  mockGraph2));
+        assertEquals(message, areEqual, comparison.groundedGraphsAreEqual(mockGraph1,  mockGraph2));
         verify(mockGraph1);
         verify(mockGraph2);
     }

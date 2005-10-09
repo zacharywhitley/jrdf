@@ -68,7 +68,8 @@ import org.jrdf.graph.GraphException;
  * @version $Revision$
  */
 public interface Comparison {
-    // TODO AN  Extend set operation and modify the API to change how this is used - perhaps by setting "setGrounded".
+    // TODO AN Extend set operation and modify the API to change how this is used - perhaps by setting "setGrounded".
+    // TODO AN Add the ability to test isomorphism and equality.
 
     /**
      * Returns true if the graph is grounded (does not contain blank nodes).
@@ -99,5 +100,5 @@ public interface Comparison {
      * @param g2 The second graph to test.
      * @return true if they are equivalent.
      */
-    boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2) throws GraphException;
+    boolean groundedGraphsAreEqual(Graph g1, Graph g2) throws GraphException;
 }

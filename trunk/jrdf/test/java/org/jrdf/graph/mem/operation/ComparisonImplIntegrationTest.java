@@ -93,7 +93,7 @@ public class ComparisonImplIntegrationTest extends TestCase {
         GraphImpl graph2 = new GraphImpl();
         addTriple(graph2, resource2);
         Comparison comparison = new ComparisonImpl();
-        assertEquals(areEqual, comparison.groundedGraphsAreIsomorphic(graph1, graph2));
+        assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));
     }
 
     private void addTriple(GraphImpl graph, URI uri) throws GraphElementFactoryException, TripleFactoryException,
