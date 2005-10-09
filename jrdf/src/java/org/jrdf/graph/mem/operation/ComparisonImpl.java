@@ -85,7 +85,7 @@ public final class ComparisonImpl implements Comparison {
         throw new UnsupportedOperationException();
     }
 
-    public boolean groundedGraphsAreIsomorphic(Graph g1, Graph g2) throws GraphException {
+    public boolean groundedGraphsAreEqual(Graph g1, Graph g2) throws GraphException {
         boolean g1IsEmpty = g1.isEmpty();
         boolean g2IsEmpty = g2.isEmpty();
         if (g1IsEmpty && g2IsEmpty) {
