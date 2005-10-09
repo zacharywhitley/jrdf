@@ -16,13 +16,13 @@ Helpers
   character    = [32..126];
   letter       = lowercase | uppercase;
   whitespace   = space | tab;
-  blank        = whitespace+;
 
 States
   def,     /* default state */
   com;     /* comment */
 
 Tokens
+  {def}                blank       = whitespace+;
   {def}                whitespace  = whitespace;
   {def}                eoln        = cr | lf | cr lf;
   {def}                dot         = '.';
