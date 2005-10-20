@@ -60,27 +60,16 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.Node;
 
-import java.io.Serializable;
-
 /**
  * Memory node.  This is an additional interface for nodes so they can be accessed by id.
- * Extends {@link Serializable} so all nodes will be serializable.
- *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @version $Revision$
+ * @version $Id$
  */
-public interface MemNode extends Node, Serializable {
-
-    /**
-     * Serial UID.
-     */
-    long serialVersionUID = -3340761272302468154L;
+public interface MemNode extends Node {
 
     /**
      * Retrieves an internal identifier for a node.
-     *
      * @return A numeric identifier for a node.
      */
     Long getId();
-
 }

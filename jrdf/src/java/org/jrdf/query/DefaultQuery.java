@@ -58,10 +58,9 @@
 
 package org.jrdf.query;
 
-import org.jrdf.util.param.ParameterUtil;
-
 import java.io.Serializable;
 import java.util.List;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Default implementation of a {@link Query}.
@@ -74,7 +73,7 @@ public final class DefaultQuery implements Query, Serializable {
     // FIXME: Check for immutability of parameters.
     // FIXME TJA: Implement equals() and hashCode()
 
-    static final long serialVersionUID = 409607492370028929L;
+    private static final long serialVersionUID = 409607492370028929L;
     private List<? extends Variable> variables;
 
     // TODO ConstraintExpression is not serializable - this won't probably work correctly!

@@ -59,19 +59,19 @@
 package org.jrdf.sparql;
 
 import java.net.URI;
-import java.util.Iterator;
+import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
@@ -110,13 +110,13 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     private void checkConnectionReturnsOneSolution(SparqlConnection connection) {
         Answer answer = executeQuery(connection, QUERY_SHOULD_RETURN_ONE_SOLUTION);
-        checkAnswer(answer);
+        checkFirstRowOfAnswer(answer);
     }
 
     private void checkConnectionReturnsNoSolutions(SparqlConnection connection) {
         Answer answer = executeQuery(connection, QUERY_SHOULD_RETURN_NOTHING);
-        Iterator<Triple> solutions = answer.getSolutions();
-        assertFalse(solutions.hasNext());
+        List<Triple> solutions = answer.getSolutions();
+        assertTrue(solutions.isEmpty());
     }
 
     private Answer executeQuery(SparqlConnection connection, String query) {
@@ -129,9 +129,9 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
         }
     }
 
-    private void checkAnswer(Answer answer) {
-        Iterator<Triple> solutions = answer.getSolutions();
-        Triple triple = solutions.next();
+    private void checkFirstRowOfAnswer(Answer answer) {
+        List<Triple> solutions = answer.getSolutions();
+        Triple triple = solutions.iterator().next();
         checkSubject(triple);
         checkPredicate(triple);
         checkLiteralObject(triple);

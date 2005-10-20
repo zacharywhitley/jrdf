@@ -71,13 +71,13 @@ import junit.framework.TestCase;
  */
 public class UuidGeneratorUnitTest extends TestCase {
 
-    static final int NUM_UIDS = 10000;
+    static final int NUM_UIDS = 1000;
 
     public void testUuidsUnique() throws Exception {
         generateUuids(NUM_UIDS);
     }
 
-    // FIXME: Refactor, UuidPopulator also does a similar thing.
+    // FIXME TJA: Refactor, UuidPopulator also does a similar thing.
     private void generateUuids(int numUuids) throws Exception {
         Set<String> uuids = new HashSet<String>(numUuids);
         for (int i = 0; i < numUuids; i++) {

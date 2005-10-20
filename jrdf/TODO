@@ -20,4 +20,4 @@ o Unit tests for:
 TJA: Done
 o Implemented SerializationIntegrationTest and fixed all marked as serializable classes to pass test: Triple, MemNode, Node & Graph.
 o Add test target for only running integration tests (as is done for unit tests now).
-o Implemented readResolve() on FalseNode, TrueNode
+o Implemented readResolve() on FalseNode, TrueNode, AllConstraintExpression

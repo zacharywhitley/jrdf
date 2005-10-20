@@ -62,9 +62,8 @@ import java.util.List;
 
 /**
  * A query to a graph.
- *
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public interface Query {
 

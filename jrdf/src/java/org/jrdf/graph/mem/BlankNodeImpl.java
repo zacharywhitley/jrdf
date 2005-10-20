@@ -60,6 +60,7 @@ package org.jrdf.graph.mem;
 
 // JRDF objects
 
+import java.io.Serializable;
 import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.BlankNode;
 
@@ -72,7 +73,7 @@ import org.jrdf.graph.BlankNode;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class BlankNodeImpl extends AbstractBlankNode implements MemNode {
+public class BlankNodeImpl extends AbstractBlankNode implements MemNode, Serializable {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

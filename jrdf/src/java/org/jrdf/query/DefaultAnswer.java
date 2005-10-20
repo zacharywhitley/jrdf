@@ -58,11 +58,12 @@
 
 package org.jrdf.query;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.util.param.ParameterUtil;
-
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.List;
+import org.jrdf.graph.Triple;
+import org.jrdf.util.EqualsUtil;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Default implementation of {@link Answer}.
@@ -71,23 +72,47 @@ import java.util.Iterator;
  */
 public final class DefaultAnswer implements Answer, Serializable {
 
-    static final long serialVersionUID = -4724846731215773529L;
+    private static final long serialVersionUID = -4724846731215773529L;
+    private static final int DEFAULT_HASH_CODE = 7;
     private static final String DELIMITER_OPEN = "{";
     private static final String DELIMITER_CLOSE = "}";
     private static final String INDENT = "  ";
     private static final String NEW_LINE = "\n";
-    private Iterator<Triple> solutions;
+    private List<Triple> solutions;
 
-    // FIXME TJA: ClosableIterator is not serializable - this won't probably work correctly!
-    // FIXME TJA: Figure out something better other than ClosableIterator to back an answer ;)
-    // FIXME TJA: Should this take a List<Triple>? Needs to be sortable for SPARQL support.
-    public DefaultAnswer(Iterator<Triple> solutions) {
+    public DefaultAnswer(List<Triple> solutions) {
         ParameterUtil.checkNotNull("solutions", solutions);
         this.solutions = solutions;
     }
 
-    public Iterator<Triple> getSolutions() {
+    public List<Triple> getSolutions() {
         return solutions;
+    }
+
+    /**
+     * Two answers are equal if their {@linkplain #getSolutions() solutions} are equal.
+     * <p>Two {@link Answer}s of differing implementation will not neccessarily be equal.</p>
+     */
+    public boolean equals(Object obj) {
+        // FIXME TJA: Should different implementations of Answer be equal?
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (EqualsUtil.differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((Answer) obj);
+    }
+
+    public int hashCode() {
+        return DEFAULT_HASH_CODE;
+    }
+
+    private boolean determineEqualityFromFields(Answer obj) {
+        return ((Answer) obj).getSolutions().equals(solutions);
     }
 
     public String toString() {
@@ -98,10 +123,10 @@ public final class DefaultAnswer implements Answer, Serializable {
         return stringForm.toString();
     }
 
-    private String getTriplesAsString(Iterator<Triple> triples) {
+    private String getTriplesAsString(List<Triple> triples) {
         StringBuffer stringForm = new StringBuffer();
-        while (triples.hasNext()) {
-            String tripleString = getTripleAsString(triples.next(), !triples.hasNext());
+        for (Iterator<Triple> iterator = triples.iterator(); iterator.hasNext();) {
+            String tripleString = getTripleAsString(iterator.next(), !iterator.hasNext());
             stringForm.append(tripleString);
         }
         return stringForm.toString();

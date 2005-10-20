@@ -63,6 +63,7 @@ import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.AssertionFailedError;
+import junit.framework.Assert;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 /**
@@ -78,35 +79,48 @@ public final class SerializationTestUtil {
 
     public static void checkSerializability(Class<? extends Serializable> cls) {
         checkContainsSerialVersionUid(cls);
-        checkCanBeSerialized(cls);
+        canBeSerialized(cls);
+    }
+
+    public static void checkSerialialVersionUid(Class<?> cls, long expectedUid) {
+        checkContainsSerialVersionUid(cls);
+        checkSerialUidValue(cls, expectedUid);
+    }
+
+    // Note. This method will not attempt to serialize interfaces.
+    public static void canBeSerialized(Class<?> cls) {
+        if (canBeInstantiated(cls)) checkSerialization(instantiate(cls));
+    }
+
+    // Note. Re-throwing exceptions below as we lose the class that caused the problem.
+    public static void checkSerialization(Object instanceToBeSerialized) {
+        try {
+            TestUtil.testSerialization(instanceToBeSerialized, WHO_KNOWS_WHAT_THIS_MEANS);
+        } catch (AssertionFailedError afe) {
+            throw new AssertionFailedError("Class " + getClassName(instanceToBeSerialized) + ", " + afe.getMessage());
+        } catch (IOException ioe) {
+            throw new RuntimeException("Exception while checking serialization of " +
+                    getClassName(instanceToBeSerialized), ioe);
+        }
+    }
+
+    private static void checkSerialUidValue(Class<?> cls, long expectedUid) {
+        long actualUid = ReflectTestUtil.getLongFieldValue(cls, FIELD_SERIAL_VERSION_UID);
+        Assert.assertEquals(expectedUid, actualUid);
     }
 
     // FIXME TJA: Do interfaces need serialVersionUID fields?
     private static void checkContainsSerialVersionUid(Class<?> cls) {
         ClassPropertiesTestUtil.checkContainsField(cls, FIELD_SERIAL_VERSION_UID);
-        ClassPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
+        ClassPropertiesTestUtil.checkFieldPrivate(cls, FIELD_SERIAL_VERSION_UID);
         ClassPropertiesTestUtil.checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
         ClassPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
         ClassPropertiesTestUtil.checkFieldIsOfType(cls, FIELD_SERIAL_VERSION_UID, CLASS_LONG_PRIMITIVE);
     }
 
-    // Note. This method will not attempt to serialize interfaces.
-    public static void checkCanBeSerialized(Class<?> cls) {
-        if (canBeInstantiated(cls)) checkSerialization(instantiate(cls));
-    }
-
+    // FIXME TJA: Think about whether interfaces need a serialVersionUID
     private static boolean canBeInstantiated(Class<?> cls) {
         return !cls.isInterface() && !Modifier.isAbstract(cls.getModifiers());
-    }
-
-    public static void checkSerialization(Object ref) {
-        try {
-            TestUtil.testSerialization(ref, WHO_KNOWS_WHAT_THIS_MEANS);
-        } catch (AssertionFailedError afe) {
-            throw new AssertionFailedError("Class " + getClassName(ref) + ", " + afe.getMessage());
-        } catch (IOException ioe) {
-            throw new RuntimeException("Exception while checking serialization of " + getClassName(ref), ioe);
-        }
     }
 
     private static String getClassName(Object ref) {

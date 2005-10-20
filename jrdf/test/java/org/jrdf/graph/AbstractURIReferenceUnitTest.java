@@ -58,13 +58,13 @@
 
 package org.jrdf.graph;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.net.URI;
+import junit.framework.TestCase;
+import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 
 /**
  * Unit test for {@link AbstractURIReference}.
@@ -110,9 +110,8 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterface(URIReference.class, AbstractURIReference.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractURIReference.class);
         ClassPropertiesTestUtil.checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class);
-        ClassPropertiesTestUtil.checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class,
-                boolean.class);
-        assertEquals(8034954863132812197L, AbstractURIReference.serialVersionUID);
+        ClassPropertiesTestUtil.checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class, boolean.class);
+        SerializationTestUtil.checkSerialialVersionUid(AbstractURIReference.class, 8034954863132812197L);
     }
 
     public void testConstructor() throws Exception {

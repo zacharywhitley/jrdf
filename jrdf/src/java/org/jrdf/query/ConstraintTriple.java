@@ -58,6 +58,7 @@
 
 package org.jrdf.query;
 
+import java.io.Serializable;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.EqualsUtil;
 import org.jrdf.util.param.ParameterUtil;
@@ -69,10 +70,11 @@ import org.jrdf.util.param.ParameterUtil;
  * @version $Revision$
  * @see org.jrdf.graph.Triple
  */
-public final class ConstraintTriple implements ConstraintExpression {
+public final class ConstraintTriple implements ConstraintExpression, Serializable {
 
-    private Triple triple;
+    private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
+    private Triple triple;
 
     public ConstraintTriple(Triple triple) {
         ParameterUtil.checkNotNull("triple", triple);

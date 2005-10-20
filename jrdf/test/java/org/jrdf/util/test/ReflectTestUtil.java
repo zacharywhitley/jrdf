@@ -90,6 +90,16 @@ public final class ReflectTestUtil {
         }
     }
 
+    public static long getLongFieldValue(Class<?> cls, String fieldName) {
+        Field field = getField(cls, fieldName);
+        try {
+            field.setAccessible(true);
+            return field.getLong(cls);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static Object createInstanceUsingConstructor(Class<?> cls, ParamSpec params) {
         Constructor<?> constructor = getConstructor(cls, params);
         return invokeConstructor(constructor, params);
