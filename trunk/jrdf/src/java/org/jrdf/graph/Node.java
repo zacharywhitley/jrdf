@@ -58,18 +58,14 @@
 
 package org.jrdf.graph;
 
-import java.io.Serializable;
-
 /**
  * RDF node.  This includes all things in the graph.
  * @author Simon Raboczi
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Node extends Serializable {
+public interface Node {
 
-    /**
-     * Serial UID.
-     */
-    long serialVersionUID = -9031232254076464056L;
+    // FIXME TJA: Breadcrumb - Removed
+    //long serialVersionUID = -9031232254076464056L;
 }

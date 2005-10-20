@@ -19,17 +19,6 @@
 
 package org.jrdf.parser.rdfxml;
 
-import org.jrdf.parser.NamespaceListener;
-import org.jrdf.parser.ParseLocationListener;
-import org.jrdf.vocabulary.RDF;
-import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
-import org.xml.sax.SAXException;
-
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -38,6 +27,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+import org.jrdf.parser.NamespaceListener;
+import org.jrdf.parser.ParseLocationListener;
+import org.jrdf.vocabulary.RDF;
+import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
 
 /**
  * A filter on SAX events to make life easier on the RDF parser
@@ -149,7 +148,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
     SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
         this.rdfParser = rdfParser;
-        th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()). newTransformerHandler();
+        th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).newTransformerHandler();
         th.setResult(new StreamResult(escapedXmlOutputStream));
     }
 

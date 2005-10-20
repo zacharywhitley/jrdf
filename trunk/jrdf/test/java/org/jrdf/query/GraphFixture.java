@@ -60,7 +60,7 @@ package org.jrdf.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 import junit.framework.Assert;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
@@ -74,8 +74,8 @@ import org.jrdf.util.ClosableIterator;
  */
 public final class GraphFixture {
 
-    static final Graph GRAPH_BAD = new MockBadGraph();
-    static final MockGraph GRAPH_GOOD = createGraph();
+    public static final Graph GRAPH_BAD = new MockBadGraph();
+    public static final MockGraph GRAPH_GOOD = createGraph();
 
     private GraphFixture() { }
 
@@ -90,8 +90,8 @@ public final class GraphFixture {
     }
 
     public static void checkAnswer(Triple expectedTriple, Answer actualAnswer) {
-        Iterator<Triple> iterator = actualAnswer.getSolutions();
-        Triple actualTriple = (Triple) iterator.next();
+        List<Triple> solutions = actualAnswer.getSolutions();
+        Triple actualTriple = (Triple) solutions.iterator().next();
         checkTriple(expectedTriple, actualTriple);
     }
 

@@ -58,9 +58,8 @@
 
 package org.jrdf.query;
 
+import java.util.List;
 import org.jrdf.graph.Triple;
-
-import java.util.Iterator;
 
 /**
  * An answer to a query.
@@ -69,5 +68,5 @@ import java.util.Iterator;
  */
 public interface Answer {
 
-    Iterator<Triple> getSolutions();
+    List<Triple> getSolutions();
 }

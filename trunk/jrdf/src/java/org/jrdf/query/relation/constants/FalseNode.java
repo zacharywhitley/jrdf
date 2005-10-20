@@ -1,16 +1,15 @@
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.graph.Node;
-
 import java.io.ObjectStreamException;
+import java.io.Serializable;
+import org.jrdf.graph.Node;
 
 /**
  * A class which simply contains the False Node constant.
- *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class FalseNode implements Node {
+public final class FalseNode implements Node, Serializable {
 
     /**
      * The node which represents the boolean logic value "FALSE".

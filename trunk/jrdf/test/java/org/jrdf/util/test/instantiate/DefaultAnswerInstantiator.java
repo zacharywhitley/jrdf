@@ -59,8 +59,7 @@
 package org.jrdf.util.test.instantiate;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.DefaultAnswer;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -79,7 +78,7 @@ final class DefaultAnswerInstantiator implements Instantiator {
     }
 
     private ReflectTestUtil.ParamSpec createParams() {
-        Collection<Triple> triples = new ArrayList<Triple>();
-        return new ReflectTestUtil.ParamSpec(new Object[]{triples.iterator()}, new Class[]{Iterator.class});
+        List<Triple> triples = new ArrayList<Triple>();
+        return new ReflectTestUtil.ParamSpec(new Object[]{triples}, new Class[]{List.class});
     }
 }

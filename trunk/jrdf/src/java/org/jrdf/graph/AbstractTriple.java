@@ -58,9 +58,8 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.util.EqualsUtil;
-
 import java.io.Serializable;
+import org.jrdf.util.EqualsUtil;
 
 /**
  * A base implementation of an RDF {@link Triple}.
@@ -70,11 +69,9 @@ import java.io.Serializable;
  */
 public class AbstractTriple implements Triple, Serializable {
 
+    private static final long serialVersionUID = 8737092494833012690L;
     private static final int DEFAULT_HASH_VALUE = 0;
-    static final long serialVersionUID = 8737092494833012690L;
-    // FIXME TJA: Why are these protected?
-    // FIXME AN: Because they are used in constructors.  Maybe the right answer is for at least one construct (with
-    // null check).
+    // FIXME TJA: See if these protected variables can be removed
     protected SubjectNode subjectNode;
     protected PredicateNode predicateNode;
     protected ObjectNode objectNode;
@@ -101,8 +98,7 @@ public class AbstractTriple implements Triple, Serializable {
     /**
      * Obtains the object of this statement.
      *
-     * @return a {@link ObjectNode} which is either a {@link BlankNode},
-     *         {@link URIReference} or {@link Literal}
+     * @return a {@link ObjectNode} which is either a {@link BlankNode}, {@link URIReference} or {@link Literal}
      */
     public ObjectNode getObject() {
         return objectNode;

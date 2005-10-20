@@ -59,16 +59,15 @@
 package org.jrdf.query;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.lang.reflect.Modifier;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
 /**
@@ -90,15 +89,17 @@ public final class DefaultAnswerUnitTest extends TestCase {
             INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
             INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE + NEW_LINE +
             "}";
+    private static final Answer EMPTY_ANSWER_1 = new DefaultAnswer(createEmptyTripleList());
+    private static final Answer EMPTY_ANSWER_2 = new DefaultAnswer(createEmptyTripleList());
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Answer.class, DefaultAnswer.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, DefaultAnswer.class);
-        ClassPropertiesTestUtil.checkConstructor(DefaultAnswer.class, Modifier.PUBLIC, Iterator.class);
+        ClassPropertiesTestUtil.checkConstructor(DefaultAnswer.class, Modifier.PUBLIC, List.class);
     }
 
     public void testSerialVersionUid() {
-        assertEquals(-4724846731215773529L, DefaultAnswer.serialVersionUID);
+        SerializationTestUtil.checkSerialialVersionUid(DefaultAnswer.class, -4724846731215773529L);
     }
 
     public void testConstructorFailsWithNull() {
@@ -110,10 +111,26 @@ public final class DefaultAnswerUnitTest extends TestCase {
     }
 
     public void testGetAnswer() {
-        MockClosableIterator expected = new MockClosableIterator(createEmptyTripleList());
-        Answer answer = new DefaultAnswer(expected);
-        Iterator<Triple> actual = answer.getSolutions();
+        List<Triple> expected = createEmptyTripleList();
+        Answer answer = new DefaultAnswer(createEmptyTripleList());
+        List<Triple> actual = answer.getSolutions();
         assertEquals(expected, actual);
+    }
+
+    public void testEquals() {
+        checkNullComparisonObject();
+        checkReflexive();
+        checkDifferentClass();
+        checkSymmetric();
+        checkTransitive();
+        checkConsistentEquals();
+        checkSimpleEqual();
+        checkSimpleNotEqual();
+    }
+
+    public void testHashCode() {
+        checkConsistentHashCode();
+        checkEqualObjectsReturnSameHashCode();
     }
 
     public void testToString() {
@@ -122,24 +139,107 @@ public final class DefaultAnswerUnitTest extends TestCase {
         checkStringForm(STRING_FORM_MULTIPLE_ELEMENTS, createMultipleTripleList());
     }
 
+    private void checkNullComparisonObject() {
+        checkNotEqual(EMPTY_ANSWER_1, null);
+    }
 
-    private void checkStringForm(String expectedStringForm, Collection<Triple> content) {
-        Answer answer = new DefaultAnswer(new MockClosableIterator(content));
+    private void checkReflexive() {
+        checkSameValueSameReference();
+        checkSameValueDifferentReference();
+    }
+
+    private void checkDifferentClass() {
+        checkNotEqual(EMPTY_ANSWER_1, STRING_FORM_NO_ELEMENTS);
+    }
+
+    private void checkSymmetric() {
+        Answer x = new DefaultAnswer(createEmptyTripleList());
+        Answer y = new DefaultAnswer(createEmptyTripleList());
+        checkEqual(x, y);
+        checkEqual(y, y);
+    }
+
+    private void checkTransitive() {
+        Answer x = new DefaultAnswer(createEmptyTripleList());
+        Answer y = new DefaultAnswer(createEmptyTripleList());
+        Answer z = new DefaultAnswer(createEmptyTripleList());
+        checkEqual(x, y);
+        checkEqual(y, z);
+        checkEqual(x, z);
+    }
+
+    private void checkConsistentEquals() {
+        Answer x = new DefaultAnswer(createEmptyTripleList());
+        Answer y = new DefaultAnswer(createEmptyTripleList());
+        checkEqual(x, y);
+        checkEqual(x, y);
+    }
+
+    private void checkSameValueSameReference() {
+        Answer x = EMPTY_ANSWER_1;
+        Answer y = x;
+        checkEqual(x, y);
+    }
+
+    private void checkSameValueDifferentReference() {
+        Answer x = new DefaultAnswer(createEmptyTripleList());
+        Answer y = new DefaultAnswer(createEmptyTripleList());
+        checkEqual(x, y);
+    }
+
+    private void checkSimpleEqual() {
+        checkEqual(EMPTY_ANSWER_1, EMPTY_ANSWER_2);
+    }
+
+    private void checkSimpleNotEqual() {
+        Answer x = new DefaultAnswer(createSingleTripleList());
+        Answer y = new DefaultAnswer(createEmptyTripleList());
+        checkNotEqual(x, y);
+    }
+
+    private void checkEqual(Object x, Object y) {
+        assertEquals(x, y);
+    }
+
+    private void checkNotEqual(Object x, Object y) {
+        assertFalse(x.equals(y));
+    }
+
+    private void checkConsistentHashCode() {
+        checkConsistentHashCode(EMPTY_ANSWER_1);
+        checkConsistentHashCode(EMPTY_ANSWER_2);
+    }
+
+    private void checkEqualObjectsReturnSameHashCode() {
+        Answer x = EMPTY_ANSWER_1;
+        Answer y = EMPTY_ANSWER_2;
+        checkEqual(x, y);
+        assertEquals(x.hashCode(), y.hashCode());
+    }
+
+    private void checkConsistentHashCode(Answer answer) {
+        int hashCode1 = answer.hashCode();
+        int hashCode2 = answer.hashCode();
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    private void checkStringForm(String expectedStringForm, List<Triple> content) {
+        Answer answer = new DefaultAnswer(content);
         assertEquals(expectedStringForm, answer.toString());
     }
 
-    private Collection<Triple> createEmptyTripleList() {
+    private static List<Triple> createEmptyTripleList() {
         return Collections.emptyList();
     }
 
-    private Collection<Triple> createSingleTripleList() {
-        Collection<Triple> triples = new ArrayList<Triple>();
+    private static List<Triple> createSingleTripleList() {
+        List<Triple> triples = new ArrayList<Triple>();
         triples.add(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
         return triples;
     }
 
-    private Collection<Triple> createMultipleTripleList() {
-        Collection<Triple> triples = new ArrayList<Triple>();
+    private List<Triple> createMultipleTripleList() {
+        List<Triple> triples = new ArrayList<Triple>();
         triples.add(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
         triples.add(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE);
         return triples;

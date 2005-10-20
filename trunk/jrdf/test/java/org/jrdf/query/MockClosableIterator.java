@@ -68,7 +68,7 @@ import org.jrdf.graph.Triple;
  * @author Tom Adams
  * @version $Revision$
  */
-public class MockClosableIterator implements ClosableIterator<Triple> {
+public final class MockClosableIterator implements ClosableIterator<Triple> {
 
     private Iterator<Triple> iterator;
 

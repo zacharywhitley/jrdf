@@ -60,6 +60,7 @@ package org.jrdf.query;
 
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 
 /**
  * Unit test for {@link org.jrdf.query.ConstraintExpression}.
@@ -69,11 +70,16 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 public final class ConstraintExpressionUnitTest extends TestCase {
 
     private static final String FIELD_ALL = "ALL";
+    private static final Class<ConstraintExpression.AllConstraintExpression> CLASS_CONSTRAINT_EXPRESSION_ALL = ConstraintExpression.AllConstraintExpression.class;
 
     public void testAllConstant() throws Exception {
         checkAllConstantStaticFinal();
         checkAllConstantImmutable();
         checkAllConstantType();
+    }
+
+    public void testAllInnerClassSerializable() {
+        SerializationTestUtil.checkSerialialVersionUid(CLASS_CONSTRAINT_EXPRESSION_ALL, 604673293181195659L);
     }
 
     private void checkAllConstantStaticFinal() throws Exception {

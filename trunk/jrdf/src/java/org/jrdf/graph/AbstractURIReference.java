@@ -60,10 +60,9 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 
-import org.jrdf.util.EqualsUtil;
-
 import java.io.Serializable;
 import java.net.URI;
+import org.jrdf.util.EqualsUtil;
 
 /**
  * A base implementation of an RDF {@link URIReference}.
@@ -72,8 +71,7 @@ import java.net.URI;
  * @author Andrew Newman
  * @version $Revision$
  */
-public abstract class AbstractURIReference implements URIReference,
-        Serializable {
+public abstract class AbstractURIReference implements URIReference, Serializable {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -81,7 +79,7 @@ public abstract class AbstractURIReference implements URIReference,
      * NOTE : update this serialVersionUID when a method or a public member is
      * deleted.
      */
-    static final long serialVersionUID = 8034954863132812197L;
+    private static final long serialVersionUID = 8034954863132812197L;
 
     /**
      * The URI of the node.

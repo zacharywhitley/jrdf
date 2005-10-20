@@ -58,20 +58,20 @@
 
 package org.jrdf.query;
 
-import org.jrdf.util.param.ParameterUtil;
-
 import java.io.Serializable;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Default implementation of {@link Variable}.
- *
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-final class DefaultVariable implements Variable, Serializable {
+public final class DefaultVariable implements Variable, Serializable {
 
-    // FIXME: Check for immutability of parameters.
-    static final long serialVersionUID = -2633694253531710240L;
+    // FIXME TJA: Write equals() & hasCode()
+    // FIXME TJA: Check for immutability of parameters.
+
+    private static final long serialVersionUID = -2633694253531710240L;
     private String name;
 
     public DefaultVariable(String name) {

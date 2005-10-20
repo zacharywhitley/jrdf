@@ -56,51 +56,30 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.util.test.instantiate;
 
-import java.net.URI;
-import java.lang.reflect.Modifier;
-
-import junit.framework.TestCase;
-import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.TripleTestUtil;
-import org.jrdf.graph.Graph;
+import java.util.List;
+import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.DefaultQuery;
+import org.jrdf.query.Variable;
+import org.jrdf.util.test.ReflectTestUtil;
 
 /**
- * Unit test for {@link NaiveQueryExecutor}.
+ * {@link Instantiator} for {@link org.jrdf.query.DefaultQuery}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-public final class NaiveQueryExecutorUnitTest extends TestCase {
+final class DefaultQueryInstantiator implements Instantiator {
 
-    private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
+    private static final Class<DefaultQuery> CLASS_DEFAULT_QUERY = DefaultQuery.class;
 
-    public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
-        ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, Graph.class, URI.class);
+    public Object instantiate() {
+        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_QUERY, createParams());
     }
 
-    public void testNullSessionInConstructor() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN);
-            }
-        });
-    }
-
-    public void testNullSesurityDomainInConstructor() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null);
-            }
-        });
-    }
-
-    public void testExecuteQuery() throws Exception {
-        JrdfQueryExecutor executor = new NaiveQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN);
-        Answer answer = executor.executeQuery(GraphFixture.createQuery());
-        GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
+    private ReflectTestUtil.ParamSpec createParams() {
+        Object[] params = new Object[]{Variable.ALL_VARIABLES, ConstraintExpression.ALL};
+        Class<?>[] types = new Class[]{List.class, ConstraintExpression.class};
+        return new ReflectTestUtil.ParamSpec(params, types);
     }
 }

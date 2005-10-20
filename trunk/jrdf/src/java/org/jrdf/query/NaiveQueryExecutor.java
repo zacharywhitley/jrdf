@@ -58,13 +58,15 @@
 
 package org.jrdf.query;
 
+import java.net.URI;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
-
-import java.net.URI;
 
 /**
  * A naive query executor that uses an iterator-based approach to finding triples.
@@ -102,8 +104,16 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * {@inheritDoc}
      */
     public Answer executeQuery(Query query) throws GraphException {
-        ClosableIterator<Triple> triples = findTriples(query);
+        List<Triple> triples = toList(findTriples(query));
         return new DefaultAnswer(triples);
+    }
+
+    private List<Triple> toList(Iterator<Triple> triples) {
+        List<Triple> list = new ArrayList<Triple>();
+        while (triples.hasNext()) {
+            list.add(triples.next());
+        }
+        return list;
     }
 
     // TODO: When the tests (& grammar) force it, get all the triples and iterate over them :)

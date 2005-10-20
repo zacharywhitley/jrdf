@@ -59,12 +59,12 @@
 package org.jrdf.query;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Arrays;
 import java.lang.reflect.Modifier;
-
+import java.util.Arrays;
+import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 
 /**
@@ -88,7 +88,7 @@ public final class DefaultQueryUnitTest extends TestCase {
     }
 
     public void testSerialVersionUid() {
-        assertEquals(409607492370028929L, DefaultQuery.serialVersionUID);
+        SerializationTestUtil.checkSerialialVersionUid(DefaultQuery.class, 409607492370028929L);
     }
 
     public void testNullsInConstructorThrowException() {

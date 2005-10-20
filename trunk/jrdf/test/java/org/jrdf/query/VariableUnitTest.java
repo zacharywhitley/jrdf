@@ -65,9 +65,12 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 /**
  * Unit test for {@link org.jrdf.query.Variable}.
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
 public final class VariableUnitTest extends TestCase {
+
+    // FIXME TJA: Breadcrumb - Was going through this and refactoring all old code to use the new serialiVersionUID
+    // checks in STU.
 
     private static final String FIELD_ALL_VARIABLES = "ALL_VARIABLES";
 

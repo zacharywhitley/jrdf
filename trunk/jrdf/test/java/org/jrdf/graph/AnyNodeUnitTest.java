@@ -19,7 +19,10 @@ public class AnyNodeUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Node.class, AnyNode.class);
         ClassPropertiesTestUtil.checkConstructor(AnyNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
-        SerializationTestUtil.checkSerialization(AnyObjectNode.ANY_OBJECT_NODE);
+    }
+
+    public void testSerialVersionUid() {
+        SerializationTestUtil.checkSerialialVersionUid(AnyNode.class, -4846208755020186880L);
     }
 
     public void testToString() {

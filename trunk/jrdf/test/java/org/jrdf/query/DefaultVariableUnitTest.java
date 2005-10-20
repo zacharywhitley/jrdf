@@ -60,10 +60,9 @@ package org.jrdf.query;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.List;
-
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 
 /**
  * Unit test for {@link DefaultVariable}.
@@ -82,7 +81,7 @@ public final class DefaultVariableUnitTest extends TestCase {
     }
 
     public void testConstants() {
-        assertEquals(-2633694253531710240L, DefaultVariable.serialVersionUID);
+        SerializationTestUtil.checkSerialialVersionUid(DefaultVariable.class, -2633694253531710240L);
     }
 
     public void testConstructorFailsWithNull() {
@@ -96,6 +95,70 @@ public final class DefaultVariableUnitTest extends TestCase {
         checkName(VARIABLE_NAME_1);
         checkName(VARIABLE_NAME_2);
     }
+
+    public void testEquals() {
+//        checkNullComparisonObject();
+//        checkReflexive();
+//        checkDifferentClass();
+//        checkSymmetric();
+//        checkTransitive();
+//        checkConsistentEquals();
+//        checkSimpleEqual();
+//        checkSimpleNotEqual();
+    }
+
+//    public void testHashCode() {
+//        checkConsistentHashCode();
+//        checkEqualObjectsReturnSameHashCode();
+//    }
+
+//    private void checkNullComparisonObject() {
+//        checkNotEqual(EMPTY_ANSWER_1, null);
+//    }
+
+//    private void checkReflexive() {
+//        checkSameValueSameReference();
+//        checkSameValueDifferentReference();
+//    }
+
+//    private void checkDifferentClass() {
+//        checkNotEqual(EMPTY_ANSWER_1, STRING_FORM_NO_ELEMENTS);
+//    }
+
+//    private void checkSymmetric() {
+//        Answer x = new DefaultAnswer(createEmptyTripleList());
+//        Answer y = new DefaultAnswer(createEmptyTripleList());
+//        checkEqual(x, y);
+//        checkEqual(y, y);
+//    }
+
+//    private void checkTransitive() {
+//        Answer x = new DefaultAnswer(createEmptyTripleList());
+//        Answer y = new DefaultAnswer(createEmptyTripleList());
+//        Answer z = new DefaultAnswer(createEmptyTripleList());
+//        checkEqual(x, y);
+//        checkEqual(y, z);
+//        checkEqual(x, z);
+//    }
+
+//    private void checkConsistentEquals() {
+//        Answer x = new DefaultAnswer(createEmptyTripleList());
+//        Answer y = new DefaultAnswer(createEmptyTripleList());
+//        checkEqual(x, y);
+//        checkEqual(x, y);
+//    }
+
+//    private void checkSameValueSameReference() {
+//        Answer x = EMPTY_ANSWER_1;
+//        Answer y = x;
+//        checkEqual(x, y);
+//    }
+
+//    private void checkSameValueDifferentReference() {
+//        Answer x = new DefaultAnswer(createEmptyTripleList());
+//        Answer y = new DefaultAnswer(createEmptyTripleList());
+//        checkEqual(x, y);
+//    }
 
     private void checkName(String name) {
         Variable variable = new DefaultVariable(name);

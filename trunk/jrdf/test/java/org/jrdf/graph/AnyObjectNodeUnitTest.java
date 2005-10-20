@@ -1,10 +1,10 @@
 package org.jrdf.graph;
 
+import java.lang.reflect.Modifier;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.SerializationTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import java.lang.reflect.Modifier;
+import org.jrdf.util.test.SerializationTestUtil;
 
 /**
  * Test the properties of the AnyObjectNode.
@@ -18,7 +18,10 @@ public class AnyObjectNodeUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ObjectNode.class, AnyObjectNode.class);
         ClassPropertiesTestUtil.checkConstructor(AnyObjectNode.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
-        SerializationTestUtil.checkSerialization(AnyObjectNode.ANY_OBJECT_NODE);
+    }
+
+    public void testSerialVersionUid() {
+        SerializationTestUtil.checkSerialialVersionUid(AnyObjectNode.class, 8654340032080018169L);
     }
 
     public void testToString() {

@@ -60,9 +60,9 @@ package org.jrdf.graph.mem;
 
 // Java 2 standard packages
 
-import org.jrdf.graph.AbstractURIReference;
-
+import java.io.Serializable;
 import java.net.URI;
+import org.jrdf.graph.AbstractURIReference;
 
 /**
  * RDF URI reference - resource node. Some RDF resources are properties. It's
@@ -76,7 +76,7 @@ import java.net.URI;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class URIReferenceImpl extends AbstractURIReference implements MemNode {
+public class URIReferenceImpl extends AbstractURIReference implements MemNode, Serializable {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

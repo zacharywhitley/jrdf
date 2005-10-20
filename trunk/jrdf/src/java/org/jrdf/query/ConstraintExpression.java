@@ -58,10 +58,12 @@
 
 package org.jrdf.query;
 
+import java.io.ObjectStreamException;
+import java.io.Serializable;
+
 /**
  * A pattern of triples applied to a graph to constrain the results of a query.
  * <p>Maps to a <code>GraphPattern</code> in the SPARQL grammar.</p>
- *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -71,6 +73,18 @@ public interface ConstraintExpression {
      * A constraint that matches all triples.
      * <p>i.e. The constraint in a query of the form <code>SELECT { ?subject ?predicate ?object }</code>.</p>
      */
-    ConstraintExpression ALL = new ConstraintExpression() {
-    };
+    ConstraintExpression ALL = AllConstraintExpression.INSTANCE;
+
+    static final class AllConstraintExpression implements ConstraintExpression, Serializable {
+
+        private static final long serialVersionUID = 604673293181195659L;
+        private static final AllConstraintExpression INSTANCE = new AllConstraintExpression();
+
+        private AllConstraintExpression() {
+        }
+
+        private Object readResolve() throws ObjectStreamException {
+            return INSTANCE;
+        }
+    }
 }

@@ -58,12 +58,12 @@
 
 package org.jrdf.query;
 
+import java.lang.reflect.Modifier;
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
-
-import java.lang.reflect.Modifier;
 
 /**
  * Unit test for {@link ConstraintTriple}.
@@ -80,6 +80,10 @@ public final class ConstraintTripleUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ConstraintExpression.class, ConstraintTriple.class);
         ClassPropertiesTestUtil.checkConstructor(ConstraintTriple.class, Modifier.PUBLIC, Triple.class);
+    }
+
+    public void testSerialVersionUID() {
+        SerializationTestUtil.checkSerialialVersionUid(ConstraintTriple.class, 4538228991602138679L);
     }
 
     public void testNullToConstructorThrowsException() {

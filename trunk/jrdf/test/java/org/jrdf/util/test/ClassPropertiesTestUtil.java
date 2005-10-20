@@ -110,10 +110,10 @@ public final class ClassPropertiesTestUtil {
         return Modifier.isFinal(method.getModifiers());
     }
 
-    // FIXME TJA: This smells. Can we do something else? We can iterate over getDeclaredFields()
+    // Note. This smells, can we do something else? We can iterate over getDeclaredFields() for example.
     public static boolean containsField(Class<?> cls, String fieldName) {
         try {
-            Field field = cls.getDeclaredField(fieldName);
+            cls.getDeclaredField(fieldName);
             return true;
         } catch (NoSuchFieldException e) {
             return false;
@@ -180,31 +180,23 @@ public final class ClassPropertiesTestUtil {
     }
 
     public static boolean isFieldFinal(Class<?> cls, String fieldName) {
-        Field field = getField(cls, fieldName);
-        return Modifier.isFinal(field.getModifiers());
+        return hasModifier(cls, fieldName, Modifier.FINAL);
     }
 
     public static void checkFieldFinal(Class<?> cls, String fieldName) {
-        String mesg = "Field " + fieldName + " of class " + cls.getSimpleName() + " must be final";
-        Assert.assertTrue(mesg, isFieldFinal(cls, fieldName));
+        checkFieldHasModifier(cls, fieldName, Modifier.FINAL);
     }
 
     public static boolean isFieldStatic(Class<?> cls, String fieldName) {
-        Field field = getField(cls, fieldName);
-        return Modifier.isStatic(field.getModifiers());
+        return hasModifier(cls, fieldName, Modifier.STATIC);
     }
 
     public static void checkFieldStatic(Class<?> cls, String fieldName) {
-        String mesg = "Field " + fieldName + " of class " + cls.getSimpleName() + " must be static";
-        Assert.assertTrue(mesg, isFieldStatic(cls, fieldName));
+        checkFieldHasModifier(cls, fieldName, Modifier.STATIC);
     }
 
-    public static void checkConstructor(Class cls, int expectedModifier, Class... parameters) {
-        Constructor constructor = tryGetConstructor(cls, parameters);
-        Assert.assertTrue(null != constructor);
-        int constructorModifier = constructor.getModifiers();
-        Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
-                " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+    public static void checkFieldPrivate(Class<?> cls, String fieldName) {
+        checkFieldHasModifier(cls, fieldName, Modifier.PRIVATE);
     }
 
     public static boolean isFieldOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
@@ -215,6 +207,25 @@ public final class ClassPropertiesTestUtil {
     public static void checkFieldIsOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
         Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must be of type " +
                 expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
+    }
+
+    public static void checkConstructor(Class cls, int expectedModifier, Class... parameters) {
+        Constructor constructor = tryGetConstructor(cls, parameters);
+        Assert.assertTrue(null != constructor);
+        int constructorModifier = constructor.getModifiers();
+        Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
+                " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+    }
+
+    private static void checkFieldHasModifier(Class<?> cls, String fieldName, int modifier) {
+        boolean hasModifier = hasModifier(cls, fieldName, modifier);
+        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must have modifier " +
+                Modifier.toString(modifier), hasModifier);
+    }
+
+    private static boolean hasModifier(Class<?> cls, String fieldName, int modifier) {
+        Field field = getField(cls, fieldName);
+        return (field.getModifiers() & modifier) != 0;
     }
 
     private static Field getField(Class<?> cls, String fieldName) {
@@ -242,9 +253,9 @@ public final class ClassPropertiesTestUtil {
 
     private static void assertParameters(Class... parameters) {
         if (parameters != null) {
-            Assert.fail("No such constructor found with types: " + Arrays.asList(parameters));
+            Assert.fail("No constructor found with types: " + Arrays.asList(parameters));
         } else {
-            Assert.fail("No null constructor found");
+            Assert.fail("No nullary constructor found");
         }
     }
 }
