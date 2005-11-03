@@ -1,5 +1,9 @@
 package org.jrdf.example;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -11,27 +15,23 @@ import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
 
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Iterator;
+public final class RdfXmlParserExample {
 
-public class RdfXmlParserExample {
     private static final String DEFAULT_RDF_URL = "http://rss.slashdot.org/Slashdot/slashdot";
 
     public static void main(String[] args) throws Exception {
         URL url = getDocumentURL(args);
-        InputStream is = url.openStream();
+        InputStream in = url.openStream();
         final Graph jrdfMem = new GraphImpl();
         RdfXmlParser parser = new RdfXmlParser(jrdfMem.getElementFactory());
         ExampleStatementHandler sh = new ExampleStatementHandler(jrdfMem);
         parser.setStatementHandler(sh);
-        parser.parse(is, url.toURI().toString());
+        parser.parse(in, url.toURI().toString());
         Iterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         while (iter.hasNext()) {
             System.out.println("Graph: " + iter.next());
         }
-        is.close();
+        in.close();
     }
 
     private static URL getDocumentURL(String[] args) throws MalformedURLException {
@@ -46,6 +46,7 @@ public class RdfXmlParserExample {
     }
 
     private static class ExampleStatementHandler implements StatementHandler {
+
         private final Graph jrdfMem;
 
         public ExampleStatementHandler(Graph jrdfMem) {

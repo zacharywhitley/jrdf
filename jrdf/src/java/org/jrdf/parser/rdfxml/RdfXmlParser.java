@@ -19,6 +19,17 @@
  */
 package org.jrdf.parser.rdfxml;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Stack;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.TransformerConfigurationException;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -35,6 +46,7 @@ import org.jrdf.parser.ParseLocationListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.Parser;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import org.jrdf.vocabulary.RDF;
 import org.xml.sax.InputSource;
@@ -42,18 +54,6 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.TransformerConfigurationException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Stack;
 
 /**
  * A parser for XML-serialized RDF. This parser operates directly
@@ -78,18 +78,17 @@ import java.util.Stack;
  * Example code:
  * <pre>
  * Graph jrdfGraph = new GraphImpl();
- * Parser parser = new RdfXmlParser(jrdfGraph);
+ * Parser parser = new RdfXmlParser(jrdfGraph.getElementFactory());
  * parser.setStatementHandler(myStatementHandler);
  * parser.setParseErrorListener(myParseErrorListener);
  * parser.setVerifyData(true);
- * parser.stopAtFirstError(false);
- * <p/>
- * // Parse the data from inputStream, resolving any
- * // relative URIs against http://foo/bar:
+ * parser.setStopAtFirstError(false);
+ *
+ * // Parse the data from inputStream, resolving any relative URIs against http://foo/bar:
  * parser.parse(inputStream, "http://foo/bar");
  * </pre>
  */
-public class RdfXmlParser implements org.jrdf.parser.Parser {
+public final class RdfXmlParser implements Parser {
 
     /**
      * The rdf:type resource. *
