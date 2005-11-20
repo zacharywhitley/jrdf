@@ -31,6 +31,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
+
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParseLocationListener;
 import org.jrdf.vocabulary.RDF;
@@ -247,11 +248,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         }
     }
 
-    public void startElement(String namespaceURI, String localName,
-            String qName, Attributes attributes) throws SAXException {
-
-        // Reset at start of element.
-        charBuf.setLength(0);
+    public void startElement(String namespaceURI, String localName, String qName, Attributes attributes)
+            throws SAXException {
 
         if (null != deferredElement) {
             // The next call could set parseLiteralMode to true!
@@ -391,14 +389,22 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
             deferredElement = null;
         } else {
-            // Check if any character data has been collected in the charBuf
-            boolean literalValue = 0 < charBuf.toString().trim().length();
 
-            if (literalValue) {
-                rdfParser.text(charBuf.toString());
+            if (parseLiteralMode) {
+                // Insert any used namespace prefixes from the XML literal's
+                // context that are not defined in the XML literal itself.
+                insertUsedContextPrefixes();
             }
 
+            // Check if any character data has been collected in the _charBuf
+            String s = charBuf.toString().trim();
             charBuf.setLength(0);
+
+            if (s.length() > 0 || parseLiteralMode) {
+                rdfParser.text(s);
+                parseLiteralMode = false;
+            }
+
             elInfoStack.pop();
             rdfContextStackHeight--;
 
@@ -442,7 +448,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     private void checkAndCopyAttributes(Attributes attributes,
-            ElementInfo elInfo) throws SAXException {
+                                        ElementInfo elInfo) throws SAXException {
         Atts atts = new Atts(attributes.getLength());
 
         int attCount = attributes.getLength();
@@ -526,8 +532,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         int colonIdx = qName.indexOf(':');
         String prefix = 0 < colonIdx ? qName.substring(0, colonIdx) : "";
 
-        if (!xmlLiteralPrefixes.contains(prefix) &&
-                !unknownPrefixesInXmlLiteral.contains(prefix)) {
+        if (!xmlLiteralPrefixes.contains(prefix) && !unknownPrefixesInXmlLiteral.contains(prefix)) {
             unknownPrefixesInXmlLiteral.add(prefix);
         }
     }
@@ -576,7 +581,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     private void appendNamespaceDecl(StringBuffer sb, String prefix,
-            String namespace) throws SAXException {
+                                     String namespace) throws SAXException {
         String attName = "xmlns";
 
         if (!"".equals(prefix)) {
@@ -597,7 +602,6 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         th.characters(c, 0, c.length);
         sb.append(escapedXmlOutputStream.toString());
         escapedXmlOutputStream.reset();
-
         sb.append("\"");
     }
 
@@ -628,7 +632,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         }
 
         ElementInfo(ElementInfo newParent, String newQName, String newNamespaceURI,
-                String newLocalName) {
+                    String newLocalName) {
             parent = newParent;
             qName = newQName;
             namespaceURI = newNamespaceURI;
