@@ -57,12 +57,12 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     /**
      * Byte array for escaping XML.
      */
-    private ByteArrayOutputStream out = new ByteArrayOutputStream();
+    private ByteArrayOutputStream escapedStream = new ByteArrayOutputStream();
 
     /**
      * Output stream for escaping XML.
      */
-    private OutputStreamWriter escapedXmlOutputStream = new OutputStreamWriter(out);
+    private OutputStreamWriter escapedWriter = new OutputStreamWriter(escapedStream);
 
     /**
      * The RDF parser to supply the filtered SAX events to.
@@ -157,7 +157,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
         this.rdfParser = rdfParser;
         th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).newTransformerHandler();
-        th.setResult(new StreamResult(escapedXmlOutputStream));
+        th.setResult(new StreamResult(escapedWriter));
     }
 
     public Locator getLocator() {
@@ -434,7 +434,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 charBuf.append(ch, start, length);
             }
 
-            out.reset();
+            escapedStream.reset();
         }
     }
 
@@ -604,7 +604,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         char[] c = new char[value.length()];
         value.getChars(0, c.length, c, 0);
         escapeXml(c, 0, c.length, sb);
-        out.reset();
+        escapedStream.reset();
 
         sb.append("\"");
     }
@@ -612,8 +612,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     private void escapeXml(char[] c, int start, int length, StringBuffer sb) throws SAXException {
         try {
             th.characters(c, start, length);
-            escapedXmlOutputStream.flush();
-            sb.append(out.toString());
+            escapedWriter.flush();
+            sb.append(escapedStream.toString());
         } catch (IOException e) {
             throw new SAXException("Error occurred escaping attribute text ", e);
         }
