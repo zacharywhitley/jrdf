@@ -20,6 +20,8 @@
 package org.jrdf.parser.rdfxml;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +57,12 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     /**
      * Byte array for escaping XML.
      */
-    private ByteArrayOutputStream escapedXmlOutputStream = new ByteArrayOutputStream();
+    private ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+    /**
+     * Output stream for escaping XML.
+     */
+    private OutputStreamWriter escapedXmlOutputStream = new OutputStreamWriter(out);
 
     /**
      * The RDF parser to supply the filtered SAX events to.
@@ -418,18 +425,16 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 reportDeferredStartElement();
             }
 
-            // Send new set of characters to transformerhandler to escape xml.
-            th.characters(ch, start, length);
-
             if (parseLiteralMode) {
                 // Characters like '<', '>', and '&' must be escaped to
                 // prevent breaking the XML text.
-                charBuf.append(escapedXmlOutputStream.toString());
+                // Send new set of characters to transformerhandler to escape xml.
+                escapeXml(ch, start, length, charBuf);
             } else {
                 charBuf.append(ch, start, length);
             }
 
-            escapedXmlOutputStream.reset();
+            out.reset();
         }
     }
 
@@ -597,12 +602,21 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         sb.append("=\"");
 
         char[] c = new char[value.length()];
-        value.getChars(0, c.length - 1, c, 0);
-        th.setResult(new StreamResult(escapedXmlOutputStream));
-        th.characters(c, 0, c.length);
-        sb.append(escapedXmlOutputStream.toString());
-        escapedXmlOutputStream.reset();
+        value.getChars(0, c.length, c, 0);
+        escapeXml(c, 0, c.length, sb);
+        out.reset();
+
         sb.append("\"");
+    }
+
+    private void escapeXml(char[] c, int start, int length, StringBuffer sb) throws SAXException {
+        try {
+            th.characters(c, start, length);
+            escapedXmlOutputStream.flush();
+            sb.append(out.toString());
+        } catch (IOException e) {
+            throw new SAXException("Error occurred escaping attribute text ", e);
+        }
     }
 
     private ElementInfo peekStack() {
