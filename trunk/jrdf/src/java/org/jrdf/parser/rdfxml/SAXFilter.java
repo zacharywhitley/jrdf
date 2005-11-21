@@ -224,7 +224,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     public void startDocument() throws SAXException {
+        // Initialize TransformerHanlder
         th.startDocument();
+        // Ignores initial xml prefix.
+        escapeXml(new char[]{}, 0, 0, new StringBuffer());
     }
 
     public void endDocument() throws SAXException {
@@ -396,7 +399,6 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
             deferredElement = null;
         } else {
-
             if (parseLiteralMode) {
                 // Insert any used namespace prefixes from the XML literal's
                 // context that are not defined in the XML literal itself.
