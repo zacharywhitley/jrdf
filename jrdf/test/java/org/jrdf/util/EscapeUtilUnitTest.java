@@ -15,6 +15,8 @@ public class EscapeUtilUnitTest extends TestCase {
         testEscapedValue("\\U00010000", "\uD800\uDC00");
         testEscapedValue("\\U00010001", "\uD800\uDC01");
         testEscapedValue("\\U00010401", "\uD801\uDC01");
+        testEscapedValue("\\U00020000", "\uD840\uDC00");
+        testEscapedValue("\\U00030000", "\uD880\uDC00");
         testEscapedValue("\\U00100000", "\uDBC0\uDC00");
         testEscapedValue("\\U0010FFFF", "\uDBFF\uDFFF");
     }
