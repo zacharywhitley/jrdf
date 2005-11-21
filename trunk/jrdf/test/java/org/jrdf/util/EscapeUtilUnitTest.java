@@ -1,8 +1,6 @@
 package org.jrdf.util;
 
 import junit.framework.TestCase;
-import org.jrdf.util.EqualsUtil;
-import org.jrdf.graph.AnySubjectNode;
 
 /**
  * Unit test for {@link EscapeUtil}.
@@ -26,8 +24,10 @@ public class EscapeUtilUnitTest extends TestCase {
         // High surrogates from D800...DBFF, low surrogates from DC00...DFFF.
         testEscapedValue("\\uD799\\uDC00", "\uD799\uDC00");
         testEscapedValue("\\uD799\\uDC01", "\uD799\uDC01");
-        testEscapedValue("\\uD840\\uDB00", "\uD840\uDB00");
-        testEscapedValue("\\uD740\\uDFFF", "\uD740\uDFFF");
+        testEscapedValue("\\uD800\\uDBFF", "\uD800\uDBFF");
+        testEscapedValue("\\uD801\\uDBFF", "\uD801\uDBFF");
+        testEscapedValue("\\uDC00\\uDFFF", "\uDC00\uDFFF");
+        testEscapedValue("\\uDBFF\\uE000", "\uDBFF\uE000");
     }
 
     private void testEscapedValue(String expectedValue, String testString) {
