@@ -24,7 +24,9 @@ public final class EscapeUtil {
      */
     private static final Pattern PATTERN = Pattern.compile("\\p{InHighSurrogates}\\p{InLowSurrogates}" +
             "|" +
-            "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
+            "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]" +
+            "|" +
+            "[\uD800\uDC00-\uDBFF\uDFFF]");
 
     /**
      * Base UTF Code point.
