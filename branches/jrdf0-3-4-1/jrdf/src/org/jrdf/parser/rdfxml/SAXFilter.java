@@ -31,6 +31,8 @@ import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +58,11 @@ class SAXFilter implements org.xml.sax.ContentHandler {
      * Byte array for escaping XML.
      */
     private ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+    /**
+     * Output stream for escaping XML.
+     */
+    private OutputStreamWriter osw = new OutputStreamWriter(os);
 
     /**
      * The RDF parser to supply the filtered SAX events to.
@@ -220,6 +227,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
     public void startDocument() throws SAXException {
         th.startDocument();
+        escapeXml(new char[]{}, 0, 0, new StringBuffer());
+
     }
 
     public void endDocument() throws SAXException {
@@ -252,9 +261,6 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
     public void startElement(String namespaceURI, String localName,
             String qName, Attributes attributes) throws SAXException {
-
-        // Reset at start of element.
-        charBuf.setLength(0);
 
         if (null != deferredElement) {
             // The next call could set parseLiteralMode to true!
@@ -399,14 +405,21 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
             deferredElement = null;
         } else {
-            // Check if any character data has been collected in the charBuf
-            boolean literalValue = 0 < charBuf.toString().trim().length();
-
-            if (literalValue) {
-                rdfParser.text(charBuf.toString());
+            if (parseLiteralMode) {
+                // Insert any used namespace prefixes from the XML literal's
+                // context that are not defined in the XML literal itself.
+                insertUsedContextPrefixes();
             }
 
+            // Check if any character data has been collected in the _charBuf
+            String s = charBuf.toString().trim();
             charBuf.setLength(0);
+
+            if (s.length() > 0 || parseLiteralMode) {
+                rdfParser.text(s);
+                parseLiteralMode = false;
+            }
+
             elInfoStack.pop();
             rdfContextStackHeight--;
 
@@ -421,12 +434,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 reportDeferredStartElement();
             }
 
-            th.characters(ch, start, length);
-
             if (parseLiteralMode) {
                 // Characters like '<', '>', and '&' must be escaped to
                 // prevent breaking the XML text.
-                charBuf.append(os.toString());
+                escapeXml(ch, start, length, charBuf);
             } else {
                 charBuf.append(ch, start, length);
             }
@@ -602,10 +613,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         sb.append("=\"");
 
         char[] c = new char[value.length()];
-        value.getChars(0, c.length - 1, c, 0);
-        th.setResult(new StreamResult(os));
-        th.characters(c, 0, c.length);
-        sb.append(os.toString());
+        value.getChars(0, c.length, c, 0);
+        escapeXml(c, 0, c.length, sb);
         os.reset();
 
         sb.append("\"");
@@ -619,6 +628,16 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         }
 
         return result;
+    }
+
+    private void escapeXml(char[] c, int start, int length, StringBuffer sb) throws SAXException {
+        try {
+            th.characters(c, start, length);
+            osw.flush();
+            sb.append(os.toString());
+        } catch (IOException e) {
+            throw new SAXException("Error occurred escaping attribute text ", e);
+        }
     }
 
     private class ElementInfo {
