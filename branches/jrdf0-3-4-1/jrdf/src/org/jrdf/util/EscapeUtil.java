@@ -105,8 +105,6 @@ public class EscapeUtil {
                         default:   // other characters use 4-digit hex escapes
                             String hexString = Integer.toHexString(groupString.charAt(0)).toUpperCase();
 
-                            System.err.println("hex string:" + hexString);
-
                             escapeString = "\\\\u0000".substring(0, CHARACTER_LENGTH_16_BIT - hexString.length()) +
                                     hexString;
 
