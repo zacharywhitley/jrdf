@@ -22,11 +22,9 @@ public final class EscapeUtil {
      * <p/>
      * This is used by the {@link #escape} method.
      */
-    private static final Pattern PATTERN = Pattern.compile("\\p{InHighSurrogates}\\p{InLowSurrogates}" +
+    private static final Pattern PATTERN = Pattern.compile("[\uD800\uDC00-\uDBFF\uDFFF]" +
             "|" +
-            "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]" +
-            "|" +
-            "[\uD800\uDC00-\uDBFF\uDFFF]");
+            "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
 
     /**
      * Base UTF Code point.
