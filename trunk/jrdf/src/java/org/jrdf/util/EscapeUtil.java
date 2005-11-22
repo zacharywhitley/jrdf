@@ -27,21 +27,6 @@ public final class EscapeUtil {
             "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
 
     /**
-     * Base UTF Code point.
-     */
-    private static final int UTF_BASE_CODEPOINT = 0x10000;
-
-    /**
-     * Shift value for high surrogates.
-     */
-    private static final int SURROGATE_SHIFT_VALUE = 10;
-
-    /**
-     * The mask to get UTF-16 character codes.
-     */
-    private static final int CHARACTER_CODE_OFFSET = 0x3FF;
-
-    /**
      * How many characters at a time to decode for 8 bit encoding.
      */
     private static final int CHARACTER_LENGTH_8_BIT = 11;
@@ -153,16 +138,8 @@ public final class EscapeUtil {
     }
 
     private static String format8BitCharacter(String groupString) {
-        int charValue = getHighSurrogate(groupString) + getLowSurrogate(groupString) + UTF_BASE_CODEPOINT;
+        int charValue = Character.codePointAt(groupString, 0);
         String hexString = Integer.toHexString(charValue).toUpperCase();
         return "\\\\U00000000".substring(0, CHARACTER_LENGTH_8_BIT - hexString.length()) + hexString;
-    }
-
-    private static int getHighSurrogate(String groupString) {
-        return ((groupString.charAt(0) & CHARACTER_CODE_OFFSET) << SURROGATE_SHIFT_VALUE);
-    }
-
-    private static int getLowSurrogate(String groupString) {
-        return (groupString.charAt(1) & CHARACTER_CODE_OFFSET);
     }
 }
