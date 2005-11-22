@@ -32,6 +32,13 @@ public class EscapeUtilUnitTest extends TestCase {
         testEscapedValue("\\uDBFF\\uE000", "\uDBFF\uE000");
     }
 
+    public void testExampleCodePoints() {
+        testEscapedValue("\\U000233B4", "\uD84C\uDFB4");
+        testEscapedValue("\\u2260", "\u2260");
+        testEscapedValue("q", "\u0071");
+        testEscapedValue("\\u030C", "\u030c");
+    }
+
     public void testControlCharacters() {
         testEscapedValue("\\\\", new String(new char[] {(char) 92}));
         testEscapedValue("\\\"", new String(new char[] {(char) 34}));
