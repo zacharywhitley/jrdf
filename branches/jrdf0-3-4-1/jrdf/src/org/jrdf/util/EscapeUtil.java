@@ -12,7 +12,8 @@ import java.util.regex.Pattern;
 public class EscapeUtil {
     /**
      * A regular expression to pick out characters needing escape from Unicode to
-     * ASCII.
+     * ASCII.  A different regular expression is used depending on which version of the JDK is detected - Java 1.4 has
+     * different character support compared with 1.5 and above.
      * <p/>
      * This is used by the {@link #escape} method.
      */
@@ -20,7 +21,6 @@ public class EscapeUtil {
 
     static {
         try {
-            // Java 1.4 has different Unicode character support compared with versions above. 
             if (System.getProperty("java.version").indexOf("1.4") >= 0) {
                 pattern = Pattern.compile("[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]" +
                         "|" +
