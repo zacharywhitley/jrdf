@@ -16,9 +16,25 @@ public class EscapeUtil {
      * <p/>
      * This is used by the {@link #escape} method.
      */
-    private static final Pattern pattern = Pattern.compile("[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]" +
-            "|" +
-            "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
+    private static Pattern pattern;
+
+    static {
+        try {
+            // Java 1.4 has different Unicode character support compared with versions above. 
+            if (System.getProperty("java.version").indexOf("1.4") >= 0) {
+                pattern = Pattern.compile("[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]" +
+                        "|" +
+                        "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
+            } else {
+                pattern = Pattern.compile("[\uD800\uDC00-\uDBFF\uDFFF]" +
+                        "|" +
+                        "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * The matcher instance used to escape characters from Unicode to ASCII.
