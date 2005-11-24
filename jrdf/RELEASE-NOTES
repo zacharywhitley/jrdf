@@ -1,17 +1,12 @@
-JRDF Release 0.4
-================
-* Does not resolve relative URIs correctly (Bug 1315291).
-* Stacked xml:base directives with relative URIs not processed
-(Bug 1314147).
-* The createTriple method should be on TripleFactory (Bug 1294602).
-* Remove the use of nulls as valid parameters (Bug 1265743).
-* MemNode doesn't extend Node (Bug 1243510).
+JRDF Release 0.3.4.2
+====================
+* XML Literals were not correctly parsed to include all data (Bug 1362610).
+* NTriple escaping did not correctly handle surrogate UTF16 (Bug 1364924).
 
 JRDF Release 0.3.4.1
 ====================
 * Fixed build problems (Bug 1314770).
-* Back ported stack xml:base directives with relative URIs not processed
-(Bug 1314750).
+* Back ported stack xml:base directives with relative URIs not processed (Bug 1314750).
 * Does not resolve relative URIs correctly (Bug 1315285).
 
 JRDF Release 0.3.4
@@ -25,7 +20,7 @@ JRDF Release 0.3.4
 * No exception thrown when calling remove before next. (Bug 1231518).
 * Parsing RDF/XML literals removes spaces (Bug 1116687).
 * Literals should return n3 when toString is called, getEscapedForm return
-properly escape n3.  (Bug 1077343).
+properly escaped n3.  (Bug 1077343).
 * Serial version (Bug 1048968) and protected constructors added to
 AbstractLiteral (Bug 1059228).
 * Javadoc enhanced, general style improved, build files refactored and
@@ -41,7 +36,7 @@ JRDF Release 0.3.2
 * Bug fixes to the in memory implementation including
 serialization/deserialization (Bug 1020911) and Literal equality (Bug 1016576).
 * All nodes for the in memory implementation are now localized (RFE 1016579)
-allowing any JRDF object to be added/removed or used in a find/contains.
+allowing any JRDF object to be added/removed or used in a find/contains. 
 This should be the semantics for all implementations of Graph.
 * The iterators returned by the in memory Graph implementation can now have
 remove called on them (RFE 1027563).
@@ -49,7 +44,7 @@ remove called on them (RFE 1027563).
 JRDF Release 0.3.1
 ==================
 * Bug fixes to the in memory implementation: creating the same Literal by
-value resulted in a different node ID (1014115) and preventing one in
+value resulted in a different node ID (1014115) and preventing one in 
 memory graph adding nodes to another in memory graph (1014054).
 * Updated javadoc for Graph.
 
