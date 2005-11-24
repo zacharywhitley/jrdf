@@ -1,3 +1,8 @@
+JRDF Release 0.3.4.2
+====================
+* XML Literals were not correctly parsed to include all data (Bug 1362610).
+* NTriple escaping did not correctly handle surrogate UTF16 (Bug 1364924).
+
 JRDF Release 0.3.4.1
 ====================
 * Fixed build problems (Bug 1314770).
@@ -15,7 +20,7 @@ JRDF Release 0.3.4
 * No exception thrown when calling remove before next. (Bug 1231518).
 * Parsing RDF/XML literals removes spaces (Bug 1116687).
 * Literals should return n3 when toString is called, getEscapedForm return
-properly escape n3.  (Bug 1077343).
+properly escaped n3.  (Bug 1077343).
 * Serial version (Bug 1048968) and protected constructors added to
 AbstractLiteral (Bug 1059228).
 * Javadoc enhanced, general style improved, build files refactored and
