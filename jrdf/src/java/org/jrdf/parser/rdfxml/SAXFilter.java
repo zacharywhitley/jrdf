@@ -259,7 +259,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     public void startElement(String namespaceURI, String localName, String qName, Attributes attributes)
-            throws SAXException {
+        throws SAXException {
 
         if (null != deferredElement) {
             // The next call could set parseLiteralMode to true!
