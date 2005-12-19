@@ -58,18 +58,19 @@
 
 package org.jrdf.util;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.net.URLClassLoader;
-import java.net.URL;
-import java.lang.reflect.Method;
-
 import junit.framework.TestCase;
+
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Integration test for {@link UuidGenerator}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

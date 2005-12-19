@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
     <module name="SuppressionFilter">
@@ -9,7 +9,7 @@
     </module>
     <property name="severity" value="error"/>
     <module name="TreeWalker">
-        <property name="tabWidth" value="4" />
+        <property name="tabWidth" value="4"/>
 
         <module name="AvoidStarImport"/>
         <module name="ConstantName"/>
@@ -21,7 +21,7 @@
         <module name="GenericIllegalRegexp">
             <property name="format" value="\s$"/>
         </module>
-<!--        <module name="Header">
+        <!--        <module name="Header">
           <property name="headerFile" value="${checkstyle.header.file}"/>
         </module>-->
         <!-- module name="IllegalCatch"/ -->
@@ -89,8 +89,8 @@
         <module name="UnusedImports"/>
         <module name="UpperEll"/>
         <module name="VisibilityModifier">
-          <property name="packageAllowed" value="true"/>
-          <property name="protectedAllowed" value="true"/>
+            <property name="packageAllowed" value="true"/>
+            <property name="protectedAllowed" value="true"/>
         </module>
         <module name="WhitespaceAfter"/>
         <module name="WhitespaceAround">

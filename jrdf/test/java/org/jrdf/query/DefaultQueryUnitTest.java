@@ -58,17 +58,19 @@
 
 package org.jrdf.query;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Unit test for {@link DefaultQuery}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -95,11 +97,13 @@ public final class DefaultQueryUnitTest extends TestCase {
         try {
             new DefaultQuery(NULL_VARIABLES, CONSTRAINT_EXPRESSION);
             fail("null variables should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        } catch (IllegalArgumentException expected) {
+        }
         try {
             new DefaultQuery(ONE_VARIABLE, NULL_EXPRESSION);
             fail("null expression should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        } catch (IllegalArgumentException expected) {
+        }
     }
 
     public void testGetProjectedVariables() {

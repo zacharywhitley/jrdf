@@ -60,9 +60,10 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 
+import org.jrdf.util.EqualsUtil;
+
 import java.io.Serializable;
 import java.net.URI;
-import org.jrdf.util.EqualsUtil;
 
 /**
  * A base implementation of an RDF {@link URIReference}.

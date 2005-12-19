@@ -62,6 +62,7 @@ import org.jrdf.graph.AnyPredicateNode;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.graph.AnyPredicateNode}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

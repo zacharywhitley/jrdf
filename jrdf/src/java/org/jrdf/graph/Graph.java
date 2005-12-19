@@ -58,8 +58,9 @@
 
 package org.jrdf.graph;
 
-import java.util.Iterator;
 import org.jrdf.util.ClosableIterator;
+
+import java.util.Iterator;
 
 /**
  * An RDF Graph. As defined by the
@@ -67,6 +68,7 @@ import org.jrdf.util.ClosableIterator;
  * Description Framework (RDF): Concepts and Abstract Syntax</cite> </a>
  * specification.  An RDF graph is a set of RDF triples.  The set of nodes of
  * an RDF graph is the set of subjects and objects of triples in the graph.
+ *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
  * @version $Revision$
@@ -77,19 +79,21 @@ public interface Graph {
      * Test the graph for the occurrence of a statement.  An AnyNode value for any
      * of the parts of a triple are treated as unconstrained, any values will be
      * returned.
-     * @param subject The subject to find or AnySubjectNode to indicate any subject.
+     *
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
      * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
-     * @param object The object to find or AnyObjectNode to indicate any object.
+     * @param object    The object to find or AnyObjectNode to indicate any object.
      * @return True if the statement is found in the model, otherwise false.
      * @throws GraphException If there was an error accessing the graph.
      */
     boolean contains(SubjectNode subject, PredicateNode predicate,
-            ObjectNode object) throws GraphException;
+                     ObjectNode object) throws GraphException;
 
     /**
      * Test the graph for the occurrence of the triple.  An AnyNode value for any
      * of the parts of a triple are treated as unconstrained, any values will be
      * returned.
+     *
      * @param triple The triple to find.
      * @return True if the triple is found in the graph, otherwise false.
      * @throws GraphException If there was an error accessing the graph.
@@ -101,20 +105,22 @@ public interface Graph {
      * match a given subject, predicate and object.  An AnyNode value for any of
      * the parts of a triple are treated as unconstrained, any values will be
      * returned.
-     * @param subject The subject to find or AnySubjectNode to indicate any subject.
+     *
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
      * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
-     * @param object ObjectNode The object to find or AnyObjectNode to indicate any object.
+     * @param object    ObjectNode The object to find or AnyObjectNode to indicate any object.
      * @return an iterator containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
      */
     ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate,
-            ObjectNode object) throws GraphException;
+                                  ObjectNode object) throws GraphException;
 
     /**
      * Returns an iterator of {@link Triple}s to a set of statements that
      * match a given subject, predicate and object.  An AnyNode value for any of
      * the parts of a triple are treated as unconstrained, any values will be
      * returned.
+     *
      * @param triple The triple to find.
      * @return an iterator containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
@@ -124,9 +130,10 @@ public interface Graph {
     /**
      * Adds a triple to the graph.  The nodes must have already been created
      * using {@link GraphElementFactory}.
-     * @param subject The subject.
+     *
+     * @param subject   The subject.
      * @param predicate The predicate.
-     * @param object The object.
+     * @param object    The object.
      * @throws GraphException If the statement can't be made.
      */
     void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
@@ -134,6 +141,7 @@ public interface Graph {
     /**
      * Adds a triple to the graph.  The nodes must have already been created
      * using {@link GraphElementFactory}.
+     *
      * @param triple The triple.
      * @throws GraphException If the statement can't be made.
      */
@@ -142,6 +150,7 @@ public interface Graph {
     /**
      * Adds all the triples contained in an iterator into the graph.  The nodes
      * must have already been created using {@link GraphElementFactory}.
+     *
      * @param triples The triple iterator.
      * @throws GraphException If the statements can't be made.
      */
@@ -155,9 +164,10 @@ public interface Graph {
     /**
      * Removes a triple from the graph.  The nodes must have already been
      * created using {@link GraphElementFactory}.
-     * @param subject The subject.
+     *
+     * @param subject   The subject.
      * @param predicate The predicate.
-     * @param object The object.
+     * @param object    The object.
      * @throws GraphException If there was an error revoking the statement, For example if it didn't exist.
      */
     void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
@@ -165,15 +175,17 @@ public interface Graph {
     /**
      * Removes a triple from the graph.  The nodes must have already been
      * created using {@link GraphElementFactory}.
+     *
      * @param triple The triple.
      * @throws GraphException If there was an error revoking the statement, For
-     * example if it didn't exist.
+     *                        example if it didn't exist.
      */
     void remove(Triple triple) throws GraphException;
 
     /**
      * Removes all the triples contained in an iterator from the graph.  The
      * nodes must have already been created using {@link GraphElementFactory}.
+     *
      * @param triples The triple iterator.
      * @throws GraphException If the statements can't be revoked.
      */
@@ -181,29 +193,33 @@ public interface Graph {
 
     /**
      * Returns the node factory for the graph, or creates one.
+     *
      * @return the node factory for the graph, or creates one.
      */
     GraphElementFactory getElementFactory();
 
     /**
      * Returns the triple factory for the graph, or creates one.
+     *
      * @return the triple factory for the graph, or creates one.
      */
     TripleFactory getTripleFactory();
 
     /**
      * Returns the number of triples in the graph.
+     *
      * @return the number of triples in the graph.
      * @throws GraphException If the statements number of statements in the graph
-     * fails to be found.
+     *                        fails to be found.
      */
     long getNumberOfTriples() throws GraphException;
 
     /**
      * Returns true if the graph is empty i.e. the number of triples is 0.
+     *
      * @return true if the graph is empty i.e. the number of triples is 0.
      * @throws GraphException If the statements number of statements in the graph
-     * fails to be found.
+     *                        fails to be found.
      */
     boolean isEmpty() throws GraphException;
 }

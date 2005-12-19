@@ -1,7 +1,6 @@
 package org.jrdf.util;
 
 import junit.framework.TestCase;
-import org.jrdf.util.EqualsUtil;
 import org.jrdf.graph.AnySubjectNode;
 
 /**

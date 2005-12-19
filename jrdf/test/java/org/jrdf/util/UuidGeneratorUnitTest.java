@@ -60,12 +60,14 @@ package org.jrdf.util;
 
 // Third party packages
 
+import junit.framework.TestCase;
+
 import java.util.HashSet;
 import java.util.Set;
-import junit.framework.TestCase;
 
 /**
  * Unit test for {@link UuidGenerator}.
+ *
  * @author Robert Turner
  * @author Tom Adams
  */

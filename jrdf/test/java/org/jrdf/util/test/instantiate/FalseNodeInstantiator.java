@@ -61,7 +61,8 @@ package org.jrdf.util.test.instantiate;
 import org.jrdf.query.relation.constants.FalseNode;
 
 /**
- * {@link org.jrdf.util.test.instantiate.Instantiator} for {@link org.jrdf.query.relation.constants.FalseNode}.
+ * {@link Instantiator} for {@link org.jrdf.query.relation.constants.FalseNode}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

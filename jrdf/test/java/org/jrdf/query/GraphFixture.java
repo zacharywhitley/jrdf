@@ -58,17 +58,19 @@
 
 package org.jrdf.query;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import junit.framework.Assert;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.test.TripleTestUtil;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.TripleTestUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Test fixture for creating graphs and queries that execute against those graphs.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -77,7 +79,8 @@ public final class GraphFixture {
     public static final Graph GRAPH_BAD = new MockBadGraph();
     public static final MockGraph GRAPH_GOOD = createGraph();
 
-    private GraphFixture() { }
+    private GraphFixture() {
+    }
 
     public static MockGraph createGraph() {
         Collection<Triple> triples = createTriples();

@@ -58,14 +58,16 @@
 
 package org.jrdf.util.test.instantiate;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.DefaultAnswer;
 import org.jrdf.util.test.ReflectTestUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * {@link org.jrdf.util.test.instantiate.Instantiator} for {@link org.jrdf.query.DefaultAnswer}.
+ * {@link Instantiator} for {@link org.jrdf.query.DefaultAnswer}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

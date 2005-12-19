@@ -64,6 +64,7 @@ import org.jrdf.sparql.parser.SparqlParser;
 
 /**
  * Parser that returns fixed good queries.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

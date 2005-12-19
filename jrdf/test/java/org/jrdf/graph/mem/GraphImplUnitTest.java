@@ -58,10 +58,6 @@
 
 package org.jrdf.graph.mem;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
@@ -71,8 +67,14 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
+ *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision$
@@ -81,6 +83,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public GraphImplUnitTest(String name) {
@@ -89,6 +92,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Create a graph implementation.
+     *
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
@@ -97,6 +101,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Hook for test runner to obtain a test suite from.
+     *
      * @return The test suite
      */
     public static Test suite() {
@@ -116,6 +121,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Default test runner.
+     *
      * @param args The command line arguments
      */
     public static void main(String[] args) throws Exception {
@@ -125,6 +131,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Implementation method for testing serialization of the graph.
+     *
      * @throws Exception When a problem is found.
      */
     public void testSerializing() throws Exception {

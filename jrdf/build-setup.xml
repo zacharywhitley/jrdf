@@ -134,7 +134,7 @@
     </path>
 
     <taskdef resource="checkstyletask.properties"
-         classpath="${checkstyle.lib.dir}/checkstyle-all-4.0-beta5.jar"/>
+             classpath="${checkstyle.lib.dir}/checkstyle-all-4.0-beta5.jar"/>
 
     <target name="default">
         <echo message="Nothing to see here..."/>
@@ -143,7 +143,7 @@
     <path id="sablecc.class.path">
         <pathelement location="${lib.dir}/sablecc-2.18.2.jar"/>
     </path>
-    
+
     <macrodef name="sablecc.macro">
         <attribute name="grammar.file"/>
         <sequential>

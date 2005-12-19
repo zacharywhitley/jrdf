@@ -62,6 +62,7 @@ import junit.framework.TestCase;
 
 /**
  * Unit test for {@link EmtpyStringChecker}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -77,7 +78,8 @@ public final class EmtpyStringCheckerUnitTest extends TestCase {
         try {
             new EmtpyStringChecker().paramAllowed(ParameterTestUtil.NULL_STRING);
             fail("paramAllowed(null) should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) { }
+        } catch (IllegalArgumentException expected) {
+        }
     }
 
     private void checkParam(String param) {

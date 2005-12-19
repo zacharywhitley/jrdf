@@ -58,9 +58,8 @@
 
 package org.jrdf.sparql.parser;
 
-import org.jrdf.util.test.SparqlQueryTestUtil;
-import org.jrdf.sparql.builder.VariableTripleSpec;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
+import org.jrdf.sparql.builder.VariableTripleSpec;
 import org.jrdf.sparql.parser.node.ALiteral;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
@@ -78,11 +77,13 @@ import org.jrdf.sparql.parser.node.TText;
 import org.jrdf.sparql.parser.node.TVariableprefix;
 import org.jrdf.sparql.parser.node.X2PStrand;
 import org.jrdf.sparql.parser.node.XPStrand;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 
 import java.net.URI;
 
 /**
  * Utilities for creating SableCC nodes.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -91,7 +92,8 @@ public final class SableCcNodeTestUtil {
     private static final String VARIABLE_PREFIX = SparqlQueryTestUtil.VARIABLE_PREFIX;
     private static final String SPARQL_QUOTE = "'";
 
-    private SableCcNodeTestUtil() {}
+    private SableCcNodeTestUtil() {
+    }
 
     public static ATriple createTripleNodeWithVariable(VariableTripleSpec tripleSpec) {
         PResourceTripleElement subject = createResourceElement(tripleSpec.getSubjectUri());

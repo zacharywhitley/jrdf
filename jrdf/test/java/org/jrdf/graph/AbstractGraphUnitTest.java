@@ -73,6 +73,7 @@ import java.util.Set;
 
 /**
  * Abstract test case for graph implementations.
+ *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision$
@@ -136,6 +137,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     protected AbstractGraphUnitTest(String name) {
@@ -144,8 +146,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Create test instance.
+     *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void setUp() throws Exception {
         graph = newGraph();
@@ -172,9 +175,10 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Create a graph implementation.
+     *
      * @return A new Graph.
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     protected abstract Graph newGraph() throws Exception;
 
@@ -184,6 +188,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Tests that a new graph is empty.
+     *
      * @throws Exception if query fails when it should have succeeded
      */
     public void testEmpty() throws Exception {
@@ -203,7 +208,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      * Tests addition.
      *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void testAddition() throws Exception {
 
@@ -283,8 +288,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Tests removal.
+     *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void testRemoval() throws Exception {
         // add some test data
@@ -406,30 +412,30 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
         // Try to add any nodes
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-            new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    graph.remove(ANY_SUBJECT_NODE, ref1, ref1);
-                }
-            });
+                new AssertThrows.Block() {
+                    public void execute() throws Throwable {
+                        graph.remove(ANY_SUBJECT_NODE, ref1, ref1);
+                    }
+                });
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-            new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    graph.remove(ref1, ANY_PREDICATE_NODE, ref1);
-                }
-            });
+                new AssertThrows.Block() {
+                    public void execute() throws Throwable {
+                        graph.remove(ref1, ANY_PREDICATE_NODE, ref1);
+                    }
+                });
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-            new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    graph.remove(ref1, ref1, ANY_OBJECT_NODE);
-                }
-            });
+                new AssertThrows.Block() {
+                    public void execute() throws Throwable {
+                        graph.remove(ref1, ref1, ANY_OBJECT_NODE);
+                    }
+                });
     }
 
     /**
      * Tests containership.
      *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void testContains() throws Exception {
         // add some test data
@@ -514,8 +520,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Tests finding.
+     *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void testFinding() throws Exception {
         graph.add(blank1, ref1, blank2);
@@ -671,8 +678,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Tests iteration over a found set.
+     *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void testIteration() throws Exception {
 
@@ -715,7 +723,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         Set<Triple> statements = new HashSet<Triple>();
         ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("ClosableIterator is returning false for hasNext().",
-            iter.hasNext());
+                iter.hasNext());
         while (iter.hasNext()) {
             statements.add(iter.next());
         }
@@ -734,8 +742,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     /**
      * Tests iterative removal.
+     *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void testIterativeRemoval() throws Exception {
         // add some test data
@@ -879,7 +888,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      * The set will be emptied and the iterator will be closed.
      *
      * @param execptedTriples the expected set of execptedTriples.
-     * @param actualTriples the iterator containing the actual execptedTriples.
+     * @param actualTriples   the iterator containing the actual execptedTriples.
      */
     private void checkSet(Set execptedTriples, ClosableIterator actualTriples) {
         while (actualTriples.hasNext()) {

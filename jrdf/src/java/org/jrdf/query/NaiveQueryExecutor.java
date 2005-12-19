@@ -58,15 +58,16 @@
 
 package org.jrdf.query;
 
-import java.net.URI;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * A naive query executor that uses an iterator-based approach to finding triples.

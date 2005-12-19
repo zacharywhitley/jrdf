@@ -62,18 +62,19 @@ import junit.framework.TestCase;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.sparql.SparqlQueryBuilder;
-import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 
 import java.lang.reflect.Modifier;
 
 /**
  * Unit test for {@link org.jrdf.sparql.SparqlQueryBuilder}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

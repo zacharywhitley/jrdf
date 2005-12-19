@@ -78,6 +78,7 @@ public final class URIReferenceImplUnitTest extends AbstractURIReferenceUnitTest
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public URIReferenceImplUnitTest(String name) {
@@ -99,6 +100,7 @@ public final class URIReferenceImplUnitTest extends AbstractURIReferenceUnitTest
 
     /**
      * Hook for test runner to obtain a test suite from.
+     *
      * @return The test suite
      */
     public static Test suite() {

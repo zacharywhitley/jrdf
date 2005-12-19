@@ -91,7 +91,7 @@ public interface TripleFactory {
      *                                 the given triple.
      */
     void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-            SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException;
+                     SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException;
 
     /**
      * Reifies a triple.  The triple added to the graph and the reificationNode is used to reify the triple.

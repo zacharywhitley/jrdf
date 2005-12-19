@@ -63,6 +63,7 @@ import org.jrdf.util.test.ReflectTestUtil;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.graph.mem.BlankNodeImpl}.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -76,6 +77,6 @@ final class BlankNodeImplInstantiator implements Instantiator {
     }
 
     private ReflectTestUtil.ParamSpec createParams() {
-        return new ReflectTestUtil.ParamSpec(new Long(NODE_ID),  NODE_ID);
+        return new ReflectTestUtil.ParamSpec(new Long(NODE_ID), NODE_ID);
     }
 }

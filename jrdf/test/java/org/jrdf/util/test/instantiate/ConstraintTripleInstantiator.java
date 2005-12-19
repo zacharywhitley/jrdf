@@ -64,7 +64,8 @@ import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
 /**
- * {@link org.jrdf.util.test.instantiate.Instantiator} for {@link org.jrdf.query.ConstraintTriple}.
+ * {@link Instantiator} for {@link org.jrdf.query.ConstraintTriple}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

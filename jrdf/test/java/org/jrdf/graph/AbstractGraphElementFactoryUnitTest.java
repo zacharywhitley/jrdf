@@ -94,6 +94,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public AbstractGraphElementFactoryUnitTest(String name) {
@@ -102,8 +103,9 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
     /**
      * Create test instance.
+     *
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     public void setUp() throws Exception {
         graph = newGraph();
@@ -117,20 +119,23 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
     /**
      * Create a new graph of the appropriate type.
+     *
      * @return A new graph implementation object.
      * @throws Exception A generic exception - this should cause the tests to
-     * fail.
+     *                   fail.
      */
     protected abstract Graph newGraph() throws Exception;
 
     /**
      * Return the default literal type from the implementation.
+     *
      * @return The default Literal type.
      */
     protected abstract URI getDefaultLiteralType();
 
     /**
      * Get the default literal language from the implementation.
+     *
      * @return The default Literal language.
      */
     public abstract String getDefaultLiteralLanguage();
@@ -141,6 +146,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
     /**
      * Tests that each of the createLiteral methods work as expected.
+     *
      * @throws Exception if query fails when it should have succeeded
      */
     public void testCreateLiterals() throws Exception {
@@ -186,6 +192,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
     /**
      * Tests that each of the createResource methods work as expected.
+     *
      * @throws Exception if query fails when it should have succeeded
      */
     public void testCreateResources() throws Exception {
@@ -208,6 +215,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
     /**
      * Tests that each of the createResource methods work as expected.
+     *
      * @throws Exception if query fails when it should have succeeded
      */
     public void testCreateTriples() throws Exception {
@@ -359,5 +367,5 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         iter = g2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("Should get back at least one result", iter.hasNext());
 
-  }
+    }
 }

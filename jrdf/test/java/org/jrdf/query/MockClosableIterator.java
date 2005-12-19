@@ -58,13 +58,15 @@
 
 package org.jrdf.query;
 
+import org.jrdf.graph.Triple;
+import org.jrdf.util.ClosableIterator;
+
 import java.util.Collection;
 import java.util.Iterator;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.graph.Triple;
 
 /**
  * Mock {@link ClosableIterator} for use in testing.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

@@ -63,7 +63,7 @@ import org.jrdf.graph.Graph;
 /**
  * The set union of two graphs - all of the items in the first graph are
  * added to the second graph (no duplicates).
- *
+ * <p/>
  * In the case of blank nodes, as noted in 1.5 in the RDF Semantics Document (http://www.w3.org/TR/rdf-mt/#unlabel) a
  * union of two graphs corresponds to a conjunction.  The merge of two separate graphs, graphs from two different
  * sources, results in a merge - where all blank nodes will retain their identity.

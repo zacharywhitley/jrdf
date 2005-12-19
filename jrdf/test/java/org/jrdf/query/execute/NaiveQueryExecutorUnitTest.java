@@ -58,8 +58,6 @@
 
 package org.jrdf.query.execute;
 
-import java.lang.reflect.Modifier;
-import java.net.URI;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
@@ -69,8 +67,12 @@ import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
+import java.lang.reflect.Modifier;
+import java.net.URI;
+
 /**
  * Unit test for {@link NaiveQueryExecutor}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

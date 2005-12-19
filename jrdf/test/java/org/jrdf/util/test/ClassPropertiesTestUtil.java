@@ -58,22 +58,24 @@
 
 package org.jrdf.util.test;
 
+import junit.framework.Assert;
+
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.io.Serializable;
-import junit.framework.Assert;
 
 public final class ClassPropertiesTestUtil {
 
     // FIXME TJA: This needs genericising ;)
     public static final Class[] NO_ARG_CONSTRUCTOR = (Class[]) null;
 
-    private ClassPropertiesTestUtil() {}
+    private ClassPropertiesTestUtil() {
+    }
 
     public static boolean isPublicInstance(Method method) {
         int modifiers = method.getModifiers();
@@ -176,7 +178,8 @@ public final class ClassPropertiesTestUtil {
     }
 
     public static void checkMarkedAsSerializable(Class<?> cls) {
-        Assert.assertTrue(cls.getSimpleName() + " implement/extend java.io.Serializable", isDirectlyMarkedAsSerializable(cls));
+        Assert.assertTrue(cls.getSimpleName() + " implement/extend java.io.Serializable",
+                isDirectlyMarkedAsSerializable(cls));
     }
 
     public static boolean isFieldFinal(Class<?> cls, String fieldName) {

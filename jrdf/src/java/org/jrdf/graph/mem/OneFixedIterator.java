@@ -140,7 +140,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
     OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, TripleFactory newFactory,
-            GraphHandler newHandler) {
+                     GraphHandler newHandler) {
 
         // store the node factory and other starting data
         factory = newFactory;
@@ -174,7 +174,7 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
     public boolean hasNext() {
         // confirm we still have an item iterator, and that it has data available
         return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
-               null != secondIndexIterator && secondIndexIterator.hasNext();
+                null != secondIndexIterator && secondIndexIterator.hasNext();
     }
 
 

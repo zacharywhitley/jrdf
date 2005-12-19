@@ -58,17 +58,19 @@
 
 package org.jrdf.graph;
 
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.util.test.SerializationTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
+
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.net.URI;
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import org.jrdf.util.test.SerializationTestUtil;
 
 /**
  * Unit test for {@link AbstractTriple}.
+ *
  * @author Tom Adams
  * @author Andrew Newman
  * @version $Revision$
@@ -87,6 +89,7 @@ public abstract class AbstractTripleUnitTest extends TestCase {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public AbstractTripleUnitTest(String name) {

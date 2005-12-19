@@ -60,9 +60,10 @@ package org.jrdf.graph.mem;
 
 // JRDF objects
 
-import java.io.Serializable;
 import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.BlankNode;
+
+import java.io.Serializable;
 
 /**
  * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying

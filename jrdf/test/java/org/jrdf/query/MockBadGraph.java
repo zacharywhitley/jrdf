@@ -1,6 +1,5 @@
 package org.jrdf.query;
 
-import java.util.Iterator;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -11,8 +10,11 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.util.ClosableIterator;
 
+import java.util.Iterator;
+
 /**
  * Mock &quot;bad&quot; {@link Graph} for unit testing.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -31,7 +33,8 @@ public final class MockBadGraph implements Graph {
         throw new UnsupportedOperationException("Implement me...");
     }
 
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
+    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+            throws GraphException {
         throw new GraphException("Don't care about the message, I'm sure it will be meaningful");
     }
 

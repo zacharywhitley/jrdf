@@ -64,6 +64,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Test utilities that use relection.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -71,7 +72,8 @@ public final class ReflectTestUtil {
 
     private static final ParamSpec PARAMS_NONE = new ParamSpec();
 
-    private ReflectTestUtil() { }
+    private ReflectTestUtil() {
+    }
 
     public static void insertFieldValue(Object ref, String fieldName, Object fieldValue) {
         Field field = getField(ref, fieldName);

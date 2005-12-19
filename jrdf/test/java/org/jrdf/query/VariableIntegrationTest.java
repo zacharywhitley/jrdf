@@ -62,7 +62,8 @@ import junit.framework.TestCase;
 import org.jrdf.util.test.SerializationTestUtil;
 
 /**
- * Integration test for {@link org.jrdf.query.Variable}.
+ * Integration test for {@link Variable}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

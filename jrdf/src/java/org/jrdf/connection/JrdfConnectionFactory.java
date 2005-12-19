@@ -9,6 +9,7 @@ import java.net.URI;
 
 /**
  * Returns queriable connections to a graph.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -30,7 +31,8 @@ public final class JrdfConnectionFactory {
      * <p>Note. A new connection is returned for each call, they are not pooled. Clients should ensure that they call
      * close on the connection once it is no longer required, the system will not clean up the connection
      * automatically.</p>
-     * @param graph The graph to query.
+     *
+     * @param graph          The graph to query.
      * @param securityDomain The security domain.
      * @return A connection through which to issue SPARQL queries.
      */

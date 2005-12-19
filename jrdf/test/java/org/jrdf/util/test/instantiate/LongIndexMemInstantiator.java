@@ -58,14 +58,16 @@
 
 package org.jrdf.util.test.instantiate;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.HashMap;
 import org.jrdf.graph.mem.index.LongIndexMem;
 import org.jrdf.util.test.ReflectTestUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * {@link Instantiator} for {@link org.jrdf.graph.mem.index.LongIndexMem}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

@@ -99,7 +99,7 @@ public class GraphHandler120 extends AbstractGraphHandler implements GraphHandle
 
     // TODO AN Not tested - can change first and last values and tests still pass.
     public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
-        return new Node[] {nodePool.getNodeById(nodes[2]), nodePool.getNodeById(nodes[0]),
+        return new Node[]{nodePool.getNodeById(nodes[2]), nodePool.getNodeById(nodes[0]),
                 nodePool.getNodeById(nodes[1])};
     }
 }

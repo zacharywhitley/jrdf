@@ -58,11 +58,12 @@
 
 package org.jrdf.util.test.filter;
 
-import java.io.FileFilter;
 import java.io.File;
+import java.io.FileFilter;
 
 /**
  * Accepts Java class files, i.e. those files ending in a ".class" extension.
+ *
  * @author Tom Adams
  * @version $Id$
  */

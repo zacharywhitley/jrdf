@@ -60,6 +60,7 @@ package org.jrdf.util.test.filter;
 
 /**
  * Filters out classes that match a given property.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

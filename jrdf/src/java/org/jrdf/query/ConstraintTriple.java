@@ -58,10 +58,11 @@
 
 package org.jrdf.query;
 
-import java.io.Serializable;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.EqualsUtil;
 import org.jrdf.util.param.ParameterUtil;
+
+import java.io.Serializable;
 
 /**
  * A constraint expression comprising a single constraint, i.e. a single triple.

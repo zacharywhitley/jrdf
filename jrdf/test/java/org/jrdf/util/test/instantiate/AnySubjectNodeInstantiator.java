@@ -61,7 +61,8 @@ package org.jrdf.util.test.instantiate;
 import org.jrdf.graph.AnySubjectNode;
 
 /**
- * {@link org.jrdf.util.test.instantiate.Instantiator} for {@link org.jrdf.graph.AnySubjectNode}.
+ * {@link Instantiator} for {@link org.jrdf.graph.AnySubjectNode}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

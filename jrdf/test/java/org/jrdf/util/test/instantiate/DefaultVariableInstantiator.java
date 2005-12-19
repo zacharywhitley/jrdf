@@ -63,6 +63,7 @@ import org.jrdf.util.test.ReflectTestUtil;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.DefaultVariable}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

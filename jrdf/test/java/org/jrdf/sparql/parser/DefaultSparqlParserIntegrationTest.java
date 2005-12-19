@@ -66,6 +66,7 @@ import org.jrdf.util.test.SparqlQueryTestUtil;
 
 /**
  * Integration test for {@link DefaultSparqlParser}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -77,8 +78,10 @@ public final class DefaultSparqlParserIntegrationTest extends TestCase {
     // FIXME TJA: Write tests to force trimming of query string.
     // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
 
-    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
-    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
+    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE =
+            SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
+    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE =
+            SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 

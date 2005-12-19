@@ -58,11 +58,6 @@
 
 package org.jrdf.query;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.test.AssertThrows;
@@ -70,8 +65,15 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Unit test for {@link DefaultAnswer}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -82,13 +84,13 @@ public final class DefaultAnswerUnitTest extends TestCase {
     private static final String STRING_FORM_NO_ELEMENTS = "{}";
     private static final String STRING_FORM_SINGLE_ELEMENT =
             "{" + NEW_LINE +
-            INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
-            "}";
+                    INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
+                    "}";
     private static final String STRING_FORM_MULTIPLE_ELEMENTS =
             "{" + NEW_LINE +
-            INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
-            INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE + NEW_LINE +
-            "}";
+                    INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL + NEW_LINE +
+                    INDENT + TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE + NEW_LINE +
+                    "}";
     private static final Answer EMPTY_ANSWER_1 = new DefaultAnswer(createEmptyTripleList());
     private static final Answer EMPTY_ANSWER_2 = new DefaultAnswer(createEmptyTripleList());
 

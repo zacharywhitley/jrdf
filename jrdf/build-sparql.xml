@@ -20,9 +20,9 @@
     <!-- FIXME TJA: Is there a better way to do this? Maybe specify in the classpath? -->
     <target name="-copy-sparql-sablecc-resources">
         <copy file="${gen.src.dir}/org/jrdf/sparql/parser/lexer/lexer.dat"
-                tofile="${prod.classes.dir}/org/jrdf/sparql/parser/lexer/lexer.dat"/>
+              tofile="${prod.classes.dir}/org/jrdf/sparql/parser/lexer/lexer.dat"/>
         <copy file="${gen.src.dir}/org/jrdf/sparql/parser/parser/parser.dat"
-                tofile="${prod.classes.dir}/org/jrdf/sparql/parser/parser/parser.dat"/>
+              tofile="${prod.classes.dir}/org/jrdf/sparql/parser/parser/parser.dat"/>
     </target>
 
 </project>

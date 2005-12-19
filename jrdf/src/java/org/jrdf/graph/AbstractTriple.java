@@ -58,8 +58,9 @@
 
 package org.jrdf.graph;
 
-import java.io.Serializable;
 import org.jrdf.util.EqualsUtil;
+
+import java.io.Serializable;
 
 /**
  * A base implementation of an RDF {@link Triple}.

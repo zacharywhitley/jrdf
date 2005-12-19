@@ -63,6 +63,7 @@ import org.jrdf.util.test.ReflectTestUtil;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.graph.mem.LiteralImpl}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

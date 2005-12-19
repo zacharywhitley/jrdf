@@ -310,8 +310,8 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     private boolean equalByStringValue(Literal tmpLiteral) {
         return (null != getDatatypeURI()) &&
-               (null != tmpLiteral.getDatatypeURI()) &&
-               (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
+                (null != tmpLiteral.getDatatypeURI()) &&
+                (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
     }
 
     /**

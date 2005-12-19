@@ -1,7 +1,7 @@
 package org.jrdf.graph;
 
-import java.io.Serializable;
 import java.io.ObjectStreamException;
+import java.io.Serializable;
 
 /**
  * A node which represents any subject - unconstrained.

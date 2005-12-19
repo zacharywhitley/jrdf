@@ -58,11 +58,6 @@
 
 package org.jrdf;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
 import junit.framework.TestCase;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.graph.mem.index.LongIndexMem;
@@ -78,9 +73,16 @@ import org.jrdf.util.test.filter.MarkedAsSerializableClassFilter;
 import org.jrdf.util.test.filter.RecursiveFileFinder;
 import org.jrdf.vocabulary.Vocabulary;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Checks that all classes that claim to be {@link java.io.Serializable} can actually be serialized and contain a
  * <code>static final long serialVersionUID</code> field.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -90,7 +92,8 @@ public final class SerializationIntegrationTest extends TestCase {
     private static final String PATH_ROOT = "/";
     private static final Class<Vocabulary> PRODUCTION_CLASS = Vocabulary.class;
     private static final String DOT = ".";
-    private static final MarkedAsSerializableClassFilter FILTER_MARKED_AS_SERIALIZABLE = new MarkedAsSerializableClassFilter();
+    private static final MarkedAsSerializableClassFilter FILTER_MARKED_AS_SERIALIZABLE =
+            new MarkedAsSerializableClassFilter();
 
     public void testSerializationClaims() {
         File packageRoot = getLocation(PATH_ROOT);
@@ -122,13 +125,15 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(FalseNode.class);
         excludedClasses.add(TrueNode.class);
         excludedClasses.add(ConstraintExpression.AllConstraintExpression.class);  // not sure why this doesn't work
-        excludedClasses.add(DefaultQuery.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
+        excludedClasses
+                .add(DefaultQuery.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
         excludedClasses.add(DefaultVariable.class); // implement equals() & hashCode()
         return excludedClasses;
     }
 
     // FIXME TJA: Try to remove unchecked cast below.
-    private Collection<Class<? extends Serializable>> getSerializableClasses(File packageRoot, Collection<File> classes) {
+    private Collection<Class<? extends Serializable>> getSerializableClasses(File packageRoot,
+                                                                             Collection<File> classes) {
         Collection<Class<? extends Serializable>> serializables = new ArrayList<Class<? extends Serializable>>();
         for (File file : classes) {
             Class<?> cls = getClass(packageRoot, file);

@@ -59,11 +59,12 @@
 package org.jrdf.sparql;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.connection.JrdfConnection;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * Unit test for {@link org.jrdf.sparql.SparqlConnection}.
+ * Unit test for {@link SparqlConnection}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

@@ -5,6 +5,7 @@ import junit.framework.AssertionFailedError;
 
 /**
  * Given a block/closure expects that the code will throw the expected exception with the expected message.
+ *
  * @author Andrew Newman
  * @version $Revision$
  */

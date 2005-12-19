@@ -58,15 +58,17 @@
 
 package org.jrdf.query.execute;
 
-import java.net.URI;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.Query;
 import org.jrdf.util.param.ParameterUtil;
 
+import java.net.URI;
+
 /**
  * Default implementation of a {@link JrdfQueryExecutor}.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -76,7 +78,8 @@ public final class DefaultQueryExecutor implements JrdfQueryExecutor {
 
     /**
      * Creates executor to execute queries.
-     * @param graph The graph to communicate with.
+     *
+     * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
     public DefaultQueryExecutor(Graph graph, URI securityDomain) {

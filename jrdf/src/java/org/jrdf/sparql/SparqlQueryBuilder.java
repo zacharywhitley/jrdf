@@ -67,6 +67,7 @@ import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Builds SPARQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
+ *
  * @author Tom Adams
  * @version $Id$
  */
