@@ -63,14 +63,16 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 
 /**
- * Unit test for {@link org.jrdf.query.ConstraintExpression}.
+ * Unit test for {@link ConstraintExpression}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
 public final class ConstraintExpressionUnitTest extends TestCase {
 
     private static final String FIELD_ALL = "ALL";
-    private static final Class<ConstraintExpression.AllConstraintExpression> CLASS_CONSTRAINT_EXPRESSION_ALL = ConstraintExpression.AllConstraintExpression.class;
+    private static final Class<ConstraintExpression.AllConstraintExpression> CLASS_CONSTRAINT_EXPRESSION_ALL =
+            ConstraintExpression.AllConstraintExpression.class;
 
     public void testAllConstant() throws Exception {
         checkAllConstantStaticFinal();

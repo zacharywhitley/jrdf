@@ -86,6 +86,7 @@ public interface Parser {
     void setVerifyData(boolean verifyData);
 
     // TODO AN Determine whether this should be kept.
+
     /**
      * Set whether the parser should preserve bnode identifiers specified
      * in the source (default is <tt>false</tt>).

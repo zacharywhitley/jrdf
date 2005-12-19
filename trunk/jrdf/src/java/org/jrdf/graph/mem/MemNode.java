@@ -62,6 +62,7 @@ import org.jrdf.graph.Node;
 
 /**
  * Memory node.  This is an additional interface for nodes so they can be accessed by id.
+ *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Id$
  */
@@ -69,6 +70,7 @@ public interface MemNode extends Node {
 
     /**
      * Retrieves an internal identifier for a node.
+     *
      * @return A numeric identifier for a node.
      */
     Long getId();

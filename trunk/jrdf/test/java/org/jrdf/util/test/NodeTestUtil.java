@@ -58,16 +58,16 @@
 
 package org.jrdf.util.test;
 
-import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.mem.GraphImpl;
 
 import java.net.URI;
 
@@ -79,7 +79,8 @@ import java.net.URI;
  */
 public final class NodeTestUtil {
 
-    private NodeTestUtil() { }
+    private NodeTestUtil() {
+    }
 
     public static URIReference createResource(URI uri) {
         try {

@@ -111,6 +111,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public AbstractTripleFactoryUnitTest(String name) {
@@ -145,12 +146,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Create a graph implementation.
+     *
      * @return A new GraphImpl.
      */
     protected abstract Graph newGraph() throws Exception;
 
     /**
      * Get the node used for subject reification.
+     *
      * @return The subject reification node.
      */
     protected abstract PredicateNode getReifySubject()
@@ -158,6 +161,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Get the node used for predicate reification.
+     *
      * @return The predicate reification node.
      */
     protected abstract PredicateNode getReifyPredicate()
@@ -165,6 +169,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Get the node used for object reification.
+     *
      * @return The object reification node.
      */
     protected abstract PredicateNode getReifyObject()
@@ -172,12 +177,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Get the node used for rdf:type.
+     *
      * @return The object rdf:type node.
      */
     protected abstract PredicateNode getRdfType() throws TripleFactoryException;
 
     /**
      * Get the node used for rdf:Statement.
+     *
      * @return The object rdf:statement node.
      */
     protected abstract ObjectNode getRdfStatement()
@@ -185,6 +192,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Create a concrete Collection.
+     *
      * @return the new collection.
      */
     protected abstract Collection<ObjectNode> createCollection(
@@ -192,6 +200,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Create a concrete alternative
+     *
      * @return the new alternative.
      */
     protected abstract Alternative<ObjectNode> createAlternative(
@@ -199,12 +208,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Create a concrete bag
+     *
      * @return the new bag.
      */
     protected abstract Bag<ObjectNode> createBag(ObjectNode[] objects);
 
     /**
      * Create a concrete sequence
+     *
      * @return the new sequence.
      */
     protected abstract Sequence<ObjectNode> createSequence(ObjectNode[] objects);
@@ -536,14 +547,15 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Utility method to check that a triple cannot be reified.
-     * @param subject The subject for the triple.
+     *
+     * @param subject   The subject for the triple.
      * @param predicate The predicate for the triple.
-     * @param object The object for the triple.
-     * @param r The reification node for the triple.
+     * @param object    The object for the triple.
+     * @param r         The reification node for the triple.
      * @throws Exception The triple could be reified.
      */
     private void testCantInsert(SubjectNode subject, PredicateNode predicate,
-            ObjectNode object, SubjectNode r) throws Exception {
+                                ObjectNode object, SubjectNode r) throws Exception {
         try {
             tripleFactory.reifyTriple(subject, predicate, object, r);
             assertTrue(false);
@@ -555,8 +567,9 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Utility method to check that a triple cannot be reified.
+     *
      * @param triple The triple to reify.
-     * @param r The reification node for the triple.
+     * @param r      The reification node for the triple.
      * @throws Exception The triple could be reified.
      */
     private void testCantInsert(Triple triple, URI r) throws Exception {
@@ -571,13 +584,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
 
     /**
      * Utility method to check that a triple cannot be reified with a blank node.
-     * @param subject The subject for the triple.
+     *
+     * @param subject   The subject for the triple.
      * @param predicate The predicate for the triple.
-     * @param object The object for the triple.
+     * @param object    The object for the triple.
      * @throws Exception The triple could be reified.
      */
     private void testCanInsert(SubjectNode subject, PredicateNode predicate,
-            ObjectNode object) throws Exception {
+                               ObjectNode object) throws Exception {
         try {
             tripleFactory.reifyTriple(subject, predicate, object,
                     elementFactory.createResource());
@@ -600,6 +614,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
             assertTrue(true);
         }
         catch (AlreadyReifiedException e) {
+        }
     }
-  }
 }

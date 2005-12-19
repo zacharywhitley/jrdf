@@ -2,6 +2,7 @@ package org.jrdf.connection;
 
 /**
  * Indicates that a connection error occured while connected/ing to a graph.
+ *
  * @author Tom Adams
  * @version $Id$
  */

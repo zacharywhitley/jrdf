@@ -62,6 +62,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
  * Accepts classes that are marked as being {@link java.io.Serializable}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

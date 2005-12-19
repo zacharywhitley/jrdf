@@ -58,11 +58,13 @@
 
 package org.jrdf.query;
 
-import java.util.List;
 import org.jrdf.graph.Triple;
+
+import java.util.List;
 
 /**
  * An answer to a query.
+ *
  * @author Tom Adams
  * @version $Id$
  */

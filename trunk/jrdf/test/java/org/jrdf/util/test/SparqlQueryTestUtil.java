@@ -75,12 +75,17 @@ public final class SparqlQueryTestUtil {
     public static final String VARIABLE_NAME_TITLE = "title";
     public static final String VARIABLE_NAME_SUBJECT = "subject";
     public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
-    public static final String QUERY_BOOK_1_DC_TITLE = createQueryString(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
-    public static final String QUERY_BOOK_2_DC_TITLE = createQueryString(TripleTestUtil.URI_BOOK_2, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
-    public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_1);
-    public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE = TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_2);
+    public static final String QUERY_BOOK_1_DC_TITLE =
+            createQueryString(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
+    public static final String QUERY_BOOK_2_DC_TITLE =
+            createQueryString(TripleTestUtil.URI_BOOK_2, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
+    public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE =
+            TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_1);
+    public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE =
+            TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_2);
 
-    private SparqlQueryTestUtil() { }
+    private SparqlQueryTestUtil() {
+    }
 
     private static String createQueryString(URI subjectUri, URI predicateUri, String objectVariable) {
         return "SELECT * WHERE  { " +

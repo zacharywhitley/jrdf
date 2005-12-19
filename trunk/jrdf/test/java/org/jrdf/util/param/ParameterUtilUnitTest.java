@@ -63,6 +63,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
  * Unit test for {@link ParameterUtil}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -83,7 +84,8 @@ public final class ParameterUtilUnitTest extends TestCase {
         try {
             ParameterUtil.checkNotNull(DUMMY_PARAM_NAME, NULL);
             fail("Nulls should not be allowed");
-        } catch (IllegalArgumentException expected) { }
+        } catch (IllegalArgumentException expected) {
+        }
     }
 
     public void testEmptyStringNotAllowed() {
@@ -104,6 +106,7 @@ public final class ParameterUtilUnitTest extends TestCase {
         try {
             ParameterUtil.checkNotEmptyString(DUMMY_PARAM_NAME, param);
             fail("Empty strings should not be allowed");
-        } catch (IllegalArgumentException expected) { }
+        } catch (IllegalArgumentException expected) {
+        }
     }
 }

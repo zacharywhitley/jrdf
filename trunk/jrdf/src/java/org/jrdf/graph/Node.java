@@ -60,6 +60,7 @@ package org.jrdf.graph;
 
 /**
  * RDF node.  This includes all things in the graph.
+ *
  * @author Simon Raboczi
  * @author Andrew Newman
  * @version $Revision$

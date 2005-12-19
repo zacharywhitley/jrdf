@@ -58,26 +58,28 @@
 
 package org.jrdf.util.test.instantiate;
 
-import java.util.Map;
-import java.util.HashMap;
+import org.jrdf.graph.AnyNode;
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.AnySubjectNode;
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralImpl;
 import org.jrdf.graph.mem.URIReferenceImpl;
 import org.jrdf.graph.mem.index.LongIndexMem;
-import org.jrdf.graph.AnyNode;
-import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.query.relation.constants.FalseNode;
-import org.jrdf.query.relation.constants.TrueNode;
+import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultAnswer;
 import org.jrdf.query.DefaultQuery;
-import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultVariable;
+import org.jrdf.query.relation.constants.FalseNode;
+import org.jrdf.query.relation.constants.TrueNode;
+import org.jrdf.util.test.ReflectTestUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Instantiates classes for use in testing.
+ *
  * @author Tom Adams
  * @version $Id$
  */

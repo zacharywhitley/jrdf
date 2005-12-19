@@ -1,13 +1,15 @@
 package org.jrdf.connection;
 
-import java.net.URI;
 import junit.framework.TestCase;
 import org.jrdf.query.MockBadGraph;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.test.AssertThrows;
 
+import java.net.URI;
+
 /**
  * Unit test for {@link JrdfConnectionFactory}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

@@ -19,17 +19,6 @@
  */
 package org.jrdf.parser.rdfxml;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Stack;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.TransformerConfigurationException;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -43,10 +32,10 @@ import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParseErrorListener;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParseLocationListener;
+import org.jrdf.parser.Parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.Parser;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import org.jrdf.vocabulary.RDF;
 import org.xml.sax.InputSource;
@@ -54,6 +43,18 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.TransformerConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * A parser for XML-serialized RDF. This parser operates directly
@@ -83,7 +84,7 @@ import org.xml.sax.XMLReader;
  * parser.setParseErrorListener(myParseErrorListener);
  * parser.setVerifyData(true);
  * parser.setStopAtFirstError(false);
- *
+ * <p/>
  * // Parse the data from inputStream, resolving any relative URIs against http://foo/bar:
  * parser.parse(inputStream, "http://foo/bar");
  * </pre>
@@ -225,7 +226,7 @@ public final class RdfXmlParser implements Parser {
      * @param parserBlankNodeFactory A ParserBlankNodeFactory.
      */
     public RdfXmlParser(GraphElementFactory valueFactory,
-            ParserBlankNodeFactory parserBlankNodeFactory) throws GraphException {
+                        ParserBlankNodeFactory parserBlankNodeFactory) throws GraphException {
         try {
             init(valueFactory, parserBlankNodeFactory);
 
@@ -833,7 +834,7 @@ public final class RdfXmlParser implements Parser {
     }
 
     private void reifyStatement(SubjectNode reifNode, SubjectNode subj,
-            PredicateNode pred, ObjectNode obj) throws SAXException {
+                                PredicateNode pred, ObjectNode obj) throws SAXException {
         reportStatement(reifNode, RDF_TYPE, RDF_STATEMENT);
         reportStatement(reifNode, RDF_SUBJECT, (ObjectNode) subj);
         reportStatement(reifNode, RDF_PREDICATE, (ObjectNode) pred);
@@ -971,7 +972,7 @@ public final class RdfXmlParser implements Parser {
      * is from this namespace, a warning is generated.
      */
     private void checkNodeEltName(String namespaceURI, String localName,
-            String qName) throws SAXException {
+                                  String qName) throws SAXException {
         if (RDF.BASE_URI.toString().equals(namespaceURI)) {
 
             if ("Description".equals(localName) ||
@@ -1020,7 +1021,7 @@ public final class RdfXmlParser implements Parser {
      * is from this namespace, a warning is generated.
      */
     private void checkPropertyEltName(String namespaceURI, String localName,
-            String qName) throws SAXException {
+                                      String qName) throws SAXException {
         if (RDF.BASE_URI.toString().equals(namespaceURI)) {
 
             if ("LI".equals(localName) ||
@@ -1141,7 +1142,7 @@ public final class RdfXmlParser implements Parser {
      *                      StatementHandlerException, which will be wrapped in a SAXException.
      */
     private void reportStatement(SubjectNode subject, PredicateNode predicate,
-            ObjectNode object) throws SAXException {
+                                 ObjectNode object) throws SAXException {
         try {
             statementHandler.handleStatement(subject, predicate, object);
         } catch (StatementHandlerException e) {

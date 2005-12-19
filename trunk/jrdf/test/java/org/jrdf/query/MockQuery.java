@@ -58,15 +58,15 @@
 
 package org.jrdf.query;
 
-import java.util.List;
-import java.net.URI;
-
-import org.jrdf.util.test.NodeTestUtil;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.util.test.NodeTestUtil;
+
+import java.net.URI;
+import java.util.List;
 
 /**
  * @author Tom Adams

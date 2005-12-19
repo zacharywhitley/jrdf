@@ -68,8 +68,8 @@ import org.jrdf.query.ConstraintTriple;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
-import java.util.Iterator;
 import java.util.Arrays;
+import java.util.Iterator;
 
 
 /**

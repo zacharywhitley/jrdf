@@ -58,17 +58,16 @@
 
 package org.jrdf.graph.mem.operation;
 
-import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.GraphException;
+import junit.framework.TestCase;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.graph.operation.Comparison;
 
 import java.net.URI;
-
-import junit.framework.TestCase;
 
 
 /**

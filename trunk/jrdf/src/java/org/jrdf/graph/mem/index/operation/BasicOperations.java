@@ -130,7 +130,7 @@ public class BasicOperations {
     }
 
     public static void performIntersection(LongIndex firstExistingIndex, LongIndex secondExistingIndex,
-            LongIndex newIndex) throws GraphException {
+                                           LongIndex newIndex) throws GraphException {
         Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = firstExistingIndex.iterator();
         while (firstEntries.hasNext()) {
             Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();

@@ -62,6 +62,7 @@ import org.jrdf.query.relation.constants.TrueNode;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.relation.constants.TrueNode}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

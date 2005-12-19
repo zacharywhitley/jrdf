@@ -58,15 +58,13 @@
 
 package org.jrdf.sparql.analysis;
 
-import java.net.URI;
 import junit.framework.TestCase;
+import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.Query;
-import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
 import org.jrdf.sparql.builder.VariableTripleSpec;
 import org.jrdf.sparql.parser.SableCcNodeTestUtil;
@@ -76,10 +74,14 @@ import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.TResource;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
+
+import java.net.URI;
 
 /**
  * Unit test for {@link DefaultSparqlAnalyser}.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -92,12 +94,15 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
     private static final String FIELD_NO_QUERY = "NO_QUERY";
     private static final String LITERAL_BOOK_TITLE = TripleTestUtil.LITERAL_BOOK_TITLE;
     private static final String EXPECTED_PARSED_LITERAL = LITERAL_BOOK_TITLE;
-    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE = new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-    private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_LITERAL = new LiteralTripleSpec(URI_BOOK_1, URI_DC_TITLE, LITERAL_BOOK_TITLE);
+    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE =
+            new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+    private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_LITERAL =
+            new LiteralTripleSpec(URI_BOOK_1, URI_DC_TITLE, LITERAL_BOOK_TITLE);
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, DefaultSparqlAnalyser.class);
+        ClassPropertiesTestUtil
+                .checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, DefaultSparqlAnalyser.class);
         ClassPropertiesTestUtil.checkExtensionOf(DepthFirstAdapter.class, DefaultSparqlAnalyser.class);
     }
 
@@ -165,7 +170,8 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
     }
 
     private void checkPredicate(ATriple expectedTriple, ConstraintTriple actualTriple) {
-        AResourceResourceTripleElement expectedPredicate = (AResourceResourceTripleElement) expectedTriple.getPredicate();
+        AResourceResourceTripleElement expectedPredicate =
+                (AResourceResourceTripleElement) expectedTriple.getPredicate();
         URIReference actualPredicate = (URIReference) actualTriple.getTriple().getPredicate();
         checkResource(expectedPredicate.getResource(), actualPredicate.getURI());
     }
@@ -227,11 +233,13 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
         try {
             SparqlAnalyser.NO_QUERY.getProjectedVariables();
             fail("SparqlAnalysis.NO_QUERY.getProjectedVariables() should have thrown UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {}
+        } catch (UnsupportedOperationException expected) {
+        }
         try {
             SparqlAnalyser.NO_QUERY.getConstraintExpression();
             fail("SparqlAnalysis.NO_QUERY.getConstraintExpression() should have thrown UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {}
+        } catch (UnsupportedOperationException expected) {
+        }
     }
 
     private void checkNoQueryConstantImmutable() {

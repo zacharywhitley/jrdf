@@ -60,6 +60,7 @@ package org.jrdf.query;
 
 /**
  * Builds queries in {@link String} form into {@link Query} objects.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -67,6 +68,7 @@ public interface QueryBuilder {
 
     /**
      * Builds a query in {@link String} form into a {@link Query}.
+     *
      * @param queryText The query in {@link String} form of the query.
      * @return The <code>queryText</code> in {@link Query} form.
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.

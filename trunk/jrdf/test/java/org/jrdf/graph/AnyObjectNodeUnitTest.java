@@ -1,13 +1,15 @@
 package org.jrdf.graph;
 
-import java.lang.reflect.Modifier;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import org.jrdf.util.test.SerializationTestUtil;
 
+import java.lang.reflect.Modifier;
+
 /**
  * Test the properties of the AnyObjectNode.
+ *
  * @author Andrew Newman
  * @version $Revision$
  */

@@ -60,7 +60,6 @@ package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.Query;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.analysis.SparqlAnalyser;
 
 /**
  * @author Tom Adams

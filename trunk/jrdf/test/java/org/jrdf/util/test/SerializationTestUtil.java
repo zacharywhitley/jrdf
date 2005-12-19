@@ -58,16 +58,18 @@
 
 package org.jrdf.util.test;
 
+import com.gargoylesoftware.base.testing.TestUtil;
+import junit.framework.Assert;
+import junit.framework.AssertionFailedError;
+import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import com.gargoylesoftware.base.testing.TestUtil;
-import junit.framework.AssertionFailedError;
-import junit.framework.Assert;
-import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 /**
  * Test utilities for checking serializability.
+ *
  * @author Tom Adams
  * @version $Id$
  */

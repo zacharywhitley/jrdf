@@ -58,15 +58,17 @@
 
 package org.jrdf.query;
 
-import java.lang.reflect.Modifier;
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
+import java.lang.reflect.Modifier;
+
 /**
  * Unit test for {@link ConstraintTriple}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -78,7 +80,8 @@ public final class ConstraintTripleUnitTest extends TestCase {
     private static final ConstraintTriple CONSTRAINT_TRIPLE_2 = new ConstraintTriple(TRIPLE_2);
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ConstraintExpression.class, ConstraintTriple.class);
+        ClassPropertiesTestUtil
+                .checkImplementationOfInterfaceAndFinal(ConstraintExpression.class, ConstraintTriple.class);
         ClassPropertiesTestUtil.checkConstructor(ConstraintTriple.class, Modifier.PUBLIC, Triple.class);
     }
 
@@ -91,7 +94,8 @@ public final class ConstraintTripleUnitTest extends TestCase {
             new ConstraintTriple(null);
             fail("null to constructor should have thrown IllegalArgumentException");
         }
-        catch (IllegalArgumentException expected) {}
+        catch (IllegalArgumentException expected) {
+        }
     }
 
     public void testGetTriple() {

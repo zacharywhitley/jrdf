@@ -98,7 +98,7 @@ public class GraphHandler012 extends AbstractGraphHandler implements GraphHandle
     }
 
     public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
-        return new Node[] {nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
+        return new Node[]{nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
                 nodePool.getNodeById(nodes[2])};
     }
 }

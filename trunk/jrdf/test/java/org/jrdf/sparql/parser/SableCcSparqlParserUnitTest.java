@@ -58,32 +58,34 @@
 
 package org.jrdf.sparql.parser;
 
-import java.util.List;
-import java.lang.reflect.Modifier;
-
 import junit.framework.TestCase;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.MockQuery;
 import org.jrdf.query.Query;
 import org.jrdf.query.Variable;
-import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.sparql.analysis.MockSparqlAnalyser;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
+
+import java.lang.reflect.Modifier;
+import java.util.List;
 
 /**
  * Unit test for {@link SableCcSparqlParser}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
 public final class SableCcSparqlParserUnitTest extends TestCase {
 
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
+    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE =
+            SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
@@ -121,7 +123,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         try {
             parseQuery(queryText);
             fail("new DefaultSparqlParser().parseQuery(BAD_BAD_BAD) should have failed");
-        } catch (IllegalArgumentException expected) {}
+        } catch (IllegalArgumentException expected) {
+        }
     }
 
     private Query parseQuery(String queryString) {

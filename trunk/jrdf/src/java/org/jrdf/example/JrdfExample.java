@@ -246,7 +246,6 @@ public class JrdfExample {
      * @param message String
      * @param graph   Graph
      * @throws IllegalArgumentException
-     *
      * @throws GraphException
      */
     private void print(String message, Graph graph) throws IllegalArgumentException, GraphException,

@@ -58,12 +58,13 @@
 
 package org.jrdf.sparql.builder;
 
-import org.jrdf.sparql.parser.SparqlParser;
-import org.jrdf.query.Query;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.sparql.parser.SparqlParser;
 
 /**
  * This parser always throws an exception when invoked.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

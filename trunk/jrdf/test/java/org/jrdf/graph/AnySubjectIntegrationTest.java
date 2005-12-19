@@ -63,6 +63,7 @@ import org.jrdf.util.test.SerializationTestUtil;
 
 /**
  * Integration test for {@link AnySubjectNode}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

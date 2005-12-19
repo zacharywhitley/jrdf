@@ -308,7 +308,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private ClosableIterator<Triple> findNonEmptyIterator(SubjectNode subject, PredicateNode predicate, Long[] values,
-            ObjectNode object) {
+                                                          ObjectNode object) {
         // test which index to use
         if (ANY_SUBJECT_NODE != subject) {
             // test for {sp*}
@@ -527,7 +527,7 @@ public class GraphImpl implements Graph, Serializable {
 
     // TODO AN Move this to a helper utility perhaps.
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
-            String nullMessage, String anyNodeMessage) {
+                                          String nullMessage, String anyNodeMessage) {
         checkForNulls(subject, predicate, object, nullMessage);
         checkForAnyNodes(subject, predicate, object, anyNodeMessage);
     }

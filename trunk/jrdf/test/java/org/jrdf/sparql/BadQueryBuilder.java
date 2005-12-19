@@ -58,12 +58,13 @@
 
 package org.jrdf.sparql;
 
-import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.Query;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.query.QueryBuilder;
 
 /**
  * A builder that always throws exceptions.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

@@ -58,14 +58,16 @@
 
 package org.jrdf.query;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+
 /**
  * Unit test for {@link DefaultVariable}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -88,7 +90,8 @@ public final class DefaultVariableUnitTest extends TestCase {
         try {
             new DefaultVariable(null);
             fail("new DefaultVariable(null) should have failed");
-        } catch (IllegalArgumentException expected) {}
+        } catch (IllegalArgumentException expected) {
+        }
     }
 
     public void testGetName() {

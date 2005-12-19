@@ -60,6 +60,7 @@ package org.jrdf.util.test.instantiate;
 
 /**
  * Instantiates objects for use in testing.
+ *
  * @author Tom Adams
  * @version $Id$
  */

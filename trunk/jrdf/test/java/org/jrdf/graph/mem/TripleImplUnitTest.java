@@ -59,17 +59,18 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.AbstractTripleUnitTest;
-import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
+import org.jrdf.util.test.NodeTestUtil;
 
 import java.net.URI;
 
 /**
  * Unit test for {@link TripleImpl}.
+ *
  * @author Tom Adams
  * @author Andrew Newman
  * @version $Revision$
@@ -78,6 +79,7 @@ public final class TripleImplUnitTest extends AbstractTripleUnitTest {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public TripleImplUnitTest(String name) {

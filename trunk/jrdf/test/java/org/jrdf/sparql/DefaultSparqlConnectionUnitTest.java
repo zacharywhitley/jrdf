@@ -58,17 +58,14 @@
 
 package org.jrdf.sparql;
 
-import java.net.URI;
-import java.lang.reflect.Modifier;
-
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
+import org.jrdf.query.GraphFixture;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.MockBadGraph;
-import org.jrdf.query.GraphFixture;
 import org.jrdf.query.MockGraph;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterTestUtil;
@@ -78,8 +75,12 @@ import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
+import java.lang.reflect.Modifier;
+import java.net.URI;
+
 /**
  * Unit test for {@link DefaultSparqlConnection}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

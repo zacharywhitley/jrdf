@@ -753,8 +753,8 @@ public class XmlDatatypeUtil {
      *                                  is not a legal floating point number.
      */
     private static String normalizeFPNumber(String value,
-            String minMantissa, String maxMantissa,
-            String minExponent, String maxExponent) {
+                                            String minMantissa, String maxMantissa,
+                                            String minExponent, String maxExponent) {
         // handle special values
         if ("INF".equals(value) || "-INF".equals(value) || "NaN".equals(value)) {
             return value;

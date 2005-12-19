@@ -58,10 +58,6 @@
 
 package org.jrdf.query.execute;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
@@ -72,6 +68,11 @@ import org.jrdf.query.DefaultAnswer;
 import org.jrdf.query.Query;
 import org.jrdf.util.param.ParameterUtil;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * A naive query executor that uses an iterator-based approach to finding triples.
  * <p>This is an initial attempt at a very basic JRDF query layer, before the real one gets written.</p>
@@ -80,6 +81,7 @@ import org.jrdf.util.param.ParameterUtil;
  * <li>Get all triples from the graph;</li>
  * <li>Iterate over them and match the query constraints against them.</li>
  * </ul>
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -92,7 +94,8 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
     /**
      * Creates executor to execute queries.
-     * @param graph The graph to communicate with.
+     *
+     * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
     public NaiveQueryExecutor(Graph graph, URI securityDomain) {

@@ -61,12 +61,22 @@ package org.jrdf.graph.mem;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-import org.jrdf.graph.*;
+import org.jrdf.graph.AbstractTripleFactoryUnitTest;
+import org.jrdf.graph.Alternative;
+import org.jrdf.graph.Bag;
+import org.jrdf.graph.Collection;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Sequence;
+import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.vocabulary.RDF;
 
 /**
  * Implementation of {@link AbstractTripleFactoryUnitTest} test
  * case.
+ *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision$
@@ -75,6 +85,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public TripleFactoryUnitTest(String name) {
@@ -83,6 +94,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     /**
      * Create a graph implementation.
+     *
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
@@ -91,6 +103,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     /**
      * Hook for test runner to obtain a test suite from.
+     *
      * @return The test suite
      */
     public static Test suite() {
@@ -105,6 +118,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     /**
      * Default test runner.
+     *
      * @param args The command line arguments
      */
     public static void main(String[] args) throws Exception {
@@ -194,5 +208,5 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         }
 
         return sequence;
-  }
+    }
 }

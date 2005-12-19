@@ -63,6 +63,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
  * Unit test for {@link SparqlParser}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

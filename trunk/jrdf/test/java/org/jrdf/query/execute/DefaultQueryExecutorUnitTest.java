@@ -58,8 +58,6 @@
 
 package org.jrdf.query.execute;
 
-import java.lang.reflect.Modifier;
-import java.net.URI;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
@@ -71,8 +69,12 @@ import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
+import java.lang.reflect.Modifier;
+import java.net.URI;
+
 /**
- * Unit test for {@link org.jrdf.query.execute.DefaultQueryExecutor}.
+ * Unit test for {@link DefaultQueryExecutor}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -82,7 +84,8 @@ public class DefaultQueryExecutorUnitTest extends TestCase {
     private static final URI URI_DC_TITLE = TripleTestUtil.URI_DC_TITLE;
     private static final MockQuery QUERY_BOOK_1_DC_TITLE = new MockQuery(URI_BOOK_1, URI_DC_TITLE);
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final JrdfQueryExecutor EXECUTOR_BAD = new DefaultQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN);
+    private static final JrdfQueryExecutor EXECUTOR_BAD =
+            new DefaultQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN);
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, DefaultQueryExecutor.class);

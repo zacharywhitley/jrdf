@@ -65,6 +65,7 @@ import java.util.Collection;
 
 /**
  * Given a directory, find all files matching a given criteria under that directory.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

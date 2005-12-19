@@ -58,14 +58,16 @@
 
 package org.jrdf.util.test.instantiate;
 
-import java.util.List;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.DefaultQuery;
 import org.jrdf.query.Variable;
 import org.jrdf.util.test.ReflectTestUtil;
 
+import java.util.List;
+
 /**
  * {@link Instantiator} for {@link org.jrdf.query.DefaultQuery}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

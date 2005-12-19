@@ -1,14 +1,16 @@
 package org.jrdf.util.test.runner;
 
+import com.gargoylesoftware.base.testing.RecursiveTestSuite;
+import com.gargoylesoftware.base.testing.TestFilter;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import com.gargoylesoftware.base.testing.RecursiveTestSuite;
-import com.gargoylesoftware.base.testing.TestFilter;
 
 /**
  * Recurses the root directory of classes and runs all tests which end with a
  * given suffix.
+ *
  * @author Andrew Newman
  * @version $Revision$
  */

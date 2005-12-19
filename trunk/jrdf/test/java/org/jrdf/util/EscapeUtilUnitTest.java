@@ -40,11 +40,11 @@ public class EscapeUtilUnitTest extends TestCase {
     }
 
     public void testControlCharacters() {
-        testEscapedValue("\\\\", new String(new char[] {(char) 92}));
-        testEscapedValue("\\\"", new String(new char[] {(char) 34}));
-        testEscapedValue("\\r", new String(new char[] {(char) 13}));
-        testEscapedValue("\\n", new String(new char[] {(char) 10}));
-        testEscapedValue("\\t", new String(new char[] {(char) 9}));
+        testEscapedValue("\\\\", new String(new char[]{(char) 92}));
+        testEscapedValue("\\\"", new String(new char[]{(char) 34}));
+        testEscapedValue("\\r", new String(new char[]{(char) 13}));
+        testEscapedValue("\\n", new String(new char[]{(char) 10}));
+        testEscapedValue("\\t", new String(new char[]{(char) 9}));
     }
 
     private void testEscapedValue(String expectedValue, String testString) {

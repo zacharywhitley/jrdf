@@ -75,6 +75,7 @@ import java.io.StringReader;
 
 /**
  * SableCC implementation of a {@link SparqlParser}.
+ *
  * @author Tom Adams
  * @version $Id$
  */
@@ -88,6 +89,7 @@ public final class SableCcSparqlParser implements SparqlParser {
 
     /**
      * Parses a textual query into a {@link org.jrdf.query.Query} object.
+     *
      * @param queryText The textual query to applyAnalyser.
      * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.

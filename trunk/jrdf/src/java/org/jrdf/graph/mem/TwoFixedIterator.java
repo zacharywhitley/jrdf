@@ -144,7 +144,7 @@ public class TwoFixedIterator implements ClosableIterator<Triple> {
      * Constructor.  Sets up the internal iterators.
      */
     TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, TripleFactory newFactory,
-            GraphHandler newHandler) {
+                     GraphHandler newHandler) {
 
         // store the node factory and other starting data
         first = fixedFirstNode;

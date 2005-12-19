@@ -58,8 +58,6 @@
 
 package org.jrdf.sparql;
 
-import java.net.URI;
-import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
@@ -78,8 +76,12 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
+import java.net.URI;
+import java.util.List;
+
 /**
- * Integration test for {@link org.jrdf.sparql.DefaultSparqlConnection}.
+ * Integration test for {@link DefaultSparqlConnection}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

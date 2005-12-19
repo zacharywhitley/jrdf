@@ -58,12 +58,14 @@
 
 package org.jrdf.util.param;
 
+import org.jrdf.util.test.AssertThrows;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import org.jrdf.util.test.AssertThrows;
 
 /**
  * Test utility for checking bad parameters to methods.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -75,9 +77,11 @@ public final class ParameterTestUtil {
     public static final String NON_EMPTY_STRING = "FOO";
     public static final Object NON_NULL_OBJECT = new Object();
 
-    private ParameterTestUtil() { }
+    private ParameterTestUtil() {
+    }
 
-    public static void checkBadStringParam(final Object ref, final String methodName, final String param) throws Exception {
+    public static void checkBadStringParam(final Object ref, final String methodName, final String param)
+            throws Exception {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 invokeMethod(ref, methodName, String.class, param);
@@ -85,7 +89,8 @@ public final class ParameterTestUtil {
         });
     }
 
-    private static void invokeMethod(Object cls, String methodName, Class paramClass, String paramValue) throws Exception {
+    private static void invokeMethod(Object cls, String methodName, Class paramClass, String paramValue)
+            throws Exception {
         try {
             Method method = cls.getClass().getMethod(methodName, new Class[]{paramClass});
             method.invoke(cls, new Object[]{paramValue});

@@ -71,6 +71,7 @@ import java.net.URI;
 /**
  * Implementation of {@link AbstractGraphElementFactoryUnitTest}
  * test case.
+ *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
@@ -78,6 +79,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public GraphElementFactoryImplUnitTest(String name) {
@@ -86,6 +88,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     /**
      * Create a new graph of the appropriate type.
+     *
      * @return A new graph implementation object.
      */
     public Graph newGraph() throws GraphException {
@@ -94,6 +97,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     /**
      * Hook for test runner to obtain a test suite from.
+     *
      * @return The test suite
      */
     public static Test suite() {
@@ -107,6 +111,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     /**
      * Default test runner.
+     *
      * @param args The command line arguments
      */
     public static void main(String[] args) throws Exception {
@@ -116,6 +121,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
 
     /**
      * Return the default literal type from the implementation.
+     *
      * @return The default Literal type.
      */
     public URI getDefaultLiteralType() {
@@ -129,6 +135,6 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
      */
     public String getDefaultLiteralLanguage() {
         return null;
-  }
+    }
 
 }

@@ -58,11 +58,12 @@
 
 package org.jrdf.util.test.filter;
 
-import java.io.FileFilter;
 import java.io.File;
+import java.io.FileFilter;
 
 /**
  * Accepts {@link File}s that are directories.
+ *
  * @author Tom Adams
  * @version $Id$
  */

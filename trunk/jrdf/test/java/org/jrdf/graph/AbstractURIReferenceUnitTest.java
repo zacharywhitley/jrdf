@@ -58,13 +58,14 @@
 
 package org.jrdf.graph;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.net.URI;
 import junit.framework.TestCase;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.net.URI;
 
 /**
  * Unit test for {@link AbstractURIReference}.
@@ -84,6 +85,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
     /**
      * Constructs a new test with the given name.
+     *
      * @param name the name of the test
      */
     public AbstractURIReferenceUnitTest(String name) {
@@ -97,7 +99,9 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     public abstract URIReference createResource(URI uri) throws Exception;
+
     public abstract URIReference createResource(URI uri, boolean check) throws Exception;
+
     public abstract void testClassProperties();
 
     protected void checkClassProperties(Class newClass) {
@@ -110,7 +114,8 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterface(URIReference.class, AbstractURIReference.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractURIReference.class);
         ClassPropertiesTestUtil.checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class);
-        ClassPropertiesTestUtil.checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class, boolean.class);
+        ClassPropertiesTestUtil
+                .checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class, boolean.class);
         SerializationTestUtil.checkSerialialVersionUid(AbstractURIReference.class, 8034954863132812197L);
     }
 
@@ -201,11 +206,12 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkNullURIThrowsException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, "Null \"newUri\" parameter", new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                createResource(null);
-            }
-        });
+        AssertThrows
+                .assertThrows(IllegalArgumentException.class, "Null \"newUri\" parameter", new AssertThrows.Block() {
+                    public void execute() throws Throwable {
+                        createResource(null);
+                    }
+                });
     }
 
     private void checkNotAbsoluteURIThrowsException() {
@@ -258,6 +264,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
     private class TestURIReference extends AbstractURIReference {
         private static final long serialVersionUID = -443111126777106029L;
+
         public TestURIReference(URI newUri) throws IllegalArgumentException {
             super(newUri);
         }
@@ -265,6 +272,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
     private class TestURIReference2 extends AbstractURIReference {
         private static final long serialVersionUID = 8196131420240571434L;
+
         public TestURIReference2(URI newUri) throws IllegalArgumentException {
             super(newUri);
         }

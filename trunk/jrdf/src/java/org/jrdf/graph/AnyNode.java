@@ -1,12 +1,13 @@
 package org.jrdf.graph;
 
-import java.io.Serializable;
 import java.io.ObjectStreamException;
+import java.io.Serializable;
 
 /**
  * A node which represents any node (subject, predicate or object) - unconstrained.
  * Shouldn't be needed unless the positional information (subject, predicate, or object) is lost or you want an
  * object to represent all three positions in one object.  The former, should probably be avoided if possible.
+ *
  * @author Andrew Newman
  * @author Tom Adams
  * @version $Id$

@@ -1,13 +1,70 @@
+/*
+ * $Header$
+ * $Revision$
+ * $Date$
+ *
+ * ====================================================================
+ *
+ * The Apache Software License, Version 1.1
+ *
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        the JRDF Project (http://jrdf.sf.net/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
+ *
+ * 4. The names "The JRDF Project" and "JRDF" must not be used to endorse
+ *    or promote products derived from this software without prior written
+ *    permission. For written permission, please contact
+ *    newmana@users.sourceforge.net.
+ *
+ * 5. Products derived from this software may not be called "JRDF"
+ *    nor may "JRDF" appear in their names without prior written
+ *    permission of the JRDF Project.
+ *
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the JRDF Project.  For more
+ * information on JRDF, please see <http://jrdf.sourceforge.net/>.
+ */
+
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.query.relation.AttributeNameValue;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,23 +76,75 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class RelationDEE implements Relation {
-    private static final Node TRUE_NODE = TrueNode.TRUE;
-    private static final Set<AttributeNameValue> TRUE_NAME_VALUE_SET =
-            Collections.singleton(TrueAttributeNameValue.TRUE_NAME_VALUE);
-    private static final Map<? super SubjectNode, Set<AttributeNameValue>> TRUE_TUPLE =
-            Collections.singletonMap(TRUE_NODE, TRUE_NAME_VALUE_SET);
+public final class RelationDEE implements Relation {
 
+    /**
+     * The singleton version of RelationDEE.
+     */
+    public static final Relation RELATION_DEE = new RelationDEE();
+
+    /**
+     * Tuple Zero is the special tuple.
+     */
+    private static final Tuple TUPLE_ZERO = new TupleZero();
+
+    /**
+     * There can be only one RelationDEE.
+     */
+    private RelationDEE() {
+    }
+
+    /**
+     * Returns the arbitrary name of the tuple - TRUE.
+     *
+     * @return TRUE_NODE.
+     */
     public Set<SubjectNode> getTupleNames() {
-        return Collections.singleton((SubjectNode) TRUE_NODE);
+        return Collections.singleton((SubjectNode) TrueNode.TRUE);
     }
 
+    /**
+     * This Relation has no attributes.
+     *
+     * @return an empty set.
+     */
     public Set<PredicateNode> getAttributeNames() {
-        return Collections.singleton((PredicateNode) TRUE_NODE);
+        return Collections.emptySet();
     }
 
-    public Map<? super SubjectNode, Set<AttributeNameValue>> getTuples(Set<SubjectNode> tupleNames) {
-        return TRUE_TUPLE;
+    /**
+     * Returns the TUPLE_ZERO.
+     *
+     * @return the TUPLE_ZERO.
+     */
+    public Set<Tuple> getTuples() {
+        return Collections.singleton(TUPLE_ZERO);
     }
 
+    private static final class TupleZero implements Tuple {
+
+        /**
+         * There can be only one TupleZero.
+         */
+        private TupleZero() {
+        }
+
+        /**
+         * Returns the single TRUE_NODE value.
+         *
+         * @return the single TRUE_NODE value.
+         */
+        public SubjectNode getName() {
+            return (SubjectNode) TrueNode.TRUE;
+        }
+
+        /**
+         * Returns the TRUE attribute/value pair.
+         *
+         * @return the TRUE attribute/value pair.
+         */
+        public Set<AttributeValuePair> getAttributeNameValues() {
+            return Collections.singleton(TrueAttributeValuePair.TRUE_VALUE_PAIR);
+        }
+    }
 }

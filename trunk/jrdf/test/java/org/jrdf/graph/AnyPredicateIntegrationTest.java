@@ -62,7 +62,8 @@ import junit.framework.TestCase;
 import org.jrdf.util.test.SerializationTestUtil;
 
 /**
- * Integration test for {@link org.jrdf.graph.AnyPredicateNode}.
+ * Integration test for {@link AnyPredicateNode}.
+ *
  * @author Tom Adams
  * @version $Id$
  */

@@ -58,14 +58,15 @@
 
 package org.jrdf.util.test.filter;
 
-import java.io.File;
-import java.util.Collection;
 import junit.framework.TestCase;
 import org.jrdf.vocabulary.Vocabulary;
-import org.jrdf.util.test.filter.RecursiveFileFinder;
+
+import java.io.File;
+import java.util.Collection;
 
 /**
- * Integration test for {@link org.jrdf.util.test.filter.RecursiveFileFinder}.
+ * Integration test for {@link RecursiveFileFinder}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

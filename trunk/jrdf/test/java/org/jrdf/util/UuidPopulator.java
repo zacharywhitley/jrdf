@@ -58,9 +58,9 @@
 
 package org.jrdf.util;
 
-import java.util.Set;
-
 import junit.framework.Assert;
+
+import java.util.Set;
 
 final class UuidPopulator implements Runnable {
 

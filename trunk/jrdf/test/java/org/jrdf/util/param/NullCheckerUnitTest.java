@@ -62,6 +62,7 @@ import junit.framework.TestCase;
 
 /**
  * Unit test for {@link NullChecker}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */

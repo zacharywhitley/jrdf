@@ -65,6 +65,7 @@ import org.jrdf.query.Query;
  * Parses {@link String}s into {@linkplain org.jrdf.query.Query queries}.
  * <p>Implementations of this interface adapt between a compiler neutral
  * {@linkplain org.jrdf.query.QueryBuilder builder} and a specific compiler.</p>
+ *
  * @author Tom Adams
  * @version $Id$
  */

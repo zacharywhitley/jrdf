@@ -60,18 +60,19 @@ package org.jrdf.sparql.builder;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.test.SparqlQueryTestUtil;
-import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.SableCcNodeTestUtil;
+import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.util.test.SparqlQueryTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
 
 /**
  * Unit test for {@link TripleBuilder}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
@@ -90,10 +91,14 @@ public final class TripleBuilderUnitTest extends TestCase {
     private static final String LITERAL_BOOK_TITLE = TripleTestUtil.LITERAL_BOOK_TITLE;
     private static final URI URI_BOOK_1 = TripleTestUtil.URI_BOOK_1;
     private static final URI URI_BOOK_2 = TripleTestUtil.URI_BOOK_2;
-    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE = new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE = new VariableTripleSpec(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE = new VariableTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
-    private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL = new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
+    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE =
+            new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE =
+            new VariableTripleSpec(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE =
+            new VariableTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
+    private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL =
+            new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
     private static final TripleBuilder BUILDER = new TripleBuilder();
 
     public void testClassProperties() {
@@ -115,7 +120,8 @@ public final class TripleBuilderUnitTest extends TestCase {
         try {
             BUILDER.build(null);
             fail("build(null) should have thrown IllegalArgumentException");
-        } catch (Exception expected) { }
+        } catch (Exception expected) {
+        }
     }
 
     private void checkBuiltTripleWithVariable(Triple expectedTriple, VariableTripleSpec actualTriple) {
