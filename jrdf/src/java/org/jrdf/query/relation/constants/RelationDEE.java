@@ -121,10 +121,14 @@ public final class RelationDEE implements Relation {
         return Collections.singleton(TUPLE_ZERO);
     }
 
+    /**
+     * Tuple Zero is the row with no values.  It has one row and that row is the zero-tuple i.e. an attribute/value
+     * pair that is an empty set.
+     */
     private static final class TupleZero implements Tuple {
 
         /**
-         * There can be only one TupleZero.
+         * There can be only one zero-tuple.
          */
         private TupleZero() {
         }
@@ -139,12 +143,12 @@ public final class RelationDEE implements Relation {
         }
 
         /**
-         * Returns the TRUE attribute/value pair.
+         * Returns the empty set attribute/value pair.
          *
-         * @return the TRUE attribute/value pair.
+         * @return the empty set attribute/value pair.
          */
         public Set<AttributeValuePair> getAttributeNameValues() {
-            return Collections.singleton(TrueAttributeValuePair.TRUE_VALUE_PAIR);
+            return Collections.emptySet();
         }
     }
 }
