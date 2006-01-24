@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.operation;
+package org.jrdf.mem.operation;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.createMock;
@@ -69,6 +69,7 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.index.operation.mem.ComparisonImpl;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -82,7 +83,7 @@ import static org.jrdf.util.test.TripleTestUtil.createTripleIterator;
 import java.lang.reflect.Modifier;
 
 /**
- * Tests {@see org.jrdf.graph.mem.operation.ComparisonImpl}.
+ * Tests {@see org.jrdf.graph.index.operation.mem.ComparisonImpl}.
  *
  * @author Andrew Newman
  * @version $Revision$

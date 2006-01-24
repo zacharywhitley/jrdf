@@ -64,6 +64,7 @@ import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.mem.GraphImpl;
 
 import java.net.URI;
 

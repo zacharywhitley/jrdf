@@ -56,24 +56,49 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.operation;
+package org.jrdf.graph.index.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.operation.Difference;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.index.AbstractGraphHandler;
+import org.jrdf.graph.index.GraphHandler;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.NodePool;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Jus a spike please ignore.
+ * Handles operations on 012 index.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class DifferenceImpl implements Difference {
-    public Graph perform(Graph a, Graph b) {
-        // Get 012index for graph a.
-        // Get 012index for graph b.
-        // Perform index.operation.difference
-        // Use GraphHandler012.reconstructIndices to create new graph based on 012.
-        return null;
+public class GraphHandler012 extends AbstractGraphHandler implements GraphHandler {
+    private LongIndex index012;
+    private LongIndex index120;
+    private LongIndex index201;
+
+    public GraphHandler012(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
+        this.index012 = index012;
+        this.index120 = index120;
+        this.index201 = index201;
+        this.nodePool = nodePool;
+    }
+
+    public void remove(Long[] currentNodes) throws GraphException {
+        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
+        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+    }
+
+    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+        return index012.iterator();
+    }
+
+    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
+        return new Node[]{nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
+                nodePool.getNodeById(nodes[2])};
     }
 }

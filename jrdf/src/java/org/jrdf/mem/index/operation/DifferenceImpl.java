@@ -56,49 +56,33 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.index;
+package org.jrdf.mem.index.operation;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.index.AbstractGraphHandler;
-import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.NodePool;
+import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.index.operation.Difference;
+import static org.jrdf.mem.index.operation.BasicOperations.copyEntriesToIndex;
+import static org.jrdf.mem.index.operation.BasicOperations.removeEntriesFromIndex;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+
 /**
- * Handles operations on 012 index.
+ * Only a Spike please ignore.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphHandler012 extends AbstractGraphHandler implements GraphHandler {
-    private LongIndex index012;
-    private LongIndex index120;
-    private LongIndex index201;
-
-    public GraphHandler012(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
-        this.index012 = index012;
-        this.index120 = index120;
-        this.index201 = index201;
-        this.nodePool = nodePool;
+public class DifferenceImpl implements Difference {
+    public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
+        HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
+        LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
+        copyEntriesToIndex(index1, newIndex);
+        removeEntriesFromIndex(index2, newIndex);
+        return newIndex;
     }
 
-    public void remove(Long[] currentNodes) throws GraphException {
-        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
-    }
-
-    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return index012.iterator();
-    }
-
-    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
-        return new Node[]{nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
-                nodePool.getNodeById(nodes[2])};
-    }
 }

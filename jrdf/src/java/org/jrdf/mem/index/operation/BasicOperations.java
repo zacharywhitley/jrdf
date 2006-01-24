@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.index.operation;
+package org.jrdf.mem.index.operation;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;

@@ -56,29 +56,62 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.index.operation;
+package org.jrdf.graph.index.operation.mem;
 
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.operation.Intersection;
-import org.jrdf.graph.mem.index.LongIndexMem;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.operation.Comparison;
+import org.jrdf.util.ClosableIterator;
 
 /**
- * Just a spike please ignore.
+ * Default in memory Comparison.
+ * <p/>
+ * Currently, only implements grounded isomorphism.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class IntersectionImpl implements Intersection {
-    public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
-        HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
-        LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
-        BasicOperations.performIntersection(index1, index2, newIndex);
-        return newIndex;
+public final class ComparisonImpl implements Comparison {
+
+    public boolean isGrounded(Graph g) throws GraphException {
+        return g.isEmpty();
+    }
+
+    public boolean areIsomorphic(Graph g1, Graph g2) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean groundedGraphsAreEqual(Graph g1, Graph g2) throws GraphException {
+        boolean g1IsEmpty = g1.isEmpty();
+        boolean g2IsEmpty = g2.isEmpty();
+        if (g1IsEmpty && g2IsEmpty) {
+            return true;
+        } else if (!g1IsEmpty && !g2IsEmpty) {
+            return compareNonEmptyGraphs(g1, g2);
+        }
+        return false;
+    }
+
+    private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {
+        long g1Size = g1.getNumberOfTriples();
+        long g2Size = g2.getNumberOfTriples();
+        if (g1Size == g2Size) {
+            return compareGraphContents(g1, g2);
+        }
+        return false;
+    }
+
+    private boolean compareGraphContents(Graph g1, Graph g2) throws GraphException {
+        ClosableIterator<Triple> iterator = g1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        while (iterator.hasNext()) {
+            if (!g2.contains(iterator.next())) {
+                return false;
+            }
+        }
+        return true;
     }
 }

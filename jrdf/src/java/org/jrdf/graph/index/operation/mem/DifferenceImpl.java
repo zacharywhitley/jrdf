@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,47 +56,24 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
+package org.jrdf.graph.index.operation.mem;
 
-package org.jrdf.query.mem.operation;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.operation.Difference;
 
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.constants.RelationDEE;
-
-import java.util.Collections;
-import java.util.Set;
 
 /**
- * A simple memory based implementation of Join.
+ * Jus a spike please ignore.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class Join implements org.jrdf.query.relation.operation.Join {
-
-    /**
-     * Singleton version of Join.
-     */
-    public static final Join JOIN = new Join();
-
-    /**
-     * Cannot create join.
-     */
-    private Join() {
-    }
-
-    public Relation join(Set<Relation> relation) {
-        // Is it the empty set - if so return DEE.
-        if (relation.equals(Collections.<Relation>emptySet())) {
-            return RelationDEE.RELATION_DEE;
-        }
-
-        // Is it just one relation - if so just return it back.
-        if (relation.size() == 1) {
-            return relation.iterator().next();
-        }
-
-        // Do a proper join.
-        Relation result = null;
+public class DifferenceImpl implements Difference {
+    public Graph perform(Graph a, Graph b) {
+        // Get 012index for graph a.
+        // Get 012index for graph b.
+        // Perform index.operation.difference
+        // Use GraphHandler012.reconstructIndices to create new graph based on 012.
         return null;
     }
 }

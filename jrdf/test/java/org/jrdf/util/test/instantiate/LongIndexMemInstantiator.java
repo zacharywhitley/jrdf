@@ -58,7 +58,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.mem.index.LongIndexMem;
+import org.jrdf.graph.index.mem.LongIndexMem;
 import org.jrdf.util.test.ReflectTestUtil;
 
 import java.util.HashMap;
@@ -66,7 +66,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.graph.mem.index.LongIndexMem}.
+ * {@link Instantiator} for {@link org.jrdf.graph.index.mem.LongIndexMem}.
  *
  * @author Tom Adams
  * @version $Id$
