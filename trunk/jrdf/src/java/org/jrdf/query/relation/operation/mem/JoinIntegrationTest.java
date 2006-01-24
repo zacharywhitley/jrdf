@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,49 +56,36 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.operation;
+
+package org.jrdf.query.relation.operation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.graph.operation.Comparison;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.constants.RelationDEE;
+import org.jrdf.query.relation.constants.RelationDUM;
 
-import java.net.URI;
-
+import java.util.Collections;
+import java.util.Set;
 
 /**
- * Integration tests {@see org.jrdf.graph.mem.operation.ComparisonImpl}.
+ * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other
+ * relations.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class ComparisonImplIntegrationTest extends TestCase {
-    private static final URI URI1 = URI.create("http://foo/bar");
-    private static final URI URI2 = URI.create("http://foo/bar/baz");
-
-    public void testMemGraphEquality() throws Exception {
-        checkGraph(URI1, URI1, true);
-        checkGraph(URI2, URI2, true);
-        checkGraph(URI1, URI2, false);
+public class JoinIntegrationTest extends TestCase {
+    public void testRelationDEEandDUM() {
+        // The JOIN of empty is DEE.
+        checkRelation(Collections.<Relation>emptySet(), RelationDEE.RELATION_DEE);
+        // The JOIN of DEE is DEE.
+        checkRelation(Collections.singleton(RelationDEE.RELATION_DEE), RelationDEE.RELATION_DEE);
+        // The JOIN of DUM is DUM.
+        checkRelation(Collections.singleton(RelationDUM.RELATION_DUM), RelationDUM.RELATION_DUM);
     }
 
-    private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {
-        GraphImpl graph1 = new GraphImpl();
-        addTriple(graph1, resource1);
-        GraphImpl graph2 = new GraphImpl();
-        addTriple(graph2, resource2);
-        Comparison comparison = new ComparisonImpl();
-        assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));
-    }
-
-    private void addTriple(GraphImpl graph, URI uri) throws GraphElementFactoryException, TripleFactoryException,
-            GraphException {
-        URIReference resource = graph.getElementFactory().createResource(uri);
-        Triple triple = graph.getTripleFactory().createTriple(resource, resource, resource);
-        graph.add(triple);
+    private void checkRelation(Set<Relation> actual, Relation expected) {
+        Relation relation = Join.JOIN.join(actual);
+        assertTrue(relation == expected);
     }
 }

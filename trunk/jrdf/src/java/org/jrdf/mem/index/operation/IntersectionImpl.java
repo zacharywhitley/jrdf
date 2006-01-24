@@ -56,13 +56,12 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.index.operation;
+package org.jrdf.mem.index.operation;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.operation.Union;
-import org.jrdf.graph.mem.index.LongIndexMem;
-import static org.jrdf.graph.mem.index.operation.BasicOperations.copyEntriesToIndex;
+import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.index.operation.Intersection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -75,12 +74,11 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class UnionImpl implements Union {
+public class IntersectionImpl implements Intersection {
     public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
         HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
         LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
-        copyEntriesToIndex(index1, newIndex);
-        copyEntriesToIndex(index2, newIndex);
+        BasicOperations.performIntersection(index1, index2, newIndex);
         return newIndex;
     }
 }

@@ -59,7 +59,7 @@
 package org.jrdf.graph.index;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.mem.index.operation.BasicOperations;
+import org.jrdf.mem.index.operation.BasicOperations;
 
 import java.io.PrintStream;
 import java.util.Iterator;

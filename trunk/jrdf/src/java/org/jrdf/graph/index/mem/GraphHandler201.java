@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,35 +56,50 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
+package org.jrdf.graph.index.mem;
 
-package org.jrdf.query.mem.operation;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.index.AbstractGraphHandler;
+import org.jrdf.graph.index.GraphHandler;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.NodePool;
 
-import junit.framework.TestCase;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.constants.RelationDEE;
-
-import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
- * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other
- * relations.
+ * Handles operations on 201 index.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class JoinIntegrationTest extends TestCase {
-    public void testRelationDEEandDUM() {
-        // The JOIN of empty is DEE.
-        checkRelation(Collections.<Relation>emptySet(), RelationDEE.RELATION_DEE);
-        // The JOIN of DEE is DEE.
-        checkRelation(Collections.singleton(RelationDEE.RELATION_DEE), RelationDEE.RELATION_DEE);
-        // The JOIN of DUM is DUM.
-        checkRelation(Collections.singleton(RelationDEE.RELATION_DEE), RelationDEE.RELATION_DEE);
+public class GraphHandler201 extends AbstractGraphHandler implements GraphHandler {
+    private LongIndex index012;
+    private LongIndex index120;
+    private LongIndex index201;
+
+    public GraphHandler201(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
+        this.index012 = index012;
+        this.index120 = index120;
+        this.index201 = index201;
+        this.nodePool = nodePool;
     }
 
-    private void checkRelation(Set<Relation> actual, Relation expected) {
-        Relation relation = Join.JOIN.join(actual);
-        assertTrue(relation == expected);
+    public void remove(Long[] currentNodes) throws GraphException {
+        index012.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
+        index120.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+    }
+
+    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+        return index201.iterator();
+    }
+
+    // TODO AN Not tested - can change first and last values and tests still pass.
+    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
+        return new Node[]{nodePool.getNodeById(nodes[1]), nodePool.getNodeById(nodes[2]),
+                nodePool.getNodeById(nodes[0])};
     }
 }

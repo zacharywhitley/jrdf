@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,62 +56,47 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.operation;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.operation.Comparison;
-import org.jrdf.util.ClosableIterator;
+package org.jrdf.query.relation.operation.mem;
+
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.constants.RelationDEE;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
- * Default in memory Comparison.
- * <p/>
- * Currently, only implements grounded isomorphism.
+ * A simple memory based implementation of Join.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class ComparisonImpl implements Comparison {
+public final class Join implements org.jrdf.query.relation.operation.Join {
 
-    public boolean isGrounded(Graph g) throws GraphException {
-        return g.isEmpty();
+    /**
+     * Singleton version of Join.
+     */
+    public static final Join JOIN = new Join();
+
+    /**
+     * Cannot create join.
+     */
+    private Join() {
     }
 
-    public boolean areIsomorphic(Graph g1, Graph g2) {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean groundedGraphsAreEqual(Graph g1, Graph g2) throws GraphException {
-        boolean g1IsEmpty = g1.isEmpty();
-        boolean g2IsEmpty = g2.isEmpty();
-        if (g1IsEmpty && g2IsEmpty) {
-            return true;
-        } else if (!g1IsEmpty && !g2IsEmpty) {
-            return compareNonEmptyGraphs(g1, g2);
+    public Relation join(Set<Relation> relation) {
+        // Is it the empty set - if so return DEE.
+        if (relation.equals(Collections.<Relation>emptySet())) {
+            return RelationDEE.RELATION_DEE;
         }
-        return false;
-    }
 
-    private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {
-        long g1Size = g1.getNumberOfTriples();
-        long g2Size = g2.getNumberOfTriples();
-        if (g1Size == g2Size) {
-            return compareGraphContents(g1, g2);
+        // Is it just one relation - if so just return it back.
+        if (relation.size() == 1) {
+            return relation.iterator().next();
         }
-        return false;
-    }
 
-    private boolean compareGraphContents(Graph g1, Graph g2) throws GraphException {
-        ClosableIterator<Triple> iterator = g1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        while (iterator.hasNext()) {
-            if (!g2.contains(iterator.next())) {
-                return false;
-            }
-        }
-        return true;
+        // Do a proper join.
+        Relation result = null;
+        return null;
     }
 }

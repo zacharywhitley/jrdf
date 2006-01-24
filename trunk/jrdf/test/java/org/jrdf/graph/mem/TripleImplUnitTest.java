@@ -64,12 +64,13 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.mem.TripleImpl;
 import org.jrdf.util.test.NodeTestUtil;
 
 import java.net.URI;
 
 /**
- * Unit test for {@link TripleImpl}.
+ * Unit test for {@link org.jrdf.graph.mem.TripleImpl}.
  *
  * @author Tom Adams
  * @author Andrew Newman

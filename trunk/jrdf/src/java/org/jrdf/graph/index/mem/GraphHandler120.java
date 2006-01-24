@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.index;
+package org.jrdf.graph.index.mem;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
@@ -71,17 +71,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Handles operations on 201 index.
+ * Handles operations on 120 index.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphHandler201 extends AbstractGraphHandler implements GraphHandler {
+public class GraphHandler120 extends AbstractGraphHandler implements GraphHandler {
     private LongIndex index012;
     private LongIndex index120;
     private LongIndex index201;
 
-    public GraphHandler201(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
+    public GraphHandler120(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
         this.index012 = index012;
         this.index120 = index120;
         this.index201 = index201;
@@ -89,17 +89,17 @@ public class GraphHandler201 extends AbstractGraphHandler implements GraphHandle
     }
 
     public void remove(Long[] currentNodes) throws GraphException {
-        index012.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-        index120.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+        index012.remove(currentNodes[0], currentNodes[1], currentNodes[2]);
+        index201.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
     }
 
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
-        return index201.iterator();
+        return index120.iterator();
     }
 
     // TODO AN Not tested - can change first and last values and tests still pass.
     public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
-        return new Node[]{nodePool.getNodeById(nodes[1]), nodePool.getNodeById(nodes[2]),
-                nodePool.getNodeById(nodes[0])};
+        return new Node[]{nodePool.getNodeById(nodes[2]), nodePool.getNodeById(nodes[0]),
+                nodePool.getNodeById(nodes[1])};
     }
 }

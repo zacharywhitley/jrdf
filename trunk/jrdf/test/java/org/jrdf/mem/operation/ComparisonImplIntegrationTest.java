@@ -56,33 +56,50 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.index.operation;
+package org.jrdf.mem.operation;
 
+import junit.framework.TestCase;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.operation.Difference;
-import org.jrdf.graph.mem.index.LongIndexMem;
-import static org.jrdf.graph.mem.index.operation.BasicOperations.copyEntriesToIndex;
-import static org.jrdf.graph.mem.index.operation.BasicOperations.removeEntriesFromIndex;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.index.operation.mem.ComparisonImpl;
+import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.operation.Comparison;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.net.URI;
 
 
 /**
- * Only a Spike please ignore.
+ * Integration tests {@see org.jrdf.graph.index.operation.mem.ComparisonImpl}.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class DifferenceImpl implements Difference {
-    public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
-        HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
-        LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
-        copyEntriesToIndex(index1, newIndex);
-        removeEntriesFromIndex(index2, newIndex);
-        return newIndex;
+public class ComparisonImplIntegrationTest extends TestCase {
+    private static final URI URI1 = URI.create("http://foo/bar");
+    private static final URI URI2 = URI.create("http://foo/bar/baz");
+
+    public void testMemGraphEquality() throws Exception {
+        checkGraph(URI1, URI1, true);
+        checkGraph(URI2, URI2, true);
+        checkGraph(URI1, URI2, false);
     }
 
+    private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {
+        GraphImpl graph1 = new GraphImpl();
+        addTriple(graph1, resource1);
+        GraphImpl graph2 = new GraphImpl();
+        addTriple(graph2, resource2);
+        Comparison comparison = new ComparisonImpl();
+        assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));
+    }
+
+    private void addTriple(GraphImpl graph, URI uri) throws GraphElementFactoryException, TripleFactoryException,
+            GraphException {
+        URIReference resource = graph.getElementFactory().createResource(uri);
+        Triple triple = graph.getTripleFactory().createTriple(resource, resource, resource);
+        graph.add(triple);
+    }
 }
