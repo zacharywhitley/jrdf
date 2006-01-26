@@ -58,22 +58,31 @@
 
 package org.jrdf.graph.index.operation.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.operation.Difference;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.index.operation.Difference;
+import static org.jrdf.graph.index.operation.mem.BasicOperations.copyEntriesToIndex;
+import static org.jrdf.graph.index.operation.mem.BasicOperations.removeEntriesFromIndex;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
- * Jus a spike please ignore.
+ * Just a spike.  Please test drive.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
 public class DifferenceImpl implements Difference {
-    public Graph perform(Graph a, Graph b) {
-        // Get 012index for graph a.
-        // Get 012index for graph b.
-        // Perform index.operation.difference
-        // Use GraphHandler012.reconstructIndices to create new graph based on 012.
-        return null;
+    public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
+        HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
+        LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
+        copyEntriesToIndex(index1, newIndex);
+        removeEntriesFromIndex(index2, newIndex);
+        return newIndex;
     }
+
 }

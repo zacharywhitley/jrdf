@@ -56,14 +56,13 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.mem.index.operation;
+package org.jrdf.graph.index.operation.mem;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.LongIndexMem;
-import org.jrdf.graph.index.operation.Difference;
-import static org.jrdf.mem.index.operation.BasicOperations.copyEntriesToIndex;
-import static org.jrdf.mem.index.operation.BasicOperations.removeEntriesFromIndex;
+import org.jrdf.graph.index.operation.Intersection;
+import org.jrdf.graph.index.operation.mem.BasicOperations;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,18 +70,16 @@ import java.util.Set;
 
 
 /**
- * Only a Spike please ignore.
+ * Just a spike.  Please test drive.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class DifferenceImpl implements Difference {
+public class IntersectionImpl implements Intersection {
     public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
         HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
         LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
-        copyEntriesToIndex(index1, newIndex);
-        removeEntriesFromIndex(index2, newIndex);
+        BasicOperations.performIntersection(index1, index2, newIndex);
         return newIndex;
     }
-
 }
