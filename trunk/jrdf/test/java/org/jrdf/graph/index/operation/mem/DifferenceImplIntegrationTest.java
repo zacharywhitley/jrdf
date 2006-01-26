@@ -59,16 +59,10 @@
 
 package org.jrdf.graph.index.operation.mem;
 
+import junit.framework.TestCase;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.LongIndexMem;
-import org.jrdf.graph.GraphException;
-import org.jrdf.mem.index.operation.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import junit.framework.TestCase;
 
 /**
  * Just a spike.  Please test drive.
@@ -82,7 +76,7 @@ public class DifferenceImplIntegrationTest extends TestCase {
         LongIndex index1 = createIndex();
         LongIndex index2 = createIndex();
 
-        LongIndex result = new org.jrdf.graph.index.operation.mem.DifferenceImpl().perform(index1, index2);
+        LongIndex result = new DifferenceImpl().perform(index1, index2);
         assertTrue(result.getSize() == 0);
     }
 
