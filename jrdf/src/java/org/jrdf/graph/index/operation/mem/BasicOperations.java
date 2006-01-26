@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.mem.index.operation;
+package org.jrdf.graph.index.operation.mem;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
@@ -67,7 +67,7 @@ import java.util.Set;
 
 
 /**
- * Just a spike please ignore.
+ * Just a spike.  Please test drive.
  *
  * @author Andrew Newman
  * @version $Revision$

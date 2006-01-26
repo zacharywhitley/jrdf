@@ -79,6 +79,10 @@ public class LongIndexMem implements LongIndex, Serializable {
 
     private Map<Long, Map<Long, Set<Long>>> index;
 
+    public LongIndexMem() {
+        index = new HashMap<Long, Map<Long, Set<Long>>>();
+    }
+
     public LongIndexMem(Map<Long, Map<Long, Set<Long>>> newIndex) {
         index = newIndex;
     }

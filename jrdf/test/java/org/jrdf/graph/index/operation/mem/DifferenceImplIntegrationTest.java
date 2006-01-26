@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,31 +56,41 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.mem.index.operation;
 
-import org.jrdf.graph.GraphException;
+package org.jrdf.graph.index.operation.mem;
+
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.LongIndexMem;
-import org.jrdf.graph.index.operation.Union;
-import static org.jrdf.mem.index.operation.BasicOperations.copyEntriesToIndex;
+import org.jrdf.graph.GraphException;
+import org.jrdf.mem.index.operation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
 
 /**
- * Just a spike please ignore.
+ * Just a spike.  Please test drive.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class UnionImpl implements Union {
-    public LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException {
-        HashMap<Long, Map<Long, Set<Long>>> newIndexHashMap = new HashMap<Long, Map<Long, Set<Long>>>();
-        LongIndexMem newIndex = new LongIndexMem(newIndexHashMap);
-        copyEntriesToIndex(index1, newIndex);
-        copyEntriesToIndex(index2, newIndex);
-        return newIndex;
+public class DifferenceImplIntegrationTest extends TestCase {
+
+    public void testTwoEmptyIndices() throws GraphException {
+        LongIndex index1 = createIndex();
+        LongIndex index2 = createIndex();
+
+        LongIndex result = new org.jrdf.graph.index.operation.mem.DifferenceImpl().perform(index1, index2);
+        assertTrue(result.getSize() == 0);
+    }
+
+    public void testOneEmptyIndex() throws GraphException {
+        Map<Long, Map<Long, Set<Long>>> map1 = createIndex({1L, 1L, 1L}, {1L, 2L, 2L});
+    }
+
+    private LongIndex createIndex(long[] ... longs) {
+        return new LongIndexMem();
     }
 }
