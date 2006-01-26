@@ -134,7 +134,7 @@
     </path>
 
     <taskdef resource="checkstyletask.properties"
-             classpath="${checkstyle.lib.dir}/checkstyle-all-4.0-beta5.jar"/>
+             classpath="${checkstyle.lib.dir}/checkstyle-all-4.1.jar"/>
 
     <target name="default">
         <echo message="Nothing to see here..."/>
