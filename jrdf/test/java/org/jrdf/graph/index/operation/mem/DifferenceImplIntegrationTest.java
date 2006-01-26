@@ -87,7 +87,7 @@ public class DifferenceImplIntegrationTest extends TestCase {
     }
 
     public void testOneEmptyIndex() throws GraphException {
-        Map<Long, Map<Long, Set<Long>>> map1 = createIndex({1L, 1L, 1L}, {1L, 2L, 2L});
+//        Map<Long, Map<Long, Set<Long>>> map1 = createIndex({1L, 1L, 1L}, {1L, 2L, 2L});
     }
 
     private LongIndex createIndex(long[] ... longs) {

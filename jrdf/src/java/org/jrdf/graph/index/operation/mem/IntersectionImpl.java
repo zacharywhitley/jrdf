@@ -62,7 +62,6 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.LongIndexMem;
 import org.jrdf.graph.index.operation.Intersection;
-import org.jrdf.graph.index.operation.mem.BasicOperations;
 
 import java.util.HashMap;
 import java.util.Map;
