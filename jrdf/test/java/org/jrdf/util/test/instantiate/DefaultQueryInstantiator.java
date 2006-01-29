@@ -62,6 +62,7 @@ import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.DefaultQuery;
 import org.jrdf.query.Variable;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.ParamSpec;
 
 import java.util.List;
 
@@ -79,9 +80,9 @@ final class DefaultQueryInstantiator implements Instantiator {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_QUERY, createParams());
     }
 
-    private ReflectTestUtil.ParamSpec createParams() {
+    private ParamSpec createParams() {
         Object[] params = new Object[]{Variable.ALL_VARIABLES, ConstraintExpression.ALL};
         Class<?>[] types = new Class[]{List.class, ConstraintExpression.class};
-        return new ReflectTestUtil.ParamSpec(params, types);
+        return new ParamSpec(params, types);
     }
 }

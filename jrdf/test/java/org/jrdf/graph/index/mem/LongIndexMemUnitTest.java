@@ -56,28 +56,33 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.mem.BlankNodeImpl;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.ParamSpec;
+package org.jrdf.graph.index.mem;
+
+import junit.framework.TestCase;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+
+import java.lang.reflect.Modifier;
+import java.util.Map;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.graph.mem.BlankNodeImpl}.
+ * Checks several implementation details of LongIndexMem implementation of LongIndex.
  *
- * @author Tom Adams
- * @version $Id$
+ * @author Andrew Newman
+ * @version $Revision$
  */
-final class BlankNodeImplInstantiator implements Instantiator {
-
-    private static final Class<BlankNodeImpl> CLASS_BLANK_NODE_IMPL = BlankNodeImpl.class;
-    private static final String NODE_ID = "0";
-
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_BLANK_NODE_IMPL, createParams());
+public class LongIndexMemUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(LongIndex.class, LongIndexMem.class);
+        ClassPropertiesTestUtil.checkConstructor(LongIndexMem.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+        // TODO AN Should really be able to test for Map<Long, Map<Long, Set<Long>>>
+        ClassPropertiesTestUtil.checkConstructor(LongIndexMem.class, Modifier.PUBLIC, Map.class);
     }
 
-    private ParamSpec createParams() {
-        return new ParamSpec(new Long(NODE_ID), NODE_ID);
+    public void testNoArgs() {
+        LongIndexMem index = new LongIndexMem();
+        //ReflectTestUtil.getField(index, "index");
     }
 }

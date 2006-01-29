@@ -60,6 +60,7 @@ package org.jrdf.util.test.instantiate;
 
 import org.jrdf.query.DefaultVariable;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.ParamSpec;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.DefaultVariable}.
@@ -76,7 +77,7 @@ final class DefaultVariableInstantiator implements Instantiator {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_VARIABLE, createParams());
     }
 
-    private ReflectTestUtil.ParamSpec createParams() {
-        return new ReflectTestUtil.ParamSpec(TITLE);
+    private ParamSpec createParams() {
+        return new ParamSpec(TITLE);
     }
 }

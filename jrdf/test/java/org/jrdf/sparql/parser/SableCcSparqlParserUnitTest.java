@@ -68,9 +68,9 @@ import org.jrdf.sparql.analysis.MockSparqlAnalyser;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
+import org.jrdf.util.test.ReflectTestUtil;
 
 import java.lang.reflect.Modifier;
 import java.util.List;

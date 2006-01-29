@@ -60,6 +60,7 @@ package org.jrdf.util.test.instantiate;
 
 import org.jrdf.graph.mem.URIReferenceImpl;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.ParamSpec;
 
 import java.net.URI;
 
@@ -79,7 +80,7 @@ final class URIReferenceImplInstantiator implements Instantiator {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_URI_REFERENCE_IMPL, createParams());
     }
 
-    private ReflectTestUtil.ParamSpec createParams() {
-        return new ReflectTestUtil.ParamSpec(A_URI, new Long(NODE_ID));
+    private ParamSpec createParams() {
+        return new ParamSpec(A_URI, new Long(NODE_ID));
     }
 }

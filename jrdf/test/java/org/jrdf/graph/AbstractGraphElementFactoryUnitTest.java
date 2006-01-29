@@ -250,9 +250,9 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         assertEquals(triple, triple2);
 
         // test all types of statement creation
-        triple = tripleFactory.createTriple(blank1, ref1, l1);
-        triple = tripleFactory.createTriple(blank1, ref1, l1);
-        triple = tripleFactory.createTriple(ref1, ref2, l1);
+        tripleFactory.createTriple(blank1, ref1, l1);
+        tripleFactory.createTriple(blank1, ref1, l1);
+        tripleFactory.createTriple(ref1, ref2, l1);
         triple = tripleFactory.createTriple(ref1, ref2, blank1);
 
         // Test that the node exists from a newly created predicate - the same
