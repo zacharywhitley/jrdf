@@ -60,6 +60,7 @@ package org.jrdf.util.test.instantiate;
 
 import org.jrdf.graph.index.mem.LongIndexMem;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.ParamSpec;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,7 +81,7 @@ final class LongIndexMemInstantiator implements Instantiator {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_LONG_INDEX_MEM, createParams());
     }
 
-    private ReflectTestUtil.ParamSpec createParams() {
-        return new ReflectTestUtil.ParamSpec(new Object[]{INDEX}, new Class[]{Map.class});
+    private ParamSpec createParams() {
+        return new ParamSpec(new Object[]{INDEX}, new Class[]{Map.class});
     }
 }

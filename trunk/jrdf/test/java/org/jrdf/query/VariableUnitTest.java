@@ -59,7 +59,7 @@
 package org.jrdf.query;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.FieldPropertiesTestUtil;
 
 import java.util.Collections;
 
@@ -78,7 +78,7 @@ public final class VariableUnitTest extends TestCase {
 
     public void testConstants() {
         assertEquals(Collections.emptyList(), Variable.ALL_VARIABLES);
-        ClassPropertiesTestUtil.checkFieldFinal(Variable.class, FIELD_ALL_VARIABLES);
-        ClassPropertiesTestUtil.checkFieldStatic(Variable.class, FIELD_ALL_VARIABLES);
+        FieldPropertiesTestUtil.checkFieldFinal(Variable.class, FIELD_ALL_VARIABLES);
+        FieldPropertiesTestUtil.checkFieldStatic(Variable.class, FIELD_ALL_VARIABLES);
     }
 }

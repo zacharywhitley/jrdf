@@ -62,13 +62,19 @@ import junit.framework.Assert;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * Tests ther properties of the a class - final, abstract, etc.
+ *
+ * @author Tom Adams
+ * @author Andrew Newman
+ * @version $Id$
+ */
 public final class ClassPropertiesTestUtil {
 
     // FIXME TJA: This needs genericising ;)
@@ -79,8 +85,12 @@ public final class ClassPropertiesTestUtil {
 
     public static boolean isPublicInstance(Method method) {
         int modifiers = method.getModifiers();
-        if (!Modifier.isPublic(modifiers)) return false;
-        if (Modifier.isStatic(modifiers)) return false;
+        if (!Modifier.isPublic(modifiers)) {
+            return false;
+        }
+        if (Modifier.isStatic(modifiers)) {
+            return false;
+        }
         return true;
     }
 
@@ -112,34 +122,20 @@ public final class ClassPropertiesTestUtil {
         return Modifier.isFinal(method.getModifiers());
     }
 
-    // Note. This smells, can we do something else? We can iterate over getDeclaredFields() for example.
-    public static boolean containsField(Class<?> cls, String fieldName) {
-        try {
-            cls.getDeclaredField(fieldName);
-            return true;
-        } catch (NoSuchFieldException e) {
-            return false;
-        }
-    }
-
-    public static void checkContainsField(Class<?> cls, String fieldName) {
-        Assert.assertTrue(cls.getSimpleName() + " must contain the field " + fieldName, containsField(cls, fieldName));
-    }
-
     public static void checkImplementationOfInterfaceAndFinal(Class<?> targetInterface, Class implementationClass) {
         Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
-                + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
+            + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
         Assert.assertTrue(implementationClass.getSimpleName() + " must be final", isClassFinal(implementationClass));
     }
 
     public static void checkImplementationOfInterface(Class<?> targetInterface, Class implementationClass) {
         Assert.assertTrue(implementationClass.getSimpleName() + " is not an implementation of "
-                + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
+            + targetInterface.getSimpleName(), isImplementationOf(targetInterface, implementationClass));
     }
 
     public static void checkExtensionOf(Class<?> superClass, Class subClass) {
         Assert.assertTrue(subClass.getSimpleName() + " is not a subclass of " + superClass.getSimpleName(),
-                isExtensionOf(superClass, subClass));
+            isExtensionOf(superClass, subClass));
     }
 
     public static void checkClassFinal(Class<?> cls) {
@@ -163,7 +159,9 @@ public final class ClassPropertiesTestUtil {
     public static boolean isDirectlyMarkedAsSerializable(Class<?> cls) {
         Class[] interfaces = cls.getInterfaces();
         for (Class actualInterface : interfaces) {
-            if (actualInterface.equals(Serializable.class)) return true;
+            if (actualInterface.equals(Serializable.class)) {
+                return true;
+            }
         }
         return false;
     }
@@ -172,44 +170,16 @@ public final class ClassPropertiesTestUtil {
         Collection<Class<?>> parentClasses = new ArrayList<Class<?>>();
         parentClasses.addAll(findParentClasses(cls));
         for (Class<?> parent : parentClasses) {
-            if (parent.equals(Serializable.class)) return true;
+            if (parent.equals(Serializable.class)) {
+                return true;
+            }
         }
         return false;
     }
 
     public static void checkMarkedAsSerializable(Class<?> cls) {
         Assert.assertTrue(cls.getSimpleName() + " implement/extend java.io.Serializable",
-                isDirectlyMarkedAsSerializable(cls));
-    }
-
-    public static boolean isFieldFinal(Class<?> cls, String fieldName) {
-        return hasModifier(cls, fieldName, Modifier.FINAL);
-    }
-
-    public static void checkFieldFinal(Class<?> cls, String fieldName) {
-        checkFieldHasModifier(cls, fieldName, Modifier.FINAL);
-    }
-
-    public static boolean isFieldStatic(Class<?> cls, String fieldName) {
-        return hasModifier(cls, fieldName, Modifier.STATIC);
-    }
-
-    public static void checkFieldStatic(Class<?> cls, String fieldName) {
-        checkFieldHasModifier(cls, fieldName, Modifier.STATIC);
-    }
-
-    public static void checkFieldPrivate(Class<?> cls, String fieldName) {
-        checkFieldHasModifier(cls, fieldName, Modifier.PRIVATE);
-    }
-
-    public static boolean isFieldOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
-        Field field = getField(cls, fieldName);
-        return field.getType().equals(expectedType);
-    }
-
-    public static void checkFieldIsOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
-        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must be of type " +
-                expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
+            isDirectlyMarkedAsSerializable(cls));
     }
 
     public static void checkConstructor(Class cls, int expectedModifier, Class... parameters) {
@@ -217,41 +187,32 @@ public final class ClassPropertiesTestUtil {
         Assert.assertTrue(null != constructor);
         int constructorModifier = constructor.getModifiers();
         Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
-                " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+            " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
     }
 
-    private static void checkFieldHasModifier(Class<?> cls, String fieldName, int modifier) {
-        boolean hasModifier = hasModifier(cls, fieldName, modifier);
-        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must have modifier " +
-                Modifier.toString(modifier), hasModifier);
+    public static Constructor tryGetConstructor(Class<?> cls, Class... parameters) {
+        try {
+            return cls.getDeclaredConstructor(parameters);
+        } catch (NoSuchMethodException e) {
+            assertParameters(parameters);
+            throw new RuntimeException(e);
+        }
     }
 
-    private static boolean hasModifier(Class<?> cls, String fieldName, int modifier) {
-        Field field = getField(cls, fieldName);
-        return (field.getModifiers() & modifier) != 0;
-    }
-
-    private static Field getField(Class<?> cls, String fieldName) {
-        return ReflectTestUtil.getField(cls, fieldName);
+    public static Constructor tryGetConstructor(Class<?> cls, ParamSpec params) {
+        Constructor constructor = tryGetConstructor(cls, params.getTypes());
+        constructor.setAccessible(true);
+        return constructor;
     }
 
     private static Collection<? extends Class<?>> findParentClasses(Class<?> cls) {
         Collection<Class<?>> parentClasses = new ArrayList<Class<?>>();
         Class[] parents = cls.getInterfaces();
-        for (int i = 0; i < parents.length; i++) {
-            parentClasses.addAll(findParentClasses(parents[i]));
+        for (Class parent : parents) {
+            parentClasses.addAll(findParentClasses(parent));
         }
         parentClasses.add(cls);
         return parentClasses;
-    }
-
-    private static Constructor tryGetConstructor(Class cls, Class... parameters) {
-        try {
-            return cls.getDeclaredConstructor(parameters);
-        } catch (NoSuchMethodException e) {
-            assertParameters(parameters);
-            return null;
-        }
     }
 
     private static void assertParameters(Class... parameters) {

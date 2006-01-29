@@ -56,28 +56,50 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.mem.BlankNodeImpl;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.ParamSpec;
+package org.jrdf.util.test;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.graph.mem.BlankNodeImpl}.
+ * Contains the values and definition of a parameter.
  *
  * @author Tom Adams
- * @version $Id$
+ * @version $Revision$
  */
-final class BlankNodeImplInstantiator implements Instantiator {
+public final class ParamSpec {
 
-    private static final Class<BlankNodeImpl> CLASS_BLANK_NODE_IMPL = BlankNodeImpl.class;
-    private static final String NODE_ID = "0";
+    private Object[] params;
+    private Class[] types;
 
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_BLANK_NODE_IMPL, createParams());
+    public ParamSpec(Object ...  params) {
+        this.params = params;
+        setTypes(this.params);
     }
 
-    private ParamSpec createParams() {
-        return new ParamSpec(new Long(NODE_ID), NODE_ID);
+    public ParamSpec(Object[] params, Class[] types) {
+        if (params.length != types.length) {
+            throw new IllegalArgumentException("params and types arrays must be of same length");
+        }
+        this.params = params;
+        this.types = types;
+    }
+
+    public Object[] getParams() {
+        return params;
+    }
+
+    public Class[] getTypes() {
+        return types;
+    }
+
+    private void setTypes(Object ... params) {
+        types = guessParameterTypes(params);
+    }
+
+    private static Class<?>[] guessParameterTypes(Object ... params) {
+        Class<?>[] types = new Class<?>[params.length];
+        for (int i = 0; i < params.length; i++) {
+            types[i] = params[i].getClass();
+        }
+        return types;
     }
 }

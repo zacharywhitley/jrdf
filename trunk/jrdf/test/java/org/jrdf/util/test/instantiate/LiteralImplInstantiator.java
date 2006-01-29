@@ -60,6 +60,7 @@ package org.jrdf.util.test.instantiate;
 
 import org.jrdf.graph.mem.LiteralImpl;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.ParamSpec;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.graph.mem.LiteralImpl}.
@@ -76,7 +77,7 @@ final class LiteralImplInstantiator implements Instantiator {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_LITERAL_IMPL, createParams());
     }
 
-    private ReflectTestUtil.ParamSpec createParams() {
-        return new ReflectTestUtil.ParamSpec(LEXICAL_VALUE);
+    private ParamSpec createParams() {
+        return new ParamSpec(LEXICAL_VALUE);
     }
 }

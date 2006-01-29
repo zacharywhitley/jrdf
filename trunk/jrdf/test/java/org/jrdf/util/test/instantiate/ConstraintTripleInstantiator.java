@@ -62,6 +62,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
+import org.jrdf.util.test.ParamSpec;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.ConstraintTriple}.
@@ -77,9 +78,9 @@ final class ConstraintTripleInstantiator implements Instantiator {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_CONSTRAINT_TRIPLE, createParams());
     }
 
-    private ReflectTestUtil.ParamSpec createParams() {
+    private ParamSpec createParams() {
         Object[] params = new Object[]{TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL};
         Class<?>[] types = new Class[]{Triple.class};
-        return new ReflectTestUtil.ParamSpec(params, types);
+        return new ParamSpec(params, types);
     }
 }

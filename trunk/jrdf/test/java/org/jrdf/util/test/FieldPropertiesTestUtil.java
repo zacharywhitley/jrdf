@@ -56,66 +56,84 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
+
 package org.jrdf.util.test;
 
-import java.lang.reflect.Constructor;
+import junit.framework.Assert;
+
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 
 /**
- * Test utilities that use relection.
+ * Allows tests to be made of fields of classes.
  *
  * @author Tom Adams
  * @author Andrew Newman
- * @version $Id$
+ * @version $Revision$
  */
-public final class ReflectTestUtil {
-
-    private static final ParamSpec PARAMS_NONE = new ParamSpec();
-
-    private ReflectTestUtil() {
-    }
-
-    public static void insertFieldValue(Object ref, String fieldName, Object fieldValue) {
-        Field field = getField(ref.getClass(), fieldName);
-        setFieldValue(ref, field, fieldValue);
-    }
-
-    public static Object newInstance(Class<?> cls) {
-        return createInstanceUsingConstructor(cls, PARAMS_NONE);
-    }
-
-    public static Object createInstanceUsingConstructor(Class<?> cls, ParamSpec params) {
-        Constructor<?> constructor = ClassPropertiesTestUtil.tryGetConstructor(cls, params);
-        return invokeConstructor(constructor, params);
-    }
-
-    private static void setFieldValue(Object ref, Field field, Object fieldValue) {
-        field.setAccessible(true);
+public class FieldPropertiesTestUtil {
+    // Note. This smells, can we do something else? We can iterate over getDeclaredFields() for example.
+    public static boolean containsField(Class<?> cls, String fieldName) {
         try {
-            field.set(ref, fieldValue);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static Object invokeConstructor(Constructor<?> constructor, ParamSpec params) {
-        try {
-            return constructor.newInstance(params.getParams());
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Field getField(Class<?> cls, String fieldName) {
-        try {
-            return cls.getDeclaredField(fieldName);
+            cls.getDeclaredField(fieldName);
+            return true;
         } catch (NoSuchFieldException e) {
+            return false;
+        }
+    }
+
+    public static void checkContainsField(Class<?> cls, String fieldName) {
+        Assert.assertTrue(cls.getSimpleName() + " must contain the field " + fieldName, containsField(cls, fieldName));
+    }
+
+    public static boolean isFieldFinal(Class<?> cls, String fieldName) {
+        return hasModifier(cls, fieldName, Modifier.FINAL);
+    }
+
+    public static void checkFieldFinal(Class<?> cls, String fieldName) {
+        checkFieldHasModifier(cls, fieldName, Modifier.FINAL);
+    }
+
+    public static boolean isFieldStatic(Class<?> cls, String fieldName) {
+        return hasModifier(cls, fieldName, Modifier.STATIC);
+    }
+
+    public static void checkFieldStatic(Class<?> cls, String fieldName) {
+        checkFieldHasModifier(cls, fieldName, Modifier.STATIC);
+    }
+
+    public static void checkFieldPrivate(Class<?> cls, String fieldName) {
+        checkFieldHasModifier(cls, fieldName, Modifier.PRIVATE);
+    }
+
+    public static boolean isFieldOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
+        Field field = ReflectTestUtil.getField(cls, fieldName);
+        return field.getType().equals(expectedType);
+    }
+
+    public static void checkFieldIsOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
+        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must be of type " +
+            expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
+    }
+
+    public static long getLongFieldValue(Class<?> cls, String fieldName) {
+        Field field = ReflectTestUtil.getField(cls, fieldName);
+        try {
+            field.setAccessible(true);
+            return field.getLong(cls);
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static void checkFieldHasModifier(Class<?> cls, String fieldName, int modifier) {
+        boolean hasModifier = hasModifier(cls, fieldName, modifier);
+        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must have modifier " +
+            Modifier.toString(modifier), hasModifier);
+    }
+
+    private static boolean hasModifier(Class<?> cls, String fieldName, int modifier) {
+        Field field = ReflectTestUtil.getField(cls, fieldName);
+        return (field.getModifiers() & modifier) != 0;
     }
 }

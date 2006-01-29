@@ -76,6 +76,7 @@ import org.jrdf.sparql.parser.node.TResource;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
+import org.jrdf.util.test.FieldPropertiesTestUtil;
 
 import java.net.URI;
 
@@ -114,8 +115,8 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
     }
 
     private void checkNoQueryConstantStaticFinal() {
-        ClassPropertiesTestUtil.checkFieldFinal(SparqlAnalyser.class, FIELD_NO_QUERY);
-        ClassPropertiesTestUtil.checkFieldStatic(SparqlAnalyser.class, FIELD_NO_QUERY);
+        FieldPropertiesTestUtil.checkFieldFinal(SparqlAnalyser.class, FIELD_NO_QUERY);
+        FieldPropertiesTestUtil.checkFieldStatic(SparqlAnalyser.class, FIELD_NO_QUERY);
     }
 
     // Note. getQuery() should always return SparqlAnalyser.NO_QUERY when not applied via SableCC framework.

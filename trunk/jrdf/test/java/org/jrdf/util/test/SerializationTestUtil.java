@@ -107,17 +107,17 @@ public final class SerializationTestUtil {
     }
 
     private static void checkSerialUidValue(Class<?> cls, long expectedUid) {
-        long actualUid = ReflectTestUtil.getLongFieldValue(cls, FIELD_SERIAL_VERSION_UID);
+        long actualUid = FieldPropertiesTestUtil.getLongFieldValue(cls, FIELD_SERIAL_VERSION_UID);
         Assert.assertEquals(expectedUid, actualUid);
     }
 
     // FIXME TJA: Do interfaces need serialVersionUID fields?
     private static void checkContainsSerialVersionUid(Class<?> cls) {
-        ClassPropertiesTestUtil.checkContainsField(cls, FIELD_SERIAL_VERSION_UID);
-        ClassPropertiesTestUtil.checkFieldPrivate(cls, FIELD_SERIAL_VERSION_UID);
-        ClassPropertiesTestUtil.checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
-        ClassPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
-        ClassPropertiesTestUtil.checkFieldIsOfType(cls, FIELD_SERIAL_VERSION_UID, CLASS_LONG_PRIMITIVE);
+        FieldPropertiesTestUtil.checkContainsField(cls, FIELD_SERIAL_VERSION_UID);
+        FieldPropertiesTestUtil.checkFieldPrivate(cls, FIELD_SERIAL_VERSION_UID);
+        FieldPropertiesTestUtil.checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
+        FieldPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
+        FieldPropertiesTestUtil.checkFieldIsOfType(cls, FIELD_SERIAL_VERSION_UID, CLASS_LONG_PRIMITIVE);
     }
 
     // FIXME TJA: Think about whether interfaces need a serialVersionUID

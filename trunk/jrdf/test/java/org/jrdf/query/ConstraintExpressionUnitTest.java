@@ -61,6 +61,7 @@ package org.jrdf.query;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
+import org.jrdf.util.test.FieldPropertiesTestUtil;
 
 /**
  * Unit test for {@link ConstraintExpression}.
@@ -85,8 +86,8 @@ public final class ConstraintExpressionUnitTest extends TestCase {
     }
 
     private void checkAllConstantStaticFinal() throws Exception {
-        ClassPropertiesTestUtil.checkFieldFinal(ConstraintExpression.class, FIELD_ALL);
-        ClassPropertiesTestUtil.checkFieldStatic(ConstraintExpression.class, FIELD_ALL);
+        FieldPropertiesTestUtil.checkFieldFinal(ConstraintExpression.class, FIELD_ALL);
+        FieldPropertiesTestUtil.checkFieldStatic(ConstraintExpression.class, FIELD_ALL);
     }
 
     private void checkAllConstantImmutable() {
