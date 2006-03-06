@@ -70,8 +70,7 @@ import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultAnswer;
 import org.jrdf.query.DefaultQuery;
 import org.jrdf.query.DefaultVariable;
-import org.jrdf.query.relation.constants.FalseNode;
-import org.jrdf.query.relation.constants.TrueNode;
+import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.util.test.ReflectTestUtil;
 
 import java.util.HashMap;
@@ -105,8 +104,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(LiteralImpl.class, new LiteralImplInstantiator());
         instantiators.put(LongIndexMem.class, new LongIndexMemInstantiator());
         instantiators.put(URIReferenceImpl.class, new URIReferenceImplInstantiator());
-        instantiators.put(FalseNode.class, new FalseNodeInstantiator());
-        instantiators.put(TrueNode.class, new TrueNodeInstantiator());
+        instantiators.put(NullaryTuple.class, new TrueNodeInstantiator());
         instantiators.put(AnyNode.class, new AnyNodeInstantiator());
         instantiators.put(AnySubjectNode.class, new AnySubjectNodeInstantiator());
         instantiators.put(AnyPredicateNode.class, new AnyPredicateNodeInstantiator());

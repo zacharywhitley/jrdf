@@ -58,9 +58,6 @@
 
 package org.jrdf.query.relation;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-
 import java.util.Set;
 
 /**
@@ -77,24 +74,14 @@ import java.util.Set;
 public interface Relation {
 
     /**
-     * Returns the set of subject nodes - can then be used to get all associated
-     * predicates and objects associated with this subject.
+     * Returns the set of attributes or heading of the relation.
      *
-     * @return the set of subject nodes.
+     * @return the set of attributes or heading of the relation.
      */
-    Set<SubjectNode> getTupleNames();
+    Set<Attribute> getAttributes();
 
     /**
-     * Returns the set of predicates in this relation.
-     *
-     * @return the set of predicate nodes.
-     */
-    Set<PredicateNode> getAttributeNames();
-
-    /**
-     * Returns the tuples for this relation.  A tuple is made of a set of
-     * attribute names and values.  Each distinct tuple has an associated subject
-     * node (or tuple name).  SubjectNodes with no attributes are not listed.
+     * Returns the set of tuples (another relation) for this relation for the given set of attributes.
      *
      * @return a set of tuples.
      */

@@ -58,47 +58,36 @@
 
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
 /**
- * Dum is a relation with no tuples and is the base relation for FALSE.
+ * A class which simply contains the True Node constant.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class RelationDUM implements Relation {
+public final class NullaryTuple implements Tuple, Serializable {
 
     /**
-     * The singleton version of RelationDUM.
+     * The node which represents the boolean logic value "NULLARY_TUPLE".
      */
-    public static final Relation RELATION_DUM = new RelationDUM();
+    public static final Tuple NULLARY_TUPLE = new NullaryTuple();
+    private static final long serialVersionUID = 1808216129525892255L;
 
-    /**
-     * There can be only one RelationDUM.
-     */
-    private RelationDUM() {
+    private NullaryTuple() {
     }
 
-    /**
-     * This Relation has no attributes.
-     *
-     * @return an empty set.
-     */
-    public Set<Attribute> getAttributes() {
-        return Collections.emptySet();
+    private Object readResolve() throws ObjectStreamException {
+        return NULLARY_TUPLE;
     }
 
-    /**
-     * Returns an empty set of tuples.
-     *
-     * @return an empty set of tuples.
-     */
-    public Set<Tuple> getTuples() {
+    public Set<AttributeValuePair> getAttributeValuePairs() {
         return Collections.emptySet();
     }
 }

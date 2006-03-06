@@ -56,19 +56,21 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.relation.constants.FalseNode;
+package org.jrdf.query.relation.type;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.relation.constants.FalseNode}.
+ * A blank node type.
  *
- * @author Tom Adams
- * @version $Id$
+ * @author Andrew Newman
+ * @version $Revision$
  */
-final class FalseNodeInstantiator implements Instantiator {
+public class BlankNodeType implements NodeType {
+    public boolean isAssignableFrom(Type type) {
+        return type instanceof BlankNodeType;
+    }
 
-    public Object instantiate() {
-        return FalseNode.FALSE_SUBJECT_NODE;
+    public String getName() {
+        return "BlankNodeType";
     }
 }

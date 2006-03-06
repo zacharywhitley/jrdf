@@ -58,8 +58,6 @@
 
 package org.jrdf.query.relation;
 
-import org.jrdf.graph.SubjectNode;
-
 import java.util.Set;
 
 /**
@@ -71,16 +69,9 @@ import java.util.Set;
 public interface Tuple {
 
     /**
-     * Returns the name of this tuple.
-     *
-     * @return the name of the tuple.
-     */
-    SubjectNode getName();
-
-    /**
      * Returns the set of attribute name/values.
      *
      * @return the set of attribute/name values.
      */
-    Set<AttributeValuePair> getAttributeNameValues();
+    Set<AttributeValuePair> getAttributeValuePairs();
 }

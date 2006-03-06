@@ -58,10 +58,10 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.relation.constants.TrueNode;
+import org.jrdf.query.relation.constants.NullaryTuple;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.relation.constants.TrueNode}.
+ * {@link Instantiator} for {@link org.jrdf.query.relation.constants.NullaryTuple}.
  *
  * @author Tom Adams
  * @version $Id$
@@ -69,6 +69,6 @@ import org.jrdf.query.relation.constants.TrueNode;
 final class TrueNodeInstantiator implements Instantiator {
 
     public Object instantiate() {
-        return TrueNode.TRUE;
+        return NullaryTuple.NULLARY_TUPLE;
     }
 }

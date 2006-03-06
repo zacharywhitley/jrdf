@@ -56,49 +56,32 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.constants;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
+package org.jrdf.query.relation;
 
-import java.util.Collections;
-import java.util.Set;
+import org.jrdf.query.relation.type.Type;
 
 /**
- * Dum is a relation with no tuples and is the base relation for FALSE.
+ * The attribute-name:type-name combination.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class RelationDUM implements Relation {
+public interface Attribute {
 
     /**
-     * The singleton version of RelationDUM.
-     */
-    public static final Relation RELATION_DUM = new RelationDUM();
-
-    /**
-     * There can be only one RelationDUM.
-     */
-    private RelationDUM() {
-    }
-
-    /**
-     * This Relation has no attributes.
+     * The name of the attribute - either a variable name or some assigned name.
      *
-     * @return an empty set.
+     * @return the name of the attribute.
      */
-    public Set<Attribute> getAttributes() {
-        return Collections.emptySet();
-    }
+    String getAttributeName();
+
 
     /**
-     * Returns an empty set of tuples.
+     * The type of the attribute - either subject, predicate, object or URI, Literal or bnode.  URIs, Literals and
+     * bnodes are disjoin whereas subject, predicates and objects have an type inheritance.
      *
-     * @return an empty set of tuples.
+     * @return the type of the attribute.
      */
-    public Set<Tuple> getTuples() {
-        return Collections.emptySet();
-    }
+    Type getType();
 }

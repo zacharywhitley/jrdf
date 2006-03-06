@@ -56,49 +56,21 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.constants;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-
-import java.util.Collections;
-import java.util.Set;
+package org.jrdf.query.relation.type;
 
 /**
- * Dum is a relation with no tuples and is the base relation for FALSE.
+ * An predicate node type.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class RelationDUM implements Relation {
-
-    /**
-     * The singleton version of RelationDUM.
-     */
-    public static final Relation RELATION_DUM = new RelationDUM();
-
-    /**
-     * There can be only one RelationDUM.
-     */
-    private RelationDUM() {
+public class PredicateNodeType implements NodeType {
+    public boolean isAssignableFrom(Type type) {
+        return type instanceof PredicateNodeType;
     }
 
-    /**
-     * This Relation has no attributes.
-     *
-     * @return an empty set.
-     */
-    public Set<Attribute> getAttributes() {
-        return Collections.emptySet();
-    }
-
-    /**
-     * Returns an empty set of tuples.
-     *
-     * @return an empty set of tuples.
-     */
-    public Set<Tuple> getTuples() {
-        return Collections.emptySet();
+    public String getName() {
+        return "PredicateNodeType";
     }
 }
