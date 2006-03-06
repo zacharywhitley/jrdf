@@ -58,9 +58,7 @@
 
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 
@@ -68,7 +66,7 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
- * Dee is a relation with one tuple and is the base relation for TRUE.
+ * Dee is a relation with one tuple and is the base relation for NULLARY_TUPLE.
  * <p>It is also the identity with respect to JOIN i.e. JOIN {r, RelationDEE} is DEE and
  * JOIN {} is RelationDEE.</p>
  * <p>Again, this is going to change when operations are more properly filled out.</p>
@@ -84,31 +82,12 @@ public final class RelationDEE implements Relation {
     public static final Relation RELATION_DEE = new RelationDEE();
 
     /**
-     * Tuple Zero is the special tuple.
-     */
-    private static final Tuple TUPLE_ZERO = new TupleZero();
-
-    /**
      * There can be only one RelationDEE.
      */
     private RelationDEE() {
     }
 
-    /**
-     * Returns the arbitrary name of the tuple - TRUE.
-     *
-     * @return TRUE_NODE.
-     */
-    public Set<SubjectNode> getTupleNames() {
-        return Collections.singleton((SubjectNode) TrueNode.TRUE);
-    }
-
-    /**
-     * This Relation has no attributes.
-     *
-     * @return an empty set.
-     */
-    public Set<PredicateNode> getAttributeNames() {
+    public Set<Attribute> getAttributes() {
         return Collections.emptySet();
     }
 
@@ -118,37 +97,6 @@ public final class RelationDEE implements Relation {
      * @return the TUPLE_ZERO.
      */
     public Set<Tuple> getTuples() {
-        return Collections.singleton(TUPLE_ZERO);
-    }
-
-    /**
-     * Tuple Zero is the row with no values.  It has one row and that row is the zero-tuple i.e. an attribute/value
-     * pair that is an empty set.
-     */
-    private static final class TupleZero implements Tuple {
-
-        /**
-         * There can be only one zero-tuple.
-         */
-        private TupleZero() {
-        }
-
-        /**
-         * Returns the single TRUE_NODE value.
-         *
-         * @return the single TRUE_NODE value.
-         */
-        public SubjectNode getName() {
-            return (SubjectNode) TrueNode.TRUE;
-        }
-
-        /**
-         * Returns the empty set attribute/value pair.
-         *
-         * @return the empty set attribute/value pair.
-         */
-        public Set<AttributeValuePair> getAttributeNameValues() {
-            return Collections.emptySet();
-        }
+        return Collections.singleton(NullaryTuple.NULLARY_TUPLE);
     }
 }

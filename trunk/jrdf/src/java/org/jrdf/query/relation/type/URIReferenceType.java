@@ -56,31 +56,21 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.constants;
 
-import org.jrdf.graph.Node;
-
-import java.io.ObjectStreamException;
-import java.io.Serializable;
+package org.jrdf.query.relation.type;
 
 /**
- * A class which simply contains the False Node constant.
+ * An URI Reference node type.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class FalseNode implements Node, Serializable {
-
-    /**
-     * The node which represents the boolean logic value "FALSE".
-     */
-    public static final Node FALSE_SUBJECT_NODE = new FalseNode();
-    private static final long serialVersionUID = 4580621120190884185L;
-
-    private FalseNode() {
+public class URIReferenceType implements NodeType {
+    public boolean isAssignableFrom(Type type) {
+        return type instanceof URIReferenceType;
     }
 
-    private Object readResolve() throws ObjectStreamException {
-        return FALSE_SUBJECT_NODE;
+    public String getName() {
+        return "URIReferenceType";
     }
 }

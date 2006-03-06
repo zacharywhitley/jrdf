@@ -58,8 +58,7 @@
 
 package org.jrdf.query.relation;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Node;
 
 /**
  * An attribute name/value consists of the predicate and object of a relation.
@@ -69,16 +68,16 @@ import org.jrdf.graph.PredicateNode;
  */
 public interface AttributeValuePair {
     /**
-     * Returns the name of the attribute.
+     * Returns the attribute.
      *
-     * @return the name of the attribute.
+     * @return the attribute.
      */
-    PredicateNode getName();
+    Attribute getAttribute();
 
     /**
      * Returns the value of the attribute.
      *
      * @return the value of the attribute.
      */
-    ObjectNode getValue();
+    Node getValue();
 }

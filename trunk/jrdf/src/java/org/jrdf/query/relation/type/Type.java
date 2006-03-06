@@ -56,31 +56,29 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.constants;
 
-import org.jrdf.graph.Node;
-
-import java.io.ObjectStreamException;
-import java.io.Serializable;
+package org.jrdf.query.relation.type;
 
 /**
- * A class which simply contains the True Node constant.
+ * Based on the concept Type found in the Relational model especially from Rel.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class TrueNode implements Node, Serializable {
+public interface Type {
 
     /**
-     * The node which represents the boolean logic value "TRUE".
+     * Returns true if this Type is a super-type of the given type.
+     *
+     * @param type the type to test to see if it can be accepted into this type.
+     * @return true if this Type is a super-type of the given type.
      */
-    public static final Node TRUE = new TrueNode();
-    private static final long serialVersionUID = 1808216129525892255L;
+    public boolean isAssignableFrom(Type type);
 
-    private TrueNode() {
-    }
-
-    private Object readResolve() throws ObjectStreamException {
-        return TRUE;
-    }
+    /**
+     * Returns the name of the type.
+     *
+     * @return the name of the type.
+     */
+    public String getName();
 }
