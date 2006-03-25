@@ -73,12 +73,12 @@ public interface Type {
      * @param type the type to test to see if it can be accepted into this type.
      * @return true if this Type is a super-type of the given type.
      */
-    public boolean isAssignableFrom(Type type);
+    boolean isAssignableFrom(Type type);
 
     /**
      * Returns the name of the type.
      *
      * @return the name of the type.
      */
-    public String getName();
+    String getName();
 }

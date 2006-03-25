@@ -86,11 +86,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     protected Graph graph;
 
     /**
-     * Instance of a factory for the graph.
-     */
-    private GraphElementFactory elementFactory;
-
-    /**
      * Instance of the triple factory for the graph.
      */
     private TripleFactory tripleFactory;
@@ -128,6 +123,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      * Literal 2.
      */
     protected static Literal l2;
+
+    private Triple t1;
+    private Triple t2;
+    private Triple t3;
+
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_REMOVE_ANY_NODE_MESSAGE = "Cannot remove any node values into the graph";
@@ -152,7 +152,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      */
     public void setUp() throws Exception {
         graph = newGraph();
-        elementFactory = graph.getElementFactory();
+        GraphElementFactory elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();
 
         blank1 = elementFactory.createResource();
@@ -294,15 +294,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      */
     public void testRemoval() throws Exception {
         // add some test data
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(ref1, ref2, l2);
-        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        graph.add(t1);
-        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
-        graph.add(t2);
-        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
-        graph.add(t3);
+        addTriplesToGraph();
+        addFullTriplesToGraph();
 
         // check that all is well
         assertFalse(graph.isEmpty());
@@ -393,6 +386,26 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertTrue(graph.isEmpty());
         assertEquals(0, graph.getNumberOfTriples());
 
+        // Re-add 3 triples.
+        addTriplesToGraph();
+
+        // Test removing using the iterator from a find.
+        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        graph.remove(iterator);
+        assertTrue(graph.isEmpty());
+
+        // Re-add 3 triples
+        addTriplesToGraph();
+        iterator = graph.find(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        graph.remove(iterator);
+        assertEquals(2, graph.getNumberOfTriples());
+
+        // Re-add 3 triples
+        addTriplesToGraph();
+        iterator = graph.find(blank1, ANY_PREDICATE_NODE, blank2);
+        graph.remove(iterator);
+        assertEquals(1, graph.getNumberOfTriples());
+
         // Try to add nulls
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
@@ -439,15 +452,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      */
     public void testContains() throws Exception {
         // add some test data
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(ref1, ref2, l2);
-        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        graph.add(t1);
-        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
-        graph.add(t2);
-        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
-        graph.add(t3);
+        addTriplesToGraph();
+        addFullTriplesToGraph();
 
         // test containership
         assertTrue(graph.contains(blank1, ref1, blank2));
@@ -714,8 +720,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         triples[15] = tripleFactory.createTriple(testUri2, testUri1, bNode2);
 
         //add them
-        for (int i = 0; i < triples.length; i++) {
-            graph.add(triples[i]);
+        for (Triple triple : triples) {
+            graph.add(triple);
         }
 
         //query them and put contents of iterator in a set for checking
@@ -733,9 +739,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals("ClosableIterator is incomplete.", statements.size(), graph.getNumberOfTriples());
 
         //check the the set contains all the original triples
-        for (int i = 0; i < triples.length; i++) {
-            if (!statements.contains(triples[i])) {
-                fail("Iterator did not contain triple: " + triples[i] + ".");
+        for (Triple triple1 : triples) {
+            if (!statements.contains(triple1)) {
+                fail("Iterator did not contain triple: " + triple1 + ".");
             }
         }
     }
@@ -748,15 +754,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      */
     public void testIterativeRemoval() throws Exception {
         // add some test data
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(ref1, ref2, l2);
-        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        graph.add(t1);
-        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
-        graph.add(t2);
-        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
-        graph.add(t3);
+        addTriplesToGraph();
+        addFullTriplesToGraph();
 
         // check that all is well
         assertFalse(graph.isEmpty());
@@ -842,15 +841,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     public void testFullIterativeRemoval() throws Exception {
         // TODO AN Add a test for fulliterative add.
         // add some test data
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(ref1, ref2, l2);
-        Triple t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        graph.add(t1);
-        Triple t2 = tripleFactory.createTriple(blank2, ref2, blank1);
-        graph.add(t2);
-        Triple t3 = tripleFactory.createTriple(blank2, ref1, l1);
-        graph.add(t3);
+        addTriplesToGraph();
+        addFullTriplesToGraph();
 
         // check that all is well
         assertFalse(graph.isEmpty());
@@ -903,4 +895,20 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         actualTriples.close();
     }
 
+
+    private void addTriplesToGraph() throws GraphException {
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(ref1, ref2, l2);
+    }
+
+
+    private void addFullTriplesToGraph() throws TripleFactoryException, GraphException {
+        t1 = tripleFactory.createTriple(blank2, ref1, blank1);
+        graph.add(t1);
+        t2 = tripleFactory.createTriple(blank2, ref2, blank1);
+        graph.add(t2);
+        t3 = tripleFactory.createTriple(blank2, ref1, l1);
+        graph.add(t3);
+    }
 }

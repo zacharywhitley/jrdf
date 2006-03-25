@@ -68,7 +68,9 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.index.mem.GraphHandler012;
+import org.jrdf.graph.index.mem.GraphHandler120;
+import org.jrdf.graph.index.mem.GraphHandler201;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -87,7 +89,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class OneFixedIterator implements ClosableIterator<Triple> {
+public class OneFixedIterator implements ClosableMemIterator<Triple> {
 
     /**
      * The fixed item.
@@ -275,5 +277,9 @@ public class OneFixedIterator implements ClosableIterator<Triple> {
      */
     public boolean close() {
         return true;
+    }
+
+    public boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120) {
+        return handler012 == handler || handler201 == handler || handler120 == handler;
     }
 }
