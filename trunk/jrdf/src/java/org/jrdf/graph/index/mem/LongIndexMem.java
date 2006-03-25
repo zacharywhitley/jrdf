@@ -87,11 +87,11 @@ public final class LongIndexMem implements LongIndex, Serializable {
         index = newIndex;
     }
 
-    public void add(Long[] triple) throws GraphException {
+    public void add(Long[] triple) {
         add(triple[0], triple[1], triple[2]);
     }
 
-    public void add(Long first, Long second, Long third) throws GraphException {
+    public void add(Long first, Long second, Long third) {
         // find the sub index
         Map<Long, Set<Long>> subIndex = index.get(first);
         // check that the subindex exists

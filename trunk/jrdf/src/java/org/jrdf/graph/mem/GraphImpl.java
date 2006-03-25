@@ -132,6 +132,11 @@ public class GraphImpl implements Graph, Serializable {
      * Triple Element Factory.  This caches the element factory.
      */
     private transient TripleFactoryImpl tripleFactory;
+
+    private transient GraphHandler012 graphHandler012;
+    private transient GraphHandler201 graphHandler201;
+    private transient GraphHandler120 graphHandler120;
+
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
     private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
@@ -170,6 +175,10 @@ public class GraphImpl implements Graph, Serializable {
         if (null == tripleFactory) {
             tripleFactory = new TripleFactoryImpl(this, elementFactory);
         }
+
+        graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory);
+        graphHandler201 = new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory);
+        graphHandler120 = new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory);
     }
 
     public boolean contains(Triple triple) throws GraphException {
@@ -221,7 +230,7 @@ public class GraphImpl implements Graph, Serializable {
         } else {
             // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
             // look up the predicate
-            Set group = subIndex.get(values[1]);
+            Set<Long> group = subIndex.get(values[1]);
             if (null == group) {
                 return false;
             }
@@ -255,7 +264,7 @@ public class GraphImpl implements Graph, Serializable {
                 return true;
             } else {
                 // Was null, pred, obj
-                Set group = predIndex.get(values[2]);
+                Set<Long> group = predIndex.get(values[2]);
                 return null != group;
             }
         }
@@ -273,7 +282,7 @@ public class GraphImpl implements Graph, Serializable {
                 return false;
             }
 
-            Set group = objIndex.get(values[0]);
+            Set<Long> group = objIndex.get(values[0]);
             return null != group;
         }
     }
@@ -289,7 +298,7 @@ public class GraphImpl implements Graph, Serializable {
      * @throws GraphException If there was an error accessing the graph.
      */
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-            GraphException {
+        GraphException {
 
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
@@ -304,11 +313,11 @@ public class GraphImpl implements Graph, Serializable {
             return new EmptyClosableIterator();
         }
 
-        return findNonEmptyIterator(subject, predicate, values, object);
+        return findNonEmptyIterator(subject, predicate, object, values);
     }
 
-    private ClosableIterator<Triple> findNonEmptyIterator(SubjectNode subject, PredicateNode predicate, Long[] values,
-                                                          ObjectNode object) {
+    private ClosableIterator<Triple> findNonEmptyIterator(SubjectNode subject, PredicateNode predicate,
+        ObjectNode object, Long[] values) {
         // test which index to use
         if (ANY_SUBJECT_NODE != subject) {
             // test for {sp*}
@@ -318,8 +327,7 @@ public class GraphImpl implements Graph, Serializable {
             } else {
                 // test for {s**}
                 if (ANY_OBJECT_NODE == object) {
-                    return new OneFixedIterator(values[0], longIndex012, tripleFactory,
-                            new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
+                    return new OneFixedIterator(values[0], longIndex012, tripleFactory, graphHandler012);
                 }
                 // {s*o} so fall through
             }
@@ -334,45 +342,38 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         // {***} so return entire graph
-        return new GraphIterator(tripleFactory, new GraphHandler012(longIndex012, longIndex120, longIndex201,
-                elementFactory));
+        return new GraphIterator(tripleFactory, graphHandler012);
     }
 
     private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object) {
         if (ANY_OBJECT_NODE != object) {
             // got {spo}
-            return new ThreeFixedIterator(values, longIndex012, tripleFactory,
-                    new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
+            return new ThreeFixedIterator(values, longIndex012, tripleFactory, graphHandler012);
         } else {
             // got {sp*}
-            return new TwoFixedIterator(values[0], values[1], longIndex012, tripleFactory,
-                    new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory));
+            return new TwoFixedIterator(values[0], values[1], longIndex012, tripleFactory, graphHandler012);
         }
     }
 
     private ClosableIterator<Triple> fixedObjectIterator(Long[] values, SubjectNode subject, PredicateNode predicate) {
         // test for {s*o}
         if (ANY_SUBJECT_NODE != subject) {
-            return new TwoFixedIterator(values[2], values[0], longIndex201, tripleFactory,
-                    new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory));
+            return new TwoFixedIterator(values[2], values[0], longIndex201, tripleFactory, graphHandler201);
         } else {
             // test for {**o}.  {*po} should have been picked up above
             assert ANY_PREDICATE_NODE == predicate;
-            return new OneFixedIterator(values[2], longIndex201, tripleFactory,
-                    new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory));
+            return new OneFixedIterator(values[2], longIndex201, tripleFactory, graphHandler201);
         }
     }
 
     private ClosableIterator<Triple> fixedPredicateIterator(Long[] values, ObjectNode object, SubjectNode subject) {
         // test for {*po}
         if (ANY_OBJECT_NODE != object) {
-            return new TwoFixedIterator(values[1], values[2], longIndex120, tripleFactory,
-                    new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory));
+            return new TwoFixedIterator(values[1], values[2], longIndex120, tripleFactory, graphHandler120);
         } else {
             // test for {*p*}.  {sp*} should have been picked up above
             assert ANY_SUBJECT_NODE == subject;
-            return new OneFixedIterator(values[1], longIndex120, tripleFactory,
-                    new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory));
+            return new OneFixedIterator(values[1], longIndex120, tripleFactory, graphHandler120);
         }
     }
 
@@ -438,10 +439,20 @@ public class GraphImpl implements Graph, Serializable {
      * @param triples The triple iterator.
      * @throws GraphException If the statements can't be revoked.
      */
+    @SuppressWarnings("unchecked")
     public void remove(Iterator triples) throws GraphException {
-        while (triples.hasNext()) {
-            Triple triple = (Triple) triples.next();
-            remove(triple);
+
+        if (triples instanceof ClosableMemIterator) {
+            ClosableMemIterator<Triple> memIterator = (ClosableMemIterator<Triple>) triples;
+            while (memIterator.hasNext()) {
+                memIterator.next();
+                memIterator.remove();
+            }
+        } else {
+            while (triples.hasNext()) {
+                Triple triple = (Triple) triples.next();
+                remove(triple);
+            }
         }
     }
 
@@ -527,7 +538,7 @@ public class GraphImpl implements Graph, Serializable {
 
     // TODO AN Move this to a helper utility perhaps.
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
-                                          String nullMessage, String anyNodeMessage) {
+        String nullMessage, String anyNodeMessage) {
         checkForNulls(subject, predicate, object, nullMessage);
         checkForAnyNodes(subject, predicate, object, anyNodeMessage);
     }
@@ -586,8 +597,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // fill in the other indexes
         try {
-            GraphHandler012 graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201,
-                    elementFactory);
+            GraphHandler012 graphHandler012 = this.graphHandler012;
             graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
         } catch (GraphException e) {
             throw new ClassNotFoundException("Unable to add to a graph index", e);
