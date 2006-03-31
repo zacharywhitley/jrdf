@@ -87,7 +87,7 @@ public interface Graph {
      * @throws GraphException If there was an error accessing the graph.
      */
     boolean contains(SubjectNode subject, PredicateNode predicate,
-                     ObjectNode object) throws GraphException;
+        ObjectNode object) throws GraphException;
 
     /**
      * Test the graph for the occurrence of the triple.  An AnyNode value for any
@@ -112,8 +112,8 @@ public interface Graph {
      * @return an iterator containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
      */
-    ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate,
-                                  ObjectNode object) throws GraphException;
+    ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
+        GraphException;
 
     /**
      * Returns an iterator of {@link Triple}s to a set of statements that
