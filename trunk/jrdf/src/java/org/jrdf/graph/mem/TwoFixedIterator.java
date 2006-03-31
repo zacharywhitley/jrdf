@@ -146,7 +146,7 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
      * Constructor.  Sets up the internal iterators.
      */
     TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, TripleFactory newFactory,
-                     GraphHandler newHandler) {
+        GraphHandler newHandler) {
 
         // store the node factory and other starting data
         first = fixedFirstNode;
@@ -172,22 +172,11 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
     }
 
 
-    /**
-     * Returns true if the iteration has more elements.
-     *
-     * @return <code>true</code> If there is an element to be read.
-     */
     public boolean hasNext() {
         return hasNext;
     }
 
 
-    /**
-     * Returns the next element in the iteration.
-     *
-     * @return the next element in the iteration.
-     * @throws NoSuchElementException iteration has no more elements.
-     */
     public Triple next() throws NoSuchElementException {
         if (!hasNext()) {
             throw new NoSuchElementException();
@@ -205,9 +194,6 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
         }
     }
 
-    /**
-     * Implemented for java.util.Iterator.
-     */
     public void remove() {
         if (null != currentNodes && null != currentNodes[2]) {
             try {
@@ -235,12 +221,6 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
         }
     }
 
-    /**
-     * Closes the iterator by freeing any resources that it current holds.
-     * Nothing to be done for this class.
-     *
-     * @return <code>true</code> indicating success.
-     */
     public boolean close() {
         return true;
     }

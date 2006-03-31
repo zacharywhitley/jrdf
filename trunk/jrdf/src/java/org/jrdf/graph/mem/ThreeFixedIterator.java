@@ -69,8 +69,8 @@ import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.GraphHandler012;
-import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.graph.index.mem.GraphHandler120;
+import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Map;
@@ -144,22 +144,11 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
     }
 
 
-    /**
-     * Returns true if the iteration has more elements.
-     *
-     * @return <code>true</code> If there is an element to be read.
-     */
     public boolean hasNext() {
         return null != triple;
     }
 
 
-    /**
-     * Returns the next element in the iteration.
-     *
-     * @return the next element in the iteration.
-     * @throws NoSuchElementException iteration has no more elements.
-     */
     public Triple next() throws NoSuchElementException {
         if (null == triple) {
             if (exception != null) {
@@ -176,9 +165,6 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
     }
 
 
-    /**
-     * Implemented for java.util.Iterator.
-     */
     public void remove() {
         if (null != removeTriple) {
             try {
@@ -194,12 +180,6 @@ public class ThreeFixedIterator implements ClosableIterator<Triple> {
     }
 
 
-    /**
-     * Closes the iterator by freeing any resources that it current holds.
-     * Nothing to be done for this class.
-     *
-     * @return <code>true</code> indicating success.
-     */
     public boolean close() {
         return true;
     }

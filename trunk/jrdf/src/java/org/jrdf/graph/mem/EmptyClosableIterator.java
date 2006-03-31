@@ -89,14 +89,16 @@ public class EmptyClosableIterator implements ClosableMemIterator<Triple> {
      * Never returns anything.  A call to this will throw NoSuchElementException.
      *
      * @return will not return.
-     * @throws NoSuchElementException iteration has no more elements.
+     * @throws NoSuchElementException always.
      */
     public Triple next() throws NoSuchElementException {
         throw new NoSuchElementException();
     }
 
     /**
-     * Implemented for java.util.Iterator.  Not supported by this implementation.
+     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException always.
      */
     public void remove() {
         throw new UnsupportedOperationException();
