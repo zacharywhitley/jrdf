@@ -133,8 +133,19 @@ public class GraphImpl implements Graph, Serializable {
      */
     private transient TripleFactoryImpl tripleFactory;
 
+    /**
+     * Graph handler for the 012 index.
+     */
     private transient GraphHandler012 graphHandler012;
+
+    /**
+     * Graph handler for the 201 index.
+     */
     private transient GraphHandler201 graphHandler201;
+
+    /**
+     * Graph handler for the 120 index.
+     */
     private transient GraphHandler120 graphHandler120;
 
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
@@ -287,16 +298,6 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    /**
-     * Returns an iterator to a set of statements that match a given subject,
-     * predicate and object.  A null value for any of the parts of a triple are
-     * treated as unconstrained, any values will be returned.
-     *
-     * @param subject   The subject to find or null to indicate any subject.
-     * @param predicate The predicate to find or null to indicate any predicate.
-     * @param object    ObjectNode The object to find or null to indicate any object.
-     * @throws GraphException If there was an error accessing the graph.
-     */
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
         GraphException {
 
@@ -377,24 +378,10 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    /**
-     * Returns an iterator to a set of statements that match a given subject,
-     * predicate and object.  A null value for any of the parts of a triple are
-     * treated as unconstrained, any values will be returned.
-     *
-     * @param triple The triple to find.
-     * @throws GraphException If there was an error accessing the graph.
-     */
     public ClosableIterator<Triple> find(Triple triple) throws GraphException {
         return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
-    /**
-     * Adds an iterator containing triples into the graph.
-     *
-     * @param triples The triple iterator.
-     * @throws GraphException If the statements can't be made.
-     */
     public void add(Iterator triples) throws GraphException {
         while (triples.hasNext()) {
             Triple triple = (Triple) triples.next();
@@ -402,24 +389,10 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    /**
-     * Adds a triple to the graph.
-     *
-     * @param triple The triple.
-     * @throws GraphException If the statement can't be made.
-     */
     public void add(Triple triple) throws GraphException {
         add(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
-    /**
-     * Adds a triple to the graph.
-     *
-     * @param subject   The subject.
-     * @param predicate The predicate.
-     * @param object    The object.
-     * @throws GraphException If the statement can't be made.
-     */
     public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
@@ -433,12 +406,6 @@ public class GraphImpl implements Graph, Serializable {
         longIndex201.add(values[2], values[0], values[1]);
     }
 
-    /**
-     * Removes an iterator containing triples from the graph.
-     *
-     * @param triples The triple iterator.
-     * @throws GraphException If the statements can't be revoked.
-     */
     @SuppressWarnings("unchecked")
     public void remove(Iterator triples) throws GraphException {
 
@@ -456,26 +423,10 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    /**
-     * Removes a triple from the graph.
-     *
-     * @param triple The triple.
-     * @throws GraphException If there was an error revoking the statement, for
-     *                        example if it didn't exist.
-     */
     public void remove(Triple triple) throws GraphException {
         remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
-    /**
-     * Removes a triple from the graph.
-     *
-     * @param subject   The subject.
-     * @param predicate The predicate.
-     * @param object    The object.
-     * @throws GraphException If there was an error revoking the statement, for
-     *                        example if it didn't exist.
-     */
     public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
 
         // Check that the parameters are not nulls or any nodes
@@ -493,45 +444,22 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    /**
-     * Returns the node factory for the graph, or creates one.
-     *
-     * @return the node factory for the graph, or creates one.
-     */
     public GraphElementFactory getElementFactory() {
         return elementFactory;
     }
 
-    /**
-     * Returns the triple factory for the graph, or creates one.
-     *
-     * @return the triple factory for the graph, or creates one.
-     */
     public TripleFactory getTripleFactory() {
         return tripleFactory;
     }
 
-    /**
-     * Returns the number of triples in the graph.
-     *
-     * @return the number of triples in the graph.
-     */
     public long getNumberOfTriples() throws GraphException {
         return longIndex012.getSize();
     }
 
-    /**
-     * Returns true if the graph is empty i.e. the number of triples is 0.
-     *
-     * @return true if the graph is empty i.e. the number of triples is 0.
-     */
     public boolean isEmpty() throws GraphException {
         return longIndex012.getSize() == 0L;
     }
 
-    /**
-     * Closes any underlying resources used by this graph.
-     */
     public void close() {
         // no op
     }
@@ -584,11 +512,6 @@ public class GraphImpl implements Graph, Serializable {
 
         // read all the nodes as well
         Object[] nodes = (Object[]) in.readObject();
-
-        // test node factory creation in case the constructor did it
-        if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl();
-        }
 
         // populate the node factory with these nodes
         for (Object node : nodes) {
