@@ -142,7 +142,7 @@ public class OneFixedIterator implements ClosableMemIterator<Triple> {
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
     OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, TripleFactory newFactory,
-                     GraphHandler newHandler) {
+        GraphHandler newHandler) {
 
         // store the node factory and other starting data
         factory = newFactory;
@@ -168,24 +168,13 @@ public class OneFixedIterator implements ClosableMemIterator<Triple> {
     }
 
 
-    /**
-     * Returns true if the iteration has more elements.
-     *
-     * @return <code>true</code> If there is an element to be read.
-     */
     public boolean hasNext() {
         // confirm we still have an item iterator, and that it has data available
         return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
-                null != secondIndexIterator && secondIndexIterator.hasNext();
+            null != secondIndexIterator && secondIndexIterator.hasNext();
     }
 
 
-    /**
-     * Returns the next element in the iteration.
-     *
-     * @return the next element in the iteration.
-     * @throws NoSuchElementException iteration has no more elements.
-     */
     public Triple next() throws NoSuchElementException {
         if (null == secondIndexIterator) {
             throw new NoSuchElementException();
@@ -235,9 +224,6 @@ public class OneFixedIterator implements ClosableMemIterator<Triple> {
     }
 
 
-    /**
-     * Implemented for java.util.Iterator.
-     */
     public void remove() {
         if (null != thirdIndexIterator) {
             // now remove from the other 2 indexes
@@ -269,12 +255,6 @@ public class OneFixedIterator implements ClosableMemIterator<Triple> {
     }
 
 
-    /**
-     * Closes the iterator by freeing any resources that it current holds.
-     * Nothing to be done for this class.
-     *
-     * @return <code>true</code> indicating success.
-     */
     public boolean close() {
         return true;
     }
