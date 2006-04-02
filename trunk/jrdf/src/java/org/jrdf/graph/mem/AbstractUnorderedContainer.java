@@ -98,8 +98,7 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
         return elements.values().iterator();
     }
 
-    // TODO This appears to be the right way to do it.  Make sure everywhere else
-    // is the same.
+    @SuppressWarnings("unchecked")
     public ObjectNode[] toArray() {
         return (ObjectNode[]) elements.values().toArray();
     }

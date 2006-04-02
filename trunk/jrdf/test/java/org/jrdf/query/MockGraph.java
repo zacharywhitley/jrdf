@@ -20,8 +20,6 @@ import java.util.Iterator;
  */
 public final class MockGraph implements Graph {
 
-    private static final long serialVersionUID = 223166258140602924L;
-
     private ClosableIterator<Triple> triples;
 
     public MockGraph(ClosableIterator<Triple> expectedIterator) {

@@ -73,9 +73,7 @@ class Atts {
      *         <tt>null</tt> if no such attribute could be found.
      */
     public Att getAtt(String qName) {
-        for (int i = 0; i < attributes.size(); i++) {
-            Att att = attributes.get(i);
-
+        for (Att att : attributes) {
             if (att.getQName().equals(qName)) {
                 return att;
             }
@@ -93,11 +91,9 @@ class Atts {
      *         name, or <tt>null</tt> if no such attribute could be found.
      */
     public Att getAtt(String namespace, String localName) {
-        for (int i = 0; i < attributes.size(); i++) {
-            Att att = attributes.get(i);
-
+        for (Att att : attributes) {
             if (att.getLocalName().equals(localName) &&
-                    att.getNamespace().equals(namespace)) {
+                att.getNamespace().equals(namespace)) {
                 return att;
             }
         }
@@ -139,7 +135,7 @@ class Atts {
             Att att = attributes.get(i);
 
             if (att.getLocalName().equals(localName) &&
-                    att.getNamespace().equals(namespace)) {
+                att.getNamespace().equals(namespace)) {
                 attributes.remove(i);
                 return att;
             }
@@ -161,8 +157,7 @@ class Atts {
     public String toString() {
         StringBuffer result = new StringBuffer();
         result.append("Atts[");
-        for (int i = 0; i < attributes.size(); i++) {
-            Att att = (Att) attributes.get(i);
+        for (Att att : attributes) {
             result.append(att.getQName());
             result.append("=");
             result.append(att.getValue());

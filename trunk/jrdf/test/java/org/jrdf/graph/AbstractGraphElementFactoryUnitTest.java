@@ -225,15 +225,11 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
         URI uri1 = new URI("http://namespace#somevalue");
         URI uri2 = new URI("http://namespace#someothervalue");
-        URI uri3 = new URI("http://namespace#yetanothervalue");
         URIReference ref1 = elementFactory.createResource(uri1);
         URIReference ref2 = elementFactory.createResource(uri2);
-        URIReference ref3 = elementFactory.createResource(uri3);
 
         final String TEST_STR1 = "A test string";
-        final String TEST_STR2 = "Another test string";
         Literal l1 = elementFactory.createLiteral(TEST_STR1);
-        Literal l2 = elementFactory.createLiteral(TEST_STR2);
 
         // test ordinary creation
         Triple triple = tripleFactory.createTriple(blank1, ref1, blank2);
@@ -348,7 +344,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         }
         catch (GraphException ge) {
             fail("Should allow nodes to be inserted from other graphs which have " +
-                    "the same value but different node ids");
+                "the same value but different node ids");
         }
 
         // Test inserting a statements using objects from the correct graph and then

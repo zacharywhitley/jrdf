@@ -73,8 +73,20 @@ public class AbstractTriple implements Triple, Serializable {
     private static final long serialVersionUID = 8737092494833012690L;
     private static final int DEFAULT_HASH_VALUE = 0;
     // FIXME TJA: See if these protected variables can be removed
+
+    /**
+     * The internal representation of the triple - subject node.
+     */
     protected SubjectNode subjectNode;
+
+    /**
+     * The internal representation of the triple - predicate node.
+     */
     protected PredicateNode predicateNode;
+
+    /**
+     * The internal representation of the triple - object node.
+     */
     protected ObjectNode objectNode;
 
     /**
@@ -141,7 +153,7 @@ public class AbstractTriple implements Triple, Serializable {
 
     private boolean determineEqualityFromFields(Triple ref) {
         return nodesEqual(subjectNode, ref.getSubject()) && nodesEqual(predicateNode, ref.getPredicate()) &&
-                nodesEqual(objectNode, ref.getObject());
+            nodesEqual(objectNode, ref.getObject());
     }
 
     private boolean nodesEqual(Node node1, Node node2) {

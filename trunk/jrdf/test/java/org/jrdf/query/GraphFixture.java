@@ -94,7 +94,7 @@ public final class GraphFixture {
 
     public static void checkAnswer(Triple expectedTriple, Answer actualAnswer) {
         List<Triple> solutions = actualAnswer.getSolutions();
-        Triple actualTriple = (Triple) solutions.iterator().next();
+        Triple actualTriple = solutions.iterator().next();
         checkTriple(expectedTriple, actualTriple);
     }
 

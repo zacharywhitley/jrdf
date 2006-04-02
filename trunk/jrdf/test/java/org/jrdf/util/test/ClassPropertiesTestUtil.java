@@ -88,10 +88,7 @@ public final class ClassPropertiesTestUtil {
         if (!Modifier.isPublic(modifiers)) {
             return false;
         }
-        if (Modifier.isStatic(modifiers)) {
-            return false;
-        }
-        return true;
+        return !Modifier.isStatic(modifiers);
     }
 
     public static boolean isClassAbstract(Class<?> cls) {
