@@ -88,17 +88,17 @@ public class GraphHandler012 extends AbstractGraphHandler implements GraphHandle
         this.nodePool = nodePool;
     }
 
-    public void remove(Long[] currentNodes) throws GraphException {
-        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
-    }
-
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
         return index012.iterator();
     }
 
     public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
         return new Node[]{nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
-                nodePool.getNodeById(nodes[2])};
+            nodePool.getNodeById(nodes[2])};
+    }
+
+    public void remove(Long[] currentNodes) throws GraphException {
+        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
+        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
     }
 }
