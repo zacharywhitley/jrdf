@@ -283,35 +283,45 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     public String getEscapedLexicalForm() {
-        return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"",
-                "\\\\\\\"");
+        return getLexicalForm().replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\"", "\\\\\\\"");
     }
 
     private boolean determineEqualityFromFields(Literal tmpLiteral) {
+        // Ensure that the lexical form is equal character by character.
+        if (lexicalFormsEqual(tmpLiteral)) {
+            return checkLiteralEquality(tmpLiteral);
+        }
+        return false;
+    }
+
+    private boolean checkLiteralEquality(Literal tmpLiteral) {
         boolean returnValue = false;
 
-        // Ensure that the lexical form is equal character by character.
-        if (getLexicalForm().equals(tmpLiteral.getLexicalForm())) {
-
-            // If datatype is null then test language equality.
-            if (null == getDatatypeURI() && null == tmpLiteral.getDatatypeURI()) {
-
-                // If languages are equal by value then its equal.
-                if (getLanguage().equals(tmpLiteral.getLanguage())) {
-                    returnValue = true;
-                }
-            } else if (equalByStringValue(tmpLiteral)) {
-                // Data type URIs are equal by their string values.
-                returnValue = true;
-            }
+        // If datatypes are null and languages are equal by value.
+        if (dataTypesNull(tmpLiteral) && languagesEqual(tmpLiteral)) {
+            returnValue = true;
+            // If datatype URIs are not null and equal by their string values.
+        } else if (dataTypesEqual(tmpLiteral)) {
+            returnValue = true;
         }
         return returnValue;
     }
 
-    private boolean equalByStringValue(Literal tmpLiteral) {
-        return (null != getDatatypeURI()) &&
-                (null != tmpLiteral.getDatatypeURI()) &&
-                (getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString()));
+    private boolean lexicalFormsEqual(Literal tmpLiteral) {
+        return getLexicalForm().equals(tmpLiteral.getLexicalForm());
+    }
+
+    private boolean dataTypesNull(Literal tmpLiteral) {
+        return ((null == getDatatypeURI()) && (null == tmpLiteral.getDatatypeURI()));
+    }
+
+    private boolean languagesEqual(Literal tmpLiteral) {
+        return getLanguage().equals(tmpLiteral.getLanguage());
+    }
+
+    private boolean dataTypesEqual(Literal tmpLiteral) {
+        return (null != getDatatypeURI()) && (null != tmpLiteral.getDatatypeURI()) &&
+            getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString());
     }
 
     /**
