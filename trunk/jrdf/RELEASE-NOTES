@@ -1,11 +1,19 @@
 JRDF Release 0.4
 ================
-* Does not resolve relative URIs correctly (Bug 1315291).
-* Stacked xml:base directives with relative URIs not processed
+* Finished converting over to use Generics and Java 1.5 (Feature 1238378).
+* Began work on SPARQL support, graph and relational operations.
+* Began work on a NTriples parser.
+* Using an iterator from the result of a find to remove nodes from the
+same graph no longer produces a concurrent modification exception 
+(Bug 1457621). 
+* NTriple escaping now correctly handles surrogates in Java 1.5. (Bug 1364927).
+* Large XML Literals are now correctly parsed (Bug 1362611).
+* Fixed incorrect resolving of relative URIs correctly (Bug 1315291).
+* Fixed processing stacked xml:base directives with relative URIs
 (Bug 1314147).
-* The createTriple method should be on TripleFactory (Bug 1294602).
-* Remove the use of nulls as valid parameters (Bug 1265743).
-* MemNode doesn't extend Node (Bug 1243510).
+* The createTriple method was moved to be on TripleFactory (Bug 1294602).
+* Removed the use of nulls as valid parameters in finds for example (Bug 1265743).
+* MemNode now extends Node (Bug 1243510).
 
 JRDF Release 0.3.4.1
 ====================

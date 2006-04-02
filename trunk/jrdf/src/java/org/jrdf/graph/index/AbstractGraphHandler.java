@@ -77,20 +77,8 @@ public abstract class AbstractGraphHandler implements GraphHandler {
     protected NodePool nodePool;
     private static final int STATEMENT_OFFSET = 5;
 
-    /**
-     * As 012, 120 and 201 are symmetrical this can be used to reconstruct either
-     * two from any one index.  Using the 012 index it will add entries correctly
-     * to 120 (secondIndex) and 201 (thirdIndex), or 120 will make
-     * 201 (secondIndex) and 012 (thirdIndex) and 201 will
-     * produce 120 and 201.
-     *
-     * @param firstIndex
-     * @param secondIndex the second index.
-     * @param thirdIndex  the third index.
-     * @throws org.jrdf.graph.GraphException if the adds fail.
-     */
     public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws
-            GraphException {
+        GraphException {
         BasicOperations.reconstruct(firstIndex, secondIndex, thirdIndex);
     }
 

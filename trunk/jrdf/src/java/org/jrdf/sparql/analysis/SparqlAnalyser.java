@@ -81,7 +81,7 @@ public interface SparqlAnalyser extends Analysis {
     /**
      * Returns the query processed by this analyser.
      *
-     * @return The query processed by this analyser, or {@link SparqlAnalyser.NO_QUERY} if no query has been processed.
+     * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
      */
     Query getQuery();
 
