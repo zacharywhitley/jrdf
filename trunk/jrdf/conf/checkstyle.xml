@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
-        "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
-        "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+    "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 
 <module name="Checker">
     <module name="SuppressionFilter">
@@ -109,7 +109,7 @@
         <module name="BooleanExpressionComplexity"/>
         <module name="ClassDataAbstractionCoupling"/>
         <module name="CyclomaticComplexity">
-            <property name="max" value="7"/>
+            <property name="max" value="6"/>
         </module>
         <module name="JavaNCSS">
             <property name="methodMaximum" value="15"/>
