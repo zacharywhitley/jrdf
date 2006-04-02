@@ -20,8 +20,6 @@ import java.util.Iterator;
  */
 public final class MockBadGraph implements Graph {
 
-    private static final long serialVersionUID = 2826041255306224321L;
-
     public MockBadGraph() {
     }
 
@@ -34,7 +32,7 @@ public final class MockBadGraph implements Graph {
     }
 
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-            throws GraphException {
+        throws GraphException {
         throw new GraphException("Don't care about the message, I'm sure it will be meaningful");
     }
 

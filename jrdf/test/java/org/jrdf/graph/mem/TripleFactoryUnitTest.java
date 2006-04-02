@@ -71,9 +71,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Sequence;
 import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.mem.AlternativeImpl;
-import org.jrdf.graph.mem.BagImpl;
-import org.jrdf.graph.mem.CollectionImpl;
 import org.jrdf.vocabulary.RDF;
 
 /**
@@ -176,8 +173,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public Collection<ObjectNode> createCollection(ObjectNode[] objects) {
         Collection<ObjectNode> collection = new CollectionImpl();
 
-        for (int index = 0; index < objects.length; index++) {
-            collection.add(objects[index]);
+        for (ObjectNode object : objects) {
+            collection.add(object);
         }
 
         return collection;
@@ -186,8 +183,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public Alternative<ObjectNode> createAlternative(ObjectNode[] objects) {
         Alternative<ObjectNode> alternative = new AlternativeImpl();
 
-        for (int index = 0; index < objects.length; index++) {
-            alternative.add(objects[index]);
+        for (ObjectNode object : objects) {
+            alternative.add(object);
         }
 
         return alternative;
@@ -196,8 +193,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public Bag<ObjectNode> createBag(ObjectNode[] objects) {
         Bag<ObjectNode> bag = new BagImpl();
 
-        for (int index = 0; index < objects.length; index++) {
-            bag.add(objects[index]);
+        for (ObjectNode object : objects) {
+            bag.add(object);
         }
 
         return bag;
@@ -206,8 +203,8 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     public Sequence<ObjectNode> createSequence(ObjectNode[] objects) {
         Sequence<ObjectNode> sequence = new SequenceImpl();
 
-        for (int index = 0; index < objects.length; index++) {
-            sequence.add(objects[index]);
+        for (ObjectNode object : objects) {
+            sequence.add(object);
         }
 
         return sequence;

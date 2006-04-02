@@ -395,6 +395,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         return predicateValue;
     }
 
+    // TODO (AN) String of instanceof should be changed to calls by type.
     private Long convertObject(Node third) throws GraphException {
         Long objectValue = null;
         if (ANY_OBJECT_NODE != third) {

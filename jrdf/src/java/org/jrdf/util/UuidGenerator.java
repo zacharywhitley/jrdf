@@ -89,7 +89,6 @@ public final class UuidGenerator {
     private static String ipAddress;
     private static String vmID;
     private static long uidCounter;
-    private static long callTime;
 
     private UuidGenerator() {
     }
@@ -118,8 +117,8 @@ public final class UuidGenerator {
 
     private static String toHexString(byte[] seedDigest) {
         StringBuilder buffer = new StringBuilder();
-        for (int i = 0; i < seedDigest.length; ++i) {
-            int currentInt = seedDigest[i] & INT_OFFSET;
+        for (byte aSeedDigest : seedDigest) {
+            int currentInt = aSeedDigest & INT_OFFSET;
             if (currentInt < SINGLE_DIGIT) {
                 buffer.append('0');
             }
@@ -130,8 +129,8 @@ public final class UuidGenerator {
 
     private static byte[] computeDigest(char[] chars) {
         ByteBuffer buffer = ByteBuffer.allocate(chars.length * 2);
-        for (int i = 0; i < chars.length; i++) {
-            buffer.putChar(chars[i]);
+        for (char aChar : chars) {
+            buffer.putChar(aChar);
         }
         return getDigester().digest(buffer.array());
     }
@@ -172,7 +171,7 @@ public final class UuidGenerator {
     }
 
     private static synchronized String getTime() {
-        callTime = System.currentTimeMillis();
+        long callTime = System.currentTimeMillis();
         return "" + callTime;
     }
 

@@ -36,7 +36,6 @@ import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -219,7 +218,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         this.locator = locator;
         if (null != locListener) {
             locListener.parseLocationUpdate(locator.getLineNumber(),
-                    locator.getColumnNumber());
+                locator.getColumnNumber());
         }
     }
 
@@ -277,7 +276,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             newNamespaceMappings.clear();
 
             if (!inRdfContext && parseStandAloneDocuments &&
-                    (!"RDF".equals(localName) || !namespaceURI.equals(RDF.BASE_URI.toString()))) {
+                (!"RDF".equals(localName) || !namespaceURI.equals(RDF.BASE_URI.toString()))) {
                 // Stand-alone document that does not start with an rdf:RDF root
                 // element. Assume this root element is omitted.
                 inRdfContext = true;
@@ -327,7 +326,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         rdfParser.setXmlLang(deferredElement.getXmlLang());
 
         rdfParser.startElement(deferredElement.getNamespaceURI(), deferredElement.getLocalName(),
-                deferredElement.getqName(), deferredElement.getAtts());
+            deferredElement.getqName(), deferredElement.getAtts());
 
         deferredElement = null;
     }
@@ -395,7 +394,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             rdfParser.setXmlLang(deferredElement.getXmlLang());
 
             rdfParser.emptyElement(deferredElement.getNamespaceURI(), deferredElement.getLocalName(),
-                    deferredElement.getqName(), deferredElement.getAtts());
+                deferredElement.getqName(), deferredElement.getAtts());
 
             deferredElement = null;
         } else {
@@ -455,7 +454,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     private void checkAndCopyAttributes(Attributes attributes,
-                                        ElementInfo elInfo) throws SAXException {
+        ElementInfo elInfo) throws SAXException {
         Atts atts = new Atts(attributes.getLength());
 
         int attCount = attributes.getLength();
@@ -479,10 +478,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 if (rdfParser.verifyData) {
                     if ("".equals(namespace)) {
                         rdfParser.sendError("unqualified attribute '" +
-                                qName + "' not allowed");
+                            qName + "' not allowed");
                     } else if (-1 == qName.indexOf(":")) {
                         rdfParser.sendWarning("unqualified attribute '" +
-                                qName + "' not allowed");
+                            qName + "' not allowed");
                     }
                 }
 
@@ -517,9 +516,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         charBuf.append("<").append(qName);
 
         // Write any new namespace prefix definitions
-        Iterator<String> prefixes = newNamespaceMappings.keySet().iterator();
-        while (prefixes.hasNext()) {
-            String prefix = prefixes.next();
+        for (String prefix : newNamespaceMappings.keySet()) {
             String namespace = newNamespaceMappings.get(prefix);
             appendNamespaceDecl(charBuf, prefix, namespace);
         }
@@ -527,8 +524,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         // Write attributes
         int attCount = attributes.getLength();
         for (int i = 0; i < attCount; i++) {
-            appendAttribute(charBuf,
-                    attributes.getQName(i), attributes.getValue(i));
+            appendAttribute(charBuf, attributes.getQName(i), attributes.getValue(i));
         }
 
         // Write end of start tag
@@ -588,7 +584,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
     }
 
     private void appendNamespaceDecl(StringBuffer sb, String prefix,
-                                     String namespace) throws SAXException {
+        String namespace) throws SAXException {
         String attName = "xmlns";
 
         if (!"".equals(prefix)) {
@@ -648,7 +644,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         }
 
         ElementInfo(ElementInfo newParent, String newQName, String newNamespaceURI,
-                    String newLocalName) {
+            String newLocalName) {
             parent = newParent;
             qName = newQName;
             namespaceURI = newNamespaceURI;

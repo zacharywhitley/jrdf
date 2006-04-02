@@ -114,7 +114,7 @@ public final class DefaultAnswer implements Answer, Serializable {
     }
 
     private boolean determineEqualityFromFields(Answer obj) {
-        return ((Answer) obj).getSolutions().equals(solutions);
+        return obj.getSolutions().equals(solutions);
     }
 
     public String toString() {

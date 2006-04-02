@@ -22,7 +22,7 @@ public class EqualsUtilUnitTest extends TestCase {
         String s1 = "foo";
         String s2 = s1;
         assertTrue(EqualsUtil.sameReference(s1, s2));
-        s2 = new String("bar");
+        s2 = "bar";
         assertFalse(EqualsUtil.sameReference(s1, s2));
     }
 
@@ -34,6 +34,6 @@ public class EqualsUtilUnitTest extends TestCase {
     public void testDifferentSuperClassOrInterface() {
         assertTrue(EqualsUtil.hasSuperClassOrInterface(CharSequence.class, new StringBuffer("foo")));
         assertFalse(EqualsUtil.hasSuperClassOrInterface(String.class, new StringBuffer("foo")));
-        assertFalse(EqualsUtil.hasSuperClassOrInterface(String.class, new Integer(1)));
+        assertFalse(EqualsUtil.hasSuperClassOrInterface(String.class, 1));
     }
 }
