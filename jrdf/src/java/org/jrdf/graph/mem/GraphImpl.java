@@ -74,12 +74,12 @@ import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.graph.index.mem.LongIndexMem;
-import org.jrdf.graph.mem.iterator.ClosableMemIterator;
-import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
-import org.jrdf.graph.mem.iterator.GraphIterator;
-import org.jrdf.graph.mem.iterator.OneFixedIterator;
-import org.jrdf.graph.mem.iterator.ThreeFixedIterator;
-import org.jrdf.graph.mem.iterator.TwoFixedIterator;
+import org.jrdf.graph.iterator.ClosableMemIterator;
+import org.jrdf.graph.iterator.EmptyClosableIterator;
+import org.jrdf.graph.iterator.GraphIterator;
+import org.jrdf.graph.iterator.OneFixedIterator;
+import org.jrdf.graph.iterator.ThreeFixedIterator;
+import org.jrdf.graph.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
