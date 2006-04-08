@@ -1,13 +1,13 @@
 /*
- * $Header$
- * $Revision$
- * $Date$
+ * $Header: /cvsroot/jrdf/jrdf/src/java/org/jrdf/query/Answer.java,v 1.6 2005/10/20 11:32:32 tomadams Exp $
+ * $Revision: 1.6 $
+ * $Date: 2005/10/20 11:32:32 $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,59 +56,29 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Triple;
+package org.jrdf.graph.mem.iterator;
+
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
-
-import java.util.NoSuchElementException;
+import org.jrdf.util.ClosableIterator;
 
 /**
- * An iterator that returns no triples.
+ * An iterator that allows you to determine if an iterator comes from the in memory graph.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 1.1 $
  */
-public class EmptyClosableIterator implements ClosableMemIterator<Triple> {
-
-    EmptyClosableIterator() {
-    }
+public interface ClosableMemIterator<Triple> extends ClosableIterator<Triple> {
 
     /**
-     * Returns false.
+     * Return true if this iterator contains any of the handlers.
      *
-     * @return <code>false</code>.
+     * @param handler012 the 012 handler
+     * @param handler201 the 201 handler
+     * @param handler120 the 120 handler
+     * @return true if this iterator contains any of the given handlers.
      */
-    public boolean hasNext() {
-        return false;
-    }
-
-    /**
-     * Never returns anything.  A call to this will throw NoSuchElementException.
-     *
-     * @return will not return.
-     * @throws NoSuchElementException always.
-     */
-    public Triple next() throws NoSuchElementException {
-        throw new NoSuchElementException();
-    }
-
-    /**
-     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
-     *
-     * @throws UnsupportedOperationException always.
-     */
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean close() {
-        return true;
-    }
-
-    public boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120) {
-        return false;
-    }
+    boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120);
 }

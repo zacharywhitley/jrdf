@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
@@ -71,135 +71,108 @@ import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * An iterator that iterates over a group with a two fixed nodes.
- * Relies on an internal iterator which iterates over all entries in
- * a set, found in a subIndex.
- * <p/>
- * The thirdIndexIterator is used to indicate the current position.
- * It will always be set to return the next value until it reaches
- * the end of the group.
+ * An iterator that returns only a single triple, if any exists.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
  * @version $Revision$
  */
-public class TwoFixedIterator implements ClosableMemIterator<Triple> {
+public class ThreeFixedIterator implements ClosableIterator<Triple> {
 
-    /**
-     * The first fixed item.
-     */
-    private final Long first;
-
-    /**
-     * The second fixed item.
-     */
-    private final Long second;
-
+    private Long[] nodes;
     /**
      * Allows access to a particular part of the index.
      */
     private LongIndex longIndex;
 
     /**
-     * The subIndex of this iterator.  Only needed for initialization and the remove method.
-     */
-    private Map<Long, Set<Long>> subIndex;
-
-    /**
-     * The subSubIndex of this iterator.  Only needed for initialization and the remove method.
-     */
-    private Set<Long> subGroup;
-
-    /**
-     * The iterator for the third index.
-     */
-    private Iterator<Long> thirdIndexIterator;
-
-    /**
-     * The factory used to create the nodes to be returned in the triples.
-     */
-    private TripleFactory factory;
-
-    /**
-     * Handles the removal of nodes
+     * Handles the removal of nodes.
      */
     private GraphHandler handler;
 
     /**
-     * The current subject predicate and object, last returned from next().  Only needed by the remove method.
+     * The triple to return on.
      */
-    private Long[] currentNodes;
+    private Triple triple;
 
     /**
-     * If there are anymore items left
+     * The triple to remove.
      */
-    private boolean hasNext;
+    private Triple removeTriple;
 
     /**
-     * Constructor.  Sets up the internal iterators.
+     * Contains the exception to throw if not null when next is called.
      */
-    TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, TripleFactory newFactory,
-        GraphHandler newHandler) {
+    private TripleFactoryException exception;
 
-        // store the node factory and other starting data
-        first = fixedFirstNode;
-        second = fixedSecondNode;
+    /**
+     * Constructor.
+     */
+    // TODO (AN) This goes back to package private after factory is complete
+    public ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, TripleFactory factory, GraphHandler newHandler) {
+        nodes = newNodes;
         longIndex = newLongIndex;
-
-        factory = newFactory;
         handler = newHandler;
+        createTriple(nodes, newHandler, factory);
+    }
 
-        // find the subIndex from the main index
-        subIndex = longIndex.getSubIndex(first);
-
-        // check that data exists
-        if (null != subIndex) {
-            // now find the set from the sub index map
-            subGroup = subIndex.get(second);
-            if (null != subGroup) {
-                // get an iterator for the set
-                thirdIndexIterator = subGroup.iterator();
-                hasNext = thirdIndexIterator.hasNext();
+    private void createTriple(Long[] longNodes, GraphHandler handler, TripleFactory factory) {
+        if (contains(longNodes)) {
+            try {
+                Node[] nodes = handler.createTriple(longNodes);
+                triple = factory.createTriple((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
+            } catch (TripleFactoryException e) {
+                exception = e;
             }
         }
     }
 
+    private boolean contains(Long[] longNodes) {
+        Map<Long, Set<Long>> subIndex = longIndex.getSubIndex(longNodes[0]);
+        if (subIndex != null) {
+            Set<Long> predicates = subIndex.get(longNodes[1]);
+            if (predicates.contains(longNodes[2])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public boolean hasNext() {
-        return hasNext;
+        return null != triple;
     }
 
 
     public Triple next() throws NoSuchElementException {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
+        if (null == triple) {
+            if (exception != null) {
+                throw new NoSuchElementException(exception.getMessage());
+            } else {
+                throw new NoSuchElementException();
+            }
         }
 
-        // Get next node.
-        Long third = thirdIndexIterator.next();
-        hasNext = thirdIndexIterator.hasNext();
-        currentNodes = new Long[]{first, second, third};
-        try {
-            Node[] triple = handler.createTriple(currentNodes);
-            return factory.createTriple((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
-        } catch (TripleFactoryException e) {
-            throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
-        }
+        // return the triple, clearing it first so next will fail on a subsequent call
+        removeTriple = triple;
+        triple = null;
+        return removeTriple;
     }
 
+
     public void remove() {
-        if (null != currentNodes && null != currentNodes[2]) {
+        if (null != removeTriple) {
             try {
-                thirdIndexIterator.remove();
-                handler.remove(currentNodes);
-                cleanIndex();
+                longIndex.remove(nodes);
+                handler.remove(nodes);
+                removeTriple = null;
             } catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());
             }
@@ -208,18 +181,6 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
         }
     }
 
-    private void cleanIndex() {
-        // check if a set was cleaned out
-        if (subGroup.isEmpty()) {
-            // remove the entry for the set
-            subIndex.remove(second);
-            // check if a subindex was cleaned out
-            if (subIndex.isEmpty()) {
-                // remove the subindex
-                longIndex.removeSubIndex(first);
-            }
-        }
-    }
 
     public boolean close() {
         return true;

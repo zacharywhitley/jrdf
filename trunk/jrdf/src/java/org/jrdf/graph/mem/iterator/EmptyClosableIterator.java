@@ -56,135 +56,60 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph.mem.iterator;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.index.GraphHandler;
-import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
-import org.jrdf.util.ClosableIterator;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 /**
- * An iterator that returns only a single triple, if any exists.
+ * An iterator that returns no triples.
  *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @author Andrew Newman
  * @version $Revision$
  */
-public class ThreeFixedIterator implements ClosableIterator<Triple> {
+public class EmptyClosableIterator implements ClosableMemIterator<Triple> {
 
-    private Long[] nodes;
-    /**
-     * Allows access to a particular part of the index.
-     */
-    private LongIndex longIndex;
-
-    /**
-     * Handles the removal of nodes.
-     */
-    private GraphHandler handler;
-
-    /**
-     * The triple to return on.
-     */
-    private Triple triple;
-
-    /**
-     * The triple to remove.
-     */
-    private Triple removeTriple;
-
-    /**
-     * Contains the exception to throw if not null when next is called.
-     */
-    private TripleFactoryException exception;
-
-    /**
-     * Constructor.
-     */
-    ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, TripleFactory factory, GraphHandler newHandler) {
-        nodes = newNodes;
-        longIndex = newLongIndex;
-        handler = newHandler;
-        createTriple(nodes, newHandler, factory);
+    // TODO (AN) This goes back to package private after factory is complete
+    public EmptyClosableIterator() {
     }
 
-    private void createTriple(Long[] longNodes, GraphHandler handler, TripleFactory factory) {
-        if (contains(longNodes)) {
-            try {
-                Node[] nodes = handler.createTriple(longNodes);
-                triple = factory.createTriple((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
-            } catch (TripleFactoryException e) {
-                exception = e;
-            }
-        }
-    }
-
-    private boolean contains(Long[] longNodes) {
-        Map<Long, Set<Long>> subIndex = longIndex.getSubIndex(longNodes[0]);
-        if (subIndex != null) {
-            Set<Long> predicates = subIndex.get(longNodes[1]);
-            if (predicates.contains(longNodes[2])) {
-                return true;
-            }
-        }
+    /**
+     * Returns false.
+     *
+     * @return <code>false</code>.
+     */
+    public boolean hasNext() {
         return false;
     }
 
-
-    public boolean hasNext() {
-        return null != triple;
-    }
-
-
+    /**
+     * Never returns anything.  A call to this will throw NoSuchElementException.
+     *
+     * @return will not return.
+     * @throws NoSuchElementException always.
+     */
     public Triple next() throws NoSuchElementException {
-        if (null == triple) {
-            if (exception != null) {
-                throw new NoSuchElementException(exception.getMessage());
-            } else {
-                throw new NoSuchElementException();
-            }
-        }
-
-        // return the triple, clearing it first so next will fail on a subsequent call
-        removeTriple = triple;
-        triple = null;
-        return removeTriple;
+        throw new NoSuchElementException();
     }
 
-
+    /**
+     * Not supported by this implementation.    A call to this will throw UnsupportedOperationException.
+     *
+     * @throws UnsupportedOperationException always.
+     */
     public void remove() {
-        if (null != removeTriple) {
-            try {
-                longIndex.remove(nodes);
-                handler.remove(nodes);
-                removeTriple = null;
-            } catch (GraphException ge) {
-                throw new IllegalStateException(ge.getMessage());
-            }
-        } else {
-            throw new IllegalStateException("Next not called or beyond end of data");
-        }
+        throw new UnsupportedOperationException();
     }
-
 
     public boolean close() {
         return true;
     }
 
     public boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120) {
-        return handler012 == handler || handler201 == handler || handler120 == handler;
+        return false;
     }
 }

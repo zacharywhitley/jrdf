@@ -74,6 +74,12 @@ import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
+import org.jrdf.graph.mem.iterator.GraphIterator;
+import org.jrdf.graph.mem.iterator.OneFixedIterator;
+import org.jrdf.graph.mem.iterator.ThreeFixedIterator;
+import org.jrdf.graph.mem.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
@@ -319,63 +325,70 @@ public class GraphImpl implements Graph, Serializable {
 
     private ClosableIterator<Triple> findNonEmptyIterator(SubjectNode subject, PredicateNode predicate,
         ObjectNode object, Long[] values) {
-        // test which index to use
+
+        ClosableIterator<Triple> result;
+
         if (ANY_SUBJECT_NODE != subject) {
-            // test for {sp*}
-            if (ANY_PREDICATE_NODE != predicate) {
-                // test for {spo}
-                return fixedSubjectAndPredicate(values, object);
+            // {s??} Get fixed subject, fixed or any predicate and object.
+            result = fixedSubjectIterator(values, predicate, object);
+        } else if (ANY_PREDICATE_NODE != predicate) {
+            // {*p?} Get any subject, fixed predicate, fixed or any object.
+            result = anySubjectFixedPredicateIterator(values, object);
+        } else if (ANY_OBJECT_NODE != object) {
+            // {**o} Get any subject and predicate, fixed object.
+            result = anySubjectAndPredicateFixedObjectIterator(values);
+        } else {
+            // {***} Get all.
+            result = new GraphIterator(tripleFactory, graphHandler012);
+        }
+        return result;
+    }
+
+    private ClosableIterator<Triple> fixedSubjectIterator(Long[] values, PredicateNode predicate, ObjectNode object) {
+        ClosableIterator<Triple> result;
+
+        // test for {s??}
+        if (ANY_PREDICATE_NODE != predicate) {
+            // test for {sp?}
+            if (ANY_OBJECT_NODE != object) {
+                // got {spo}
+                result = new ThreeFixedIterator(values, longIndex012, tripleFactory, graphHandler012);
             } else {
-                // test for {s**}
-                if (ANY_OBJECT_NODE == object) {
-                    return new OneFixedIterator(values[0], longIndex012, tripleFactory, graphHandler012);
-                }
-                // {s*o} so fall through
+                // got {sp*}
+                result = new TwoFixedIterator(values[0], values[1], longIndex012, tripleFactory, graphHandler012);
+            }
+        } else {
+            // test for {s*?}
+            if (ANY_OBJECT_NODE != object) {
+                // got s*o {}
+                result = new TwoFixedIterator(values[2], values[0], longIndex201, tripleFactory, graphHandler201);
+            } else {
+                // got {s**}
+                result = new OneFixedIterator(values[0], longIndex012, tripleFactory, graphHandler012);
             }
         }
 
-        if (ANY_PREDICATE_NODE != predicate) {
-            return fixedPredicateIterator(values, object, subject);
-        }
-
-        if (ANY_OBJECT_NODE != object) {
-            return fixedObjectIterator(values, subject, predicate);
-        }
-
-        // {***} so return entire graph
-        return new GraphIterator(tripleFactory, graphHandler012);
+        return result;
     }
 
-    private ClosableIterator<Triple> fixedSubjectAndPredicate(Long[] values, ObjectNode object) {
+    private ClosableIterator<Triple> anySubjectFixedPredicateIterator(Long[] values, ObjectNode object) {
+        ClosableIterator<Triple> result;
+
+        // test for {*p?}
         if (ANY_OBJECT_NODE != object) {
-            // got {spo}
-            return new ThreeFixedIterator(values, longIndex012, tripleFactory, graphHandler012);
+            // got {*po}
+            result = new TwoFixedIterator(values[1], values[2], longIndex120, tripleFactory, graphHandler120);
         } else {
-            // got {sp*}
-            return new TwoFixedIterator(values[0], values[1], longIndex012, tripleFactory, graphHandler012);
+            // got {*p*}.
+            result = new OneFixedIterator(values[1], longIndex120, tripleFactory, graphHandler120);
         }
+
+        return result;
     }
 
-    private ClosableIterator<Triple> fixedObjectIterator(Long[] values, SubjectNode subject, PredicateNode predicate) {
-        // test for {s*o}
-        if (ANY_SUBJECT_NODE != subject) {
-            return new TwoFixedIterator(values[2], values[0], longIndex201, tripleFactory, graphHandler201);
-        } else {
-            // test for {**o}.  {*po} should have been picked up above
-            assert ANY_PREDICATE_NODE == predicate;
-            return new OneFixedIterator(values[2], longIndex201, tripleFactory, graphHandler201);
-        }
-    }
-
-    private ClosableIterator<Triple> fixedPredicateIterator(Long[] values, ObjectNode object, SubjectNode subject) {
-        // test for {*po}
-        if (ANY_OBJECT_NODE != object) {
-            return new TwoFixedIterator(values[1], values[2], longIndex120, tripleFactory, graphHandler120);
-        } else {
-            // test for {*p*}.  {sp*} should have been picked up above
-            assert ANY_SUBJECT_NODE == subject;
-            return new OneFixedIterator(values[1], longIndex120, tripleFactory, graphHandler120);
-        }
+    private ClosableIterator<Triple> anySubjectAndPredicateFixedObjectIterator(Long[] values) {
+        // got {**o}
+        return new OneFixedIterator(values[2], longIndex201, tripleFactory, graphHandler201);
     }
 
     public ClosableIterator<Triple> find(Triple triple) throws GraphException {
