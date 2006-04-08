@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
@@ -142,7 +142,8 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
      * @throws IllegalArgumentException Must be created with implementations from
      *                                  the memory package.
      */
-    GraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
+    // TODO (AN) This goes back to package private after factory is complete
+    public GraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
 
         // store the node factory
         factory = newFactory;

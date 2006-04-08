@@ -69,8 +69,7 @@ import java.util.ArrayList;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class SequenceImpl extends ArrayList<ObjectNode>
-        implements Sequence<ObjectNode> {
+public final class SequenceImpl extends ArrayList<ObjectNode> implements Sequence<ObjectNode> {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -91,7 +90,7 @@ public final class SequenceImpl extends ArrayList<ObjectNode>
      * @throws IllegalArgumentException if the given object is not the correct
      *                                  type, ObjectNode.
      */
-    // TODO Possibly dodgy now due to Generics
+    // TODO (AN) Possibly dodgy now due to Generics
     public boolean contains(Object o) {
 //    if (!(o instanceof ObjectNode)) {
 //      throw new IllegalArgumentException("Can only add object nodes");
@@ -104,11 +103,9 @@ public final class SequenceImpl extends ArrayList<ObjectNode>
      * @throws IllegalArgumentException if the given object is not the correct
      *                                  type, Sequence.
      */
-    // TODO Possibly dodgy now due to Generics
     public boolean containsAll(java.util.Collection<?> c) {
         if (!(c instanceof Sequence)) {
-            throw new IllegalArgumentException("Can only add sequences to other " +
-                    "sequences");
+            throw new IllegalArgumentException("Can only add sequences to other sequences");
         }
 
         return super.containsAll(c);
@@ -118,7 +115,7 @@ public final class SequenceImpl extends ArrayList<ObjectNode>
      * @throws IllegalArgumentException if the given object is not the correct
      *                                  type, ObjectNode.
      */
-    // TODO Possibly dodgy now due to Generics
+    // TODO (AN) Possibly dodgy now due to Generics
     public int indexOf(Object o) throws IllegalArgumentException {
 //    if (!(o instanceof ObjectNode)) {
 //      throw new IllegalArgumentException("Can only get Object nodes");
@@ -144,9 +141,8 @@ public final class SequenceImpl extends ArrayList<ObjectNode>
      * @throws IllegalArgumentException if the given object is not the correct
      *                                  type, Sequence.
      */
-    // TODO Possibly dodgy now due to Generics
     public boolean removeAll(java.util.Collection<?> c) throws
-            IllegalArgumentException {
+        IllegalArgumentException {
         if (!(c instanceof Sequence)) {
             throw new IllegalArgumentException("Can only add bags to other bags");
         }
@@ -158,9 +154,8 @@ public final class SequenceImpl extends ArrayList<ObjectNode>
      * @throws IllegalArgumentException if the given object is not the correct
      *                                  type, Sequence.
      */
-    // TODO Possibly dodgy now due to Generics
     public boolean retainAll(java.util.Collection<?> c) throws
-            IllegalArgumentException {
+        IllegalArgumentException {
         if (!(c instanceof Sequence)) {
             throw new IllegalArgumentException("Can only add bags to other bags");
         }
