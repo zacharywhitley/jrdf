@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.mem.operation;
+package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.createMock;
@@ -69,7 +69,6 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.index.operation.mem.ComparisonImpl;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -148,16 +147,16 @@ public class ComparisonImplUnitTest extends TestCase {
         resetGraphMocks();
         setUpEmptyCalls(graph1Empty, graph2Empty);
         replayAssertAndVerify("Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty, areEqual, mockGraph1,
-                mockGraph2);
+            mockGraph2);
     }
 
     private void checkDifferentSizeGraphsAreNotIsomorphic(long graph1Size, long graph2Size, boolean areEqual)
-            throws Exception {
+        throws Exception {
         resetGraphMocks();
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(graph1Size, graph2Size);
         replayAssertAndVerify("Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size, areEqual, mockGraph1,
-                mockGraph2);
+            mockGraph2);
     }
 
     private void checkGraphContent(Triple[] triples1, Triple[] triples2, boolean areEqual) throws Exception {
@@ -166,7 +165,7 @@ public class ComparisonImplUnitTest extends TestCase {
         setUpNumberOfTripleCalls(triples1.length, triples2.length);
         setUpFindAndIteratorCalls(triples1, triples2);
         replayAssertAndVerify("Graph 1 size: " + triples1.length + " Graph 2 size: " + triples2.length, areEqual,
-                mockGraph1, mockGraph2);
+            mockGraph1, mockGraph2);
     }
 
     private void setUpEmptyCalls(boolean graph1Empty, boolean graph2Empty) throws Exception {
@@ -194,12 +193,14 @@ public class ComparisonImplUnitTest extends TestCase {
             mockGraph2.contains(triple1);
             boolean b = triple1.equals(triple2);
             expectLastCall().andReturn(b);
-            if (!b) break;
+            if (!b) {
+                break;
+            }
         }
     }
 
     private void replayAssertAndVerify(String message, boolean areEqual, Graph mockGraph1, Graph mockGraph2)
-            throws GraphException {
+        throws GraphException {
         replay(mockGraph1);
         replay(mockGraph2);
         assertEquals(message, areEqual, comparison.groundedGraphsAreEqual(mockGraph1, mockGraph2));
