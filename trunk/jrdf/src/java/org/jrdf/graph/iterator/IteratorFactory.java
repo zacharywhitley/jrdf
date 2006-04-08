@@ -55,7 +55,7 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem.iterator;
+package org.jrdf.graph.iterator;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;

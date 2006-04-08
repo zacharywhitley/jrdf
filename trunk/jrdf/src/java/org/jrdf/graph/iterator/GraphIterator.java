@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.iterator;
+package org.jrdf.graph.iterator;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;

@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.mem.iterator;
+package org.jrdf.graph.iterator;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
@@ -78,10 +78,9 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
- * An iterator that iterates over a group with a two fixed nodes.
- * Relies on an internal iterator which iterates over all entries in
- * a set, found in a subIndex.
- * <p/>
+ * An iterator that iterates over a group with a single fixed node.
+ * Relies on internal iterators which iterate over all entries in
+ * a submap, and the sets they point to.
  * The thirdIndexIterator is used to indicate the current position.
  * It will always be set to return the next value until it reaches
  * the end of the group.
@@ -90,17 +89,12 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class TwoFixedIterator implements ClosableMemIterator<Triple> {
+public class OneFixedIterator implements ClosableMemIterator<Triple> {
 
     /**
-     * The first fixed item.
+     * The fixed item.
      */
     private final Long first;
-
-    /**
-     * The second fixed item.
-     */
-    private final Long second;
 
     /**
      * Allows access to a particular part of the index.
@@ -113,9 +107,14 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
     private Map<Long, Set<Long>> subIndex;
 
     /**
-     * The subSubIndex of this iterator.  Only needed for initialization and the remove method.
+     * The iterator for the second index.
      */
-    private Set<Long> subGroup;
+    private Iterator<Map.Entry<Long, Set<Long>>> secondIndexIterator;
+
+    /**
+     * The current element for the iterator on the second index.
+     */
+    private Map.Entry<Long, Set<Long>> secondEntry;
 
     /**
      * The iterator for the third index.
@@ -138,54 +137,59 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
     private Long[] currentNodes;
 
     /**
-     * If there are anymore items left
-     */
-    private boolean hasNext;
-
-    /**
      * Constructor.  Sets up the internal iterators.
+     *
+     * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
     // TODO (AN) This goes back to package private after factory is complete
-    public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, TripleFactory newFactory,
+    public OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, TripleFactory newFactory,
         GraphHandler newHandler) {
 
         // store the node factory and other starting data
-        first = fixedFirstNode;
-        second = fixedSecondNode;
-        longIndex = newLongIndex;
-
         factory = newFactory;
         handler = newHandler;
+
+        first = fixedFirstNode;
+        longIndex = newLongIndex;
+
+        // initialise the iterators to empty
+        thirdIndexIterator = null;
+        secondIndexIterator = null;
 
         // find the subIndex from the main index
         subIndex = longIndex.getSubIndex(first);
 
         // check that data exists
         if (null != subIndex) {
-            // now find the set from the sub index map
-            subGroup = subIndex.get(second);
-            if (null != subGroup) {
-                // get an iterator for the set
-                thirdIndexIterator = subGroup.iterator();
-                hasNext = thirdIndexIterator.hasNext();
-            }
+            // now get an iterator to the sub index map
+            secondIndexIterator = subIndex.entrySet().iterator();
+            // check if there is data available - structural constraints say there should be
+            assert secondIndexIterator.hasNext();
         }
     }
 
 
     public boolean hasNext() {
-        return hasNext;
+        // confirm we still have an item iterator, and that it has data available
+        return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
+            null != secondIndexIterator && secondIndexIterator.hasNext();
     }
 
 
     public Triple next() throws NoSuchElementException {
-        if (!hasNext()) {
+        if (null == secondIndexIterator) {
             throw new NoSuchElementException();
         }
-
-        // Get next node.
+        // move to the next position
+        updatePosition();
+        if (null == secondIndexIterator) {
+            throw new NoSuchElementException();
+        }
+        // get the next item
         Long third = thirdIndexIterator.next();
-        hasNext = thirdIndexIterator.hasNext();
+        // construct the triple
+        Long second = secondEntry.getKey();
+        // get back the nodes for these IDs and build the triple
         currentNodes = new Long[]{first, second, third};
         try {
             Node[] triple = handler.createTriple(currentNodes);
@@ -195,8 +199,35 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
         }
     }
 
+
+    /**
+     * Helper method to move the iterators on to the next position.
+     * If there is no next position then {@link #thirdIndexIterator thirdIndexIterator}
+     * will be set to null, telling {@link #hasNext() hasNext} to return
+     * <code>false</code>.
+     */
+    private void updatePosition() {
+        // progress to the next item if needed
+        if (null == thirdIndexIterator || !thirdIndexIterator.hasNext()) {
+            // the current iterator been exhausted
+            if (!secondIndexIterator.hasNext()) {
+                // the subiterator has been exhausted
+                // tell the secondIndexIterator to finish
+                secondIndexIterator = null;
+                return;
+            }
+            // get the next entry of the sub index
+            secondEntry = secondIndexIterator.next();
+            // get an iterator to the next set from the sub index
+            thirdIndexIterator = secondEntry.getValue().iterator();
+            assert thirdIndexIterator.hasNext();
+        }
+    }
+
+
     public void remove() {
-        if (null != currentNodes && null != currentNodes[2]) {
+        if (null != thirdIndexIterator) {
+            // now remove from the other 2 indexes
             try {
                 thirdIndexIterator.remove();
                 handler.remove(currentNodes);
@@ -211,16 +242,19 @@ public class TwoFixedIterator implements ClosableMemIterator<Triple> {
 
     private void cleanIndex() {
         // check if a set was cleaned out
+        Set subGroup = secondEntry.getValue();
         if (subGroup.isEmpty()) {
             // remove the entry for the set
-            subIndex.remove(second);
+            secondIndexIterator.remove();
             // check if a subindex was cleaned out
             if (subIndex.isEmpty()) {
                 // remove the subindex
                 longIndex.removeSubIndex(first);
+                subIndex = null;
             }
         }
     }
+
 
     public boolean close() {
         return true;
