@@ -69,17 +69,19 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.graph.index.mem.LongIndexMem;
-import org.jrdf.graph.iterator.ClosableMemIterator;
-import org.jrdf.graph.iterator.EmptyClosableIterator;
-import org.jrdf.graph.iterator.GraphIterator;
-import org.jrdf.graph.iterator.OneFixedIterator;
-import org.jrdf.graph.iterator.ThreeFixedIterator;
-import org.jrdf.graph.iterator.TwoFixedIterator;
+import org.jrdf.graph.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
+import org.jrdf.graph.mem.iterator.GraphIterator;
+import org.jrdf.graph.mem.iterator.OneFixedIterator;
+import org.jrdf.graph.mem.iterator.ThreeFixedIterator;
+import org.jrdf.graph.mem.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
@@ -154,6 +156,11 @@ public class GraphImpl implements Graph, Serializable {
      */
     private transient GraphHandler120 graphHandler120;
 
+    /**
+     * A way to create iterators.
+     */
+    private transient IteratorFactoryImpl iteratorFactory;
+
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
     private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
@@ -196,6 +203,9 @@ public class GraphImpl implements Graph, Serializable {
         graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory);
         graphHandler201 = new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory);
         graphHandler120 = new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory);
+
+        iteratorFactory = new IteratorFactoryImpl(new LongIndex[] {longIndex012, longIndex120, longIndex201},
+            new GraphHandler[] {graphHandler012, graphHandler120, graphHandler201}, tripleFactory);
     }
 
     public boolean contains(Triple triple) throws GraphException {

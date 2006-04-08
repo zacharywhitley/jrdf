@@ -1,13 +1,13 @@
 /*
- * $Header: /cvsroot/jrdf/jrdf/src/java/org/jrdf/query/Answer.java,v 1.6 2005/10/20 11:32:32 tomadams Exp $
- * $Revision: 1.6 $
- * $Date: 2005/10/20 11:32:32 $
+ * $Header$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,30 +55,53 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.graph.mem.iterator;
 
-
-package org.jrdf.graph.iterator;
-
-import org.jrdf.graph.index.mem.GraphHandler012;
-import org.jrdf.graph.index.mem.GraphHandler120;
-import org.jrdf.graph.index.mem.GraphHandler201;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.index.GraphHandler;
+import org.jrdf.graph.index.LongIndex;
 
 /**
- * An iterator that allows you to determine if an iterator comes from the in memory graph.
+ * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
  *
  * @author Andrew Newman
- * @version $Revision: 1.1 $
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public interface ClosableMemIterator<Triple> extends ClosableIterator<Triple> {
+public class IteratorFactoryImpl implements IteratorFactory {
+    private LongIndex[] longIndexes;
+    private GraphHandler[] graphHandlers;
+    private TripleFactory tripleFactory;
 
-    /**
-     * Return true if this iterator contains any of the handlers.
-     *
-     * @param handler012 the 012 handler
-     * @param handler201 the 201 handler
-     * @param handler120 the 120 handler
-     * @return true if this iterator contains any of the given handlers.
-     */
-    boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120);
+    public IteratorFactoryImpl(LongIndex[] longIndexes, GraphHandler[] graphHandlers, TripleFactory tripleFactory) {
+        this.longIndexes = longIndexes;
+        this.graphHandlers = graphHandlers;
+        this.tripleFactory = tripleFactory;
+    }
+
+    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public ClosableMemIterator<Triple> newGraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex,
+        TripleFactory newFactory, GraphHandler newHandler) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode,
+        LongIndex newLongIndex, TripleFactory newFactory, GraphHandler newHandler) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    // TODO (AN) Modify three fixed iterator to fit new interface here.
+    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex,
+        TripleFactory factory, GraphHandler newHandler) {
+
+        //return new ThreeFixedIterator(newNodes, newLongIndex, factory, newHandler);
+        return null;
+    }
 }

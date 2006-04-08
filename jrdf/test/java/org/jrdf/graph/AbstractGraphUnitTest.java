@@ -386,26 +386,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertTrue(graph.isEmpty());
         assertEquals(0, graph.getNumberOfTriples());
 
-        // Re-add 3 triples.
-        addTriplesToGraph();
-
-        // Test removing using the iterator from a find.
-        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        graph.remove(iterator);
-        assertTrue(graph.isEmpty());
-
-        // Re-add 3 triples
-        addTriplesToGraph();
-        iterator = graph.find(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        graph.remove(iterator);
-        assertEquals(2, graph.getNumberOfTriples());
-
-        // Re-add 3 triples
-        addTriplesToGraph();
-        iterator = graph.find(blank1, ANY_PREDICATE_NODE, blank2);
-        graph.remove(iterator);
-        assertEquals(1, graph.getNumberOfTriples());
-
         // Try to add nulls
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
@@ -442,6 +422,22 @@ public abstract class AbstractGraphUnitTest extends TestCase {
                         graph.remove(ref1, ref1, ANY_OBJECT_NODE);
                     }
                 });
+    }
+
+    public void testRemoveIterator() throws Exception {
+        // Test removing using the iterator from a find.
+        checkRemoveIterator(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 0);
+        checkRemoveIterator(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
+        checkRemoveIterator(blank1, ANY_PREDICATE_NODE, blank2, 1);
+        checkRemoveIterator(ref1, ref2, l2, 2);
+    }
+
+    private void checkRemoveIterator(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
+        int expectedNumberOfTriples) throws GraphException {
+        addTriplesToGraph();
+        ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode);
+        graph.remove(iterator);
+        assertEquals(expectedNumberOfTriples, graph.getNumberOfTriples());
     }
 
     /**
@@ -689,7 +685,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      *                   fail.
      */
     public void testIteration() throws Exception {
-
         GraphElementFactory factory = graph.getElementFactory();
 
         //create nodes
@@ -749,120 +744,59 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     /**
      * Tests iterative removal.
      *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
-     */
-    public void testIterativeRemoval() throws Exception {
-        // add some test data
-        addTriplesToGraph();
-        addFullTriplesToGraph();
-
-        // check that all is well
-        assertFalse(graph.isEmpty());
-        assertEquals(6, graph.getNumberOfTriples());
-
-        // get an iterator for the blank2,ref1 elements
-        ClosableIterator ci = graph.find(blank2, ref1, ANY_OBJECT_NODE);
-        checkInvalidRemove(ci);
-
-        // remove the first element
-        assertTrue(ci.hasNext());
-        ci.next();
-        ci.remove();
-        assertEquals(5, graph.getNumberOfTriples());
-
-        // remove the second element
-        assertTrue(ci.hasNext());
-        ci.next();
-        ci.remove();
-        assertEquals(4, graph.getNumberOfTriples());
-
-        assertFalse(ci.hasNext());
-
-        // get an iterator for the blank1 elements
-        ci = graph.find(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        checkInvalidRemove(ci);
-
-        // remove the first element
-        assertTrue(ci.hasNext());
-        ci.next();
-        ci.remove();
-        assertEquals(3, graph.getNumberOfTriples());
-
-        // remove the second element
-        assertTrue(ci.hasNext());
-        ci.next();
-        ci.remove();
-        assertEquals(2, graph.getNumberOfTriples());
-
-        assertFalse(ci.hasNext());
-
-        // get an iterator for the ref1, ref2, l2 element
-        ci = graph.find(ref1, ref2, l2);
-        checkInvalidRemove(ci);
-
-        // remove the element
-        assertTrue(ci.hasNext());
-        ci.next();
-        ci.remove();
-        assertEquals(1, graph.getNumberOfTriples());
-
-        assertFalse(ci.hasNext());
-
-        // get an iterator for the final element
-        ci = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        checkInvalidRemove(ci);
-
-        // remove the element
-        assertTrue(ci.hasNext());
-        ci.next();
-        ci.remove();
-        assertEquals(0, graph.getNumberOfTriples());
-        assertTrue(graph.isEmpty());
-
-        assertFalse(ci.hasNext());
-        ci.close();
-
-        // check that we can't still remove things
-        try {
-            graph.remove(ref2, ref2, ref2);
-            assertTrue(false);
-        }
-        catch (GraphException e) { /* no-op */
-        }
-
-    }
-
-    /**
-     * Tests full iterative removal.
-     *
      * @throws Exception A generic exception - this should cause the tests to fail.
      */
-    public void testFullIterativeRemoval() throws Exception {
+    public void testIterativeRemoval() throws Exception {
         // TODO AN Add a test for fulliterative add.
         // add some test data
+        checkFullIteratorRemoval(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 6);
+        checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
+        checkFullIteratorRemoval(blank2, ref1, ANY_OBJECT_NODE, 2);
+        checkFullIteratorRemoval(ref1, ref2, l2, 1);
+    }
+
+    private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
+        int expectedFoundTriples)
+        throws GraphException, TripleFactoryException {
+
         addTriplesToGraph();
         addFullTriplesToGraph();
+        int numberOfTriplesInGraph = 6;
 
         // check that all is well
         assertFalse(graph.isEmpty());
-        assertEquals(6, graph.getNumberOfTriples());
+        assertEquals(numberOfTriplesInGraph, graph.getNumberOfTriples());
 
         // get an iterator for all the elements
-        ClosableIterator ci = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        for (int i = 5; 0 <= i; i--) {
+        ClosableIterator ci = graph.find(subjectNode, predicateNode, objectNode);
+
+        // Check that it throws an exception before hasNext is called.
+        checkInvalidRemove(ci);
+
+        for (int i = expectedFoundTriples-1; 0 <= i; i--) {
             // remove the element
             assertTrue(ci.hasNext());
             ci.next();
             ci.remove();
-            assertEquals(i, graph.getNumberOfTriples());
+            assertEquals(--numberOfTriplesInGraph, graph.getNumberOfTriples());
         }
 
-        assertTrue(graph.isEmpty());
+        if (numberOfTriplesInGraph == 0) {
+            assertTrue(graph.isEmpty());
+        }
 
         assertFalse(ci.hasNext());
-
         ci.close();
+
+        if (numberOfTriplesInGraph == 0) {
+            // check that we can't still remove things
+            try {
+                graph.remove(ref2, ref2, ref2);
+                assertTrue(false);
+            }
+            catch (GraphException e) { /* no-op */
+            }
+        }
     }
 
     private void checkInvalidRemove(ClosableIterator ci) {

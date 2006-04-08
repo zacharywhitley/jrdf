@@ -55,7 +55,7 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.iterator;
+package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
@@ -82,7 +82,6 @@ public interface IteratorFactory {
 
     ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex,
         TripleFactory newFactory, GraphHandler newHandler);
-
 
     // TODO (AN) Modify three fixed iterator to fit new interface here.
     ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes, LongIndex newLongIndex, TripleFactory factory,
