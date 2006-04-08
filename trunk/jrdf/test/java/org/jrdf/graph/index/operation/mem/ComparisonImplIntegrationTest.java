@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.mem.operation;
+package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -64,7 +64,6 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.index.operation.mem.ComparisonImpl;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.graph.operation.Comparison;
 
@@ -97,7 +96,7 @@ public class ComparisonImplIntegrationTest extends TestCase {
     }
 
     private void addTriple(GraphImpl graph, URI uri) throws GraphElementFactoryException, TripleFactoryException,
-            GraphException {
+        GraphException {
         URIReference resource = graph.getElementFactory().createResource(uri);
         Triple triple = graph.getTripleFactory().createTriple(resource, resource, resource);
         graph.add(triple);
