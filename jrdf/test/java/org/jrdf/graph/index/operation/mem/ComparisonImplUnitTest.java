@@ -120,9 +120,7 @@ public class ComparisonImplUnitTest extends TestCase {
         verify(mockGraph1);
     }
 
-    /**
-     * test
-     */
+
     public void testEmptyGraphEquality() throws Exception {
         checkEmptyGroundedGraphs(GRAPH_EMPTY, GRAPH_EMPTY, ARE_EQUAL);
         checkEmptyGroundedGraphs(GRAPH_CONTAINS_NODES, GRAPH_EMPTY, ARE_UNEQUAL);
