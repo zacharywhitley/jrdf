@@ -57,49 +57,22 @@
  */
 package org.jrdf.graph.mem.iterator;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.index.GraphHandler;
-import org.jrdf.graph.index.LongIndex;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+
+import java.lang.reflect.Modifier;
 
 /**
- * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
+ * Test the low level properties of EmptyClosableIterator.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public final class IteratorFactoryImpl implements IteratorFactory {
-    private LongIndex[] longIndexes;
-    private GraphHandler[] graphHandlers;
-    private TripleFactory tripleFactory;
+public class EmptyClosableIteratorUnitTest extends TestCase {
 
-    public IteratorFactoryImpl(LongIndex[] longIndexes, GraphHandler[] graphHandlers, TripleFactory tripleFactory) {
-        this.longIndexes = longIndexes;
-        this.graphHandlers = graphHandlers;
-        this.tripleFactory = tripleFactory;
-    }
-
-    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
-        return new EmptyClosableIterator();
-    }
-
-    public ClosableMemIterator<Triple> newGraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
-        return new GraphIterator(tripleFactory, newHandler);
-    }
-
-    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex,
-        TripleFactory newFactory, GraphHandler newHandler) {
-        return new OneFixedIterator(fixedFirstNode, newLongIndex, tripleFactory, newHandler);
-    }
-
-    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode,
-        LongIndex newLongIndex, TripleFactory newFactory, GraphHandler newHandler) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, newLongIndex, tripleFactory, newHandler);
-    }
-
-    // TODO (AN) Modify three fixed iterator to fit new interface here.
-    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex,
-        GraphHandler newHandler) {
-        return new ThreeFixedIterator(newNodes, newLongIndex, tripleFactory, newHandler);
+    public void testClassProperties() throws Exception {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
+            EmptyClosableIterator.class);
+        ClassPropertiesTestUtil.checkConstructor(EmptyClosableIterator.class, Modifier.PUBLIC);
     }
 }
