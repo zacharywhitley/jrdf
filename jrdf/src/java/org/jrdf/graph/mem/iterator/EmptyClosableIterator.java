@@ -71,7 +71,7 @@ import java.util.NoSuchElementException;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class EmptyClosableIterator implements ClosableMemIterator<Triple> {
+public final class EmptyClosableIterator implements ClosableMemIterator<Triple> {
 
     // TODO (AN) This goes back to package private after factory is complete
     public EmptyClosableIterator() {

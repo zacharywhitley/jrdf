@@ -90,7 +90,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class TwoFixedIterator implements ClosableMemIterator<Triple> {
+public final class TwoFixedIterator implements ClosableMemIterator<Triple> {
 
     /**
      * The first fixed item.

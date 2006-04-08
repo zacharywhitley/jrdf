@@ -89,7 +89,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class OneFixedIterator implements ClosableMemIterator<Triple> {
+public final class OneFixedIterator implements ClosableMemIterator<Triple> {
 
     /**
      * The fixed item.

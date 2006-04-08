@@ -70,8 +70,6 @@ import org.jrdf.graph.index.LongIndex;
  */
 public interface IteratorFactory {
     // TODO (AN) Comeback and javadoc.
-    // TODO (AN) Constructor will be something like: longIndexes (1,2, 3), tripleFactory, graphHandler (1, 2, 3).
-
     ClosableMemIterator<Triple> newEmptyClosableIterator();
 
     ClosableMemIterator<Triple> newGraphIterator(TripleFactory newFactory, GraphHandler newHandler);
@@ -83,7 +81,6 @@ public interface IteratorFactory {
     ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex,
         TripleFactory newFactory, GraphHandler newHandler);
 
-    // TODO (AN) Modify three fixed iterator to fit new interface here.
-    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes, LongIndex newLongIndex, TripleFactory factory,
+    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes, LongIndex newLongIndex,
         GraphHandler newHandler);
 }
