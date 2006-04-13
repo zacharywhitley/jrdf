@@ -92,7 +92,7 @@ public final class SerializationIntegrationTest extends TestCase {
     private static final Class<Vocabulary> PRODUCTION_CLASS = Vocabulary.class;
     private static final String DOT = ".";
     private static final MarkedAsSerializableClassFilter FILTER_MARKED_AS_SERIALIZABLE =
-            new MarkedAsSerializableClassFilter();
+        new MarkedAsSerializableClassFilter();
 
     public void testSerializationClaims() {
         File packageRoot = getLocation(PATH_ROOT);
@@ -124,18 +124,21 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(NullaryTuple.class);
         excludedClasses.add(ConstraintExpression.AllConstraintExpression.class);  // not sure why this doesn't work
         excludedClasses
-                .add(DefaultQuery.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
+            .add(DefaultQuery.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
         excludedClasses.add(DefaultVariable.class); // implement equals() & hashCode()
         return excludedClasses;
     }
 
     // FIXME TJA: Try to remove unchecked cast below.
+    @SuppressWarnings("unchecked")
     private Collection<Class<? extends Serializable>> getSerializableClasses(File packageRoot,
-                                                                             Collection<File> classes) {
+        Collection<File> classes) {
         Collection<Class<? extends Serializable>> serializables = new ArrayList<Class<? extends Serializable>>();
         for (File file : classes) {
             Class<?> cls = getClass(packageRoot, file);
-            if (isMarkedAsSerializable(cls)) serializables.add((Class<? extends Serializable>) cls);
+            if (isMarkedAsSerializable(cls)) {
+                serializables.add((Class<? extends Serializable>) cls);
+            }
         }
         return serializables;
     }
@@ -168,7 +171,9 @@ public final class SerializationIntegrationTest extends TestCase {
 
     private String replaceFileSeperatorsWithDots(String path) {
         String name = path.replaceAll(File.separator, DOT);
-        if (name.startsWith(DOT)) name = name.substring(1);
+        if (name.startsWith(DOT)) {
+            name = name.substring(1);
+        }
         return name;
     }
 
