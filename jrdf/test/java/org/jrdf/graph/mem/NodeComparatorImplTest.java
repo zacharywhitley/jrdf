@@ -80,8 +80,11 @@ import java.util.Comparator;
  */
 public class NodeComparatorImplTest extends TestCase {
     private static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
+    private static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
     private static final BlankNode BNODE_1 = new BlankNodeImpl(1l, "a");
-    private static final Literal LITERAL_1 = new LiteralImpl("foo");
+    private static final BlankNode BNODE_2 = new BlankNodeImpl(2l, "b");
+    private static final Literal LITERAL_1 = new LiteralImpl("bar");
+    private static final Literal LITERAL_2 = new LiteralImpl("foo");
     private static final String STRING_1 = "string";
     private static final String STRING_2 = "string2";
     private static final int EQUAL = 0;
@@ -128,7 +131,21 @@ public class NodeComparatorImplTest extends TestCase {
     }
 
     public void testBlankNodeComparison() {
+        assertEquals(BEFORE, nodeComparator.compare(BNODE_1, BNODE_2));
+        assertEquals(AFTER, nodeComparator.compare(BNODE_2, BNODE_1));
+        assertEquals(EQUAL, nodeComparator.compare(BNODE_2, new BlankNodeImpl(2l, "b")));
+    }
 
+    public void testURIComparisonByString() {
+        assertEquals(BEFORE, nodeComparator.compare(URI_1, URI_2));
+        assertEquals(AFTER, nodeComparator.compare(URI_2, URI_1));
+        assertEquals(EQUAL, nodeComparator.compare(URI_2, new URIReferenceImpl(RDF.BAG, 2l)));
+    }
+
+    public void testLiteralComparisonByString() {
+        assertEquals(BEFORE, nodeComparator.compare(LITERAL_1, LITERAL_2));
+        assertEquals(AFTER, nodeComparator.compare(LITERAL_2, LITERAL_1));
+        assertEquals(EQUAL, nodeComparator.compare(LITERAL_2, new LiteralImpl("foo")));
     }
 
     private void checkIllegalArguments(final NodeComparator nodeComparator, final Object obj1, final Object obj2) {

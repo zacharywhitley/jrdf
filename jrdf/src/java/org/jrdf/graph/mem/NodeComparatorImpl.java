@@ -71,25 +71,31 @@ import org.jrdf.graph.URIReference;
  */
 public final class NodeComparatorImpl implements NodeComparator {
 
-    public int compare(Object o, Object o1) {
-        isNode(o);
-        isNode(o1);
+    public int compare(Object o1, Object o2) {
+        checkIsNode(o1);
+        checkIsNode(o2);
 
-        NodeType nodeType1 = getNodeType(o.getClass());
-        NodeType nodeType2 = getNodeType(o1.getClass());
+        NodeType nodeType1 = getNodeType(o1.getClass());
+        NodeType nodeType2 = getNodeType(o2.getClass());
 
         if (nodesDifferentType(nodeType1, nodeType2)) {
             return compareDifferentNodeTypes(nodeType1, nodeType2);
         } else {
-            if (o == o1) {
+            if (o1 == o2) {
                 return 0;
+            } else if (nodeType1.equals(NodeType.BLANK_NODE)) {
+                return compareBlankNodes((BlankNode) o1, (BlankNode) o2);
+            } else if (nodeType1.equals(NodeType.URI_REFERENCE)) {
+                return compareByString(o1.toString(), o2.toString());
+            } else if (nodeType1.equals(NodeType.LITERAL)) {
+                return compareByString(o1.toString(), o2.toString());
             }
-            return 1;
+            throw new IllegalArgumentException("Could not compare: " + o1.getClass() + " and " + o2.getClass());
         }
     }
 
-    private int compareDifferentNodeTypes(NodeType nodeType1,
-        NodeType nodeType2) {
+    // TODO (AN) Move to different class - NodeTypeComparator
+    private int compareDifferentNodeTypes(NodeType nodeType1, NodeType nodeType2) {
         int result = 0;
         if (nodeType1.isBlankNode()) {
             result = -1;
@@ -99,6 +105,40 @@ public final class NodeComparatorImpl implements NodeComparator {
             result = 1;
         } else if (nodeType1.isLiteralNode()) {
             result = 1;
+        }
+        return result;
+    }
+
+    // TODO (AN) Move to different class - BNodeComparator
+    private int compareBlankNodes(BlankNode blankNode1, BlankNode blankNode2) {
+        int result;
+
+        if ((blankNode1 instanceof MemNode) && (blankNode2 instanceof MemNode)) {
+            result = compareByMemNode((MemNode) blankNode1, (MemNode) blankNode2);
+        } else {
+            result = compareByString(blankNode1.toString(), blankNode2.toString());
+        }
+        return result;
+    }
+
+    // TODO (AN) Move to different class - BNodeComparator
+    private int compareByMemNode(MemNode memNode1, MemNode memNode2) {
+        int result = 0;
+        if (memNode1.getId() > memNode2.getId()) {
+            result = 1;
+        } else if (memNode1.getId() < memNode2.getId()) {
+            result = -1;
+        }
+        return result;
+    }
+
+    // TODO (AN) Move to different class - StringComparator
+    private int compareByString(String str1, String str2) {
+        int result = 0;
+        if (str1.compareTo(str2) > 0) {
+            result = 1;
+        } else if (str1.compareTo(str2) < 0) {
+            result = -1;
         }
         return result;
     }
@@ -121,7 +161,7 @@ public final class NodeComparatorImpl implements NodeComparator {
         }
     }
 
-    private void isNode(Object o) {
+    private void checkIsNode(Object o) {
         if (!(Node.class.isAssignableFrom(o.getClass()))) {
             throw new ClassCastException(o.getClass() + " is not a JRDF Node.");
         }
