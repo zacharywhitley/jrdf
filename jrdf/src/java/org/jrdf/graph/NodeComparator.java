@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,87 +55,15 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.graph;
 
-package org.jrdf.graph.mem;
-
-import org.jrdf.graph.Container;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Comparator;
 
 /**
- * The base class for the implementation of Bag and Alternative.
+ * A NodeComparator provides a comparison between nodes.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public abstract class AbstractUnorderedContainer<ObjectNode> implements Container<ObjectNode> {
-
-    /**
-     * The hashmap containing the elements.
-     */
-    protected Map<Long, ObjectNode> elements = new HashMap<Long, ObjectNode>();
-
-    /**
-     * Counter used to generate keys to add to the hashmap.
-     */
-    protected long key;
-
-    public int size() {
-        return elements.values().size();
-    }
-
-    public boolean isEmpty() {
-        return elements.values().isEmpty();
-    }
-
-    public boolean contains(Object o) {
-        return elements.values().contains(o);
-    }
-
-    public Iterator<ObjectNode> iterator() {
-        return elements.values().iterator();
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public ObjectNode[] toArray() {
-        return (ObjectNode[]) elements.values().toArray();
-    }
-
-    public <ObjectNode>ObjectNode[] toArray(ObjectNode[] a) {
-        return elements.values().toArray(a);
-    }
-
-    public boolean add(ObjectNode o) {
-        elements.put(key++, o);
-        return true;
-    }
-
-    public boolean remove(Object o) {
-        Iterator iter = elements.entrySet().iterator();
-        boolean found = false;
-
-        // Removes the first entry in the map that matches the given object.
-        while (!found && iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            if (o.equals(entry.getValue())) {
-                elements.remove(o);
-                found = true;
-            }
-        }
-
-        return found;
-    }
-
-    public void clear() {
-        key = 0L;
-        elements.clear();
-    }
-
-    public int hashCode() {
-        return elements.hashCode();
-    }
-
-    public abstract boolean equals(Object o);
+public interface NodeComparator extends Comparator {
 }

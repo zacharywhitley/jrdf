@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,87 +55,75 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Container;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.URIReference;
 
 /**
- * The base class for the implementation of Bag and Alternative.
+ * Stuff goes in here.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public abstract class AbstractUnorderedContainer<ObjectNode> implements Container<ObjectNode> {
+public final class NodeComparatorImpl implements NodeComparator {
 
-    /**
-     * The hashmap containing the elements.
-     */
-    protected Map<Long, ObjectNode> elements = new HashMap<Long, ObjectNode>();
+    public int compare(Object o, Object o1) {
+        isNode(o);
+        isNode(o1);
 
-    /**
-     * Counter used to generate keys to add to the hashmap.
-     */
-    protected long key;
+        NodeType nodeType1 = getNodeType(o.getClass());
+        NodeType nodeType2 = getNodeType(o1.getClass());
 
-    public int size() {
-        return elements.values().size();
-    }
-
-    public boolean isEmpty() {
-        return elements.values().isEmpty();
-    }
-
-    public boolean contains(Object o) {
-        return elements.values().contains(o);
-    }
-
-    public Iterator<ObjectNode> iterator() {
-        return elements.values().iterator();
-    }
-
-    @SuppressWarnings({"unchecked"})
-    public ObjectNode[] toArray() {
-        return (ObjectNode[]) elements.values().toArray();
-    }
-
-    public <ObjectNode>ObjectNode[] toArray(ObjectNode[] a) {
-        return elements.values().toArray(a);
-    }
-
-    public boolean add(ObjectNode o) {
-        elements.put(key++, o);
-        return true;
-    }
-
-    public boolean remove(Object o) {
-        Iterator iter = elements.entrySet().iterator();
-        boolean found = false;
-
-        // Removes the first entry in the map that matches the given object.
-        while (!found && iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            if (o.equals(entry.getValue())) {
-                elements.remove(o);
-                found = true;
+        if (nodesDifferentType(nodeType1, nodeType2)) {
+            return compareDifferentNodeTypes(nodeType1, nodeType2);
+        } else {
+            if (o == o1) {
+                return 0;
             }
+            return 1;
         }
-
-        return found;
     }
 
-    public void clear() {
-        key = 0L;
-        elements.clear();
+    private int compareDifferentNodeTypes(NodeType nodeType1,
+        NodeType nodeType2) {
+        int result = 0;
+        if (nodeType1.isBlankNode()) {
+            result = -1;
+        } else if (nodeType1.isURIReferenceNode() && nodeType2.isLiteralNode()) {
+            result = -1;
+        } else if (nodeType1.isURIReferenceNode() && nodeType2.isBlankNode()) {
+            result = 1;
+        } else if (nodeType1.isLiteralNode()) {
+            result = 1;
+        }
+        return result;
     }
 
-    public int hashCode() {
-        return elements.hashCode();
+    // TODO (AN) Move to different class.
+    private boolean nodesDifferentType(NodeType nodeType1, NodeType nodeType2) {
+        return !nodeType1.equals(nodeType2);
     }
 
-    public abstract boolean equals(Object o);
+    // TODO (AN) Move to different class.
+    private NodeType getNodeType(Class nodeClass) {
+        if (BlankNode.class.isAssignableFrom(nodeClass)) {
+            return NodeType.BLANK_NODE;
+        } else if (URIReference.class.isAssignableFrom(nodeClass)) {
+            return NodeType.URI_REFERENCE;
+        } else if (Literal.class.isAssignableFrom(nodeClass)) {
+            return NodeType.LITERAL;
+        } else {
+            throw new IllegalArgumentException("Illegal node: " + nodeClass);
+        }
+    }
+
+    private void isNode(Object o) {
+        if (!(Node.class.isAssignableFrom(o.getClass()))) {
+            throw new ClassCastException(o.getClass() + " is not a JRDF Node.");
+        }
+    }
 }

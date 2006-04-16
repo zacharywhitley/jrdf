@@ -415,7 +415,7 @@ public class GraphImpl implements Graph, Serializable {
         longIndex201.add(values[2], values[0], values[1]);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked"})
     public void remove(Iterator triples) throws GraphException {
 
         if (triples instanceof ClosableMemIterator) {
