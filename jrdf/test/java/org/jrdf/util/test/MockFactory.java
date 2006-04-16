@@ -57,11 +57,54 @@
  */
 package org.jrdf.util.test;
 
+import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Stuff goes in here.
+ * A utility that allows you to treat a collection of MockControl.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 public class MockFactory {
+    private Map<IMocksControl, IMocksControl> controls = new HashMap<IMocksControl, IMocksControl>();
+
+    public IMocksControl createControl() {
+        IMocksControl control = EasyMock.createControl();
+        controls.put(control, control);
+        return control;
+    }
+
+    public IMocksControl createNiceControl() {
+        IMocksControl niceControl = EasyMock.createNiceControl();
+        controls.put(niceControl, niceControl);
+        return niceControl;
+    }
+
+    public IMocksControl createStrictControl() {
+        IMocksControl strictControl = EasyMock.createStrictControl();
+        controls.put(strictControl, strictControl);
+        return strictControl;
+    }
+
+    public void replay() {
+        for (IMocksControl control : controls.values()) {
+            control.replay();
+        }
+    }
+
+    public void verify() {
+        for (IMocksControl control : controls.values()) {
+            control.verify();
+        }
+    }
+
+    public void reset() {
+        for (IMocksControl control : controls.values()) {
+            control.reset();
+        }
+    }
 }
