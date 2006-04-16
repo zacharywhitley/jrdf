@@ -73,7 +73,7 @@ import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
 /**
- * Test for the implementation of NodeComparator.
+ * Test for the implementation of NodeComparatorImpl.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
