@@ -79,6 +79,7 @@ public final class ClassPropertiesTestUtil {
 
     // FIXME TJA: This needs genericising ;)
     public static final Class[] NO_ARG_CONSTRUCTOR = (Class[]) null;
+    public static final int NO_MODIFIER = 0;
 
     private ClassPropertiesTestUtil() {
     }
@@ -183,8 +184,9 @@ public final class ClassPropertiesTestUtil {
         Constructor constructor = tryGetConstructor(cls, parameters);
         Assert.assertTrue(null != constructor);
         int constructorModifier = constructor.getModifiers();
-        Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) +
-            " but was: " + Modifier.toString(constructorModifier), expectedModifier == constructorModifier);
+        Assert.assertTrue("Expected modifier: " + Modifier.toString(expectedModifier) + "(" + expectedModifier + ")" +
+            " but was: " + Modifier.toString(constructorModifier) + "(" + constructorModifier + ")",
+            expectedModifier == constructorModifier);
     }
 
     public static Constructor tryGetConstructor(Class<?> cls, Class... parameters) {

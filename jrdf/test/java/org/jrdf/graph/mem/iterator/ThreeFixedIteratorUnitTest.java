@@ -62,8 +62,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-
-import java.lang.reflect.Modifier;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 
 /**
  * Test the low level properties of ThreeFixedIterator.
@@ -76,7 +75,7 @@ public class ThreeFixedIteratorUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
             ThreeFixedIterator.class);
-        ClassPropertiesTestUtil.checkConstructor(ThreeFixedIterator.class, Modifier.PUBLIC, Long[].class,
+        ClassPropertiesTestUtil.checkConstructor(ThreeFixedIterator.class, NO_MODIFIER, Long[].class,
             LongIndex.class, TripleFactory.class, GraphHandler.class);
     }
 }

@@ -83,23 +83,20 @@ public final class IteratorFactoryImpl implements IteratorFactory {
         return new EmptyClosableIterator();
     }
 
-    public ClosableMemIterator<Triple> newGraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
-        return new GraphIterator(tripleFactory, newHandler);
+    public ClosableMemIterator<Triple> newGraphIterator() {
+        return new GraphIterator(tripleFactory, graphHandlers[0]);
     }
 
-    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex,
-        TripleFactory newFactory, GraphHandler newHandler) {
-        return new OneFixedIterator(fixedFirstNode, newLongIndex, tripleFactory, newHandler);
+    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
+        return new OneFixedIterator(fixedFirstNode, longIndexes[index], tripleFactory, graphHandlers[index]);
     }
 
-    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode,
-        LongIndex newLongIndex, TripleFactory newFactory, GraphHandler newHandler) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, newLongIndex, tripleFactory, newHandler);
+    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
+        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], tripleFactory,
+            graphHandlers[index]);
     }
 
-    // TODO (AN) Modify three fixed iterator to fit new interface here.
-    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex,
-        GraphHandler newHandler) {
-        return new ThreeFixedIterator(newNodes, newLongIndex, tripleFactory, newHandler);
+    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
+        return new ThreeFixedIterator(newNodes, longIndexes[0], tripleFactory, graphHandlers[0]);
     }
 }

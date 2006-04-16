@@ -146,7 +146,7 @@ public final class TwoFixedIterator implements ClosableMemIterator<Triple> {
      * Constructor.  Sets up the internal iterators.
      */
     // TODO (AN) This goes back to package private after factory is complete
-    public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, TripleFactory newFactory,
+    TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, TripleFactory newFactory,
         GraphHandler newHandler) {
 
         // store the node factory and other starting data

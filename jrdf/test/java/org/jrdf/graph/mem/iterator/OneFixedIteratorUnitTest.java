@@ -61,9 +61,9 @@ import junit.framework.TestCase;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-
-import java.lang.reflect.Modifier;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
 /**
  * Test the low level properties of OneFixedIterator.
@@ -74,9 +74,9 @@ import java.lang.reflect.Modifier;
 public class OneFixedIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
+        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
             OneFixedIterator.class);
-        ClassPropertiesTestUtil.checkConstructor(OneFixedIterator.class, Modifier.PUBLIC, Long.class, LongIndex.class,
-            TripleFactory.class, GraphHandler.class);
+        checkConstructor(OneFixedIterator.class, NO_MODIFIER, Long.class, LongIndex.class, TripleFactory.class,
+            GraphHandler.class);
     }
 }
