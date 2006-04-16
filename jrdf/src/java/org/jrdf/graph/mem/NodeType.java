@@ -8,6 +8,9 @@ package org.jrdf.graph.mem;
  */
 // TODO (AN) Test drive me.
 public enum NodeType {
+    /**
+     * The order of the three different types of RDF nodes.
+     */
     BLANK_NODE, URI_REFERENCE, LITERAL;
 
     public boolean isBlankNode() {

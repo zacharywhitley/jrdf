@@ -75,11 +75,11 @@ import org.jrdf.sparql.parser.node.TQuote;
 import org.jrdf.sparql.parser.node.TResource;
 import org.jrdf.sparql.parser.node.TText;
 import org.jrdf.sparql.parser.node.TVariableprefix;
-import org.jrdf.sparql.parser.node.X2PStrand;
-import org.jrdf.sparql.parser.node.XPStrand;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utilities for creating SableCC nodes.
@@ -124,8 +124,9 @@ public final class SableCcNodeTestUtil {
 
     public static ALiteral createLiteralNode(String literalText) {
         PStrand text = new AUnescapedStrand(new TText(literalText));
-        XPStrand strand = new X2PStrand(text);
-        return new ALiteral(createQuoteNode(), strand, createQuoteNode());
+        List<PStrand> strandList = new ArrayList<PStrand>();
+        strandList.add(text);
+        return new ALiteral(createQuoteNode(), strandList, createQuoteNode());
     }
 
     public static TQuote createQuoteNode() {

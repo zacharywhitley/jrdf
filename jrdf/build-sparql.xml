@@ -3,10 +3,6 @@
 
     <import file="build-setup.xml"/>
 
-    <path id="sablecc.class.path">
-        <pathelement location="${lib.dir}/sablecc-2.18.2.jar"/>
-    </path>
-
     <target name="gen-sparql-parser" depends="-sparql-parser-uptodate" unless="sparql-parser-uptodate">
         <sablecc.macro grammar.file="sparql.grammar"/>
     </target>

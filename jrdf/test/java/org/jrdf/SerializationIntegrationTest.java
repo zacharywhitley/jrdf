@@ -130,7 +130,7 @@ public final class SerializationIntegrationTest extends TestCase {
     }
 
     // FIXME TJA: Try to remove unchecked cast below.
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     private Collection<Class<? extends Serializable>> getSerializableClasses(File packageRoot,
         Collection<File> classes) {
         Collection<Class<? extends Serializable>> serializables = new ArrayList<Class<? extends Serializable>>();

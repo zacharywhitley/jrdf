@@ -98,8 +98,8 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
         return elements.values().iterator();
     }
 
-    @SuppressWarnings({"unchecked"})
     public ObjectNode[] toArray() {
+        //noinspection unchecked
         return (ObjectNode[]) elements.values().toArray();
     }
 
