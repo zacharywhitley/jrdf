@@ -141,7 +141,6 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
-    // TODO (AN) This goes back to package private after factory is complete
     OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, TripleFactory newFactory,
         GraphHandler newHandler) {
 
