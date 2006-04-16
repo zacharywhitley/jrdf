@@ -69,19 +69,15 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
-import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.GraphHandler;
+import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.graph.index.mem.LongIndexMem;
 import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
-import org.jrdf.graph.mem.iterator.GraphIterator;
-import org.jrdf.graph.mem.iterator.OneFixedIterator;
-import org.jrdf.graph.mem.iterator.ThreeFixedIterator;
-import org.jrdf.graph.mem.iterator.TwoFixedIterator;
+import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
@@ -147,16 +143,6 @@ public class GraphImpl implements Graph, Serializable {
     private transient GraphHandler012 graphHandler012;
 
     /**
-     * Graph handler for the 201 index.
-     */
-    private transient GraphHandler201 graphHandler201;
-
-    /**
-     * Graph handler for the 120 index.
-     */
-    private transient GraphHandler120 graphHandler120;
-
-    /**
      * A way to create iterators.
      */
     private transient IteratorFactoryImpl iteratorFactory;
@@ -201,11 +187,11 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory);
-        graphHandler201 = new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory);
-        graphHandler120 = new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory);
+        GraphHandler201 graphHandler201 = new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory);
+        GraphHandler120 graphHandler120 = new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory);
 
-        iteratorFactory = new IteratorFactoryImpl(new LongIndex[] {longIndex012, longIndex120, longIndex201},
-            new GraphHandler[] {graphHandler012, graphHandler120, graphHandler201}, tripleFactory);
+        iteratorFactory = new IteratorFactoryImpl(new LongIndex[]{longIndex012, longIndex120, longIndex201},
+            new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201}, tripleFactory);
     }
 
     public boolean contains(Triple triple) throws GraphException {
@@ -349,7 +335,7 @@ public class GraphImpl implements Graph, Serializable {
             result = anySubjectAndPredicateFixedObjectIterator(values);
         } else {
             // {***} Get all.
-            result = new GraphIterator(tripleFactory, graphHandler012);
+            result = iteratorFactory.newGraphIterator();
         }
         return result;
     }
@@ -362,19 +348,19 @@ public class GraphImpl implements Graph, Serializable {
             // test for {sp?}
             if (ANY_OBJECT_NODE != object) {
                 // got {spo}
-                result = new ThreeFixedIterator(values, longIndex012, tripleFactory, graphHandler012);
+                result = iteratorFactory.newThreeFixedIterator(values);
             } else {
                 // got {sp*}
-                result = new TwoFixedIterator(values[0], values[1], longIndex012, tripleFactory, graphHandler012);
+                result = iteratorFactory.newTwoFixedIterator(values[0], values[1], 0);
             }
         } else {
             // test for {s*?}
             if (ANY_OBJECT_NODE != object) {
                 // got s*o {}
-                result = new TwoFixedIterator(values[2], values[0], longIndex201, tripleFactory, graphHandler201);
+                result = iteratorFactory.newTwoFixedIterator(values[2], values[0], 2);
             } else {
                 // got {s**}
-                result = new OneFixedIterator(values[0], longIndex012, tripleFactory, graphHandler012);
+                result = iteratorFactory.newOneFixedIterator(values[0], 0);
             }
         }
 
@@ -387,10 +373,10 @@ public class GraphImpl implements Graph, Serializable {
         // test for {*p?}
         if (ANY_OBJECT_NODE != object) {
             // got {*po}
-            result = new TwoFixedIterator(values[1], values[2], longIndex120, tripleFactory, graphHandler120);
+            result = iteratorFactory.newTwoFixedIterator(values[1], values[2], 1);
         } else {
             // got {*p*}.
-            result = new OneFixedIterator(values[1], longIndex120, tripleFactory, graphHandler120);
+            result = iteratorFactory.newOneFixedIterator(values[1], 1);
         }
 
         return result;
@@ -398,7 +384,7 @@ public class GraphImpl implements Graph, Serializable {
 
     private ClosableIterator<Triple> anySubjectAndPredicateFixedObjectIterator(Long[] values) {
         // got {**o}
-        return new OneFixedIterator(values[2], longIndex201, tripleFactory, graphHandler201);
+        return iteratorFactory.newOneFixedIterator(values[2], 2);
     }
 
     public ClosableIterator<Triple> find(Triple triple) throws GraphException {

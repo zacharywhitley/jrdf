@@ -58,9 +58,6 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.index.GraphHandler;
-import org.jrdf.graph.index.LongIndex;
 
 /**
  * Creates the iterators.  Allows different implementations of iterators to be used.
@@ -72,15 +69,13 @@ public interface IteratorFactory {
     // TODO (AN) Comeback and javadoc.
     ClosableMemIterator<Triple> newEmptyClosableIterator();
 
-    ClosableMemIterator<Triple> newGraphIterator(TripleFactory newFactory, GraphHandler newHandler);
+    ClosableMemIterator<Triple> newGraphIterator();
 
-    ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex,
-        TripleFactory newFactory, GraphHandler newHandler);
+    ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index);
 
 
-    ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex,
-        TripleFactory newFactory, GraphHandler newHandler);
+    ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index);
 
-    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes, LongIndex newLongIndex,
-        GraphHandler newHandler);
+    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes
+    );
 }

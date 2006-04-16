@@ -119,7 +119,7 @@ public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
      * Constructor.
      */
     // TODO (AN) This goes back to package private after factory is complete
-    public ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, TripleFactory factory, GraphHandler newHandler) {
+    ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, TripleFactory factory, GraphHandler newHandler) {
         nodes = newNodes;
         longIndex = newLongIndex;
         handler = newHandler;
