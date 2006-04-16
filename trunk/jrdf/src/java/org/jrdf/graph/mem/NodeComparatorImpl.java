@@ -80,33 +80,65 @@ public final class NodeComparatorImpl implements NodeComparator {
         NodeType nodeType1 = getNodeType(o1.getClass());
         NodeType nodeType2 = getNodeType(o2.getClass());
 
+        int result;
         if (nodesDifferentType(nodeType1, nodeType2)) {
-            return compareDifferentNodeTypes(nodeType1, nodeType2);
+            result = compareDifferentNodeTypes(nodeType1, nodeType2);
         } else {
-            if (o1 == o2) {
-                return 0;
-            } else if (nodeType1.equals(NodeType.BLANK_NODE)) {
-                return compareBlankNodes((BlankNode) o1, (BlankNode) o2);
-            } else if (nodeType1.equals(NodeType.URI_REFERENCE)) {
-                return compareByString(o1.toString(), o2.toString());
-            } else if (nodeType1.equals(NodeType.LITERAL)) {
-                return compareByString(o1.toString(), o2.toString());
-            }
+            result = compareSameNode(o1, o2, nodeType1);
+        }
+        return result;
+    }
+
+    private int compareSameNode(Object o1, Object o2, NodeType nodeType1) {
+        int result;
+        if (o1 == o2) {
+            result = 0;
+        } else {
+            result = compareSameNodeTypes(o1, o2, nodeType1);
+        }
+        return result;
+    }
+
+    private int compareSameNodeTypes(Object o1, Object o2, NodeType nodeType) {
+        int result;
+        if (nodeType.isBlankNode()) {
+            result = compareBlankNodes((BlankNode) o1, (BlankNode) o2);
+        } else if (nodeType.isURIReferenceNode()) {
+            result = compareByString(o1.toString(), o2.toString());
+        } else if (nodeType.isLiteralNode()) {
+            result = compareByString(o1.toString(), o2.toString());
+        } else {
             throw new IllegalArgumentException("Could not compare: " + o1.getClass() + " and " + o2.getClass());
         }
+        return result;
     }
 
     // TODO (AN) Move to different class - NodeTypeComparator
     private int compareDifferentNodeTypes(NodeType nodeType1, NodeType nodeType2) {
-        int result = 0;
+        int result;
         if (nodeType1.isBlankNode()) {
             result = -1;
-        } else if (nodeType1.isURIReferenceNode() && nodeType2.isLiteralNode()) {
-            result = -1;
+        } else if (nodeType1.isURIReferenceNode()) {
+            result = uriComparison(nodeType1, nodeType2);
         } else if (nodeType1.isURIReferenceNode() && nodeType2.isBlankNode()) {
             result = 1;
         } else if (nodeType1.isLiteralNode()) {
             result = 1;
+        } else {
+            throw new IllegalArgumentException("Could not compare: " + nodeType1 + " and " + nodeType2);
+        }
+        return result;
+    }
+
+    // TODO (AN) Move to different class - NodeTypeComparator
+    private int uriComparison(NodeType nodeType1, NodeType nodeType2) {
+        int result;
+        if (nodeType2.isLiteralNode()) {
+            result = -1;
+        } else if (nodeType2.isBlankNode()) {
+            result = 1;
+        } else {
+            throw new IllegalArgumentException("Could not compare: " + nodeType1 + " and " + nodeType2);
         }
         return result;
     }
