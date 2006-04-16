@@ -64,7 +64,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A utility that allows you to treat a collection of MockControl.
+ * A utility that allows you to treat a collection of MockControls.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
