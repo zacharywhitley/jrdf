@@ -142,8 +142,7 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
      * @throws IllegalArgumentException Must be created with implementations from
      *                                  the memory package.
      */
-    // TODO (AN) This goes back to package private after factory is complete
-    public GraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
+    GraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
 
         // store the node factory
         factory = newFactory;
