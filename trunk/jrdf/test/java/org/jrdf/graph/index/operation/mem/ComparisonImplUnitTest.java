@@ -59,10 +59,8 @@
 package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import org.easymock.IMocksControl;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -73,6 +71,7 @@ import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import org.jrdf.util.test.MockFactory;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
@@ -100,9 +99,14 @@ public class ComparisonImplUnitTest extends TestCase {
     private Comparison comparison;
     private Graph mockGraph1;
     private Graph mockGraph2;
+    private MockFactory mockFactory;
 
     public void setUp() throws Exception {
         comparison = new ComparisonImpl();
+        mockFactory = new MockFactory();
+        IMocksControl control = mockFactory.createControl();
+        mockGraph1 = control.createMock(Graph.class);
+        mockGraph2 = control.createMock(Graph.class);
     }
 
     public void testClassProperties() {
@@ -112,12 +116,11 @@ public class ComparisonImplUnitTest extends TestCase {
     }
 
     public void testIsGroundedEmptyGraph() throws Exception {
-        resetGraphMocks();
         mockGraph1.isEmpty();
         expectLastCall().andReturn(GRAPH_EMPTY);
-        replay(mockGraph1);
+        mockFactory.replay();
         assertTrue(comparison.isGrounded(mockGraph1));
-        verify(mockGraph1);
+        mockFactory.verify();
     }
 
 
@@ -139,13 +142,8 @@ public class ComparisonImplUnitTest extends TestCase {
         checkGraphContent(TRIPLES_2, TRIPLES_2, ARE_EQUAL);
     }
 
-    private void resetGraphMocks() {
-        mockGraph1 = createMock(Graph.class);
-        mockGraph2 = createMock(Graph.class);
-    }
-
     private void checkEmptyGroundedGraphs(boolean graph1Empty, boolean graph2Empty, boolean areEqual) throws Exception {
-        resetGraphMocks();
+        mockFactory.reset();
         setUpEmptyCalls(graph1Empty, graph2Empty);
         replayAssertAndVerify("Graph 1 empty: " + graph1Empty + " Graph 2 empty: " + graph2Empty, areEqual, mockGraph1,
             mockGraph2);
@@ -153,7 +151,7 @@ public class ComparisonImplUnitTest extends TestCase {
 
     private void checkDifferentSizeGraphsAreNotIsomorphic(long graph1Size, long graph2Size, boolean areEqual)
         throws Exception {
-        resetGraphMocks();
+        mockFactory.reset();
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(graph1Size, graph2Size);
         replayAssertAndVerify("Graph 1 size: " + graph1Size + " Graph 2 size: " + graph2Size, areEqual, mockGraph1,
@@ -161,7 +159,7 @@ public class ComparisonImplUnitTest extends TestCase {
     }
 
     private void checkGraphContent(Triple[] triples1, Triple[] triples2, boolean areEqual) throws Exception {
-        resetGraphMocks();
+        mockFactory.reset();
         setUpEmptyCalls(GRAPH_CONTAINS_NODES, GRAPH_CONTAINS_NODES);
         setUpNumberOfTripleCalls(triples1.length, triples2.length);
         setUpFindAndIteratorCalls(triples1, triples2);
@@ -202,10 +200,8 @@ public class ComparisonImplUnitTest extends TestCase {
 
     private void replayAssertAndVerify(String message, boolean areEqual, Graph mockGraph1, Graph mockGraph2)
         throws GraphException {
-        replay(mockGraph1);
-        replay(mockGraph2);
+        mockFactory.replay();
         assertEquals(message, areEqual, comparison.groundedGraphsAreEqual(mockGraph1, mockGraph2));
-        verify(mockGraph1);
-        verify(mockGraph2);
+        mockFactory.verify();
     }
 }
