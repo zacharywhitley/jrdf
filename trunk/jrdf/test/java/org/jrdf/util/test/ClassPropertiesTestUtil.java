@@ -77,8 +77,7 @@ import java.util.Collection;
  */
 public final class ClassPropertiesTestUtil {
 
-    // FIXME TJA: This needs genericising ;)
-    public static final Class[] NO_ARG_CONSTRUCTOR = (Class[]) null;
+    public static final Class[] NO_ARG_CONSTRUCTOR = {};
     public static final int NO_MODIFIER = 0;
 
     private ClassPropertiesTestUtil() {
