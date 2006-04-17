@@ -65,5 +65,5 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public interface NodeComparator extends Comparator {
+public interface NodeComparator extends Comparator<Node> {
 }
