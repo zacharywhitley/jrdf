@@ -86,26 +86,26 @@ public final class NodeComparatorImpl implements NodeComparator {
         return result;
     }
 
-    private int compareSameNode(Object o1, Object o2, NodeType nodeType1) {
+    private int compareSameNode(Node n1, Node n2, NodeType nodeType1) {
         int result;
-        if (o1 == o2) {
+        if (n1 == n2) {
             result = 0;
         } else {
-            result = compareSameNodeTypes(o1, o2, nodeType1);
+            result = compareSameNodeTypes(n1, n2, nodeType1);
         }
         return result;
     }
 
-    private int compareSameNodeTypes(Object o1, Object o2, NodeType nodeType) {
+    private int compareSameNodeTypes(Node n1, Node n2, NodeType nodeType) {
         int result;
         if (nodeType.isBlankNode()) {
-            result = compareBlankNodes((BlankNode) o1, (BlankNode) o2);
+            result = compareBlankNodes((BlankNode) n1, (BlankNode) n2);
         } else if (nodeType.isURIReferenceNode()) {
-            result = compareByString(o1.toString(), o2.toString());
+            result = compareByString(n1.toString(), n2.toString());
         } else if (nodeType.isLiteralNode()) {
-            result = compareByString(o1.toString(), o2.toString());
+            result = compareByString(n1.toString(), n2.toString());
         } else {
-            throw new IllegalArgumentException("Could not compare: " + o1.getClass() + " and " + o2.getClass());
+            throw new IllegalArgumentException("Could not compare: " + n1.getClass() + " and " + n2.getClass());
         }
         return result;
     }
