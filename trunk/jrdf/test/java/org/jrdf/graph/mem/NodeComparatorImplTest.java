@@ -60,6 +60,7 @@ package org.jrdf.graph.mem;
 import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.test.AssertThrows;
@@ -85,8 +86,6 @@ public class NodeComparatorImplTest extends TestCase {
     private static final BlankNode BNODE_2 = new BlankNodeImpl(2l, "b");
     private static final Literal LITERAL_1 = new LiteralImpl("bar");
     private static final Literal LITERAL_2 = new LiteralImpl("foo");
-    private static final String STRING_1 = "string";
-    private static final String STRING_2 = "string2";
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
@@ -101,12 +100,6 @@ public class NodeComparatorImplTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
         checkExtensionOf(Comparator.class, NodeComparator.class);
         checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
-    }
-
-    public void testIllegalArguments() {
-        checkIllegalArguments(nodeComparator, STRING_1, STRING_2);
-        checkIllegalArguments(nodeComparator, URI_1, STRING_1);
-        checkIllegalArguments(nodeComparator, STRING_1, URI_1);
     }
 
     public void testNullPointerException() {
@@ -148,20 +141,11 @@ public class NodeComparatorImplTest extends TestCase {
         assertEquals(EQUAL, nodeComparator.compare(LITERAL_2, new LiteralImpl("foo")));
     }
 
-    private void checkIllegalArguments(final NodeComparator nodeComparator, final Object obj1, final Object obj2) {
-        AssertThrows.assertThrows(ClassCastException.class, new AssertThrows.Block() {
-            @SuppressWarnings({"unchecked"})
-            public void execute() throws Throwable {
-                nodeComparator.compare(obj1, obj2);
-            }
-        });
-    }
-
-    private void checkNullPointerException(final NodeComparator nodeComparator, final Object obj1, final Object obj2) {
+    private void checkNullPointerException(final NodeComparator nodeComparator, final Node node1, final Node node2) {
         AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 //noinspection unchecked
-                nodeComparator.compare(obj1, obj2);
+                nodeComparator.compare(node1, node2);
             }
         });
     }

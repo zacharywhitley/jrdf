@@ -73,10 +73,7 @@ import org.jrdf.graph.URIReference;
  */
 public final class NodeComparatorImpl implements NodeComparator {
 
-    public int compare(Object o1, Object o2) {
-        checkIsNode(o1);
-        checkIsNode(o2);
-
+    public int compare(Node o1, Node o2) {
         NodeType nodeType1 = getNodeType(o1.getClass());
         NodeType nodeType2 = getNodeType(o2.getClass());
 
@@ -192,12 +189,6 @@ public final class NodeComparatorImpl implements NodeComparator {
             return NodeType.LITERAL;
         } else {
             throw new IllegalArgumentException("Illegal node: " + nodeClass);
-        }
-    }
-
-    private void checkIsNode(Object o) {
-        if (!(Node.class.isAssignableFrom(o.getClass()))) {
-            throw new ClassCastException(o.getClass() + " is not a JRDF Node.");
         }
     }
 }
