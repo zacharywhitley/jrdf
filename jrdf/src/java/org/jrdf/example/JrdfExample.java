@@ -1,5 +1,6 @@
 package org.jrdf.example;
 
+import org.jrdf.JRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -13,10 +14,6 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -242,9 +239,7 @@ public class JrdfExample {
      * @return Graph
      */
     private Graph getGraph() {
-        Resource res = new ClassPathResource("wiring.xml");
-        BeanFactory beanFactory = new XmlBeanFactory(res);
-        return (Graph) beanFactory.getBean("Graph");
+        return JRDFFactory.getNewGraph();
     }
 
     /**

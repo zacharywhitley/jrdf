@@ -59,6 +59,7 @@
 package org.jrdf.sparql;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -70,7 +71,6 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.util.test.SparqlQueryTestUtil;
@@ -155,7 +155,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     }
 
     private Graph createGraph() {
-        GraphImpl graph = new GraphImpl();
+        Graph graph = JRDFFactory.getNewGraph();
         populateGraph(graph);
         return graph;
     }
@@ -198,9 +198,5 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
         } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private URI createUri(String uri) {
-        return URI.create(uri);
     }
 }

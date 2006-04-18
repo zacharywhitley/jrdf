@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
@@ -55,51 +55,33 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf;
 
-package org.jrdf.graph.index.operation.mem;
-
-import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.operation.Comparison;
-
-import java.net.URI;
-
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /**
- * Integration tests {@see org.jrdf.graph.index.operation.mem.ComparisonImpl}.
+ * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class ComparisonImplIntegrationTest extends TestCase {
-    private static final URI URI1 = URI.create("http://foo/bar");
-    private static final URI URI2 = URI.create("http://foo/bar/baz");
+public class JRDFFactory {
+    private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
+    private static final Resource DEFAULT_RESOURCE = new ClassPathResource(DEFAULT_WIRING_CONFIG);
+    private static BeanFactory beanFactory = new XmlBeanFactory(DEFAULT_RESOURCE);
 
-    public void testMemGraphEquality() throws Exception {
-        checkGraph(URI1, URI1, true);
-        checkGraph(URI2, URI2, true);
-        checkGraph(URI1, URI2, false);
+    private JRDFFactory() {
     }
 
-    private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {
-        Graph graph1 = JRDFFactory.getNewGraph();
-        addTriple(graph1, resource1);
-        Graph graph2 = JRDFFactory.getNewGraph();
-        addTriple(graph2, resource2);
-        Comparison comparison = new ComparisonImpl();
-        assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));
+    public void reload(Resource res) {
+        beanFactory = new XmlBeanFactory(res);
     }
 
-    private void addTriple(Graph graph, URI uri) throws GraphElementFactoryException, TripleFactoryException,
-        GraphException {
-        URIReference resource = graph.getElementFactory().createResource(uri);
-        Triple triple = graph.getTripleFactory().createTriple(resource, resource, resource);
-        graph.add(triple);
+    public static Graph getNewGraph() {
+        return (Graph) beanFactory.getBean("Graph");
     }
 }
