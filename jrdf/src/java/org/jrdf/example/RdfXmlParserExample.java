@@ -7,9 +7,12 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -23,7 +26,7 @@ public final class RdfXmlParserExample {
     public static void main(String[] args) throws Exception {
         URL url = getDocumentURL(args);
         InputStream in = url.openStream();
-        final Graph jrdfMem = new GraphImpl();
+        final Graph jrdfMem = getGraph();
         RdfXmlParser parser = new RdfXmlParser(jrdfMem.getElementFactory());
         ExampleStatementHandler sh = new ExampleStatementHandler(jrdfMem);
         parser.setStatementHandler(sh);
@@ -33,6 +36,12 @@ public final class RdfXmlParserExample {
             System.out.println("Graph: " + iter.next());
         }
         in.close();
+    }
+
+    private static Graph getGraph() {
+        Resource res = new ClassPathResource("wiring.xml");
+        BeanFactory beanFactory = new XmlBeanFactory(res);
+        return (Graph) beanFactory.getBean("Graph");
     }
 
     private static URL getDocumentURL(String[] args) throws MalformedURLException {
