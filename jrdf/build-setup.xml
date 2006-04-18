@@ -136,6 +136,7 @@
         <pathelement location="${lib.dir}/spring/spring-context-2.0M3.jar"/>
         <pathelement location="${lib.dir}/spring/spring-core-2.0M3.jar"/>
         <pathelement location="${lib.dir}/spring/spring-dao-2.0M3.jar"/>
+        <pathelement location="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <pathelement location="${prod.classes.dir}"/>
         <pathelement location="${test.classes.dir}"/>
     </path>
