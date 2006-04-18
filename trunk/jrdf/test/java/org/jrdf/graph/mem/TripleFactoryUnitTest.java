@@ -61,6 +61,7 @@ package org.jrdf.graph.mem;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+import org.jrdf.JRDFFactory;
 import org.jrdf.graph.AbstractTripleFactoryUnitTest;
 import org.jrdf.graph.Alternative;
 import org.jrdf.graph.Bag;
@@ -98,7 +99,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
-        return new GraphImpl();
+        return JRDFFactory.getNewGraph();
     }
 
     /**

@@ -58,7 +58,9 @@
 
 package org.jrdf.sparql.builder;
 
+import org.jrdf.JRDFFactory;
 import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
@@ -68,7 +70,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
@@ -184,7 +185,7 @@ public final class TripleBuilder {
         return createGraph().getElementFactory();
     }
 
-    private GraphImpl createGraph() {
-        return new GraphImpl();
+    private Graph createGraph() {
+        return JRDFFactory.getNewGraph();
     }
 }
