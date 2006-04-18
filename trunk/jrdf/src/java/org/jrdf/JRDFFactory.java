@@ -69,7 +69,7 @@ import org.springframework.core.io.Resource;
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class JRDFFactory {
+public final class JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
     private static final Resource DEFAULT_RESOURCE = new ClassPathResource(DEFAULT_WIRING_CONFIG);
     private static BeanFactory beanFactory = new XmlBeanFactory(DEFAULT_RESOURCE);
