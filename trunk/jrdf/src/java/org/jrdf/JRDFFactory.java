@@ -77,6 +77,7 @@ public final class JRDFFactory {
     private JRDFFactory() {
     }
 
+    // TODO (AN) ApplicationContext instead?
     public void reload(Resource res) {
         beanFactory = new XmlBeanFactory(res);
     }
