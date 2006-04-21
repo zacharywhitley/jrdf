@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
@@ -55,61 +55,38 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.graph.index.mem;
 
-package org.jrdf.graph.mem;
-
-import junit.textui.TestRunner;
-import org.jrdf.JRDFFactory;
-import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-
-import java.net.URI;
-
+import org.jrdf.graph.Node;
+import org.jrdf.graph.index.NodePool;
+import org.jrdf.graph.mem.MemNode;
 
 /**
- * Implementation of {@link AbstractGraphElementFactoryUnitTest}
- * test case.
+ * An extension of NodePools that handles in memory nodes.
  *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactoryUnitTest {
+public interface NodePoolMem extends NodePool {
+    /**
+     * Adds a node that was not created by this pool but still uses the MemNode interface.
+     *
+     * @param node The node to add.
+     * @throws IllegalArgumentException The node conflicts with one already in use.
+     */
+    void registerNode(MemNode node);
 
     /**
-     * Create a new graph of the appropriate type.
+     * Returns all the nodes in the node pool.
      *
-     * @return A new graph implementation object.
+     * @return The node pool.
      */
-    public Graph newGraph() throws GraphException {
-        return JRDFFactory.getNewGraph();
-    }
+    java.util.Collection<Node> getNodePoolValues();
 
     /**
-     * Default test runner.
+     * Returns the current next node Id increments it by one.
      *
-     * @param args The command line arguments
+     * @return the current next node Id.
      */
-    public static void main(String[] args) throws Exception {
-        TestRunner.run(GraphElementFactoryImplUnitTest.class);
-    }
-
-    /**
-     * Return the default literal type from the implementation.
-     *
-     * @return The default Literal type.
-     */
-    public URI getDefaultLiteralType() {
-        return null;
-    }
-
-    /**
-     * Get the default literal language from the implementation.
-     *
-     * @return The default Literal language.
-     */
-    public String getDefaultLiteralLanguage() {
-        return null;
-    }
-
+    Long getNextNodeId();
 }

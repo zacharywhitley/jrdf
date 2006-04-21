@@ -75,6 +75,8 @@ import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.index.mem.NodePoolMem;
+import org.jrdf.graph.index.mem.NodePoolMemImpl;
 import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
@@ -130,7 +132,12 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Graph Element Factory.  This caches the node factory.
      */
-    private transient GraphElementFactoryImpl elementFactory;
+    private transient GraphElementFactory elementFactory;
+
+    /**
+     * The node pool.
+     */
+    private transient NodePoolMem nodePool;
 
     /**
      * Triple Element Factory.  This caches the element factory.
@@ -157,7 +164,13 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Default constructor.
      */
-    public GraphImpl() {
+    public GraphImpl(LongIndex newLongIndex012, LongIndex newLongIndex120, LongIndex newLongIndex201,
+        GraphElementFactory newElementFactory, NodePoolMem newNodePool) {
+        longIndex012 = newLongIndex012;
+        longIndex120 = newLongIndex120;
+        longIndex201 = newLongIndex201;
+        elementFactory = newElementFactory;
+        nodePool = newNodePool;
         init();
     }
 
@@ -179,16 +192,17 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl();
+            nodePool = new NodePoolMemImpl();
+            elementFactory = new GraphElementFactoryImpl(nodePool);
         }
 
         if (null == tripleFactory) {
             tripleFactory = new TripleFactoryImpl(this, elementFactory);
         }
 
-        graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201, elementFactory);
-        GraphHandler201 graphHandler201 = new GraphHandler201(longIndex012, longIndex120, longIndex201, elementFactory);
-        GraphHandler120 graphHandler120 = new GraphHandler120(longIndex012, longIndex120, longIndex201, elementFactory);
+        graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201, nodePool);
+        GraphHandler201 graphHandler201 = new GraphHandler201(longIndex012, longIndex120, longIndex201, nodePool);
+        GraphHandler120 graphHandler120 = new GraphHandler120(longIndex012, longIndex120, longIndex201, nodePool);
 
         iteratorFactory = new IteratorFactoryImpl(new LongIndex[]{longIndex012, longIndex120, longIndex201},
             new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201}, tripleFactory);
@@ -211,7 +225,7 @@ public class GraphImpl implements Graph, Serializable {
         // Get local node values
         Long[] values;
         try {
-            values = elementFactory.localize(subject, predicate, object);
+            values = nodePool.localize(subject, predicate, object);
         } catch (GraphException ge) {
 
             // Graph exception on localize implies that the subject, predicate or
@@ -309,7 +323,7 @@ public class GraphImpl implements Graph, Serializable {
         // Get local node values
         Long[] values;
         try {
-            values = elementFactory.localize(subject, predicate, object);
+            values = nodePool.localize(subject, predicate, object);
         } catch (GraphException ge) {
             // A graph exception implies that the subject, predicate or object does
             // not exist in the graph.
@@ -409,7 +423,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // Get local node values also tests that it's a valid subject, predicate
         // and object.
-        Long[] values = elementFactory.localize(subject, predicate, object);
+        Long[] values = nodePool.localize(subject, predicate, object);
         longIndex012.add(values);
         longIndex120.add(values[1], values[2], values[0]);
         longIndex201.add(values[2], values[0], values[1]);
@@ -444,7 +458,7 @@ public class GraphImpl implements Graph, Serializable {
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
 
         // Get local node values also tests that it's a valid subject, predicate and object.
-        Long[] values = elementFactory.localize(subject, predicate, object);
+        Long[] values = nodePool.localize(subject, predicate, object);
 
         longIndex012.remove(values[0], values[1], values[2]);
         // if the first one succeeded then try and attempt removal on both of the others
@@ -504,7 +518,7 @@ public class GraphImpl implements Graph, Serializable {
         // write out the first index with the default writer
         out.defaultWriteObject();
         // write all the nodes as well
-        out.writeObject(elementFactory.getNodePoolValues().toArray());
+        out.writeObject(nodePool.getNodePoolValues().toArray());
         // TODO: Consider writing these nodes individually.  Converting to an array
         // may take up unnecessary memory
     }
@@ -526,7 +540,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // populate the node factory with these nodes
         for (Object node : nodes) {
-            elementFactory.registerNode((MemNode) node);
+            nodePool.registerNode((MemNode) node);
         }
 
         // fill in the other indexes
