@@ -58,22 +58,15 @@
 
 package org.jrdf.graph.mem;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.index.NodePool;
+import org.jrdf.graph.index.mem.NodePoolMem;
 import org.jrdf.util.UuidGenerator;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A SkipListNode Factory is a class which create the various components of a graph.
@@ -83,35 +76,18 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
+public final class GraphElementFactoryImpl implements GraphElementFactory {
 
     /**
-     * Three being the number, and the number being 3.
+     * The node pool.
      */
-    private static final int TRIPLE = 3;
-
-    /**
-     * The pool of all nodes, mapped from their ids.
-     */
-    private Map<Long, Node> nodePool;
-
-    /**
-     * A reverse mapping of all ids, mapped from their string.
-     */
-    private Map<String, Long> stringPool;
-
-    /**
-     * The next available node id.
-     */
-    private long nextNode;
+    private NodePoolMem nodePool;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl() {
-        nodePool = new HashMap<Long, Node>();
-        stringPool = new HashMap<String, Long>();
-        nextNode = 1L;
+    GraphElementFactoryImpl(NodePoolMem nodePool) {
+        this.nodePool = nodePool;
     }
 
 
@@ -131,14 +107,10 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
             throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.", exception);
         }
 
-        // create the new node
-        BlankNode node = new BlankNodeImpl(nextNode, uid);
-
-        // put the node in the pool
-        nodePool.put(nextNode, node);
-
-        // go on to the next node id
-        nextNode++;
+        // create the node identifier and add
+        Long nodeId = nodePool.getNextNodeId();
+        BlankNode node = new BlankNodeImpl(nodeId, uid);
+        nodePool.registerNode((MemNode) node);
         return node;
     }
 
@@ -155,24 +127,16 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         }
 
         // check if the node already exists in the string pool
-        Long nodeId = getNodeIdByString(uri.toString());
+        Long nodeId = nodePool.getNodeIdByString(uri.toString());
 
         if (null != nodeId) {
-            return (URIReference) getNodeById(nodeId);
+            return (URIReference) nodePool.getNodeById(nodeId);
         }
 
-        // create the node identifier and increment the node
-        nodeId = nextNode++;
-
-        // create the new node
+        // create the node identifier and add
+        nodeId = nodePool.getNextNodeId();
         URIReference node = new URIReferenceImpl(uri, nodeId);
-
-        // put the node in the pool
-        nodePool.put(nodeId, node);
-
-        // put the URI string into the pool
-        // TODO: This could conflict with a literal
-        stringPool.put(uri.toString(), nodeId);
+        nodePool.registerNode((MemNode) node);
         return node;
     }
 
@@ -192,23 +156,15 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         }
 
         // check if the node already exists in the string pool
-        Long nodeId = getNodeIdByString(uri.toString());
+        Long nodeId = nodePool.getNodeIdByString(uri.toString());
         if (null != nodeId) {
-            return (URIReference) getNodeById(nodeId);
+            return (URIReference) nodePool.getNodeById(nodeId);
         }
 
-        // create the node identifier and increment the node
-        nodeId = nextNode++;
-
-        // create the new node
+        // create the node identifier and add
+        nodeId = nodePool.getNextNodeId();
         URIReference node = new URIReferenceImpl(uri, validate, nodeId);
-
-        // put the node in the pool
-        nodePool.put(nodeId, node);
-
-        // put the URI string into the pool
-        // TODO: This could conflict with a literal
-        stringPool.put(uri.toString(), nodeId);
+        nodePool.registerNode((MemNode) node);
         return node;
     }
 
@@ -219,9 +175,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
      *
      * @param lexicalValue The lexical value for the literal.
      * @return the newly created literal value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Literal createLiteral(String lexicalValue) throws GraphElementFactoryException {
+    public Literal createLiteral(String lexicalValue) {
         LiteralImpl literal = new LiteralImpl(lexicalValue);
         addNodeId(literal);
         return literal;
@@ -235,9 +190,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
      * @param lexicalValue The lexical value for the literal.  Cannot be null.
      * @param languageType The language of the literal or null if not required.
      * @return the newly created literal value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Literal createLiteral(String lexicalValue, String languageType) throws GraphElementFactoryException {
+    public Literal createLiteral(String lexicalValue, String languageType) {
         LiteralImpl newLiteral = new LiteralImpl(lexicalValue, languageType);
         addNodeId(newLiteral);
         return newLiteral;
@@ -251,9 +205,8 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
      * @param datatypeURI  The URI of the datatype of the literal or null if not
      *                     required.
      * @return the newly created literal value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    public Literal createLiteral(String lexicalValue, URI datatypeURI) throws GraphElementFactoryException {
+    public Literal createLiteral(String lexicalValue, URI datatypeURI) {
         // create the node identifier
         LiteralImpl newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
         addNodeId(newLiteral);
@@ -273,7 +226,7 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         String strId = newLiteral.getEscapedForm();
 
         // check if the node already exists in the string pool
-        Long tmpNodeId = stringPool.get(strId);
+        Long tmpNodeId = nodePool.getNodeIdByString(strId);
 
         if (null != tmpNodeId) {
 
@@ -282,136 +235,9 @@ public class GraphElementFactoryImpl implements GraphElementFactory, NodePool {
         } else {
 
             // create the node identifier
+            Long nextNode = nodePool.getNextNodeId();
             newLiteral.setId(nextNode);
-
-            // put the node in the pool
-            nodePool.put(nextNode, newLiteral);
-
-            // put the URI string into the pool
-            stringPool.put(strId, nextNode);
-
-            // increment the node, since we used it
-            nextNode++;
+            nodePool.registerNode(newLiteral);
         }
-    }
-
-
-    public Node getNodeById(Long id) {
-        return nodePool.get(id);
-    }
-
-
-    public Long getNodeIdByString(String str) {
-        return stringPool.get(str);
-    }
-
-    /**
-     * Package method for adding in a node that was not created by this factory.
-     * Used by GraphImpl for deserializing.
-     *
-     * @param node The node to add.
-     * @throws IllegalArgumentException The node conflicts with one already in use.
-     */
-    void registerNode(MemNode node) {
-        // get the id for this node
-        Long id = node.getId();
-
-        // look the node up to see if it already exists in the graph
-        MemNode existingNode = (MemNode) nodePool.get(id);
-        if (null != existingNode) {
-            // check that the node is equal to the one that is already in the graph
-            if (existingNode.equals(node)) {
-                return;
-            }
-            // node does not match
-            throw new IllegalArgumentException("SkipListNode conflicts with one already in the graph");
-        }
-        // add the node
-        nodePool.put(id, node);
-
-        // check if the node has a string representation
-        if (!(node instanceof BlankNode)) {
-
-            if (node instanceof Literal) {
-                stringPool.put(((Literal) node).getEscapedForm(), node.getId());
-            } else {
-                stringPool.put(node.toString(), node.getId());
-            }
-        }
-
-        // update the nextNode counter to a unique number
-        if (!(id < nextNode)) {
-            nextNode = id + 1L;
-        }
-    }
-
-
-    /**
-     * Package scope method to get all the nodes in the node pool.  Used by GraphImpl for serializing.
-     *
-     * @return The node pool.
-     */
-    java.util.Collection<Node> getNodePoolValues() {
-        return nodePool.values();
-    }
-
-    public Long[] localize(Node first, Node second, Node third) throws GraphException {
-        Long[] localValues = new Long[TRIPLE];
-
-        // convert the nodes to local memory nodes for convenience
-        localValues[0] = convertSubject(first);
-        localValues[1] = convertPredicate(second);
-        localValues[2] = convertObject(third);
-        return localValues;
-    }
-
-    private Long convertSubject(Node first) throws GraphException {
-        Long subjectValue = null;
-        if (ANY_SUBJECT_NODE != first) {
-            if (first instanceof BlankNodeImpl) {
-                subjectValue = ((BlankNodeImpl) first).getId();
-            } else {
-                subjectValue = getNodeIdByString(String.valueOf(first));
-            }
-
-            if (null == subjectValue) {
-                throw new GraphException("Subject does not exist in graph");
-            }
-        }
-
-        return subjectValue;
-    }
-
-    private Long convertPredicate(Node second) throws GraphException {
-        Long predicateValue = null;
-        if (ANY_PREDICATE_NODE != second) {
-            predicateValue = getNodeIdByString(String.valueOf(second));
-
-            if (null == predicateValue) {
-                throw new GraphException("Predicate does not exist in graph");
-            }
-        }
-
-        return predicateValue;
-    }
-
-    // TODO (AN) String of instanceof should be changed to calls by type.
-    private Long convertObject(Node third) throws GraphException {
-        Long objectValue = null;
-        if (ANY_OBJECT_NODE != third) {
-            if (third instanceof BlankNodeImpl) {
-                objectValue = ((BlankNodeImpl) third).getId();
-            } else if (third instanceof LiteralImpl) {
-                objectValue = getNodeIdByString(((LiteralImpl) third).getEscapedForm());
-            } else {
-                objectValue = getNodeIdByString(String.valueOf(third));
-            }
-
-            if (null == objectValue) {
-                throw new GraphException("Object does not exist in graph");
-            }
-        }
-
-        return objectValue;
     }
 }

@@ -82,6 +82,6 @@ public final class JRDFFactory {
     }
 
     public static Graph getNewGraph() {
-        return (Graph) beanFactory.getBean("Graph");
+        return (Graph) beanFactory.getBean("graph");
     }
 }
