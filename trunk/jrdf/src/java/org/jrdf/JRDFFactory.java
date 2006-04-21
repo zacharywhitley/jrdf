@@ -82,6 +82,6 @@ public final class JRDFFactory {
     }
 
     public static Graph getNewGraph() {
-        return (Graph) beanFactory.getBean("graph");
+        return (Graph) beanFactory.getBean("org.jrdf.graph.mem.GraphImpl");
     }
 }

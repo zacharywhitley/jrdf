@@ -3,16 +3,16 @@
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-    <bean id="graph" class="org.jrdf.graph.mem.GraphImpl" singleton="false" autowire="constructor">
+    <bean class="org.jrdf.graph.mem.GraphImpl" singleton="false" autowire="constructor">
     </bean>
 
-    <bean id="longIndex" class="org.jrdf.graph.index.mem.LongIndexMem" singleton="false">
+    <bean class="org.jrdf.graph.index.mem.LongIndexMem" singleton="false">
     </bean>
 
-    <bean id="graphElementFactory" class="org.jrdf.graph.mem.GraphElementFactoryImpl" singleton="false"
+    <bean class="org.jrdf.graph.mem.GraphElementFactoryImpl" singleton="false"
           autowire="constructor">
     </bean>
 
-    <bean id="nodePool" class="org.jrdf.graph.index.mem.NodePoolMemImpl" singleton="true">
+    <bean class="org.jrdf.graph.index.mem.NodePoolMemImpl" singleton="true">
     </bean>
 </beans>
