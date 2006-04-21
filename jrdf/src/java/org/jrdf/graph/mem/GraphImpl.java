@@ -132,7 +132,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Graph Element Factory.  This caches the node factory.
      */
-    private transient GraphElementFactory elementFactory;
+    private transient GraphElementFactoryMem elementFactory;
 
     /**
      * The node pool.
@@ -165,12 +165,12 @@ public class GraphImpl implements Graph, Serializable {
      * Default constructor.
      */
     public GraphImpl(LongIndex newLongIndex012, LongIndex newLongIndex120, LongIndex newLongIndex201,
-        GraphElementFactory newElementFactory, NodePoolMem newNodePool) {
+        GraphElementFactoryMem newElementFactory) {
         longIndex012 = newLongIndex012;
         longIndex120 = newLongIndex120;
         longIndex201 = newLongIndex201;
         elementFactory = newElementFactory;
-        nodePool = newNodePool;
+        nodePool = elementFactory.getNodePool();
         init();
     }
 

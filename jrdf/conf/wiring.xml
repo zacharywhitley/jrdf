@@ -6,13 +6,13 @@
     <bean class="org.jrdf.graph.mem.GraphImpl" singleton="false" autowire="constructor">
     </bean>
 
-    <bean class="org.jrdf.graph.index.mem.LongIndexMem" singleton="false">
-    </bean>
-
     <bean class="org.jrdf.graph.mem.GraphElementFactoryImpl" singleton="false"
           autowire="constructor">
     </bean>
 
-    <bean class="org.jrdf.graph.index.mem.NodePoolMemImpl" singleton="true">
+    <bean class="org.jrdf.graph.index.mem.LongIndexMem" singleton="false">
+    </bean>
+
+    <bean class="org.jrdf.graph.index.mem.NodePoolMemImpl" singleton="false">
     </bean>
 </beans>
