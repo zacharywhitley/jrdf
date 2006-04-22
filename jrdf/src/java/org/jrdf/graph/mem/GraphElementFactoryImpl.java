@@ -63,7 +63,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.index.mem.NodePoolMem;
+import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
 import org.jrdf.util.UuidGenerator;
 
 import java.net.URI;
