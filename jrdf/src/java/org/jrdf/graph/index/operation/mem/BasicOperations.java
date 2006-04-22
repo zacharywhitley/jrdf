@@ -59,7 +59,7 @@
 package org.jrdf.graph.index.operation.mem;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.longindex.LongIndex;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -82,7 +82,7 @@ public class BasicOperations {
     }
 
     public static void reconstruct(LongIndex existingIndex, LongIndex firstNewIndex, LongIndex secondNewIndex) throws
-            GraphException {
+        GraphException {
         DoTripleStuff doReconstructTripleStuff = new DoReconstructTripleStuff(firstNewIndex, secondNewIndex);
         goOverIndex(existingIndex, doReconstructTripleStuff);
     }
@@ -130,7 +130,7 @@ public class BasicOperations {
     }
 
     public static void performIntersection(LongIndex firstExistingIndex, LongIndex secondExistingIndex,
-                                           LongIndex newIndex) throws GraphException {
+        LongIndex newIndex) throws GraphException {
         Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> firstEntries = firstExistingIndex.iterator();
         while (firstEntries.hasNext()) {
             Map.Entry<Long, Map<Long, Set<Long>>> firstEntry = firstEntries.next();
@@ -149,7 +149,7 @@ public class BasicOperations {
 
                         // Common
                         DoTripleStuff doIntersectionTripleStuff = new DoIntersectionTripleStuff(newIndex,
-                                existingSecondIndexLongSet);
+                            existingSecondIndexLongSet);
                         for (Long third : secondEntry.getValue()) {
                             doIntersectionTripleStuff.doStuff(first, second, third);
                         }

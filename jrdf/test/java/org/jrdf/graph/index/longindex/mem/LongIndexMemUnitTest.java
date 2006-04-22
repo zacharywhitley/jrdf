@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 442 $
+ * $Date: 2006-01-29 14:41:23 +1000 (Sun, 29 Jan 2006) $
  *
  * ====================================================================
  *
@@ -57,10 +57,10 @@
  */
 
 
-package org.jrdf.graph.index.mem;
+package org.jrdf.graph.index.longindex.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 
@@ -71,7 +71,7 @@ import java.util.Map;
  * Checks several implementation details of LongIndexMem implementation of LongIndex.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 442 $
  */
 public class LongIndexMemUnitTest extends TestCase {
     public void testClassProperties() {

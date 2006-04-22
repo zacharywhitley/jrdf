@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 449 $
+ * $Date: 2006-04-02 20:41:17 +1000 (Sun, 02 Apr 2006) $
  *
  * ====================================================================
  *
@@ -56,18 +56,63 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.index.operation;
+package org.jrdf.graph.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.longindex.LongIndex;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 /**
- * The set union of two graphs - all of the items in the first graph are
- * added to the second graph (no duplicates).
+ * An interface used to make modifications on the internal indexes (012, 120 and 201) of a graph.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 449 $
  */
-public interface Union extends SetOperation {
-    LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException;
+public interface GraphHandler {
+
+    /**
+     * As 012, 120 and 201 are symmetrical this can be used to reconstruct either two from any one index.  Using the
+     * 012 index it will add entries correctly to 120 (secondIndex) and 201 (thirdIndex), or 120 will make 201
+     * (secondIndex) and 012 (thirdIndex) and 201 will produce 120 and 201.
+     *
+     * @param firstIndex  the first index.
+     * @param secondIndex the second index.
+     * @param thirdIndex  the third index.
+     * @throws org.jrdf.graph.GraphException if the adds fail.
+     */
+    void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws GraphException;
+
+    /**
+     * Returns an iterator over an internal representation of the graph in the fixed order based on the underlying
+     * index.
+     *
+     * @return an iterator over an internal representation of the graph in the fixed order based on the underlying
+     *         index.
+     */
+    Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries();
+
+    /**
+     * Creates the globalized nodes based on the internal representation of the nodes.  This may move to the NodePool
+     * interface.
+     *
+     * @param nodes an array of three triple values to create.
+     * @return an array of three nodes.
+     * @throws TripleFactoryException if the nodes could not be mapped - the nodes must refer to something that already
+     *                                have existed.
+     */
+    Node[] createTriple(Long[] nodes) throws TripleFactoryException;
+
+    /**
+     * Removes a triple from the other indexes of the graph.  For example, if this is the 012 GraphHandler it will
+     * remove the 120 and 201.
+     *
+     * @param currentNodes the array of nodes to remove.
+     * @throws GraphException if the nodes do not exist.
+     */
+    void remove(Long[] currentNodes) throws GraphException;
 }

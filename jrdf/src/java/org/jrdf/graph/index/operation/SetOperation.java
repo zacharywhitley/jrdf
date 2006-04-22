@@ -59,7 +59,7 @@
 package org.jrdf.graph.index.operation;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.longindex.LongIndex;
 
 /**
  * The interface the indicates a set operation.  Take in two graphs and returns a new one.

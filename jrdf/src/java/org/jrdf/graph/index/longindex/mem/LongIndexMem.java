@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 444 $
+ * $Date: 2006-03-25 17:44:37 +1000 (Sat, 25 Mar 2006) $
  *
  * ====================================================================
  *
@@ -56,10 +56,10 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.index.mem;
+package org.jrdf.graph.index.longindex.mem;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.longindex.LongIndex;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -69,10 +69,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * An memory version of ${@link org.jrdf.graph.index.LongIndex}.
+ * An memory version of ${@link org.jrdf.graph.index.longindex.LongIndex}.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 444 $
  */
 public final class LongIndexMem implements LongIndex, Serializable {
     private static final long serialVersionUID = -8212815756891200898L;

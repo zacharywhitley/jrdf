@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 354 $
+ * $Date: 2005-09-20 17:23:32 +1000 (Tue, 20 Sep 2005) $
  *
  * ====================================================================
  *
@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.index;
+package org.jrdf.graph.index.longindex;
 
 import org.jrdf.graph.GraphException;
 
@@ -68,7 +68,7 @@ import java.util.Set;
  * Represents an indexed set of longs.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 354 $
  */
 public interface LongIndex {
     /**

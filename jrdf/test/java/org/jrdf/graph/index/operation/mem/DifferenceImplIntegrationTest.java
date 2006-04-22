@@ -61,8 +61,8 @@ package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 
 /**
  * Just a spike.  Please test drive.
@@ -91,7 +91,7 @@ public class DifferenceImplIntegrationTest extends TestCase {
 
     private LongIndex createIndex(Long[]... longs) throws GraphException {
         LongIndexMem index = new LongIndexMem();
-        for (Long[] triple: longs) {
+        for (Long[] triple : longs) {
             index.add(triple);
         }
         return index;

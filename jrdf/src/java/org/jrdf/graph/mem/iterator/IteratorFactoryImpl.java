@@ -58,8 +58,8 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.longindex.LongIndex;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
