@@ -65,11 +65,11 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.mem.GraphHandler012;
-import org.jrdf.graph.index.mem.GraphHandler120;
-import org.jrdf.graph.index.mem.GraphHandler201;
+import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 import org.jrdf.graph.mem.TripleImpl;
 
 import java.util.Map;
