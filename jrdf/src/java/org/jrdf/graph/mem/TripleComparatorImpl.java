@@ -57,43 +57,40 @@
  */
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
-import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 
 /**
- * Creates a new Graph implementation based on required types.
+ * Provides a comparison of the RDF Triples.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class GraphFactoryImpl implements GraphFactory {
-    private LongIndex[] longIndexes;
-    private NodePoolMem nodePool;
-    private GraphElementFactory elementFactory;
-    private GraphHandler[] graphHandlers;
-    private IteratorFactory iteratorFactory;
+public final class TripleComparatorImpl implements TripleComparator {
+    private NodeComparator nodeComparator;
 
-    public GraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool) {
-        this.longIndexes = longIndexes;
-        this.nodePool = nodePool;
-        this.graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
-            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
-        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
-//        IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
-//        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool);
+    public TripleComparatorImpl(NodeComparator nodeComparator) {
+        this.nodeComparator = nodeComparator;
     }
 
-    public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
-            iteratorFactory);
+    public int compare(Triple o1, Triple o2) {
+        int subjectComparison = nodeComparator.compare(o1.getSubject(), o2.getSubject());
+        if (subjectComparison == 0) {
+            return comparePredicates(o1, o2);
+        }
+        return subjectComparison;
+    }
+
+    private int comparePredicates(Triple o1, Triple o2) {
+        int predicateComparison = nodeComparator.compare(o1.getPredicate(), o2.getPredicate());
+        if (predicateComparison == 0) {
+            return compareObjects(o1, o2);
+        }
+        return predicateComparison;
+    }
+
+    private int compareObjects(Triple o1, Triple o2) {
+        return nodeComparator.compare(o1.getObject(), o2.getObject());
     }
 }
