@@ -58,9 +58,12 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
 
 import java.util.Iterator;
 
@@ -72,9 +75,17 @@ import java.util.Iterator;
  */
 public class TripleClosableIterator implements ClosableMemIterator<Triple> {
     private Iterator<Triple> iter;
+    private NodePoolMem nodePool;
+    private LongIndex longIndex;
+    private GraphHandler handler;
+    private Triple triple;
 
-    public TripleClosableIterator(Iterator<Triple> iter) {
+    public TripleClosableIterator(Iterator<Triple> iter, NodePoolMem nodePool, LongIndex longIndex,
+        GraphHandler handler) {
         this.iter = iter;
+        this.nodePool = nodePool;
+        this.longIndex = longIndex;
+        this.handler = handler;
     }
 
     public boolean close() {
@@ -86,14 +97,21 @@ public class TripleClosableIterator implements ClosableMemIterator<Triple> {
     }
 
     public Triple next() {
-        return iter.next();
+        triple = iter.next();
+        return triple;
     }
 
     public void remove() {
-        iter.remove();
+        try {
+            Long[] longs = nodePool.localize(triple.getSubject(), triple.getPredicate(), triple.getObject());
+            longIndex.remove(longs);
+            handler.remove(longs);
+        } catch (Exception ise) {
+            throw new IllegalStateException("Next not called or beyond end of data");
+        }
     }
 
     public boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120) {
-        return true;
+        return false;
     }
 }

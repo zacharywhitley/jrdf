@@ -4,6 +4,7 @@
 
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="EscapeUtil.java"/>
     <suppress checks="JavaNCSS" files="RDF.java"/>

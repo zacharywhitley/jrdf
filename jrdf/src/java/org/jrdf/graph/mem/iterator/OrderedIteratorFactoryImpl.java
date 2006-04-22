@@ -58,6 +58,9 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.TripleComparatorImpl;
 
@@ -71,9 +74,16 @@ import java.util.TreeSet;
  */
 public class OrderedIteratorFactoryImpl implements IteratorFactory {
     private IteratorFactory iteratorFactory;
+    private NodePoolMem nodePool;
+    private LongIndex longIndex;
+    private GraphHandler graphHandler;
 
-    public OrderedIteratorFactoryImpl(IteratorFactory iteratorFactory) {
+    public OrderedIteratorFactoryImpl(IteratorFactory iteratorFactory, NodePoolMem nodePool,
+        LongIndex longIndex, GraphHandler graphHandlers) {
         this.iteratorFactory = iteratorFactory;
+        this.nodePool = nodePool;
+        this.longIndex = longIndex;
+        this.graphHandler = graphHandlers;
     }
 
     public ClosableMemIterator<Triple> newEmptyClosableIterator() {
@@ -102,6 +112,6 @@ public class OrderedIteratorFactoryImpl implements IteratorFactory {
         while (closableMemIterator.hasNext()) {
             treeMap.add(closableMemIterator.next());
         }
-        return new TripleClosableIterator(treeMap.iterator());
+        return new TripleClosableIterator(treeMap.iterator(), nodePool, longIndex, graphHandler);
     }
 }

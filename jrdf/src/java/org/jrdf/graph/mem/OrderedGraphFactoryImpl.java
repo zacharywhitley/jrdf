@@ -55,32 +55,46 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf;
+package org.jrdf.graph.mem;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.mem.GraphFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
+import org.jrdf.graph.mem.iterator.IteratorFactory;
+import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.mem.iterator.OrderedIteratorFactoryImpl;
 
 /**
- * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
+ * Creates a new Graph implementation based on required types.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public final class JRDFFactory {
-    private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
-    private static ClassPathXmlApplicationContext beanFactory =
-        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+public class OrderedGraphFactoryImpl implements GraphFactory {
+    private LongIndex[] longIndexes;
+    private NodePoolMem nodePool;
+    private GraphElementFactory elementFactory;
+    private GraphHandler[] graphHandlers;
+    private IteratorFactory iteratorFactory;
 
-    private JRDFFactory() {
+    public OrderedGraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool) {
+        this.longIndexes = longIndexes;
+        this.nodePool = nodePool;
+        this.graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
+            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
+        IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
+        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, longIndexes[0],
+            graphHandlers[0]);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool);
     }
 
-    public void refresh() {
-        beanFactory.refresh();
-    }
-
-    public static Graph getNewGraph() {
-        GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("graphFactory");
-        return graphFactory.getGraph();
+    public Graph getGraph() {
+        return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
+            iteratorFactory);
     }
 }

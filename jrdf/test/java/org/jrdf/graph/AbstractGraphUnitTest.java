@@ -136,15 +136,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
 
     /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    protected AbstractGraphUnitTest(String name) {
-        super(name);
-    }
-
-    /**
      * Create test instance.
      *
      * @throws Exception A generic exception - this should cause the tests to
@@ -405,23 +396,23 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
         // Try to add any nodes
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-                new AssertThrows.Block() {
-                    public void execute() throws Throwable {
-                        graph.remove(ANY_SUBJECT_NODE, ref1, ref1);
-                    }
-                });
+            new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    graph.remove(ANY_SUBJECT_NODE, ref1, ref1);
+                }
+            });
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-                new AssertThrows.Block() {
-                    public void execute() throws Throwable {
-                        graph.remove(ref1, ANY_PREDICATE_NODE, ref1);
-                    }
-                });
+            new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    graph.remove(ref1, ANY_PREDICATE_NODE, ref1);
+                }
+            });
         AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
-                new AssertThrows.Block() {
-                    public void execute() throws Throwable {
-                        graph.remove(ref1, ref1, ANY_OBJECT_NODE);
-                    }
-                });
+            new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    graph.remove(ref1, ref1, ANY_OBJECT_NODE);
+                }
+            });
     }
 
     public void testRemoveIterator() throws Exception {
@@ -724,7 +715,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         Set<Triple> statements = new HashSet<Triple>();
         ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("ClosableIterator is returning false for hasNext().",
-                iter.hasNext());
+            iter.hasNext());
         while (iter.hasNext()) {
             statements.add(iter.next());
         }
@@ -773,7 +764,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         // Check that it throws an exception before hasNext is called.
         checkInvalidRemove(ci);
 
-        for (int i = expectedFoundTriples-1; 0 <= i; i--) {
+        for (int i = expectedFoundTriples - 1; 0 <= i; i--) {
             // remove the element
             assertTrue(ci.hasNext());
             ci.next();
