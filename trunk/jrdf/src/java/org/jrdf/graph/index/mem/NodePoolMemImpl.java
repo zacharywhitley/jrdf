@@ -77,7 +77,7 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class NodePoolMemImpl implements NodePoolMem {
+public final class NodePoolMemImpl implements NodePoolMem {
     /**
      * Three being the number, and the number being 3.
      */
@@ -96,12 +96,16 @@ public class NodePoolMemImpl implements NodePoolMem {
     /**
      * The next available node id.
      */
-    private long nextNode;
+    private long nextNode = 1L;
 
     public NodePoolMemImpl() {
         nodePool = new HashMap<Long, Node>();
         stringPool = new HashMap<String, Long>();
-        nextNode = 1L;
+    }
+
+    public NodePoolMemImpl(Map<Long, Node> newNodePool, Map<String, Long> newStringPool) {
+        nodePool = newNodePool;
+        stringPool = newStringPool;
     }
 
     public Node getNodeById(Long id) {

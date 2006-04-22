@@ -64,13 +64,13 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
+import org.jrdf.graph.mem.TripleImpl;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -118,18 +118,18 @@ public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
     /**
      * Constructor.
      */
-    ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, TripleFactory factory, GraphHandler newHandler) {
+    ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphHandler newHandler) {
         nodes = newNodes;
         longIndex = newLongIndex;
         handler = newHandler;
-        createTriple(nodes, newHandler, factory);
+        createTriple(nodes, newHandler);
     }
 
-    private void createTriple(Long[] longNodes, GraphHandler handler, TripleFactory factory) {
+    private void createTriple(Long[] longNodes, GraphHandler handler) {
         if (contains(longNodes)) {
             try {
                 Node[] nodes = handler.createTriple(longNodes);
-                triple = factory.createTriple((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
+                triple = new TripleImpl((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
             } catch (TripleFactoryException e) {
                 exception = e;
             }

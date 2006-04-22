@@ -58,7 +58,6 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
 
@@ -71,12 +70,10 @@ import org.jrdf.graph.index.LongIndex;
 public final class IteratorFactoryImpl implements IteratorFactory {
     private LongIndex[] longIndexes;
     private GraphHandler[] graphHandlers;
-    private TripleFactory tripleFactory;
 
-    public IteratorFactoryImpl(LongIndex[] longIndexes, GraphHandler[] graphHandlers, TripleFactory tripleFactory) {
+    public IteratorFactoryImpl(LongIndex[] longIndexes, GraphHandler[] graphHandlers) {
         this.longIndexes = longIndexes;
         this.graphHandlers = graphHandlers;
-        this.tripleFactory = tripleFactory;
     }
 
     public ClosableMemIterator<Triple> newEmptyClosableIterator() {
@@ -84,19 +81,18 @@ public final class IteratorFactoryImpl implements IteratorFactory {
     }
 
     public ClosableMemIterator<Triple> newGraphIterator() {
-        return new GraphIterator(tripleFactory, graphHandlers[0]);
+        return new GraphIterator(graphHandlers[0]);
     }
 
     public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return new OneFixedIterator(fixedFirstNode, longIndexes[index], tripleFactory, graphHandlers[index]);
+        return new OneFixedIterator(fixedFirstNode, longIndexes[index], graphHandlers[index]);
     }
 
     public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], tripleFactory,
-            graphHandlers[index]);
+        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], graphHandlers[index]);
     }
 
     public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return new ThreeFixedIterator(newNodes, longIndexes[0], tripleFactory, graphHandlers[0]);
+        return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
     }
 }

@@ -55,26 +55,16 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem.iterator;
+package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.Graph;
 
 /**
- * Creates the iterators.  Allows different implementations of iterators to be used.
+ * Allows the construction of a graph.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public interface IteratorFactory {
-    // TODO (AN) Comeback and javadoc.
-    ClosableMemIterator<Triple> newEmptyClosableIterator();
-
-    ClosableMemIterator<Triple> newGraphIterator();
-
-    ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index);
-
-    ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index);
-
-    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes
-    );
+public interface GraphFactory {
+    Graph getGraph();
 }

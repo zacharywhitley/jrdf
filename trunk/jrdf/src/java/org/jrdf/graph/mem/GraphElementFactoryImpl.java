@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
@@ -75,7 +76,7 @@ import java.net.URI;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class GraphElementFactoryImpl implements GraphElementFactoryMem {
+public final class GraphElementFactoryImpl implements GraphElementFactory {
 
     /**
      * The node pool.

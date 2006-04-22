@@ -55,26 +55,26 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem.iterator;
+package org.jrdf.graph.index.mem;
 
-import org.jrdf.graph.Triple;
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+
+import java.lang.reflect.Modifier;
+import java.util.Map;
 
 /**
- * Creates the iterators.  Allows different implementations of iterators to be used.
+ * Checks several implementation details of NodePoolMem implementation of LongIndex.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Revision: 442 $
  */
-public interface IteratorFactory {
-    // TODO (AN) Comeback and javadoc.
-    ClosableMemIterator<Triple> newEmptyClosableIterator();
-
-    ClosableMemIterator<Triple> newGraphIterator();
-
-    ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index);
-
-    ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index);
-
-    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes
-    );
+public class NodePoolMemUnitTest extends TestCase {
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(NodePoolMem.class, NodePoolMemImpl.class);
+        checkConstructor(NodePoolMemImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+        checkConstructor(NodePoolMemImpl.class, Modifier.PUBLIC, Map.class, Map.class);
+    }
 }

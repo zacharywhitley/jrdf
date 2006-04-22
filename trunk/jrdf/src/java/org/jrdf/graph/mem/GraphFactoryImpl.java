@@ -57,19 +57,41 @@
  */
 package org.jrdf.graph.mem;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.index.GraphHandler;
+import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.mem.GraphHandler012;
+import org.jrdf.graph.index.mem.GraphHandler120;
+import org.jrdf.graph.index.mem.GraphHandler201;
 import org.jrdf.graph.index.mem.NodePoolMem;
+import org.jrdf.graph.mem.iterator.IteratorFactory;
+import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 
 /**
- * An extension of the GraphElementFactory that allows the NodePool to be retrieved.
+ * Creates a new Graph implementation based on required types.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public interface GraphElementFactoryMem extends GraphElementFactory {
+public class GraphFactoryImpl implements GraphFactory {
+    private LongIndex[] longIndexes;
+    private NodePoolMem nodePool;
+    private GraphElementFactory elementFactory;
+    private GraphHandler[] graphHandlers;
+    private IteratorFactory iteratorFactory;
 
-    /**
-     * Return the node pool.
-     */
-    NodePoolMem getNodePool();
+    public GraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool) {
+        this.longIndexes = longIndexes;
+        this.nodePool = nodePool;
+        this.graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
+            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
+        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool);
+    }
+
+    public Graph getGraph() {
+        return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
+            iteratorFactory);
+    }
 }
