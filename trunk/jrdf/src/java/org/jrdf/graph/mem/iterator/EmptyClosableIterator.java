@@ -59,9 +59,9 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.index.mem.GraphHandler012;
-import org.jrdf.graph.index.mem.GraphHandler120;
-import org.jrdf.graph.index.mem.GraphHandler201;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
+import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 
 import java.util.NoSuchElementException;
 
