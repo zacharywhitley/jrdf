@@ -55,45 +55,15 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem;
+package org.jrdf.graph;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
-import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
+import java.util.Comparator;
 
 /**
- * Creates a new Graph implementation based on required types.
+ * A TripleComparator provides a comparison between triples.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class GraphFactoryImpl implements GraphFactory {
-    private LongIndex[] longIndexes;
-    private NodePoolMem nodePool;
-    private GraphElementFactory elementFactory;
-    private GraphHandler[] graphHandlers;
-    private IteratorFactory iteratorFactory;
-
-    public GraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool) {
-        this.longIndexes = longIndexes;
-        this.nodePool = nodePool;
-        this.graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
-            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
-        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
-//        IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
-//        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool);
-    }
-
-    public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
-            iteratorFactory);
-    }
+public interface TripleComparator extends Comparator<Triple> {
 }

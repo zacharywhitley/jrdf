@@ -55,45 +55,53 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem;
+package org.jrdf.graph.mem.iterator;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
-import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.graph.mem.TripleComparatorImpl;
+
+import java.util.TreeSet;
 
 /**
- * Creates a new Graph implementation based on required types.
+ * Stuff goes in here.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class GraphFactoryImpl implements GraphFactory {
-    private LongIndex[] longIndexes;
-    private NodePoolMem nodePool;
-    private GraphElementFactory elementFactory;
-    private GraphHandler[] graphHandlers;
+public class OrderedIteratorFactoryImpl implements IteratorFactory {
     private IteratorFactory iteratorFactory;
 
-    public GraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool) {
-        this.longIndexes = longIndexes;
-        this.nodePool = nodePool;
-        this.graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
-            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
-        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
-//        IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
-//        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool);
+    public OrderedIteratorFactoryImpl(IteratorFactory iteratorFactory) {
+        this.iteratorFactory = iteratorFactory;
     }
 
-    public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
-            iteratorFactory);
+    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
+        return iteratorFactory.newEmptyClosableIterator();
+    }
+
+    public ClosableMemIterator<Triple> newGraphIterator() {
+        return sortResults(iteratorFactory.newGraphIterator());
+    }
+
+    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
+        return sortResults(iteratorFactory.newOneFixedIterator(fixedFirstNode, index));
+    }
+
+    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
+        return sortResults(iteratorFactory.newTwoFixedIterator(fixedFirstNode, fixedSecondNode, index));
+    }
+
+    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes) {
+        return iteratorFactory.newThreeFixedIterator(nodes);
+    }
+
+    private ClosableMemIterator<Triple> sortResults(ClosableMemIterator<Triple> closableMemIterator) {
+        TripleComparatorImpl tripleComparator = new TripleComparatorImpl(new NodeComparatorImpl());
+        TreeSet<Triple> treeMap = new TreeSet<Triple>(tripleComparator);
+        while (closableMemIterator.hasNext()) {
+            treeMap.add(closableMemIterator.next());
+        }
+        return new TripleClosableIterator(treeMap.iterator());
     }
 }
