@@ -86,7 +86,7 @@ public class TripleImpl extends AbstractTriple {
      * @param predicate The predicate node of this triple.
      * @param object    The object node of this triple.
      */
-    TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+    public TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         subjectNode = subject;
         predicateNode = predicate;
         objectNode = object;

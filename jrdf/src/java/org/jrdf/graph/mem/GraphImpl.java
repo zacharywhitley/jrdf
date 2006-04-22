@@ -79,6 +79,7 @@ import org.jrdf.graph.index.mem.NodePoolMem;
 import org.jrdf.graph.index.mem.NodePoolMemImpl;
 import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
+import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
 
@@ -132,7 +133,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Graph Element Factory.  This caches the node factory.
      */
-    private transient GraphElementFactoryMem elementFactory;
+    private transient GraphElementFactory elementFactory;
 
     /**
      * The node pool.
@@ -142,7 +143,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Triple Element Factory.  This caches the element factory.
      */
-    private transient TripleFactoryImpl tripleFactory;
+    private transient TripleFactory tripleFactory;
 
     /**
      * Graph handler for the 012 index.
@@ -152,7 +153,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * A way to create iterators.
      */
-    private transient IteratorFactoryImpl iteratorFactory;
+    private transient IteratorFactory iteratorFactory;
 
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
@@ -164,13 +165,15 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex newLongIndex012, LongIndex newLongIndex120, LongIndex newLongIndex201,
-        GraphElementFactoryMem newElementFactory) {
-        longIndex012 = newLongIndex012;
-        longIndex120 = newLongIndex120;
-        longIndex201 = newLongIndex201;
-        elementFactory = newElementFactory;
-        nodePool = elementFactory.getNodePool();
+    public GraphImpl(LongIndex[] longIndexes, NodePoolMem nodePool, GraphElementFactory elementFactory,
+        GraphHandler012 graphHandler012, IteratorFactory iteratorFactory) {
+        this.longIndex012 = longIndexes[0];
+        this.longIndex120 = longIndexes[1];
+        this.longIndex201 = longIndexes[2];
+        this.nodePool = nodePool;
+        this.elementFactory = elementFactory;
+        this.graphHandler012 = graphHandler012;
+        this.iteratorFactory = iteratorFactory;
         init();
     }
 
@@ -181,6 +184,30 @@ public class GraphImpl implements Graph, Serializable {
 
         // TODO AN Replace these with IOC!
         // protect each field allocation with a test for null
+        initIndexes();
+
+        LongIndex[] indexes = new LongIndex[]{longIndex012, longIndex120, longIndex201};
+
+        if (null == nodePool) {
+            nodePool = new NodePoolMemImpl();
+        }
+
+        if (null == elementFactory) {
+            elementFactory = new GraphElementFactoryImpl(nodePool);
+        }
+
+        if (null == tripleFactory) {
+            tripleFactory = new TripleFactoryImpl(this, elementFactory);
+        }
+
+        if (null == graphHandler012) {
+            graphHandler012 = new GraphHandler012(indexes, nodePool);
+        }
+
+        initIteratorFactory(indexes);
+    }
+
+    private void initIndexes() {
         if (null == longIndex012) {
             longIndex012 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
         }
@@ -190,22 +217,15 @@ public class GraphImpl implements Graph, Serializable {
         if (null == longIndex201) {
             longIndex201 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
         }
+    }
 
-        if (null == elementFactory) {
-            nodePool = new NodePoolMemImpl();
-            elementFactory = new GraphElementFactoryImpl(nodePool);
+    private void initIteratorFactory(LongIndex[] indexes) {
+        if (null == iteratorFactory) {
+            GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
+            GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
+            iteratorFactory = new IteratorFactoryImpl(indexes,
+                new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201});
         }
-
-        if (null == tripleFactory) {
-            tripleFactory = new TripleFactoryImpl(this, elementFactory);
-        }
-
-        graphHandler012 = new GraphHandler012(longIndex012, longIndex120, longIndex201, nodePool);
-        GraphHandler201 graphHandler201 = new GraphHandler201(longIndex012, longIndex120, longIndex201, nodePool);
-        GraphHandler120 graphHandler120 = new GraphHandler120(longIndex012, longIndex120, longIndex201, nodePool);
-
-        iteratorFactory = new IteratorFactoryImpl(new LongIndex[]{longIndex012, longIndex120, longIndex201},
-            new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201}, tripleFactory);
     }
 
     public boolean contains(Triple triple) throws GraphException {

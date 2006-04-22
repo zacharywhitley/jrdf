@@ -64,12 +64,12 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
+import org.jrdf.graph.mem.TripleImpl;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -122,11 +122,6 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
     private Long[] currentNodes;
 
     /**
-     * The factory used to create the nodes to be returned in the triples.
-     */
-    private TripleFactory factory;
-
-    /**
      * Handles the removal of nodes
      */
     private GraphHandler handler;
@@ -142,10 +137,9 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
      * @throws IllegalArgumentException Must be created with implementations from
      *                                  the memory package.
      */
-    GraphIterator(TripleFactory newFactory, GraphHandler newHandler) {
+    GraphIterator(GraphHandler newHandler) {
 
         // store the node factory
-        factory = newFactory;
         handler = newHandler;
         iterator = handler.getEntries();
     }
@@ -205,7 +199,7 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
         currentNodes = new Long[]{first, second, third};
         try {
             Node[] triple = handler.createTriple(currentNodes);
-            return factory.createTriple((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
+            return new TripleImpl((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
         } catch (TripleFactoryException e) {
             throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
         }

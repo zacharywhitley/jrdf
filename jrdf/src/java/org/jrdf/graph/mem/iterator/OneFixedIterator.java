@@ -64,13 +64,13 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.mem.GraphHandler012;
 import org.jrdf.graph.index.mem.GraphHandler120;
 import org.jrdf.graph.index.mem.GraphHandler201;
+import org.jrdf.graph.mem.TripleImpl;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -122,11 +122,6 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
     private Iterator<Long> thirdIndexIterator;
 
     /**
-     * The factory used to create the nodes to be returned in the triples.
-     */
-    private TripleFactory factory;
-
-    /**
      * Handles the removal of nodes
      */
     private GraphHandler handler;
@@ -141,11 +136,9 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
-    OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, TripleFactory newFactory,
-        GraphHandler newHandler) {
+    OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, GraphHandler newHandler) {
 
         // store the node factory and other starting data
-        factory = newFactory;
         handler = newHandler;
 
         first = fixedFirstNode;
@@ -192,7 +185,7 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
         currentNodes = new Long[]{first, second, third};
         try {
             Node[] triple = handler.createTriple(currentNodes);
-            return factory.createTriple((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
+            return new TripleImpl((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
         } catch (TripleFactoryException e) {
             throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
         }

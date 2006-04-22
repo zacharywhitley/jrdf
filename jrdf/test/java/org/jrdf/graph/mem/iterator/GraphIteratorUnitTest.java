@@ -58,7 +58,6 @@
 package org.jrdf.graph.mem.iterator;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
@@ -74,7 +73,6 @@ public class GraphIteratorUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
             GraphIterator.class);
-        ClassPropertiesTestUtil.checkConstructor(GraphIterator.class, NO_MODIFIER, TripleFactory.class,
-            GraphHandler.class);
+        ClassPropertiesTestUtil.checkConstructor(GraphIterator.class, NO_MODIFIER, GraphHandler.class);
     }
 }

@@ -81,10 +81,10 @@ public class GraphHandler012 extends AbstractGraphHandler implements GraphHandle
     private LongIndex index120;
     private LongIndex index201;
 
-    public GraphHandler012(LongIndex index012, LongIndex index120, LongIndex index201, NodePool nodePool) {
-        this.index012 = index012;
-        this.index120 = index120;
-        this.index201 = index201;
+    public GraphHandler012(LongIndex[] indexes, NodePool nodePool) {
+        this.index012 = indexes[0];
+        this.index120 = indexes[1];
+        this.index201 = indexes[2];
         this.nodePool = nodePool;
     }
 

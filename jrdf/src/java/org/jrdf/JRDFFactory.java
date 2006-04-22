@@ -58,10 +58,8 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.jrdf.graph.mem.GraphFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
@@ -71,18 +69,18 @@ import org.springframework.core.io.Resource;
  */
 public final class JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
-    private static final Resource DEFAULT_RESOURCE = new ClassPathResource(DEFAULT_WIRING_CONFIG);
-    private static BeanFactory beanFactory = new XmlBeanFactory(DEFAULT_RESOURCE);
+    private static ClassPathXmlApplicationContext beanFactory =
+        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
     private JRDFFactory() {
     }
 
-    // TODO (AN) ApplicationContext instead?
-    public void reload(Resource res) {
-        beanFactory = new XmlBeanFactory(res);
+    public void refresh() {
+        beanFactory.refresh();
     }
 
     public static Graph getNewGraph() {
-        return (Graph) beanFactory.getBean("org.jrdf.graph.mem.GraphImpl");
+        GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("org.jrdf.graph.mem.GraphFactoryImpl");
+        return graphFactory.getGraph();
     }
 }

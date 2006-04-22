@@ -58,7 +58,6 @@
 package org.jrdf.graph.mem.iterator;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.index.GraphHandler;
 import org.jrdf.graph.index.LongIndex;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -77,6 +76,6 @@ public class IteratorFactoryImplUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(IteratorFactory.class,
             IteratorFactoryImpl.class);
         ClassPropertiesTestUtil.checkConstructor(IteratorFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class,
-            GraphHandler[].class, TripleFactory.class);
+            GraphHandler[].class);
     }
 }
