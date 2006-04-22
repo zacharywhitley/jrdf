@@ -86,8 +86,6 @@ import java.util.Collection;
  * @version $Id$
  */
 public final class SerializationIntegrationTest extends TestCase {
-
-
     private static final String PATH_ROOT = "/";
     private static final Class<Vocabulary> PRODUCTION_CLASS = Vocabulary.class;
     private static final String DOT = ".";
