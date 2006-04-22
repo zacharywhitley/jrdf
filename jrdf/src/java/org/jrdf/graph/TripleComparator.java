@@ -60,7 +60,8 @@ package org.jrdf.graph;
 import java.util.Comparator;
 
 /**
- * A TripleComparator provides a comparison between triples.
+ * Provides a comparison between triples - this will usually be implemented using the order Subject, Predicate,
+ * Object of the nodes and a NodeComparator to compare each of the nodes.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $

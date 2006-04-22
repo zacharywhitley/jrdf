@@ -60,7 +60,8 @@ package org.jrdf.graph;
 import java.util.Comparator;
 
 /**
- * A NodeComparator provides a comparison between nodes.
+ * Provides a comparison of the three different node types: BNode, URI and Literal.  Given two different types of node
+ * the arbitrary order enforced is: BNode, URI and then Literal.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $

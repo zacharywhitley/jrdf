@@ -64,9 +64,8 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
 
 /**
- * Provides a comparison of the three different node types: BNode, URI and Literal.  Given two different types of node
- * the arbitrary order enforced is: BNode, URI and then Literal.  Currently only support simple comparison - either
- * by node id for blank nodes or string comparisons for URIs and Literals.
+ * Currently only support simple comparison - either by node id for blank nodes or string comparisons for URIs and
+ * Literals.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $

@@ -68,7 +68,8 @@ import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
 import java.util.Iterator;
 
 /**
- * Simple iterator.
+ * A simple iterator that provides removal of nodes from the underlying store - irrespectively of the order given
+ * by the iterator.
  *
  * @author Andrew Newman
  * @version $Revision: 436 $
@@ -107,7 +108,7 @@ public class TripleClosableIterator implements ClosableMemIterator<Triple> {
             longIndex.remove(longs);
             handler.remove(longs);
         } catch (Exception ise) {
-            throw new IllegalStateException("Next not called or beyond end of data");
+            throw new IllegalStateException("Next not called or beyond end of data", ise);
         }
     }
 
