@@ -202,8 +202,6 @@ public class GraphImpl implements Graph, Serializable {
 
         if (null == graphHandler012) {
             graphHandler012 = new GraphHandler012(indexes, nodePool);
-            graphHandler120 = new GraphHandler120(indexes, nodePool);
-            graphHandler201 = new GraphHandler201(indexes, nodePool);
         }
 
         initIteratorFactory(indexes);
