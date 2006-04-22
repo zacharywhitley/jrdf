@@ -9,7 +9,7 @@
     <bean class="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl" singleton="false">
     </bean>
 
-    <bean class="org.jrdf.graph.mem.GraphFactoryImpl" singleton="false">
+    <bean name="graphFactory" class="org.jrdf.graph.mem.OrderedGraphFactoryImpl" singleton="false">
         <constructor-arg>
             <list>
                 <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>

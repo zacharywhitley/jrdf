@@ -58,8 +58,6 @@
 
 package org.jrdf.graph.mem;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 import org.jrdf.JRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
@@ -83,15 +81,6 @@ import java.io.ObjectOutputStream;
 public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    public GraphImplUnitTest(String name) {
-        super(name);
-    }
-
-    /**
      * Create a graph implementation.
      *
      * @return A new GraphImplUnitTest.
@@ -101,33 +90,12 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     }
 
     /**
-     * Hook for test runner to obtain a test suite from.
-     *
-     * @return The test suite
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(GraphImplUnitTest.class);
-        suite.addTest(new GraphImplUnitTest("testEmpty"));
-        suite.addTest(new GraphImplUnitTest("testFactory"));
-        suite.addTest(new GraphImplUnitTest("testAddition"));
-        suite.addTest(new GraphImplUnitTest("testRemoval"));
-        suite.addTest(new GraphImplUnitTest("testRemoveIterator"));
-        suite.addTest(new GraphImplUnitTest("testContains"));
-        suite.addTest(new GraphImplUnitTest("testFinding"));
-        suite.addTest(new GraphImplUnitTest("testIteration"));
-        suite.addTest(new GraphImplUnitTest("testIterativeRemoval"));
-        suite.addTest(new GraphImplUnitTest("testSerializing"));
-        return suite;
-    }
-
-    /**
      * Default test runner.
      *
      * @param args The command line arguments
      */
     public static void main(String[] args) throws Exception {
-
-        TestRunner.run(suite());
+        TestRunner.run(GraphImplUnitTest.class);
     }
 
     /**

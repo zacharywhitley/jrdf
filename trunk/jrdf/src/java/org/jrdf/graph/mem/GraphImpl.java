@@ -166,13 +166,13 @@ public class GraphImpl implements Graph, Serializable {
      * Default constructor.
      */
     public GraphImpl(LongIndex[] longIndexes, NodePoolMem nodePool, GraphElementFactory elementFactory,
-        GraphHandler012 graphHandler012, IteratorFactory iteratorFactory) {
+        GraphHandler012 graphHandler, IteratorFactory iteratorFactory) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
         this.nodePool = nodePool;
         this.elementFactory = elementFactory;
-        this.graphHandler012 = graphHandler012;
+        this.graphHandler012 = graphHandler;
         this.iteratorFactory = iteratorFactory;
         init();
     }
@@ -202,6 +202,8 @@ public class GraphImpl implements Graph, Serializable {
 
         if (null == graphHandler012) {
             graphHandler012 = new GraphHandler012(indexes, nodePool);
+            graphHandler120 = new GraphHandler120(indexes, nodePool);
+            graphHandler201 = new GraphHandler201(indexes, nodePool);
         }
 
         initIteratorFactory(indexes);
@@ -452,19 +454,26 @@ public class GraphImpl implements Graph, Serializable {
     @SuppressWarnings({
         "unchecked"
         })
-    public void remove(Iterator triples) throws GraphException {
-
+    public void remove(Iterator<Triple> triples) throws GraphException {
         if (triples instanceof ClosableMemIterator) {
-            ClosableMemIterator<Triple> memIterator = (ClosableMemIterator<Triple>) triples;
-            while (memIterator.hasNext()) {
-                memIterator.next();
-                memIterator.remove();
-            }
+            localIteratorRemove(triples);
         } else {
-            while (triples.hasNext()) {
-                Triple triple = (Triple) triples.next();
-                remove(triple);
-            }
+            globalIteratorRemove(triples);
+        }
+    }
+
+    private void localIteratorRemove(Iterator<Triple> triples) {
+        ClosableMemIterator<Triple> memIterator = (ClosableMemIterator<Triple>) triples;
+        while (memIterator.hasNext()) {
+            memIterator.next();
+            memIterator.remove();
+        }
+    }
+
+    private void globalIteratorRemove(Iterator<Triple> triples) throws GraphException {
+        while (triples.hasNext()) {
+            Triple triple = triples.next();
+            remove(triple);
         }
     }
 
