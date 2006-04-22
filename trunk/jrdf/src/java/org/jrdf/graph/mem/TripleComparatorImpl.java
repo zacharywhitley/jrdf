@@ -62,7 +62,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
 /**
- * Provides a comparison of the RDF Triples.
+ * Provides a comparison between triples using a NodeComparator and the order of the nodes Subject, Predicate and
+ * Object.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
