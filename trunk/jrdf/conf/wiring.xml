@@ -3,20 +3,20 @@
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-    <bean class="org.jrdf.graph.index.mem.LongIndexMem" singleton="false">
+    <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false">
     </bean>
 
-    <bean class="org.jrdf.graph.index.mem.NodePoolMemImpl" singleton="false">
+    <bean class="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl" singleton="false">
     </bean>
 
     <bean class="org.jrdf.graph.mem.GraphFactoryImpl" singleton="false">
         <constructor-arg>
             <list>
-                <ref bean="org.jrdf.graph.index.mem.LongIndexMem"/>
-                <ref bean="org.jrdf.graph.index.mem.LongIndexMem"/>
-                <ref bean="org.jrdf.graph.index.mem.LongIndexMem"/>
+                <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
+                <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
+                <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
             </list>
         </constructor-arg>
-        <constructor-arg ref="org.jrdf.graph.index.mem.NodePoolMemImpl"/>
+        <constructor-arg ref="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl"/>
     </bean>
 </beans>
