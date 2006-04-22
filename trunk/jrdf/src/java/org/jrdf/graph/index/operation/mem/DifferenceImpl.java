@@ -59,8 +59,8 @@
 package org.jrdf.graph.index.operation.mem;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
-import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.operation.Difference;
 import static org.jrdf.graph.index.operation.mem.BasicOperations.copyEntriesToIndex;
 import static org.jrdf.graph.index.operation.mem.BasicOperations.removeEntriesFromIndex;

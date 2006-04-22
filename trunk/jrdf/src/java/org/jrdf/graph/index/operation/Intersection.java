@@ -59,7 +59,7 @@
 package org.jrdf.graph.index.operation;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.LongIndex;
+import org.jrdf.graph.index.longindex.LongIndex;
 
 /**
  * The set of all object which appear in both graphs.

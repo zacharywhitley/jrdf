@@ -62,7 +62,7 @@ import org.jrdf.graph.AnyNode;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.index.mem.LongIndexMem;
+import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralImpl;
 import org.jrdf.graph.mem.URIReferenceImpl;
@@ -91,7 +91,9 @@ public final class ArnoldTheInstantiator {
     }
 
     public Object instantiate(Class<?> cls) {
-        if (instantiators.containsKey(cls)) return instantiators.get(cls).instantiate();
+        if (instantiators.containsKey(cls)) {
+            return instantiators.get(cls).instantiate();
+        }
         return newInstance(cls);
     }
 

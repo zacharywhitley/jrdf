@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 483 $
+ * $Date: 2006-04-22 17:54:03 +1000 (Sat, 22 Apr 2006) $
  *
  * ====================================================================
  *
@@ -56,18 +56,49 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.graph.index.operation;
+package org.jrdf.graph.index.graphhandler.mem;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.index.graphhandler.AbstractGraphHandler;
+import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.nodepool.NodePool;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * The set union of two graphs - all of the items in the first graph are
- * added to the second graph (no duplicates).
+ * Handles operations on 012 index.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 483 $
  */
-public interface Union extends SetOperation {
-    LongIndex perform(LongIndex index1, LongIndex index2) throws GraphException;
+public class GraphHandler012 extends AbstractGraphHandler implements GraphHandler {
+    private LongIndex index012;
+    private LongIndex index120;
+    private LongIndex index201;
+
+    public GraphHandler012(LongIndex[] indexes, NodePool nodePool) {
+        this.index012 = indexes[0];
+        this.index120 = indexes[1];
+        this.index201 = indexes[2];
+        this.nodePool = nodePool;
+    }
+
+    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
+        return index012.iterator();
+    }
+
+    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
+        return new Node[]{nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
+            nodePool.getNodeById(nodes[2])};
+    }
+
+    public void remove(Long[] currentNodes) throws GraphException {
+        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
+        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+    }
 }

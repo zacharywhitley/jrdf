@@ -58,8 +58,8 @@
 package org.jrdf.graph.mem.iterator;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.index.LongIndex;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.longindex.LongIndex;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
