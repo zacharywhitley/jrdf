@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 443 $
- * $Date: 2006-03-06 21:34:14 +1000 (Mon, 06 Mar 2006) $
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,23 +55,54 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.query.relation.mem;
 
-package org.jrdf.query.relation;
+import junit.framework.TestCase;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.type.BlankNodeType;
+import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.Type;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.util.Set;
+import java.lang.reflect.Modifier;
 
 /**
- * A tuple is a named finite set of tuples (attributes to a set of values).
+ * Test for attribute implementation.
  *
  * @author Andrew Newman
- * @version $Revision: 443 $
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public interface Tuple {
+public class AttributeImplUnitTest extends TestCase {
+    private static final String ATTRIBUTE_NAME = "attributeName";
+    private static final String TYPE_NAME = "type";
+    private static final String STRING_1 = "foo";
+    private static final String STRING_2 = "bar";
+    private static final Type TYPE_1 = new LiteralType();
+    private static final Type TYPE_2 = new BlankNodeType();
 
-    /**
-     * Returns the set of tuples (attribute name/values).
-     *
-     * @return the set of tuples (attribute/name values).
-     */
-    Set<AttributeValuePair> getAttributeValues();
+    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(STRING_1, TYPE_1);
+    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(STRING_2, TYPE_2);
+
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
+        checkConstructor(AttributeImpl.class, Modifier.PUBLIC, String.class, Type.class);
+        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, ATTRIBUTE_NAME, String.class);
+        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, TYPE_NAME, Type.class);
+    }
+
+    public void testConstructor() {
+        checkStandardConstructor(STRING_1, TYPE_1);
+        checkStandardConstructor(STRING_2, TYPE_2);
+    }
+
+    private void checkStandardConstructor(String attributeName, Type type) {
+        Attribute attribute = new AttributeImpl(attributeName, type);
+        checkFieldValue(attribute, ATTRIBUTE_NAME, attributeName);
+        checkFieldValue(attribute, TYPE_NAME, type);
+        assertEquals(attributeName, attribute.getAttributeName());
+        assertEquals(type, attribute.getType());
+    }
 }

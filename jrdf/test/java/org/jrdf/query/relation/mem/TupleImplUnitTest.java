@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,39 +55,61 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.query.relation.mem;
 
-package org.jrdf.query.relation.constants;
-
+import junit.framework.TestCase;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
+import static org.jrdf.query.relation.mem.AttributeValuePairUnitTest.TEST_ATTRIBUTE_VALUE_1;
+import static org.jrdf.query.relation.mem.AttributeValuePairUnitTest.TEST_ATTRIBUTE_VALUE_2;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.io.ObjectStreamException;
-import java.io.Serializable;
-import java.util.Collections;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
- * A class which simply contains the True Node constant.
+ * Test for tuple implementation.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public final class NullaryTuple implements Tuple, Serializable {
+public class TupleImplUnitTest extends TestCase {
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_1 =
+        new AttributeValuePair[]{TEST_ATTRIBUTE_VALUE_1};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_2 =
+        new AttributeValuePair[]{TEST_ATTRIBUTE_VALUE_1, TEST_ATTRIBUTE_VALUE_2};
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_1 = createSet(ATTRIBUTE_VALUE_PAIRS_1);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_2 = createSet(ATTRIBUTE_VALUE_PAIRS_2);
+    private static final String TUPLES_NAME = "attributeValues";
 
-    /**
-     * The node which represents the boolean logic value "NULLARY_TUPLE".
-     */
-    public static final Tuple NULLARY_TUPLE = new NullaryTuple();
-    private static final long serialVersionUID = 1808216129525892255L;
+    public static final Tuple TEST_TUPLE_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_1);
+    public static final Tuple TEST_TUPLE_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_2);
 
-    private NullaryTuple() {
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(Tuple.class, TupleImpl.class);
+        checkConstructor(TupleImpl.class, Modifier.PUBLIC, Set.class);
+        checkFieldIsOfTypePrivateAndFinal(TupleImpl.class, TUPLES_NAME, Set.class);
     }
 
-    private Object readResolve() throws ObjectStreamException {
-        return NULLARY_TUPLE;
+    public void testConstructor() {
+        checkStandardConstructor(ATTRIBUTE_VALUE_SET_1);
+        checkStandardConstructor(ATTRIBUTE_VALUE_SET_2);
     }
 
-    public Set<AttributeValuePair> getAttributeValues() {
-        return Collections.emptySet();
+    private void checkStandardConstructor(Set<AttributeValuePair> tupleSet) {
+        Tuple tuple = new TupleImpl(tupleSet);
+        checkFieldValue(tuple, TUPLES_NAME, tupleSet);
+        assertEquals(tupleSet, tuple.getAttributeValues());
     }
+
+    private static Set<AttributeValuePair> createSet(AttributeValuePair[] attributeValuePair) {
+        //noinspection unchecked
+        return new HashSet(Arrays.asList(attributeValuePair));
+    }
+
 }

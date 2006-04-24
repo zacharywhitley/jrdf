@@ -61,12 +61,8 @@ package org.jrdf.query.relation;
 import java.util.Set;
 
 /**
- * Represents a relation or truth propisition.  The subjects map to the names of
- * the tuple, the predicates to the attribute names (or column names),
- * the object nodes to tuples, and the combination of all three values can be
- * retrieved as triples.
- * <p/>
- * Unsure how operations are going to be implemented - this interface may change.
+ * Relations containing a set of tuples and a set of attributes.  The attribute constitute a heading the maps to the
+ * tuple values.
  *
  * @author Andrew Newman
  * @version $Revision$
@@ -78,10 +74,10 @@ public interface Relation {
      *
      * @return the set of attributes or heading of the relation.
      */
-    Set<Attribute> getAttributes();
+    Set<Attribute> getHeading();
 
     /**
-     * Returns the set of tuples (another relation) for this relation for the given set of attributes.
+     * Returns the set of tuples.
      *
      * @return a set of tuples.
      */

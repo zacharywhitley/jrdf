@@ -89,7 +89,7 @@ public final class RelationDUM implements Relation {
      *
      * @return an empty set.
      */
-    public Set<Attribute> getAttributes() {
+    public Set<Attribute> getHeading() {
         return Collections.emptySet();
     }
 

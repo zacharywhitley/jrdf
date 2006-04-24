@@ -61,8 +61,8 @@ package org.jrdf.util.test;
 
 import junit.framework.Assert;
 
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Allows tests to be made of fields of classes.
@@ -116,14 +116,10 @@ public class FieldPropertiesTestUtil {
             expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
     }
 
-    public static long getLongFieldValue(Class<?> cls, String fieldName) {
-        Field field = ReflectTestUtil.getField(cls, fieldName);
-        try {
-            field.setAccessible(true);
-            return field.getLong(cls);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public static void checkFieldIsOfTypePrivateAndFinal(Class<?> cls, String fieldName, Class<?> expectedType) {
+        checkFieldIsOfType(cls, fieldName, expectedType);
+        checkFieldPrivate(cls, fieldName);
+        checkFieldFinal(cls, fieldName);
     }
 
     private static void checkFieldHasModifier(Class<?> cls, String fieldName, int modifier) {

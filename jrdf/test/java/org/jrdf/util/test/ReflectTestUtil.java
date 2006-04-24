@@ -58,6 +58,8 @@
 
 package org.jrdf.util.test;
 
+import junit.framework.Assert;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -74,6 +76,17 @@ public final class ReflectTestUtil {
     private static final ParamSpec PARAMS_NONE = new ParamSpec();
 
     private ReflectTestUtil() {
+    }
+
+    public static void checkFieldValue(Object ref, String fieldName, Object expectedValue) {
+        Field field = getField(ref.getClass(), fieldName);
+        field.setAccessible(true);
+        try {
+            Object actual = field.get(ref);
+            Assert.assertEquals("Field value in field: " + fieldName, expectedValue, actual);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void insertFieldValue(Object ref, String fieldName, Object fieldValue) {

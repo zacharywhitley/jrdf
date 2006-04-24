@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 443 $
- * $Date: 2006-03-06 21:34:14 +1000 (Mon, 06 Mar 2006) $
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,23 +55,35 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.query.relation.mem;
 
-package org.jrdf.query.relation;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 
 import java.util.Set;
 
 /**
- * A tuple is a named finite set of tuples (attributes to a set of values).
+ * Implementation of relations containing a set of tuples and a set of attributes.  The attribute constitute a heading
+ * the maps to the tuple values.
  *
  * @author Andrew Newman
- * @version $Revision: 443 $
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public interface Tuple {
+public final class RelationImpl implements Relation {
+    private final Set<Attribute> heading;
+    private final Set<Tuple> tuples;
 
-    /**
-     * Returns the set of tuples (attribute name/values).
-     *
-     * @return the set of tuples (attribute/name values).
-     */
-    Set<AttributeValuePair> getAttributeValues();
+    public RelationImpl(Set<Attribute> newHeading, Set<Tuple> newTuples) {
+        heading = newHeading;
+        tuples = newTuples;
+    }
+
+    public Set<Attribute> getHeading() {
+        return heading;
+    }
+
+    public Set<Tuple> getTuples() {
+        return tuples;
+    }
 }

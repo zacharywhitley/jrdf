@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 443 $
- * $Date: 2006-03-06 21:34:14 +1000 (Mon, 06 Mar 2006) $
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,23 +55,31 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.query.relation.mem;
 
-package org.jrdf.query.relation;
-
-import java.util.Set;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.type.Type;
 
 /**
- * A tuple is a named finite set of tuples (attributes to a set of values).
+ * Implementation of attribute-name:type-name combination.
  *
  * @author Andrew Newman
- * @version $Revision: 443 $
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public interface Tuple {
+public final class AttributeImpl implements Attribute {
+    private final String attributeName;
+    private final Type type;
 
-    /**
-     * Returns the set of tuples (attribute name/values).
-     *
-     * @return the set of tuples (attribute/name values).
-     */
-    Set<AttributeValuePair> getAttributeValues();
+    public AttributeImpl(String newAttributeName, Type newType) {
+        attributeName = newAttributeName;
+        type = newType;
+    }
+
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    public Type getType() {
+        return type;
+    }
 }
