@@ -87,7 +87,7 @@ public final class RelationDEE implements Relation {
     private RelationDEE() {
     }
 
-    public Set<Attribute> getAttributes() {
+    public Set<Attribute> getHeading() {
         return Collections.emptySet();
     }
 

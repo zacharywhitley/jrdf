@@ -55,63 +55,67 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem.iterator;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.graph.mem.TripleComparatorImpl;
+import junit.framework.TestCase;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_1;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_2;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_1;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_2;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.util.TreeSet;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Stuff goes in here.
+ * Test for tuple implementation.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class OrderedIteratorFactoryImpl implements IteratorFactory {
-    private IteratorFactory iteratorFactory;
-    private NodePoolMem nodePool;
-    private LongIndex longIndex;
-    private GraphHandler graphHandler;
+public class RelationImplUnitTest extends TestCase {
+    private static final Attribute[] ATTRIBUTES_1 = new Attribute[]{TEST_ATTRIBUTE_1};
+    private static final Attribute[] ATTRIBUTES_2 = new Attribute[]{TEST_ATTRIBUTE_2};
+    private static final Tuple[] TUPLES_1 = new Tuple[]{TEST_TUPLE_1};
+    private static final Tuple[] TUPLES_2 = new Tuple[]{TEST_TUPLE_2};
+    private static final String HEADING_NAME = "heading";
+    private static final String TUPLES_NAME = "tuples";
 
-    public OrderedIteratorFactoryImpl(IteratorFactory iteratorFactory, NodePoolMem nodePool,
-        LongIndex longIndex, GraphHandler graphHandlers) {
-        this.iteratorFactory = iteratorFactory;
-        this.nodePool = nodePool;
-        this.longIndex = longIndex;
-        this.graphHandler = graphHandlers;
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
+        checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, Set.class);
+        checkFieldIsOfTypePrivateAndFinal(RelationImpl.class, HEADING_NAME, Set.class);
+        checkFieldIsOfTypePrivateAndFinal(RelationImpl.class, TUPLES_NAME, Set.class);
     }
 
-    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
-        return iteratorFactory.newEmptyClosableIterator();
+    public void testConstructor() {
+        checkStandardConstructor(createHeading(ATTRIBUTES_1), createTuple(TUPLES_1));
+        checkStandardConstructor(createHeading(ATTRIBUTES_2), createTuple(TUPLES_2));
     }
 
-    public ClosableMemIterator<Triple> newGraphIterator() {
-        return sortResults(iteratorFactory.newGraphIterator());
+    private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples) {
+        Relation relation = new RelationImpl(heading, tuples);
+        checkFieldValue(relation, HEADING_NAME, heading);
+        checkFieldValue(relation, TUPLES_NAME, tuples);
+        assertEquals(heading, relation.getHeading());
+        assertEquals(tuples, relation.getTuples());
     }
 
-    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return sortResults(iteratorFactory.newOneFixedIterator(fixedFirstNode, index));
+    private Set<Attribute> createHeading(Attribute[] attributes) {
+        //noinspection unchecked
+        return new HashSet(Arrays.asList(attributes));
     }
 
-    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return sortResults(iteratorFactory.newTwoFixedIterator(fixedFirstNode, fixedSecondNode, index));
-    }
-
-    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes) {
-        return iteratorFactory.newThreeFixedIterator(nodes);
-    }
-
-    private ClosableMemIterator<Triple> sortResults(ClosableMemIterator<Triple> closableMemIterator) {
-        TripleComparatorImpl tripleComparator = new TripleComparatorImpl(new NodeComparatorImpl());
-        TreeSet<Triple> orderedSet = new TreeSet<Triple>(tripleComparator);
-        while (closableMemIterator.hasNext()) {
-            orderedSet.add(closableMemIterator.next());
-        }
-        return new TripleClosableIterator(orderedSet.iterator(), nodePool, longIndex, graphHandler);
+    private Set<Tuple> createTuple(Tuple[] tuples) {
+        //noinspection unchecked
+        return new HashSet(Arrays.asList(tuples));
     }
 }

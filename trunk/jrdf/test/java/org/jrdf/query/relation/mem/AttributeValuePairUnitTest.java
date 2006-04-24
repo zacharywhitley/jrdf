@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,39 +55,55 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf.query.relation.mem;
 
-package org.jrdf.query.relation.constants;
-
+import junit.framework.TestCase;
+import static org.jrdf.graph.AnyNode.ANY_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Node;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_1;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_2;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.io.ObjectStreamException;
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Set;
+import java.lang.reflect.Modifier;
 
 /**
- * A class which simply contains the True Node constant.
+ * Test for attribute value pair implementation.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public final class NullaryTuple implements Tuple, Serializable {
+public class AttributeValuePairUnitTest extends TestCase {
+    private static final String ATTRIBUTE_NAME = "attribute";
+    private static final String VALUE_NAME = "value";
 
-    /**
-     * The node which represents the boolean logic value "NULLARY_TUPLE".
-     */
-    public static final Tuple NULLARY_TUPLE = new NullaryTuple();
-    private static final long serialVersionUID = 1808216129525892255L;
+    public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_1 =
+        new AttributeValuePairImpl(TEST_ATTRIBUTE_1, ANY_NODE);
+    public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_2 =
+        new AttributeValuePairImpl(TEST_ATTRIBUTE_2, ANY_SUBJECT_NODE);
 
-    private NullaryTuple() {
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(AttributeValuePair.class, AttributeValuePairImpl.class);
+        checkConstructor(AttributeValuePairImpl.class, Modifier.PUBLIC, Attribute.class, Node.class);
+        checkFieldIsOfTypePrivateAndFinal(AttributeValuePairImpl.class, ATTRIBUTE_NAME, Attribute.class);
+        checkFieldIsOfTypePrivateAndFinal(AttributeValuePairImpl.class, VALUE_NAME, Node.class);
     }
 
-    private Object readResolve() throws ObjectStreamException {
-        return NULLARY_TUPLE;
+    public void testConstructor() {
+        checkStandardConstructor(TEST_ATTRIBUTE_1, ANY_NODE);
+        checkStandardConstructor(TEST_ATTRIBUTE_2, ANY_SUBJECT_NODE);
     }
 
-    public Set<AttributeValuePair> getAttributeValues() {
-        return Collections.emptySet();
+    private void checkStandardConstructor(Attribute attributeName, Node node) {
+        AttributeValuePair attributeValuePair = new AttributeValuePairImpl(attributeName, node);
+        checkFieldValue(attributeValuePair, ATTRIBUTE_NAME, attributeName);
+        checkFieldValue(attributeValuePair, VALUE_NAME, node);
+        assertEquals(attributeName, attributeValuePair.getAttribute());
+        assertEquals(node, attributeValuePair.getValue());
     }
 }

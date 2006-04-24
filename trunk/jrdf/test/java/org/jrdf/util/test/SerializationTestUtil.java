@@ -65,6 +65,7 @@ import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
@@ -91,7 +92,9 @@ public final class SerializationTestUtil {
 
     // Note. This method will not attempt to serialize interfaces.
     public static void canBeSerialized(Class<?> cls) {
-        if (canBeInstantiated(cls)) checkSerialization(instantiate(cls));
+        if (canBeInstantiated(cls)) {
+            checkSerialization(instantiate(cls));
+        }
     }
 
     // Note. Re-throwing exceptions below as we lose the class that caused the problem.
@@ -102,12 +105,12 @@ public final class SerializationTestUtil {
             throw new AssertionFailedError("Class " + getClassName(instanceToBeSerialized) + ", " + afe.getMessage());
         } catch (IOException ioe) {
             throw new RuntimeException("Exception while checking serialization of " +
-                    getClassName(instanceToBeSerialized), ioe);
+                getClassName(instanceToBeSerialized), ioe);
         }
     }
 
     private static void checkSerialUidValue(Class<?> cls, long expectedUid) {
-        long actualUid = FieldPropertiesTestUtil.getLongFieldValue(cls, FIELD_SERIAL_VERSION_UID);
+        long actualUid = getLongFieldValue(cls, FIELD_SERIAL_VERSION_UID);
         Assert.assertEquals(expectedUid, actualUid);
     }
 
@@ -131,5 +134,15 @@ public final class SerializationTestUtil {
 
     private static Object instantiate(Class<?> cls) {
         return new ArnoldTheInstantiator().instantiate(cls);
+    }
+
+    public static long getLongFieldValue(Class<?> cls, String fieldName) {
+        try {
+            Field field = ReflectTestUtil.getField(cls, fieldName);
+            field.setAccessible(true);
+            return field.getLong(cls);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
