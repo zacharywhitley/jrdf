@@ -59,11 +59,14 @@
 
 package org.jrdf.query.relation.operation.mem;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.constants.RelationDEE;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A simple memory based implementation of Join.
@@ -97,6 +100,47 @@ public final class Join implements org.jrdf.query.relation.operation.Join {
 
         // Do a proper join.
         Relation result = null;
+
+        // Get the common attributes that are being joined
+        Set<Attribute> intersectionHeading = getHeadingIntersections(relation);
+
+        // No common attributes
+//        if (intersectionHeading.size() == 0) {
+//            // Perform cartesian product
+//        }
+
+        // Perform join using common headings.
+
+        // Union all of the headings together.
+        Set<Attribute> resultHeading = getHeadingUnions(relation);
+
         return null;
+    }
+
+    private Set<Attribute> getHeadingUnions(Set<Relation> relation) {
+        Set<Attribute> headings = new TreeSet<Attribute>();
+
+        for (Relation aRelation : relation) {
+            Set<Attribute> heading = aRelation.getHeading();
+            headings.addAll(heading);
+        }
+
+        return headings;
+    }
+
+    private Set<Attribute> getHeadingIntersections(Set<Relation> relation) {
+        Set<Attribute> headings = new TreeSet<Attribute>();
+        Iterator<Relation> iterator = relation.iterator();
+
+        Relation firstRelation = iterator.next();
+        headings.addAll(firstRelation.getHeading());
+
+        while (iterator.hasNext()) {
+            Relation aRelation = iterator.next();
+            Set<Attribute> heading = aRelation.getHeading();
+            headings.retainAll(heading);
+        }
+
+        return headings;
     }
 }
