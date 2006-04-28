@@ -55,13 +55,15 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation;
+
+import java.util.Comparator;
 
 /**
- * Sort attributes by their type.
+ * Compares tuples.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class AttributeComparator {
+public interface TupleComparator extends Comparator<Tuple> {
 }
