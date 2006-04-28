@@ -55,36 +55,15 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-
-import java.util.Set;
+import java.util.Comparator;
 
 /**
- * Implementation of relations containing a set of tuples and a set of attributes.  The attribute constitute a heading
- * the maps to the tuple values.
+ * Sort attributes by their type.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public final class RelationImpl implements Relation {
-    private final Set<Attribute> heading;
-    private final Set<Tuple> tuples;
-
-    // TODO (AN) Headings can be gleaned from tuples
-    public RelationImpl(Set<Attribute> newHeading, Set<Tuple> newTuples) {
-        heading = newHeading;
-        tuples = newTuples;
-    }
-
-    public Set<Attribute> getHeading() {
-        return heading;
-    }
-
-    public Set<Tuple> getTuples() {
-        return tuples;
-    }
+public interface AttributeComparator extends Comparator<Attribute> {
 }

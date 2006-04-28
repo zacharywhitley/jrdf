@@ -60,8 +60,12 @@
 package org.jrdf.query.relation.operation.mem;
 
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.constants.RelationDEE;
+import org.jrdf.query.relation.mem.RelationImpl;
+import org.jrdf.query.relation.mem.TupleImpl;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -87,57 +91,84 @@ public final class Join implements org.jrdf.query.relation.operation.Join {
     private Join() {
     }
 
-    public Relation join(Set<Relation> relation) {
+    public Relation join(Set<Relation> relations) {
         // Is it the empty set - if so return DEE.
-        if (relation.equals(Collections.<Relation>emptySet())) {
+        if (relations.equals(Collections.<Relation>emptySet())) {
             return RelationDEE.RELATION_DEE;
         }
 
-        // Is it just one relation - if so just return it back.
-        if (relation.size() == 1) {
-            return relation.iterator().next();
+        // Is it just one relations - if so just return it back.
+        if (relations.size() == 1) {
+            return relations.iterator().next();
         }
 
         // Do a proper join.
         Relation result = null;
 
         // Get the common attributes that are being joined
-        Set<Attribute> intersectionHeading = getHeadingIntersections(relation);
+        Set<Attribute> intersectionHeading = getHeadingIntersections(relations);
+
+        Set<Tuple> resultTuples = new TreeSet<Tuple>();
 
         // No common attributes
-//        if (intersectionHeading.size() == 0) {
-//            // Perform cartesian product
-//        }
+        if (intersectionHeading.size() == 0) {
+            // Perform cartesian product
+            resultTuples = performCartesianProduct(relations);
+        }
 
         // Perform join using common headings.
 
         // Union all of the headings together.
-        Set<Attribute> resultHeading = getHeadingUnions(relation);
+        Set<Attribute> resultHeading = getHeadingUnions(relations);
 
-        return null;
+        return new RelationImpl(resultHeading, resultTuples);
     }
 
-    private Set<Attribute> getHeadingUnions(Set<Relation> relation) {
+    private Set<Tuple> performCartesianProduct(Set<Relation> relations) {
+        Iterator<Relation> iterator = relations.iterator();
+        Relation relation1 = iterator.next();
+        Relation relation2 = iterator.next();
+        Set<Tuple> tuples = joinTuples(relation1.getTuples(), relation2.getTuples());
+        while (iterator.hasNext()) {
+            tuples = joinTuples(tuples, iterator.next().getTuples());
+        }
+        return tuples;
+    }
+
+    private Set<Tuple> joinTuples(Set<Tuple> tuples1, Set<Tuple> tuples2) {
+        Set<Tuple> result = new TreeSet<Tuple>();
+
+        for (Tuple tuple1 : tuples1) {
+            Set<AttributeValuePair> resultantAttributeValues = tuple1.getAttributeValues();
+            for (Tuple tuple2 : tuples2) {
+                resultantAttributeValues.addAll(tuple2.getAttributeValues());
+            }
+            result.add(new TupleImpl(resultantAttributeValues));
+        }
+        return result;
+    }
+
+    private Set<Attribute> getHeadingUnions(Set<Relation> relations) {
         Set<Attribute> headings = new TreeSet<Attribute>();
 
-        for (Relation aRelation : relation) {
-            Set<Attribute> heading = aRelation.getHeading();
+        for (Relation relation : relations) {
+            Set<Attribute> heading = relation.getHeading();
             headings.addAll(heading);
         }
 
         return headings;
     }
 
-    private Set<Attribute> getHeadingIntersections(Set<Relation> relation) {
+    private Set<Attribute> getHeadingIntersections(Set<Relation> relations) {
         Set<Attribute> headings = new TreeSet<Attribute>();
-        Iterator<Relation> iterator = relation.iterator();
+        Iterator<Relation> iterator = relations.iterator();
 
         Relation firstRelation = iterator.next();
         headings.addAll(firstRelation.getHeading());
 
         while (iterator.hasNext()) {
-            Relation aRelation = iterator.next();
-            Set<Attribute> heading = aRelation.getHeading();
+            Relation relation = iterator.next();
+            Set<Attribute> heading = relation.getHeading();
             headings.retainAll(heading);
         }
 
