@@ -55,57 +55,26 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.query.relation.mem;
+package org.jrdf.graph.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.attributename.PositionName;
-import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.LiteralType;
-import org.jrdf.query.relation.type.Type;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
-import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
+import java.util.Comparator;
 
 /**
- * Test for attribute implementation.
+ * Test for the implementation of NodeComparatorImpl.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class AttributeImplUnitTest extends TestCase {
-    private static final String ATTRIBUTE_NAME = "attributeName";
-    private static final String TYPE_NAME = "type";
-    private static final AttributeName ATTRIBUTE_NAME_1 = new PositionName("foo");
-    private static final AttributeName ATTRIBUTE_NAME_2 = new VariableName("bar");
-    private static final Type TYPE_1 = new LiteralType();
-    private static final Type TYPE_2 = new BlankNodeType();
-
-    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, TYPE_1);
-    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, TYPE_2);
-
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
-        checkConstructor(AttributeImpl.class, Modifier.PUBLIC, AttributeName.class, Type.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, ATTRIBUTE_NAME, AttributeName.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, TYPE_NAME, Type.class);
-    }
-
-    public void testConstructor() {
-        checkStandardConstructor(ATTRIBUTE_NAME_1, TYPE_1);
-        checkStandardConstructor(ATTRIBUTE_NAME_2, TYPE_2);
-    }
-
-    private void checkStandardConstructor(AttributeName attributeName, Type type) {
-        Attribute attribute = new AttributeImpl(attributeName, type);
-        checkFieldValue(attribute, ATTRIBUTE_NAME, attributeName);
-        checkFieldValue(attribute, TYPE_NAME, type);
-        assertEquals(attributeName, attribute.getAttributeName());
-        assertEquals(type, attribute.getType());
+public class NodeComparatorImplUnitTest extends TestCase {
+    public void testClassProperties() throws Exception {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
+        ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
+        ClassPropertiesTestUtil
+            .checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 }

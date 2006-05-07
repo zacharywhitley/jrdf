@@ -58,6 +58,7 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.Type;
 
 /**
@@ -67,15 +68,15 @@ import org.jrdf.query.relation.type.Type;
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 public final class AttributeImpl implements Attribute {
-    private final String attributeName;
+    private final AttributeName attributeName;
     private final Type type;
 
-    public AttributeImpl(String newAttributeName, Type newType) {
+    public AttributeImpl(AttributeName newAttributeName, Type newType) {
         attributeName = newAttributeName;
         type = newType;
     }
 
-    public String getAttributeName() {
+    public AttributeName getAttributeName() {
         return attributeName;
     }
 

@@ -64,10 +64,19 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.constants.RelationDUM;
+import org.jrdf.query.relation.mem.AttributeComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import org.jrdf.query.relation.mem.RelationComparatorImpl;
+import org.jrdf.query.relation.mem.RelationImpl;
+import org.jrdf.query.relation.mem.TupleImpl;
 import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.LiteralType;
 import org.jrdf.query.relation.type.PredicateNodeType;
@@ -77,6 +86,7 @@ import org.jrdf.vocabulary.RDF;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other
@@ -86,10 +96,14 @@ import java.util.Set;
  * @version $Revision$
  */
 public class JoinIntegrationTest extends TestCase {
-    private static final Attribute ATTRIBUTE_1 = new AttributeImpl("foo1", new LiteralType());
-    private static final Attribute ATTRIBUTE_2 = new AttributeImpl("foo2", new BlankNodeType());
-    private static final Attribute ATTRIBUTE_3 = new AttributeImpl("bar1", new SubjectNodeType());
-    private static final Attribute ATTRIBUTE_4 = new AttributeImpl("bar2", new PredicateNodeType());
+    private static final AttributeName ATTRIBUTE_NAME_1 = new PositionName("foo1");
+    private static final AttributeName ATTRIBUTE_NAME_2 = new PositionName("foo2");
+    private static final AttributeName ATTRIBUTE_NAME_3 = new VariableName("bar1");
+    private static final AttributeName ATTRIBUTE_NAME_4 = new VariableName("bar2");
+    private static final Attribute ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, new LiteralType());
+    private static final Attribute ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, new BlankNodeType());
+    private static final Attribute ATTRIBUTE_3 = new AttributeImpl(ATTRIBUTE_NAME_3, new SubjectNodeType());
+    private static final Attribute ATTRIBUTE_4 = new AttributeImpl(ATTRIBUTE_NAME_4, new PredicateNodeType());
     private static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
     private static final URIReference RESOURCE_2 = NodeTestUtil.createResource(RDF.BAG);
     private static final URIReference RESOURCE_3 = NodeTestUtil.createResource(RDF.FIRST);
@@ -113,45 +127,45 @@ public class JoinIntegrationTest extends TestCase {
         checkRelation(Collections.singleton(RelationDUM.RELATION_DUM), RelationDUM.RELATION_DUM);
     }
 
-//    public void testCartesianProduct() {
-//        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
-//        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-//        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
-//            ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-//        Set<Attribute> heading1 = createHeading(ATTRIBUTE_1, ATTRIBUTE_2);
-//        Set<Attribute> heading2 = createHeading(ATTRIBUTE_3, ATTRIBUTE_4);
-//        Set<Attribute> resultHeading = createHeading(ATTRIBUTE_1, ATTRIBUTE_2, ATTRIBUTE_3, ATTRIBUTE_4);
-//        Relation relation1 = new RelationImpl(heading1, tuple1);
-//        Relation relation2 = new RelationImpl(heading2, tuple2);
-//        Relation expectedResult = new RelationImpl(resultHeading, resultTuple);
-//
-//        Set<Relation> tuples = new TreeSet<Relation>();
-//        tuples.add(relation1);
-//        tuples.add(relation2);
-//
-//        checkRelation(tuples, expectedResult);
-//    }
+    public void testCartesianProduct() {
+        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
+        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
+        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
+            ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
+        Set<Attribute> heading1 = createHeading(ATTRIBUTE_1, ATTRIBUTE_2);
+        Set<Attribute> heading2 = createHeading(ATTRIBUTE_3, ATTRIBUTE_4);
+        Set<Attribute> resultHeading = createHeading(ATTRIBUTE_1, ATTRIBUTE_2, ATTRIBUTE_3, ATTRIBUTE_4);
+        Relation relation1 = new RelationImpl(heading1, tuple1);
+        Relation relation2 = new RelationImpl(heading2, tuple2);
+        Relation expectedResult = new RelationImpl(resultHeading, resultTuple);
 
-//    private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
-//        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>();
-//        for (AttributeValuePair attributeValuePair : attributeValuePairs) {
-//            values.add(attributeValuePair);
-//        }
-//        Set<Tuple> tuples = new TreeSet<Tuple>();
-//        tuples.add(new TupleImpl(values));
-//        return tuples;
-//    }
-//
-//    private Set<Attribute> createHeading(Attribute... attributes) {
-//        Set<Attribute> heading = new TreeSet<Attribute>();
-//        for (Attribute attribute: attributes) {
-//            heading.add(attribute);
-//        }
-//        return heading;
-//    }
+        Set<Relation> tuples = new TreeSet<Relation>(new RelationComparatorImpl());
+        tuples.add(relation1);
+        tuples.add(relation2);
+
+        checkRelation(tuples, expectedResult);
+    }
+
+    private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
+        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(new AttributeValuePairComparatorImpl());
+        for (AttributeValuePair attributeValuePair : attributeValuePairs) {
+            values.add(attributeValuePair);
+        }
+        Set<Tuple> tuples = new TreeSet<Tuple>();
+        tuples.add(new TupleImpl(values));
+        return tuples;
+    }
+
+    private Set<Attribute> createHeading(Attribute... attributes) {
+        Set<Attribute> heading = new TreeSet<Attribute>(new AttributeComparatorImpl());
+        for (Attribute attribute : attributes) {
+            heading.add(attribute);
+        }
+        return heading;
+    }
 
     private void checkRelation(Set<Relation> actual, Relation expected) {
         Relation relation = Join.JOIN.join(actual);
-        assertTrue(relation == expected);
+        //assertTrue(relation == expected);
     }
 }
