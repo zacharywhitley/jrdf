@@ -55,57 +55,40 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.query.relation.mem;
+package org.jrdf.query.relation.attributename;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.attributename.PositionName;
-import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.LiteralType;
-import org.jrdf.query.relation.type.Type;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
-import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
 
 /**
- * Test for attribute implementation.
+ * Stuff goes in here.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class AttributeImplUnitTest extends TestCase {
-    private static final String ATTRIBUTE_NAME = "attributeName";
-    private static final String TYPE_NAME = "type";
-    private static final AttributeName ATTRIBUTE_NAME_1 = new PositionName("foo");
-    private static final AttributeName ATTRIBUTE_NAME_2 = new VariableName("bar");
-    private static final Type TYPE_1 = new LiteralType();
-    private static final Type TYPE_2 = new BlankNodeType();
-
-    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, TYPE_1);
-    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, TYPE_2);
+public class VariableNameUnitTest extends TestCase {
+    private static final String VARIABLE_FIELD_NAME = "variableName";
+    private static final String VARIABLE_NAME_1 = "foo";
+    private static final String VARIABLE_NAME_2 = "bar";
 
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
-        checkConstructor(AttributeImpl.class, Modifier.PUBLIC, AttributeName.class, Type.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, ATTRIBUTE_NAME, AttributeName.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, TYPE_NAME, Type.class);
+        checkImplementationOfInterfaceAndFinal(AttributeName.class, VariableName.class);
+        checkConstructor(VariableName.class, Modifier.PUBLIC, String.class);
+        checkFieldIsOfTypePrivateAndFinal(VariableName.class, VARIABLE_FIELD_NAME, String.class);
     }
 
     public void testConstructor() {
-        checkStandardConstructor(ATTRIBUTE_NAME_1, TYPE_1);
-        checkStandardConstructor(ATTRIBUTE_NAME_2, TYPE_2);
+        checkStandardConstructor(VARIABLE_NAME_1);
+        checkStandardConstructor(VARIABLE_NAME_2);
     }
 
-    private void checkStandardConstructor(AttributeName attributeName, Type type) {
-        Attribute attribute = new AttributeImpl(attributeName, type);
-        checkFieldValue(attribute, ATTRIBUTE_NAME, attributeName);
-        checkFieldValue(attribute, TYPE_NAME, type);
-        assertEquals(attributeName, attribute.getAttributeName());
-        assertEquals(type, attribute.getType());
+    private void checkStandardConstructor(String variableName) {
+        AttributeName var = new VariableName(variableName);
+        org.jrdf.util.test.ReflectTestUtil.checkFieldValue(var, VARIABLE_FIELD_NAME, variableName);
+        assertEquals("?" + variableName, var.getLiteral());
     }
 }

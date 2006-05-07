@@ -59,6 +59,7 @@
 
 package org.jrdf.query.relation;
 
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.Type;
 
 /**
@@ -74,7 +75,7 @@ public interface Attribute {
      *
      * @return the name of the attribute.
      */
-    String getAttributeName();
+    AttributeName getAttributeName();
 
 
     /**

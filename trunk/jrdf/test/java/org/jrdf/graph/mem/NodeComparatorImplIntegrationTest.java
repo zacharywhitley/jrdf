@@ -79,7 +79,7 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class NodeComparatorImplTest extends TestCase {
+public class NodeComparatorImplIntegrationTest extends TestCase {
     private static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
     private static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
     private static final BlankNode BNODE_1 = new BlankNodeImpl(1l, "a");
