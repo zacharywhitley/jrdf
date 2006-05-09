@@ -67,7 +67,11 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.URIReferenceType;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -86,15 +90,20 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     private static final int AFTER = 1;
     private AttributeComparator attComparator;
 
-    private static final AttributeName ATTRIBUTE_NAME_1 = new VariableName("bar");
-    private static final AttributeName ATTRIBUTE_NAME_2 = new PositionName("bar");
-    private static final AttributeName ATTRIBUTE_NAME_3 = new VariableName("foo");
-    private static final Type TYPE_1 = new LiteralType();
-    private static final Type TYPE_2 = new BlankNodeType();
+    private static final AttributeName VARIABLE_NAME_1 = new VariableName("bar");
+    private static final AttributeName VARIABLE_NAME_2 = new VariableName("foo");
+    private static final AttributeName POSITION_NAME_1 = new PositionName("bar");
+    private static final AttributeName POSITION_NAME_2 = new PositionName("foo");
+    private static final Type NODE_TYPE_1 = new BlankNodeType();
+    private static final Type NODE_TYPE_2 = new URIReferenceType();
+    private static final Type NODE_TYPE_3 = new LiteralType();
+    private static final Type POSITIONAL_NODE_1 = new SubjectNodeType();
+    private static final Type POSITIONAL_NODE_2 = new PredicateNodeType();
+    private static final Type POSITIONAL_NODE_3 = new ObjectNodeType();
 
-    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, TYPE_1);
-    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, TYPE_1);
-    public static final Attribute TEST_ATTRIBUTE_3 = new AttributeImpl(ATTRIBUTE_NAME_3, TYPE_1);
+    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_1);
+    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_1);
+    public static final Attribute TEST_ATTRIBUTE_3 = new AttributeImpl(POSITION_NAME_1, NODE_TYPE_1);
 
 
     protected void setUp() throws Exception {
