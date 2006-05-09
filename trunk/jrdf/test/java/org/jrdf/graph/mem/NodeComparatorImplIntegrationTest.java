@@ -89,7 +89,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private NodeComparatorImpl nodeComparator;
+    private NodeComparator nodeComparator;
 
     protected void setUp() throws Exception {
         super.setUp();

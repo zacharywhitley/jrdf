@@ -59,6 +59,8 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.attributename.VariableName;
 
 /**
  * Stuff goes in here.
@@ -69,6 +71,51 @@ import org.jrdf.query.relation.AttributeComparator;
 public final class AttributeComparatorImpl implements AttributeComparator {
 
     public int compare(Attribute attribute, Attribute attribute1) {
-        return 0;
+
+        int result;
+
+        if (attribute == null || attribute1 == null) {
+            throw new NullPointerException();
+        }
+
+        if (attribute == attribute1) {
+            return 0;
+        }
+
+        result = compareAttributeNames(attribute.getAttributeName(), attribute1.getAttributeName());
+
+        if (result == 0) {
+            result = compareAttributeLiterals(attribute.getAttributeName(), attribute1.getAttributeName());
+        }
+
+        return result;
+    }
+
+    private int compareAttributeLiterals(AttributeName attributeName, AttributeName attributeName1) {
+        String attLit1 = attributeName.getLiteral();
+        String attLit2 = attributeName1.getLiteral();
+        int result = attLit1.compareTo(attLit2);
+        if (result > 0) {
+            return 1;
+        } else if (result < 0) {
+            return -1;
+        }
+        return result;
+    }
+
+    private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
+        boolean attIsVariable = attributeIsVariableName(attribute);
+        boolean att2IsVariable = attributeIsVariableName(attribute1);
+        if (attIsVariable && !att2IsVariable) {
+            return -1;
+        } else if (attIsVariable && att2IsVariable) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    private boolean attributeIsVariableName(AttributeName attribute) {
+        return attribute instanceof VariableName;
     }
 }
