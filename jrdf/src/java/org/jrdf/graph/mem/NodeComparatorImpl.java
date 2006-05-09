@@ -73,35 +73,35 @@ import org.jrdf.graph.URIReference;
 public final class NodeComparatorImpl implements NodeComparator {
 
     public int compare(Node o1, Node o2) {
-        NodeType nodeType1 = getNodeType(o1.getClass());
-        NodeType nodeType2 = getNodeType(o2.getClass());
+        NodeTypeEnum nodeType1Enum = getNodeType(o1.getClass());
+        NodeTypeEnum nodeType2Enum = getNodeType(o2.getClass());
 
         int result;
-        if (areNodesDifferentType(nodeType1, nodeType2)) {
-            result = compareDifferentNodeTypes(nodeType1, nodeType2);
+        if (areNodesDifferentType(nodeType1Enum, nodeType2Enum)) {
+            result = compareDifferentNodeTypes(nodeType1Enum, nodeType2Enum);
         } else {
-            result = compareSameNodeType(o1, o2, nodeType1);
+            result = compareSameNodeType(o1, o2, nodeType1Enum);
         }
         return result;
     }
 
-    private int compareSameNodeType(Node n1, Node n2, NodeType nodeType1) {
+    private int compareSameNodeType(Node n1, Node n2, NodeTypeEnum nodeTypeEnum) {
         int result;
         if (n1 == n2) {
             result = 0;
         } else {
-            result = compareSameNodeTypes(n1, n2, nodeType1);
+            result = compareSameNodeTypes(n1, n2, nodeTypeEnum);
         }
         return result;
     }
 
-    private int compareSameNodeTypes(Node n1, Node n2, NodeType nodeType) {
+    private int compareSameNodeTypes(Node n1, Node n2, NodeTypeEnum nodeTypeEnum) {
         int result;
-        if (nodeType.isBlankNode()) {
+        if (nodeTypeEnum.isBlankNode()) {
             result = compareBlankNodes((BlankNode) n1, (BlankNode) n2);
-        } else if (nodeType.isURIReferenceNode()) {
+        } else if (nodeTypeEnum.isURIReferenceNode()) {
             result = compareByString(n1.toString(), n2.toString());
-        } else if (nodeType.isLiteralNode()) {
+        } else if (nodeTypeEnum.isLiteralNode()) {
             result = compareByString(n1.toString(), n2.toString());
         } else {
             throw new IllegalArgumentException("Could not compare: " + n1.getClass() + " and " + n2.getClass());
@@ -110,31 +110,31 @@ public final class NodeComparatorImpl implements NodeComparator {
     }
 
     // TODO (AN) Move to different class - NodeTypeComparator
-    private int compareDifferentNodeTypes(NodeType nodeType1, NodeType nodeType2) {
+    private int compareDifferentNodeTypes(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
         int result;
-        if (nodeType1.isBlankNode()) {
+        if (nodeType1Enum.isBlankNode()) {
             result = -1;
-        } else if (nodeType1.isURIReferenceNode()) {
-            result = uriComparison(nodeType1, nodeType2);
-        } else if (nodeType1.isURIReferenceNode() && nodeType2.isBlankNode()) {
+        } else if (nodeType1Enum.isURIReferenceNode()) {
+            result = uriComparison(nodeType1Enum, nodeType2Enum);
+        } else if (nodeType1Enum.isURIReferenceNode() && nodeType2Enum.isBlankNode()) {
             result = 1;
-        } else if (nodeType1.isLiteralNode()) {
+        } else if (nodeType1Enum.isLiteralNode()) {
             result = 1;
         } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1 + " and " + nodeType2);
+            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
         }
         return result;
     }
 
     // TODO (AN) Move to different class - NodeTypeComparator
-    private int uriComparison(NodeType nodeType1, NodeType nodeType2) {
+    private int uriComparison(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
         int result;
-        if (nodeType2.isLiteralNode()) {
+        if (nodeType2Enum.isLiteralNode()) {
             result = -1;
-        } else if (nodeType2.isBlankNode()) {
+        } else if (nodeType2Enum.isBlankNode()) {
             result = 1;
         } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1 + " and " + nodeType2);
+            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
         }
         return result;
     }
@@ -174,18 +174,18 @@ public final class NodeComparatorImpl implements NodeComparator {
     }
 
     // TODO (AN) Move to different class.
-    private boolean areNodesDifferentType(NodeType nodeType1, NodeType nodeType2) {
-        return !nodeType1.equals(nodeType2);
+    private boolean areNodesDifferentType(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
+        return !nodeType1Enum.equals(nodeType2Enum);
     }
 
     // TODO (AN) Move to different class.
-    private NodeType getNodeType(Class nodeClass) {
+    private NodeTypeEnum getNodeType(Class nodeClass) {
         if (BlankNode.class.isAssignableFrom(nodeClass)) {
-            return NodeType.BLANK_NODE;
+            return NodeTypeEnum.BLANK_NODE;
         } else if (URIReference.class.isAssignableFrom(nodeClass)) {
-            return NodeType.URI_REFERENCE;
+            return NodeTypeEnum.URI_REFERENCE;
         } else if (Literal.class.isAssignableFrom(nodeClass)) {
-            return NodeType.LITERAL;
+            return NodeTypeEnum.LITERAL;
         } else {
             throw new IllegalArgumentException("Illegal node: " + nodeClass);
         }

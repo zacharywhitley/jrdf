@@ -106,12 +106,12 @@ public final class AttributeComparatorImpl implements AttributeComparator {
     private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
         boolean attIsVariable = attributeIsVariableName(attribute);
         boolean att2IsVariable = attributeIsVariableName(attribute1);
-        if (attIsVariable && !att2IsVariable) {
-            return -1;
+        if (!attIsVariable && att2IsVariable) {
+            return 1;
         } else if (attIsVariable && att2IsVariable) {
             return 0;
         } else {
-            return 1;
+            return -1;
         }
     }
 
