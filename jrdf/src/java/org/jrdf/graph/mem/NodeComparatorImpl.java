@@ -77,15 +77,15 @@ public final class NodeComparatorImpl implements NodeComparator {
         NodeType nodeType2 = getNodeType(o2.getClass());
 
         int result;
-        if (nodesDifferentType(nodeType1, nodeType2)) {
+        if (areNodesDifferentType(nodeType1, nodeType2)) {
             result = compareDifferentNodeTypes(nodeType1, nodeType2);
         } else {
-            result = compareSameNode(o1, o2, nodeType1);
+            result = compareSameNodeType(o1, o2, nodeType1);
         }
         return result;
     }
 
-    private int compareSameNode(Node n1, Node n2, NodeType nodeType1) {
+    private int compareSameNodeType(Node n1, Node n2, NodeType nodeType1) {
         int result;
         if (n1 == n2) {
             result = 0;
@@ -164,17 +164,17 @@ public final class NodeComparatorImpl implements NodeComparator {
 
     // TODO (AN) Move to different class - StringComparator
     private int compareByString(String str1, String str2) {
-        int result = 0;
-        if (str1.compareTo(str2) > 0) {
+        int result = str1.compareTo(str2);
+        if (result > 0) {
             result = 1;
-        } else if (str1.compareTo(str2) < 0) {
+        } else if (result < 0) {
             result = -1;
         }
         return result;
     }
 
     // TODO (AN) Move to different class.
-    private boolean nodesDifferentType(NodeType nodeType1, NodeType nodeType2) {
+    private boolean areNodesDifferentType(NodeType nodeType1, NodeType nodeType2) {
         return !nodeType1.equals(nodeType2);
     }
 

@@ -60,6 +60,15 @@ package org.jrdf.query.relation.mem;
 import junit.framework.TestCase;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.type.BlankNodeType;
+import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.Type;
+import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -75,11 +84,22 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private NodeComparatorImpl nodeComparator;
+    private AttributeComparator attComparator;
+
+    private static final AttributeName ATTRIBUTE_NAME_1 = new VariableName("bar");
+    private static final AttributeName ATTRIBUTE_NAME_2 = new PositionName("bar");
+    private static final AttributeName ATTRIBUTE_NAME_3 = new VariableName("foo");
+    private static final Type TYPE_1 = new LiteralType();
+    private static final Type TYPE_2 = new BlankNodeType();
+
+    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, TYPE_1);
+    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, TYPE_1);
+    public static final Attribute TEST_ATTRIBUTE_3 = new AttributeImpl(ATTRIBUTE_NAME_3, TYPE_1);
+
 
     protected void setUp() throws Exception {
         super.setUp();
-        nodeComparator = new NodeComparatorImpl();
+        attComparator = new AttributeComparatorImpl();
     }
 
     public void testClassProperties() throws Exception {
@@ -89,51 +109,50 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
             .checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 
-//    public void testNullPointerException() {
-//        checkNullPointerException(nodeComparator, AttributeValuePairComparatorImplIntegrationTest.URI_1, null);
-//        checkNullPointerException(nodeComparator, null, AttributeValuePairComparatorImplIntegrationTest.URI_1);
-//    }
-//
-//    public void testIdentity() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//    }
-//
-//    public void testNodeTypeOrder() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
-//    }
-//
-//    public void testNodeTypeAntiCommutation() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//    }
-//
+    public void testNullPointerException() {
+        checkNullPointerException(attComparator, AttributeImplUnitTest.TEST_ATTRIBUTE_1, null);
+        checkNullPointerException(attComparator, null, AttributeImplUnitTest.TEST_ATTRIBUTE_1);
+    }
+
+    public void testIdentity() {
+        assertEquals(EQUAL, attComparator.compare(TEST_ATTRIBUTE_1, TEST_ATTRIBUTE_1));
+    }
+
+    public void testAttributeNameTypeOrder() {
+        assertEquals(BEFORE, attComparator.compare(TEST_ATTRIBUTE_1, TEST_ATTRIBUTE_2));
+        assertEquals(BEFORE, attComparator.compare(TEST_ATTRIBUTE_1, TEST_ATTRIBUTE_3));
+    }
+
+    public void testAttributeNameTypeAntiCommutation() {
+        assertEquals(AFTER, attComparator.compare(TEST_ATTRIBUTE_2, TEST_ATTRIBUTE_1));
+        assertEquals(AFTER, attComparator.compare(TEST_ATTRIBUTE_3, TEST_ATTRIBUTE_1));
+    }
+
 //    public void testBlankNodeComparison() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, new BlankNodeImpl(2l, "b")));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_2));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, new BlankNodeImpl(2l, "b")));
 //    }
 //
 //    public void testURIComparisonByString() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.URI_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, new URIReferenceImpl(RDF.BAG, 2l)));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.URI_2));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, AttributeValuePairComparatorImplIntegrationTest.URI_1));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, new URIReferenceImpl(RDF.BAG, 2l)));
 //    }
 //
 //    public void testLiteralComparisonByString() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, new LiteralImpl("foo")));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_2));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
+//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, new LiteralImpl("foo")));
 //    }
-//
-//    private void checkNullPointerException(final NodeComparator nodeComparator, final Node node1, final Node node2) {
-//        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                //noinspection unchecked
-//                nodeComparator.compare(node1, node2);
-//            }
-//        });
-//    }
+
+    private void checkNullPointerException(final AttributeComparator nodeComparator, final Attribute att,
+        final Attribute att2) {
+        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                //noinspection unchecked
+                nodeComparator.compare(att, att2);
+            }
+        });
+    }
 }
