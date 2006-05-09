@@ -7,7 +7,7 @@ package org.jrdf.graph.mem;
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 // TODO (AN) Test drive me.
-public enum NodeType {
+public enum NodeTypeEnum {
     /**
      * The order of the three different types of RDF nodes.
      */
