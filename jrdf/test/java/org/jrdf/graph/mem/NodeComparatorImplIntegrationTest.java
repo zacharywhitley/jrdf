@@ -58,13 +58,13 @@
 package org.jrdf.graph.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
@@ -95,7 +95,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        nodeComparator = JRDFFactory.getNewNodeComparator();
     }
 
     public void testClassProperties() throws Exception {

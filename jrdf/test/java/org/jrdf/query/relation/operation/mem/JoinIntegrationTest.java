@@ -60,10 +60,12 @@
 package org.jrdf.query.relation.operation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -71,9 +73,7 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.constants.RelationDUM;
-import org.jrdf.query.relation.mem.AttributeComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.mem.RelationComparatorImpl;
 import org.jrdf.query.relation.mem.RelationImpl;
@@ -82,8 +82,6 @@ import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.LiteralType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
 
@@ -150,10 +148,8 @@ public class JoinIntegrationTest extends TestCase {
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
-        AttributeComparatorImpl attributeComparator = new AttributeComparatorImpl(new NodeTypeComparatorImpl());
-        AttributeValuePairComparatorImpl attributeValuePairComparator =
-                new AttributeValuePairComparatorImpl(attributeComparator);
-        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
+        AttributeValuePairComparator avpComparator = JRDFFactory.getNewAttributeValuePairComparator();
+        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
         for (AttributeValuePair attributeValuePair : attributeValuePairs) {
             values.add(attributeValuePair);
         }
@@ -163,8 +159,7 @@ public class JoinIntegrationTest extends TestCase {
     }
 
     private Set<Attribute> createHeading(Attribute... attributes) {
-        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
-        AttributeComparator attributeComparator = new AttributeComparatorImpl(nodeTypeComparator);
+        AttributeComparator attributeComparator = JRDFFactory.getNewAttributeComparator();
         Set<Attribute> heading = new TreeSet<Attribute>(attributeComparator);
         for (Attribute attribute : attributes) {
             heading.add(attribute);

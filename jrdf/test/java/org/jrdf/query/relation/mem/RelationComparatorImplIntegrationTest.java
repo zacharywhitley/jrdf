@@ -58,9 +58,9 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.JRDFFactory;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -75,11 +75,11 @@ public class RelationComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private NodeComparatorImpl nodeComparator;
+    private NodeComparator nodeComparator;
 
     protected void setUp() throws Exception {
         super.setUp();
-        nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        nodeComparator = JRDFFactory.getNewNodeComparator();
     }
 
     public void testClassProperties() {
