@@ -64,15 +64,11 @@ public class NodeTypeComparatorImpl implements NodeTypeComparator {
 
     // TODO (AN) Move to different class - NodeTypeComparatorImpl
     public int compare(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        int result;
-
         // TODO (AN) Test drive.
         if (nodeType1Enum.equals(nodeType2Enum)) {
             return 0;
         }
-
-        result = compareNodeType(nodeType1Enum, nodeType2Enum);
-        return result;
+        return compareNodeType(nodeType1Enum, nodeType2Enum);
     }
 
     private int compareNodeType(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
