@@ -65,13 +65,7 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.LiteralType;
-import org.jrdf.query.relation.type.ObjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
-import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.Type;
-import org.jrdf.query.relation.type.URIReferenceType;
+import org.jrdf.query.relation.type.*;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -115,7 +109,7 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
         ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
         ClassPropertiesTestUtil
-            .checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+                .checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 
     public void testNullPointerException() {
@@ -155,12 +149,22 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
 //        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, new LiteralImpl("foo")));
 //    }
 
-    private void checkNullPointerException(final AttributeComparator nodeComparator, final Attribute att,
-        final Attribute att2) {
+    private void checkNullPointerException(final AttributeComparator attComparator, final Attribute att,
+                                           final Attribute att2) {
         AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 //noinspection unchecked
-                nodeComparator.compare(att, att2);
+                attComparator.compare(att, att2);
+            }
+        });
+    }
+
+    private void checkClassCastException(final AttributeComparator attComparator, final Attribute att,
+                                         final Attribute att2) {
+        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                //noinspection unchecked
+                attComparator.compare(att, att2);
             }
         });
     }
