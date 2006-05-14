@@ -59,8 +59,8 @@
 
 package org.jrdf.query.relation.type;
 
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
 
 /**
  * An object node type.
@@ -71,6 +71,11 @@ import org.jrdf.graph.ObjectNode;
 public class ObjectNodeType implements NodeType {
     public boolean isAssignableFrom(Type type) {
         return type instanceof SubjectNode || type instanceof PredicateNodeType || type instanceof ObjectNode;
+    }
+
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType ||
+                type instanceof LiteralType;
     }
 
     public String getName() {

@@ -99,6 +99,7 @@ public final class AttributeComparatorImpl implements AttributeComparator {
             result = compareAttributeLiterals(attribute.getAttributeName(), attribute1.getAttributeName());
         }
 
+
         if (result == 0) {
             NodeTypeEnum nodeType1Enum = getNodeType(attribute.getType().getClass());
             NodeTypeEnum nodeType2Enum = getNodeType(attribute1.getType().getClass());

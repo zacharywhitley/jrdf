@@ -70,6 +70,10 @@ public class BlankNodeType implements NodeType {
         return type instanceof BlankNodeType;
     }
 
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type);
+    }
+
     public String getName() {
         return "BlankNodeType";
     }

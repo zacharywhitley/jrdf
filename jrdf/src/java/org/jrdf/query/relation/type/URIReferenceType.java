@@ -70,6 +70,10 @@ public class URIReferenceType implements NodeType {
         return type instanceof URIReferenceType;
     }
 
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type) || type instanceof PredicateNodeType;
+    }
+
     public String getName() {
         return "URIReferenceType";
     }
