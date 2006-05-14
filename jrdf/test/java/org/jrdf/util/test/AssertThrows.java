@@ -3,6 +3,9 @@ package org.jrdf.util.test;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Given a block/closure expects that the code will throw the expected exception with the expected message.
  *
@@ -39,7 +42,10 @@ public class AssertThrows {
     }
 
     private static void checkExceptionClass(Class exceptionClass, Throwable t) {
-        Assert.assertEquals(exceptionClass, t.getClass());
+        StringWriter writer = new StringWriter();
+        PrintWriter s = new PrintWriter(writer);
+        t.printStackTrace(s);
+        Assert.assertEquals("Got exception: " + writer.toString(), exceptionClass, t.getClass());
     }
 
     public interface Block {
