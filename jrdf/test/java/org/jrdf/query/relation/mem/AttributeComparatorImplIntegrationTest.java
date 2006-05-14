@@ -171,6 +171,7 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_ONODE, TEST_VAR_BAR_LITERAL));
     }
 
+    // TODO (AN) Duplication with other comparator tests
     private void checkNullPointerException(final AttributeComparator attComparator, final Attribute att,
                                            final Attribute att2) {
         AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {

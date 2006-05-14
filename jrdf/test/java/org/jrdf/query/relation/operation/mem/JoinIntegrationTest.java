@@ -150,7 +150,10 @@ public class JoinIntegrationTest extends TestCase {
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
-        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(new AttributeValuePairComparatorImpl());
+        AttributeComparatorImpl attributeComparator = new AttributeComparatorImpl(new NodeTypeComparatorImpl());
+        AttributeValuePairComparatorImpl attributeValuePairComparator =
+                new AttributeValuePairComparatorImpl(attributeComparator);
+        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
         for (AttributeValuePair attributeValuePair : attributeValuePairs) {
             values.add(attributeValuePair);
         }

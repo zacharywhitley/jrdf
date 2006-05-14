@@ -57,6 +57,7 @@
  */
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 
@@ -67,11 +68,17 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 public final class AttributeValuePairComparatorImpl implements AttributeValuePairComparator {
+    private AttributeComparator attributeComparator;
+
+    public AttributeValuePairComparatorImpl(AttributeComparator attributeComparator) {
+        this.attributeComparator = attributeComparator;
+    }
+
     public int compare(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
 
         ifNullThrowException(attributeValuePair, attributeValuePair1);
 
-        return 0;
+        return attributeComparator.compare(attributeValuePair.getAttribute(), attributeValuePair1.getAttribute());
     }
 
     private void ifNullThrowException(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
