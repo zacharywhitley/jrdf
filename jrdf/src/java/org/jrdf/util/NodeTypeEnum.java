@@ -1,4 +1,4 @@
-package org.jrdf.graph.mem;
+package org.jrdf.util;
 
 /**
  * Enumeration for node types.

@@ -61,6 +61,12 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.type.BlankNodeType;
+import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.URIReferenceType;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeEnum;
 
 /**
  * Stuff goes in here.
@@ -69,6 +75,11 @@ import org.jrdf.query.relation.attributename.VariableName;
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 public final class AttributeComparatorImpl implements AttributeComparator {
+    private NodeTypeComparator nodeTypeComparator;
+
+    public AttributeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
+        this.nodeTypeComparator = nodeTypeComparator;
+    }
 
     public int compare(Attribute attribute, Attribute attribute1) {
 
@@ -86,6 +97,12 @@ public final class AttributeComparatorImpl implements AttributeComparator {
 
         if (result == 0) {
             result = compareAttributeLiterals(attribute.getAttributeName(), attribute1.getAttributeName());
+        }
+
+        if (result == 0) {
+            NodeTypeEnum nodeType1Enum = getNodeType(attribute.getType().getClass());
+            NodeTypeEnum nodeType2Enum = getNodeType(attribute1.getType().getClass());
+            result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
         }
 
         return result;
@@ -115,6 +132,18 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         }
     }
 
+    private NodeTypeEnum getNodeType(Class<? extends Type> nodeClass) {
+        if (BlankNodeType.class.isAssignableFrom(nodeClass)) {
+            return NodeTypeEnum.BLANK_NODE;
+        } else if (URIReferenceType.class.isAssignableFrom(nodeClass)) {
+            return NodeTypeEnum.URI_REFERENCE;
+        } else if (LiteralType.class.isAssignableFrom(nodeClass)) {
+            return NodeTypeEnum.LITERAL;
+        } else {
+            throw new IllegalArgumentException("Illegal node: " + nodeClass);
+        }
+    }
+
     private boolean isSameNameType(boolean attIsVariable, boolean att2IsVariable) {
         return attIsVariable && att2IsVariable || !attIsVariable && !att2IsVariable;
     }
@@ -122,4 +151,5 @@ public final class AttributeComparatorImpl implements AttributeComparator {
     private boolean attributeIsVariableName(AttributeName attribute) {
         return attribute instanceof VariableName;
     }
+
 }

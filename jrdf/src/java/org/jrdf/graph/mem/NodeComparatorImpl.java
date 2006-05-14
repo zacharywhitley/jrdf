@@ -62,6 +62,8 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeEnum;
 
 /**
  * Currently only support simple comparison - either by node id for blank nodes or string comparisons for URIs and
@@ -71,6 +73,11 @@ import org.jrdf.graph.URIReference;
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 public final class NodeComparatorImpl implements NodeComparator {
+    private NodeTypeComparator nodeTypeComparator;
+
+    public NodeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
+        this.nodeTypeComparator = nodeTypeComparator;
+    }
 
     public int compare(Node o1, Node o2) {
         NodeTypeEnum nodeType1Enum = getNodeType(o1.getClass());
@@ -78,7 +85,7 @@ public final class NodeComparatorImpl implements NodeComparator {
 
         int result;
         if (areNodesDifferentType(nodeType1Enum, nodeType2Enum)) {
-            result = compareDifferentNodeTypes(nodeType1Enum, nodeType2Enum);
+            result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
         } else {
             result = compareSameNodeType(o1, o2, nodeType1Enum);
         }
@@ -105,36 +112,6 @@ public final class NodeComparatorImpl implements NodeComparator {
             result = compareByString(n1.toString(), n2.toString());
         } else {
             throw new IllegalArgumentException("Could not compare: " + n1.getClass() + " and " + n2.getClass());
-        }
-        return result;
-    }
-
-    // TODO (AN) Move to different class - NodeTypeComparator
-    private int compareDifferentNodeTypes(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        int result;
-        if (nodeType1Enum.isBlankNode()) {
-            result = -1;
-        } else if (nodeType1Enum.isURIReferenceNode()) {
-            result = uriComparison(nodeType1Enum, nodeType2Enum);
-        } else if (nodeType1Enum.isURIReferenceNode() && nodeType2Enum.isBlankNode()) {
-            result = 1;
-        } else if (nodeType1Enum.isLiteralNode()) {
-            result = 1;
-        } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
-        }
-        return result;
-    }
-
-    // TODO (AN) Move to different class - NodeTypeComparator
-    private int uriComparison(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        int result;
-        if (nodeType2Enum.isLiteralNode()) {
-            result = -1;
-        } else if (nodeType2Enum.isBlankNode()) {
-            result = 1;
-        } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
         }
         return result;
     }

@@ -55,69 +55,52 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem.iterator;
-
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.graph.mem.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
-
-import java.util.TreeSet;
+package org.jrdf.util;
 
 /**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * Test me!
  */
-public class OrderedIteratorFactoryImpl implements IteratorFactory {
-    private IteratorFactory iteratorFactory;
-    private NodePoolMem nodePool;
-    private LongIndex longIndex;
-    private GraphHandler graphHandler;
+public class NodeTypeComparatorImpl implements NodeTypeComparator {
 
-    public OrderedIteratorFactoryImpl(IteratorFactory iteratorFactory, NodePoolMem nodePool,
-                                      LongIndex longIndex, GraphHandler graphHandlers) {
-        this.iteratorFactory = iteratorFactory;
-        this.nodePool = nodePool;
-        this.longIndex = longIndex;
-        this.graphHandler = graphHandlers;
-    }
+    // TODO (AN) Move to different class - NodeTypeComparatorImpl
+    public int compare(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
+        int result;
 
-    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
-        return iteratorFactory.newEmptyClosableIterator();
-    }
-
-    public ClosableMemIterator<Triple> newGraphIterator() {
-        return sortResults(iteratorFactory.newGraphIterator());
-    }
-
-    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return sortResults(iteratorFactory.newOneFixedIterator(fixedFirstNode, index));
-    }
-
-    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return sortResults(iteratorFactory.newTwoFixedIterator(fixedFirstNode, fixedSecondNode, index));
-    }
-
-    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes) {
-        return iteratorFactory.newThreeFixedIterator(nodes);
-    }
-
-    private ClosableMemIterator<Triple> sortResults(ClosableMemIterator<Triple> closableMemIterator) {
-        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
-        NodeComparator nodeComparator = new NodeComparatorImpl(nodeTypeComparator);
-        TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
-        TreeSet<Triple> orderedSet = new TreeSet<Triple>(tripleComparator);
-        while (closableMemIterator.hasNext()) {
-            orderedSet.add(closableMemIterator.next());
+        // TODO (AN) Test drive.
+        if (nodeType1Enum.equals(nodeType2Enum)) {
+            return 0;
         }
-        return new TripleClosableIterator(orderedSet.iterator(), nodePool, longIndex, graphHandler);
+
+        result = compareNodeType(nodeType1Enum, nodeType2Enum);
+        return result;
+    }
+
+    private int compareNodeType(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
+        int result;
+        if (nodeType1Enum.isBlankNode()) {
+            result = -1;
+        } else if (nodeType1Enum.isURIReferenceNode()) {
+            result = uriComparison(nodeType1Enum, nodeType2Enum);
+        } else if (nodeType1Enum.isURIReferenceNode() && nodeType2Enum.isBlankNode()) {
+            result = 1;
+        } else if (nodeType1Enum.isLiteralNode()) {
+            result = 1;
+        } else {
+            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
+        }
+        return result;
+    }
+
+    // TODO (AN) Move to different class - NodeTypeComparatorImpl
+    private int uriComparison(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
+        int result;
+        if (nodeType2Enum.isLiteralNode()) {
+            result = -1;
+        } else if (nodeType2Enum.isBlankNode()) {
+            result = 1;
+        } else {
+            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
+        }
+        return result;
     }
 }
