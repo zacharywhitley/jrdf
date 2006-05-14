@@ -58,14 +58,12 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
-import java.util.Comparator;
 
 /**
  * Test for the implementation of NodeComparatorImpl.
@@ -84,11 +82,11 @@ public class RelationComparatorImplIntegrationTest extends TestCase {
         nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
     }
 
-    public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
-        ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
+    public void testClassProperties() {
         ClassPropertiesTestUtil
-                .checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
+                .checkImplementationOfInterfaceAndFinal(RelationComparator.class, RelationComparatorImpl.class);
+        ClassPropertiesTestUtil.checkConstructor(RelationComparatorImpl.class, Modifier.PUBLIC,
+                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 
 //    public void testNullPointerException() {

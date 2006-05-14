@@ -87,14 +87,10 @@ public final class AttributeComparatorImpl implements AttributeComparator {
     public int compare(Attribute attribute, Attribute attribute1) {
         int result;
 
-        if (attribute == null || attribute1 == null) {
-            throw new NullPointerException();
-        }
+        ifNullThrowException(attribute, attribute1);
 
         // TODO (AN) Cannot compare different types - conversions should happen at a layer above.
-        if (!isComparableTypes(attribute.getType(), attribute1.getType())) {
-            throw new ClassCastException("Cannot compare: " + attribute.getType() + " with: " + attribute1.getType());
-        }
+        ifIncompatibleThrowException(attribute, attribute1);
 
         // TODO (AN) Test drive me!
         if (attribute.equals(attribute1)) {
@@ -104,18 +100,36 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         result = compareAttributeNames(attribute.getAttributeName(), attribute1.getAttributeName());
 
         if (result == 0) {
-            result = compareAttributeLiterals(attribute.getAttributeName(), attribute1.getAttributeName());
+            result = compareByLiteralValue(attribute.getAttributeName(), attribute1.getAttributeName());
         }
 
         if (result == 0) {
-            if (isPositionNodeType(attribute.getType())) {
-                result = comparePositionalNodeTypes(attribute, attribute1);
-            } else {
-                result = compareNodeTypes(attribute, attribute1);
-            }
+            result = compareByNodeType(attribute, attribute1);
         }
 
         return result;
+    }
+
+    private int compareByNodeType(Attribute attribute, Attribute attribute1) {
+        int result;
+        if (isPositionNodeType(attribute.getType())) {
+            result = comparePositionalNodeTypes(attribute, attribute1);
+        } else {
+            result = compareNodeTypes(attribute, attribute1);
+        }
+        return result;
+    }
+
+    private void ifIncompatibleThrowException(Attribute attribute, Attribute attribute1) {
+        if (!isComparableTypes(attribute.getType(), attribute1.getType())) {
+            throw new ClassCastException("Cannot compare: " + attribute.getType() + " with: " + attribute1.getType());
+        }
+    }
+
+    private void ifNullThrowException(Attribute attribute, Attribute attribute1) {
+        if (attribute == null || attribute1 == null) {
+            throw new NullPointerException();
+        }
     }
 
     private int comparePositionalNodeTypes(Attribute attribute, Attribute attribute1) {
@@ -156,7 +170,7 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         return type instanceof SubjectNodeType || type instanceof PredicateNodeType || type instanceof ObjectNodeType;
     }
 
-    private int compareAttributeLiterals(AttributeName attributeName, AttributeName attributeName1) {
+    private int compareByLiteralValue(AttributeName attributeName, AttributeName attributeName1) {
         String attLit1 = attributeName.getLiteral();
         String attLit2 = attributeName1.getLiteral();
         int result = attLit1.compareTo(attLit2);
