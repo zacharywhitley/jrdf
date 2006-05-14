@@ -74,8 +74,10 @@ import java.lang.reflect.Modifier;
 public class AttributeValuePairComparatorImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeValuePairComparator.class,
-            AttributeValuePairComparatorImpl.class);
+                AttributeValuePairComparatorImpl.class);
         checkConstructor(AttributeValuePairComparatorImpl.class, Modifier.PUBLIC,
-            ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
+
+    // TODO (AN) Test drive the combining of the node comparator and the attribute comparator.
 }
