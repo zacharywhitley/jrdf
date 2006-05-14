@@ -159,49 +159,21 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_ONODE, TEST_VAR_BAR_PNODE));
     }
 
-    public void testIncompatibleTypesThrowException() {
-        checkClassCastException(attComparator, TEST_VAR_BAR_BNODE, TEST_VAR_BAR_SNODE);
-        checkClassCastException(attComparator, TEST_VAR_BAR_URI_REF, TEST_VAR_BAR_PNODE);
-        checkClassCastException(attComparator, TEST_VAR_BAR_LITERAL, TEST_VAR_BAR_ONODE);
+    public void testNodeTypeAndPositionalTypeOrder() {
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_SNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_URI_REF, TEST_VAR_BAR_PNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_LITERAL, TEST_VAR_BAR_ONODE));
     }
 
-    public void testIncompatibleTypesThrowExceptionAntiCommutation() {
-        checkClassCastException(attComparator, TEST_VAR_BAR_SNODE, TEST_VAR_BAR_BNODE);
-        checkClassCastException(attComparator, TEST_VAR_BAR_PNODE, TEST_VAR_BAR_URI_REF);
-        checkClassCastException(attComparator, TEST_VAR_BAR_ONODE, TEST_VAR_BAR_LITERAL);
+    public void testNodeTypeAndPositionalTypeOrderAntiCommutation() {
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_SNODE, TEST_VAR_BAR_BNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_PNODE, TEST_VAR_BAR_URI_REF));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_ONODE, TEST_VAR_BAR_LITERAL));
     }
-
-//    public void testBlankNodeComparison() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, new BlankNodeImpl(2l, "b")));
-//    }
-//
-//    public void testURIComparisonByString() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.URI_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, new URIReferenceImpl(RDF.BAG, 2l)));
-//    }
-//
-//    public void testLiteralComparisonByString() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, attComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, new LiteralImpl("foo")));
-//    }
 
     private void checkNullPointerException(final AttributeComparator attComparator, final Attribute att,
                                            final Attribute att2) {
         AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                attComparator.compare(att, att2);
-            }
-        });
-    }
-
-    private void checkClassCastException(final AttributeComparator attComparator, final Attribute att,
-                                         final Attribute att2) {
-        AssertThrows.assertThrows(ClassCastException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 //noinspection unchecked
                 attComparator.compare(att, att2);
