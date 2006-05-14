@@ -109,6 +109,9 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     public static final Attribute TEST_POS_FOO_BNODE = new AttributeImpl(POSITION_NAME_2, NODE_TYPE_1);
     public static final Attribute TEST_VAR_BAR_URI_REF = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_2);
     public static final Attribute TEST_VAR_BAR_LITERAL = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_3);
+    public static final Attribute TEST_VAR_BAR_SNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_1);
+    public static final Attribute TEST_VAR_BAR_PNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_2);
+    public static final Attribute TEST_VAR_BAR_ONODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_3);
 
 
     protected void setUp() throws Exception {
@@ -144,10 +147,40 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, attComparator.compare(TEST_POS_FOO_BNODE, TEST_POS_BAR_BNODE));
     }
 
-    public void testTypeOrder() {
+    public void testNodeTypeOrder() {
         assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_URI_REF));
         assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_LITERAL));
         assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_URI_REF, TEST_VAR_BAR_LITERAL));
+    }
+
+    public void testNodeTypeOrderAntiCommutation() {
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_URI_REF, TEST_VAR_BAR_BNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_LITERAL, TEST_VAR_BAR_BNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_LITERAL, TEST_VAR_BAR_URI_REF));
+    }
+
+    public void testPositionalNodeOrder() {
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_SNODE, TEST_VAR_BAR_PNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_SNODE, TEST_VAR_BAR_ONODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_PNODE, TEST_VAR_BAR_ONODE));
+    }
+
+    public void testPositionalNodeOrderAntiCommutation() {
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_PNODE, TEST_VAR_BAR_SNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_ONODE, TEST_VAR_BAR_SNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_ONODE, TEST_VAR_BAR_PNODE));
+    }
+
+    public void testIncompatibleTypesThrowException() {
+        checkClassCastException(attComparator, TEST_VAR_BAR_BNODE, TEST_VAR_BAR_SNODE);
+        checkClassCastException(attComparator, TEST_VAR_BAR_URI_REF, TEST_VAR_BAR_PNODE);
+        checkClassCastException(attComparator, TEST_VAR_BAR_LITERAL, TEST_VAR_BAR_ONODE);
+    }
+
+    public void testIncompatibleTypesThrowExceptionAntiCommutation() {
+        checkClassCastException(attComparator, TEST_VAR_BAR_SNODE, TEST_VAR_BAR_BNODE);
+        checkClassCastException(attComparator, TEST_VAR_BAR_PNODE, TEST_VAR_BAR_URI_REF);
+        checkClassCastException(attComparator, TEST_VAR_BAR_ONODE, TEST_VAR_BAR_LITERAL);
     }
 
 //    public void testBlankNodeComparison() {
@@ -180,7 +213,7 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
 
     private void checkClassCastException(final AttributeComparator attComparator, final Attribute att,
                                          final Attribute att2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
+        AssertThrows.assertThrows(ClassCastException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 //noinspection unchecked
                 attComparator.compare(att, att2);

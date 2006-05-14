@@ -63,6 +63,9 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.Type;
 import org.jrdf.query.relation.type.URIReferenceType;
 import org.jrdf.util.NodeTypeComparator;
@@ -82,14 +85,19 @@ public final class AttributeComparatorImpl implements AttributeComparator {
     }
 
     public int compare(Attribute attribute, Attribute attribute1) {
-
         int result;
 
         if (attribute == null || attribute1 == null) {
             throw new NullPointerException();
         }
 
-        if (attribute == attribute1) {
+        // TODO (AN) Cannot compare different types - conversions should happen at a layer above.
+        if (!isComparableTypes(attribute.getType(), attribute1.getType())) {
+            throw new ClassCastException("Cannot compare: " + attribute.getType() + " with: " + attribute1.getType());
+        }
+
+        // TODO (AN) Test drive me!
+        if (attribute.equals(attribute1)) {
             return 0;
         }
 
@@ -99,14 +107,53 @@ public final class AttributeComparatorImpl implements AttributeComparator {
             result = compareAttributeLiterals(attribute.getAttributeName(), attribute1.getAttributeName());
         }
 
-
         if (result == 0) {
-            NodeTypeEnum nodeType1Enum = getNodeType(attribute.getType().getClass());
-            NodeTypeEnum nodeType2Enum = getNodeType(attribute1.getType().getClass());
-            result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
+            if (isPositionNodeType(attribute.getType())) {
+                result = comparePositionalNodeTypes(attribute, attribute1);
+            } else {
+                result = compareNodeTypes(attribute, attribute1);
+            }
         }
 
         return result;
+    }
+
+    private int comparePositionalNodeTypes(Attribute attribute, Attribute attribute1) {
+        if (attribute.getType() instanceof SubjectNodeType) {
+            return -1;
+        } else if (attribute.getType() instanceof PredicateNodeType) {
+            if (attribute1.getType() instanceof ObjectNodeType) {
+                return -1;
+            } else {
+                return 1;
+            }
+        } else {
+            return 1;
+        }
+    }
+
+    private int compareNodeTypes(Attribute attribute, Attribute attribute1) {
+        int result;
+        NodeTypeEnum nodeType1Enum = getNodeType(attribute.getType().getClass());
+        NodeTypeEnum nodeType2Enum = getNodeType(attribute1.getType().getClass());
+        result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
+        return result;
+    }
+
+    private boolean isComparableTypes(Type type, Type type1) {
+        boolean result = false;
+        if (type.equals(type1)) {
+            result = true;
+        }
+        if ((isPositionNodeType(type) && isPositionNodeType(type1)) ||
+                (!isPositionNodeType(type) && !isPositionNodeType(type1))) {
+            result = true;
+        }
+        return result;
+    }
+
+    private boolean isPositionNodeType(Type type) {
+        return type instanceof SubjectNodeType || type instanceof PredicateNodeType || type instanceof ObjectNodeType;
     }
 
     private int compareAttributeLiterals(AttributeName attributeName, AttributeName attributeName1) {
