@@ -58,8 +58,9 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
@@ -76,7 +77,7 @@ public class AttributeValuePairComparatorImplUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(AttributeValuePairComparator.class,
                 AttributeValuePairComparatorImpl.class);
         checkConstructor(AttributeValuePairComparatorImpl.class, Modifier.PUBLIC,
-                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+                AttributeComparator.class, NodeComparator.class);
     }
 
     // TODO (AN) Test drive the combining of the node comparator and the attribute comparator.

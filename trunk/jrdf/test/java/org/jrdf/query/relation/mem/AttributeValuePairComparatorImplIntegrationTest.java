@@ -58,12 +58,13 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import static org.jrdf.graph.mem.NodeComparatorImplIntegrationTest.LITERAL_1;
+import static org.jrdf.graph.mem.NodeComparatorImplIntegrationTest.LITERAL_2;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_BAR_BNODE;
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_FOO_BNODE;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.AssertThrows;
 
 /**
@@ -80,10 +81,11 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
 
     public static AttributeValuePair TEST_AVP_1 = new AttributeValuePairImpl(TEST_VAR_BAR_BNODE, LITERAL_1);
     public static AttributeValuePair TEST_AVP_2 = new AttributeValuePairImpl(TEST_VAR_FOO_BNODE, LITERAL_1);
+    public static AttributeValuePair TEST_AVP_3 = new AttributeValuePairImpl(TEST_VAR_FOO_BNODE, LITERAL_2);
 
     protected void setUp() throws Exception {
         super.setUp();
-        avpComparator = new AttributeValuePairComparatorImpl(new AttributeComparatorImpl(new NodeTypeComparatorImpl()));
+        avpComparator = JRDFFactory.getNewAttributeValuePairComparator();
     }
 
     public void testNullPointerException() {
@@ -101,6 +103,14 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
 
     public void testOrderOfAttributeValuesAntiCommutation() {
         assertEquals(AFTER, avpComparator.compare(TEST_AVP_2, TEST_AVP_1));
+    }
+
+    public void testOrderOfValues() {
+        assertEquals(BEFORE, avpComparator.compare(TEST_AVP_2, TEST_AVP_3));
+    }
+
+    public void testOrderOfValuesAntiCommutation() {
+        assertEquals(AFTER, avpComparator.compare(TEST_AVP_3, TEST_AVP_2));
     }
 
     // TODO (AN) Duplication with other comparator tests

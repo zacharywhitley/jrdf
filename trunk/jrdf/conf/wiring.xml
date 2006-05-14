@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-    "http://www.springframework.org/dtd/spring-beans.dtd">
+        "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
     <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false">
@@ -18,5 +18,29 @@
             </list>
         </constructor-arg>
         <constructor-arg ref="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl"/>
+    </bean>
+
+    <bean name="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl">
+    </bean>
+
+    <bean name="attributeComparator" class="org.jrdf.query.relation.mem.AttributeComparatorImpl">
+        <constructor-arg>
+            <ref bean="nodeTypeComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="nodeComparator" class="org.jrdf.graph.mem.NodeComparatorImpl">
+        <constructor-arg>
+            <ref bean="nodeTypeComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="avpComparator" class="org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl">
+        <constructor-arg>
+            <ref bean="nodeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
     </bean>
 </beans>

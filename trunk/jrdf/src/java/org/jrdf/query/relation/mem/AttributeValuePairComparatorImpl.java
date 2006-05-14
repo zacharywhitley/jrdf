@@ -57,6 +57,7 @@
  */
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -69,16 +70,25 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
  */
 public final class AttributeValuePairComparatorImpl implements AttributeValuePairComparator {
     private AttributeComparator attributeComparator;
+    private NodeComparator valueComparator;
 
-    public AttributeValuePairComparatorImpl(AttributeComparator attributeComparator) {
+    public AttributeValuePairComparatorImpl(AttributeComparator attributeComparator, NodeComparator valueComparator) {
         this.attributeComparator = attributeComparator;
+        this.valueComparator = valueComparator;
     }
 
     public int compare(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
+        int result;
 
         ifNullThrowException(attributeValuePair, attributeValuePair1);
 
-        return attributeComparator.compare(attributeValuePair.getAttribute(), attributeValuePair1.getAttribute());
+        result = attributeComparator.compare(attributeValuePair.getAttribute(), attributeValuePair1.getAttribute());
+
+        if (result == 0) {
+            result = valueComparator.compare(attributeValuePair.getValue(), attributeValuePair1.getValue());
+        }
+
+        return result;
     }
 
     private void ifNullThrowException(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {

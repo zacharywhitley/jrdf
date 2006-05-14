@@ -58,6 +58,7 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -70,8 +71,6 @@ import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.Type;
 import org.jrdf.query.relation.type.URIReferenceType;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.AssertThrows;
 
 /**
@@ -110,8 +109,7 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
-        attComparator = new AttributeComparatorImpl(nodeTypeComparator);
+        attComparator = JRDFFactory.getNewAttributeComparator();
     }
 
     public void testNullPointerException() {

@@ -58,7 +58,10 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.mem.GraphFactory;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -70,7 +73,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public final class JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
     private static ClassPathXmlApplicationContext beanFactory =
-        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+            new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+    private static AttributeValuePairComparator newAttributeValuePairComparator;
 
     private JRDFFactory() {
     }
@@ -82,5 +86,17 @@ public final class JRDFFactory {
     public static Graph getNewGraph() {
         GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("graphFactory");
         return graphFactory.getGraph();
+    }
+
+    public static AttributeValuePairComparator getNewAttributeValuePairComparator() {
+        return (AttributeValuePairComparator) beanFactory.getBean("avpComparator");
+    }
+
+    public static NodeComparator getNewNodeComparator() {
+        return (NodeComparator) beanFactory.getBean("nodeComparator");
+    }
+
+    public static AttributeComparator getNewAttributeComparator() {
+        return (AttributeComparator) beanFactory.getBean("attributeComparator");
     }
 }
