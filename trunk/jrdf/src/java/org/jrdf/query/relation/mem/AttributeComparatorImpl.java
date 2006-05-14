@@ -108,11 +108,15 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         boolean att2IsVariable = attributeIsVariableName(attribute1);
         if (!attIsVariable && att2IsVariable) {
             return 1;
-        } else if (attIsVariable && att2IsVariable) {
+        } else if (isSameNameType(attIsVariable, att2IsVariable)) {
             return 0;
         } else {
             return -1;
         }
+    }
+
+    private boolean isSameNameType(boolean attIsVariable, boolean att2IsVariable) {
+        return attIsVariable && att2IsVariable || !attIsVariable && !att2IsVariable;
     }
 
     private boolean attributeIsVariableName(AttributeName attribute) {

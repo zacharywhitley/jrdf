@@ -95,9 +95,10 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     private static final Type POSITIONAL_NODE_2 = new PredicateNodeType();
     private static final Type POSITIONAL_NODE_3 = new ObjectNodeType();
 
-    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_1);
-    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_1);
-    public static final Attribute TEST_ATTRIBUTE_3 = new AttributeImpl(POSITION_NAME_1, NODE_TYPE_1);
+    public static final Attribute TEST_VAR_BAR_BNODE = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_1);
+    public static final Attribute TEST_VAR_FOO_BNODE = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_1);
+    public static final Attribute TEST_POS_BAR_BNODE = new AttributeImpl(POSITION_NAME_1, NODE_TYPE_1);
+    public static final Attribute TEST_POS_FOO_BNODE = new AttributeImpl(POSITION_NAME_2, NODE_TYPE_1);
 
 
     protected void setUp() throws Exception {
@@ -118,17 +119,19 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     }
 
     public void testIdentity() {
-        assertEquals(EQUAL, attComparator.compare(TEST_ATTRIBUTE_1, TEST_ATTRIBUTE_1));
+        assertEquals(EQUAL, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_BNODE));
     }
 
     public void testAttributeNameTypeOrder() {
-        assertEquals(BEFORE, attComparator.compare(TEST_ATTRIBUTE_1, TEST_ATTRIBUTE_2));
-        assertEquals(BEFORE, attComparator.compare(TEST_ATTRIBUTE_1, TEST_ATTRIBUTE_3));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_FOO_BNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_POS_BAR_BNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_BNODE, TEST_POS_FOO_BNODE));
     }
 
     public void testAttributeNameTypeAntiCommutation() {
-        assertEquals(AFTER, attComparator.compare(TEST_ATTRIBUTE_2, TEST_ATTRIBUTE_1));
-        assertEquals(AFTER, attComparator.compare(TEST_ATTRIBUTE_3, TEST_ATTRIBUTE_1));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_FOO_BNODE, TEST_VAR_BAR_BNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_BNODE, TEST_VAR_BAR_BNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_POS_FOO_BNODE, TEST_POS_BAR_BNODE));
     }
 
 //    public void testBlankNodeComparison() {
