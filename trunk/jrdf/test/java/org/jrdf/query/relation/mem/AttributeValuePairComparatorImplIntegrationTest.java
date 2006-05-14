@@ -58,14 +58,11 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.mem.NodeComparatorImpl;
+import static org.jrdf.graph.mem.NodeComparatorImplIntegrationTest.LITERAL_1;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-
-import java.lang.reflect.Modifier;
+import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_BAR_BNODE;
+import org.jrdf.util.test.AssertThrows;
 
 /**
  * Test for the implementation of NodeComparatorImpl.
@@ -77,25 +74,20 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private NodeComparatorImpl nodeComparator;
+    private AttributeValuePairComparator avpComparator;
+
+    public static AttributeValuePair TEST_AVP_1 = new AttributeValuePairImpl(TEST_VAR_BAR_BNODE, LITERAL_1);
 
     protected void setUp() throws Exception {
         super.setUp();
-        nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        avpComparator = new AttributeValuePairComparatorImpl();
     }
 
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(AttributeValuePairComparator.class,
-                AttributeValuePairComparatorImpl.class);
-        checkConstructor(AttributeValuePairComparatorImpl.class, Modifier.PUBLIC,
-                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+    public void testNullPointerException() {
+        checkNullPointerException(avpComparator, TEST_AVP_1, null);
+        checkNullPointerException(avpComparator, null, TEST_AVP_1);
     }
 
-//    public void testNullPointerException() {
-//        checkNullPointerException(nodeComparator, AttributeValuePairComparatorImplIntegrationTest.URI_1, null);
-//        checkNullPointerException(nodeComparator, null, AttributeValuePairComparatorImplIntegrationTest.URI_1);
-//    }
-//
 //    public void testIdentity() {
 //        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.URI_1));
 //    }
@@ -130,12 +122,14 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
 //        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, new LiteralImpl("foo")));
 //    }
 //
-//    private void checkNullPointerException(final NodeComparator nodeComparator, final Node node1, final Node node2) {
-//        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                //noinspection unchecked
-//                nodeComparator.compare(node1, node2);
-//            }
-//        });
-//    }
+
+    private void checkNullPointerException(final AttributeValuePairComparator avpComparator,
+                                           final AttributeValuePair node1, final AttributeValuePair node2) {
+        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                //noinspection unchecked
+                avpComparator.compare(node1, node2);
+            }
+        });
+    }
 }
