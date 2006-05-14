@@ -65,7 +65,15 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.type.*;
+import org.jrdf.query.relation.type.BlankNodeType;
+import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.URIReferenceType;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -99,18 +107,20 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     public static final Attribute TEST_VAR_FOO_BNODE = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_1);
     public static final Attribute TEST_POS_BAR_BNODE = new AttributeImpl(POSITION_NAME_1, NODE_TYPE_1);
     public static final Attribute TEST_POS_FOO_BNODE = new AttributeImpl(POSITION_NAME_2, NODE_TYPE_1);
+    public static final Attribute TEST_VAR_BAR_URI_REF = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_2);
+    public static final Attribute TEST_VAR_BAR_LITERAL = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_3);
 
 
     protected void setUp() throws Exception {
         super.setUp();
-        attComparator = new AttributeComparatorImpl();
+        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
+        attComparator = new AttributeComparatorImpl(nodeTypeComparator);
     }
 
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
         ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
-        ClassPropertiesTestUtil
-                .checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+        ClassPropertiesTestUtil .checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
     }
 
     public void testNullPointerException() {
@@ -132,6 +142,12 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, attComparator.compare(TEST_VAR_FOO_BNODE, TEST_VAR_BAR_BNODE));
         assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_BNODE, TEST_VAR_BAR_BNODE));
         assertEquals(AFTER, attComparator.compare(TEST_POS_FOO_BNODE, TEST_POS_BAR_BNODE));
+    }
+
+    public void testTypeOrder() {
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_URI_REF));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_LITERAL));
+        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_URI_REF, TEST_VAR_BAR_LITERAL));
     }
 
 //    public void testBlankNodeComparison() {

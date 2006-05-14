@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.0//EN"
-    "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+        "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
@@ -11,7 +11,7 @@
     <suppress checks="JavaNCSS" files="RDFS.java"/>
     <suppress checks="JavaNCSS" files="JrdfExample.java"/>
     <suppress checks="JavaNCSS" files="RdfXmlParserExample.java"/>
-    <suppress checks="JavaNCSS" files="NodeComparatorImpl.java"/>
+    <suppress checks="JavaNCSS" files="NodeTypeComparatorImpl.java"/>
 
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>

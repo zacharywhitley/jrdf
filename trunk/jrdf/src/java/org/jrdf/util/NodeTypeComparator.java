@@ -55,26 +55,14 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.graph.mem;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+package org.jrdf.util;
 
-import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
 /**
- * Test for the implementation of NodeComparatorImpl.
- *
- * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * Test me!
  */
-public class NodeComparatorImplUnitTest extends TestCase {
-    public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
-        ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
-        ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
-    }
+public interface NodeTypeComparator extends Comparator<NodeTypeEnum> {
+
 }
