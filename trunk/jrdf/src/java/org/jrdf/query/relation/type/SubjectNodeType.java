@@ -73,6 +73,10 @@ public class SubjectNodeType implements NodeType {
         return type instanceof SubjectNode || type instanceof PredicateNode;
     }
 
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType;
+    }
+
     public String getName() {
         return "SubjectNodeType";
     }

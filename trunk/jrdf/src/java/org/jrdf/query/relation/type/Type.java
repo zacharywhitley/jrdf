@@ -76,6 +76,13 @@ public interface Type {
     boolean isAssignableFrom(Type type);
 
     /**
+     * Returns true if this Type is join compatible with the given type.  Join compatible means that the given type
+     * can be joined and considered to be this type i.e. blank nodes and uri references to subject nodes, uri
+     * references to any positional node type, predicate nodes to uri references, etc.
+     */
+    boolean isJoinCompatible(Type type);
+
+    /**
      * Returns the name of the type.
      *
      * @return the name of the type.

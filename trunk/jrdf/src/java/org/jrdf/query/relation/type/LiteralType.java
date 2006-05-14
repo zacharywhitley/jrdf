@@ -70,6 +70,10 @@ public class LiteralType implements NodeType {
         return type instanceof LiteralType;
     }
 
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type);
+    }
+
     public String getName() {
         return "LiteralNodeType";
     }

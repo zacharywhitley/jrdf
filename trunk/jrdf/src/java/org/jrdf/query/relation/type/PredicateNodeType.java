@@ -70,6 +70,10 @@ public class PredicateNodeType implements NodeType {
         return type instanceof PredicateNodeType;
     }
 
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type) || type instanceof URIReferenceType;
+    }
+
     public String getName() {
         return "PredicateNodeType";
     }
