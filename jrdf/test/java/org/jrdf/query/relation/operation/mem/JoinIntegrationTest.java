@@ -161,8 +161,8 @@ public class JoinIntegrationTest extends TestCase {
 
     private Set<Attribute> createHeading(Attribute... attributes) {
         NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
-        AttributeComparator c = new AttributeComparatorImpl(nodeTypeComparator);
-        Set<Attribute> heading = new TreeSet<Attribute>(c);
+        AttributeComparator attributeComparator = new AttributeComparatorImpl(nodeTypeComparator);
+        Set<Attribute> heading = new TreeSet<Attribute>(attributeComparator);
         for (Attribute attribute : attributes) {
             heading.add(attribute);
         }

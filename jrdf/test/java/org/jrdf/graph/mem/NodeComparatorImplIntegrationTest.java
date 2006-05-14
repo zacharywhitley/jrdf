@@ -81,16 +81,17 @@ import java.util.Comparator;
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 public class NodeComparatorImplIntegrationTest extends TestCase {
-    private static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
-    private static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
-    private static final BlankNode BNODE_1 = new BlankNodeImpl(1l, "a");
-    private static final BlankNode BNODE_2 = new BlankNodeImpl(2l, "b");
-    private static final Literal LITERAL_1 = new LiteralImpl("bar");
-    private static final Literal LITERAL_2 = new LiteralImpl("foo");
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
     private NodeComparator nodeComparator;
+
+    public static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
+    public static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
+    public static final BlankNode BNODE_1 = new BlankNodeImpl(1l, "a");
+    public static final BlankNode BNODE_2 = new BlankNodeImpl(2l, "b");
+    public static final Literal LITERAL_1 = new LiteralImpl("bar");
+    public static final Literal LITERAL_2 = new LiteralImpl("foo");
 
     protected void setUp() throws Exception {
         super.setUp();

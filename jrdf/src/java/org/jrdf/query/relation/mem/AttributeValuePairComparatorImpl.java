@@ -68,6 +68,15 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
  */
 public final class AttributeValuePairComparatorImpl implements AttributeValuePairComparator {
     public int compare(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
+
+        ifNullThrowException(attributeValuePair, attributeValuePair1);
+
         return 0;
+    }
+
+    private void ifNullThrowException(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
+        if (attributeValuePair == null || attributeValuePair1 == null) {
+            throw new NullPointerException();
+        }
     }
 }
