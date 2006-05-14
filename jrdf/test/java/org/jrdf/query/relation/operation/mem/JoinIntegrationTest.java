@@ -75,6 +75,8 @@ import org.jrdf.query.relation.mem.AttributeComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import org.jrdf.query.relation.mem.RelationComparatorImpl;
+import org.jrdf.query.relation.mem.RelationImpl;
 import org.jrdf.query.relation.mem.TupleImpl;
 import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.LiteralType;
@@ -128,24 +130,24 @@ public class JoinIntegrationTest extends TestCase {
         checkRelation(Collections.singleton(RelationDUM.RELATION_DUM), RelationDUM.RELATION_DUM);
     }
 
-//    public void testCartesianProduct() {
-//        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
-//        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-//        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
-//                ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-//        Set<Attribute> heading1 = createHeading(ATTRIBUTE_1, ATTRIBUTE_2);
-//        Set<Attribute> heading2 = createHeading(ATTRIBUTE_3, ATTRIBUTE_4);
-//        Set<Attribute> resultHeading = createHeading(ATTRIBUTE_1, ATTRIBUTE_2, ATTRIBUTE_3, ATTRIBUTE_4);
-//        Relation relation1 = new RelationImpl(heading1, tuple1);
-//        Relation relation2 = new RelationImpl(heading2, tuple2);
-//        Relation expectedResult = new RelationImpl(resultHeading, resultTuple);
-//
-//        Set<Relation> tuples = new TreeSet<Relation>(new RelationComparatorImpl());
-//        tuples.add(relation1);
-//        tuples.add(relation2);
-//
-//        checkRelation(tuples, expectedResult);
-//    }
+    public void testCartesianProduct() {
+        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
+        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
+        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
+                ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
+        Set<Attribute> heading1 = createHeading(ATTRIBUTE_1, ATTRIBUTE_2);
+        Set<Attribute> heading2 = createHeading(ATTRIBUTE_3, ATTRIBUTE_4);
+        Set<Attribute> resultHeading = createHeading(ATTRIBUTE_1, ATTRIBUTE_2, ATTRIBUTE_3, ATTRIBUTE_4);
+        Relation relation1 = new RelationImpl(heading1, tuple1);
+        Relation relation2 = new RelationImpl(heading2, tuple2);
+        Relation expectedResult = new RelationImpl(resultHeading, resultTuple);
+
+        Set<Relation> tuples = new TreeSet<Relation>(new RelationComparatorImpl());
+        tuples.add(relation1);
+        tuples.add(relation2);
+
+        checkRelation(tuples, expectedResult);
+    }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(new AttributeValuePairComparatorImpl());

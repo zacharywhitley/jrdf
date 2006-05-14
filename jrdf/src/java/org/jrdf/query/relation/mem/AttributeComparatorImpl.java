@@ -79,6 +79,9 @@ import org.jrdf.util.NodeTypeEnum;
  */
 public final class AttributeComparatorImpl implements AttributeComparator {
     private NodeTypeComparator nodeTypeComparator;
+    private static final int AFTER = 1;
+    private static final int BEFORE = -AFTER;
+    private static final int EQUAL = 0;
 
     public AttributeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
         this.nodeTypeComparator = nodeTypeComparator;
@@ -89,21 +92,18 @@ public final class AttributeComparatorImpl implements AttributeComparator {
 
         ifNullThrowException(attribute, attribute1);
 
-        // TODO (AN) Cannot compare different types - conversions should happen at a layer above.
-        ifIncompatibleThrowException(attribute, attribute1);
-
         // TODO (AN) Test drive me!
         if (attribute.equals(attribute1)) {
-            return 0;
+            return EQUAL;
         }
 
         result = compareAttributeNames(attribute.getAttributeName(), attribute1.getAttributeName());
 
-        if (result == 0) {
+        if (result == EQUAL) {
             result = compareByLiteralValue(attribute.getAttributeName(), attribute1.getAttributeName());
         }
 
-        if (result == 0) {
+        if (result == EQUAL) {
             result = compareByNodeType(attribute, attribute1);
         }
 
@@ -112,18 +112,33 @@ public final class AttributeComparatorImpl implements AttributeComparator {
 
     private int compareByNodeType(Attribute attribute, Attribute attribute1) {
         int result;
-        if (isPositionNodeType(attribute.getType())) {
+        Type type1 = attribute.getType();
+        Type type2 = attribute1.getType();
+        if ((isPositionNodeType(type1) && isPositionNodeType(type2)) ||
+                (!isPositionNodeType(type1) && !isPositionNodeType(type2))) {
+            result = compareSameNodeTypes(attribute, attribute1);
+        } else {
+            result = compareDifferentNodeTypes(type1, type2);
+        }
+        return result;
+    }
+
+    private int compareDifferentNodeTypes(Type type1, Type type2) {
+        if (isPositionNodeType(type1) && !isPositionNodeType(type2)) {
+            return AFTER;
+        }
+        return BEFORE;
+    }
+
+    private int compareSameNodeTypes(Attribute attribute, Attribute attribute1) {
+        int result;
+        Type type1 = attribute.getType();
+        if (isPositionNodeType(type1)) {
             result = comparePositionalNodeTypes(attribute, attribute1);
         } else {
             result = compareNodeTypes(attribute, attribute1);
         }
         return result;
-    }
-
-    private void ifIncompatibleThrowException(Attribute attribute, Attribute attribute1) {
-        if (!isComparableTypes(attribute.getType(), attribute1.getType())) {
-            throw new ClassCastException("Cannot compare: " + attribute.getType() + " with: " + attribute1.getType());
-        }
     }
 
     private void ifNullThrowException(Attribute attribute, Attribute attribute1) {
@@ -134,15 +149,15 @@ public final class AttributeComparatorImpl implements AttributeComparator {
 
     private int comparePositionalNodeTypes(Attribute attribute, Attribute attribute1) {
         if (attribute.getType() instanceof SubjectNodeType) {
-            return -1;
+            return BEFORE;
         } else if (attribute.getType() instanceof PredicateNodeType) {
             if (attribute1.getType() instanceof ObjectNodeType) {
-                return -1;
+                return BEFORE;
             } else {
-                return 1;
+                return AFTER;
             }
         } else {
-            return 1;
+            return AFTER;
         }
     }
 
@@ -154,18 +169,6 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         return result;
     }
 
-    private boolean isComparableTypes(Type type, Type type1) {
-        boolean result = false;
-        if (type.equals(type1)) {
-            result = true;
-        }
-        if ((isPositionNodeType(type) && isPositionNodeType(type1)) ||
-                (!isPositionNodeType(type) && !isPositionNodeType(type1))) {
-            result = true;
-        }
-        return result;
-    }
-
     private boolean isPositionNodeType(Type type) {
         return type instanceof SubjectNodeType || type instanceof PredicateNodeType || type instanceof ObjectNodeType;
     }
@@ -174,10 +177,10 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         String attLit1 = attributeName.getLiteral();
         String attLit2 = attributeName1.getLiteral();
         int result = attLit1.compareTo(attLit2);
-        if (result > 0) {
-            return 1;
-        } else if (result < 0) {
-            return -1;
+        if (result > EQUAL) {
+            return AFTER;
+        } else if (result < EQUAL) {
+            return BEFORE;
         }
         return result;
     }
@@ -186,11 +189,11 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         boolean attIsVariable = attributeIsVariableName(attribute);
         boolean att2IsVariable = attributeIsVariableName(attribute1);
         if (!attIsVariable && att2IsVariable) {
-            return 1;
+            return AFTER;
         } else if (isSameNameType(attIsVariable, att2IsVariable)) {
-            return 0;
+            return EQUAL;
         } else {
-            return -1;
+            return BEFORE;
         }
     }
 
@@ -213,5 +216,4 @@ public final class AttributeComparatorImpl implements AttributeComparator {
     private boolean attributeIsVariableName(AttributeName attribute) {
         return attribute instanceof VariableName;
     }
-
 }
