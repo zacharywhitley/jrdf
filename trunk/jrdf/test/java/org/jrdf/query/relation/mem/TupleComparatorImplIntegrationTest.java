@@ -55,11 +55,12 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.util.test.AssertThrows;
 
 /**
@@ -68,20 +69,20 @@ import org.jrdf.util.test.AssertThrows;
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public class RelationComparatorImplIntegrationTest extends TestCase {
+public class TupleComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private RelationComparator relationComparator;
+    private TupleComparator tupleComparator;
 
     protected void setUp() throws Exception {
         super.setUp();
-        relationComparator = new RelationComparatorImpl();
+        tupleComparator = new TupleComparatorImpl();
     }
 
     public void testNullPointerException() {
-//        checkNullPointerException(relationComparator, AttributeValuePairComparatorImplIntegrationTest.URI_1, null);
-//        checkNullPointerException(relationComparator, null, AttributeValuePairComparatorImplIntegrationTest.URI_1);
+        checkNullPointerException(tupleComparator, TupleImplUnitTest.TEST_TUPLE_1, null);
+        checkNullPointerException(tupleComparator, null, TupleImplUnitTest.TEST_TUPLE_1);
     }
 //
 //    public void testIdentity() {
@@ -119,12 +120,12 @@ public class RelationComparatorImplIntegrationTest extends TestCase {
 //    }
 //
 
-    private void checkNullPointerException(final RelationComparator relationComparator, final Relation relation1,
-                                           final Relation relation2) {
+    private void checkNullPointerException(final TupleComparator tupleComparator, final Tuple tuple1,
+                                           final Tuple tuple2) {
         AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 //noinspection unchecked
-                relationComparator.compare(relation1, relation2);
+                tupleComparator.compare(tuple1, tuple2);
             }
         });
     }

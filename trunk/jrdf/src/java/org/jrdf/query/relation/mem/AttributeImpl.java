@@ -83,4 +83,9 @@ public final class AttributeImpl implements Attribute {
     public Type getType() {
         return type;
     }
+
+    // TODO (AN) Test drive
+    public String toString() {
+        return "AttributeName: " + attributeName.getLiteral() + " Type: " + type;
+    }
 }
