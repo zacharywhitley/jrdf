@@ -55,40 +55,28 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
-
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import org.jrdf.query.relation.TupleComparator;
 
 /**
- * Implementation of a tuple is a named finite set of attributeValues (attributes to a set of values).
- *
- * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * Created by IntelliJ IDEA.
+ * User: andrew
+ * Date: May 15, 2006
+ * Time: 5:12:15 PM
+ * To change this template use File | Settings | File Templates.
  */
-public final class TupleImpl implements Tuple {
-    private final Set<AttributeValuePair> attributeValues;
-
-    public TupleImpl(Set<AttributeValuePair> newAttributeValues) {
-        attributeValues = newAttributeValues;
+public final class TupleComparatorImpl implements TupleComparator {
+    public int compare(Tuple o1, Tuple o2) {
+        ifNullThrowException(o1, o2);
+        return 0;
     }
 
-    public Set<AttributeValuePair> getAttributeValues() {
-        return attributeValues;
-    }
-
-    // TODO (AN) Test drive me
-    public Set<AttributeValuePair> getSortedAttributeValues() {
-        if (attributeValues instanceof SortedSet) {
-            return attributeValues;
-        } else {
-            // TODO (AN) Turn this into a sort call instead?
-            return new TreeSet<AttributeValuePair>(JRDFFactory.getNewAttributeValuePairComparator());
+    private void ifNullThrowException(Tuple tuple1, Tuple tuple2) {
+        if (tuple1 == null || tuple2 == null) {
+            throw new NullPointerException();
         }
     }
 }

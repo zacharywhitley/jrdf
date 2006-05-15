@@ -55,40 +55,26 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
+import junit.framework.TestCase;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.lang.reflect.Modifier;
 
 /**
- * Implementation of a tuple is a named finite set of attributeValues (attributes to a set of values).
+ * Stuff goes in here.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
-public final class TupleImpl implements Tuple {
-    private final Set<AttributeValuePair> attributeValues;
-
-    public TupleImpl(Set<AttributeValuePair> newAttributeValues) {
-        attributeValues = newAttributeValues;
-    }
-
-    public Set<AttributeValuePair> getAttributeValues() {
-        return attributeValues;
-    }
-
-    // TODO (AN) Test drive me
-    public Set<AttributeValuePair> getSortedAttributeValues() {
-        if (attributeValues instanceof SortedSet) {
-            return attributeValues;
-        } else {
-            // TODO (AN) Turn this into a sort call instead?
-            return new TreeSet<AttributeValuePair>(JRDFFactory.getNewAttributeValuePairComparator());
-        }
+public class TupleComparatorImplUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil
+                .checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
+        ClassPropertiesTestUtil.checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC,
+                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 }
