@@ -43,4 +43,10 @@
             <ref bean="attributeComparator"/>
         </constructor-arg>
     </bean>
+
+    <bean name="tupleComparator" class="org.jrdf.query.relation.mem.TupleComparatorImpl">
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
+    </bean>
 </beans>

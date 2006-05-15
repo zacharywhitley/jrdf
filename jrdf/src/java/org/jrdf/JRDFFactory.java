@@ -62,6 +62,7 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.TupleComparator;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -74,7 +75,6 @@ public final class JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
     private static ClassPathXmlApplicationContext beanFactory =
             new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
-    private static AttributeValuePairComparator newAttributeValuePairComparator;
 
     private JRDFFactory() {
     }
@@ -98,5 +98,9 @@ public final class JRDFFactory {
 
     public static AttributeComparator getNewAttributeComparator() {
         return (AttributeComparator) beanFactory.getBean("attributeComparator");
+    }
+
+    public static TupleComparator getNewTupleComparator() {
+        return (TupleComparator) beanFactory.getBean("tupleComparator");
     }
 }
