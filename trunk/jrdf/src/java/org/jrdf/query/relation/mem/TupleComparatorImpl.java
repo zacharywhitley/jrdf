@@ -58,8 +58,13 @@
 
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -69,9 +74,28 @@ import org.jrdf.query.relation.TupleComparator;
  * To change this template use File | Settings | File Templates.
  */
 public final class TupleComparatorImpl implements TupleComparator {
+    private AttributeValuePairComparator attributeValuePairComparator;
+
+    public TupleComparatorImpl(AttributeValuePairComparator attributeValuePairComparator) {
+        this.attributeValuePairComparator = attributeValuePairComparator;
+    }
+
     public int compare(Tuple o1, Tuple o2) {
         ifNullThrowException(o1, o2);
-        return 0;
+
+        Set<AttributeValuePair> attributeValues1 = o1.getAttributeValues();
+        Set<AttributeValuePair> attributeValues2 = o2.getAttributeValues();
+        Iterator<AttributeValuePair> iterator1 = attributeValues1.iterator();
+        Iterator<AttributeValuePair> iterator2 = attributeValues2.iterator();
+
+        int result = 0;
+        boolean notEqual = true;
+        while (iterator1.hasNext() && iterator2.hasNext() && notEqual) {
+            result = attributeValuePairComparator.compare(iterator1.next(), iterator2.next());
+            notEqual = result != 0;
+        }
+
+        return result;
     }
 
     private void ifNullThrowException(Tuple tuple1, Tuple tuple2) {

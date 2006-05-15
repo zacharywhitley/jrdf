@@ -59,8 +59,12 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_1;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import org.jrdf.util.test.AssertThrows;
 
 /**
@@ -77,30 +81,26 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        tupleComparator = new TupleComparatorImpl();
+        tupleComparator = JRDFFactory.getNewTupleComparator();
     }
 
     public void testNullPointerException() {
-        checkNullPointerException(tupleComparator, TupleImplUnitTest.TEST_TUPLE_1, null);
-        checkNullPointerException(tupleComparator, null, TupleImplUnitTest.TEST_TUPLE_1);
+        checkNullPointerException(tupleComparator, TEST_TUPLE_1, null);
+        checkNullPointerException(tupleComparator, null, TEST_TUPLE_1);
     }
-//
-//    public void testIdentity() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//    }
-//
-//    public void testNodeTypeOrder() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
-//    }
-//
-//    public void testNodeTypeAntiCommutation() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//    }
-//
+
+    public void testIdentity() {
+        assertEquals(EQUAL, tupleComparator.compare(TEST_TUPLE_3, TEST_TUPLE_3));
+    }
+
+    public void testAttributeOrder() {
+        assertEquals(BEFORE, tupleComparator.compare(TEST_TUPLE_3, TEST_TUPLE_4));
+    }
+
+    public void testAttributeOrderAntiCommutation() {
+        assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_4, TEST_TUPLE_3));
+    }
+
 //    public void testBlankNodeComparison() {
 //        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_2));
 //        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
