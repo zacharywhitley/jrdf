@@ -136,8 +136,7 @@ public interface Parser {
      * @throws StatementHandlerException If the configured statement handler
      *                                   has encountered an unrecoverable error.
      */
-    void parse(InputStream in, String baseURI) throws IOException,
-            ParseException, StatementHandlerException;
+    void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException;
 
     /**
      * Parses the data from the supplied Reader, using the supplied
@@ -152,6 +151,5 @@ public interface Parser {
      * @throws StatementHandlerException If the configured statement handler
      *                                   has encountered an unrecoverable error.
      */
-    void parse(Reader reader, String baseURI) throws IOException,
-            ParseException, StatementHandlerException;
+    void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException;
 }
