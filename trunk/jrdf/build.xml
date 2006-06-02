@@ -28,6 +28,9 @@
         <compile.macro src.dir="${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
                        code.path="test.code.path" code.pattern="test.code.pattern"/>
         <copy file="conf/wiring.xml" todir="${prod.classes.dir}"/>
+        <copy todir="${prod.classes.dir}">
+            <fileset dir="${test.src.dir}" includes="**/*.rdf"/>
+        </copy>
     </target>
 
     <macrodef name="compile.macro">
