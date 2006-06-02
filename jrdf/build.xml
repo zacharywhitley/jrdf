@@ -27,7 +27,10 @@
                        code.path="production.code.path" code.pattern="production.code.pattern"/>
         <compile.macro src.dir="${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
                        code.path="test.code.path" code.pattern="test.code.pattern"/>
+        <!-- Configuration for Wiring up the various components using Spring -->
         <copy file="conf/wiring.xml" todir="${prod.classes.dir}"/>
+
+        <!-- Test data used by the RDF/XML Writer -->
         <copy todir="${prod.classes.dir}">
             <fileset dir="${test.src.dir}" includes="**/*.rdf"/>
         </copy>
