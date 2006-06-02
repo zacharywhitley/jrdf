@@ -128,8 +128,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
             parser.parse(reader, "http://www.example.org/");
         } catch (ParseException e) {
             e.printStackTrace();
-            fail("Output could not be parsed [" + e.getLineNumber() + ":"
-                    + e.getColumnNumber() + "]: " + e);
+            fail("Output could not be parsed [" + e.getLineNumber() + ":" + e.getColumnNumber() + "]: " + e);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Output could not be parsed: " + e);
