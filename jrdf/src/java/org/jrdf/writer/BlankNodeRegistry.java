@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 442 $
- * $Date: 2006-01-29 14:41:23 +1000 (Sun, 29 Jan 2006) $
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
@@ -55,35 +55,18 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.writer;
 
 import org.jrdf.graph.BlankNode;
 
-import java.util.ArrayList;
-
 /**
- * A registry of BlankNodes that are encountered while writing a Graph.
- *
- * @author TurnerRX
+ * Created by IntelliJ IDEA.
+ * User: andrew
+ * Date: Jun 2, 2006
+ * Time: 9:51:03 PM
+ * To change this template use File | Settings | File Templates.
  */
-public class BlankNodeRegistry {
-
-    private ArrayList<BlankNode> bNodes = new ArrayList<BlankNode>();
-
-    /**
-     * If the node has already been registered, it's node Id is returned,
-     * otherwise it is registered and the new node Id is returned.
-     *
-     * @param node BlankNode
-     * @return String node ID
-     */
-    public String getNodeId(BlankNode node) {
-        long id = bNodes.indexOf(node);
-        if (id == -1) {
-            bNodes.add(node);
-            id = bNodes.indexOf(node);
-        }
-        return "bNode_" + id;
-    }
-
+public interface BlankNodeRegistry {
+    String getNodeId(BlankNode node);
 }
