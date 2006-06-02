@@ -92,7 +92,7 @@ public class ResourceStatement extends RdfXmlWritable {
             throw new IllegalArgumentException("RdfNamespaceMap is null.");
         }
         if (registry == null) {
-            throw new IllegalArgumentException("BlankNodeRegistry is null.");
+            throw new IllegalArgumentException("BlankNodeRegistryImpl is null.");
         }
         this.names = names;
         this.registry = registry;

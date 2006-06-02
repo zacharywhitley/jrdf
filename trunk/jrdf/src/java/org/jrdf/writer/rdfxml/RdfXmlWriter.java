@@ -70,6 +70,7 @@ import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
+import org.jrdf.writer.mem.BlankNodeRegistryImpl;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -84,14 +85,12 @@ import java.io.Writer;
  */
 public class RdfXmlWriter implements RdfWriter {
 
-    public void write(Graph graph, OutputStream stream) throws IOException,
-            WriteException, GraphException {
+    public void write(Graph graph, OutputStream stream) throws IOException, WriteException, GraphException {
         OutputStreamWriter writer = new OutputStreamWriter(stream);
         write(graph, writer);
     }
 
-    public void write(Graph graph, Writer writer) throws IOException,
-            WriteException, GraphException {
+    public void write(Graph graph, Writer writer) throws IOException, WriteException, GraphException {
         PrintWriter printWriter = new PrintWriter(writer);
         write(graph, printWriter, null);
     }
@@ -138,12 +137,11 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws IOException    If the statements cannot be written.
      * @throws WriteException If the statements could not be written.
      */
-    private void writeStatements(Graph graph, PrintWriter writer,
-                                 RdfNamespaceMap names) throws GraphException, IOException,
-            WriteException {
+    private void writeStatements(Graph graph, PrintWriter writer, RdfNamespaceMap names) throws GraphException,
+            IOException, WriteException {
         ClosableIterator<Triple> iter = null;
         try {
-            BlankNodeRegistry registry = new BlankNodeRegistry();
+            BlankNodeRegistry registry = new BlankNodeRegistryImpl();
             // get all statements
             // TODO - ensure these statements are ordered.
             iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
