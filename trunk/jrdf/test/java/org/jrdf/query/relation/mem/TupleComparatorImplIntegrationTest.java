@@ -74,7 +74,7 @@ import org.jrdf.util.test.AssertThrows;
  * Test for the implementation of TupleComparatorImpl.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class TupleComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
