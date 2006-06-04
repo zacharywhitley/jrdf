@@ -95,6 +95,21 @@ public final class TupleComparatorImpl implements TupleComparator {
             notEqual = result != 0;
         }
 
+        if (result == 0) {
+            result = compareDifferentLengths(iterator1, iterator2);
+        }
+
+        return result;
+    }
+
+    private int compareDifferentLengths(Iterator<AttributeValuePair> iterator1, Iterator<AttributeValuePair> iterator2) {
+        int result = 0;
+        if (iterator1.hasNext()) {
+            result = 1;
+        }
+        if (iterator2.hasNext()) {
+            result = -1;
+        }
         return result;
     }
 

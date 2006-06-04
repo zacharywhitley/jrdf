@@ -62,6 +62,8 @@ import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_1_2;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_1_3;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_5;
@@ -83,6 +85,8 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_2 = TEST_TUPLE_4;
     private static final Tuple TEST_VARBAR_LITERAL_TUPLE_3 = TEST_TUPLE_5;
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_4 = TEST_TUPLE_6;
+    private static final Tuple TEST_TUPLE_1_2 = TEST_TUPLES_1_2;
+    private static final Tuple TEST_TUPLE_1_3 = TEST_TUPLES_1_3;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -100,6 +104,7 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
 
     public void testAttributeOrder() {
         assertEquals(BEFORE, tupleComparator.compare(TEST_VARBAR_LITERAL_TUPLE_1, TEST_VARFOO_LITERAL_TUPLE_2));
+        assertEquals(BEFORE, tupleComparator.compare(TEST_VARBAR_LITERAL_TUPLE_3, TEST_VARFOO_LITERAL_TUPLE_2));
         assertEquals(BEFORE, tupleComparator.compare(TEST_VARBAR_LITERAL_TUPLE_3, TEST_VARFOO_LITERAL_TUPLE_4));
     }
 
@@ -108,24 +113,15 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, tupleComparator.compare(TEST_VARFOO_LITERAL_TUPLE_4, TEST_VARBAR_LITERAL_TUPLE_3));
     }
 
-//    public void testBlankNodeComparison() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_1, AttributeValuePairComparatorImplIntegrationTest.BNODE_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, AttributeValuePairComparatorImplIntegrationTest.BNODE_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.BNODE_2, new BlankNodeImpl(2l, "b")));
-//    }
-//
-//    public void testURIComparisonByString() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_1, AttributeValuePairComparatorImplIntegrationTest.URI_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, AttributeValuePairComparatorImplIntegrationTest.URI_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.URI_2, new URIReferenceImpl(RDF.BAG, 2l)));
-//    }
-//
-//    public void testLiteralComparisonByString() {
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.BEFORE, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_1, AttributeValuePairComparatorImplIntegrationTest.LITERAL_2));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.AFTER, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, AttributeValuePairComparatorImplIntegrationTest.LITERAL_1));
-//        assertEquals(AttributeValuePairComparatorImplIntegrationTest.EQUAL, nodeComparator.compare(AttributeValuePairComparatorImplIntegrationTest.LITERAL_2, new LiteralImpl("foo")));
-//    }
-//
+    public void testDifferentTupleSizes() {
+        assertEquals(BEFORE, tupleComparator.compare(TEST_VARBAR_LITERAL_TUPLE_1, TEST_TUPLE_1_2));
+        assertEquals(BEFORE, tupleComparator.compare(TEST_TUPLE_1_3, TEST_TUPLE_1_2));
+    }
+
+    public void testDifferentTupleSizesAntiCommutation() {
+        assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_1_2, TEST_VARBAR_LITERAL_TUPLE_1));
+        assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_1_2, TEST_TUPLE_1_3));
+    }
 
     private void checkNullPointerException(final TupleComparator tupleComparator, final Tuple tuple1,
                                            final Tuple tuple2) {
