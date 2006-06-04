@@ -73,7 +73,7 @@ import java.util.Set;
  * @version $Id$
  */
 public final class TupleComparatorImpl implements TupleComparator {
-    private AttributeValuePairComparator attributeValuePairComparator;
+    private final AttributeValuePairComparator attributeValuePairComparator;
 
     public TupleComparatorImpl(AttributeValuePairComparator attributeValuePairComparator) {
         this.attributeValuePairComparator = attributeValuePairComparator;

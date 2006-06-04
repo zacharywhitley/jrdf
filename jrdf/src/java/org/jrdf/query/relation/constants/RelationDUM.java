@@ -101,4 +101,14 @@ public final class RelationDUM implements Relation {
     public Set<Tuple> getTuples() {
         return Collections.emptySet();
     }
+
+    // TODO (AN) Test drive me
+    public Set<Attribute> getSortedHeading() {
+        return getHeading();
+    }
+
+    // TODO (AN) Test drive me
+    public Set<Tuple> getSortedTuples() {
+        return getTuples();
+    }
 }

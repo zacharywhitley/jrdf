@@ -67,7 +67,8 @@ import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_1;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_2;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.isFieldOfType;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
@@ -92,8 +93,10 @@ public class RelationImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
         checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, Set.class);
-        checkFieldIsOfTypePrivateAndFinal(RelationImpl.class, HEADING_NAME, Set.class);
-        checkFieldIsOfTypePrivateAndFinal(RelationImpl.class, TUPLES_NAME, Set.class);
+        checkFieldPrivate(RelationImpl.class, HEADING_NAME);
+        isFieldOfType(RelationImpl.class, HEADING_NAME, Set.class);
+        checkFieldPrivate(RelationImpl.class, TUPLES_NAME);
+        isFieldOfType(RelationImpl.class, TUPLES_NAME, Set.class);
     }
 
     public void testConstructor() {

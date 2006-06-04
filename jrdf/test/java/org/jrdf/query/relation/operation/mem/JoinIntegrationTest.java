@@ -75,7 +75,6 @@ import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.constants.RelationDUM;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
-import org.jrdf.query.relation.mem.RelationComparatorImpl;
 import org.jrdf.query.relation.mem.RelationImpl;
 import org.jrdf.query.relation.mem.TupleImpl;
 import org.jrdf.query.relation.type.BlankNodeType;
@@ -110,13 +109,13 @@ public class JoinIntegrationTest extends TestCase {
     private static final URIReference RESOURCE_3 = NodeTestUtil.createResource(RDF.FIRST);
     private static final URIReference RESOURCE_4 = NodeTestUtil.createResource(RDF.LI);
     private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_1 =
-            new AttributeValuePairImpl(ATTRIBUTE_1, RESOURCE_1);
+        new AttributeValuePairImpl(ATTRIBUTE_1, RESOURCE_1);
     private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_2 =
-            new AttributeValuePairImpl(ATTRIBUTE_2, RESOURCE_2);
+        new AttributeValuePairImpl(ATTRIBUTE_2, RESOURCE_2);
     private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_3 =
-            new AttributeValuePairImpl(ATTRIBUTE_3, RESOURCE_3);
+        new AttributeValuePairImpl(ATTRIBUTE_3, RESOURCE_3);
     private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_4 =
-            new AttributeValuePairImpl(ATTRIBUTE_4, RESOURCE_4);
+        new AttributeValuePairImpl(ATTRIBUTE_4, RESOURCE_4);
 
 
     public void testRelationDEEandDUM() {
@@ -132,7 +131,7 @@ public class JoinIntegrationTest extends TestCase {
         Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
         Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
         Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
-                ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
+            ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
         Set<Attribute> heading1 = createHeading(ATTRIBUTE_1, ATTRIBUTE_2);
         Set<Attribute> heading2 = createHeading(ATTRIBUTE_3, ATTRIBUTE_4);
         Set<Attribute> resultHeading = createHeading(ATTRIBUTE_1, ATTRIBUTE_2, ATTRIBUTE_3, ATTRIBUTE_4);
@@ -140,7 +139,7 @@ public class JoinIntegrationTest extends TestCase {
         Relation relation2 = new RelationImpl(heading2, tuple2);
         Relation expectedResult = new RelationImpl(resultHeading, resultTuple);
 
-        Set<Relation> tuples = new TreeSet<Relation>(new RelationComparatorImpl());
+        Set<Relation> tuples = new TreeSet<Relation>(JRDFFactory.getNewRelationComparator());
         tuples.add(relation1);
         tuples.add(relation2);
 

@@ -99,4 +99,14 @@ public final class RelationDEE implements Relation {
     public Set<Tuple> getTuples() {
         return Collections.singleton(NullaryTuple.NULLARY_TUPLE);
     }
+
+    // TODO (AN) Test drive me
+    public Set<Attribute> getSortedHeading() {
+        return getHeading();
+    }
+
+    // TODO (AN) Test drive me
+    public Set<Tuple> getSortedTuples() {
+        return getTuples();
+    }
 }
