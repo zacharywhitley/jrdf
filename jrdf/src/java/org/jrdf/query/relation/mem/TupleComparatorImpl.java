@@ -70,7 +70,7 @@ import java.util.Set;
  * Stuff goes in here.
  *
  * @author Andrew Newman
- * @version $Id: Closab'leIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public final class TupleComparatorImpl implements TupleComparator {
     private AttributeValuePairComparator attributeValuePairComparator;
