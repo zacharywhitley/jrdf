@@ -72,7 +72,7 @@ import java.util.TreeSet;
  * @version $Id$
  */
 public final class TupleImpl implements Tuple {
-    private final Set<AttributeValuePair> attributeValues;
+    private Set<AttributeValuePair> attributeValues;
 
     public TupleImpl(Set<AttributeValuePair> newAttributeValues) {
         attributeValues = newAttributeValues;
@@ -88,7 +88,11 @@ public final class TupleImpl implements Tuple {
             return attributeValues;
         } else {
             // TODO (AN) Turn this into a sort call instead?
-            return new TreeSet<AttributeValuePair>(JRDFFactory.getNewAttributeValuePairComparator());
+            Set<AttributeValuePair> sortedPairs =
+                    new TreeSet<AttributeValuePair>(JRDFFactory.getNewAttributeValuePairComparator());
+            sortedPairs.addAll(attributeValues);
+            attributeValues = sortedPairs;
+            return sortedPairs;
         }
     }
 }

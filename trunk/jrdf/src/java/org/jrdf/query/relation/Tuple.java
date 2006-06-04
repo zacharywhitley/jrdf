@@ -74,4 +74,7 @@ public interface Tuple {
      * @return the set of tuples (attribute/name values).
      */
     Set<AttributeValuePair> getAttributeValues();
+
+    // TODO (AN) Test drive me
+    Set<AttributeValuePair> getSortedAttributeValues();
 }
