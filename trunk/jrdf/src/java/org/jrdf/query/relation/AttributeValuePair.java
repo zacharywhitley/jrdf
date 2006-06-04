@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 443 $
- * $Date: 2006-03-06 21:34:14 +1000 (Mon, 06 Mar 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -64,7 +64,7 @@ import org.jrdf.graph.Node;
  * An attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
  *
  * @author Andrew Newman
- * @version $Revision: 443 $
+ * @version $Revision$
  */
 public interface AttributeValuePair {
     /**

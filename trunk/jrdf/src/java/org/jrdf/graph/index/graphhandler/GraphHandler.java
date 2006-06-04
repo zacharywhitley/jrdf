@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 449 $
- * $Date: 2006-04-02 20:41:17 +1000 (Sun, 02 Apr 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import java.util.Set;
  * An interface used to make modifications on the internal indexes (012, 120 and 201) of a graph.
  *
  * @author Andrew Newman
- * @version $Revision: 449 $
+ * @version $Revision$
  */
 public interface GraphHandler {
 

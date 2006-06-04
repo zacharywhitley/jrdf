@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 354 $
- * $Date: 2005-09-20 17:23:32 +1000 (Tue, 20 Sep 2005) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import java.util.Set;
  * Represents an indexed set of longs.
  *
  * @author Andrew Newman
- * @version $Revision: 354 $
+ * @version $Revision$
  */
 public interface LongIndex {
     /**

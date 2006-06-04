@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -66,13 +66,13 @@ import java.lang.reflect.Modifier;
  * Test the low level properties of EmptyClosableIterator.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class EmptyClosableIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
-            EmptyClosableIterator.class);
+                EmptyClosableIterator.class);
         ClassPropertiesTestUtil.checkConstructor(EmptyClosableIterator.class, Modifier.PUBLIC);
     }
 }

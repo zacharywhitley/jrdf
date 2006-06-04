@@ -1,7 +1,7 @@
 /*
  * $Header: /cvsroot/jrdf/jrdf/src/java/org/jrdf/query/Answer.java,v 1.6 2005/10/20 11:32:32 tomadams Exp $
- * $Revision: 1.6 $
- * $Date: 2005/10/20 11:32:32 $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -68,7 +68,7 @@ import org.jrdf.util.ClosableIterator;
  * An iterator that allows you to determine if an iterator comes from the in memory graph.
  *
  * @author Andrew Newman
- * @version $Revision: 1.1 $
+ * @version $Revision$
  */
 public interface ClosableMemIterator<Triple> extends ClosableIterator<Triple> {
 

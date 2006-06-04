@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -75,7 +75,7 @@ import org.jrdf.util.NodeTypeEnum;
  * Stuff goes in here.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public final class AttributeComparatorImpl implements AttributeComparator {
     private NodeTypeComparator nodeTypeComparator;

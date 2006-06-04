@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 383 $
- * $Date: 2005-10-01 22:38:03 +1000 (Sat, 01 Oct 2005) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -65,7 +65,7 @@ import org.jrdf.graph.Node;
  * Maps between the Long identifier and a Node (globalized value) or from a String to a Long (local value).
  *
  * @author Andrew Newman
- * @version $Revision: 383 $
+ * @version $Revision$
  */
 public interface NodePool {
 

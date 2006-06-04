@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 444 $
- * $Date: 2006-03-25 17:44:37 +1000 (Sat, 25 Mar 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import java.util.Set;
  * An memory version of ${@link org.jrdf.graph.index.longindex.LongIndex}.
  *
  * @author Andrew Newman
- * @version $Revision: 444 $
+ * @version $Revision$
  */
 public final class LongIndexMem implements LongIndex, Serializable {
     private static final long serialVersionUID = -8212815756891200898L;

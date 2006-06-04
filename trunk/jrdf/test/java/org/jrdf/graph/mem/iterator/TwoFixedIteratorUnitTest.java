@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -67,14 +67,14 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
  * Test the low level properties of TwoFixedIterator.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class TwoFixedIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
-            TwoFixedIterator.class);
+                TwoFixedIterator.class);
         ClassPropertiesTestUtil.checkConstructor(TwoFixedIterator.class, NO_MODIFIER, Long.class, Long.class,
-            LongIndex.class, GraphHandler.class);
+                LongIndex.class, GraphHandler.class);
     }
 }

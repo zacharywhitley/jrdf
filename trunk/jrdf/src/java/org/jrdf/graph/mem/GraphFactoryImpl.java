@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
  * Creates a new Graph implementation based on required types.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class GraphFactoryImpl implements GraphFactory {
     private LongIndex[] longIndexes;
@@ -85,13 +85,13 @@ public class GraphFactoryImpl implements GraphFactory {
         this.longIndexes = longIndexes;
         this.nodePool = nodePool;
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
-            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
+                new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
         this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
         this.elementFactory = new GraphElementFactoryImpl(nodePool);
     }
 
     public Graph getGraph() {
         return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
-            iteratorFactory);
+                iteratorFactory);
     }
 }
