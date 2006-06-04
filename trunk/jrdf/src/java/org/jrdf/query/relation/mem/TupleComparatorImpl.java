@@ -87,6 +87,16 @@ public final class TupleComparatorImpl implements TupleComparator {
         Iterator<AttributeValuePair> iterator1 = attributeValues1.iterator();
         Iterator<AttributeValuePair> iterator2 = attributeValues2.iterator();
 
+        int result = comparePairs(iterator1, iterator2);
+
+        if (areDifferentLengths(attributeValues1, attributeValues2) && result == 0) {
+            result = compareDifferentLengths(iterator1, iterator2);
+        }
+
+        return result;
+    }
+
+    private int comparePairs(Iterator<AttributeValuePair> iterator1, Iterator<AttributeValuePair> iterator2) {
         int result = 0;
         boolean equal = true;
         while ((iterator1.hasNext() && iterator2.hasNext()) && equal) {
@@ -95,20 +105,16 @@ public final class TupleComparatorImpl implements TupleComparator {
             result = attributeValuePairComparator.compare(av1, av2);
             equal = result == 0;
         }
-
-        if (differentLengths(attributeValues1, attributeValues2, result)) {
-            result = compareDifferentLengths(iterator1, iterator2);
-        }
-
         return result;
     }
 
-    private boolean differentLengths(Set<AttributeValuePair> attributeValues1,
-                                     Set<AttributeValuePair> attributeValues2, int result) {
-        return (result == 0 && (attributeValues1.size() != attributeValues2.size()));
+    private boolean areDifferentLengths(Set<AttributeValuePair> attributeValues1,
+                                        Set<AttributeValuePair> attributeValues2) {
+        return (attributeValues1.size() != attributeValues2.size());
     }
 
-    private int compareDifferentLengths(Iterator<AttributeValuePair> iterator1, Iterator<AttributeValuePair> iterator2) {
+    private int compareDifferentLengths(Iterator<AttributeValuePair> iterator1,
+                                        Iterator<AttributeValuePair> iterator2) {
         int result = 0;
         if (iterator1.hasNext()) {
             result = 1;
