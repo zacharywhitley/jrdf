@@ -90,6 +90,9 @@ public class RelationImplUnitTest extends TestCase {
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
 
+    public static final Relation TEST_RELATION_1 = new RelationImpl(createHeading(ATTRIBUTES_1), createTuple(TUPLES_1));
+    public static final Relation TEST_RELATION_2 = new RelationImpl(createHeading(ATTRIBUTES_2), createTuple(TUPLES_2));
+
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
         checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, Set.class);
@@ -100,24 +103,23 @@ public class RelationImplUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        checkStandardConstructor(createHeading(ATTRIBUTES_1), createTuple(TUPLES_1));
-        checkStandardConstructor(createHeading(ATTRIBUTES_2), createTuple(TUPLES_2));
+        checkStandardConstructor(createHeading(ATTRIBUTES_1), createTuple(TUPLES_1), TEST_RELATION_1);
+        checkStandardConstructor(createHeading(ATTRIBUTES_2), createTuple(TUPLES_2), TEST_RELATION_2);
     }
 
-    private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples) {
-        Relation relation = new RelationImpl(heading, tuples);
+    private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples, Relation relation) {
         checkFieldValue(relation, HEADING_NAME, heading);
         checkFieldValue(relation, TUPLES_NAME, tuples);
         assertEquals(heading, relation.getHeading());
         assertEquals(tuples, relation.getTuples());
     }
 
-    private Set<Attribute> createHeading(Attribute[] attributes) {
+    private static Set<Attribute> createHeading(Attribute[] attributes) {
         //noinspection unchecked
         return new HashSet(Arrays.asList(attributes));
     }
 
-    private Set<Tuple> createTuple(Tuple[] tuples) {
+    private static Set<Tuple> createTuple(Tuple[] tuples) {
         //noinspection unchecked
         return new HashSet(Arrays.asList(tuples));
     }

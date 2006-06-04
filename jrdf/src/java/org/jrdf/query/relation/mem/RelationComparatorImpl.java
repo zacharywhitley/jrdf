@@ -78,6 +78,13 @@ public final class RelationComparatorImpl implements RelationComparator {
     }
 
     public int compare(Relation relation1, Relation relation2) {
+        ifNullThrowException(relation1, relation2);
         return 0;
+    }
+
+    private void ifNullThrowException(Relation relation1, Relation relation2) {
+        if (relation1 == null || relation2 == null) {
+            throw new NullPointerException();
+        }
     }
 }
