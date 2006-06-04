@@ -69,11 +69,15 @@ import org.jrdf.query.relation.TupleComparator;
  * @version $Id$
  */
 public final class RelationComparatorImpl implements RelationComparator {
+    private final AttributeComparator attributeComparator;
+    private final TupleComparator tupleComparator;
 
-    public RelationComparatorImpl(AttributeComparator attributeComparator, TupleComparator tupleComparator) {
+    public RelationComparatorImpl(AttributeComparator newAttributeComparator, TupleComparator newTupleComparator) {
+        attributeComparator = newAttributeComparator;
+        tupleComparator = newTupleComparator;
     }
 
-    public int compare(Relation relation, Relation relation1) {
+    public int compare(Relation relation1, Relation relation2) {
         return 0;
     }
 }
