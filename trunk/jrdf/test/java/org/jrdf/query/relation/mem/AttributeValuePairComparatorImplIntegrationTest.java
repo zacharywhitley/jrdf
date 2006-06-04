@@ -63,8 +63,8 @@ import static org.jrdf.graph.mem.NodeComparatorImplIntegrationTest.LITERAL_1;
 import static org.jrdf.graph.mem.NodeComparatorImplIntegrationTest.LITERAL_2;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_BAR_BNODE;
-import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_FOO_BNODE;
+import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_BAR_LITERAL;
+import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_FOO_LITERAL;
 import org.jrdf.util.test.AssertThrows;
 
 /**
@@ -79,9 +79,10 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
     private static final int AFTER = 1;
     private AttributeValuePairComparator avpComparator;
 
-    public static AttributeValuePair TEST_AVP_1 = new AttributeValuePairImpl(TEST_VAR_BAR_BNODE, LITERAL_1);
-    public static AttributeValuePair TEST_AVP_2 = new AttributeValuePairImpl(TEST_VAR_FOO_BNODE, LITERAL_1);
-    public static AttributeValuePair TEST_AVP_3 = new AttributeValuePairImpl(TEST_VAR_FOO_BNODE, LITERAL_2);
+    public static AttributeValuePair TEST_AVP_1 = new AttributeValuePairImpl(TEST_VAR_BAR_LITERAL, LITERAL_1);
+    public static AttributeValuePair TEST_AVP_2 = new AttributeValuePairImpl(TEST_VAR_FOO_LITERAL, LITERAL_1);
+    public static AttributeValuePair TEST_AVP_3 = new AttributeValuePairImpl(TEST_VAR_BAR_LITERAL, LITERAL_2);
+    public static AttributeValuePair TEST_AVP_4 = new AttributeValuePairImpl(TEST_VAR_FOO_LITERAL, LITERAL_2);
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -99,18 +100,20 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
 
     public void testOrderOfAttributeValues() {
         assertEquals(BEFORE, avpComparator.compare(TEST_AVP_1, TEST_AVP_2));
+        assertEquals(BEFORE, avpComparator.compare(TEST_AVP_3, TEST_AVP_4));
     }
 
     public void testOrderOfAttributeValuesAntiCommutation() {
         assertEquals(AFTER, avpComparator.compare(TEST_AVP_2, TEST_AVP_1));
+        assertEquals(AFTER, avpComparator.compare(TEST_AVP_4, TEST_AVP_3));
     }
 
     public void testOrderOfValues() {
-        assertEquals(BEFORE, avpComparator.compare(TEST_AVP_2, TEST_AVP_3));
+        assertEquals(BEFORE, avpComparator.compare(TEST_AVP_1, TEST_AVP_3));
     }
 
     public void testOrderOfValuesAntiCommutation() {
-        assertEquals(AFTER, avpComparator.compare(TEST_AVP_3, TEST_AVP_2));
+        assertEquals(AFTER, avpComparator.compare(TEST_AVP_3, TEST_AVP_1));
     }
 
     // TODO (AN) Duplication with other comparator tests

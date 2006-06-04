@@ -101,7 +101,9 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     public static final Attribute TEST_POS_BAR_BNODE = new AttributeImpl(POSITION_NAME_1, NODE_TYPE_1);
     public static final Attribute TEST_POS_FOO_BNODE = new AttributeImpl(POSITION_NAME_2, NODE_TYPE_1);
     public static final Attribute TEST_VAR_BAR_URI_REF = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_2);
+    public static final Attribute TEST_VAR_FOO_URI_REF = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_2);
     public static final Attribute TEST_VAR_BAR_LITERAL = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_3);
+    public static final Attribute TEST_VAR_FOO_LITERAL = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_3);
     public static final Attribute TEST_VAR_BAR_SNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_1);
     public static final Attribute TEST_VAR_BAR_PNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_2);
     public static final Attribute TEST_VAR_BAR_ONODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_3);
