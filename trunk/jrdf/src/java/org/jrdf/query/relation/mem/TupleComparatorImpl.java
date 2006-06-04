@@ -67,11 +67,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: May 15, 2006
- * Time: 5:12:15 PM
- * To change this template use File | Settings | File Templates.
+ * Stuff goes in here.
+ *
+ * @author Andrew Newman
+ * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
  */
 public final class TupleComparatorImpl implements TupleComparator {
     private AttributeValuePairComparator attributeValuePairComparator;
