@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import java.util.Iterator;
  * by the iterator.
  *
  * @author Andrew Newman
- * @version $Revision: 436 $
+ * @version $Revision$
  */
 public class TripleClosableIterator implements ClosableMemIterator<Triple> {
     private Iterator<Triple> iter;
@@ -82,7 +82,7 @@ public class TripleClosableIterator implements ClosableMemIterator<Triple> {
     private Triple triple;
 
     public TripleClosableIterator(Iterator<Triple> iter, NodePoolMem nodePool, LongIndex longIndex,
-        GraphHandler handler) {
+                                  GraphHandler handler) {
         this.iter = iter;
         this.nodePool = nodePool;
         this.longIndex = longIndex;

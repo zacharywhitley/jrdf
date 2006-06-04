@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import java.util.Map;
  * A utility that allows you to treat a collection of MockControls.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class MockFactory {
     private Map<IMocksControl, IMocksControl> controls = new HashMap<IMocksControl, IMocksControl>();

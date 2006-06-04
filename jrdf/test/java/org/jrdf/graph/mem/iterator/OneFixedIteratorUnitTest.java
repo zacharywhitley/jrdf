@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -68,13 +68,13 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
  * Test the low level properties of OneFixedIterator.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class OneFixedIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
-            OneFixedIterator.class);
+                OneFixedIterator.class);
         checkConstructor(OneFixedIterator.class, NO_MODIFIER, Long.class, LongIndex.class, GraphHandler.class);
     }
 }

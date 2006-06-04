@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 442 $
- * $Date: 2006-01-29 14:41:23 +1000 (Sun, 29 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -71,7 +71,7 @@ import java.util.Map;
  * Checks several implementation details of LongIndexMem implementation of LongIndex.
  *
  * @author Andrew Newman
- * @version $Revision: 442 $
+ * @version $Revision$
  */
 public class LongIndexMemUnitTest extends TestCase {
     public void testClassProperties() {

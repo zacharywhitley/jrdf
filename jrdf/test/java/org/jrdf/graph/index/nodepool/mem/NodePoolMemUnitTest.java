@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -69,7 +69,7 @@ import java.util.Map;
  * Checks several implementation details of NodePoolMem implementation of LongIndex.
  *
  * @author Andrew Newman
- * @version $Revision: 442 $
+ * @version $Revision$
  */
 public class NodePoolMemUnitTest extends TestCase {
     public void testClassProperties() {

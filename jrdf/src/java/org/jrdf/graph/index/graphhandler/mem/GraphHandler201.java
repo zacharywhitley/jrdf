@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 483 $
- * $Date: 2006-04-22 17:54:03 +1000 (Sat, 22 Apr 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -74,7 +74,7 @@ import java.util.Set;
  * Handles operations on 201 index.
  *
  * @author Andrew Newman
- * @version $Revision: 483 $
+ * @version $Revision$
  */
 public class GraphHandler201 extends AbstractGraphHandler implements GraphHandler {
     private LongIndex index012;
@@ -95,7 +95,7 @@ public class GraphHandler201 extends AbstractGraphHandler implements GraphHandle
     // TODO AN Not tested - can change first and last values and tests still pass.
     public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
         return new Node[]{nodePool.getNodeById(nodes[1]), nodePool.getNodeById(nodes[2]),
-            nodePool.getNodeById(nodes[0])};
+                nodePool.getNodeById(nodes[0])};
     }
 
     public void remove(Long[] currentNodes) throws GraphException {

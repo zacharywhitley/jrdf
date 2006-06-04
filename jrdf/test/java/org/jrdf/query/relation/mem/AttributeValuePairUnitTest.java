@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -76,16 +76,16 @@ import java.lang.reflect.Modifier;
  * Test for attribute value pair implementation.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class AttributeValuePairUnitTest extends TestCase {
     private static final String ATTRIBUTE_NAME = "attribute";
     private static final String VALUE_NAME = "value";
 
     public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_1 =
-        new AttributeValuePairImpl(TEST_ATTRIBUTE_1, ANY_NODE);
+            new AttributeValuePairImpl(TEST_ATTRIBUTE_1, ANY_NODE);
     public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_2 =
-        new AttributeValuePairImpl(TEST_ATTRIBUTE_2, ANY_SUBJECT_NODE);
+            new AttributeValuePairImpl(TEST_ATTRIBUTE_2, ANY_SUBJECT_NODE);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeValuePair.class, AttributeValuePairImpl.class);

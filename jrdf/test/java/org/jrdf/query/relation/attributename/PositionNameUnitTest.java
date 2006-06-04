@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -67,7 +67,7 @@ import java.lang.reflect.Modifier;
  * Stuff goes in here.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class PositionNameUnitTest extends TestCase {
     private static final String POSITION_FIELD_NAME = "positionName";
@@ -78,7 +78,7 @@ public class PositionNameUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(AttributeName.class, PositionName.class);
         ClassPropertiesTestUtil.checkConstructor(PositionName.class, Modifier.PUBLIC, String.class);
         FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal(PositionName.class,
-            PositionNameUnitTest.POSITION_FIELD_NAME, String.class);
+                PositionNameUnitTest.POSITION_FIELD_NAME, String.class);
     }
 
     public void testConstructor() {

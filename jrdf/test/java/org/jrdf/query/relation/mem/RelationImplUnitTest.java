@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -79,7 +79,7 @@ import java.util.Set;
  * Test for tuple implementation.
  *
  * @author Andrew Newman
- * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
+ * @version $Id$
  */
 public class RelationImplUnitTest extends TestCase {
     private static final Attribute[] ATTRIBUTES_1 = new Attribute[]{TEST_ATTRIBUTE_1};

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 449 $
- * $Date: 2006-04-02 20:41:17 +1000 (Sun, 02 Apr 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -72,7 +72,7 @@ import java.util.Set;
  * Turn this into delegation rather than inheritance?
  *
  * @author Andrew Newman
- * @version $Revision: 449 $
+ * @version $Revision$
  */
 public abstract class AbstractGraphHandler implements GraphHandler {
 
@@ -80,7 +80,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
     private static final int STATEMENT_OFFSET = 5;
 
     public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws
-        GraphException {
+            GraphException {
         BasicOperations.reconstruct(firstIndex, secondIndex, thirdIndex);
     }
 
