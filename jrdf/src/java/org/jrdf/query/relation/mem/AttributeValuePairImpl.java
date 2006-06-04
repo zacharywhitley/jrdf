@@ -83,4 +83,9 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
     public Node getValue() {
         return value;
     }
+
+    // TODO (AN) Test drive me
+    public String toString() {
+        return attribute + "|" + value;
+    }
 }

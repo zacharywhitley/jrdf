@@ -64,6 +64,7 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_1_2;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_1_3;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_3_1;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_5;
@@ -87,6 +88,7 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
     private static final Tuple TEST_VARFOO_LITERAL_TUPLE_4 = TEST_TUPLE_6;
     private static final Tuple TEST_TUPLE_1_2 = TEST_TUPLES_1_2;
     private static final Tuple TEST_TUPLE_1_3 = TEST_TUPLES_1_3;
+    private static final Tuple TEST_TUPLE_3_1 = TEST_TUPLES_3_1;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -115,12 +117,22 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
 
     public void testDifferentTupleSizes() {
         assertEquals(BEFORE, tupleComparator.compare(TEST_VARBAR_LITERAL_TUPLE_1, TEST_TUPLE_1_2));
-        assertEquals(BEFORE, tupleComparator.compare(TEST_TUPLE_1_3, TEST_TUPLE_1_2));
     }
 
     public void testDifferentTupleSizesAntiCommutation() {
         assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_1_2, TEST_VARBAR_LITERAL_TUPLE_1));
+    }
+
+    public void testMultipleLength() {
+        assertEquals(BEFORE, tupleComparator.compare(TEST_TUPLE_1_3, TEST_TUPLE_1_2));
+        assertEquals(BEFORE, tupleComparator.compare(TEST_TUPLE_3_1, TEST_TUPLE_1_2));
+        assertEquals(EQUAL, tupleComparator.compare(TEST_TUPLE_3_1, TEST_TUPLE_1_3));
+    }
+
+    public void testMutlipleLengthAntiCommutation() {
         assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_1_2, TEST_TUPLE_1_3));
+        assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_1_2, TEST_TUPLE_3_1));
+        assertEquals(EQUAL, tupleComparator.compare(TEST_TUPLE_1_3, TEST_TUPLE_3_1));
     }
 
     private void checkNullPointerException(final TupleComparator tupleComparator, final Tuple tuple1,

@@ -68,7 +68,8 @@ import static org.jrdf.query.relation.mem.AttributeValuePairUnitTest.TEST_ATTRIB
 import static org.jrdf.query.relation.mem.AttributeValuePairUnitTest.TEST_ATTRIBUTE_VALUE_2;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.isFieldOfType;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
@@ -83,24 +84,26 @@ import java.util.Set;
  * @version $Id$
  */
 public class TupleImplUnitTest extends TestCase {
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_1 = {TEST_ATTRIBUTE_VALUE_1};
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_2 = {TEST_ATTRIBUTE_VALUE_1,
+    private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_1 = {TEST_ATTRIBUTE_VALUE_1};
+    private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_2 = {TEST_ATTRIBUTE_VALUE_1,
             TEST_ATTRIBUTE_VALUE_2};
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_3 = {TEST_AVP_1};
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_4 = {TEST_AVP_2};
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_5 = {TEST_AVP_3};
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_6 = {TEST_AVP_4};
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_7 = {TEST_AVP_1, TEST_AVP_2};
-    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_8 = {TEST_AVP_1, TEST_AVP_3};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_1 = {TEST_AVP_1};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_2 = {TEST_AVP_2};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_3 = {TEST_AVP_3};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_4 = {TEST_AVP_4};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_1_2 = {TEST_AVP_1, TEST_AVP_2};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_1_3 = {TEST_AVP_1, TEST_AVP_3};
+    private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_3_1 = {TEST_AVP_3, TEST_AVP_1};
 
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_1 = createSet(ATTRIBUTE_VALUE_PAIRS_1);
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_2 = createSet(ATTRIBUTE_VALUE_PAIRS_2);
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_3 = createSet(ATTRIBUTE_VALUE_PAIRS_3);
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_4 = createSet(ATTRIBUTE_VALUE_PAIRS_4);
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_5 = createSet(ATTRIBUTE_VALUE_PAIRS_5);
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_6 = createSet(ATTRIBUTE_VALUE_PAIRS_6);
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_1_2 = createSet(ATTRIBUTE_VALUE_PAIRS_7);
-    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_1_3 = createSet(ATTRIBUTE_VALUE_PAIRS_8);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_1 = createSet(TEST_ATTRIBUTE_VALUE_PAIRS_1);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_2 = createSet(TEST_ATTRIBUTE_VALUE_PAIRS_2);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_3 = createSet(ATTRIBUTE_VALUE_PAIRS_1);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_4 = createSet(ATTRIBUTE_VALUE_PAIRS_2);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_5 = createSet(ATTRIBUTE_VALUE_PAIRS_3);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_6 = createSet(ATTRIBUTE_VALUE_PAIRS_4);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_1_2 = createSet(ATTRIBUTE_VALUE_PAIRS_1_2);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_1_3 = createSet(ATTRIBUTE_VALUE_PAIRS_1_3);
+    private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_3_1 = createSet(ATTRIBUTE_VALUE_PAIRS_3_1);
     private static final String TUPLES_NAME = "attributeValues";
 
     public static final Tuple TEST_TUPLE_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_1);
@@ -111,11 +114,13 @@ public class TupleImplUnitTest extends TestCase {
     public static final Tuple TEST_TUPLE_6 = new TupleImpl(ATTRIBUTE_VALUE_SET_6);
     public static final Tuple TEST_TUPLES_1_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_2);
     public static final Tuple TEST_TUPLES_1_3 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_3);
+    public static final Tuple TEST_TUPLES_3_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_3_1);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Tuple.class, TupleImpl.class);
         checkConstructor(TupleImpl.class, Modifier.PUBLIC, Set.class);
-        checkFieldIsOfTypePrivateAndFinal(TupleImpl.class, TUPLES_NAME, Set.class);
+        checkFieldPrivate(TupleImpl.class, TUPLES_NAME);
+        isFieldOfType(TupleImpl.class, TUPLES_NAME, Set.class);
     }
 
     public void testConstructor() {

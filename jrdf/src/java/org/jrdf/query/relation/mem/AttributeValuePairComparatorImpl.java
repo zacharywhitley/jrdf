@@ -83,6 +83,7 @@ public final class AttributeValuePairComparatorImpl implements AttributeValuePai
         ifNullThrowException(attributeValuePair, attributeValuePair1);
 
         result = attributeComparator.compare(attributeValuePair.getAttribute(), attributeValuePair1.getAttribute());
+        System.err.println("Atts:" + result);
 
         if (result == 0) {
             result = valueComparator.compare(attributeValuePair.getValue(), attributeValuePair1.getValue());

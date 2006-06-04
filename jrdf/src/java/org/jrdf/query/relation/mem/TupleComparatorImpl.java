@@ -82,23 +82,30 @@ public final class TupleComparatorImpl implements TupleComparator {
     public int compare(Tuple o1, Tuple o2) {
         ifNullThrowException(o1, o2);
 
-        Set<AttributeValuePair> attributeValues1 = o1.getAttributeValues();
-        Set<AttributeValuePair> attributeValues2 = o2.getAttributeValues();
+        Set<AttributeValuePair> attributeValues1 = o1.getSortedAttributeValues();
+        Set<AttributeValuePair> attributeValues2 = o2.getSortedAttributeValues();
         Iterator<AttributeValuePair> iterator1 = attributeValues1.iterator();
         Iterator<AttributeValuePair> iterator2 = attributeValues2.iterator();
 
         int result = 0;
-        boolean notEqual = true;
-        while (iterator1.hasNext() && iterator2.hasNext() && notEqual) {
-            result = attributeValuePairComparator.compare(iterator1.next(), iterator2.next());
-            notEqual = result != 0;
+        boolean equal = true;
+        while ((iterator1.hasNext() && iterator2.hasNext()) && equal) {
+            AttributeValuePair av1 = iterator1.next();
+            AttributeValuePair av2 = iterator2.next();
+            result = attributeValuePairComparator.compare(av1, av2);
+            equal = result == 0;
         }
 
-        if (result == 0) {
+        if (differentLengths(attributeValues1, attributeValues2, result)) {
             result = compareDifferentLengths(iterator1, iterator2);
         }
 
         return result;
+    }
+
+    private boolean differentLengths(Set<AttributeValuePair> attributeValues1,
+                                     Set<AttributeValuePair> attributeValues2, int result) {
+        return (result == 0 && (attributeValues1.size() != attributeValues2.size()));
     }
 
     private int compareDifferentLengths(Iterator<AttributeValuePair> iterator1, Iterator<AttributeValuePair> iterator2) {

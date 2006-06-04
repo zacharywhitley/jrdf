@@ -90,4 +90,8 @@ public final class NullaryTuple implements Tuple, Serializable {
     public Set<AttributeValuePair> getAttributeValues() {
         return Collections.emptySet();
     }
+
+    public Set<AttributeValuePair> getSortedAttributeValues() {
+        return Collections.emptySet();
+    }
 }
