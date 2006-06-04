@@ -62,6 +62,7 @@ import junit.framework.TestCase;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
 
 import java.lang.reflect.Modifier;
 
@@ -72,10 +73,13 @@ import java.lang.reflect.Modifier;
  * @version $Id$
  */
 public class TupleComparatorImplUnitTest extends TestCase {
+    private static final String ATTRIBUTE_VALUE_PAIR_COMPARATOR = "attributeValuePairComparator";
+
     public void testClassProperties() {
         ClassPropertiesTestUtil
-                .checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
+            .checkImplementationOfInterfaceAndFinal(TupleComparator.class, TupleComparatorImpl.class);
         ClassPropertiesTestUtil.checkConstructor(TupleComparatorImpl.class, Modifier.PUBLIC,
-                AttributeValuePairComparator.class);
+            AttributeValuePairComparator.class);
+        checkFieldIsOfTypePrivateAndFinal(TupleComparatorImpl.class, ATTRIBUTE_VALUE_PAIR_COMPARATOR, AttributeValuePairComparator.class);
     }
 }

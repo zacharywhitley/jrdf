@@ -58,6 +58,7 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.util.test.AssertThrows;
@@ -76,7 +77,7 @@ public class RelationComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        relationComparator = new RelationComparatorImpl();
+        relationComparator = JRDFFactory.getNewRelationComparator();
     }
 
     public void testNullPointerException() {

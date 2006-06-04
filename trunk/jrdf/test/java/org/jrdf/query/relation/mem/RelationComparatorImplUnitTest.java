@@ -58,7 +58,9 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -72,8 +74,8 @@ import java.lang.reflect.Modifier;
 public class RelationComparatorImplUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil
-                .checkImplementationOfInterfaceAndFinal(RelationComparator.class, RelationComparatorImpl.class);
+            .checkImplementationOfInterfaceAndFinal(RelationComparator.class, RelationComparatorImpl.class);
         ClassPropertiesTestUtil.checkConstructor(RelationComparatorImpl.class, Modifier.PUBLIC,
-                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+            AttributeComparator.class, TupleComparator.class);
     }
 }

@@ -57,8 +57,10 @@
  */
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.TupleComparator;
 
 /**
  * Stuff goes in here.
@@ -67,6 +69,10 @@ import org.jrdf.query.relation.RelationComparator;
  * @version $Id$
  */
 public final class RelationComparatorImpl implements RelationComparator {
+
+    public RelationComparatorImpl(AttributeComparator attributeComparator, TupleComparator tupleComparator) {
+    }
+
     public int compare(Relation relation, Relation relation1) {
         return 0;
     }

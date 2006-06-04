@@ -82,4 +82,10 @@ public interface Relation {
      * @return a set of tuples.
      */
     Set<Tuple> getTuples();
+
+    // TODO (AN) Test drive me
+    Set<Attribute> getSortedHeading();
+
+    // TODO (AN) Test drive me
+    Set<Tuple> getSortedTuples();
 }

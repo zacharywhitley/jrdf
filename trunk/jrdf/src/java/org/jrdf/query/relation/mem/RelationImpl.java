@@ -57,11 +57,14 @@
  */
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Implementation of relations containing a set of tuples and a set of attributes.  The attribute constitute a heading
@@ -71,8 +74,8 @@ import java.util.Set;
  * @version $Id$
  */
 public final class RelationImpl implements Relation {
-    private final Set<Attribute> heading;
-    private final Set<Tuple> tuples;
+    private Set<Attribute> heading;
+    private Set<Tuple> tuples;
 
     // TODO (AN) Headings can be gleaned from tuples
     public RelationImpl(Set<Attribute> newHeading, Set<Tuple> newTuples) {
@@ -86,5 +89,31 @@ public final class RelationImpl implements Relation {
 
     public Set<Tuple> getTuples() {
         return tuples;
+    }
+
+    // TODO (AN) Test drive me
+    public Set<Attribute> getSortedHeading() {
+        if (heading instanceof SortedSet) {
+            return heading;
+        } else {
+            // TODO (AN) Turn this into a sort call instead?
+            Set<Attribute> sortedHeading = new TreeSet<Attribute>(JRDFFactory.getNewAttributeComparator());
+            sortedHeading.addAll(heading);
+            heading = sortedHeading;
+            return sortedHeading;
+        }
+    }
+
+    // TODO (AN) Test drive me
+    public Set<Tuple> getSortedTuples() {
+        if (tuples instanceof SortedSet) {
+            return tuples;
+        } else {
+            // TODO (AN) Turn this into a sort call instead?
+            Set<Tuple> sortedTuples = new TreeSet<Tuple>(JRDFFactory.getNewTupleComparator());
+            sortedTuples.addAll(tuples);
+            tuples = sortedTuples;
+            return sortedTuples;
+        }
     }
 }
