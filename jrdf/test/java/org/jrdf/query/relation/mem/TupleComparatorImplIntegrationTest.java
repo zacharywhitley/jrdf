@@ -71,7 +71,7 @@ import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
 import org.jrdf.util.test.AssertThrows;
 
 /**
- * Test for the implementation of NodeComparatorImpl.
+ * Test for the implementation of TupleComparatorImpl.
  *
  * @author Andrew Newman
  * @version $Id: ClosableIterator.java 436 2005-12-19 13:19:55Z newmana $
