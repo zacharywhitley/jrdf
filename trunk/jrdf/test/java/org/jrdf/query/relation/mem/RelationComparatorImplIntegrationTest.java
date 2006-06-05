@@ -63,6 +63,7 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
 import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_1;
 import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_2;
+import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_3;
 import org.jrdf.util.test.AssertThrows;
 
 /**
@@ -91,12 +92,20 @@ public class RelationComparatorImplIntegrationTest extends TestCase {
         assertEquals(EQUAL, relationComparator.compare(TEST_RELATION_1, TEST_RELATION_1));
     }
 
-    public void testTupleOrder() {
+    public void testAttributeOrder() {
         assertEquals(BEFORE, relationComparator.compare(TEST_RELATION_1, TEST_RELATION_2));
     }
 
-    public void testTupleOrderAntiCommutation() {
+    public void testAttributeOrderAntiCommutation() {
         assertEquals(AFTER, relationComparator.compare(TEST_RELATION_2, TEST_RELATION_1));
+    }
+
+    public void testTupleOrder() {
+        assertEquals(BEFORE, relationComparator.compare(TEST_RELATION_2, TEST_RELATION_3));
+    }
+
+    public void testTupleOrderAntiCommutation() {
+        assertEquals(AFTER, relationComparator.compare(TEST_RELATION_3, TEST_RELATION_2));
     }
 
     private void checkNullPointerException(final RelationComparator relationComparator, final Relation relation1,
