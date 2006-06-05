@@ -57,10 +57,14 @@
  */
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Stuff goes in here.
@@ -79,7 +83,27 @@ public final class RelationComparatorImpl implements RelationComparator {
 
     public int compare(Relation relation1, Relation relation2) {
         ifNullThrowException(relation1, relation2);
-        return 0;
+
+        int result = 0;
+
+        result = compareAttributes(relation1, relation2, result);
+
+        return result;
+    }
+
+    private int compareAttributes(Relation relation1, Relation relation2, int result) {
+        Set<Attribute> sortedHeading1 = relation1.getSortedHeading();
+        Set<Attribute> sortedHeading2 = relation2.getSortedHeading();
+        Iterator<Attribute> iterator1 = sortedHeading1.iterator();
+        Iterator<Attribute> iterator2 = sortedHeading2.iterator();
+        boolean equal = true;
+        while (iterator1.hasNext() && iterator2.hasNext() && equal) {
+            Attribute att1 = iterator1.next();
+            Attribute att2 = iterator2.next();
+            result = attributeComparator.compare(att1, att2);
+            equal = result == 0;
+        }
+        return result;
     }
 
     private void ifNullThrowException(Relation relation1, Relation relation2) {

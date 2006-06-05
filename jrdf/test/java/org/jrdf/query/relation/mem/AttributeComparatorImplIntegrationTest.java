@@ -115,8 +115,8 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     }
 
     public void testNullPointerException() {
-        checkNullPointerException(attComparator, AttributeImplUnitTest.TEST_ATTRIBUTE_1, null);
-        checkNullPointerException(attComparator, null, AttributeImplUnitTest.TEST_ATTRIBUTE_1);
+        checkNullPointerException(attComparator, AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS, null);
+        checkNullPointerException(attComparator, null, AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS);
     }
 
     public void testIdentity() {

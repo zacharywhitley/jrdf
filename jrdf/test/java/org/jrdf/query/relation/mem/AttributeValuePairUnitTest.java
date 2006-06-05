@@ -63,8 +63,8 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_1;
-import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_2;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
@@ -83,9 +83,9 @@ public class AttributeValuePairUnitTest extends TestCase {
     private static final String VALUE_NAME = "value";
 
     public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_1 =
-            new AttributeValuePairImpl(TEST_ATTRIBUTE_1, ANY_NODE);
+        new AttributeValuePairImpl(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
     public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_2 =
-            new AttributeValuePairImpl(TEST_ATTRIBUTE_2, ANY_SUBJECT_NODE);
+        new AttributeValuePairImpl(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeValuePair.class, AttributeValuePairImpl.class);
@@ -95,8 +95,8 @@ public class AttributeValuePairUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        checkStandardConstructor(TEST_ATTRIBUTE_1, ANY_NODE);
-        checkStandardConstructor(TEST_ATTRIBUTE_2, ANY_SUBJECT_NODE);
+        checkStandardConstructor(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
+        checkStandardConstructor(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
     }
 
     private void checkStandardConstructor(Attribute attributeName, Node node) {

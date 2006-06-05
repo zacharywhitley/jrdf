@@ -58,13 +58,13 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_1;
-import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_2;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_1;
-import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_2;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
@@ -73,8 +73,8 @@ import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Test for tuple implementation.
@@ -83,15 +83,13 @@ import java.util.Set;
  * @version $Id$
  */
 public class RelationImplUnitTest extends TestCase {
-    private static final Attribute[] ATTRIBUTES_1 = new Attribute[]{TEST_ATTRIBUTE_1};
-    private static final Attribute[] ATTRIBUTES_2 = new Attribute[]{TEST_ATTRIBUTE_2};
-    private static final Tuple[] TUPLES_1 = new Tuple[]{TEST_TUPLE_1};
-    private static final Tuple[] TUPLES_2 = new Tuple[]{TEST_TUPLE_2};
+    private static final Tuple[] TUPLES_1 = new Tuple[]{TEST_TUPLE_3};
+    private static final Tuple[] TUPLES_2 = new Tuple[]{TEST_TUPLE_4};
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
 
-    public static final Relation TEST_RELATION_1 = new RelationImpl(createHeading(ATTRIBUTES_1), createTuple(TUPLES_1));
-    public static final Relation TEST_RELATION_2 = new RelationImpl(createHeading(ATTRIBUTES_2), createTuple(TUPLES_2));
+    public static final Relation TEST_RELATION_1 = new RelationImpl(createHeading(TUPLES_1), createTuple(TUPLES_1));
+    public static final Relation TEST_RELATION_2 = new RelationImpl(createHeading(TUPLES_2), createTuple(TUPLES_2));
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
@@ -103,8 +101,8 @@ public class RelationImplUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        checkStandardConstructor(createHeading(ATTRIBUTES_1), createTuple(TUPLES_1), TEST_RELATION_1);
-        checkStandardConstructor(createHeading(ATTRIBUTES_2), createTuple(TUPLES_2), TEST_RELATION_2);
+        checkStandardConstructor(createHeading(TUPLES_1), createTuple(TUPLES_1), TEST_RELATION_1);
+        checkStandardConstructor(createHeading(TUPLES_2), createTuple(TUPLES_2), TEST_RELATION_2);
     }
 
     private void checkStandardConstructor(Set<Attribute> heading, Set<Tuple> tuples, Relation relation) {
@@ -114,13 +112,22 @@ public class RelationImplUnitTest extends TestCase {
         assertEquals(tuples, relation.getTuples());
     }
 
-    private static Set<Attribute> createHeading(Attribute[] attributes) {
+    private static Set<Attribute> createHeading(Tuple[] tuples) {
+        Set<Attribute> heading = new TreeSet<Attribute>(JRDFFactory.getNewAttributeComparator());
         //noinspection unchecked
-        return new HashSet(Arrays.asList(attributes));
+        for (Tuple tuple : tuples) {
+            Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
+            for (AttributeValuePair avPair : sortedAttributeValues) {
+                heading.add(avPair.getAttribute());
+            }
+        }
+        return heading;
     }
 
     private static Set<Tuple> createTuple(Tuple[] tuples) {
         //noinspection unchecked
-        return new HashSet(Arrays.asList(tuples));
+        Set<Tuple> sortedTuples = new TreeSet<Tuple>(JRDFFactory.getNewTupleComparator());
+        sortedTuples.addAll(Arrays.asList(tuples));
+        return sortedTuples;
     }
 }
