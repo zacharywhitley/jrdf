@@ -81,13 +81,13 @@ import java.lang.reflect.Modifier;
 public class AttributeImplUnitTest extends TestCase {
     private static final String ATTRIBUTE_NAME = "attributeName";
     private static final String TYPE_NAME = "type";
-    private static final AttributeName ATTRIBUTE_NAME_1 = new PositionName("foo");
-    private static final AttributeName ATTRIBUTE_NAME_2 = new VariableName("bar");
-    private static final Type TYPE_1 = new LiteralType();
-    private static final Type TYPE_2 = new BlankNodeType();
+    private static final AttributeName TEST_NAME_FOO_POS = new PositionName("foo");
+    private static final AttributeName TEST_NAME_BAR_VAR = new VariableName("bar");
+    private static final Type LITERAL_TYPE = new LiteralType();
+    private static final Type BLANK_NODE_TYPE = new BlankNodeType();
 
-    public static final Attribute TEST_ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, TYPE_1);
-    public static final Attribute TEST_ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, TYPE_2);
+    public static final Attribute TEST_ATTRIBUTE_FOO_POS = new AttributeImpl(TEST_NAME_FOO_POS, LITERAL_TYPE);
+    public static final Attribute TEST_ATTRIBUTE_BAR_VAR = new AttributeImpl(TEST_NAME_BAR_VAR, BLANK_NODE_TYPE);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
@@ -97,8 +97,8 @@ public class AttributeImplUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        checkStandardConstructor(ATTRIBUTE_NAME_1, TYPE_1);
-        checkStandardConstructor(ATTRIBUTE_NAME_2, TYPE_2);
+        checkStandardConstructor(TEST_NAME_FOO_POS, LITERAL_TYPE);
+        checkStandardConstructor(TEST_NAME_BAR_VAR, BLANK_NODE_TYPE);
     }
 
     private void checkStandardConstructor(AttributeName attributeName, Type type) {

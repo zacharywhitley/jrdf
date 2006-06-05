@@ -116,4 +116,9 @@ public final class RelationImpl implements Relation {
             return sortedTuples;
         }
     }
+
+    // TODO (AN) Test drive me
+    public String toString() {
+        return "Headings: " + heading + " | " + tuples;
+    }
 }
