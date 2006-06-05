@@ -61,6 +61,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 
 import java.util.Iterator;
@@ -84,14 +85,19 @@ public final class RelationComparatorImpl implements RelationComparator {
     public int compare(Relation relation1, Relation relation2) {
         ifNullThrowException(relation1, relation2);
 
-        int result = 0;
+        int result;
 
-        result = compareAttributes(relation1, relation2, result);
+        result = compareAttributes(relation1, relation2);
+
+        if (result == 0) {
+            result = compareTuples(relation1, relation2);
+        }
 
         return result;
     }
 
-    private int compareAttributes(Relation relation1, Relation relation2, int result) {
+    private int compareAttributes(Relation relation1, Relation relation2) {
+        int result = 0;
         Set<Attribute> sortedHeading1 = relation1.getSortedHeading();
         Set<Attribute> sortedHeading2 = relation2.getSortedHeading();
         Iterator<Attribute> iterator1 = sortedHeading1.iterator();
@@ -105,6 +111,23 @@ public final class RelationComparatorImpl implements RelationComparator {
         }
         return result;
     }
+
+    private int compareTuples(Relation relation1, Relation relation2) {
+        int result = 0;
+        Set<Tuple> sortedTuples1 = relation1.getSortedTuples();
+        Set<Tuple> sortedTuples2 = relation2.getSortedTuples();
+        Iterator<Tuple> iterator1 = sortedTuples1.iterator();
+        Iterator<Tuple> iterator2 = sortedTuples2.iterator();
+        boolean equal = true;
+        while (iterator1.hasNext() && iterator2.hasNext() && equal) {
+            Tuple tuple1 = iterator1.next();
+            Tuple tuple2 = iterator2.next();
+            result = tupleComparator.compare(tuple1, tuple2);
+            equal = result == 0;
+        }
+        return result;
+    }
+
 
     private void ifNullThrowException(Relation relation1, Relation relation2) {
         if (relation1 == null || relation2 == null) {

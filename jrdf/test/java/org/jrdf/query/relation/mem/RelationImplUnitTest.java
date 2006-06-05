@@ -65,6 +65,7 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
@@ -85,11 +86,13 @@ import java.util.TreeSet;
 public class RelationImplUnitTest extends TestCase {
     private static final Tuple[] TUPLES_1 = new Tuple[]{TEST_TUPLE_3};
     private static final Tuple[] TUPLES_2 = new Tuple[]{TEST_TUPLE_4};
+    private static final Tuple[] TUPLES_3 = new Tuple[]{TEST_TUPLE_6};
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
 
     public static final Relation TEST_RELATION_1 = new RelationImpl(createHeading(TUPLES_1), createTuple(TUPLES_1));
     public static final Relation TEST_RELATION_2 = new RelationImpl(createHeading(TUPLES_2), createTuple(TUPLES_2));
+    public static final Relation TEST_RELATION_3 = new RelationImpl(createHeading(TUPLES_3), createTuple(TUPLES_3));
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
