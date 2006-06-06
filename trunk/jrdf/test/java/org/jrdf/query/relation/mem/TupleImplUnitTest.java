@@ -57,6 +57,8 @@
  */
 package org.jrdf.query.relation.mem;
 
+import au.net.netstorm.boost.primordial.Primordial;
+import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
@@ -86,7 +88,7 @@ import java.util.Set;
 public class TupleImplUnitTest extends TestCase {
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_1 = {TEST_ATTRIBUTE_VALUE_1};
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_2 = {TEST_ATTRIBUTE_VALUE_1,
-            TEST_ATTRIBUTE_VALUE_2};
+        TEST_ATTRIBUTE_VALUE_2};
     private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_1 = {TEST_AVP_1};
     private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_2 = {TEST_AVP_2};
     private static final AttributeValuePair[] ATTRIBUTE_VALUE_PAIRS_3 = {TEST_AVP_3};
@@ -117,6 +119,7 @@ public class TupleImplUnitTest extends TestCase {
     public static final Tuple TEST_TUPLES_3_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_3_1);
 
     public void testClassProperties() {
+        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Tuple.class, TupleImpl.class);
         checkConstructor(TupleImpl.class, Modifier.PUBLIC, Set.class);
         checkFieldPrivate(TupleImpl.class, TUPLES_NAME);
