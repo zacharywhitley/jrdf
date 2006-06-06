@@ -57,6 +57,7 @@
  */
 package org.jrdf.query.relation.mem;
 
+import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
@@ -73,7 +74,7 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class RelationImpl implements Relation {
+public final class RelationImpl extends Primordial implements Relation {
     private Set<Attribute> heading;
     private Set<Tuple> tuples;
 
@@ -94,31 +95,30 @@ public final class RelationImpl implements Relation {
     // TODO (AN) Test drive me
     public Set<Attribute> getSortedHeading() {
         if (heading instanceof SortedSet) {
-            return heading;
-        } else {
-            // TODO (AN) Turn this into a sort call instead?
-            Set<Attribute> sortedHeading = new TreeSet<Attribute>(JRDFFactory.getNewAttributeComparator());
-            sortedHeading.addAll(heading);
-            heading = sortedHeading;
-            return sortedHeading;
+            if (((SortedSet) heading).comparator() != null) {
+                return heading;
+            }
         }
+
+        // TODO (AN) Turn this into a sort call instead?
+        Set<Attribute> sortedHeading = new TreeSet<Attribute>(JRDFFactory.getNewAttributeComparator());
+        sortedHeading.addAll(heading);
+        heading = sortedHeading;
+        return sortedHeading;
     }
 
     // TODO (AN) Test drive me
     public Set<Tuple> getSortedTuples() {
         if (tuples instanceof SortedSet) {
-            return tuples;
-        } else {
-            // TODO (AN) Turn this into a sort call instead?
-            Set<Tuple> sortedTuples = new TreeSet<Tuple>(JRDFFactory.getNewTupleComparator());
-            sortedTuples.addAll(tuples);
-            tuples = sortedTuples;
-            return sortedTuples;
+            if (((SortedSet) tuples).comparator() != null) {
+                return tuples;
+            }
         }
-    }
 
-    // TODO (AN) Test drive me
-    public String toString() {
-        return "Headings: " + heading + " | " + tuples;
+        // TODO (AN) Turn this into a sort call instead?
+        Set<Tuple> sortedTuples = new TreeSet<Tuple>(JRDFFactory.getNewTupleComparator());
+        sortedTuples.addAll(tuples);
+        tuples = sortedTuples;
+        return sortedTuples;
     }
 }

@@ -57,6 +57,7 @@
  */
 package org.jrdf.query.relation.mem;
 
+import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
@@ -71,7 +72,7 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class TupleImpl implements Tuple {
+public final class TupleImpl extends Primordial implements Tuple {
     private Set<AttributeValuePair> attributeValues;
 
     public TupleImpl(Set<AttributeValuePair> newAttributeValues) {
@@ -85,14 +86,16 @@ public final class TupleImpl implements Tuple {
     // TODO (AN) Test drive me
     public Set<AttributeValuePair> getSortedAttributeValues() {
         if (attributeValues instanceof SortedSet) {
-            return attributeValues;
-        } else {
-            // TODO (AN) Turn this into a sort call instead?
-            Set<AttributeValuePair> sortedPairs =
-                    new TreeSet<AttributeValuePair>(JRDFFactory.getNewAttributeValuePairComparator());
-            sortedPairs.addAll(attributeValues);
-            attributeValues = sortedPairs;
-            return sortedPairs;
+            if (((SortedSet) attributeValues).comparator() != null) {
+                return attributeValues;
+            }
         }
+
+        // TODO (AN) Turn this into a sort call instead?
+        Set<AttributeValuePair> sortedPairs =
+            new TreeSet<AttributeValuePair>(JRDFFactory.getNewAttributeValuePairComparator());
+        sortedPairs.addAll(attributeValues);
+        attributeValues = sortedPairs;
+        return sortedPairs;
     }
 }

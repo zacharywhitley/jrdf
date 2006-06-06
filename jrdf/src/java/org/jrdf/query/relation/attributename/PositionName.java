@@ -57,13 +57,15 @@
  */
 package org.jrdf.query.relation.attributename;
 
+import au.net.netstorm.boost.primordial.Primordial;
+
 /**
  * Stuff goes in here.
  *
  * @author Andrew Newman
  * @version $Id$
  */
-public final class PositionName implements AttributeName {
+public final class PositionName extends Primordial implements AttributeName {
     private final String positionName;
 
     public PositionName(String newPositionName) {
