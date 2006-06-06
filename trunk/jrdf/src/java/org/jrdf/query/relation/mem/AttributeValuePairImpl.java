@@ -57,6 +57,7 @@
  */
 package org.jrdf.query.relation.mem;
 
+import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -67,7 +68,7 @@ import org.jrdf.query.relation.AttributeValuePair;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class AttributeValuePairImpl implements AttributeValuePair {
+public final class AttributeValuePairImpl extends Primordial implements AttributeValuePair {
     private final Attribute attribute;
     private final Node value;
 
@@ -82,10 +83,5 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
 
     public Node getValue() {
         return value;
-    }
-
-    // TODO (AN) Test drive me
-    public String toString() {
-        return attribute + "|" + value;
     }
 }

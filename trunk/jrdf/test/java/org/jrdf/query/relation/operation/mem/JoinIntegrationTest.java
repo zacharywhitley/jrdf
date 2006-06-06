@@ -67,7 +67,9 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
@@ -120,11 +122,11 @@ public class JoinIntegrationTest extends TestCase {
 
     public void testRelationDEEandDUM() {
         // The JOIN of empty is DEE.
-        checkRelation(Collections.<Relation>emptySet(), RelationDEE.RELATION_DEE);
+        checkRelation(RelationDEE.RELATION_DEE, Collections.<Relation>emptySet());
         // The JOIN of DEE is DEE.
-        checkRelation(Collections.singleton(RelationDEE.RELATION_DEE), RelationDEE.RELATION_DEE);
+        checkRelation(RelationDEE.RELATION_DEE, Collections.singleton(RelationDEE.RELATION_DEE));
         // The JOIN of DUM is DUM.
-        checkRelation(Collections.singleton(RelationDUM.RELATION_DUM), RelationDUM.RELATION_DUM);
+        checkRelation(RelationDUM.RELATION_DUM, Collections.singleton(RelationDUM.RELATION_DUM));
     }
 
     public void testCartesianProduct() {
@@ -139,11 +141,12 @@ public class JoinIntegrationTest extends TestCase {
         Relation relation2 = new RelationImpl(heading2, tuple2);
         Relation expectedResult = new RelationImpl(resultHeading, resultTuple);
 
-        Set<Relation> tuples = new TreeSet<Relation>(JRDFFactory.getNewRelationComparator());
+        RelationComparator relationComparator = JRDFFactory.getNewRelationComparator();
+        Set<Relation> tuples = new TreeSet<Relation>(relationComparator);
         tuples.add(relation1);
         tuples.add(relation2);
 
-        checkRelation(tuples, expectedResult);
+        checkRelation(expectedResult, tuples);
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
@@ -152,7 +155,8 @@ public class JoinIntegrationTest extends TestCase {
         for (AttributeValuePair attributeValuePair : attributeValuePairs) {
             values.add(attributeValuePair);
         }
-        Set<Tuple> tuples = new TreeSet<Tuple>();
+        TupleComparator tupleComparator = JRDFFactory.getNewTupleComparator();
+        Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
         tuples.add(new TupleImpl(values));
         return tuples;
     }
@@ -166,8 +170,19 @@ public class JoinIntegrationTest extends TestCase {
         return heading;
     }
 
-    private void checkRelation(Set<Relation> actual, Relation expected) {
+    private void checkRelation(Relation expected, Set<Relation> actual) {
         Relation relation = Join.JOIN.join(actual);
-        //assertTrue(relation == expected);
+
+//        Set<Tuple> sortedTuples = relation.getSortedTuples();
+//        Set<Tuple> sortedTuples2 = expected.getSortedTuples();
+//        System.err.println("Sorted Actual tuples relation: " + relation.getSortedTuples());
+//        System.err.println("Sorted Expected tuples relation: " + expected.getSortedTuples());
+//        System.err.println("-------------------------------");
+//        boolean isEqual = sortedTuples.equals(sortedTuples2);
+//        System.err.println("Sorted Expected tuples relation1: " + isEqual);
+//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
+//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
+
+        assertEquals(expected, relation);
     }
 }
