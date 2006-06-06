@@ -57,6 +57,8 @@
  */
 package org.jrdf.query.relation.mem;
 
+import au.net.netstorm.boost.primordial.Primordial;
+import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -90,6 +92,7 @@ public class AttributeImplUnitTest extends TestCase {
     public static final Attribute TEST_ATTRIBUTE_BAR_VAR = new AttributeImpl(TEST_NAME_BAR_VAR, BLANK_NODE_TYPE);
 
     public void testClassProperties() {
+        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
         checkConstructor(AttributeImpl.class, Modifier.PUBLIC, AttributeName.class, Type.class);
         checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, ATTRIBUTE_NAME, AttributeName.class);

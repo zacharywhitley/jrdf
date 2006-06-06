@@ -118,6 +118,7 @@
 
     <path id="gen.class.path"/>
     <path id="production.class.path">
+        <pathelement location="${lib.dir}/boost-547.jar"/>
         <pathelement location="${lib.dir}/spring/spring-aop-2.0M5.jar"/>
         <pathelement location="${lib.dir}/spring/spring-beans-2.0M5.jar"/>
         <pathelement location="${lib.dir}/spring/spring-context-2.0M5.jar"/>
