@@ -67,6 +67,7 @@ import java.util.ArrayList;
  *
  * @author TurnerRX
  */
+// TODO (AN) Combine this with parser's PaserBlankNodeFactory
 public class BlankNodeRegistryImpl implements BlankNodeRegistry {
 
     private ArrayList<BlankNode> bNodes = new ArrayList<BlankNode>();
