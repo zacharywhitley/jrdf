@@ -61,12 +61,13 @@ package org.jrdf.writer;
 import org.jrdf.graph.BlankNode;
 
 /**
- * Created by IntelliJ IDEA.
- * User: andrew
- * Date: Jun 2, 2006
- * Time: 9:51:03 PM
- * To change this template use File | Settings | File Templates.
+ * A simple interface for turning blank nodes into their String representation.  The oppose of PaserBlankNodeFactory.
+ *
+ * @author Andrew Newman
+ * @author TurnerRX
+ * @version $Id$
  */
+// TODO (AN) Combine this with parser's PaserBlankNodeFactory
 public interface BlankNodeRegistry {
     String getNodeId(BlankNode node);
 }
