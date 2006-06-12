@@ -109,8 +109,7 @@ public class RdfNamespaceMap {
      */
     public void load(Graph graph) throws GraphException {
         // check for blank nodes
-        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE,
-            ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Triple triple;
         while (iter.hasNext()) {
             triple = iter.next();

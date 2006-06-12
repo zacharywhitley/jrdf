@@ -79,21 +79,23 @@ import org.jrdf.util.ClosableIterator;
 public final class ComparisonImpl implements Comparison {
 
     public boolean isGrounded(Graph g) throws GraphException {
-        ClosableIterator<Triple> iterator = null;
-        try {
-            iterator = g.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-            while (iterator.hasNext()) {
-                Triple triple = iterator.next();
-                if (tripleContainsBlankNode(triple)) {
-                    return false;
+        if (!g.isEmpty()) {
+            ClosableIterator<Triple> iterator = null;
+            try {
+                iterator = g.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+                while (iterator.hasNext()) {
+                    Triple triple = iterator.next();
+                    if (tripleContainsBlankNode(triple)) {
+                        return false;
+                    }
+                }
+            } finally {
+                if (iterator != null) {
+                    iterator.close();
                 }
             }
-            return true;
-        } finally {
-            if (iterator != null) {
-                iterator.close();
-            }
         }
+        return true;
     }
 
     public boolean areIsomorphic(Graph g1, Graph g2) throws GraphException {
@@ -128,8 +130,8 @@ public final class ComparisonImpl implements Comparison {
     }
 
     private boolean tripleContainsBlankNode(Triple triple) {
-        return triple.getSubject() instanceof BlankNode || triple.getPredicate() instanceof BlankNode
-            || triple.getObject() instanceof BlankNode;
+        return triple.getSubject() instanceof BlankNode || triple.getPredicate() instanceof BlankNode ||
+            triple.getObject() instanceof BlankNode;
     }
 
     private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {
