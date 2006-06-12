@@ -70,6 +70,8 @@ import org.jrdf.graph.operation.Comparison;
 
 import java.net.URI;
 
+// TODO (AN) Add tests for isGrounded - return false when there are blank nodes.
+// TODO (AN) Add tests for areIsomorphic.
 
 /**
  * Integration tests {@see org.jrdf.graph.index.operation.mem.ComparisonImpl}.

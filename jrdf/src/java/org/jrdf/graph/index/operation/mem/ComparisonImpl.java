@@ -61,6 +61,7 @@ package org.jrdf.graph.index.operation.mem;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
@@ -78,11 +79,41 @@ import org.jrdf.util.ClosableIterator;
 public final class ComparisonImpl implements Comparison {
 
     public boolean isGrounded(Graph g) throws GraphException {
-        return g.isEmpty();
+        ClosableIterator<Triple> iterator = null;
+        try {
+            iterator = g.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            while (iterator.hasNext()) {
+                Triple triple = iterator.next();
+                if (tripleContainsBlankNode(triple)) {
+                    return false;
+                }
+            }
+            return true;
+        } finally {
+            if (iterator != null) {
+                iterator.close();
+            }
+        }
     }
 
-    public boolean areIsomorphic(Graph g1, Graph g2) {
-        throw new UnsupportedOperationException();
+    public boolean areIsomorphic(Graph g1, Graph g2) throws GraphException {
+        if (g1 == g2) {
+            return true;
+        }
+        if (g1 == null || g2 == null) {
+            return false;
+        }
+        // check grounding
+        boolean g1Grounded = isGrounded(g1);
+        boolean g2Gounded = isGrounded(g2);
+        // if only one is grounded, they cannot be isomorphic
+        if (g1Grounded != g2Gounded) {
+            return false;
+        } else if (g1Grounded) {
+            return groundedGraphsAreEqual(g1, g2);
+        } else {
+            throw new UnsupportedOperationException("Ungrounded Graph Isomorphism not implemented.");
+        }
     }
 
     public boolean groundedGraphsAreEqual(Graph g1, Graph g2) throws GraphException {
@@ -94,6 +125,11 @@ public final class ComparisonImpl implements Comparison {
             return compareNonEmptyGraphs(g1, g2);
         }
         return false;
+    }
+
+    private boolean tripleContainsBlankNode(Triple triple) {
+        return triple.getSubject() instanceof BlankNode || triple.getPredicate() instanceof BlankNode
+            || triple.getObject() instanceof BlankNode;
     }
 
     private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {
