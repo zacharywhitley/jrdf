@@ -5,10 +5,7 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
 
 import java.io.InputStream;
@@ -16,6 +13,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
+/**
+ * A simple example of parsing in a RDF/XML file into an in memory JRDF graph.
+ *
+ * @author Andrew Newman
+ * @version $Revision$
+ */
 public final class RdfXmlParserExample {
 
     private static final String DEFAULT_RDF_URL = "http://rss.slashdot.org/Slashdot/slashdot";
@@ -25,7 +28,7 @@ public final class RdfXmlParserExample {
         InputStream in = url.openStream();
         final Graph jrdfMem = getGraph();
         RdfXmlParser parser = new RdfXmlParser(jrdfMem.getElementFactory());
-        ExampleStatementHandler sh = new ExampleStatementHandler(jrdfMem);
+        GraphStatementHandler sh = new GraphStatementHandler(jrdfMem);
         parser.setStatementHandler(sh);
         parser.parse(in, url.toURI().toString());
         Iterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -48,22 +51,5 @@ public final class RdfXmlParserExample {
             baseURL = args[0];
         }
         return new URL(baseURL);
-    }
-
-    private static class ExampleStatementHandler implements StatementHandler {
-
-        private final Graph jrdfMem;
-
-        public ExampleStatementHandler(Graph jrdfMem) {
-            this.jrdfMem = jrdfMem;
-        }
-
-        public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-            try {
-                jrdfMem.add(subject, predicate, object);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
