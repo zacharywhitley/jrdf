@@ -70,6 +70,7 @@ import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -94,21 +95,10 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         // write graph
         StringWriter out = writeGraph(graph);
         // re-read
-        Graph read = readGraph(out);
+        Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
         // compare
         assertTrue("Output graph should be grounded", comparison.isGrounded(read));
         assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
-    }
-
-    private Graph readGraph(String document) throws Exception {
-        URL source = getClass().getClassLoader().getResource(document);
-        if (source == null) {
-            throw new Exception("Failed to find: " + document);
-        }
-        Graph read = JRDFFactory.getNewGraph();
-        Parser parser = new GraphRdfXmlParser(read);
-        parser.parse(source.openStream(), source.toURI().toString());
-        return read;
     }
 
     private StringWriter writeGraph(Graph graph) throws WriteException, GraphException, IOException {
@@ -123,16 +113,22 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         return out;
     }
 
-    private Graph readGraph(StringWriter out) throws GraphException {
+    private Graph readGraph(String document) throws Exception {
+        URL source = getClass().getClassLoader().getResource(document);
+        if (source == null) {
+            throw new Exception("Failed to find: " + document);
+        }
+        return readGraph(new InputStreamReader(source.openStream()), source.toURI().toString());
+    }
+
+    private Graph readGraph(Reader reader, String baseURI) throws GraphException {
         Graph read = JRDFFactory.getNewGraph();
-        Reader reader = new StringReader(out.toString());
         Parser parser = new GraphRdfXmlParser(read);
         try {
-            parser.parse(reader, "http://www.example.org/");
+            parser.parse(reader, baseURI);
         } catch (ParseException e) {
             e.printStackTrace();
-            fail("Output could not be parsed [" + e.getLineNumber() + ":" + e.getColumnNumber() + "]: " + e +
-                "Parsed: " + out.toString());
+            fail("Output could not be parsed [" + e.getLineNumber() + ":" + e.getColumnNumber() + "]: " + e);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Output could not be parsed: " + e);
