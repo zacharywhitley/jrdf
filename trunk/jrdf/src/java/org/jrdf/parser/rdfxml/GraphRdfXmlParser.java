@@ -56,36 +56,44 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser;
+package org.jrdf.parser.rdfxml;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.GraphException;
+import org.jrdf.parser.ConfigurableParser;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParseException;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.StatementHandlerException;
 
-// TODO (AN) Not test driven or tested properly in the slightest.
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+
+// TODO (AN) Can this be made more generic by parsing in a configurable parser instead?
 
 /**
- * A statement handler takes a JRDF graph in the constructor and for every subject, predicate and object
- * encountered adds it to the graph.
+ * An RDF/XML parser that adds every triple encountered to a JRDF Graph.  Use the default parser configuration.
  *
  * @author Andrew Newman
- * @version $Revision: 363 $
+ * @version $Revision: 544 $
  */
-public class GraphStatementHandler implements StatementHandler {
+public class GraphRdfXmlParser implements Parser {
+    private ConfigurableParser parser;
+    private StatementHandler statementHandler;
 
-    private final Graph jrdfMem;
-
-    public GraphStatementHandler(Graph jrdfMem) {
-        this.jrdfMem = jrdfMem;
+    public GraphRdfXmlParser(Graph graph) throws GraphException {
+        parser = new RdfXmlParser(graph.getElementFactory());
+        statementHandler = new GraphStatementHandler(graph);
+        parser.setStatementHandler(statementHandler);
     }
 
-    public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        try {
-            jrdfMem.add(subject, predicate, object);
-        } catch (Exception e) {
-            new RuntimeException("Failed to add: " + subject + ", " + predicate + ", " + object + " to the graph.");
-        }
+    public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.parse(in, baseURI);
     }
 
+    public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.parse(reader, baseURI);
+    }
 }
