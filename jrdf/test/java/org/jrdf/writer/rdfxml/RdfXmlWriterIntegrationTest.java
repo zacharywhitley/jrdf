@@ -98,6 +98,8 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
         // compare
         assertTrue("Output graph should be grounded", comparison.isGrounded(read));
+        assertEquals("Output graph and input graph should have the same number of statements.",
+            graph.getNumberOfTriples(), read.getNumberOfTriples());
         assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
     }
 
@@ -111,6 +113,8 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
         // compare
         assertFalse("Output graph should not be grounded", comparison.isGrounded(read));
+        assertEquals("Output graph and input graph should have the same number of statements.",
+            graph.getNumberOfTriples(), read.getNumberOfTriples());
 // TODO (AN) Put this back in when ungrounded isomorphism is complete.
 //        assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
     }
