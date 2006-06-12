@@ -80,6 +80,9 @@ import static org.jrdf.util.test.TripleTestUtil.createTripleIterator;
 
 import java.lang.reflect.Modifier;
 
+// TODO (AN) Add tests for isGrounded - return false when there are blank nodes.
+// TODO (AN) Add tests for areIsomorphic.
+
 /**
  * Tests {@see org.jrdf.graph.index.operation.mem.ComparisonImpl}.
  *

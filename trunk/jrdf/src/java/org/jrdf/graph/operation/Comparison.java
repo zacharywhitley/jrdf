@@ -90,7 +90,7 @@ public interface Comparison {
      * @param g2 The second graph to test.
      * @return true if they are equivalent.
      */
-    boolean areIsomorphic(Graph g1, Graph g2);
+    boolean areIsomorphic(Graph g1, Graph g2) throws GraphException;
 
     /**
      * Return true if both graphs are equivalent (isomophic) to one another.  These graphs must contain only labelled
