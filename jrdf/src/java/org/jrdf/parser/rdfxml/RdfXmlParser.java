@@ -28,11 +28,11 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
+import org.jrdf.parser.ConfigurableParser;
 import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParseErrorListener;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParseLocationListener;
-import org.jrdf.parser.Parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
@@ -89,7 +89,7 @@ import java.util.Stack;
  * parser.parse(inputStream, "http://foo/bar");
  * </pre>
  */
-public final class RdfXmlParser implements Parser {
+public final class RdfXmlParser implements ConfigurableParser {
 
     /**
      * The rdf:type resource. *
@@ -241,7 +241,7 @@ public final class RdfXmlParser implements Parser {
     }
 
     private void init(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory) throws
-            TransformerConfigurationException, GraphException {
+        TransformerConfigurationException, GraphException {
         this.valueFactory = valueFactory;
         bNodeFactory = parserBlankNodeFactory;
 
@@ -341,7 +341,7 @@ public final class RdfXmlParser implements Parser {
      *                                   base URI is <tt>null</tt>.
      */
     public synchronized void parse(InputStream in, String baseURI) throws IOException, ParseException,
-            StatementHandlerException {
+        StatementHandlerException {
         if (null == in) {
             throw new IllegalArgumentException("Input stream cannot be 'null'");
         }
@@ -371,7 +371,7 @@ public final class RdfXmlParser implements Parser {
      *                                   is <tt>null</tt>.
      */
     public synchronized void parse(Reader reader, String baseURI) throws
-            IOException, ParseException, StatementHandlerException {
+        IOException, ParseException, StatementHandlerException {
         if (null == reader) {
             throw new IllegalArgumentException("Reader cannot be 'null'");
         }
@@ -386,7 +386,7 @@ public final class RdfXmlParser implements Parser {
     }
 
     private void parse(InputSource inputSource) throws IOException,
-            ParseException, StatementHandlerException {
+        ParseException, StatementHandlerException {
         try {
             //saxFilter.clear();
             saxFilter.setDocumentURI(inputSource.getSystemId());
@@ -881,13 +881,13 @@ public final class RdfXmlParser implements Parser {
         URI relUri = URI.create(uriReference);
         if (verifyData) {
             if (null == relUri.getScheme() && // Relative URI that is not a self-reference
-                    !(null == relUri.getScheme() &&
-                            null == relUri.getAuthority() &&
-                            null == relUri.getQuery() &&
-                            0 == relUri.getPath().length()) &&
-                    baseURI.isOpaque()) {
+                !(null == relUri.getScheme() &&
+                    null == relUri.getAuthority() &&
+                    null == relUri.getQuery() &&
+                    0 == relUri.getPath().length()) &&
+                baseURI.isOpaque()) {
                 sendError("Relative URI '" + uriReference + "' cannot be resolved using the opaque base URI '" +
-                        baseURI + "'");
+                    baseURI + "'");
             }
         }
         if ("".equals(uriReference)) {
@@ -938,8 +938,8 @@ public final class RdfXmlParser implements Parser {
                 if (DT_VERIFY == datatypeHandling) {
                     if (!XmlDatatypeUtil.isValidValue(label, datatype)) {
                         throw new Exception("'" + label +
-                                "' is not a valid value for datatype " +
-                                datatype);
+                            "' is not a valid value for datatype " +
+                            datatype);
                     }
                 } else if (DT_NORMALIZE == datatypeHandling) {
                     label = XmlDatatypeUtil.normalize(label, datatype);
@@ -976,36 +976,36 @@ public final class RdfXmlParser implements Parser {
         if (RDF.BASE_URI.toString().equals(namespaceURI)) {
 
             if ("Description".equals(localName) ||
-                    "Seq".equals(localName) ||
-                    "Bag".equals(localName) ||
-                    "Alt".equals(localName) ||
-                    "Statement".equals(localName) ||
-                    "Property".equals(localName) ||
-                    "List".equals(localName) ||
-                    "subject".equals(localName) ||
-                    "predicate".equals(localName) ||
-                    "object".equals(localName) ||
-                    "type".equals(localName) ||
-                    "value".equals(localName) ||
-                    "first".equals(localName) ||
-                    "rest".equals(localName) ||
-                    "nil".equals(localName) ||
-                    localName.startsWith("_")) {
+                "Seq".equals(localName) ||
+                "Bag".equals(localName) ||
+                "Alt".equals(localName) ||
+                "Statement".equals(localName) ||
+                "Property".equals(localName) ||
+                "List".equals(localName) ||
+                "subject".equals(localName) ||
+                "predicate".equals(localName) ||
+                "object".equals(localName) ||
+                "type".equals(localName) ||
+                "value".equals(localName) ||
+                "first".equals(localName) ||
+                "rest".equals(localName) ||
+                "nil".equals(localName) ||
+                localName.startsWith("_")) {
                 // These are OK
             } else if (
-                    "LI".equals(localName) ||
-                            "RDF".equals(localName) ||
-                            "ID".equals(localName) ||
-                            "about".equals(localName) ||
-                            "parseType".equals(localName) ||
-                            "resource".equals(localName) ||
-                            "nodeID".equals(localName) ||
-                            "datatype".equals(localName)) {
+                "LI".equals(localName) ||
+                    "RDF".equals(localName) ||
+                    "ID".equals(localName) ||
+                    "about".equals(localName) ||
+                    "parseType".equals(localName) ||
+                    "resource".equals(localName) ||
+                    "nodeID".equals(localName) ||
+                    "datatype".equals(localName)) {
                 sendError("<" + qName + "> not allowed as node element");
             } else if (
-                    "bagID".equals(localName) ||
-                            "aboutEach".equals(localName) ||
-                            "aboutEachPrefix".equals(localName)) {
+                "bagID".equals(localName) ||
+                    "aboutEach".equals(localName) ||
+                    "aboutEachPrefix".equals(localName)) {
                 sendError(qName + " is no longer a valid RDF name");
             } else {
                 sendWarning("unknown rdf element <" + qName + ">");
@@ -1025,36 +1025,36 @@ public final class RdfXmlParser implements Parser {
         if (RDF.BASE_URI.toString().equals(namespaceURI)) {
 
             if ("LI".equals(localName) ||
-                    "Seq".equals(localName) ||
-                    "Bag".equals(localName) ||
-                    "Alt".equals(localName) ||
-                    "Statement".equals(localName) ||
-                    "Property".equals(localName) ||
-                    "List".equals(localName) ||
-                    "subject".equals(localName) ||
-                    "predicate".equals(localName) ||
-                    "object".equals(localName) ||
-                    "type".equals(localName) ||
-                    "value".equals(localName) ||
-                    "first".equals(localName) ||
-                    "rest".equals(localName) ||
-                    "nil".equals(localName) ||
-                    localName.startsWith("_")) {
+                "Seq".equals(localName) ||
+                "Bag".equals(localName) ||
+                "Alt".equals(localName) ||
+                "Statement".equals(localName) ||
+                "Property".equals(localName) ||
+                "List".equals(localName) ||
+                "subject".equals(localName) ||
+                "predicate".equals(localName) ||
+                "object".equals(localName) ||
+                "type".equals(localName) ||
+                "value".equals(localName) ||
+                "first".equals(localName) ||
+                "rest".equals(localName) ||
+                "nil".equals(localName) ||
+                localName.startsWith("_")) {
                 // These are OK
             } else if (
-                    "Description".equals(localName) ||
-                            "RDF".equals(localName) ||
-                            "ID".equals(localName) ||
-                            "about".equals(localName) ||
-                            "parseType".equals(localName) ||
-                            "resource".equals(localName) ||
-                            "nodeID".equals(localName) ||
-                            "datatype".equals(localName)) {
+                "Description".equals(localName) ||
+                    "RDF".equals(localName) ||
+                    "ID".equals(localName) ||
+                    "about".equals(localName) ||
+                    "parseType".equals(localName) ||
+                    "resource".equals(localName) ||
+                    "nodeID".equals(localName) ||
+                    "datatype".equals(localName)) {
                 sendError("<" + qName + "> not allowed as property element");
             } else if (
-                    "bagID".equals(localName) ||
-                            "aboutEach".equals(localName) ||
-                            "aboutEachPrefix".equals(localName)) {
+                "bagID".equals(localName) ||
+                    "aboutEach".equals(localName) ||
+                    "aboutEachPrefix".equals(localName)) {
                 sendError(qName + " is no longer a valid RDF name");
             } else {
                 sendWarning("unknown rdf element <" + qName + ">");
@@ -1078,37 +1078,37 @@ public final class RdfXmlParser implements Parser {
                 String localName = att.getLocalName();
 
                 if ("Seq".equals(localName) ||
-                        "Bag".equals(localName) ||
-                        "Alt".equals(localName) ||
-                        "Statement".equals(localName) ||
-                        "Property".equals(localName) ||
-                        "List".equals(localName) ||
-                        "subject".equals(localName) ||
-                        "predicate".equals(localName) ||
-                        "object".equals(localName) ||
-                        "type".equals(localName) ||
-                        "value".equals(localName) ||
-                        "first".equals(localName) ||
-                        "rest".equals(localName) ||
-                        "nil".equals(localName) ||
-                        localName.startsWith("_")) {
+                    "Bag".equals(localName) ||
+                    "Alt".equals(localName) ||
+                    "Statement".equals(localName) ||
+                    "Property".equals(localName) ||
+                    "List".equals(localName) ||
+                    "subject".equals(localName) ||
+                    "predicate".equals(localName) ||
+                    "object".equals(localName) ||
+                    "type".equals(localName) ||
+                    "value".equals(localName) ||
+                    "first".equals(localName) ||
+                    "rest".equals(localName) ||
+                    "nil".equals(localName) ||
+                    localName.startsWith("_")) {
                     // These are OK
                 } else if (
-                        "Description".equals(localName) ||
-                                "LI".equals(localName) ||
-                                "RDF".equals(localName) ||
-                                "ID".equals(localName) ||
-                                "about".equals(localName) ||
-                                "parseType".equals(localName) ||
-                                "resource".equals(localName) ||
-                                "nodeID".equals(localName) ||
-                                "datatype".equals(localName)) {
+                    "Description".equals(localName) ||
+                        "LI".equals(localName) ||
+                        "RDF".equals(localName) ||
+                        "ID".equals(localName) ||
+                        "about".equals(localName) ||
+                        "parseType".equals(localName) ||
+                        "resource".equals(localName) ||
+                        "nodeID".equals(localName) ||
+                        "datatype".equals(localName)) {
                     sendError("'" + att.getQName() + "' not allowed as attribute name");
                     iter.remove();
                 } else if (
-                        "bagID".equals(localName) ||
-                                "aboutEach".equals(localName) ||
-                                "aboutEachPrefix".equals(localName)) {
+                    "bagID".equals(localName) ||
+                        "aboutEach".equals(localName) ||
+                        "aboutEachPrefix".equals(localName)) {
                     sendError(att.getQName() + " is no longer a valid RDF name");
                 } else {
                     sendWarning("unknown rdf attribute '" + att.getQName() + "'");

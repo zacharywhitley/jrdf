@@ -26,6 +26,9 @@ import org.jrdf.graph.SubjectNode;
 /**
  * An interface defining methods for receiving RDF statements from an RDF
  * parser.
+ *
+ * @author Andrew Newman
+ * @version $Revision$
  */
 public interface StatementHandler {
 

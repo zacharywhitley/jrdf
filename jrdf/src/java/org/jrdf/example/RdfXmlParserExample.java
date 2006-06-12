@@ -5,8 +5,8 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.parser.rdfxml.RdfXmlParser;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -27,9 +27,7 @@ public final class RdfXmlParserExample {
         URL url = getDocumentURL(args);
         InputStream in = url.openStream();
         final Graph jrdfMem = getGraph();
-        RdfXmlParser parser = new RdfXmlParser(jrdfMem.getElementFactory());
-        GraphStatementHandler sh = new GraphStatementHandler(jrdfMem);
-        parser.setStatementHandler(sh);
+        Parser parser = new GraphRdfXmlParser(jrdfMem);
         parser.parse(in, url.toURI().toString());
         Iterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         while (iter.hasNext()) {
