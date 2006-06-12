@@ -139,9 +139,9 @@ public class RdfXmlHeader extends RdfXmlWritable {
      */
     private String getEntities() {
         StringBuffer buffer = new StringBuffer();
-        String entity = XML_ENTITY;
         Set<Entry<String, String>> entries = this.names.getNameEntries();
         for (Entry<String, String> entry : entries) {
+            String entity = XML_ENTITY;
             entity = entity.replaceAll("\\$\\{name\\}", entry.getKey());
             entity = entity.replaceAll("\\$\\{uri\\}", entry.getValue());
             buffer.append(entity);
@@ -167,9 +167,9 @@ public class RdfXmlHeader extends RdfXmlWritable {
      */
     private String getNamespaces() {
         StringBuffer buffer = new StringBuffer();
-        String entity = XML_NAMESPACE;
         Set<Entry<String, String>> entries = this.names.getNameEntries();
         for (Entry<String, String> entry : entries) {
+            String entity = XML_NAMESPACE;
             entity = entity.replaceAll("\\$\\{name\\}", entry.getKey());
             entity = entity.replaceAll("\\$\\{uri\\}", entry.getValue());
             buffer.append(entity);
