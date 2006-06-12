@@ -101,16 +101,18 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
     }
 
-    private StringWriter writeGraph(Graph graph) throws WriteException, GraphException, IOException {
-        // do write
-        StringWriter out = new StringWriter();
-        try {
-            RdfWriter writer = new RdfXmlWriter();
-            writer.write(graph, out);
-        } finally {
-            out.close();
-        }
-        return out;
+    public void testReadWriteUngrounded() throws Exception {
+        // input
+        Graph graph = readGraph(UNGROUNDED);
+        assertFalse("Test data is invalid. Input graph should not be grounded.", comparison.isGrounded(graph));
+        // output
+        StringWriter out = writeGraph(graph);
+        // re-read
+        Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
+        // compare
+        assertFalse("Output graph should not be grounded", comparison.isGrounded(read));
+// TODO (AN) Put this back in when ungrounded isomorphism is complete.
+//        assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
     }
 
     private Graph readGraph(String document) throws Exception {
@@ -136,35 +138,15 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         return read;
     }
 
-//    public void testReadWriteUngrounded() throws Exception {
-//        ComparisonImpl comparison = new ComparisonImpl();
-//        // input
-//        Graph graph = readGraph(UNGROUNDED);
-//        assertFalse("Test data is invalid. Input graph should not be grounded.", comparison.isGrounded(graph));
-//        // output
-//        StringWriter out = new StringWriter();
-//        // do write
-//        try {
-//            RdfXmlWriter writer = new RdfXmlWriter();
-//            writer.write(graph, out);
-//        } finally {
-//            out.close();
-//        }
-//        // re-read
-//        Graph read = JRDFFactory.getNewGraph();
-//        StringReader reader = new StringReader(out.toString());
-//        RdfXmlParser parser = new RdfXmlParser(read.getElementFactory());
-//        try {
-//            parser.parse(reader, "http://www.example.org/");
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//            fail("Output could not be parsed [" + e.getLineNumber() + ":" + e.getColumnNumber() + "]: " + e);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            fail("Output could not be parsed: " + e);
-//        }
-//        // compare
-//        assertFalse("Output graph should not be grounded", comparison .isGrounded(read));
-//        assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
-//    }
+    private StringWriter writeGraph(Graph graph) throws WriteException, GraphException, IOException {
+        // do write
+        StringWriter out = new StringWriter();
+        try {
+            RdfWriter writer = new RdfXmlWriter();
+            writer.write(graph, out);
+        } finally {
+            out.close();
+        }
+        return out;
+    }
 }
