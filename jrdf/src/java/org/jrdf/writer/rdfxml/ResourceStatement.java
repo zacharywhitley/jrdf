@@ -154,8 +154,7 @@ public class ResourceStatement extends RdfXmlWritable {
         // one or the other - not both
         if (object.getDatatypeURI() != null) {
             type = DATATYPE;
-            type = type.replaceAll("\\$\\{datatype\\}", object.getDatatypeURI()
-                    .toString());
+            type = type.replaceAll("\\$\\{datatype\\}", object.getDatatypeURI().toString());
         } else if (object.getLanguage() != null && !"".equals(object.getLanguage())) {
             lang = LANGUAGE;
             lang = lang.replaceAll("\\$\\{language\\}", object.getLanguage());
