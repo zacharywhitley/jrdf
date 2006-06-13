@@ -95,6 +95,7 @@
           class="org.springframework.context.support.ResourceMapFactoryBean">
         <property name="locations">
             <list>
+                <value>classpath:org/springframework/richclient/image/images.properties</value>
                 <value>classpath:org/jrdf/gui/image/images.properties</value>
             </list>
         </property>

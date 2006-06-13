@@ -33,7 +33,20 @@
     <bean id="fileMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
         <property name="members">
             <list>
+                <bean class="org.jrdf.gui.command.LoadRdfCommand"/>
+                <ref bean="queryMenu"/>
                 <bean class="org.springframework.richclient.command.support.ExitCommand"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="queryMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
+        <property name="members">
+            <list>
+                <bean class="org.jrdf.gui.command.NewQueryCommand"/>
+                <bean class="org.jrdf.gui.command.OpenQueryCommand"/>
+                <bean class="org.jrdf.gui.command.RunQueryCommand"/>
+                <bean class="org.jrdf.gui.command.SaveQueryCommand"/>
             </list>
         </property>
     </bean>
