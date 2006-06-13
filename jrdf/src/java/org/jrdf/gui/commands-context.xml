@@ -32,15 +32,6 @@
         </property>
     </bean>
 
-    <!--<bean id="toolBar" class="org.springframework.richclient.command.CommandGroupFactoryBean">-->
-    <!--<property name="members">-->
-    <!--<list>-->
-    <!--<ref bean="newMenu"/>-->
-    <!--<value>saveAsCommand</value>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--</bean>-->
-
     <bean id="fileMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
         <property name="members">
             <list>
@@ -57,20 +48,6 @@
             </list>
         </property>
     </bean>
-
-    <!--<bean id="newMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">-->
-    <!--<property name="members">-->
-    <!--<list>-->
-    <!--<ref bean="newOwnerCommand"/>-->
-    <!--</list>-->
-    <!--</property>-->
-    <!--</bean>-->
-
-    <!--<bean id="newOwnerCommand" class="org.springframework.richclient.command.TargetableActionCommand">-->
-    <!--<property name="commandExecutor">-->
-    <!--<ref bean="newOwnerWizard"/>-->
-    <!--</property>-->
-    <!--</bean>-->
 
     <bean id="editMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
         <property name="members">
@@ -115,6 +92,29 @@
             <value>org/jrdf/gui/about.txt</value>
         </property>
     </bean>
+
+    <!--<bean id="toolBar" class="org.springframework.richclient.command.CommandGroupFactoryBean">-->
+    <!--<property name="members">-->
+    <!--<list>-->
+    <!--<ref bean="newMenu"/>-->
+    <!--<value>saveAsCommand</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="newMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">-->
+    <!--<property name="members">-->
+    <!--<list>-->
+    <!--<ref bean="newOwnerCommand"/>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="newOwnerCommand" class="org.springframework.richclient.command.TargetableActionCommand">-->
+    <!--<property name="commandExecutor">-->
+    <!--<ref bean="newOwnerWizard"/>-->
+    <!--</property>-->
+    <!--</bean>-->
 
     <!--<bean id="loginCommand" class="org.springframework.richclient.security.LoginCommand">-->
     <!--<property name="closeOnCancel" value="false"/>-->

@@ -28,11 +28,11 @@
             <value>org/jrdf/gui/commands-context.xml</value>
         </property>
         <property name="startingPageId">
-            <value>ownerManagerView</value>
+            <value>queryView</value>
         </property>
     </bean>
 
-    <bean id="ownerManagerView"
+    <bean id="queryView"
           class="org.springframework.richclient.application.support.DefaultViewDescriptor">
         <property name="viewClass">
             <value>org.jrdf.gui.view.QueryView</value>
@@ -57,6 +57,7 @@
         <property name="basenames">
             <list>
                 <value>org.jrdf.gui.messages</value>
+                <value>org.springframework.richclient.application.messages</value>
             </list>
         </property>
     </bean>
