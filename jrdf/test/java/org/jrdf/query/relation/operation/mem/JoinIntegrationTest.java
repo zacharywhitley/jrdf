@@ -60,7 +60,7 @@
 package org.jrdf.query.relation.operation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -98,6 +98,9 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public class JoinIntegrationTest extends TestCase {
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = TestJRDFFactory.getNewAttributeComparator();
+    private static final TupleComparator TUPLE_COMPARATOR = TestJRDFFactory.getNewTupleComparator();
+
     private static final AttributeName ATTRIBUTE_NAME_1 = new PositionName("foo1");
     private static final AttributeName ATTRIBUTE_NAME_2 = new PositionName("foo2");
     private static final AttributeName ATTRIBUTE_NAME_3 = new VariableName("bar1");
@@ -118,6 +121,7 @@ public class JoinIntegrationTest extends TestCase {
         new AttributeValuePairImpl(ATTRIBUTE_3, RESOURCE_3);
     private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_4 =
         new AttributeValuePairImpl(ATTRIBUTE_4, RESOURCE_4);
+    private static final org.jrdf.query.relation.operation.Join JOIN = TestJRDFFactory.getNewJoin();
 
 
     public void testRelationDEEandDUM() {
@@ -137,11 +141,11 @@ public class JoinIntegrationTest extends TestCase {
         Set<Attribute> heading1 = createHeading(ATTRIBUTE_1, ATTRIBUTE_2);
         Set<Attribute> heading2 = createHeading(ATTRIBUTE_3, ATTRIBUTE_4);
         Set<Attribute> resultHeading = createHeading(ATTRIBUTE_1, ATTRIBUTE_2, ATTRIBUTE_3, ATTRIBUTE_4);
-        Relation relation1 = new RelationImpl(heading1, tuple1);
-        Relation relation2 = new RelationImpl(heading2, tuple2);
-        Relation expectedResult = new RelationImpl(resultHeading, resultTuple);
+        Relation relation1 = createRelation(heading1, tuple1);
+        Relation relation2 = createRelation(heading2, tuple2);
+        Relation expectedResult = createRelation(resultHeading, resultTuple);
 
-        RelationComparator relationComparator = JRDFFactory.getNewRelationComparator();
+        RelationComparator relationComparator = TestJRDFFactory.getNewRelationComparator();
         Set<Relation> tuples = new TreeSet<Relation>(relationComparator);
         tuples.add(relation1);
         tuples.add(relation2);
@@ -150,19 +154,20 @@ public class JoinIntegrationTest extends TestCase {
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
-        AttributeValuePairComparator avpComparator = JRDFFactory.getNewAttributeValuePairComparator();
+        AttributeValuePairComparator avpComparator = TestJRDFFactory.getNewAttributeValuePairComparator();
         Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
         for (AttributeValuePair attributeValuePair : attributeValuePairs) {
             values.add(attributeValuePair);
         }
-        TupleComparator tupleComparator = JRDFFactory.getNewTupleComparator();
+        TupleComparator tupleComparator = TestJRDFFactory.getNewTupleComparator();
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
-        tuples.add(new TupleImpl(values));
+        Tuple t = new TupleImpl(values, TestJRDFFactory.getNewAttributeValuePairComparator());
+        tuples.add(t);
         return tuples;
     }
 
     private Set<Attribute> createHeading(Attribute... attributes) {
-        AttributeComparator attributeComparator = JRDFFactory.getNewAttributeComparator();
+        AttributeComparator attributeComparator = TestJRDFFactory.getNewAttributeComparator();
         Set<Attribute> heading = new TreeSet<Attribute>(attributeComparator);
         for (Attribute attribute : attributes) {
             heading.add(attribute);
@@ -171,7 +176,7 @@ public class JoinIntegrationTest extends TestCase {
     }
 
     private void checkRelation(Relation expected, Set<Relation> actual) {
-        Relation relation = Join.JOIN.join(actual);
+        Relation relation = JOIN.join(actual);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();
@@ -184,5 +189,9 @@ public class JoinIntegrationTest extends TestCase {
 //        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
 
         assertEquals(expected, relation);
+    }
+
+    private static Relation createRelation(Set<Attribute> newHeading, Set<Tuple> newTuples) {
+        return new RelationImpl(newHeading, newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
     }
 }

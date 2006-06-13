@@ -59,6 +59,7 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
@@ -82,14 +83,14 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
     private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;
 
-    public OrderedGraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool) {
+    public OrderedGraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool, NodeComparator nodeComparator) {
         this.longIndexes = longIndexes;
         this.nodePool = nodePool;
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(longIndexes, nodePool),
             new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)};
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, longIndexes[0],
-            graphHandlers[0]);
+            graphHandlers[0], nodeComparator);
         this.elementFactory = new GraphElementFactoryImpl(nodePool);
     }
 

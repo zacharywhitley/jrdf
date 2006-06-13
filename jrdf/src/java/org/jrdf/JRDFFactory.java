@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
@@ -55,6 +55,7 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
@@ -64,48 +65,50 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.operation.Join;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
  *
  * @author Andrew Newman
- * @version $Id$
+ * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
     private static ClassPathXmlApplicationContext beanFactory =
         new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
-    private JRDFFactory() {
-    }
-
     public void refresh() {
         beanFactory.refresh();
     }
 
-    public static Graph getNewGraph() {
+    public Graph getNewGraph() {
         GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("graphFactory");
         return graphFactory.getGraph();
     }
 
-    public static AttributeValuePairComparator getNewAttributeValuePairComparator() {
+    public AttributeValuePairComparator getNewAttributeValuePairComparator() {
         return (AttributeValuePairComparator) beanFactory.getBean("avpComparator");
     }
 
-    public static NodeComparator getNewNodeComparator() {
+    public NodeComparator getNewNodeComparator() {
         return (NodeComparator) beanFactory.getBean("nodeComparator");
     }
 
-    public static AttributeComparator getNewAttributeComparator() {
+    public AttributeComparator getNewAttributeComparator() {
         return (AttributeComparator) beanFactory.getBean("attributeComparator");
     }
 
-    public static TupleComparator getNewTupleComparator() {
+    public TupleComparator getNewTupleComparator() {
         return (TupleComparator) beanFactory.getBean("tupleComparator");
     }
 
-    public static RelationComparator getNewRelationComparator() {
+    public RelationComparator getNewRelationComparator() {
         return (RelationComparator) beanFactory.getBean("relationComparator");
+    }
+
+    public Join getNewJoin() {
+        return (Join) beanFactory.getBean("join");
     }
 }

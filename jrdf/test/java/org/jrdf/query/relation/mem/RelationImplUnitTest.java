@@ -60,11 +60,13 @@ package org.jrdf.query.relation.mem;
 import au.net.netstorm.boost.primordial.Primordial;
 import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
@@ -91,15 +93,18 @@ public class RelationImplUnitTest extends TestCase {
     private static final Tuple[] TUPLES_3 = new Tuple[]{TEST_TUPLE_6};
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = TestJRDFFactory.getNewAttributeComparator();
+    private static final TupleComparator TUPLE_COMPARATOR = TestJRDFFactory.getNewTupleComparator();
 
-    public static final Relation TEST_RELATION_1 = new RelationImpl(createHeading(TUPLES_1), createTuple(TUPLES_1));
-    public static final Relation TEST_RELATION_2 = new RelationImpl(createHeading(TUPLES_2), createTuple(TUPLES_2));
-    public static final Relation TEST_RELATION_3 = new RelationImpl(createHeading(TUPLES_3), createTuple(TUPLES_3));
+    public static final Relation TEST_RELATION_1 = createRelation(createHeading(TUPLES_1), createTuple(TUPLES_1));
+    public static final Relation TEST_RELATION_2 = createRelation(createHeading(TUPLES_2), createTuple(TUPLES_2));
+    public static final Relation TEST_RELATION_3 = createRelation(createHeading(TUPLES_3), createTuple(TUPLES_3));
 
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
-        checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, Set.class);
+        checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, Set.class, AttributeComparator.class,
+            TupleComparator.class);
         checkFieldPrivate(RelationImpl.class, HEADING_NAME);
         isFieldOfType(RelationImpl.class, HEADING_NAME, Set.class);
         checkFieldPrivate(RelationImpl.class, TUPLES_NAME);
@@ -119,7 +124,7 @@ public class RelationImplUnitTest extends TestCase {
     }
 
     private static Set<Attribute> createHeading(Tuple[] tuples) {
-        Set<Attribute> heading = new TreeSet<Attribute>(JRDFFactory.getNewAttributeComparator());
+        Set<Attribute> heading = new TreeSet<Attribute>(TestJRDFFactory.getNewAttributeComparator());
         //noinspection unchecked
         for (Tuple tuple : tuples) {
             Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
@@ -132,8 +137,12 @@ public class RelationImplUnitTest extends TestCase {
 
     private static Set<Tuple> createTuple(Tuple[] tuples) {
         //noinspection unchecked
-        Set<Tuple> sortedTuples = new TreeSet<Tuple>(JRDFFactory.getNewTupleComparator());
+        Set<Tuple> sortedTuples = new TreeSet<Tuple>(TestJRDFFactory.getNewTupleComparator());
         sortedTuples.addAll(Arrays.asList(tuples));
         return sortedTuples;
+    }
+
+    private static Relation createRelation(Set<Attribute> newHeading, Set<Tuple> newTuples) {
+        return new RelationImpl(newHeading, newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
     }
 }

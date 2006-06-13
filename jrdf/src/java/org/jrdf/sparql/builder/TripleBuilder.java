@@ -185,7 +185,8 @@ public final class TripleBuilder {
         return createGraph().getElementFactory();
     }
 
+    // TODO (AN) Come back and see if we can fix this up.
     private Graph createGraph() {
-        return JRDFFactory.getNewGraph();
+        return new JRDFFactory().getNewGraph();
     }
 }

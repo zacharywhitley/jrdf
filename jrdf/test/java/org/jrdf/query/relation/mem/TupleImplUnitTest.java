@@ -60,7 +60,9 @@ package org.jrdf.query.relation.mem;
 import au.net.netstorm.boost.primordial.Primordial;
 import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegrationTest.TEST_AVP_1;
 import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegrationTest.TEST_AVP_2;
@@ -86,6 +88,8 @@ import java.util.Set;
  * @version $Id$
  */
 public class TupleImplUnitTest extends TestCase {
+    private static final AttributeValuePairComparator comparator = TestJRDFFactory.getNewAttributeValuePairComparator();
+
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_1 = {TEST_ATTRIBUTE_VALUE_1};
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_2 = {TEST_ATTRIBUTE_VALUE_1,
         TEST_ATTRIBUTE_VALUE_2};
@@ -108,20 +112,20 @@ public class TupleImplUnitTest extends TestCase {
     private static final Set<AttributeValuePair> ATTRIBUTE_VALUE_SET_3_1 = createSet(ATTRIBUTE_VALUE_PAIRS_3_1);
     private static final String TUPLES_NAME = "attributeValues";
 
-    public static final Tuple TEST_TUPLE_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_1);
-    public static final Tuple TEST_TUPLE_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_2);
-    public static final Tuple TEST_TUPLE_3 = new TupleImpl(ATTRIBUTE_VALUE_SET_3);
-    public static final Tuple TEST_TUPLE_4 = new TupleImpl(ATTRIBUTE_VALUE_SET_4);
-    public static final Tuple TEST_TUPLE_5 = new TupleImpl(ATTRIBUTE_VALUE_SET_5);
-    public static final Tuple TEST_TUPLE_6 = new TupleImpl(ATTRIBUTE_VALUE_SET_6);
-    public static final Tuple TEST_TUPLES_1_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_2);
-    public static final Tuple TEST_TUPLES_1_3 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_3);
-    public static final Tuple TEST_TUPLES_3_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_3_1);
+    public static final Tuple TEST_TUPLE_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_1, comparator);
+    public static final Tuple TEST_TUPLE_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_2, comparator);
+    public static final Tuple TEST_TUPLE_3 = new TupleImpl(ATTRIBUTE_VALUE_SET_3, comparator);
+    public static final Tuple TEST_TUPLE_4 = new TupleImpl(ATTRIBUTE_VALUE_SET_4, comparator);
+    public static final Tuple TEST_TUPLE_5 = new TupleImpl(ATTRIBUTE_VALUE_SET_5, comparator);
+    public static final Tuple TEST_TUPLE_6 = new TupleImpl(ATTRIBUTE_VALUE_SET_6, comparator);
+    public static final Tuple TEST_TUPLES_1_2 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_2, comparator);
+    public static final Tuple TEST_TUPLES_1_3 = new TupleImpl(ATTRIBUTE_VALUE_SET_1_3, comparator);
+    public static final Tuple TEST_TUPLES_3_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_3_1, comparator);
 
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Tuple.class, TupleImpl.class);
-        checkConstructor(TupleImpl.class, Modifier.PUBLIC, Set.class);
+        checkConstructor(TupleImpl.class, Modifier.PUBLIC, Set.class, AttributeValuePairComparator.class);
         checkFieldPrivate(TupleImpl.class, TUPLES_NAME);
         isFieldOfType(TupleImpl.class, TUPLES_NAME, Set.class);
     }
@@ -132,7 +136,7 @@ public class TupleImplUnitTest extends TestCase {
     }
 
     private void checkStandardConstructor(Set<AttributeValuePair> tupleSet) {
-        Tuple tuple = new TupleImpl(tupleSet);
+        Tuple tuple = new TupleImpl(tupleSet, comparator);
         checkFieldValue(tuple, TUPLES_NAME, tupleSet);
         assertEquals(tupleSet, tuple.getAttributeValues());
     }

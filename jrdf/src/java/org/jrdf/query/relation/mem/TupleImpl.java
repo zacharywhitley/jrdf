@@ -58,8 +58,8 @@
 package org.jrdf.query.relation.mem;
 
 import au.net.netstorm.boost.primordial.Primordial;
-import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
 
 import java.util.Set;
@@ -74,9 +74,12 @@ import java.util.TreeSet;
  */
 public final class TupleImpl extends Primordial implements Tuple {
     private Set<AttributeValuePair> attributeValues;
+    private final AttributeValuePairComparator attributeValuePairComparator;
 
-    public TupleImpl(Set<AttributeValuePair> newAttributeValues) {
+    public TupleImpl(Set<AttributeValuePair> newAttributeValues,
+                     AttributeValuePairComparator attributeValuePairComparator) {
         attributeValues = newAttributeValues;
+        this.attributeValuePairComparator = attributeValuePairComparator;
     }
 
     public Set<AttributeValuePair> getAttributeValues() {
@@ -92,8 +95,7 @@ public final class TupleImpl extends Primordial implements Tuple {
         }
 
         // TODO (AN) Turn this into a sort call instead?
-        Set<AttributeValuePair> sortedPairs =
-            new TreeSet<AttributeValuePair>(JRDFFactory.getNewAttributeValuePairComparator());
+        Set<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
         sortedPairs.addAll(attributeValues);
         attributeValues = sortedPairs;
         return sortedPairs;
