@@ -58,92 +58,14 @@
 
 package org.jrdf.gui.view;
 
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
-import org.springframework.richclient.application.PageComponentContext;
-import org.springframework.richclient.application.support.AbstractView;
-import org.springframework.richclient.command.support.AbstractActionCommandExecutor;
-import org.springframework.richclient.command.support.GlobalCommandIds;
-
 import javax.swing.*;
 
 /**
- * A builder that always throws exceptions.
+ * A generic panel.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class QueryView extends AbstractView implements ApplicationListener {
-
-    private PanelView queryPanelView;
-    private PanelView resultsPanelView;
-
-    private RenameExecutor renameExecutor = new RenameExecutor();
-
-    private DeleteExecutor deleteExecutor = new DeleteExecutor();
-
-    private PropertiesExecutor propertiesExecutor = new PropertiesExecutor();
-
-    public void setQueryPanel(PanelView newQueryPanelView) {
-        queryPanelView = newQueryPanelView;
-    }
-
-    public void setResultsPanel(PanelView newResultsPanelView) {
-        resultsPanelView = newResultsPanelView;
-    }
-
-    protected void registerLocalCommandExecutors(PageComponentContext context) {
-        context.register("renameCommand", renameExecutor);
-        context.register(GlobalCommandIds.DELETE, deleteExecutor);
-        context.register(GlobalCommandIds.PROPERTIES, propertiesExecutor);
-    }
-
-    protected JComponent createControl() {
-        JPanel queryJPanel = queryPanelView.getJPanel();
-        JPanel resultsJPanel = resultsPanelView.getJPanel();
-        return createPane(queryJPanel, resultsJPanel);
-    }
-
-    private JSplitPane createPane(JPanel queryJPanel, JPanel resultsJPanel) {
-        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, queryJPanel, resultsJPanel);
-        splitPane.setDividerLocation(0.5);
-        splitPane.setResizeWeight(0.5);
-        splitPane.setContinuousLayout(true);
-        splitPane.setOneTouchExpandable(true);
-        return splitPane;
-    }
-
-    public void onApplicationEvent(ApplicationEvent e) {
-    }
-
-    private class RenameExecutor extends AbstractActionCommandExecutor {
-        public void execute() {
-        }
-    }
-
-    private class PropertiesExecutor extends AbstractActionCommandExecutor {
-        public void execute() {
-        }
-    }
-
-    private class DeleteExecutor extends AbstractActionCommandExecutor {
-        public void execute() {
-        }
-    }
-
-    public void componentClosed() {
-        System.out.println("closed");
-    }
-
-    public void componentFocusGained() {
-        System.out.println("gained");
-    }
-
-    public void componentFocusLost() {
-        System.out.println("lost");
-    }
-
-    public void componentOpened() {
-        System.out.println("opened");
-    }
+public interface PanelView {
+    JPanel getJPanel();
 }
