@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -55,17 +55,57 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+package org.jrdf;
 
-package org.jrdf.gui.view;
-
-import javax.swing.JPanel;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.operation.Join;
 
 /**
- * A generic panel.
+ * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Id$
  */
-public interface PanelView {
-    JPanel getJPanel();
+public final class TestJRDFFactory {
+    private static final JRDFFactory FACTORY = new JRDFFactory();
+
+    private TestJRDFFactory() {
+    }
+
+    public void refresh() {
+        FACTORY.refresh();
+    }
+
+    public static Graph getNewGraph() {
+        return FACTORY.getNewGraph();
+    }
+
+    public static AttributeValuePairComparator getNewAttributeValuePairComparator() {
+        return FACTORY.getNewAttributeValuePairComparator();
+    }
+
+    public static NodeComparator getNewNodeComparator() {
+        return FACTORY.getNewNodeComparator();
+    }
+
+    public static AttributeComparator getNewAttributeComparator() {
+        return FACTORY.getNewAttributeComparator();
+    }
+
+    public static TupleComparator getNewTupleComparator() {
+        return FACTORY.getNewTupleComparator();
+    }
+
+    public static RelationComparator getNewRelationComparator() {
+        return FACTORY.getNewRelationComparator();
+    }
+
+    public static Join getNewJoin() {
+        return FACTORY.getNewJoin();
+    }
 }

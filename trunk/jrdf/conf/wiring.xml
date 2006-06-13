@@ -18,6 +18,9 @@
             </list>
         </constructor-arg>
         <constructor-arg ref="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl"/>
+        <constructor-arg>
+            <ref bean="nodeComparator"/>
+        </constructor-arg>
     </bean>
 
     <bean name="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl">
@@ -56,6 +59,18 @@
         </constructor-arg>
         <constructor-arg>
             <ref bean="tupleComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="join" class="org.jrdf.query.relation.operation.mem.Join">
+        <constructor-arg>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
         </constructor-arg>
     </bean>
 </beans>

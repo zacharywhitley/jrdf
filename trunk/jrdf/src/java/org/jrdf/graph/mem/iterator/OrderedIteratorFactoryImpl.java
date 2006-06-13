@@ -57,7 +57,6 @@
  */
 package org.jrdf.graph.mem.iterator;
 
-import org.jrdf.JRDFFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
@@ -79,13 +78,15 @@ public class OrderedIteratorFactoryImpl implements IteratorFactory {
     private NodePoolMem nodePool;
     private LongIndex longIndex;
     private GraphHandler graphHandler;
+    private final NodeComparator nodeComparator;
 
     public OrderedIteratorFactoryImpl(IteratorFactory iteratorFactory, NodePoolMem nodePool,
-                                      LongIndex longIndex, GraphHandler graphHandlers) {
+                                      LongIndex longIndex, GraphHandler graphHandlers, NodeComparator nodeComparator) {
         this.iteratorFactory = iteratorFactory;
         this.nodePool = nodePool;
         this.longIndex = longIndex;
         this.graphHandler = graphHandlers;
+        this.nodeComparator = nodeComparator;
     }
 
     public ClosableMemIterator<Triple> newEmptyClosableIterator() {
@@ -109,7 +110,6 @@ public class OrderedIteratorFactoryImpl implements IteratorFactory {
     }
 
     private ClosableMemIterator<Triple> sortResults(ClosableMemIterator<Triple> closableMemIterator) {
-        NodeComparator nodeComparator = JRDFFactory.getNewNodeComparator();
         TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
         TreeSet<Triple> orderedSet = new TreeSet<Triple>(tripleComparator);
         while (closableMemIterator.hasNext()) {

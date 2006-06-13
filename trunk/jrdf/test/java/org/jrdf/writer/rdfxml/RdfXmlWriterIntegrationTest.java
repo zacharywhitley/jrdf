@@ -58,7 +58,7 @@
 package org.jrdf.writer.rdfxml;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.operation.mem.ComparisonImpl;
@@ -128,7 +128,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     private Graph readGraph(Reader reader, String baseURI) throws GraphException {
-        Graph read = JRDFFactory.getNewGraph();
+        Graph read = TestJRDFFactory.getNewGraph();
         Parser parser = new GraphRdfXmlParser(read);
         try {
             parser.parse(reader, baseURI);

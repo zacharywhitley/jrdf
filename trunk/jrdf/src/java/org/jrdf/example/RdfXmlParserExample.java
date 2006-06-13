@@ -37,7 +37,7 @@ public final class RdfXmlParserExample {
     }
 
     private static Graph getGraph() {
-        return JRDFFactory.getNewGraph();
+        return new JRDFFactory().getNewGraph();
     }
 
     private static URL getDocumentURL(String[] args) throws MalformedURLException {

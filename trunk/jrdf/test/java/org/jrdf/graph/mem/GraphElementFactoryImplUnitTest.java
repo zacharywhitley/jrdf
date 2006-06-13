@@ -59,7 +59,7 @@
 package org.jrdf.graph.mem;
 
 import junit.textui.TestRunner;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
@@ -82,7 +82,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
      * @return A new graph implementation object.
      */
     public Graph newGraph() throws GraphException {
-        return JRDFFactory.getNewGraph();
+        return TestJRDFFactory.getNewGraph();
     }
 
     /**

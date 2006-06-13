@@ -58,7 +58,7 @@
 
 package org.jrdf.util.test;
 
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Literal;
@@ -119,6 +119,6 @@ public final class NodeTestUtil {
 
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     private static Graph createGraph() {
-        return JRDFFactory.getNewGraph();
+        return TestJRDFFactory.getNewGraph();
     }
 }

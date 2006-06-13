@@ -58,7 +58,7 @@
 package org.jrdf.graph.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -95,7 +95,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        nodeComparator = JRDFFactory.getNewNodeComparator();
+        nodeComparator = TestJRDFFactory.getNewNodeComparator();
     }
 
     public void testClassProperties() throws Exception {

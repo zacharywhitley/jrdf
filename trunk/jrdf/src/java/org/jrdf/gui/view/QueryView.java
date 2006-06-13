@@ -65,7 +65,10 @@ import org.springframework.richclient.application.support.AbstractView;
 import org.springframework.richclient.command.support.AbstractActionCommandExecutor;
 import org.springframework.richclient.command.support.GlobalCommandIds;
 
-import javax.swing.*;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+
 
 /**
  * A builder that always throws exceptions.
@@ -83,6 +86,7 @@ public class QueryView extends AbstractView implements ApplicationListener {
     private DeleteExecutor deleteExecutor = new DeleteExecutor();
 
     private PropertiesExecutor propertiesExecutor = new PropertiesExecutor();
+    private static final double HALF_PANE = 0.5;
 
     public void setQueryPanel(PanelView newQueryPanelView) {
         queryPanelView = newQueryPanelView;
@@ -106,8 +110,8 @@ public class QueryView extends AbstractView implements ApplicationListener {
 
     private JSplitPane createPane(JPanel queryJPanel, JPanel resultsJPanel) {
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, queryJPanel, resultsJPanel);
-        splitPane.setDividerLocation(0.5);
-        splitPane.setResizeWeight(0.5);
+        splitPane.setDividerLocation(HALF_PANE);
+        splitPane.setResizeWeight(HALF_PANE);
         splitPane.setContinuousLayout(true);
         splitPane.setOneTouchExpandable(true);
         return splitPane;

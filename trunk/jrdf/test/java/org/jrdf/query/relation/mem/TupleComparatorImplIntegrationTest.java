@@ -59,7 +59,7 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLES_1_2;
@@ -92,7 +92,7 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        tupleComparator = JRDFFactory.getNewTupleComparator();
+        tupleComparator = TestJRDFFactory.getNewTupleComparator();
     }
 
     public void testNullPointerException() {

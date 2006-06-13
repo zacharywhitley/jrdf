@@ -58,10 +58,11 @@
 package org.jrdf.query.relation.mem;
 
 import au.net.netstorm.boost.primordial.Primordial;
-import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -77,11 +78,16 @@ import java.util.TreeSet;
 public final class RelationImpl extends Primordial implements Relation {
     private Set<Attribute> heading;
     private Set<Tuple> tuples;
+    private final AttributeComparator attributeComparator;
+    private final TupleComparator tupleComparator;
 
     // TODO (AN) Headings can be gleaned from tuples
-    public RelationImpl(Set<Attribute> newHeading, Set<Tuple> newTuples) {
+    public RelationImpl(Set<Attribute> newHeading, Set<Tuple> newTuples, AttributeComparator attributeComparator,
+                        TupleComparator tupleComparator) {
         heading = newHeading;
         tuples = newTuples;
+        this.attributeComparator = attributeComparator;
+        this.tupleComparator = tupleComparator;
     }
 
     public Set<Attribute> getHeading() {
@@ -101,7 +107,7 @@ public final class RelationImpl extends Primordial implements Relation {
         }
 
         // TODO (AN) Turn this into a sort call instead?
-        Set<Attribute> sortedHeading = new TreeSet<Attribute>(JRDFFactory.getNewAttributeComparator());
+        Set<Attribute> sortedHeading = new TreeSet<Attribute>(attributeComparator);
         sortedHeading.addAll(heading);
         heading = sortedHeading;
         return sortedHeading;
@@ -116,7 +122,7 @@ public final class RelationImpl extends Primordial implements Relation {
         }
 
         // TODO (AN) Turn this into a sort call instead?
-        Set<Tuple> sortedTuples = new TreeSet<Tuple>(JRDFFactory.getNewTupleComparator());
+        Set<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
         sortedTuples.addAll(tuples);
         tuples = sortedTuples;
         return sortedTuples;

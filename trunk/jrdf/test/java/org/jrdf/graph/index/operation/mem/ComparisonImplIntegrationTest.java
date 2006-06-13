@@ -59,7 +59,7 @@
 package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
@@ -90,9 +90,9 @@ public class ComparisonImplIntegrationTest extends TestCase {
     }
 
     private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {
-        Graph graph1 = JRDFFactory.getNewGraph();
+        Graph graph1 = TestJRDFFactory.getNewGraph();
         addTriple(graph1, resource1);
-        Graph graph2 = JRDFFactory.getNewGraph();
+        Graph graph2 = TestJRDFFactory.getNewGraph();
         addTriple(graph2, resource2);
         Comparison comparison = new ComparisonImpl();
         assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));

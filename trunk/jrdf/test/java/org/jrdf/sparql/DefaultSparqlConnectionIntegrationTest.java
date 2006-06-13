@@ -59,7 +59,7 @@
 package org.jrdf.sparql;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -155,7 +155,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     }
 
     private Graph createGraph() {
-        Graph graph = JRDFFactory.getNewGraph();
+        Graph graph = TestJRDFFactory.getNewGraph();
         populateGraph(graph);
         return graph;
     }

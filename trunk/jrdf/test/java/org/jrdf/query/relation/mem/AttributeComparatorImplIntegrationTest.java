@@ -58,7 +58,7 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -111,7 +111,7 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        attComparator = JRDFFactory.getNewAttributeComparator();
+        attComparator = TestJRDFFactory.getNewAttributeComparator();
     }
 
     public void testNullPointerException() {

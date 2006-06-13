@@ -59,10 +59,10 @@
 
 package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -82,16 +82,18 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public final class Join implements org.jrdf.query.relation.operation.Join {
-
-    /**
-     * Singleton version of Join.
-     */
-    public static final Join JOIN = new Join();
+    private final TupleComparator tupleComparator;
+    private final AttributeComparator attributeComparator;
+    private AttributeValuePairComparator attributeValuePairComparator;
 
     /**
      * Cannot create join.
      */
-    private Join() {
+    public Join(TupleComparator tupleComparator, AttributeComparator attributeComparator,
+                AttributeValuePairComparator attributeValuePairComparator) {
+        this.tupleComparator = tupleComparator;
+        this.attributeComparator = attributeComparator;
+        this.attributeValuePairComparator = attributeValuePairComparator;
     }
 
     public Relation join(Set<Relation> relations) {
@@ -110,7 +112,6 @@ public final class Join implements org.jrdf.query.relation.operation.Join {
 
         // Get the common attributes that are being joined
         Set<Attribute> intersectionHeading = getHeadingIntersections(relations);
-        TupleComparator tupleComparator = JRDFFactory.getNewTupleComparator();
         Set<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
 
         // No common attributes
@@ -124,7 +125,7 @@ public final class Join implements org.jrdf.query.relation.operation.Join {
         // Union all of the headings together.
         Set<Attribute> resultHeading = getHeadingUnions(relations);
 
-        return new RelationImpl(resultHeading, resultTuples);
+        return new RelationImpl(resultHeading, resultTuples, attributeComparator, tupleComparator);
     }
 
     private Set<Tuple> performCartesianProduct(Set<Relation> relations) {
@@ -139,20 +140,19 @@ public final class Join implements org.jrdf.query.relation.operation.Join {
     }
 
     private Set<Tuple> joinTuples(Set<Tuple> tuples1, Set<Tuple> tuples2) {
-        TupleComparator tupleComparator = JRDFFactory.getNewTupleComparator();
         Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple1 : tuples1) {
             Set<AttributeValuePair> resultantAttributeValues = tuple1.getAttributeValues();
             for (Tuple tuple2 : tuples2) {
                 resultantAttributeValues.addAll(tuple2.getAttributeValues());
             }
-            result.add(new TupleImpl(resultantAttributeValues));
+            Tuple t = new TupleImpl(resultantAttributeValues, attributeValuePairComparator);
+            result.add(t);
         }
         return result;
     }
 
     private Set<Attribute> getHeadingUnions(Set<Relation> relations) {
-        AttributeComparator attributeComparator = JRDFFactory.getNewAttributeComparator();
         Set<Attribute> headings = new TreeSet<Attribute>(attributeComparator);
         for (Relation relation : relations) {
             Set<Attribute> heading = relation.getHeading();
@@ -162,7 +162,6 @@ public final class Join implements org.jrdf.query.relation.operation.Join {
     }
 
     private Set<Attribute> getHeadingIntersections(Set<Relation> relations) {
-        AttributeComparator attributeComparator = JRDFFactory.getNewAttributeComparator();
         Set<Attribute> headings = new TreeSet<Attribute>(attributeComparator);
         Iterator<Relation> iterator = relations.iterator();
         Relation firstRelation = iterator.next();
