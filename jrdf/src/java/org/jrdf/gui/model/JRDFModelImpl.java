@@ -56,30 +56,32 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.command;
+package org.jrdf.gui.model;
 
-import org.jrdf.gui.model.JRDFModel;
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+import org.jrdf.JRDFFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+
+import java.net.URL;
 
 /**
- * Loads an RDF file from the file system.
+ * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class LoadRdfCommand extends ApplicationWindowAwareCommand {
-    private JRDFModel jrdfModel;
-    private static final String STATIC_URL = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
+public class JRDFModelImpl implements JRDFModel {
+    private static final JRDFFactory FACTORY = new JRDFFactory();
+    private Graph graph = FACTORY.getNewGraph();
 
-    public LoadRdfCommand() {
-        super("rdfCommand");
-    }
-
-    public void setJRDFModel(JRDFModel jrdfModel) {
-        this.jrdfModel = jrdfModel;
-    }
-
-    protected void doExecuteCommand() {
-        jrdfModel.loadModel(STATIC_URL);
+    public void loadModel(String urlName) {
+        try {
+            GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
+            URL source = getClass().getClassLoader().getResource(urlName);
+            graphRdfXmlParser.parse(source.openStream(), source.toURI().toString());
+            System.err.println("Got: " + graph.getNumberOfTriples());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

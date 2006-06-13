@@ -33,11 +33,20 @@
     <bean id="fileMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
         <property name="members">
             <list>
-                <bean class="org.jrdf.gui.command.LoadRdfCommand"/>
+                <ref bean="loadRdfCommand"/>
                 <ref bean="queryMenu"/>
                 <bean class="org.springframework.richclient.command.support.ExitCommand"/>
             </list>
         </property>
+    </bean>
+
+    <bean id="loadRdfCommand" class="org.jrdf.gui.command.LoadRdfCommand">
+        <property name="JRDFModel">
+            <ref bean="jrdfModel"/>
+        </property>
+    </bean>
+
+    <bean id="jrdfModel" class="org.jrdf.gui.model.JRDFModelImpl">
     </bean>
 
     <bean id="queryMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
