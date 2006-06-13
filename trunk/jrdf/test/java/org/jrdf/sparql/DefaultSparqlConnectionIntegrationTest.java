@@ -58,6 +58,8 @@
 
 package org.jrdf.sparql;
 
+import java.net.URI;
+import java.util.List;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.connection.JrdfConnectionFactory;
@@ -76,14 +78,8 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
-import java.net.URI;
-import java.util.List;
-
 /**
  * Integration test for {@link DefaultSparqlConnection}.
- *
- * @author Tom Adams
- * @version $Id$
  */
 public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
@@ -164,6 +160,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
         try {
             graph.add(createTriple(graph));
         } catch (GraphException e) {
+            // FIXME TJA: Remove stack trace.
             e.printStackTrace();
             throw new RuntimeException(e);
         }
