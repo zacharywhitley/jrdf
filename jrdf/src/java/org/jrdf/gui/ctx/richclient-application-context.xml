@@ -37,7 +37,26 @@
         <property name="viewClass">
             <value>org.jrdf.gui.view.QueryView</value>
         </property>
+        <property name="viewProperties">
+            <map>
+                <entry>
+                    <key>
+                        <value>queryPanel</value>
+                    </key>
+                    <ref bean="queryPanelView"/>
+                </entry>
+                <entry>
+                    <key>
+                        <value>resultsPanel</value>
+                    </key>
+                    <ref bean="resultsPanelView"/>
+                </entry>
+            </map>
+        </property>
     </bean>
+
+    <bean id="queryPanelView" class="org.jrdf.gui.view.QueryPanelView"/>
+    <bean id="resultsPanelView" class="org.jrdf.gui.view.ResultsPanelView"/>
 
     <bean id="applicationObjectConfigurer"
           class="org.springframework.richclient.application.config.DefaultApplicationObjectConfigurer">
