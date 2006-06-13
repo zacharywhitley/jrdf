@@ -66,4 +66,6 @@ package org.jrdf.gui.model;
  */
 public interface JRDFModel {
     void loadModel(String urlName);
+
+    void performQuery(String query);
 }
