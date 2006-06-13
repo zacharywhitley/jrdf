@@ -56,30 +56,14 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.command;
-
-import org.jrdf.gui.model.JRDFModel;
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+package org.jrdf.gui.model;
 
 /**
- * Loads an RDF file from the file system.
+ * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class LoadRdfCommand extends ApplicationWindowAwareCommand {
-    private JRDFModel jrdfModel;
-    private static final String STATIC_URL = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
-
-    public LoadRdfCommand() {
-        super("rdfCommand");
-    }
-
-    public void setJRDFModel(JRDFModel jrdfModel) {
-        this.jrdfModel = jrdfModel;
-    }
-
-    protected void doExecuteCommand() {
-        jrdfModel.loadModel(STATIC_URL);
-    }
+public interface JRDFModel {
+    void loadModel(String urlName);
 }
