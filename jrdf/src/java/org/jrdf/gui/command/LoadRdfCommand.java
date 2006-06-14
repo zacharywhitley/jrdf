@@ -68,8 +68,8 @@ import org.springframework.richclient.command.support.ApplicationWindowAwareComm
  * @version $Revision:$
  */
 public class LoadRdfCommand extends ApplicationWindowAwareCommand {
-    private JRDFModel jrdfModel;
     private static final String STATIC_URL = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
+    private JRDFModel jrdfModel;
 
     public LoadRdfCommand() {
         super("rdfCommand");

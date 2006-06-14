@@ -62,8 +62,6 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.richclient.application.PageComponentContext;
 import org.springframework.richclient.application.support.AbstractView;
-import org.springframework.richclient.command.support.AbstractActionCommandExecutor;
-import org.springframework.richclient.command.support.GlobalCommandIds;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -77,16 +75,10 @@ import javax.swing.JSplitPane;
  * @version $Revision:$
  */
 public class QueryView extends AbstractView implements ApplicationListener {
+    private static final double HALF_PANE = 0.5;
 
     private PanelView queryPanelView;
     private PanelView resultsPanelView;
-
-    private RenameExecutor renameExecutor = new RenameExecutor();
-
-    private DeleteExecutor deleteExecutor = new DeleteExecutor();
-
-    private PropertiesExecutor propertiesExecutor = new PropertiesExecutor();
-    private static final double HALF_PANE = 0.5;
 
     public void setQueryPanel(PanelView newQueryPanelView) {
         queryPanelView = newQueryPanelView;
@@ -96,10 +88,9 @@ public class QueryView extends AbstractView implements ApplicationListener {
         resultsPanelView = newResultsPanelView;
     }
 
+    // TODO (AN) Add afterPropertiesSet to check that the panels aren't null.
+
     protected void registerLocalCommandExecutors(PageComponentContext context) {
-        context.register("renameCommand", renameExecutor);
-        context.register(GlobalCommandIds.DELETE, deleteExecutor);
-        context.register(GlobalCommandIds.PROPERTIES, propertiesExecutor);
     }
 
     protected JComponent createControl() {
@@ -118,21 +109,6 @@ public class QueryView extends AbstractView implements ApplicationListener {
     }
 
     public void onApplicationEvent(ApplicationEvent e) {
-    }
-
-    private class RenameExecutor extends AbstractActionCommandExecutor {
-        public void execute() {
-        }
-    }
-
-    private class PropertiesExecutor extends AbstractActionCommandExecutor {
-        public void execute() {
-        }
-    }
-
-    private class DeleteExecutor extends AbstractActionCommandExecutor {
-        public void execute() {
-        }
     }
 
     public void componentClosed() {
