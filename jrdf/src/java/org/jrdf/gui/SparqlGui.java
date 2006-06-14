@@ -60,13 +60,7 @@ package org.jrdf.gui;
 
 import org.springframework.richclient.application.ApplicationLauncher;
 
-/**
- * A builder that always throws exceptions.
- *
- * @author Andrew Newman
- * @version $Revision: 436 $
- */
-public class SparqlGui {
+public final class SparqlGui {
     private static final String ROOT_CONTEXT = "/org/jrdf/gui/ctx";
     //private static final String STARTUP_CONTEXT = ROOT_CONTEXT + "/richclient-startup-context.xml";
     private static final String RICHCLIENT_APPLICATION_CONTEXT = ROOT_CONTEXT +

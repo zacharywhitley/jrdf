@@ -58,6 +58,7 @@
 
 package org.jrdf.gui.model;
 
+import java.net.URL;
 import org.jrdf.JRDFFactory;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
@@ -66,14 +67,6 @@ import org.jrdf.query.Answer;
 import org.jrdf.sparql.DefaultSparqlConnection;
 import org.jrdf.sparql.SparqlConnection;
 
-import java.net.URL;
-
-/**
- * A builder that always throws exceptions.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
 public class JRDFModelImpl implements JRDFModel {
     private static final JRDFFactory FACTORY = new JRDFFactory();
     private Graph graph = FACTORY.getNewGraph();

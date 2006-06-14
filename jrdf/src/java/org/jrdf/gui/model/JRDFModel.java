@@ -58,12 +58,6 @@
 
 package org.jrdf.gui.model;
 
-/**
- * A builder that always throws exceptions.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
 public interface JRDFModel {
     void loadModel(String urlName);
 
