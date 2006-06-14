@@ -58,7 +58,7 @@
 
 package org.jrdf.gui.command;
 
-import org.springframework.richclient.application.Application;
+import org.jrdf.gui.model.JRDFModel;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
@@ -68,12 +68,18 @@ import org.springframework.richclient.command.support.ApplicationWindowAwareComm
  * @version $Revision:$
  */
 public class RunQueryCommand extends ApplicationWindowAwareCommand {
+    private static final String QUERY = "SELECT * WHERE { <http://purl.org/dc/elements/1.1/> <http://purl.org/dc/elements/1.1/title> ?o }";
+    private JRDFModel jrdfModel;
 
     public RunQueryCommand() {
         super("runQueryCommand");
     }
 
+    public void setJRDFModel(JRDFModel jrdfModel) {
+        this.jrdfModel = jrdfModel;
+    }
+
     protected void doExecuteCommand() {
-        Application.instance().close();
+        jrdfModel.performQuery(QUERY);
     }
 }

@@ -70,13 +70,13 @@ import java.awt.BorderLayout;
  * @version $Revision:$
  */
 public class QueryPanelView implements PanelView {
-    private JTextArea query = new JTextArea();
 
     public JPanel getJPanel() {
         JPanel queryPanel = new JPanel();
         queryPanel.setLayout(new BorderLayout());
 
 //        query.getDocument().addUndoableEditListener(_undoManager);
+        JTextArea query = new JTextArea();
         JScrollPane scrollPane = new JScrollPane(query);
         queryPanel.add(scrollPane, BorderLayout.CENTER);
 //        queryPanel.add(createOptionsPanel(), BorderLayout.EAST);

@@ -54,9 +54,15 @@
             <list>
                 <bean class="org.jrdf.gui.command.NewQueryCommand"/>
                 <bean class="org.jrdf.gui.command.OpenQueryCommand"/>
-                <bean class="org.jrdf.gui.command.RunQueryCommand"/>
+                <ref bean="runQueryCommand"/>
                 <bean class="org.jrdf.gui.command.SaveQueryCommand"/>
             </list>
+        </property>
+    </bean>
+
+    <bean id="runQueryCommand" class="org.jrdf.gui.command.RunQueryCommand">
+        <property name="JRDFModel">
+            <ref bean="jrdfModel"/>
         </property>
     </bean>
 
