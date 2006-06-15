@@ -58,29 +58,12 @@
 
 package org.jrdf.gui.view;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import java.awt.BorderLayout;
-
 /**
- * The query panel.
+ * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class QueryPanelView implements PanelView {
-
-    public JPanel getJPanel() {
-        JPanel queryPanel = new JPanel();
-        queryPanel.setLayout(new BorderLayout());
-
-//        query.getDocument().addUndoableEditListener(_undoManager);
-        JTextArea query = new JTextArea();
-        JScrollPane scrollPane = new JScrollPane(query);
-        queryPanel.add(scrollPane, BorderLayout.CENTER);
-//        queryPanel.add(createOptionsPanel(), BorderLayout.EAST);
-
-        return queryPanel;
-    }
+public interface QueryPanelView extends PanelView {
+    String getQuery();
 }

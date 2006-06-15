@@ -58,20 +58,36 @@
 
 package org.jrdf.gui.view;
 
-import org.jrdf.query.Answer;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import java.awt.BorderLayout;
 
 /**
- * A builder that always throws exceptions.
+ * The query panel.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface QueryView {
-    void setQueryPanel(QueryPanelView newQueryPanelView);
+public class QueryPanelViewImpl implements PanelView, QueryPanelView {
+    private static final String QUERY = "SELECT * WHERE { <http://purl.org/dc/elements/1.1/> <http://purl.org/dc/elements/1.1/title> ?o }";
+    private JTextArea query;
 
-    void setResultsPanel(ResultsPanelView newResultsPanelView);
+    public JPanel getJPanel() {
+        JPanel queryPanel = new JPanel();
+        queryPanel.setLayout(new BorderLayout());
 
-    void setTriplesLoaded(long numberOfTriples);
+//        query.getDocument().addUndoableEditListener(_undoManager);
+        query = new JTextArea();
+        query.setText(QUERY);
+        JScrollPane scrollPane = new JScrollPane(query);
+        queryPanel.add(scrollPane, BorderLayout.CENTER);
+//        queryPanel.add(createOptionsPanel(), BorderLayout.EAST);
 
-    void setResults(Answer answer);
+        return queryPanel;
+    }
+
+    public String getQuery() {
+        return query.getText();
+    }
 }

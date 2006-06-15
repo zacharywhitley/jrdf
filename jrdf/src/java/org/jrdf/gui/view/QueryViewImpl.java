@@ -80,10 +80,10 @@ import javax.swing.JSplitPane;
 public class QueryViewImpl extends AbstractView implements ApplicationListener, QueryView {
     private static final double HALF_PANE = 0.5;
 
-    private PanelView queryPanelView;
+    private QueryPanelView queryPanelView;
     private ResultsPanelView resultsPanelView;
 
-    public void setQueryPanel(PanelView newQueryPanelView) {
+    public void setQueryPanel(QueryPanelView newQueryPanelView) {
         queryPanelView = newQueryPanelView;
     }
 
@@ -97,7 +97,6 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
         context.register("rdfLoadedCommand", new RdfLoadedCommand(this));
         context.register("queryRanCommand", new QueryRanCommand(this));
     }
-
 
     public void setTriplesLoaded(long numberOfTriples) {
         String message = getMessage("queryView.modelLoaded");

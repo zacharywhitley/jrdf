@@ -59,6 +59,7 @@
 package org.jrdf.gui.command;
 
 import org.jrdf.gui.model.JRDFModel;
+import org.jrdf.gui.view.QueryPanelView;
 import org.jrdf.query.Answer;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 import org.springframework.richclient.application.PageComponent;
@@ -71,8 +72,8 @@ import org.springframework.richclient.application.PageComponentContext;
  * @version $Revision:$
  */
 public class RunQueryCommand extends ApplicationWindowAwareCommand {
-    private static final String QUERY = "SELECT * WHERE { <http://purl.org/dc/elements/1.1/> <http://purl.org/dc/elements/1.1/title> ?o }";
     private JRDFModel jrdfModel;
+    private QueryPanelView queryPanelView;
 
     public RunQueryCommand() {
         super("runQueryCommand");
@@ -82,8 +83,12 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
         this.jrdfModel = jrdfModel;
     }
 
+    public void setQueryPanelView(QueryPanelView queryPanelView) {
+        this.queryPanelView = queryPanelView;
+    }
+
     protected void doExecuteCommand() {
-        Answer answer = jrdfModel.performQuery(QUERY);
+        Answer answer = jrdfModel.performQuery(queryPanelView.getQuery());
         QueryRanCommand queryRanCommand = getQueryRanCommand();
         queryRanCommand.setAnswer(answer);
         queryRanCommand.execute();
