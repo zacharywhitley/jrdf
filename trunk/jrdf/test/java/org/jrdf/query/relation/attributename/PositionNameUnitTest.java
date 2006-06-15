@@ -60,7 +60,6 @@ package org.jrdf.query.relation.attributename;
 import au.net.netstorm.boost.primordial.Primordial;
 import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
-import org.jrdf.query.relation.mem.RelationImpl;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.FieldPropertiesTestUtil;
 
@@ -78,7 +77,7 @@ public class PositionNameUnitTest extends TestCase {
     private static final String POSITION_NAME_2 = "bar";
 
     public void testClassProperties() {
-        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
+        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, PositionName.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(AttributeName.class, PositionName.class);
         ClassPropertiesTestUtil.checkConstructor(PositionName.class, Modifier.PUBLIC, String.class);
         FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal(PositionName.class,

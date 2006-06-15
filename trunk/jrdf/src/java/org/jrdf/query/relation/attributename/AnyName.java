@@ -56,13 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation;
+package org.jrdf.query.relation.attributename;
 
 /**
- * A marker interface that indicates that the relation is of three columns - subject, predicate and object.
+ * A name that indicates a wildcard name - this will match any name.
  *
  * @author Andrew Newman
- * @version $Revision: 533 $
+ * @version $Revision:$
  */
-public interface TripleRelation extends Relation {
+public final class AnyName implements AttributeName {
+
+    public String getLiteral() {
+        return "ANY_NAME";
+    }
 }

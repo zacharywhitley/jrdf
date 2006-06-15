@@ -56,13 +56,34 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation;
+package org.jrdf.query.relation.attributename;
+
+import au.net.netstorm.boost.primordial.Primordial;
+import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+
+import java.lang.reflect.Modifier;
 
 /**
- * A marker interface that indicates that the relation is of three columns - subject, predicate and object.
+ * Stuff goes in here.
  *
  * @author Andrew Newman
- * @version $Revision: 533 $
+ * @version $Id: PositionNameUnitTest.java 540 2006-06-06 20:03:16 +1000 (Tue, 06 Jun 2006) newmana $
  */
-public interface TripleRelation extends Relation {
+public class AnyNameUnitTest extends TestCase {
+    private static final String FIXED_NAME_VALUE = "ANY_NAME";
+
+    public void testClassProperties() {
+        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, AnyName.class);
+        checkImplementationOfInterfaceAndFinal(AttributeName.class, AnyName.class);
+        checkConstructor(AnyName.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+    }
+
+    public void testReturnsConstantNameValue() {
+        AnyName anyName = new AnyName();
+        assertEquals(FIXED_NAME_VALUE, anyName.getLiteral());
+    }
 }
