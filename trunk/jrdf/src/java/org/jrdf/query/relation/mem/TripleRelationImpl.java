@@ -84,6 +84,10 @@ public final class TripleRelationImpl extends Primordial implements TripleRelati
         return null;
     }
 
+    public Set<Tuple> getSortedTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return null;
+    }
+
     public Set<Tuple> getTuples() {
         return null;
     }
