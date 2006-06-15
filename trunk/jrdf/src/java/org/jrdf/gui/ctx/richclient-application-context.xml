@@ -56,7 +56,7 @@
     </bean>
 
     <bean id="queryPanelView" class="org.jrdf.gui.view.QueryPanelView"/>
-    <bean id="resultsPanelView" class="org.jrdf.gui.view.ResultsPanelView"/>
+    <bean id="resultsPanelView" class="org.jrdf.gui.view.ResultsPanelViewImpl"/>
 
     <bean id="applicationObjectConfigurer"
           class="org.springframework.richclient.application.config.DefaultApplicationObjectConfigurer">
