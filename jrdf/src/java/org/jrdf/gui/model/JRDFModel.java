@@ -58,8 +58,10 @@
 
 package org.jrdf.gui.model;
 
+import org.jrdf.graph.Graph;
+
 public interface JRDFModel {
-    void loadModel(String urlName);
+    Graph loadModel(String urlName);
 
     void performQuery(String query);
 }

@@ -58,8 +58,12 @@
 
 package org.jrdf.gui.command;
 
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.gui.model.JRDFModel;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+import org.springframework.richclient.application.PageComponent;
+import org.springframework.richclient.application.PageComponentContext;
 
 /**
  * Loads an RDF file from the file system.
@@ -80,6 +84,24 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
     }
 
     protected void doExecuteCommand() {
-        jrdfModel.loadModel(STATIC_URL);
+        Graph graph = jrdfModel.loadModel(STATIC_URL);
+        long numberOfTriples = tryGetNumberOfTriples(graph);
+        RdfLoadedCommand actionCommand = getRdfLoadedCommand();
+        actionCommand.setTriplesLoaded(numberOfTriples);
+        actionCommand.execute();
+    }
+
+    private long tryGetNumberOfTriples(Graph graph) {
+        try {
+            return graph.getNumberOfTriples();
+        } catch (GraphException ge) {
+            throw new RuntimeException(ge);
+        }
+    }
+
+    private RdfLoadedCommand getRdfLoadedCommand() {
+        PageComponent activeComponent = getApplicationWindow().getPage().getActiveComponent();
+        PageComponentContext context = activeComponent.getContext();
+        return (RdfLoadedCommand) context.getLocalCommandExecutor("rdfLoadedCommand");
     }
 }

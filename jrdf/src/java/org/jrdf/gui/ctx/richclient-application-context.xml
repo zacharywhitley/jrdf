@@ -35,7 +35,7 @@
     <bean id="queryView"
           class="org.springframework.richclient.application.support.DefaultViewDescriptor">
         <property name="viewClass">
-            <value>org.jrdf.gui.view.QueryView</value>
+            <value>org.jrdf.gui.view.QueryViewImpl</value>
         </property>
         <property name="viewProperties">
             <map>

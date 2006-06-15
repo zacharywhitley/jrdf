@@ -56,18 +56,31 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.view;
+package org.jrdf.gui.command;
+
+import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+import org.jrdf.gui.view.QueryView;
 
 /**
- * A builder that always throws exceptions.
+ * Loads an RDF file from the file system.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface QueryView {
-    void setQueryPanel(PanelView newQueryPanelView);
+public class RdfLoadedCommand extends ApplicationWindowAwareCommand {
+    private long numberOfTriples;
+    private QueryView queryView;
 
-    void setResultsPanel(PanelView newResultsPanelView);
+    public RdfLoadedCommand(QueryView queryView) {
+        super("rdfCommand");
+        this.queryView = queryView;
+    }
 
-    void setTriplesLoaded(long numberOfTriples);
+    public void setTriplesLoaded(long numberOfTriples) {
+        this.numberOfTriples = numberOfTriples;
+    }
+
+    protected void doExecuteCommand() {
+        queryView.setTriplesLoaded(numberOfTriples);
+    }
 }

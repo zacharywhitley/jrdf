@@ -58,7 +58,6 @@
 
 package org.jrdf.gui.model;
 
-import java.net.URL;
 import org.jrdf.JRDFFactory;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
@@ -67,17 +66,19 @@ import org.jrdf.query.Answer;
 import org.jrdf.sparql.DefaultSparqlConnection;
 import org.jrdf.sparql.SparqlConnection;
 
+import java.net.URL;
+
 public class JRDFModelImpl implements JRDFModel {
     private static final JRDFFactory FACTORY = new JRDFFactory();
     private Graph graph = FACTORY.getNewGraph();
     private SparqlConnection connection = new DefaultSparqlConnection(graph, JrdfConnectionFactory.NO_SECURITY_DOMAIN);
 
-    public void loadModel(String urlName) {
+    public Graph loadModel(String urlName) {
         try {
             GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
             URL source = getClass().getClassLoader().getResource(urlName);
             graphRdfXmlParser.parse(source.openStream(), source.toURI().toString());
-            System.err.println("Got: " + graph.getNumberOfTriples());
+            return graph;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
