@@ -73,11 +73,10 @@ public class JRDFModelImpl implements JRDFModel {
     private Graph graph = FACTORY.getNewGraph();
     private SparqlConnection connection = new DefaultSparqlConnection(graph, JrdfConnectionFactory.NO_SECURITY_DOMAIN);
 
-    public Graph loadModel(String urlName) {
+    public Graph loadModel(URL url) {
         try {
             GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            URL source = getClass().getClassLoader().getResource(urlName);
-            graphRdfXmlParser.parse(source.openStream(), source.toURI().toString());
+            graphRdfXmlParser.parse(url.openStream(), url.toURI().toString());
             return graph;
         } catch (Exception e) {
             throw new RuntimeException(e);

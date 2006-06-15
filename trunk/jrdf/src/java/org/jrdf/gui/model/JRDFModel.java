@@ -61,8 +61,10 @@ package org.jrdf.gui.model;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Answer;
 
+import java.net.URL;
+
 public interface JRDFModel {
-    Graph loadModel(String urlName);
+    Graph loadModel(URL urlName);
 
     Answer performQuery(String query);
 }
