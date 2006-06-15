@@ -58,16 +58,80 @@
 
 package org.jrdf.gui.view;
 
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.richclient.application.PageComponentContext;
+import org.springframework.richclient.application.support.AbstractView;
+import org.jrdf.gui.command.RdfLoadedCommand;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+
+
 /**
  * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface QueryView {
-    void setQueryPanel(PanelView newQueryPanelView);
+public class QueryViewImpl extends AbstractView implements ApplicationListener, QueryView {
+    private static final double HALF_PANE = 0.5;
 
-    void setResultsPanel(PanelView newResultsPanelView);
+    private PanelView queryPanelView;
+    private PanelView resultsPanelView;
 
-    void setTriplesLoaded(long numberOfTriples);
+    public void setQueryPanel(PanelView newQueryPanelView) {
+        queryPanelView = newQueryPanelView;
+    }
+
+    public void setResultsPanel(PanelView newResultsPanelView) {
+        resultsPanelView = newResultsPanelView;
+    }
+
+    // TODO (AN) Add afterPropertiesSet to check that the panels aren't null.
+
+    protected void registerLocalCommandExecutors(PageComponentContext context) {
+        context.register("rdfLoadedCommand", new RdfLoadedCommand(this));
+    }
+
+
+    public void setTriplesLoaded(long numberOfTriples) {
+        String message = getMessage("queryView.modelLoaded");
+        getStatusBar().setMessage(message + numberOfTriples);
+    }
+
+    protected JComponent createControl() {
+        JPanel queryJPanel = queryPanelView.getJPanel();
+        JPanel resultsJPanel = resultsPanelView.getJPanel();
+        return createPane(queryJPanel, resultsJPanel);
+    }
+
+    private JSplitPane createPane(JPanel queryJPanel, JPanel resultsJPanel) {
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, queryJPanel, resultsJPanel);
+        splitPane.setDividerLocation(HALF_PANE);
+        splitPane.setResizeWeight(HALF_PANE);
+        splitPane.setContinuousLayout(true);
+        splitPane.setOneTouchExpandable(true);
+        return splitPane;
+    }
+
+    public void onApplicationEvent(ApplicationEvent e) {
+    }
+
+    public void componentClosed() {
+        System.out.println("closed");
+    }
+
+    public void componentFocusGained() {
+        System.out.println("gained");
+    }
+
+    public void componentFocusLost() {
+        System.out.println("lost");
+    }
+
+    public void componentOpened() {
+        System.out.println("opened");
+    }
 }
