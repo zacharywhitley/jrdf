@@ -56,22 +56,32 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.view;
+package org.jrdf.gui.command;
 
+import org.jrdf.gui.view.QueryView;
 import org.jrdf.query.Answer;
+import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * A builder that always throws exceptions.
+ * Run an SPARQL query.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface QueryView {
-    void setQueryPanel(PanelView newQueryPanelView);
+public class QueryRanCommand extends ApplicationWindowAwareCommand {
+    private final QueryView queryView;
+    private Answer answer;
 
-    void setResultsPanel(ResultsPanelView newResultsPanelView);
+    public QueryRanCommand(QueryView queryView) {
+        super("runQueryCommand");
+        this.queryView = queryView;
+    }
 
-    void setTriplesLoaded(long numberOfTriples);
+    public void setAnswer(Answer answer) {
+        this.answer = answer;
+    }
 
-    void setResults(Answer answer);
+    protected void doExecuteCommand() {
+        queryView.setResults(answer);
+    }
 }

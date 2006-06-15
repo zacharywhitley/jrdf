@@ -58,18 +58,14 @@
 
 package org.jrdf.gui.view;
 
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
+import org.jrdf.query.Answer;
 
 /**
- * The results panel.
+ * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class ResultsPanelView implements PanelView {
-
-    public JPanel getJPanel() {
-        return new JPanel(new BorderLayout());
-    }
+public interface ResultsPanelView extends PanelView {
+    void setResults(Answer answer);
 }

@@ -59,7 +59,10 @@
 package org.jrdf.gui.command;
 
 import org.jrdf.gui.model.JRDFModel;
+import org.jrdf.query.Answer;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+import org.springframework.richclient.application.PageComponent;
+import org.springframework.richclient.application.PageComponentContext;
 
 /**
  * Run an SPARQL query.
@@ -80,6 +83,15 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
     }
 
     protected void doExecuteCommand() {
-        jrdfModel.performQuery(QUERY);
+        Answer answer = jrdfModel.performQuery(QUERY);
+        QueryRanCommand queryRanCommand = getQueryRanCommand();
+        queryRanCommand.setAnswer(answer);
+        queryRanCommand.execute();
+    }
+
+    private QueryRanCommand getQueryRanCommand() {
+        PageComponent activeComponent = getApplicationWindow().getPage().getActiveComponent();
+        PageComponentContext context = activeComponent.getContext();
+        return (QueryRanCommand) context.getLocalCommandExecutor("queryRanCommand");
     }
 }

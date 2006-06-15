@@ -84,10 +84,9 @@ public class JRDFModelImpl implements JRDFModel {
         }
     }
 
-    public void performQuery(String query) {
+    public Answer performQuery(String query) {
         try {
-            Answer answer = connection.executeQuery(query);
-            System.err.println("Answer: " + answer);
+            return connection.executeQuery(query);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

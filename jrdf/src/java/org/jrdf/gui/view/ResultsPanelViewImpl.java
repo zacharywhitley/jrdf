@@ -60,18 +60,27 @@ package org.jrdf.gui.view;
 
 import org.jrdf.query.Answer;
 
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import java.awt.BorderLayout;
+
 /**
- * A builder that always throws exceptions.
+ * The results panel.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface QueryView {
-    void setQueryPanel(PanelView newQueryPanelView);
+public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
+    private JTextArea results;
 
-    void setResultsPanel(ResultsPanelView newResultsPanelView);
+    public JPanel getJPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        results = new JTextArea();
+        panel.add(results);
+        return panel;
+    }
 
-    void setTriplesLoaded(long numberOfTriples);
-
-    void setResults(Answer answer);
+    public void setResults(Answer answer) {
+        results.setText(answer.toString());
+    }
 }
