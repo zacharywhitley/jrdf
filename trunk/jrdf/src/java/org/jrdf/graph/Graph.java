@@ -108,7 +108,7 @@ public interface Graph {
      *
      * @param subject   The subject to find or AnySubjectNode to indicate any subject.
      * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
-     * @param object    ObjectNode The object to find or AnyObjectNode to indicate any object.
+     * @param object    The object to find or AnyObjectNode to indicate any object.
      * @return an iterator containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
      */
