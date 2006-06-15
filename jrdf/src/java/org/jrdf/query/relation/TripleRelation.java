@@ -82,4 +82,14 @@ public interface TripleRelation extends Relation {
      * @return a set of tuples.
      */
     Set<Tuple> getTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+
+    /**
+     * Returns the set of sorted tuples based on the constraints given.
+     *
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
+     * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
+     * @param object    The object to find or AnyObjectNode to indicate any object.
+     * @return a set of tuples.
+     */
+    Set<Tuple> getSortedTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 }
