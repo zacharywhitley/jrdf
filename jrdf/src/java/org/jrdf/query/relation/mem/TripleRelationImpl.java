@@ -59,33 +59,41 @@
 package org.jrdf.query.relation.mem;
 
 import au.net.netstorm.boost.primordial.Primordial;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.TripleRelation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
 
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * Implementation of relations containing a graph that can be restricted based on a series of simple constraints.
+ * Implementation of relations containing 3 column heading (subject, predicate, object).
  *
  * @author Andrew Newman
  * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
 public final class TripleRelationImpl extends Primordial implements TripleRelation {
+    private final Triple triple;
+    private final Graph graph;
+    private final AttributeComparator attributeComparator;
+    private final TupleComparator tupleComparator;
+
+    public TripleRelationImpl(Triple triple, Graph graph, AttributeComparator attributeComparator,
+                              TupleComparator tupleComparator) {
+        this.triple = triple;
+        this.graph = graph;
+        this.attributeComparator = attributeComparator;
+        this.tupleComparator = tupleComparator;
+    }
 
     public Set<Attribute> getHeading() {
-        return null;
-    }
-
-    public Set<Tuple> getTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return null;
-    }
-
-    public Set<Tuple> getSortedTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return null;
+        Set<Attribute> attributeHeading = new TreeSet<Attribute>(attributeComparator);
+//        new AttributeImpl(ANY_NAME, new SubjectNodeType());
+        return attributeHeading;
     }
 
     public Set<Tuple> getTuples() {
