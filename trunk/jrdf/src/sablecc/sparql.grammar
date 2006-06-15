@@ -86,7 +86,8 @@ Productions
     [subject]:resource_triple_element [predicate]:resource_triple_element [object]:object_triple_element ;
 
   resource_triple_element =
-    {resource} resource ;
+    {resource} resource |
+    {variable} variable ;
 
   object_triple_element =
     {resource} resource |
