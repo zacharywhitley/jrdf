@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,21 +56,30 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation;
+package org.jrdf.query.relation;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.TripleRelation;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
 
 import java.util.Set;
 
 /**
- * Returns the list of relations with the same set of attributes.
+ * Relations containing a set of tuples and a set of attributes.  The attribute constitute a heading the maps to the
+ * tuple values.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 533 $
  */
-public interface Restrict extends Operation {
-    Relation restrict(Relation relation, Set<AttributeValuePair> nameValues);
-    Relation restrict(TripleRelation relation, Set<AttributeValuePair> nameValues);
+public interface TripleRelation extends Relation {
+
+    /**
+     * Returns the set of tuples based on the constraints given.
+     *
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
+     * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
+     * @param object    The object to find or AnyObjectNode to indicate any object.
+     * @return a set of tuples.
+     */
+    Set<Tuple> getTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 }

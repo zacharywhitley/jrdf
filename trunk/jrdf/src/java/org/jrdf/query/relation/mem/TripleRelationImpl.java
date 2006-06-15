@@ -56,30 +56,43 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
+import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.TripleRelation;
+import org.jrdf.query.relation.Tuple;
 
 import java.util.Set;
 
 /**
- * Relations containing a set of tuples and a set of attributes.  The attribute constitute a heading the maps to the
- * tuple values.
+ * Implementation of relations containing a graph that can be restricted based on a series of simple constraints.
  *
  * @author Andrew Newman
- * @version $Revision: 533 $
+ * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
-public interface FindableRelation extends Relation {
+public final class TripleRelationImpl extends Primordial implements TripleRelation {
 
-    /**
-     * Returns the set of tuples based on the constraints given.
-     *
-     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
-     * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
-     * @param object    The object to find or AnyObjectNode to indicate any object.
-     * @return a set of tuples.
-     */
-    Set<Tuple> getTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+    public Set<Attribute> getHeading() {
+        return null;
+    }
+
+    public Set<Tuple> getTuples(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return null;
+    }
+
+    public Set<Tuple> getTuples() {
+        return null;
+    }
+
+    public Set<Attribute> getSortedHeading() {
+        return null;
+    }
+
+    public Set<Tuple> getSortedTuples() {
+        return null;
+    }
 }
