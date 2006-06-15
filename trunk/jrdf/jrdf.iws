@@ -16,9 +16,7 @@
     <option name="USE_USER_FILTER" value="false" />
     <option name="USER" value="" />
   </component>
-  <component name="CheckinPanelState">
-    <Excluded key="$PROJECT_DIR$/jrdf.iws" />
-  </component>
+  <component name="CheckinPanelState" />
   <component name="Commander">
     <leftPanel />
     <rightPanel />
@@ -135,30 +133,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="RdfLoadedCommand.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/command/RdfLoadedCommand.java">
+      <file leaf-file-name="RunQueryCommand.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/command/RunQueryCommand.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="13" selection-start="2921" selection-end="2921" vertical-scroll-proportion="0.33620688">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="QueryPanelView.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryPanelView.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="13" selection-start="2893" selection-end="2893" vertical-scroll-proportion="0.31034482">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="richclient-application-context.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/ctx/richclient-application-context.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.0344827">
+            <state line="75" column="26" selection-start="3212" selection-end="3226" vertical-scroll-proportion="0.36206895">
               <folding />
             </state>
           </provider>
@@ -167,7 +145,43 @@
       <file leaf-file-name="QueryViewImpl.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryViewImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="107" column="42" selection-start="4305" selection-end="4305" vertical-scroll-proportion="0.54310346">
+            <state line="85" column="44" selection-start="3527" selection-end="3527" vertical-scroll-proportion="0.48706895">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="commands-context.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/commands-context.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="81" column="34" selection-start="2981" selection-end="2981" vertical-scroll-proportion="0.79525864">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QueryPanelViewImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryPanelViewImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="90" column="15" selection-start="3640" selection-end="3640" vertical-scroll-proportion="0.8285078">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResultsPanelViewImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/ResultsPanelViewImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="72" column="47" selection-start="2928" selection-end="2928" vertical-scroll-proportion="0.31034482">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PanelView.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/PanelView.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="70" column="0" selection-start="2841" selection-end="2841" vertical-scroll-proportion="0.36206895">
               <folding />
             </state>
           </provider>
@@ -176,52 +190,25 @@
       <file leaf-file-name="ResultsPanelView.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/ResultsPanelView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="68" column="52" selection-start="2867" selection-end="2867" vertical-scroll-proportion="0.31034482">
+            <state line="68" column="17" selection-start="2832" selection-end="2832" vertical-scroll-proportion="0.31034482">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="QueryView.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryView.java">
+      <file leaf-file-name="QueryPanelView.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryPanelView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="32" selection-start="2930" selection-end="2930" vertical-scroll-proportion="0.38793105">
+            <state line="66" column="17" selection-start="2801" selection-end="2801" vertical-scroll-proportion="0.25862068">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="JRDFModelImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/model/JRDFModelImpl.java">
+      <file leaf-file-name="richclient-application-context.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/ctx/richclient-application-context.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="86" column="15" selection-start="3698" selection-end="3698" vertical-scroll-proportion="0.5689655">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RunQueryCommand.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/command/RunQueryCommand.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="79" column="29" selection-start="3371" selection-end="3371" vertical-scroll-proportion="0.5077951">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoadRdfCommand.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/command/LoadRdfCommand.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="106" column="0" selection-start="4000" selection-end="4310" vertical-scroll-proportion="1.1637931">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="QueryRanCommand.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/command/QueryRanCommand.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="86" column="0" selection-start="3346" selection-end="3346" vertical-scroll-proportion="0.7241379">
+            <state line="57" column="28" selection-start="1973" selection-end="1987" vertical-scroll-proportion="0.5366379">
               <folding />
             </state>
           </provider>
@@ -346,6 +333,28 @@
       </PATH_ELEMENT>
       <PATH_ELEMENT>
         <option name="myItemId" value="model" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="org.jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="gui" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="ctx" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
     </PATH>
@@ -757,44 +766,9 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/lib/spring-rcp/spring-richclient-full-0.1.0.jar!/org/springframework/richclient/command/support/ApplicationWindowAwareCommand.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="22" selection-start="193" selection-end="193" vertical-scroll-proportion="0.10666667">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/commands-context.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="66" selection-start="1565" selection-end="1565" vertical-scroll-proportion="0.02586207">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/model/JRDFModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="65" column="9" selection-start="2787" selection-end="2787" vertical-scroll-proportion="0.23275863">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/PanelView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="17" selection-start="2805" selection-end="2805" vertical-scroll-proportion="0.30967742">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/ResultsPanelViewImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="17" selection-start="2898" selection-end="2898" vertical-scroll-proportion="0.30967742">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/ctx/richclient-application-context.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.0344827">
           <folding />
         </state>
       </provider>
@@ -805,41 +779,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryPanelView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="13" selection-start="2893" selection-end="2893" vertical-scroll-proportion="0.31034482">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/ResultsPanelView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="52" selection-start="2867" selection-end="2867" vertical-scroll-proportion="0.31034482">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryViewImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="107" column="42" selection-start="4305" selection-end="4305" vertical-scroll-proportion="0.54310346">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="32" selection-start="2930" selection-end="2930" vertical-scroll-proportion="0.38793105">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/model/JRDFModelImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="86" column="15" selection-start="3698" selection-end="3698" vertical-scroll-proportion="0.5689655">
-          <folding />
         </state>
       </provider>
     </entry>
@@ -857,9 +796,79 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/model/JRDFModelImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="13" selection-start="2993" selection-end="2993" vertical-scroll-proportion="0.15517241">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryViewImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="44" selection-start="3527" selection-end="3527" vertical-scroll-proportion="0.48706895">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryPanelViewImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="15" selection-start="3640" selection-end="3640" vertical-scroll-proportion="0.8285078">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/ResultsPanelView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="17" selection-start="2832" selection-end="2832" vertical-scroll-proportion="0.31034482">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/ResultsPanelViewImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="47" selection-start="2928" selection-end="2928" vertical-scroll-proportion="0.31034482">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/PanelView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="0" selection-start="2841" selection-end="2841" vertical-scroll-proportion="0.36206895">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="28" selection-start="2872" selection-end="2872" vertical-scroll-proportion="0.33548388">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/view/QueryPanelView.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="66" column="17" selection-start="2801" selection-end="2801" vertical-scroll-proportion="0.25862068">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/ctx/richclient-application-context.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="28" selection-start="1973" selection-end="1987" vertical-scroll-proportion="0.5366379">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/command/RunQueryCommand.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="29" selection-start="3371" selection-end="3371" vertical-scroll-proportion="0.5077951">
+        <state line="75" column="26" selection-start="3212" selection-end="3226" vertical-scroll-proportion="0.36206895">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/commands-context.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="81" column="34" selection-start="2981" selection-end="2981" vertical-scroll-proportion="0.79525864">
           <folding />
         </state>
       </provider>

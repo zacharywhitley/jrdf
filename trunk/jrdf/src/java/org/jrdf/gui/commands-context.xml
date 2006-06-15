@@ -64,6 +64,9 @@
         <property name="JRDFModel">
             <ref bean="jrdfModel"/>
         </property>
+        <property name="queryPanelView">
+            <ref bean="queryPanelView"/>
+        </property>
     </bean>
 
     <bean id="editMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">

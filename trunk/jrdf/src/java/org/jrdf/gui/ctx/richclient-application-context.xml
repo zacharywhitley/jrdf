@@ -55,7 +55,7 @@
         </property>
     </bean>
 
-    <bean id="queryPanelView" class="org.jrdf.gui.view.QueryPanelView"/>
+    <bean id="queryPanelView" class="org.jrdf.gui.view.QueryPanelViewImpl"/>
     <bean id="resultsPanelView" class="org.jrdf.gui.view.ResultsPanelViewImpl"/>
 
     <bean id="applicationObjectConfigurer"
