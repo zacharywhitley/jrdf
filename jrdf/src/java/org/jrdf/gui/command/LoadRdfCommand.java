@@ -64,6 +64,12 @@ import org.jrdf.gui.model.JRDFModel;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 import org.springframework.richclient.application.PageComponent;
 import org.springframework.richclient.application.PageComponentContext;
+import org.springframework.richclient.filechooser.FileChooserUtils;
+
+import javax.swing.JFrame;
+import java.io.File;
+import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * Loads an RDF file from the file system.
@@ -72,7 +78,6 @@ import org.springframework.richclient.application.PageComponentContext;
  * @version $Revision:$
  */
 public class LoadRdfCommand extends ApplicationWindowAwareCommand {
-    private static final String STATIC_URL = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
     private JRDFModel jrdfModel;
 
     public LoadRdfCommand() {
@@ -84,11 +89,21 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
     }
 
     protected void doExecuteCommand() {
-        Graph graph = jrdfModel.loadModel(STATIC_URL);
+        JFrame control = getContext().getWindow().getControl();
+        File file = FileChooserUtils.showFileChooser(control, "rdf", "Okay", null);
+        Graph graph = jrdfModel.loadModel(tryGetURL(file));
         long numberOfTriples = tryGetNumberOfTriples(graph);
         RdfLoadedCommand actionCommand = getRdfLoadedCommand();
         actionCommand.setTriplesLoaded(numberOfTriples);
         actionCommand.execute();
+    }
+
+    private URL tryGetURL(File file) {
+        try {
+            return file.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private long tryGetNumberOfTriples(Graph graph) {
@@ -100,8 +115,11 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
     }
 
     private RdfLoadedCommand getRdfLoadedCommand() {
+        return (RdfLoadedCommand) getContext().getLocalCommandExecutor("rdfLoadedCommand");
+    }
+
+    private PageComponentContext getContext() {
         PageComponent activeComponent = getApplicationWindow().getPage().getActiveComponent();
-        PageComponentContext context = activeComponent.getContext();
-        return (RdfLoadedCommand) context.getLocalCommandExecutor("rdfLoadedCommand");
+        return activeComponent.getContext();
     }
 }
