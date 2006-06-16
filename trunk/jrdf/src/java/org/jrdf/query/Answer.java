@@ -70,5 +70,7 @@ import java.util.List;
  */
 public interface Answer {
 
+    // TODO (PB) Add column names
+
     List<Triple> getSolutions();
 }

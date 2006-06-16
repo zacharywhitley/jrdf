@@ -58,11 +58,15 @@
 
 package org.jrdf.gui.view;
 
+import org.jrdf.graph.Triple;
 import org.jrdf.query.Answer;
 
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
+import java.util.List;
 
 /**
  * The results panel.
@@ -71,16 +75,70 @@ import java.awt.BorderLayout;
  * @version $Revision:$
  */
 public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
-    private JTextArea results;
+    ResultsTableModel resultsTableModel = new ResultsTableModel();
 
     public JPanel getJPanel() {
-        JPanel panel = new JPanel(new BorderLayout());
-        results = new JTextArea();
-        panel.add(results);
+        JTable table = createTable();
+        table.setModel(resultsTableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+        JPanel panel = createPanel();
+        panel.add(scrollPane);
         return panel;
     }
 
     public void setResults(Answer answer) {
-        results.setText(answer.toString());
+        resultsTableModel.setResults(answer);
+    }
+
+    private JPanel createPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        return panel;
+    }
+
+    private JTable createTable() {
+        JTable table = new JTable();
+        table.getTableHeader().setReorderingAllowed(false);
+        return table;
+    }
+
+    private static class ResultsTableModel extends AbstractTableModel {
+        String[] columnNames = {"Subject", "Predicate", "Object"};
+        String[][] data = {};
+
+        public void setResults(Answer answer) {
+            updateTableData(answer);
+            fireTableDataChanged();
+        }
+
+        public int getRowCount() {
+            return data.length;
+        }
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public String getColumnName(int col) {
+            return columnNames[col];
+        }
+
+        public Object getValueAt(int row, int col) {
+            return data[row][col];
+        }
+
+        private void updateTableData(Answer answer) {
+            List<Triple> triples = answer.getSolutions();
+            data = new String[triples.size()][columnNames.length];
+            int i = 0;
+            for (Triple triple : triples) {
+                data[i++] = new String[] {
+                        triple.getSubject().toString(),
+                        triple.getPredicate().toString(),
+                        triple.getObject().toString()
+                };
+            }
+        }
+
     }
 }

@@ -105,6 +105,8 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
 
     public void setResults(Answer answer) {
         resultsPanelView.setResults(answer);
+        String message = getMessage("resultsView.numResultsFound");
+        getStatusBar().setMessage(message + answer.getSolutions().size());
     }
 
     protected JComponent createControl() {
