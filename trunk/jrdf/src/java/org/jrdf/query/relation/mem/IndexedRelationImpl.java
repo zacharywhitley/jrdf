@@ -56,13 +56,64 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation;
+package org.jrdf.query.relation.mem;
+
+import au.net.netstorm.boost.primordial.Primordial;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.IndexedRelation;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.attributename.AnyName;
+import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.ObjectNodeType;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * A marker interface that indicates that the relation is of three columns - subject, predicate and object.
+ * Implementation of relations containing 3 column heading (subject, predicate, object).
  *
  * @author Andrew Newman
- * @version $Revision: 533 $
+ * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
-public interface TripleRelation extends Relation {
+public final class  IndexedRelationImpl extends Primordial implements IndexedRelation {
+    private static final AttributeName ANY_NAME = new AnyName();
+    private static final AttributeImpl SUBJECT_ATTRIBUTE = new AttributeImpl(ANY_NAME, new SubjectNodeType());
+    private static final AttributeImpl PREDICATE_ATTRIBUTE = new AttributeImpl(ANY_NAME, new PredicateNodeType());
+    private static final AttributeImpl OBJECT_ATTRIBUTE = new AttributeImpl(ANY_NAME, new ObjectNodeType());
+
+    private final Triple triple;
+    private final Graph graph;
+    private final AttributeComparator attributeComparator;
+    private final TupleComparator tupleComparator;
+
+    public IndexedRelationImpl(Triple triple, Graph graph, AttributeComparator attributeComparator,
+                               TupleComparator tupleComparator) {
+        this.triple = triple;
+        this.graph = graph;
+        this.attributeComparator = attributeComparator;
+        this.tupleComparator = tupleComparator;
+    }
+
+    public Set<Attribute> getHeading() {
+        Set<Attribute> attributeHeading = new TreeSet<Attribute>(attributeComparator);
+        return attributeHeading;
+    }
+
+    public Set<Tuple> getTuples() {
+        return null;
+    }
+
+    public Set<Attribute> getSortedHeading() {
+        return null;
+    }
+
+    public Set<Tuple> getSortedTuples() {
+        return null;
+    }
 }

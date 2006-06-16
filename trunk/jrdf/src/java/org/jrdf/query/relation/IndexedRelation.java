@@ -56,55 +56,13 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.mem;
-
-import au.net.netstorm.boost.primordial.Primordial;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TripleRelation;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
-
-import java.util.Set;
-import java.util.TreeSet;
+package org.jrdf.query.relation;
 
 /**
- * Implementation of relations containing 3 column heading (subject, predicate, object).
+ * A marker interface that indicates that the relation is of three columns - subject, predicate and object.
  *
  * @author Andrew Newman
- * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
+ * @version $Revision: 533 $
  */
-public final class TripleRelationImpl extends Primordial implements TripleRelation {
-    private final Triple triple;
-    private final Graph graph;
-    private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
-
-    public TripleRelationImpl(Triple triple, Graph graph, AttributeComparator attributeComparator,
-                              TupleComparator tupleComparator) {
-        this.triple = triple;
-        this.graph = graph;
-        this.attributeComparator = attributeComparator;
-        this.tupleComparator = tupleComparator;
-    }
-
-    public Set<Attribute> getHeading() {
-        Set<Attribute> attributeHeading = new TreeSet<Attribute>(attributeComparator);
-//        new AttributeImpl(ANY_NAME, new SubjectNodeType());
-        return attributeHeading;
-    }
-
-    public Set<Tuple> getTuples() {
-        return null;
-    }
-
-    public Set<Attribute> getSortedHeading() {
-        return null;
-    }
-
-    public Set<Tuple> getSortedTuples() {
-        return null;
-    }
+public interface IndexedRelation extends Relation {
 }

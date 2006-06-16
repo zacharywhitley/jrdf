@@ -59,8 +59,8 @@
 package org.jrdf.query.relation.operation;
 
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.IndexedRelation;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.TripleRelation;
 
 import java.util.Set;
 
@@ -72,5 +72,7 @@ import java.util.Set;
  */
 public interface Restrict extends Operation {
     Relation restrict(Relation relation, Set<AttributeValuePair> nameValues);
-    Relation restrict(TripleRelation relation, Set<AttributeValuePair> nameValues);
+
+    // TODO (AN) Does this break symmetry?
+    Relation restrict(IndexedRelation relation, Set<AttributeValuePair> nameValues);
 }
