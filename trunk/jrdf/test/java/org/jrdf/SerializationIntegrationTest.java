@@ -168,7 +168,9 @@ public final class SerializationIntegrationTest extends TestCase {
     }
 
     private String replaceFileSeperatorsWithDots(String path) {
-        String name = path.replaceAll(File.separator, DOT);
+        String separator = File.separator;
+        separator = separator.replaceAll("\\\\", "\\\\\\\\");
+        String name = path.replaceAll(separator, DOT);
         if (name.startsWith(DOT)) {
             name = name.substring(1);
         }
