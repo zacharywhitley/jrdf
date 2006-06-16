@@ -58,8 +58,13 @@
 
 package org.jrdf.gui.command;
 
-import org.springframework.richclient.application.Application;
+import org.jrdf.gui.view.QueryPanelView;
+import org.jrdf.gui.view.ResultsPanelView;
+import org.jrdf.query.DefaultAnswer;
+import org.jrdf.graph.Triple;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+
+import java.util.ArrayList;
 
 /**
  * Creates a new SPARQL query.
@@ -68,12 +73,26 @@ import org.springframework.richclient.command.support.ApplicationWindowAwareComm
  * @version $Revision:$
  */
 public class NewQueryCommand extends ApplicationWindowAwareCommand {
+    private static final String BLANK = "";
+    private static final DefaultAnswer EMPTY_ANSWER = new DefaultAnswer(new ArrayList<Triple>());
+
+    private QueryPanelView queryPanelView;
+    private ResultsPanelView resultsPanelView;
 
     public NewQueryCommand() {
         super("newQueryCommand");
     }
 
+    public void setQueryPanelView(QueryPanelView queryPanelView) {
+        this.queryPanelView = queryPanelView;
+    }
+
+    public void setResultsPanelView(ResultsPanelView resultsPanelView) {
+        this.resultsPanelView = resultsPanelView;
+    }
+
     protected void doExecuteCommand() {
-        Application.instance().close();
+        queryPanelView.setQuery(BLANK);
+        resultsPanelView.setResults(EMPTY_ANSWER);
     }
 }

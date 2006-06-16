@@ -66,4 +66,6 @@ package org.jrdf.gui.view;
  */
 public interface QueryPanelView extends PanelView {
     String getQuery();
+
+    void setQuery(String query);
 }

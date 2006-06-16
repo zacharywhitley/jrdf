@@ -72,16 +72,14 @@ import java.awt.BorderLayout;
 public class QueryPanelViewImpl implements PanelView, QueryPanelView {
     private static final String QUERY =
         "SELECT * WHERE { <http://purl.org/dc/elements/1.1/> <http://purl.org/dc/elements/1.1/title> ?o }";
-    private JTextArea query;
+    private JTextArea textArea = new JTextArea(QUERY);
 
     public JPanel getJPanel() {
         JPanel queryPanel = new JPanel();
         queryPanel.setLayout(new BorderLayout());
 
 //        query.getDocument().addUndoableEditListener(_undoManager);
-        query = new JTextArea();
-        query.setText(QUERY);
-        JScrollPane scrollPane = new JScrollPane(query);
+        JScrollPane scrollPane = new JScrollPane(textArea);
         queryPanel.add(scrollPane, BorderLayout.CENTER);
 //        queryPanel.add(createOptionsPanel(), BorderLayout.EAST);
 
@@ -89,6 +87,10 @@ public class QueryPanelViewImpl implements PanelView, QueryPanelView {
     }
 
     public String getQuery() {
-        return query.getText();
+        return textArea.getText();
+    }
+
+    public void setQuery(String query) {
+        textArea.setText(query);
     }
 }

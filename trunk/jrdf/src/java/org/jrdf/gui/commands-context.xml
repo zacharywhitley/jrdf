@@ -19,6 +19,16 @@
         </property>
     </bean>
 
+    <bean id="toolBar" class="org.springframework.richclient.command.CommandGroupFactoryBean">
+        <property name="members">
+            <list>
+                <ref bean="loadRdfCommand"/>
+                <ref bean="newQueryCommand"/>
+                <ref bean="runQueryCommand"/>
+            </list>
+        </property>
+    </bean>
+
     <bean id="menuBar" class="org.springframework.richclient.command.CommandGroupFactoryBean">
         <property name="members">
             <list>
@@ -52,11 +62,20 @@
     <bean id="queryMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
         <property name="members">
             <list>
-                <bean class="org.jrdf.gui.command.NewQueryCommand"/>
+                <ref bean="newQueryCommand"/>
                 <bean class="org.jrdf.gui.command.OpenQueryCommand"/>
                 <ref bean="runQueryCommand"/>
                 <bean class="org.jrdf.gui.command.SaveQueryCommand"/>
             </list>
+        </property>
+    </bean>
+
+    <bean id="newQueryCommand" class="org.jrdf.gui.command.NewQueryCommand">
+        <property name="queryPanelView">
+            <ref bean="queryPanelView"/>
+        </property>
+        <property name="resultsPanelView">
+            <ref bean="resultsPanelView"/>
         </property>
     </bean>
 
