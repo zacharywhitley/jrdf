@@ -59,18 +59,27 @@
 package org.jrdf.query.relation.mem;
 
 import au.net.netstorm.boost.primordial.Primordial;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.IndexedRelation;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.attributename.AnyName;
-import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -81,32 +90,44 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
-public final class  IndexedRelationImpl extends Primordial implements IndexedRelation {
-    private static final AttributeName ANY_NAME = new AnyName();
-    private static final AttributeImpl SUBJECT_ATTRIBUTE = new AttributeImpl(ANY_NAME, new SubjectNodeType());
-    private static final AttributeImpl PREDICATE_ATTRIBUTE = new AttributeImpl(ANY_NAME, new PredicateNodeType());
-    private static final AttributeImpl OBJECT_ATTRIBUTE = new AttributeImpl(ANY_NAME, new ObjectNodeType());
+// TODO (AN) Come back and add unit tests and integration tests!!!!!
+public final class GraphRelationImpl extends Primordial implements GraphRelation {
+    private static final PositionName SUBJECT_NAME = new PositionName("SUBJECT1");
+    private static final PositionName PREDICATE_NAME = new PositionName("PREDICATE1");
+    private static final PositionName OBJECT_NAME = new PositionName("OBJECT1");
+    private static final Attribute SUBJECT_ATTRIBUTE = new AttributeImpl(SUBJECT_NAME, new SubjectNodeType());
+    private static final Attribute PREDICATE_ATTRIBUTE = new AttributeImpl(PREDICATE_NAME, new PredicateNodeType());
+    private static final Attribute OBJECT_ATTRIBUTE = new AttributeImpl(OBJECT_NAME, new ObjectNodeType());
 
-    private final Triple triple;
     private final Graph graph;
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
+    private final AttributeValuePairComparator attributeValuePairComparator;
 
-    public IndexedRelationImpl(Triple triple, Graph graph, AttributeComparator attributeComparator,
-                               TupleComparator tupleComparator) {
-        this.triple = triple;
+    public GraphRelationImpl(Graph graph, AttributeComparator attributeComparator,
+            AttributeValuePairComparator attributeValuePairComparator, TupleComparator tupleComparator) {
         this.graph = graph;
         this.attributeComparator = attributeComparator;
+        this.attributeValuePairComparator = attributeValuePairComparator;
         this.tupleComparator = tupleComparator;
     }
 
     public Set<Attribute> getHeading() {
-        Set<Attribute> attributeHeading = new TreeSet<Attribute>(attributeComparator);
-        return attributeHeading;
+        return createHeading();
     }
 
     public Set<Tuple> getTuples() {
-        return null;
+        ClosableIterator<Triple> closableIterator = tryGetTriples(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            ANY_OBJECT_NODE);
+        Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
+        while (closableIterator.hasNext()) {
+            Triple triple = closableIterator.next();
+            Set<AttributeValuePair> avp = createAvp(triple);
+            Tuple tuple = new TupleImpl(avp, attributeValuePairComparator);
+            tuples.add(tuple);
+        }
+
+        return tuples;
     }
 
     public Set<Attribute> getSortedHeading() {
@@ -115,5 +136,41 @@ public final class  IndexedRelationImpl extends Primordial implements IndexedRel
 
     public Set<Tuple> getSortedTuples() {
         return null;
+    }
+
+    public Set<Tuple> getTuples(Set<AttributeValuePair> nameValues) {
+        return null;
+    }
+
+    private ClosableIterator<Triple> tryGetTriples(SubjectNode subjectNode, PredicateNode predicateNode,
+                                                   ObjectNode objectNode) {
+        try {
+            return graph.find(subjectNode, predicateNode, objectNode);
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Set<Attribute> createHeading() {
+        return new TreeSet<Attribute>(attributeComparator) {
+            {
+                add(GraphRelationImpl.SUBJECT_ATTRIBUTE);
+                add(GraphRelationImpl.PREDICATE_ATTRIBUTE);
+                add(GraphRelationImpl.OBJECT_ATTRIBUTE);
+            }
+        };
+    }
+
+    private Set<AttributeValuePair> createAvp(Triple triple) {
+        final AttributeValuePair subjectAv = new AttributeValuePairImpl(SUBJECT_ATTRIBUTE, triple.getSubject());
+        final AttributeValuePair predicateAv = new AttributeValuePairImpl(PREDICATE_ATTRIBUTE, triple.getPredicate());
+        final AttributeValuePair objectAv = new AttributeValuePairImpl(OBJECT_ATTRIBUTE, triple.getObject());
+        return new TreeSet<AttributeValuePair>(attributeValuePairComparator) {
+            {
+                add(subjectAv);
+                add(predicateAv);
+                add(objectAv);
+            }
+        };
     }
 }
