@@ -58,11 +58,21 @@
 
 package org.jrdf.query.relation;
 
+import java.util.Set;
+
 /**
  * A marker interface that indicates that the relation is of three columns - subject, predicate and object.
  *
  * @author Andrew Newman
  * @version $Revision: 533 $
  */
-public interface IndexedRelation extends Relation {
+public interface GraphRelation extends Relation {
+
+    /**
+     * Returns the set of tuples based on the constraints given 3 attribute/value pairs.  Either of variable, type
+     * and ANY_NODE or position name, type and node value.
+     *
+     * @return a set of tuples.
+     */
+    Set<Tuple> getTuples(Set<AttributeValuePair> nameValues);
 }
