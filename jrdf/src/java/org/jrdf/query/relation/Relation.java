@@ -59,6 +59,7 @@
 package org.jrdf.query.relation;
 
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Relations containing a set of tuples and a set of attributes.  The attribute constitute a heading the maps to the
@@ -84,8 +85,8 @@ public interface Relation {
     Set<Tuple> getTuples();
 
     // TODO (AN) Test drive me
-    Set<Attribute> getSortedHeading();
+    SortedSet<Attribute> getSortedHeading();
 
     // TODO (AN) Test drive me
-    Set<Tuple> getSortedTuples();
+    SortedSet<Tuple> getSortedTuples();
 }

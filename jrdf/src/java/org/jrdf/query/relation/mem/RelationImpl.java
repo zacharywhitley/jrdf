@@ -99,10 +99,10 @@ public final class RelationImpl extends Primordial implements Relation {
     }
 
     // TODO (AN) Test drive me
-    public Set<Attribute> getSortedHeading() {
+    public SortedSet<Attribute> getSortedHeading() {
         if (heading instanceof SortedSet) {
             if (((SortedSet) heading).comparator() != null) {
-                return heading;
+                return (SortedSet) heading;
             }
         }
 
@@ -110,14 +110,14 @@ public final class RelationImpl extends Primordial implements Relation {
         Set<Attribute> sortedHeading = new TreeSet<Attribute>(attributeComparator);
         sortedHeading.addAll(heading);
         heading = sortedHeading;
-        return sortedHeading;
+        return (SortedSet) sortedHeading;
     }
 
     // TODO (AN) Test drive me
-    public Set<Tuple> getSortedTuples() {
+    public SortedSet<Tuple> getSortedTuples() {
         if (tuples instanceof SortedSet) {
             if (((SortedSet) tuples).comparator() != null) {
-                return tuples;
+                return (SortedSet) tuples;
             }
         }
 
@@ -125,6 +125,6 @@ public final class RelationImpl extends Primordial implements Relation {
         Set<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
         sortedTuples.addAll(tuples);
         tuples = sortedTuples;
-        return sortedTuples;
+        return (SortedSet) sortedTuples;
     }
 }

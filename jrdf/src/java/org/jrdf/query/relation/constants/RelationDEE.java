@@ -64,6 +64,8 @@ import org.jrdf.query.relation.Tuple;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Dee is a relation with one tuple and is the base relation for NULLARY_TUPLE.
@@ -101,12 +103,12 @@ public final class RelationDEE implements Relation {
     }
 
     // TODO (AN) Test drive me
-    public Set<Attribute> getSortedHeading() {
-        return getHeading();
+    public SortedSet<Attribute> getSortedHeading() {
+        return new TreeSet<Attribute>(getHeading());
     }
 
     // TODO (AN) Test drive me
-    public Set<Tuple> getSortedTuples() {
-        return getTuples();
+    public SortedSet<Tuple> getSortedTuples() {
+        return new TreeSet<Tuple>(getTuples());
     }
 }
