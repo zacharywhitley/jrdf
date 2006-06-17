@@ -76,12 +76,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * A simple memory based implementation of Join.
+ * A simple memory based implementation of JoinImpl.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class Join implements org.jrdf.query.relation.operation.Join {
+public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
     private final TupleComparator tupleComparator;
     private final AttributeComparator attributeComparator;
     private AttributeValuePairComparator attributeValuePairComparator;
@@ -89,7 +89,7 @@ public final class Join implements org.jrdf.query.relation.operation.Join {
     /**
      * Cannot create join.
      */
-    public Join(TupleComparator tupleComparator, AttributeComparator attributeComparator,
+    public JoinImpl(TupleComparator tupleComparator, AttributeComparator attributeComparator,
                 AttributeValuePairComparator attributeValuePairComparator) {
         this.tupleComparator = tupleComparator;
         this.attributeComparator = attributeComparator;

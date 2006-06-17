@@ -97,7 +97,7 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class JoinIntegrationTest extends TestCase {
+public class JoinImplIntegrationTest extends TestCase {
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = TestJRDFFactory.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = TestJRDFFactory.getNewTupleComparator();
 

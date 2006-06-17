@@ -68,6 +68,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.mem.TripleImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -79,12 +80,12 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.Type;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.Iterator;
 
 /**
  * Implementation of relations containing 3 column heading (subject, predicate, object).
@@ -93,6 +94,7 @@ import java.util.TreeSet;
  * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
 // TODO (AN) Come back and add unit tests and integration tests!!!!!
+// TODO (AN) This class is doing too much - given the abstractcoupling failure.
 public final class GraphRelationImpl extends Primordial implements GraphRelation {
     private static final PositionName SUBJECT_NAME = new PositionName("SUBJECT1");
     private static final PositionName PREDICATE_NAME = new PositionName("PREDICATE1");
@@ -134,7 +136,7 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     public Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues) {
         throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(nameValues);
         Triple triple = getNodes(nameValues);
-        return null;
+        return getTuplesFromGraph(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
     private Set<Attribute> createHeading() {
@@ -188,11 +190,10 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     }
 
     private Triple getNodes(SortedSet<AttributeValuePair> nameValues) {
-        Triple triple;
-        for (AttributeValuePair attributeValuePair : nameValues) {
-            Type type = attributeValuePair.getAttribute().getType();
-
-        }
-        return null;
+        Iterator<AttributeValuePair> iterator = nameValues.iterator();
+        SubjectNode subject = (SubjectNode) iterator.next().getValue();
+        PredicateNode predicate = (PredicateNode) iterator.next().getValue();
+        ObjectNode object = (ObjectNode) iterator.next().getValue();
+        return new TripleImpl(subject, predicate, object);
     }
 }
