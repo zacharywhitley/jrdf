@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,36 +56,50 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
+package org.jrdf.query.relation.operation.mem;
 
-package org.jrdf.query.relation.type;
+import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.mem.RelationImpl;
+
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
- * Based on the concept Type found in the Relational model especially from Rel.
+ * The relational operation that remove tuples that don't meet a specific criteria.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision:$
  */
-public interface Type {
+public class RestrictImpl implements Restrict {
+    private final AttributeValuePairComparator avpComparator;
+    private final AttributeComparator attributeComparator;
+    private final TupleComparator tupleComparator;
 
-    /**
-     * Returns true if this Type is a super-type of the given type.
-     *
-     * @param type the type to test to see if it can be accepted into this type.
-     * @return true if this Type is a super-type of the given type.
-     */
-    boolean isAssignableFrom(Type type);
+    // TODO (AN) These comparators should be injected into a factory for Tuples rather than having them exposed to
+    // all objects that need to create various tuples, relations, etc.
+    public RestrictImpl(AttributeComparator attributeComparator, AttributeValuePairComparator avpComparator,
+            TupleComparator tupleComparator) {
+        this.attributeComparator = attributeComparator;
+        this.avpComparator = avpComparator;
+        this.tupleComparator = tupleComparator;
+    }
 
-    /**
-     * Returns true if this Type is join compatible with the given type.  JoinImpl compatible means that the given type
-     * can be joined and considered to be this type i.e. blank nodes and uri references to subject nodes, uri
-     * references to any positional node type, predicate nodes to uri references, etc.
-     */
-    boolean isJoinCompatible(Type type);
+    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
+    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
+        throw new UnsupportedOperationException();
+    }
 
-    /**
-     * Returns the name of the type.
-     *
-     * @return the name of the type.
-     */
-    String getName();
+    public Relation restrict(GraphRelation relation, Set<AttributeValuePair> nameValues) {
+        SortedSet<AttributeValuePair> sortedAvp = new TreeSet<AttributeValuePair>(avpComparator);
+        Set<Tuple> tuples = relation.getTuples(sortedAvp);
+        return new RelationImpl(relation.getHeading(), tuples, attributeComparator, tupleComparator);
+    }
 }

@@ -62,7 +62,7 @@
         </constructor-arg>
     </bean>
 
-    <bean name="join" class="org.jrdf.query.relation.operation.mem.Join">
+    <bean name="join" class="org.jrdf.query.relation.operation.mem.JoinImpl">
         <constructor-arg>
             <ref bean="tupleComparator"/>
         </constructor-arg>
