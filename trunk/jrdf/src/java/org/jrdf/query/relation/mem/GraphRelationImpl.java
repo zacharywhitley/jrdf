@@ -79,9 +79,11 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.Type;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -103,6 +105,7 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
     private final AttributeValuePairComparator attributeValuePairComparator;
+    private static final int NUMBER_OF_NODES = 3;
 
     public GraphRelationImpl(Graph graph, AttributeComparator attributeComparator,
             AttributeValuePairComparator attributeValuePairComparator, TupleComparator tupleComparator) {
@@ -117,33 +120,43 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     }
 
     public Set<Tuple> getTuples() {
-        ClosableIterator<Triple> closableIterator = tryGetTriples(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE);
+        return getTuplesFromGraph(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+    }
+
+    public SortedSet<Attribute> getSortedHeading() {
+        return null;
+    }
+
+    public SortedSet<Tuple> getSortedTuples() {
+        return null;
+    }
+
+    public Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues) {
+        throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(nameValues);
+        Triple triple = getNodes(nameValues);
+        return null;
+    }
+
+    private Set<Attribute> createHeading() {
+        TreeSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
+        attributes.add(GraphRelationImpl.SUBJECT_ATTRIBUTE);
+        attributes.add(GraphRelationImpl.PREDICATE_ATTRIBUTE);
+        attributes.add(GraphRelationImpl.OBJECT_ATTRIBUTE);
+        return attributes;
+    }
+
+    private Set<Tuple> getTuplesFromGraph(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode) {
+        ClosableIterator<Triple> closableIterator = tryGetTriples(subjectNode, predicateNode, objectNode);
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
-            Set<AttributeValuePair> avp = createAvp(triple);
-            Tuple tuple = new TupleImpl(avp, attributeValuePairComparator);
-            tuples.add(tuple);
+            addTripleToTuples(tuples, triple);
         }
-
         return tuples;
     }
 
-    public Set<Attribute> getSortedHeading() {
-        return null;
-    }
-
-    public Set<Tuple> getSortedTuples() {
-        return null;
-    }
-
-    public Set<Tuple> getTuples(Set<AttributeValuePair> nameValues) {
-        return null;
-    }
-
     private ClosableIterator<Triple> tryGetTriples(SubjectNode subjectNode, PredicateNode predicateNode,
-                                                   ObjectNode objectNode) {
+          ObjectNode objectNode) {
         try {
             return graph.find(subjectNode, predicateNode, objectNode);
         } catch (GraphException e) {
@@ -151,26 +164,35 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
         }
     }
 
-    private Set<Attribute> createHeading() {
-        return new TreeSet<Attribute>(attributeComparator) {
-            {
-                add(GraphRelationImpl.SUBJECT_ATTRIBUTE);
-                add(GraphRelationImpl.PREDICATE_ATTRIBUTE);
-                add(GraphRelationImpl.OBJECT_ATTRIBUTE);
-            }
-        };
+    private void addTripleToTuples(Set<Tuple> tuples, Triple triple) {
+        Set<AttributeValuePair> avp = createAvp(triple);
+        Tuple tuple = new TupleImpl(avp, attributeValuePairComparator);
+        tuples.add(tuple);
     }
 
     private Set<AttributeValuePair> createAvp(Triple triple) {
         final AttributeValuePair subjectAv = new AttributeValuePairImpl(SUBJECT_ATTRIBUTE, triple.getSubject());
         final AttributeValuePair predicateAv = new AttributeValuePairImpl(PREDICATE_ATTRIBUTE, triple.getPredicate());
         final AttributeValuePair objectAv = new AttributeValuePairImpl(OBJECT_ATTRIBUTE, triple.getObject());
-        return new TreeSet<AttributeValuePair>(attributeValuePairComparator) {
-            {
-                add(subjectAv);
-                add(predicateAv);
-                add(objectAv);
-            }
-        };
+        TreeSet<AttributeValuePair> attributeValuePairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
+        attributeValuePairs.add(subjectAv);
+        attributeValuePairs.add(predicateAv);
+        attributeValuePairs.add(objectAv);
+        return attributeValuePairs;
+    }
+
+    private void throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(Set<AttributeValuePair> nameValues) {
+        if (nameValues.size() != NUMBER_OF_NODES) {
+            throw new IllegalArgumentException("Can only get 3 tuples.");
+        }
+    }
+
+    private Triple getNodes(SortedSet<AttributeValuePair> nameValues) {
+        Triple triple;
+        for (AttributeValuePair attributeValuePair : nameValues) {
+            Type type = attributeValuePair.getAttribute().getType();
+
+        }
+        return null;
     }
 }
