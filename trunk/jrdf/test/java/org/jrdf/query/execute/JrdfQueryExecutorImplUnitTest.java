@@ -94,7 +94,7 @@ public class JrdfQueryExecutorImplUnitTest extends TestCase {
 //        });
 //    }
 //
-//    public void testNullSesurityDomainInConstructor() {
+//    public void testNullSecurityDomainInConstructor() {
 //        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
 //            public void execute() throws Throwable {
 //                new JrdfQueryExecutorImpl(GraphFixture.GRAPH_BAD, null);

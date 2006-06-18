@@ -66,7 +66,7 @@ import org.jrdf.util.test.TripleTestUtil;
 import java.net.URI;
 
 /**
- * Integration test for {@link DefaultSparqlConnection}.
+ * Integration test for {@link SparqlConnectionImpl}.
  */
 public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
@@ -92,7 +92,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 //    }
 //
 //    private SparqlConnection createRawConnection() {
-//        return new DefaultSparqlConnection(createGraph(), NO_SECURITY_DOMAIN);
+//        return new SparqlConnectionImpl(createGraph(), NO_SECURITY_DOMAIN);
 //    }
 //
 //    private SparqlConnection createConnectionFromFactory() {

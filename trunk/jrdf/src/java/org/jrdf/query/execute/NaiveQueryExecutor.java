@@ -118,8 +118,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      */
     public Answer executeQuery(Query query) throws GraphException {
         List<Triple> triples = findTriples(query);
-        DefaultAnswer defaultAnswer = new DefaultAnswer(triples);
-        return defaultAnswer;
+        return new DefaultAnswer(triples);
     }
 
     public Relation newExecuteQuery(Query query) {
@@ -137,8 +136,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
     private Triple getSingleConstraint(Query query) {
         ConstraintExpression constraints = query.getConstraintExpression();
-        Triple triple = ((ConstraintTriple) constraints).getTriple();
-        return triple;
+        return ((ConstraintTriple) constraints).getTriple();
     }
 
     private List<Triple> iteratorToList(Iterator<Triple> iterator) {
