@@ -59,19 +59,22 @@
 package org.jrdf.query.execute;
 
 import junit.framework.TestCase;
-import org.jrdf.query.GraphFixture;
-import org.jrdf.query.Answer;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.query.Answer;
+import org.jrdf.query.GraphFixture;
+import org.jrdf.query.JrdfQueryExecutor;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairFactory;
+import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
-import java.net.URI;
 import java.lang.reflect.Modifier;
+import java.net.URI;
 
 /**
  * Unit test for {@link NaiveQueryExecutor}.
@@ -82,8 +85,11 @@ import java.lang.reflect.Modifier;
 public final class NaiveQueryExecutorUnitTest extends TestCase {
 
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final AttributeValuePairComparator avpComparator =
-            MockTestUtil.createFromInterface(AttributeValuePairComparator.class);
+    private static final SortedAttributeValuePairFactory AVP_FACTORY =
+            MockTestUtil.createFromInterface(SortedAttributeValuePairFactory.class);
+    private static final Restrict RESTRICT = MockTestUtil.createFromInterface(Restrict.class);
+    private static final GraphRelationFactory GRAPH_RELATION_FACTORY =
+            MockTestUtil.createFromInterface(GraphRelationFactory.class);
     private MockFactory mockFactory;
 
     public void setUp() {
@@ -93,13 +99,13 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
         ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, Graph.class, URI.class,
-                AttributeValuePairComparator.class);
+                SortedAttributeValuePairFactory.class, Restrict.class, GraphRelationFactory.class);
     }
 
     public void testNullSessionInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN, avpComparator);
+                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN, AVP_FACTORY, RESTRICT, GRAPH_RELATION_FACTORY);
             }
         });
     }
@@ -107,7 +113,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testNullSecurityDomainInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null, avpComparator);
+                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null, AVP_FACTORY, RESTRICT, GRAPH_RELATION_FACTORY);
             }
         });
     }
@@ -115,14 +121,15 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testNullAvpComparatorInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN, null);
+                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN, null, RESTRICT,
+                        GRAPH_RELATION_FACTORY);
             }
         });
     }
 
     public void testExecuteQuery() throws Exception {
         JrdfQueryExecutor executor = new NaiveQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN,
-                avpComparator);
+                AVP_FACTORY, RESTRICT, GRAPH_RELATION_FACTORY);
         Answer answer = executor.executeQuery(GraphFixture.createQuery());
         GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
     }

@@ -66,9 +66,13 @@ import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultAnswer;
 import org.jrdf.query.Query;
+import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairFactory;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
@@ -77,7 +81,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * A naive query executor that uses an iterator-based approach to finding triples.
@@ -97,7 +100,9 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
     private Graph graph;
     private URI securityDomain;
-    private final AttributeValuePairComparator avpComparator;
+    private final SortedAttributeValuePairFactory avpComparatorFactory;
+    private final Restrict restrict;
+    private GraphRelationFactory graphRelationFactory;
 
     /**
      * Creates executor to execute queries.
@@ -105,13 +110,18 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
-    public NaiveQueryExecutor(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
+    public NaiveQueryExecutor(Graph graph, URI securityDomain, SortedAttributeValuePairFactory avpComparatorFactory,
+            Restrict restrict, GraphRelationFactory graphRelationFactory) {
         ParameterUtil.checkNotNull("session", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("avpComparator", avpComparator);
+        ParameterUtil.checkNotNull("avpComparatorFactory", avpComparatorFactory);
+        ParameterUtil.checkNotNull("restrict", restrict);
+        ParameterUtil.checkNotNull("graphRelationFactory", graphRelationFactory);
         this.graph = graph;
         this.securityDomain = securityDomain;
-        this.avpComparator = avpComparator;
+        this.avpComparatorFactory = avpComparatorFactory;
+        this.restrict = restrict;
+        this.graphRelationFactory = graphRelationFactory;
     }
 
     /**
@@ -124,8 +134,9 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
     public Relation newExecuteQuery(Query query) {
         Triple singleConstraint = getSingleConstraint(query);
-        SortedSet<AttributeValuePair> sortedAvp = new TreeSet<AttributeValuePair>(avpComparator);
-        return null;
+        final SortedSet<AttributeValuePair> avp = avpComparatorFactory.createAvp(singleConstraint);
+        GraphRelation graphRelation = graphRelationFactory.createRelation(graph);
+        return restrict.restrict(graphRelation, avp);
     }
 
     // TODO: When the tests (& grammar) force it, get all the triples and iterate over them :)

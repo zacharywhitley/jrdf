@@ -70,6 +70,7 @@ import java.util.List;
  */
 public interface Answer {
 
+    // TODO (AN) Can this be replaced by relation.
     // TODO (PB) Add column names
 
     List<Triple> getSolutions();

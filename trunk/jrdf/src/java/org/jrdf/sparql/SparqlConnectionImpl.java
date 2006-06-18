@@ -64,9 +64,7 @@ import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.execute.JrdfQueryExecutorImpl;
-import org.jrdf.query.execute.JrdfQueryExecutor;
+import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
@@ -81,9 +79,7 @@ import java.net.URI;
 public final class SparqlConnectionImpl implements SparqlConnection {
 
     // FIXME TJA: Ensure connections are threadsafe.
-    // FIXME TJA: Set builder using IoC
-
-    private QueryBuilder builder = new SparqlQueryBuilder();
+    private QueryBuilder builder;
     private JrdfQueryExecutor executor;
     private Graph graph;
 
@@ -93,12 +89,15 @@ public final class SparqlConnectionImpl implements SparqlConnection {
      * @param graph          The graph to query.
      * @param securityDomain The security domain of the graph.
      */
-    public SparqlConnectionImpl(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
+    public SparqlConnectionImpl(Graph graph, URI securityDomain, QueryBuilder builder,
+            JrdfQueryExecutor queryExceutor) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("avpComparator", avpComparator);
-        executor = new JrdfQueryExecutorImpl(graph, securityDomain, avpComparator);
+        ParameterUtil.checkNotNull("builder", builder);
+        ParameterUtil.checkNotNull("queryExceutor", queryExceutor);
         this.graph = graph;
+        this.builder = builder;
+        this.executor = queryExceutor;
     }
 
     /**
