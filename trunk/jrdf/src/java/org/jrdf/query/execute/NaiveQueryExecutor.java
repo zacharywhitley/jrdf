@@ -66,12 +66,18 @@ import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultAnswer;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A naive query executor that uses an iterator-based approach to finding triples.
@@ -91,6 +97,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
     private Graph graph;
     private URI securityDomain;
+    private final AttributeValuePairComparator avpComparator;
 
     /**
      * Creates executor to execute queries.
@@ -98,7 +105,8 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
-    public NaiveQueryExecutor(Graph graph, URI securityDomain) {
+    public NaiveQueryExecutor(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
+        this.avpComparator = avpComparator;
         ParameterUtil.checkNotNull("session", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
         this.graph = graph;
@@ -110,14 +118,27 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      */
     public Answer executeQuery(Query query) throws GraphException {
         List<Triple> triples = findTriples(query);
-        return new DefaultAnswer(triples);
+        DefaultAnswer defaultAnswer = new DefaultAnswer(triples);
+        return defaultAnswer;
+    }
+
+    public Relation newExecuteQuery(Query query) {
+        Triple singleConstraint = getSingleConstraint(query);
+        SortedSet<AttributeValuePair> sortedAvp = new TreeSet<AttributeValuePair>(avpComparator);
+        return null;
     }
 
     // TODO: When the tests (& grammar) force it, get all the triples and iterate over them :)
     private List<Triple> findTriples(Query query) throws GraphException {
+        Triple triple = getSingleConstraint(query);
+        ClosableIterator<Triple> iterator = graph.find(triple);
+        return iteratorToList(iterator);
+    }
+
+    private Triple getSingleConstraint(Query query) {
         ConstraintExpression constraints = query.getConstraintExpression();
         Triple triple = ((ConstraintTriple) constraints).getTriple();
-        return iteratorToList(graph.find(triple));
+        return triple;
     }
 
     private List<Triple> iteratorToList(Iterator<Triple> iterator) {

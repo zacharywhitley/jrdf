@@ -4,6 +4,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.sparql.DefaultSparqlConnection;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 
 import java.net.URI;
 
@@ -36,9 +37,10 @@ public final class JrdfConnectionFactory {
      * @param securityDomain The security domain.
      * @return A connection through which to issue SPARQL queries.
      */
-    public SparqlConnection createSparqlConnection(Graph graph, URI securityDomain) {
+    public SparqlConnection createSparqlConnection(Graph graph, URI securityDomain,
+            AttributeValuePairComparator avpComparator) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        return new DefaultSparqlConnection(graph, securityDomain);
+        return new DefaultSparqlConnection(graph, securityDomain, avpComparator);
     }
 }

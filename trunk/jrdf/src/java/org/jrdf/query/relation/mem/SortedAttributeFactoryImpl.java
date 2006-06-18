@@ -56,48 +56,73 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.mem;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.mem.RelationImpl;
-import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
 
-import java.util.Set;
+import java.util.List;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
- * The relational operation that remove tuples that don't meet a specific criteria.
+ * Allows the creation of headings.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class RestrictImpl implements Restrict {
-    private final AttributeValuePairComparator avpComparator;
+public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
+    private static long nameCounter = 1;
+    private static final SubjectNodeType SUBJECT_TYPE = new SubjectNodeType();
+    private static final PredicateNodeType PREDICATE_TYPE = new PredicateNodeType();
+    private static final ObjectNodeType OBJECT_TYPE = new ObjectNodeType();
+
     private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
+    private static final int TRIPLES = 3;
 
-    // TODO (AN) These comparators should be injected into a factory for Tuples rather than having them exposed to
-    // all objects that need to create various tuples, relations, etc.
-    public RestrictImpl(AttributeComparator attributeComparator, AttributeValuePairComparator avpComparator,
-            TupleComparator tupleComparator) {
+    public SortedAttributeFactoryImpl(AttributeComparator attributeComparator) {
         this.attributeComparator = attributeComparator;
-        this.avpComparator = avpComparator;
-        this.tupleComparator = tupleComparator;
     }
 
-    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
-        throw new UnsupportedOperationException();
+    public SortedSet<Attribute> createHeading() {
+        return reallyCreateHeading(SUBJECT_TYPE, PREDICATE_TYPE, OBJECT_TYPE);
     }
 
-    public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
-        Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
-        return new RelationImpl(relation.getHeading(), restrictedTuples, attributeComparator, tupleComparator);
+    public SortedSet<Attribute> createHeading(List<NodeType> types) throws IllegalArgumentException {
+        if (types.size() != TRIPLES) {
+            throw new IllegalArgumentException("Must supply three node types");
+        }
+
+        return reallyCreateHeading(types.get(0), types.get(1), types.get(2));
+    }
+
+    private SortedSet<Attribute> reallyCreateHeading(NodeType subjectType, NodeType predicateType,
+            NodeType objectType) {
+        SortedSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
+        attributes.add(createSubjectAttribute(subjectType));
+        attributes.add(createPredicateAttribute(predicateType));
+        attributes.add(createObjectAttribute(objectType));
+        nameCounter++;
+        return attributes;
+    }
+
+    private Attribute createSubjectAttribute(NodeType type) {
+        PositionName positionName = new PositionName(DEFAULT_SUBJECT_NAME + nameCounter);
+        return new AttributeImpl(positionName, type);
+    }
+
+    private Attribute createPredicateAttribute(NodeType type) {
+        PositionName positionName = new PositionName(DEFAULT_PREDICATE_NAME + nameCounter);
+        return new AttributeImpl(positionName, type);
+    }
+
+    private Attribute createObjectAttribute(NodeType type) {
+        PositionName positionName = new PositionName(DEFAULT_OBJECT_NAME + nameCounter);
+        return new AttributeImpl(positionName, type);
     }
 }

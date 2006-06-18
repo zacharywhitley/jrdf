@@ -90,7 +90,7 @@ public final class TripleBuilder {
     // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
 
     private static final String SINGLE_QUOTE = "'";
-    private static final ObjectNode ANY_VALUE = AnyObjectNode.ANY_OBJECT_NODE;
+    private static final ObjectNode ANY_OBJECT_VALUE = AnyObjectNode.ANY_OBJECT_NODE;
 
     /**
      * Builds the given <var>tripleNode</var> into a local Triple.
@@ -122,7 +122,7 @@ public final class TripleBuilder {
         // FIXME TJA: Use the visitor pattern to do this.
         PObjectTripleElement object = tripleNode.getObject();
         if (object instanceof AVariableObjectTripleElement) {
-            return ANY_VALUE;
+            return ANY_OBJECT_VALUE;
         } else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);

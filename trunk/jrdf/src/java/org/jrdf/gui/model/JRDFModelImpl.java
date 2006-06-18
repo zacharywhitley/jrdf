@@ -63,6 +63,7 @@ import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.query.Answer;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.sparql.DefaultSparqlConnection;
 import org.jrdf.sparql.SparqlConnection;
 
@@ -71,7 +72,9 @@ import java.net.URL;
 public class JRDFModelImpl implements JRDFModel {
     private static final JRDFFactory FACTORY = new JRDFFactory();
     private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = new DefaultSparqlConnection(graph, JrdfConnectionFactory.NO_SECURITY_DOMAIN);
+    private AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
+    private SparqlConnection connection = new DefaultSparqlConnection(graph, JrdfConnectionFactory.NO_SECURITY_DOMAIN,
+            avpComparator);
 
     public Graph loadModel(URL url) {
         try {

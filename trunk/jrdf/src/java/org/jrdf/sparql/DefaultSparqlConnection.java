@@ -64,6 +64,7 @@ import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.execute.JrdfQueryExecutorImpl;
 import org.jrdf.query.execute.JrdfQueryExecutor;
 import org.jrdf.util.param.ParameterUtil;
@@ -92,10 +93,10 @@ public final class DefaultSparqlConnection implements SparqlConnection {
      * @param graph          The graph to query.
      * @param securityDomain The security domain of the graph.
      */
-    public DefaultSparqlConnection(Graph graph, URI securityDomain) {
+    public DefaultSparqlConnection(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        executor = new JrdfQueryExecutorImpl(graph, securityDomain);
+        executor = new JrdfQueryExecutorImpl(graph, securityDomain, avpComparator);
         this.graph = graph;
     }
 

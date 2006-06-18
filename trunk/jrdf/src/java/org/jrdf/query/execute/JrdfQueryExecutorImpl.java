@@ -62,6 +62,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
@@ -82,10 +83,10 @@ public final class JrdfQueryExecutorImpl implements JrdfQueryExecutor {
      * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
-    public JrdfQueryExecutorImpl(Graph graph, URI securityDomain) {
+    public JrdfQueryExecutorImpl(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
         ParameterUtil.checkNotNull("session", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        executor = new NaiveQueryExecutor(graph, securityDomain);
+        executor = new NaiveQueryExecutor(graph, securityDomain, avpComparator);
     }
 
     /**

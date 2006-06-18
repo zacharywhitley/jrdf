@@ -63,6 +63,7 @@ import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Returns the list of relations with the same set of attributes.
@@ -76,5 +77,5 @@ public interface Restrict extends Operation {
     // TODO (AN) Does this break symmetry?
     // TODO (AN) Must be three specific attribute value pairs - where the attributes are Subject, Predicate and Object
     // or Blank Node, URI or Literal and the values either ANY_NODE or constants.
-    Relation restrict(GraphRelation relation, Set<AttributeValuePair> nameValues);
+    Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues);
 }

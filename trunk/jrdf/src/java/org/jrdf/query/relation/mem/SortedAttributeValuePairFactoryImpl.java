@@ -56,48 +56,58 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.mem.RelationImpl;
-import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.graph.Triple;
 
-import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Iterator;
 
 /**
- * The relational operation that remove tuples that don't meet a specific criteria.
+ * Allows the creation of sroted AttributeValuePairs.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class RestrictImpl implements Restrict {
+public class SortedAttributeValuePairFactoryImpl implements SortedAttributeValuePairFactory {
+    private final SortedAttributeFactory sortedAttributeFactory;
     private final AttributeValuePairComparator avpComparator;
-    private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
+    private static final int TRIPLES = 3;
 
-    // TODO (AN) These comparators should be injected into a factory for Tuples rather than having them exposed to
-    // all objects that need to create various tuples, relations, etc.
-    public RestrictImpl(AttributeComparator attributeComparator, AttributeValuePairComparator avpComparator,
-            TupleComparator tupleComparator) {
-        this.attributeComparator = attributeComparator;
+    public SortedAttributeValuePairFactoryImpl(SortedAttributeFactory sortedAttributeFactory,
+            AttributeValuePairComparator avpComparator) {
+        this.sortedAttributeFactory = sortedAttributeFactory;
         this.avpComparator = avpComparator;
-        this.tupleComparator = tupleComparator;
     }
 
-    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
-        throw new UnsupportedOperationException();
+    public SortedSet<AttributeValuePair> createAvp(Triple triple) {
+        Attribute[] attributes = getAttributes();
+        return createAttributeValuePairs(attributes, triple);
     }
 
-    public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
-        Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
-        return new RelationImpl(relation.getHeading(), restrictedTuples, attributeComparator, tupleComparator);
+    private TreeSet<AttributeValuePair> createAttributeValuePairs(Attribute[] attributes, Triple triple) {
+        AttributeValuePair subjectAv = new AttributeValuePairImpl(attributes[0], triple.getSubject());
+        AttributeValuePair predicateAv = new AttributeValuePairImpl(attributes[1], triple.getPredicate());
+        AttributeValuePair objectAv = new AttributeValuePairImpl(attributes[2], triple.getObject());
+        TreeSet<AttributeValuePair> attributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
+        attributeValuePairs.add(subjectAv);
+        attributeValuePairs.add(predicateAv);
+        attributeValuePairs.add(objectAv);
+        return attributeValuePairs;
     }
+
+    private Attribute[] getAttributes() {
+        SortedSet<Attribute> heading = sortedAttributeFactory.createHeading();
+        Iterator<Attribute> iterator = heading.iterator();
+        Attribute[] attributes = new Attribute[TRIPLES];
+        attributes[0] = iterator.next();
+        attributes[1] = iterator.next();
+        attributes[2] = iterator.next();
+        return attributes;
+    }
+
 }
