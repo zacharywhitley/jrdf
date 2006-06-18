@@ -61,13 +61,11 @@ package org.jrdf.sparql;
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.jrdf.connection.JrdfConnectionFactory;
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import org.jrdf.query.GraphFixture;
+import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.JrdfQueryExecutor;
-import org.jrdf.query.MockGraph;
+import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.AssertThrows;
@@ -76,7 +74,6 @@ import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -89,7 +86,6 @@ import java.net.URI;
  */
 public class SparqlConnectionImplUnitTest extends TestCase {
 
-    private static final MockGraph GRAPH_GOOD = GraphFixture.createGraph();
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
     private static final String EXECUTE_QUERY_METHOD = "executeQuery";
     private static final String NULL = ParameterTestUtil.NULL_STRING;
@@ -99,8 +95,10 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final String FIELD_BUILDER = "builder";
     private static final JrdfQueryExecutor QUERY_EXECUTOR = MockTestUtil.createFromInterface(JrdfQueryExecutor.class);
     private static final QueryBuilder BUILDER = MockTestUtil.createFromInterface(QueryBuilder.class);
-    private static final Graph NO_EXPECTATIONS_GRAPH = MockTestUtil.createFromInterface(Graph.class);
+    private static final Answer ANSWER = MockTestUtil.createFromInterface(Answer.class);
     private MockFactory factory;
+    private static final String TEST_QUERY_1 = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
+    private static final Query QUERY = MockTestUtil.createFromInterface(Query.class);
 
     public void setUp() {
         factory = new MockFactory();
@@ -108,22 +106,14 @@ public class SparqlConnectionImplUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(SparqlConnection.class, SparqlConnectionImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(SparqlConnectionImpl.class, Modifier.PUBLIC, Graph.class,
-                URI.class, QueryBuilder.class, JrdfQueryExecutor.class);
-    }
-
-    public void testNullSessionInConstructor() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new SparqlConnectionImpl(null, NO_SECURITY_DOMAIN, BUILDER, QUERY_EXECUTOR);
-            }
-        });
+        ClassPropertiesTestUtil.checkConstructor(SparqlConnectionImpl.class, Modifier.PUBLIC, URI.class,
+                QueryBuilder.class, JrdfQueryExecutor.class);
     }
 
     public void testNullSecurityDomainInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new SparqlConnectionImpl(NO_EXPECTATIONS_GRAPH, null, BUILDER, QUERY_EXECUTOR);
+                new SparqlConnectionImpl(null, BUILDER, QUERY_EXECUTOR);
             }
         });
     }
@@ -131,7 +121,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     public void testNullBuilder() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new SparqlConnectionImpl(NO_EXPECTATIONS_GRAPH, NO_SECURITY_DOMAIN, null, QUERY_EXECUTOR);
+                new SparqlConnectionImpl(NO_SECURITY_DOMAIN, null, QUERY_EXECUTOR);
             }
         });
     }
@@ -139,69 +129,95 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     public void testNullQueryExecutor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new SparqlConnectionImpl(NO_EXPECTATIONS_GRAPH, NO_SECURITY_DOMAIN, BUILDER, null);
+                new SparqlConnectionImpl(NO_SECURITY_DOMAIN, BUILDER, null);
             }
         });
     }
 
-    public void testClose() {
-        new SparqlConnectionImpl(GRAPH_GOOD, NO_SECURITY_DOMAIN, BUILDER, QUERY_EXECUTOR).close();
-    }
-
     public void testExecuteSimpleBadQuery() throws Exception {
-        SparqlConnection connection = new SparqlConnectionImpl(NO_EXPECTATIONS_GRAPH, NO_SECURITY_DOMAIN,
-                BUILDER, QUERY_EXECUTOR);
+        SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, BUILDER, QUERY_EXECUTOR);
         checkBadParam(connection, EXECUTE_QUERY_METHOD, NULL);
         checkBadParam(connection, EXECUTE_QUERY_METHOD, EMPTY_STRING);
         checkBadParam(connection, EXECUTE_QUERY_METHOD, SINGLE_SPACE);
     }
 
-    // TODO (AN) 19/6 Put this back in.
-//    public void testGraphExceptionPassthrough() throws Exception {
-//        final Graph graph = createGraph();
-//        AssertThrows.assertThrows(GraphException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                factory.replay();
-//                SparqlConnection connection = new SparqlConnectionImpl(graph, NO_SECURITY_DOMAIN, BUILDER,
-//                        QUERY_EXECUTOR);
-//                connection.executeQuery(SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE);
-//                factory.verify();
-//            }
-//        });
-//    }
+    public void testExecuteQuery() throws Exception {
+        QueryBuilder builder = createBuilder(QUERY_ITQL, QUERY);
+        JrdfQueryExecutor executor = createExecutor(QUERY, ANSWER);
+        SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, executor);
+        factory.replay();
+        Answer answer = connection.executeQuery(QUERY_ITQL);
+        factory.verify();
+        assertEquals(ANSWER, answer);
+    }
 
-    public void testInvalidQueryExceptionPassthrough() {
-        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, new AssertThrows.Block() {
+    public void testGraphExceptionPassthrough() throws Exception {
+        QueryBuilder builder = createBuilder(TEST_QUERY_1, QUERY);
+        JrdfQueryExecutor executor = createExecutorThrowsGraphException(QUERY);
+        final SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, executor);
+        AssertThrows.assertThrows(GraphException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                SparqlConnection connection = createConnection(GRAPH_GOOD, new BadQueryBuilder());
-                connection.executeQuery(SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE);
+                factory.replay();
+                connection.executeQuery(TEST_QUERY_1);
+                factory.verify();
             }
         });
     }
 
-    // TODO (AN) 19/6 Put this back in.
-//    public void testExecuteQuery() throws InvalidQuerySyntaxException, GraphException {
-//        SparqlConnection connection = createConnection(GRAPH_GOOD, new MockQueryBuilder());
-//        Answer answer = connection.executeQuery(QUERY_ITQL);
-//        GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
-//    }
-
-    private Graph createGraph() throws Exception {
-        IMocksControl control = factory.createControl();
-        final Graph graph = control.createMock(Graph.class);
-        Triple triple = TripleTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
-        graph.find(triple);
-        control.andThrow(new GraphException(""));
-        return graph;
+    public void testInvalidQueryExceptionPassthrough() {
+        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                SparqlConnection connection = createConnection(new BadQueryBuilder());
+                connection.executeQuery(TEST_QUERY_1);
+            }
+        });
     }
 
-    private SparqlConnection createConnection(Graph graph, QueryBuilder builder) {
-        SparqlConnection connection = new SparqlConnectionImpl(graph, NO_SECURITY_DOMAIN, BUILDER, QUERY_EXECUTOR);
+    public void testClose() {
+        SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, BUILDER, createExecutorWithClose());
+        factory.replay();
+        connection.close();
+        factory.verify();
+    }
+
+    private SparqlConnection createConnection(QueryBuilder builder) {
+        SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, BUILDER, QUERY_EXECUTOR);
         ReflectTestUtil.insertFieldValue(connection, FIELD_BUILDER, builder);
         return connection;
     }
 
     private void checkBadParam(SparqlConnection connection, String method, String param) throws Exception {
         ParameterTestUtil.checkBadStringParam(connection, method, param);
+    }
+
+    private QueryBuilder createBuilder(String queryString, Query query) throws Exception {
+        IMocksControl control = factory.createControl();
+        QueryBuilder builder = control.createMock(QueryBuilder.class);
+        builder.buildQuery(queryString);
+        control.andReturn(query);
+        return builder;
+    }
+
+    private JrdfQueryExecutor createExecutor(Query query, Answer answer) throws Exception {
+        IMocksControl control = factory.createControl();
+        JrdfQueryExecutor executor = control.createMock(JrdfQueryExecutor.class);
+        executor.executeQuery(query);
+        control.andReturn(answer);
+        return executor;
+    }
+
+    private JrdfQueryExecutor createExecutorThrowsGraphException(Query query) throws Exception {
+        IMocksControl control = factory.createControl();
+        JrdfQueryExecutor executor = control.createMock(JrdfQueryExecutor.class);
+        executor.executeQuery(query);
+        control.andThrow(new GraphException(""));
+        return executor;
+    }
+
+    private JrdfQueryExecutor createExecutorWithClose() {
+        IMocksControl control = factory.createControl();
+        JrdfQueryExecutor executor = control.createMock(JrdfQueryExecutor.class);
+        executor.close();
+        return executor;
     }
 }

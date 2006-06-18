@@ -43,6 +43,6 @@ public final class JrdfConnectionFactory {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
         ParameterUtil.checkNotNull("queryExecutor", queryExecutor);
-        return new SparqlConnectionImpl(graph, securityDomain, builder, queryExecutor);
+        return new SparqlConnectionImpl(securityDomain, builder, queryExecutor);
     }
 }

@@ -139,6 +139,29 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
         return restrict.restrict(graphRelation, avp);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void close() {
+        graph.close();
+    }
+
+    /**
+     * Attempt to close the underlying session in case the client did not.
+     * <p><strong>Clients should not rely on this method being called, it is only here as a last minute check to see if
+     * any cleanup can be performed. This method is not guarenteed to be executed by the JVM.</strong></p>
+     *
+     * @throws Throwable An unknown error occurs, possibly in object finalisation.
+     */
+    protected void finalize() throws Throwable {
+        try {
+            close();
+        } finally {
+            // FIXME TJA: See http://www.janeg.ca/scjp/gc/finalize.html
+            super.finalize();
+        }
+    }
+
     // TODO: When the tests (& grammar) force it, get all the triples and iterate over them :)
     private List<Triple> findTriples(Query query) throws GraphException {
         Triple triple = getSingleConstraint(query);
