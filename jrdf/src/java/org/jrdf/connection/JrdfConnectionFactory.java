@@ -1,10 +1,11 @@
 package org.jrdf.connection;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.util.param.ParameterUtil;
-import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.JrdfQueryExecutor;
+import org.jrdf.query.QueryBuilder;
 
 import java.net.URI;
 
@@ -37,10 +38,11 @@ public final class JrdfConnectionFactory {
      * @param securityDomain The security domain.
      * @return A connection through which to issue SPARQL queries.
      */
-    public SparqlConnection createSparqlConnection(Graph graph, URI securityDomain,
-            AttributeValuePairComparator avpComparator) {
+    public SparqlConnection createSparqlConnection(Graph graph, URI securityDomain, JrdfQueryExecutor queryExecutor,
+            QueryBuilder builder) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        return new SparqlConnectionImpl(graph, securityDomain, avpComparator);
+        ParameterUtil.checkNotNull("queryExecutor", queryExecutor);
+        return new SparqlConnectionImpl(graph, securityDomain, builder, queryExecutor);
     }
 }

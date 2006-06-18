@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,28 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.execute;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.Query;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.graph.Graph;
 
 /**
- * Executes queries against a graph.
+ * A builder that always throws exceptions.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public interface JrdfQueryExecutor {
-
-    // FIXME TJA: Should executeQuery() throw a wrapper exception or just throw the root cause?
-
-    /**
-     * Executes a query against a graph.
-     *
-     * @param query The query to execute.
-     * @return The answer to the query, will never be <code>null</code>.
-     * @throws GraphException If an error occurs while executing the query.
-     */
-    Answer executeQuery(Query query) throws GraphException;
+public interface GraphRelationFactory {
+    GraphRelation createRelation(Graph graph);
 }

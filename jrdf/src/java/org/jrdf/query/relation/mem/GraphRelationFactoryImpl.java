@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 581 $
- * $Date: 2006-06-18 15:38:56 +1000 (Sun, 18 Jun 2006) $
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,47 +56,35 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.execute;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.Query;
+import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.util.param.ParameterUtil;
-
-import java.net.URI;
-
-// TODO (AN) Do we need two versions when it's just a call from one to the other?
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.graph.Graph;
 
 /**
- * Default implementation of a {@link JrdfQueryExecutor}.
+ * A factory that produces graph relations.
  *
- * @author Tom Adams
- * @version $Id: JrdfQueryExecutorImpl.java 581 2006-06-18 05:38:56Z newmana $
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class JrdfQueryExecutorImpl implements JrdfQueryExecutor {
+public class GraphRelationFactoryImpl implements GraphRelationFactory {
+    private SortedAttributeFactory attributeFactory;
+    private SortedAttributeValuePairFactory avpFactory;
+    private AttributeValuePairComparator attributeValuePairComparator;
+    private TupleComparator tupleComparator;
 
-    private NaiveQueryExecutor executor;
-
-    /**
-     * Creates executor to execute queries.
-     *
-     * @param graph          The graph to communicate with.
-     * @param securityDomain The security domain of the graph.
-     */
-    public JrdfQueryExecutorImpl(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
-        ParameterUtil.checkNotNull("session", graph);
-        ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("avpComparator", avpComparator);
-        executor = new NaiveQueryExecutor(graph, securityDomain, avpComparator);
+    public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, SortedAttributeValuePairFactory avpFactory,
+            AttributeValuePairComparator attributeValuePairComparator, TupleComparator tupleComparator) {
+        this.attributeFactory = attributeFactory;
+        this.tupleComparator = tupleComparator;
+        this.attributeValuePairComparator = attributeValuePairComparator;
+        this.avpFactory = avpFactory;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Answer executeQuery(Query query) throws GraphException {
-        ParameterUtil.checkNotNull("query", query);
-        return executor.executeQuery(query);
+    public GraphRelation createRelation(Graph graph) {
+        return new GraphRelationImpl(graph, attributeFactory, avpFactory, attributeValuePairComparator,
+                tupleComparator);
     }
 }

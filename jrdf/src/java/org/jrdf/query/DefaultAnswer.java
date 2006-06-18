@@ -66,6 +66,8 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
+// TODO (AN) Can this be replaced by relation.
+
 /**
  * Default implementation of {@link Answer}.
  *

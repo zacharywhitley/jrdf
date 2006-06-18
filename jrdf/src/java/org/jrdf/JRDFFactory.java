@@ -66,6 +66,7 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
+import org.jrdf.sparql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -110,5 +111,9 @@ public final class JRDFFactory {
 
     public Join getNewJoin() {
         return (Join) beanFactory.getBean("join");
+    }
+
+    public SparqlConnection getNewSparqlConnection() {
+        return null;
     }
 }
