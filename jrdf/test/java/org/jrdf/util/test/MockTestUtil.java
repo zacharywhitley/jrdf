@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,79 +56,20 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.util.test;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
-import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.execute.JrdfQueryExecutorImpl;
-import org.jrdf.query.execute.JrdfQueryExecutor;
-import org.jrdf.util.param.ParameterUtil;
-
-import java.net.URI;
-
+import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
 
 /**
- * Default implementation of a {@link SparqlConnection}.
+ * Create a mock with no expectations.
  *
- * @author Tom Adams
- * @version $Id$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class DefaultSparqlConnection implements SparqlConnection {
-
-    // FIXME TJA: Ensure connections are threadsafe.
-    // FIXME TJA: Set builder using IoC
-
-    private QueryBuilder builder = new SparqlQueryBuilder();
-    private JrdfQueryExecutor executor;
-    private Graph graph;
-
-    /**
-     * Creates a new SPARQL connection.
-     *
-     * @param graph          The graph to query.
-     * @param securityDomain The security domain of the graph.
-     */
-    public DefaultSparqlConnection(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
-        ParameterUtil.checkNotNull("graph", graph);
-        ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        executor = new JrdfQueryExecutorImpl(graph, securityDomain, avpComparator);
-        this.graph = graph;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Answer executeQuery(String queryText) throws InvalidQuerySyntaxException, GraphException {
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
-        Query builtQuery = builder.buildQuery(queryText);
-        return executor.executeQuery(builtQuery);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void close() {
-        graph.close();
-    }
-
-    /**
-     * Attempt to close the underlying session in case the client did not.
-     * <p><strong>Clients should not rely on this method being called, it is only here as a last minute check to see if
-     * any cleanup can be performed. This method is not guarenteed to be executed by the JVM.</strong></p>
-     *
-     * @throws Throwable An unknown error occurs, possibly in object finalisation.
-     */
-    protected void finalize() throws Throwable {
-        try {
-            close();
-        } finally {
-            // FIXME TJA: See http://www.janeg.ca/scjp/gc/finalize.html
-            super.finalize();
-        }
+public class MockTestUtil {
+    public static <T>T createFromInterface(Class<T> clazz) {
+        IMocksControl control = EasyMock.createControl();
+        return control.createMock(clazz);
     }
 }

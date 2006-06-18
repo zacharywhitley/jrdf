@@ -18,6 +18,7 @@ import java.util.Iterator;
  * @author Tom Adams
  * @version $Revision$
  */
+// TODO (AN) Try and remove usage from GraphFixture.
 public final class MockBadGraph implements Graph {
 
     public MockBadGraph() {

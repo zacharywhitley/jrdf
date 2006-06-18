@@ -1,7 +1,7 @@
 package org.jrdf.connection;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.sparql.DefaultSparqlConnection;
+import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.util.param.ParameterUtil;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -41,6 +41,6 @@ public final class JrdfConnectionFactory {
             AttributeValuePairComparator avpComparator) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        return new DefaultSparqlConnection(graph, securityDomain, avpComparator);
+        return new SparqlConnectionImpl(graph, securityDomain, avpComparator);
     }
 }

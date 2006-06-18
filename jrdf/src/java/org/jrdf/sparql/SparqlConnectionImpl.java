@@ -56,50 +56,80 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.execute;
+package org.jrdf.sparql;
 
-import junit.framework.TestCase;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.query.Answer;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.execute.JrdfQueryExecutorImpl;
+import org.jrdf.query.execute.JrdfQueryExecutor;
+import org.jrdf.util.param.ParameterUtil;
+
+import java.net.URI;
+
 
 /**
- * Unit test for {@link NaiveQueryExecutor}.
+ * Default implementation of a {@link SparqlConnection}.
  *
  * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-public final class NaiveQueryExecutorUnitTest extends TestCase {
+public final class SparqlConnectionImpl implements SparqlConnection {
 
-    // TODO (AN) Woz is calling - Come back and wire this stuff in instead of using constructors.
+    // FIXME TJA: Ensure connections are threadsafe.
+    // FIXME TJA: Set builder using IoC
 
-    public void testBadMan() {
+    private QueryBuilder builder = new SparqlQueryBuilder();
+    private JrdfQueryExecutor executor;
+    private Graph graph;
 
+    /**
+     * Creates a new SPARQL connection.
+     *
+     * @param graph          The graph to query.
+     * @param securityDomain The security domain of the graph.
+     */
+    public SparqlConnectionImpl(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
+        ParameterUtil.checkNotNull("graph", graph);
+        ParameterUtil.checkNotNull("securityDomain", securityDomain);
+        ParameterUtil.checkNotNull("avpComparator", avpComparator);
+        executor = new JrdfQueryExecutorImpl(graph, securityDomain, avpComparator);
+        this.graph = graph;
     }
 
-//    private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-//
-//    public void testClassProperties() {
-//        ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
-//        ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, Graph.class, URI.class);
-//    }
-//
-//    public void testNullSessionInConstructor() {
-//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN);
-//            }
-//        });
-//    }
-//
-//    public void testNullSecurityDomainInConstructor() {
-//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null);
-//            }
-//        });
-//    }
-//
-//    public void testExecuteQuery() throws Exception {
-//        JrdfQueryExecutor executor = new NaiveQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN);
-//        Answer answer = executor.executeQuery(GraphFixture.createQuery());
-//        GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
-//    }
+    /**
+     * {@inheritDoc}
+     */
+    public Answer executeQuery(String queryText) throws InvalidQuerySyntaxException, GraphException {
+        ParameterUtil.checkNotEmptyString("queryText", queryText);
+        Query builtQuery = builder.buildQuery(queryText);
+        return executor.executeQuery(builtQuery);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void close() {
+        graph.close();
+    }
+
+    /**
+     * Attempt to close the underlying session in case the client did not.
+     * <p><strong>Clients should not rely on this method being called, it is only here as a last minute check to see if
+     * any cleanup can be performed. This method is not guarenteed to be executed by the JVM.</strong></p>
+     *
+     * @throws Throwable An unknown error occurs, possibly in object finalisation.
+     */
+    protected void finalize() throws Throwable {
+        try {
+            close();
+        } finally {
+            // FIXME TJA: See http://www.janeg.ca/scjp/gc/finalize.html
+            super.finalize();
+        }
+    }
 }
