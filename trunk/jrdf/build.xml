@@ -55,6 +55,12 @@
                 <patternset refid="@{code.pattern}"/>
                 <compilerarg value="@{compiler.args}"/>
             </javac>
+            <echo message="Got: ${emma.enabled}"/>
+            <emma enabled="${emma.enabled}">
+                <instr instrpath="@{output.dir}" destdir="${out.instr.dir}/classes"
+                       metadatafile="${coverage.dir}/metadata.emma" merge="true"/>
+            </emma>
+
         </sequential>
     </macrodef>
 
@@ -88,6 +94,15 @@
     <target name="integration-test" depends="dist">
         <test.macro type="integration"/>
     </target>
+    <target name="emma-unit-test" depends="emma, dist">
+        <emma.test.macro type="unit"/>
+    </target>
+
+    <target name="emma" description="turns on EMMA instrumentation/reporting">
+        <mkdir dir="${out.instr.dir}"/>
+        <mkdir dir="${coverage.dir}"/>
+        <property name="emma.enabled" value="true"/>
+    </target>
 
     <macrodef name="test.macro">
         <attribute name="type"/>
@@ -101,6 +116,32 @@
                 </batchtest>
             </junit>
             <fail if="@{type}.test.failed" message="@{type} tests failed."/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="emma.test.macro">
+        <attribute name="type"/>
+        <sequential>
+            <mkdir dir="${@{type}.test.results.dir}"/>
+            <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
+                <classpath refid="@{type}.test.class.path"/>
+                <formatter type="brief" usefile="false"/>
+                <batchtest todir="${@{type}.test.results.dir}">
+                    <fileset refid="@{type}.test.code.fileset"/>
+                </batchtest>
+                <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma"/>
+                <formatter type="xml"/>
+                <formatter type="brief" usefile="false"/>
+            </junit>
+            <fail if="@{type}.test.failed" message="@{type} tests failed."/>
+            <emma enabled="${emma.enabled}">
+                <report sourcepath="${prod.src.dir}" depth="method">
+                    <fileset dir="${coverage.dir}">
+                        <include name="*.emma"/>
+                    </fileset>
+                    <html outfile="${coverage.dir}/coverage.html"/>
+                </report>
+            </emma>
         </sequential>
     </macrodef>
 
