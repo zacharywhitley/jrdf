@@ -63,6 +63,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.TripleTestUtil;
+import org.jrdf.util.test.MockTestUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,7 +77,7 @@ import java.util.List;
  */
 public final class GraphFixture {
 
-    public static final Graph GRAPH_BAD = new MockBadGraph();
+    public static final Graph GRAPH_BAD = MockTestUtil.createFromInterface(Graph.class);
     public static final MockGraph GRAPH_GOOD = createGraph();
 
     private GraphFixture() {
