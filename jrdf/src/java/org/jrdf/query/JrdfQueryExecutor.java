@@ -78,4 +78,6 @@ public interface JrdfQueryExecutor {
      * @throws GraphException If an error occurs while executing the query.
      */
     Answer executeQuery(Query query) throws GraphException;
+
+    void close();
 }

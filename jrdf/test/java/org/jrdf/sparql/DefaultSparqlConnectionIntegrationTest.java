@@ -101,7 +101,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     // TODO (AN) 19/6 Put this back in.
     public void testBadMan() {}
-    
+
 //    public void testCreateSparqlConnection() {
 //        checkConnectionReturnsOneSolution(createRawConnection());
 //        checkConnectionReturnsOneSolution(createConnectionFromFactory());
@@ -109,7 +109,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 //    }
 
     private SparqlConnection createRawConnection() {
-        return new SparqlConnectionImpl(createGraph(), NO_SECURITY_DOMAIN, QUERY_BUILDER, QUERY_EXECUTOR);
+        return new SparqlConnectionImpl(NO_SECURITY_DOMAIN, QUERY_BUILDER, QUERY_EXECUTOR);
     }
 
     private SparqlConnection createConnectionFromFactory() {

@@ -58,13 +58,12 @@
 
 package org.jrdf.sparql;
 
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
@@ -81,21 +80,16 @@ public final class SparqlConnectionImpl implements SparqlConnection {
     // FIXME TJA: Ensure connections are threadsafe.
     private QueryBuilder builder;
     private JrdfQueryExecutor executor;
-    private Graph graph;
 
     /**
      * Creates a new SPARQL connection.
      *
-     * @param graph          The graph to query.
      * @param securityDomain The security domain of the graph.
      */
-    public SparqlConnectionImpl(Graph graph, URI securityDomain, QueryBuilder builder,
-            JrdfQueryExecutor queryExceutor) {
-        ParameterUtil.checkNotNull("graph", graph);
+    public SparqlConnectionImpl(URI securityDomain, QueryBuilder builder, JrdfQueryExecutor queryExceutor) {
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
         ParameterUtil.checkNotNull("builder", builder);
         ParameterUtil.checkNotNull("queryExceutor", queryExceutor);
-        this.graph = graph;
         this.builder = builder;
         this.executor = queryExceutor;
     }
@@ -109,26 +103,7 @@ public final class SparqlConnectionImpl implements SparqlConnection {
         return executor.executeQuery(builtQuery);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void close() {
-        graph.close();
-    }
-
-    /**
-     * Attempt to close the underlying session in case the client did not.
-     * <p><strong>Clients should not rely on this method being called, it is only here as a last minute check to see if
-     * any cleanup can be performed. This method is not guarenteed to be executed by the JVM.</strong></p>
-     *
-     * @throws Throwable An unknown error occurs, possibly in object finalisation.
-     */
-    protected void finalize() throws Throwable {
-        try {
-            close();
-        } finally {
-            // FIXME TJA: See http://www.janeg.ca/scjp/gc/finalize.html
-            super.finalize();
-        }
+        executor.close();
     }
 }

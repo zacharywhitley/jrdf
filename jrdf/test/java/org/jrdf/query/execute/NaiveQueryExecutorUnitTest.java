@@ -133,4 +133,14 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
         Answer answer = executor.executeQuery(GraphFixture.createQuery());
         GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
     }
+
+//    private Graph createGraph() throws Exception {
+//        IMocksControl control = factory.createControl();
+//        final Graph graph = control.createMock(Graph.class);
+//        Triple triple = TripleTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
+//        graph.find(triple);
+//        control.andThrow(new GraphException(""));
+//        return graph;
+//    }
+//
 }
