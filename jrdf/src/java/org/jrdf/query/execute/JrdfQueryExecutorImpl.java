@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 581 $
+ * $Date: 2006-06-18 15:38:56 +1000 (Sun, 18 Jun 2006) $
  *
  * ====================================================================
  *
@@ -67,11 +67,13 @@ import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
 
+// TODO (AN) Do we need two versions when it's just a call from one to the other?
+
 /**
  * Default implementation of a {@link JrdfQueryExecutor}.
  *
  * @author Tom Adams
- * @version $Id$
+ * @version $Id: JrdfQueryExecutorImpl.java 581 2006-06-18 05:38:56Z newmana $
  */
 public final class JrdfQueryExecutorImpl implements JrdfQueryExecutor {
 
@@ -86,6 +88,7 @@ public final class JrdfQueryExecutorImpl implements JrdfQueryExecutor {
     public JrdfQueryExecutorImpl(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
         ParameterUtil.checkNotNull("session", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
+        ParameterUtil.checkNotNull("avpComparator", avpComparator);
         executor = new NaiveQueryExecutor(graph, securityDomain, avpComparator);
     }
 

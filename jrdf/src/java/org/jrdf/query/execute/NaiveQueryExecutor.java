@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 582 $
+ * $Date: 2006-06-18 17:34:10 +1000 (Sun, 18 Jun 2006) $
  *
  * ====================================================================
  *
@@ -89,7 +89,7 @@ import java.util.TreeSet;
  * </ul>
  *
  * @author Tom Adams
- * @version $Id$
+ * @version $Id: NaiveQueryExecutor.java 582 2006-06-18 07:34:10Z newmana $
  */
 final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
@@ -106,11 +106,12 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * @param securityDomain The security domain of the graph.
      */
     public NaiveQueryExecutor(Graph graph, URI securityDomain, AttributeValuePairComparator avpComparator) {
-        this.avpComparator = avpComparator;
         ParameterUtil.checkNotNull("session", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
+        ParameterUtil.checkNotNull("avpComparator", avpComparator);
         this.graph = graph;
         this.securityDomain = securityDomain;
+        this.avpComparator = avpComparator;
     }
 
     /**

@@ -282,7 +282,6 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      *
      * @throws Exception if query fails when it should have succeeded
      */
-    // TODO (AN) FIX ME!!!!!!!!!!!!  Uncomment broken tests.
     public void testTwoGraphs() throws Exception {
 
         Graph g1 = newGraph();
