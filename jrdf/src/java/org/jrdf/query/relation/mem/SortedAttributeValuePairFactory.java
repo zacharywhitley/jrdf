@@ -56,48 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.mem.RelationImpl;
-import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.graph.Triple;
 
-import java.util.Set;
 import java.util.SortedSet;
 
 /**
- * The relational operation that remove tuples that don't meet a specific criteria.
+ * Allows the creation of sroted AttributeValuePairs.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class RestrictImpl implements Restrict {
-    private final AttributeValuePairComparator avpComparator;
-    private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
-
-    // TODO (AN) These comparators should be injected into a factory for Tuples rather than having them exposed to
-    // all objects that need to create various tuples, relations, etc.
-    public RestrictImpl(AttributeComparator attributeComparator, AttributeValuePairComparator avpComparator,
-            TupleComparator tupleComparator) {
-        this.attributeComparator = attributeComparator;
-        this.avpComparator = avpComparator;
-        this.tupleComparator = tupleComparator;
-    }
-
-    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
-        throw new UnsupportedOperationException();
-    }
-
-    public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
-        Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
-        return new RelationImpl(relation.getHeading(), restrictedTuples, attributeComparator, tupleComparator);
-    }
+public interface SortedAttributeValuePairFactory {
+    SortedSet<AttributeValuePair> createAvp(Triple triple);
 }
