@@ -135,34 +135,47 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SparqlConnectionImplUnitTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/SparqlConnectionImplUnitTest.java">
+      <file leaf-file-name="MockBadGraph.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/MockBadGraph.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="183" column="45" selection-start="8193" selection-end="8193" vertical-scroll-proportion="1.3388236">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <marker date="1150615955000" expanded="true" signature="3727:3742" placeholder="/**...*/" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NaiveQueryExecutor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/execute/NaiveQueryExecutor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="133" column="22" selection-start="5363" selection-end="5363" vertical-scroll-proportion="0.5090909">
+            <state line="21" column="19" selection-start="565" selection-end="565" vertical-scroll-proportion="0.23362832">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SparqlConnectionImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/SparqlConnectionImpl.java">
+      <file leaf-file-name="GraphFixture.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/GraphFixture.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="65" selection-start="4051" selection-end="4051" vertical-scroll-proportion="0.15294118">
-              <folding>
-                <marker date="1150615034000" expanded="true" signature="3270:3285" placeholder="/**...*/" />
-              </folding>
+            <state line="85" column="28" selection-start="3364" selection-end="3364" vertical-scroll-proportion="0.42477876">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JrdfQueryExecutorImplUnitTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/JrdfQueryExecutorImplUnitTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="120" column="62" selection-start="5012" selection-end="5012" vertical-scroll-proportion="0.8909091">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="JrdfQueryExecutorImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/JrdfQueryExecutorImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="72" column="25" selection-start="3002" selection-end="3002" vertical-scroll-proportion="0.25486726">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="wiring.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/conf/wiring.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="79" column="0" selection-start="2734" selection-end="2734" vertical-scroll-proportion="1.4247788">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -895,12 +908,12 @@
   </component>
   <component name="RunManager">
     <activeType name="JUnit" />
-    <tempConfiguration selected="true" default="false" name="SparqlConnectionImplUnitTest" type="JUnit" factoryName="JUnit">
+    <tempConfiguration selected="false" default="false" name="JrdfQueryExecutorImplUnitTest" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.jrdf.sparql" />
-      <option name="MAIN_CLASS_NAME" value="org.jrdf.sparql.SparqlConnectionImplUnitTest" />
+      <option name="PACKAGE_NAME" value="org.jrdf.query" />
+      <option name="MAIN_CLASS_NAME" value="org.jrdf.query.JrdfQueryExecutorImplUnitTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -957,7 +970,7 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <module name="" />
     </configuration>
-    <configuration selected="false" default="false" name="All Tests" type="JUnit" factoryName="JUnit">
+    <configuration selected="true" default="false" name="All Tests" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -1057,12 +1070,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1680" height="1024" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="8" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32901832" order="7" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.27022058" order="0" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32901832" order="1" />
+      <window_info id="Find" active="true" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.32901832" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.27508092" order="11" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="6" />
@@ -1070,7 +1083,7 @@
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="9" />
       <window_info id="Favorites" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="5" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.1452206" order="1" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.4638619" order="2" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4638619" order="2" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
       <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="4" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="4" />
@@ -1184,36 +1197,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/gui/model/JRDFModelImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="76" column="25" selection-start="3453" selection-end="3453" vertical-scroll-proportion="0.22">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/execute/NaiveQueryExecutorUnitTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="0" selection-start="2890" selection-end="3027" vertical-scroll-proportion="0.28">
-          <folding>
-            <marker date="1150614926000" expanded="true" signature="2817:2823" placeholder="/**...*/" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/connection/JrdfConnectionFactoryUnitTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="53" selection-start="1179" selection-end="1179" vertical-scroll-proportion="0.63716817">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/util/EscapeUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="3" selection-start="2743" selection-end="2743" vertical-scroll-proportion="0.10619469">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/util/test/MockTestUtil.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="72" column="15" selection-start="3008" selection-end="3008" vertical-scroll-proportion="0.43636364">
@@ -1233,20 +1216,6 @@
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/graph/index/operation/mem/ComparisonImplUnitTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="91" column="13" selection-start="3999" selection-end="3999" vertical-scroll-proportion="0.42352942">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/MockBadGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="52" selection-start="568" selection-end="568" vertical-scroll-proportion="0.21238938">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/GraphFixture.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="46" selection-start="3154" selection-end="3166" vertical-scroll-proportion="0.29734513">
           <folding />
         </state>
       </provider>
@@ -1272,15 +1241,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/SparqlConnectionImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="65" selection-start="4051" selection-end="4051" vertical-scroll-proportion="0.15294118">
-          <folding>
-            <marker date="1150615034000" expanded="true" signature="3270:3285" placeholder="/**...*/" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/execute/NaiveQueryExecutor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="133" column="22" selection-start="5363" selection-end="5363" vertical-scroll-proportion="0.5090909">
@@ -1288,13 +1248,64 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/SparqlConnectionImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="65" selection-start="4051" selection-end="4051" vertical-scroll-proportion="0.15294118">
+          <folding>
+            <marker date="1150616023000" expanded="true" signature="3270:3285" placeholder="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/SparqlConnectionImplUnitTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="183" column="45" selection-start="8193" selection-end="8193" vertical-scroll-proportion="1.3388236">
+        <state line="156" column="35" selection-start="6888" selection-end="6888" vertical-scroll-proportion="-0.07294118">
           <folding>
             <element signature="imports" expanded="true" />
-            <marker date="1150615955000" expanded="true" signature="3727:3742" placeholder="/**...*/" />
+            <marker date="1150616023000" expanded="true" signature="3727:3742" placeholder="/**...*/" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/BadQueryBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="12" selection-start="2911" selection-end="2911" vertical-scroll-proportion="0.3272727">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/GraphFixture.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="85" column="28" selection-start="3364" selection-end="3364" vertical-scroll-proportion="0.42477876">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conf/wiring.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="79" column="0" selection-start="2734" selection-end="2734" vertical-scroll-proportion="1.4247788">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/JrdfQueryExecutorImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="25" selection-start="3002" selection-end="3002" vertical-scroll-proportion="0.25486726">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/JrdfQueryExecutorImplUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="120" column="62" selection-start="5012" selection-end="5012" vertical-scroll-proportion="0.8909091">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/MockBadGraph.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="19" selection-start="565" selection-end="565" vertical-scroll-proportion="0.23362832">
+          <folding />
         </state>
       </provider>
     </entry>

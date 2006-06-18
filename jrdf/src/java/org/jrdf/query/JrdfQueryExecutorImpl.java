@@ -70,7 +70,7 @@ import java.net.URI;
  * @author Tom Adams
  * @version $Id$
  */
-public final class DefaultQueryExecutor implements JrdfQueryExecutor {
+public final class JrdfQueryExecutorImpl implements JrdfQueryExecutor {
 
     private NaiveQueryExecutor executor;
 
@@ -80,7 +80,7 @@ public final class DefaultQueryExecutor implements JrdfQueryExecutor {
      * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
-    public DefaultQueryExecutor(Graph graph, URI securityDomain) {
+    public JrdfQueryExecutorImpl(Graph graph, URI securityDomain) {
         ParameterUtil.checkNotNull("session", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
         executor = new NaiveQueryExecutor(graph, securityDomain);

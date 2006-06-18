@@ -3,6 +3,7 @@
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
+    <!-- Graph Classes -->
     <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false">
     </bean>
 
@@ -23,6 +24,7 @@
         </constructor-arg>
     </bean>
 
+    <!-- Relational Classes -->
     <bean name="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl">
     </bean>
 
@@ -73,4 +75,6 @@
             <ref bean="avpComparator"/>
         </constructor-arg>
     </bean>
+
+    <!-- Query Classes -->
 </beans>
