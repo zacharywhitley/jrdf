@@ -23,10 +23,17 @@
         <compile.macro src.dir="${gen.src.dir}" classpath.ref="gen.class.path" output.dir="${prod.classes.dir}"
                        code.path="gen.code.path" code.pattern="production.code.pattern"
                        compiler.args="-Xlint:-unchecked"/>
-        <prod.compile.macro src.dir="${prod.src.dir}" classpath.ref="production.class.path" output.dir="${prod.classes.dir}"
+        <compile.macro src.dir="${prod.src.dir}" classpath.ref="production.class.path" output.dir="${prod.classes.dir}"
                        code.path="production.code.path" code.pattern="production.code.pattern"/>
         <compile.macro src.dir="${test.src.dir}" classpath.ref="test.class.path" output.dir="${test.classes.dir}"
                        code.path="test.code.path" code.pattern="test.code.pattern"/>
+
+        <!-- Create emma instrumented classes if turned on -->
+        <emma enabled="${emma.enabled}">
+            <instr instrpath="${prod.classes.dir}" destdir="${out.instr.dir}/classes"
+                   metadatafile="${coverage.dir}/metadata.emma" merge="true"/>
+        </emma>
+
         <!-- Configuration for Wiring up the various components using Spring -->
         <copy file="conf/wiring.xml" todir="${prod.classes.dir}"/>
 
@@ -55,32 +62,6 @@
                 <patternset refid="@{code.pattern}"/>
                 <compilerarg value="@{compiler.args}"/>
             </javac>
-        </sequential>
-    </macrodef>
-    <macrodef name="prod.compile.macro">
-        <attribute name="src.dir"/>
-        <attribute name="output.dir"/>
-        <attribute name="classpath.ref"/>
-        <attribute name="code.path"/>
-        <attribute name="code.pattern"/>
-        <attribute name="compiler.args" default="-Xlint"/>
-        <sequential>
-            <mkdir dir="@{output.dir}"/>
-            <javac source="${java.src.version}" srcdir="@{src.dir}" destdir="@{output.dir}"
-                   classpathref="@{classpath.ref}"
-                   debug="${compile.debug}" debuglevel="${compile.debuglevel}" deprecation="${compile.deprecation}"
-                   optimize="${compile.optimize}">
-                <src>
-                    <path refid="@{code.path}"/>
-                </src>
-                <patternset refid="@{code.pattern}"/>
-                <compilerarg value="@{compiler.args}"/>
-            </javac>
-            <emma enabled="${emma.enabled}">
-                <instr instrpath="@{output.dir}" destdir="${out.instr.dir}/classes"
-                       metadatafile="${coverage.dir}/metadata.emma" merge="true"/>
-            </emma>
-
         </sequential>
     </macrodef>
 
@@ -115,7 +96,7 @@
         <test.macro type="integration"/>
     </target>
     <target name="emma-unit-test" depends="-emma, dist">
-        <emma.test.macro type="unit"/>
+        <test.macro type="unit"/>
     </target>
 
     <target name="-emma" description="turns on EMMA instrumentation/reporting">
@@ -125,21 +106,6 @@
     </target>
 
     <macrodef name="test.macro">
-        <attribute name="type"/>
-        <sequential>
-            <mkdir dir="${@{type}.test.results.dir}"/>
-            <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
-                <classpath refid="@{type}.test.class.path"/>
-                <formatter type="brief" usefile="false"/>
-                <batchtest todir="${@{type}.test.results.dir}">
-                    <fileset refid="@{type}.test.code.fileset"/>
-                </batchtest>
-            </junit>
-            <fail if="@{type}.test.failed" message="@{type} tests failed."/>
-        </sequential>
-    </macrodef>
-
-    <macrodef name="emma.test.macro">
         <attribute name="type"/>
         <sequential>
             <mkdir dir="${@{type}.test.results.dir}"/>
