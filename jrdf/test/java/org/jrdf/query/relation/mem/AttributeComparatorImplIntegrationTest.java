@@ -89,6 +89,9 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     private static final AttributeName VARIABLE_NAME_2 = new VariableName("foo");
     private static final AttributeName POSITION_NAME_1 = new PositionName("bar");
     private static final AttributeName POSITION_NAME_2 = new PositionName("foo");
+    private static final AttributeName POSITION_NAME_3 = new PositionName("subject");
+    private static final AttributeName POSITION_NAME_4 = new PositionName("predicate");
+    private static final AttributeName POSITION_NAME_5 = new PositionName("object");
     private static final Type NODE_TYPE_1 = new BlankNodeType();
     private static final Type NODE_TYPE_2 = new URIReferenceType();
     private static final Type NODE_TYPE_3 = new LiteralType();
@@ -107,7 +110,9 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     public static final Attribute TEST_VAR_BAR_SNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_1);
     public static final Attribute TEST_VAR_BAR_PNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_2);
     public static final Attribute TEST_VAR_BAR_ONODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_3);
-
+    public static final Attribute TEST_POS_BAR_SNODE = new AttributeImpl(POSITION_NAME_3, POSITIONAL_NODE_1);
+    public static final Attribute TEST_POS_BAR_PNODE = new AttributeImpl(POSITION_NAME_4, POSITIONAL_NODE_2);
+    public static final Attribute TEST_POS_BAR_ONODE = new AttributeImpl(POSITION_NAME_5, POSITIONAL_NODE_3);
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -169,6 +174,18 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_SNODE, TEST_VAR_BAR_BNODE));
         assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_PNODE, TEST_VAR_BAR_URI_REF));
         assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_ONODE, TEST_VAR_BAR_LITERAL));
+    }
+
+    public void testSameAttributeNameDifferentNodeType() {
+        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_SNODE, TEST_POS_BAR_PNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_SNODE, TEST_POS_BAR_ONODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_PNODE, TEST_POS_BAR_ONODE));
+    }
+
+    public void testSameAttributeNameDifferentNodeTypeAntiCommutation() {
+        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_PNODE, TEST_POS_BAR_SNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_ONODE, TEST_POS_BAR_PNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_ONODE, TEST_POS_BAR_SNODE));
     }
 
     // TODO (AN) Duplication with other comparator tests
