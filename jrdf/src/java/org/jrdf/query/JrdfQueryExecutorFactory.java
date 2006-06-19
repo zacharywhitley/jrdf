@@ -56,37 +56,16 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.model;
+package org.jrdf.query;
 
-import org.jrdf.JRDFFactoryImpl;
-import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.Answer;
-import org.jrdf.sparql.SparqlConnection;
 
-import java.net.URL;
-
-public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = new JRDFFactoryImpl();
-    private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = FACTORY.getNewSparqlConnection();
-
-    public Graph loadModel(URL url) {
-        try {
-            GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            graphRdfXmlParser.parse(url.openStream(), url.toURI().toString());
-            return graph;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Answer performQuery(String query) {
-        try {
-            return connection.executeQuery(query, graph);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+/**
+ * Create a new query executor - allows the graph executing on to vary.
+ *
+ * @author Andrew Newman
+ * @version $Revision:$
+ */
+public interface JrdfQueryExecutorFactory {
+    JrdfQueryExecutor getExecutor(Graph graph);
 }

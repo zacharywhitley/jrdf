@@ -77,4 +77,81 @@
     </bean>
 
     <!-- Query Classes -->
+    <bean name="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
+        <constructor-arg type="java.net.URL">
+            <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="queryBuilder"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="jrdfQueryExecutorFactory"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="queryBuilder" class="org.jrdf.sparql.SparqlQueryBuilder">
+        <constructor-arg>
+            <ref bean="sparqlParser"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser"/>
+
+    <bean name="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">
+        <constructor-arg type="java.net.URL">
+            <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="sortedAttributeValuePairFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="restrict"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="graphRelationFactory"/>
+        </constructor-arg>
+    </bean>
+
+    <!-- Relational Operations and Supporting Classes -->
+    <bean name="sortedAttributeFactory" class="org.jrdf.query.relation.mem.SortedAttributeFactoryImpl">
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="sortedAttributeValuePairFactory" class="org.jrdf.query.relation.mem.SortedAttributeValuePairFactoryImpl">
+        <constructor-arg>
+            <ref bean="sortedAttributeFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="restrict" class="org.jrdf.query.relation.operation.mem.RestrictImpl">
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="graphRelationFactory" class="org.jrdf.query.relation.mem.GraphRelationFactoryImpl">
+        <constructor-arg>
+            <ref bean="sortedAttributeFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="sortedAttributeValuePairFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+    </bean>
 </beans>

@@ -111,7 +111,7 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        attComparator = TestJRDFFactory.getNewAttributeComparator();
+        attComparator = TestJRDFFactory.getFactory().getNewAttributeComparator();
     }
 
     public void testNullPointerException() {

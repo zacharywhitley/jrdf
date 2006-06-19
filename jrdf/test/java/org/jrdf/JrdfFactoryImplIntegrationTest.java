@@ -56,37 +56,22 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.model;
+package org.jrdf;
 
-import org.jrdf.JRDFFactoryImpl;
-import org.jrdf.JRDFFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.Answer;
-import org.jrdf.sparql.SparqlConnection;
+import junit.framework.TestCase;
 
-import java.net.URL;
-
-public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = new JRDFFactoryImpl();
-    private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = FACTORY.getNewSparqlConnection();
-
-    public Graph loadModel(URL url) {
-        try {
-            GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            graphRdfXmlParser.parse(url.openStream(), url.toURI().toString());
-            return graph;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Answer performQuery(String query) {
-        try {
-            return connection.executeQuery(query, graph);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+/**
+ * Test that the Wiring is correct.
+ *
+ * @author Andrew Newman
+ * @version $Revision:$
+ */
+public class JrdfFactoryImplIntegrationTest extends TestCase {
+    public void testWiring() {
+        JRDFFactoryImpl jrdfFactory = new JRDFFactoryImpl();
+        jrdfFactory.getNewGraph();
+        jrdfFactory.getNewTupleComparator();
+        jrdfFactory.getNewSparqlConnection();
+        jrdfFactory.getNewJrdfQueryExecutorFactory();
     }
 }

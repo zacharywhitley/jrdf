@@ -86,7 +86,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
-        return TestJRDFFactory.getNewGraph();
+        return TestJRDFFactory.getFactory().getNewGraph();
     }
 
     /**

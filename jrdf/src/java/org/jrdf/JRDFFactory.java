@@ -60,60 +60,41 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.mem.GraphFactory;
+import org.jrdf.query.JrdfQueryExecutorFactory;
+import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
 import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
+ * A simple wrapper around Spring wiring to return types objects.
  *
  * @author Andrew Newman
- * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
+ * @version $Revision:$
  */
-public final class JRDFFactory {
-    private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
-    private static ClassPathXmlApplicationContext beanFactory =
-        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+public interface JRDFFactory {
+    void refresh();
 
-    public void refresh() {
-        beanFactory.refresh();
-    }
+    Graph getNewGraph();
 
-    public Graph getNewGraph() {
-        GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("graphFactory");
-        return graphFactory.getGraph();
-    }
+    AttributeValuePairComparator getNewAttributeValuePairComparator();
 
-    public AttributeValuePairComparator getNewAttributeValuePairComparator() {
-        return (AttributeValuePairComparator) beanFactory.getBean("avpComparator");
-    }
+    NodeComparator getNewNodeComparator();
 
-    public NodeComparator getNewNodeComparator() {
-        return (NodeComparator) beanFactory.getBean("nodeComparator");
-    }
+    AttributeComparator getNewAttributeComparator();
 
-    public AttributeComparator getNewAttributeComparator() {
-        return (AttributeComparator) beanFactory.getBean("attributeComparator");
-    }
+    TupleComparator getNewTupleComparator();
 
-    public TupleComparator getNewTupleComparator() {
-        return (TupleComparator) beanFactory.getBean("tupleComparator");
-    }
+    RelationComparator getNewRelationComparator();
 
-    public RelationComparator getNewRelationComparator() {
-        return (RelationComparator) beanFactory.getBean("relationComparator");
-    }
+    Join getNewJoin();
 
-    public Join getNewJoin() {
-        return (Join) beanFactory.getBean("join");
-    }
+    SparqlConnection getNewSparqlConnection();
 
-    public SparqlConnection getNewSparqlConnection() {
-        return null;
-    }
+    JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory();
+
+    QueryBuilder getNewQueryBuilder();
 }

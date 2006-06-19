@@ -58,15 +58,17 @@
 
 package org.jrdf.sparql;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.JrdfQueryExecutor;
+import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.util.param.ParameterUtil;
 
-import java.net.URI;
+import java.net.URL;
 
 
 /**
@@ -79,31 +81,28 @@ public final class SparqlConnectionImpl implements SparqlConnection {
 
     // FIXME TJA: Ensure connections are threadsafe.
     private QueryBuilder builder;
-    private JrdfQueryExecutor executor;
+    private JrdfQueryExecutorFactory executorFactory;
 
     /**
      * Creates a new SPARQL connection.
      *
      * @param securityDomain The security domain of the graph.
      */
-    public SparqlConnectionImpl(URI securityDomain, QueryBuilder builder, JrdfQueryExecutor queryExceutor) {
+    public SparqlConnectionImpl(URL securityDomain, QueryBuilder builder, JrdfQueryExecutorFactory executorFactory) {
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
         ParameterUtil.checkNotNull("builder", builder);
-        ParameterUtil.checkNotNull("queryExceutor", queryExceutor);
+        ParameterUtil.checkNotNull("executorFactory", executorFactory);
         this.builder = builder;
-        this.executor = queryExceutor;
+        this.executorFactory = executorFactory;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Answer executeQuery(String queryText) throws InvalidQuerySyntaxException, GraphException {
+    public Answer executeQuery(String queryText, Graph graph) throws InvalidQuerySyntaxException, GraphException {
         ParameterUtil.checkNotEmptyString("queryText", queryText);
         Query builtQuery = builder.buildQuery(queryText);
+        JrdfQueryExecutor executor = executorFactory.getExecutor(graph);
         return executor.executeQuery(builtQuery);
-    }
-
-    public void close() {
-        executor.close();
     }
 }

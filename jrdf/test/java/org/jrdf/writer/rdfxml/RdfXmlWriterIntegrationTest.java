@@ -128,7 +128,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
     }
 
     private Graph readGraph(Reader reader, String baseURI) throws GraphException {
-        Graph read = TestJRDFFactory.getNewGraph();
+        Graph read = TestJRDFFactory.getFactory().getNewGraph();
         Parser parser = new GraphRdfXmlParser(read);
         try {
             parser.parse(reader, baseURI);
