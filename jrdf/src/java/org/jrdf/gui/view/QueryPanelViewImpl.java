@@ -70,19 +70,14 @@ import java.awt.BorderLayout;
  * @version $Revision:$
  */
 public class QueryPanelViewImpl implements PanelView, QueryPanelView {
-    private static final String QUERY =
-        "SELECT * WHERE { <http://purl.org/dc/elements/1.1/> <http://purl.org/dc/elements/1.1/title> ?o }";
+    private static final String QUERY = "SELECT * WHERE { ?s ?p ?o }";
     private JTextArea textArea = new JTextArea(QUERY);
 
     public JPanel getJPanel() {
         JPanel queryPanel = new JPanel();
         queryPanel.setLayout(new BorderLayout());
-
-//        query.getDocument().addUndoableEditListener(_undoManager);
         JScrollPane scrollPane = new JScrollPane(textArea);
         queryPanel.add(scrollPane, BorderLayout.CENTER);
-//        queryPanel.add(createOptionsPanel(), BorderLayout.EAST);
-
         return queryPanel;
     }
 
