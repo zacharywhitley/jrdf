@@ -61,6 +61,7 @@ package org.jrdf.gui.view;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.Attribute;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -113,6 +114,7 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
         public void setResults(Relation answer) {
             updateTableData(answer);
             fireTableDataChanged();
+            fireTableStructureChanged();
         }
 
         public int getRowCount() {
@@ -133,8 +135,14 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
 
         private void updateTableData(Relation answer) {
             SortedSet<Tuple> sortedTuples = answer.getSortedTuples();
-            data = new String[sortedTuples.size()][columnNames.length];
+            SortedSet<Attribute> sortedHeading = answer.getSortedHeading();
+            setColumnNames(sortedHeading);
+            setColumnValues(sortedHeading, sortedTuples);
+        }
+
+        private void setColumnValues(SortedSet<Attribute> sortedHeading, SortedSet<Tuple> sortedTuples) {
             int i = 0;
+            data = new String[sortedTuples.size()][sortedHeading.size()];
             for (Tuple tuple : sortedTuples) {
                 Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
                 List<String> results = new ArrayList<String>();
@@ -143,6 +151,15 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
                 }
                 data[i++] = results.toArray(new String[] {});
             }
+        }
+
+        private void setColumnNames(SortedSet<Attribute> sortedHeading) {
+            List<String> resultColumnNames = new ArrayList<String>();
+            for (Attribute attribute : sortedHeading) {
+                resultColumnNames.add(attribute.getAttributeName().getLiteral() + " | " +
+                    attribute.getType().getName());
+            }
+            columnNames = resultColumnNames.toArray(new String[] {});
         }
     }
 

@@ -107,6 +107,17 @@ public final class AttributeComparatorImpl implements AttributeComparator {
             result = compareByNodeType(attribute, attribute1);
         }
 
+//        result = compareByNodeType(attribute, attribute1);
+//
+//        if (result == EQUAL) {
+//            result = compareAttributeNames(attribute.getAttributeName(), attribute1.getAttributeName());
+//        }
+//
+//        if (result == EQUAL) {
+//            result = compareByLiteralValue(attribute.getAttributeName(), attribute1.getAttributeName());
+//        }
+
+
         return result;
     }
 
