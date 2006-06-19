@@ -79,6 +79,6 @@ public class ObjectNodeType implements NodeType {
     }
 
     public String getName() {
-        return "ObjectNodeType";
+        return "Object";
     }
 }

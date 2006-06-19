@@ -75,6 +75,6 @@ public class LiteralType implements NodeType {
     }
 
     public String getName() {
-        return "LiteralNodeType";
+        return "Literal";
     }
 }
