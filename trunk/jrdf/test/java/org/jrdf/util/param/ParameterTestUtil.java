@@ -81,7 +81,7 @@ public final class ParameterTestUtil {
     }
 
     public static void checkBadStringParam(final Object ref, final String methodName, final String param)
-        throws Exception {
+            throws Exception {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 invokeMethod(ref, methodName, String.class, param);
