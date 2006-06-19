@@ -74,7 +74,7 @@ import java.util.SortedSet;
 public interface Restrict extends Operation {
     Relation restrict(Relation relation, Set<AttributeValuePair> nameValues);
 
-    // TODO (AN) Does this break symmetry?
+    // TODO (AN) Does this break symmetry and closure?
     // TODO (AN) Must be three specific attribute value pairs - where the attributes are Subject, Predicate and Object
     // or Blank Node, URI or Literal and the values either ANY_NODE or constants.
     Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues);
