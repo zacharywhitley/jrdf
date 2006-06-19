@@ -80,7 +80,7 @@ public class RelationComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        relationComparator = TestJRDFFactory.getNewRelationComparator();
+        relationComparator = TestJRDFFactory.getFactory().getNewRelationComparator();
     }
 
     public void testNullPointerException() {

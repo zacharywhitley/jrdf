@@ -61,6 +61,7 @@ package org.jrdf.query.relation.operation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.JRDFFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -98,8 +99,9 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public class JoinImplIntegrationTest extends TestCase {
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = TestJRDFFactory.getNewAttributeComparator();
-    private static final TupleComparator TUPLE_COMPARATOR = TestJRDFFactory.getNewTupleComparator();
+    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
+    private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
 
     private static final AttributeName ATTRIBUTE_NAME_1 = new PositionName("foo1");
     private static final AttributeName ATTRIBUTE_NAME_2 = new PositionName("foo2");
@@ -121,7 +123,7 @@ public class JoinImplIntegrationTest extends TestCase {
         new AttributeValuePairImpl(ATTRIBUTE_3, RESOURCE_3);
     private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_4 =
         new AttributeValuePairImpl(ATTRIBUTE_4, RESOURCE_4);
-    private static final org.jrdf.query.relation.operation.Join JOIN = TestJRDFFactory.getNewJoin();
+    private static final org.jrdf.query.relation.operation.Join JOIN = FACTORY.getNewJoin();
 
 
     public void testRelationDEEandDUM() {
@@ -145,7 +147,7 @@ public class JoinImplIntegrationTest extends TestCase {
         Relation relation2 = createRelation(heading2, tuple2);
         Relation expectedResult = createRelation(resultHeading, resultTuple);
 
-        RelationComparator relationComparator = TestJRDFFactory.getNewRelationComparator();
+        RelationComparator relationComparator = FACTORY.getNewRelationComparator();
         Set<Relation> tuples = new TreeSet<Relation>(relationComparator);
         tuples.add(relation1);
         tuples.add(relation2);
@@ -154,20 +156,20 @@ public class JoinImplIntegrationTest extends TestCase {
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
-        AttributeValuePairComparator avpComparator = TestJRDFFactory.getNewAttributeValuePairComparator();
+        AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
         Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
         for (AttributeValuePair attributeValuePair : attributeValuePairs) {
             values.add(attributeValuePair);
         }
-        TupleComparator tupleComparator = TestJRDFFactory.getNewTupleComparator();
+        TupleComparator tupleComparator = FACTORY.getNewTupleComparator();
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
-        Tuple t = new TupleImpl(values, TestJRDFFactory.getNewAttributeValuePairComparator());
+        Tuple t = new TupleImpl(values, FACTORY.getNewAttributeValuePairComparator());
         tuples.add(t);
         return tuples;
     }
 
     private Set<Attribute> createHeading(Attribute... attributes) {
-        AttributeComparator attributeComparator = TestJRDFFactory.getNewAttributeComparator();
+        AttributeComparator attributeComparator = FACTORY.getNewAttributeComparator();
         Set<Attribute> heading = new TreeSet<Attribute>(attributeComparator);
         for (Attribute attribute : attributes) {
             heading.add(attribute);

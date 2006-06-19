@@ -61,7 +61,6 @@ package org.jrdf.sparql;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.sparql.parser.SableCcSparqlParser;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterUtil;
 
@@ -73,8 +72,11 @@ import org.jrdf.util.param.ParameterUtil;
  */
 public final class SparqlQueryBuilder implements QueryBuilder {
 
-    // FIXME TJA: Use IoC to set the parser to use.
-    SparqlParser parser = new SableCcSparqlParser();
+    private SparqlParser parser;
+
+    public SparqlQueryBuilder(SparqlParser parser) {
+        this.parser = parser;
+    }
 
     /**
      * {@inheritDoc}

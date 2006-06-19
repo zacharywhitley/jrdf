@@ -58,7 +58,7 @@
 
 package org.jrdf.sparql.builder;
 
-import org.jrdf.JRDFFactory;
+import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -187,6 +187,6 @@ public final class TripleBuilder {
 
     // TODO (AN) Come back and see if we can fix this up.
     private Graph createGraph() {
-        return new JRDFFactory().getNewGraph();
+        return new JRDFFactoryImpl().getNewGraph();
     }
 }

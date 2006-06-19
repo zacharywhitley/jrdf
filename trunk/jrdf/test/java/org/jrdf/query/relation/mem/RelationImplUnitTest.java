@@ -61,6 +61,7 @@ import au.net.netstorm.boost.primordial.Primordial;
 import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -93,8 +94,9 @@ public class RelationImplUnitTest extends TestCase {
     private static final Tuple[] TUPLES_3 = new Tuple[]{TEST_TUPLE_6};
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = TestJRDFFactory.getNewAttributeComparator();
-    private static final TupleComparator TUPLE_COMPARATOR = TestJRDFFactory.getNewTupleComparator();
+    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
+    private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
 
     public static final Relation TEST_RELATION_1 = createRelation(createHeading(TUPLES_1), createTuple(TUPLES_1));
     public static final Relation TEST_RELATION_2 = createRelation(createHeading(TUPLES_2), createTuple(TUPLES_2));
@@ -124,7 +126,7 @@ public class RelationImplUnitTest extends TestCase {
     }
 
     private static Set<Attribute> createHeading(Tuple[] tuples) {
-        Set<Attribute> heading = new TreeSet<Attribute>(TestJRDFFactory.getNewAttributeComparator());
+        Set<Attribute> heading = new TreeSet<Attribute>(FACTORY.getNewAttributeComparator());
         //noinspection unchecked
         for (Tuple tuple : tuples) {
             Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
@@ -137,7 +139,7 @@ public class RelationImplUnitTest extends TestCase {
 
     private static Set<Tuple> createTuple(Tuple[] tuples) {
         //noinspection unchecked
-        Set<Tuple> sortedTuples = new TreeSet<Tuple>(TestJRDFFactory.getNewTupleComparator());
+        Set<Tuple> sortedTuples = new TreeSet<Tuple>(FACTORY.getNewTupleComparator());
         sortedTuples.addAll(Arrays.asList(tuples));
         return sortedTuples;
     }

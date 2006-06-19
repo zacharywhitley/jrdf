@@ -92,7 +92,7 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        tupleComparator = TestJRDFFactory.getNewTupleComparator();
+        tupleComparator = TestJRDFFactory.getFactory().getNewTupleComparator();
     }
 
     public void testNullPointerException() {

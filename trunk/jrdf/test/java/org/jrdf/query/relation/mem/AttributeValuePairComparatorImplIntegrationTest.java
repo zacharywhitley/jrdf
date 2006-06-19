@@ -86,7 +86,7 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        avpComparator = TestJRDFFactory.getNewAttributeValuePairComparator();
+        avpComparator = TestJRDFFactory.getFactory().getNewAttributeValuePairComparator();
     }
 
     public void testNullPointerException() {

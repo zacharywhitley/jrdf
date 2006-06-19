@@ -61,6 +61,7 @@ import au.net.netstorm.boost.primordial.Primordial;
 import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.JRDFFactory;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
@@ -88,7 +89,8 @@ import java.util.Set;
  * @version $Id$
  */
 public class TupleImplUnitTest extends TestCase {
-    private static final AttributeValuePairComparator comparator = TestJRDFFactory.getNewAttributeValuePairComparator();
+    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final AttributeValuePairComparator comparator = FACTORY.getNewAttributeValuePairComparator();
 
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_1 = {TEST_ATTRIBUTE_VALUE_1};
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_2 = {TEST_ATTRIBUTE_VALUE_1,

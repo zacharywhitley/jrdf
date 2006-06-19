@@ -1,13 +1,13 @@
 package org.jrdf.connection;
 
-import org.jrdf.graph.Graph;
+import org.jrdf.query.JrdfQueryExecutorFactory;
+import org.jrdf.query.QueryBuilder;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.util.param.ParameterUtil;
-import org.jrdf.query.JrdfQueryExecutor;
-import org.jrdf.query.QueryBuilder;
 
 import java.net.URI;
+import java.net.URL;
 
 /**
  * Returns queriable connections to a graph.
@@ -34,15 +34,13 @@ public final class JrdfConnectionFactory {
      * close on the connection once it is no longer required, the system will not clean up the connection
      * automatically.</p>
      *
-     * @param graph          The graph to query.
      * @param securityDomain The security domain.
      * @return A connection through which to issue SPARQL queries.
      */
-    public SparqlConnection createSparqlConnection(Graph graph, URI securityDomain, JrdfQueryExecutor queryExecutor,
+    public SparqlConnection createSparqlConnection(URL securityDomain, JrdfQueryExecutorFactory queryExecutorFactory,
             QueryBuilder builder) {
-        ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("queryExecutor", queryExecutor);
-        return new SparqlConnectionImpl(securityDomain, builder, queryExecutor);
+        ParameterUtil.checkNotNull("queryExecutorFactory", queryExecutorFactory);
+        return new SparqlConnectionImpl(securityDomain, builder, queryExecutorFactory);
     }
 }

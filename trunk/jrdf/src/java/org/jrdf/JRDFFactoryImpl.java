@@ -56,37 +56,74 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.model;
+package org.jrdf;
 
-import org.jrdf.JRDFFactoryImpl;
-import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.Answer;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.mem.GraphFactory;
+import org.jrdf.query.JrdfQueryExecutorFactory;
+import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.operation.Join;
 import org.jrdf.sparql.SparqlConnection;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.net.URL;
+/**
+ * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
+ *
+ * @author Andrew Newman
+ * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
+ */
+public final class JRDFFactoryImpl implements JRDFFactory {
+    private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
+    private static ClassPathXmlApplicationContext beanFactory =
+        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
-public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = new JRDFFactoryImpl();
-    private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = FACTORY.getNewSparqlConnection();
-
-    public Graph loadModel(URL url) {
-        try {
-            GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            graphRdfXmlParser.parse(url.openStream(), url.toURI().toString());
-            return graph;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void refresh() {
+        beanFactory.refresh();
     }
 
-    public Answer performQuery(String query) {
-        try {
-            return connection.executeQuery(query, graph);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public Graph getNewGraph() {
+        GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("graphFactory");
+        return graphFactory.getGraph();
+    }
+
+    public AttributeValuePairComparator getNewAttributeValuePairComparator() {
+        return (AttributeValuePairComparator) beanFactory.getBean("avpComparator");
+    }
+
+    public NodeComparator getNewNodeComparator() {
+        return (NodeComparator) beanFactory.getBean("nodeComparator");
+    }
+
+    public AttributeComparator getNewAttributeComparator() {
+        return (AttributeComparator) beanFactory.getBean("attributeComparator");
+    }
+
+    public TupleComparator getNewTupleComparator() {
+        return (TupleComparator) beanFactory.getBean("tupleComparator");
+    }
+
+    public RelationComparator getNewRelationComparator() {
+        return (RelationComparator) beanFactory.getBean("relationComparator");
+    }
+
+    public Join getNewJoin() {
+        return (Join) beanFactory.getBean("join");
+    }
+
+    public SparqlConnection getNewSparqlConnection() {
+        return (SparqlConnection) beanFactory.getBean("sparqlConnection");
+    }
+
+    public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
+        return (JrdfQueryExecutorFactory) beanFactory.getBean("jrdfQueryExecutorFactory");
+    }
+
+    public QueryBuilder getNewQueryBuilder() {
+        return (QueryBuilder) beanFactory.getBean("queryBuilder");
     }
 }

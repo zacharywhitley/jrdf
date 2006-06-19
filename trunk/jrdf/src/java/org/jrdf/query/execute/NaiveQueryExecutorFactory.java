@@ -56,36 +56,48 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.model;
+package org.jrdf.query.execute;
 
-import org.jrdf.JRDFFactoryImpl;
-import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.Answer;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.query.JrdfQueryExecutor;
+import org.jrdf.query.JrdfQueryExecutorFactory;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairFactory;
+import org.jrdf.query.relation.operation.Restrict;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
-public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = new JRDFFactoryImpl();
-    private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = FACTORY.getNewSparqlConnection();
+/**
+ * Allows the creation of NaiveQueryExecutors by knowing only the graph to connect to.
+ *
+ * @author Andrew Newman
+ * @version $Revision:$
+ */
+public class NaiveQueryExecutorFactory implements JrdfQueryExecutorFactory {
+    private final URL securityDomain;
+    private final SortedAttributeValuePairFactory avpComparatorFactory;
+    private final Restrict restrict;
+    private final GraphRelationFactory graphRelationFactory;
 
-    public Graph loadModel(URL url) {
-        try {
-            GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            graphRdfXmlParser.parse(url.openStream(), url.toURI().toString());
-            return graph;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public NaiveQueryExecutorFactory(URL securityDomain, SortedAttributeValuePairFactory avpComparatorFactory,
+            Restrict restrict, GraphRelationFactory graphRelationFactory) {
+        this.securityDomain = securityDomain;
+        this.avpComparatorFactory = avpComparatorFactory;
+        this.restrict = restrict;
+        this.graphRelationFactory = graphRelationFactory;
     }
 
-    public Answer performQuery(String query) {
+    public JrdfQueryExecutor getExecutor(Graph graph) {
+        return new NaiveQueryExecutor(graph, tryGetUri(), avpComparatorFactory, restrict, graphRelationFactory);
+    }
+
+    // TODO (AN) Remove this when Spring handles a URI as a Property type.
+    private URI tryGetUri() {
         try {
-            return connection.executeQuery(query, graph);
-        } catch (Exception e) {
+            return securityDomain.toURI();
+        } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }

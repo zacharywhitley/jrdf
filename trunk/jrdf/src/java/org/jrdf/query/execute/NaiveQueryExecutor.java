@@ -112,7 +112,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      */
     public NaiveQueryExecutor(Graph graph, URI securityDomain, SortedAttributeValuePairFactory avpComparatorFactory,
             Restrict restrict, GraphRelationFactory graphRelationFactory) {
-        ParameterUtil.checkNotNull("session", graph);
+        ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
         ParameterUtil.checkNotNull("avpComparatorFactory", avpComparatorFactory);
         ParameterUtil.checkNotNull("restrict", restrict);

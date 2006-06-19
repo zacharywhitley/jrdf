@@ -95,7 +95,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        nodeComparator = TestJRDFFactory.getNewNodeComparator();
+        nodeComparator = TestJRDFFactory.getFactory().getNewNodeComparator();
     }
 
     public void testClassProperties() throws Exception {

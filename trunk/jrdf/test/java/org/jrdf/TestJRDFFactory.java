@@ -59,11 +59,14 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.query.JrdfQueryExecutorFactory;
+import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
+import org.jrdf.sparql.SparqlConnection;
 
 /**
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
@@ -71,41 +74,57 @@ import org.jrdf.query.relation.operation.Join;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class TestJRDFFactory {
-    private static final JRDFFactory FACTORY = new JRDFFactory();
+public final class TestJRDFFactory implements JRDFFactory {
+    private static final JRDFFactory FACTORY = new JRDFFactoryImpl();
 
     private TestJRDFFactory() {
+    }
+
+    public static JRDFFactory getFactory() {
+        return FACTORY;
     }
 
     public void refresh() {
         FACTORY.refresh();
     }
 
-    public static Graph getNewGraph() {
+    public Graph getNewGraph() {
         return FACTORY.getNewGraph();
     }
 
-    public static AttributeValuePairComparator getNewAttributeValuePairComparator() {
+    public AttributeValuePairComparator getNewAttributeValuePairComparator() {
         return FACTORY.getNewAttributeValuePairComparator();
     }
 
-    public static NodeComparator getNewNodeComparator() {
+    public NodeComparator getNewNodeComparator() {
         return FACTORY.getNewNodeComparator();
     }
 
-    public static AttributeComparator getNewAttributeComparator() {
+    public AttributeComparator getNewAttributeComparator() {
         return FACTORY.getNewAttributeComparator();
     }
 
-    public static TupleComparator getNewTupleComparator() {
+    public TupleComparator getNewTupleComparator() {
         return FACTORY.getNewTupleComparator();
     }
 
-    public static RelationComparator getNewRelationComparator() {
+    public RelationComparator getNewRelationComparator() {
         return FACTORY.getNewRelationComparator();
     }
 
-    public static Join getNewJoin() {
+    public Join getNewJoin() {
         return FACTORY.getNewJoin();
+    }
+
+    public SparqlConnection getNewSparqlConnection() {
+        return FACTORY.getNewSparqlConnection();
+    }
+
+    public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
+        return FACTORY.getNewJrdfQueryExecutorFactory();
+    }
+
+    public QueryBuilder getNewQueryBuilder() {
+        return FACTORY.getNewQueryBuilder();
     }
 }

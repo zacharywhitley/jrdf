@@ -60,6 +60,7 @@ package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
@@ -82,6 +83,7 @@ import java.net.URI;
 public class ComparisonImplIntegrationTest extends TestCase {
     private static final URI URI1 = URI.create("http://foo/bar");
     private static final URI URI2 = URI.create("http://foo/bar/baz");
+    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
 
     public void testMemGraphEquality() throws Exception {
         checkGraph(URI1, URI1, true);
@@ -90,9 +92,9 @@ public class ComparisonImplIntegrationTest extends TestCase {
     }
 
     private void checkGraph(URI resource1, URI resource2, boolean areEqual) throws Exception {
-        Graph graph1 = TestJRDFFactory.getNewGraph();
+        Graph graph1 = FACTORY.getNewGraph();
         addTriple(graph1, resource1);
-        Graph graph2 = TestJRDFFactory.getNewGraph();
+        Graph graph2 = FACTORY.getNewGraph();
         addTriple(graph2, resource2);
         Comparison comparison = new ComparisonImpl();
         assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));

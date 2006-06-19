@@ -1,6 +1,6 @@
 package org.jrdf.example;
 
-import org.jrdf.JRDFFactory;
+import org.jrdf.JRDFFactoryImpl;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -239,7 +239,7 @@ public class JrdfExample {
      * @return Graph
      */
     private Graph getGraph() {
-        return new JRDFFactory().getNewGraph();
+        return new JRDFFactoryImpl().getNewGraph();
     }
 
     /**
