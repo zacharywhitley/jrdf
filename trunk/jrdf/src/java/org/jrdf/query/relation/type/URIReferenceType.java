@@ -75,6 +75,6 @@ public class URIReferenceType implements NodeType {
     }
 
     public String getName() {
-        return "URIReferenceType";
+        return "URI Reference";
     }
 }

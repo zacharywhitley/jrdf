@@ -75,6 +75,6 @@ public class PredicateNodeType implements NodeType {
     }
 
     public String getName() {
-        return "PredicateNodeType";
+        return "Predicate";
     }
 }

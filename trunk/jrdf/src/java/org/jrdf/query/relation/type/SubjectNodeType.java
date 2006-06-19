@@ -78,6 +78,6 @@ public class SubjectNodeType implements NodeType {
     }
 
     public String getName() {
-        return "SubjectNodeType";
+        return "Subject";
     }
 }

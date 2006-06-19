@@ -75,6 +75,6 @@ public class BlankNodeType implements NodeType {
     }
 
     public String getName() {
-        return "BlankNodeType";
+        return "Blank Node";
     }
 }
