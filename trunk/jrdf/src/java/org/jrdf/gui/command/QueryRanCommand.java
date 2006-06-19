@@ -59,7 +59,7 @@
 package org.jrdf.gui.command;
 
 import org.jrdf.gui.view.QueryView;
-import org.jrdf.query.Answer;
+import org.jrdf.query.relation.Relation;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
@@ -70,14 +70,14 @@ import org.springframework.richclient.command.support.ApplicationWindowAwareComm
  */
 public class QueryRanCommand extends ApplicationWindowAwareCommand {
     private final QueryView queryView;
-    private Answer answer;
+    private Relation answer;
 
     public QueryRanCommand(QueryView queryView) {
         super("runQueryCommand");
         this.queryView = queryView;
     }
 
-    public void setAnswer(Answer answer) {
+    public void setAnswer(Relation answer) {
         this.answer = answer;
     }
 

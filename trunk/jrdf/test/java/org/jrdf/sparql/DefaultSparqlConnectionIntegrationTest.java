@@ -61,28 +61,27 @@ package org.jrdf.sparql;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.connection.JrdfConnectionFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Integration test for {@link SparqlConnectionImpl}.
@@ -125,17 +124,18 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     }
 
     private void checkConnectionReturnsOneSolution(SparqlConnection connection) {
-        Answer answer = executeQuery(connection, QUERY_SHOULD_RETURN_ONE_SOLUTION);
+        Relation relation = executeQuery(connection, QUERY_SHOULD_RETURN_ONE_SOLUTION);
+        Set<Tuple> answer = relation.getTuples();
         checkFirstRowOfAnswer(answer);
     }
 
     private void checkConnectionReturnsNoSolutions(SparqlConnection connection) {
-        Answer answer = executeQuery(connection, QUERY_SHOULD_RETURN_NOTHING);
-        List<Triple> solutions = answer.getSolutions();
+        Relation relation = executeQuery(connection, QUERY_SHOULD_RETURN_NOTHING);
+        Set<Tuple> solutions = relation.getTuples();
         assertTrue(solutions.isEmpty());
     }
 
-    private Answer executeQuery(SparqlConnection connection, String query) {
+    private Relation executeQuery(SparqlConnection connection, String query) {
         try {
             return connection.executeQuery(query, GRAPH);
         } catch (InvalidQuerySyntaxException e) {
@@ -145,73 +145,26 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
         }
     }
 
-    private void checkFirstRowOfAnswer(Answer answer) {
-        List<Triple> solutions = answer.getSolutions();
-        Triple triple = solutions.iterator().next();
-        checkSubject(triple);
-        checkPredicate(triple);
-        checkLiteralObject(triple);
+    private void checkFirstRowOfAnswer(Set<Tuple> solutions) {
+        Tuple tuple = solutions.iterator().next();
+        Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
+        Iterator<AttributeValuePair> iterator = sortedAttributeValues.iterator();
+        checkSubject((SubjectNode) iterator.next().getValue());
+        checkPredicate((PredicateNode) iterator.next().getValue());
+        checkLiteral((Literal) iterator.next().getValue());
     }
 
     // TODO AN Why do we need to call toString should they be equal?
-    private void checkSubject(Triple triple) {
-        assertEquals(URI_SUBJECT.toString(), triple.getSubject().toString());
+    private void checkSubject(SubjectNode subject) {
+        assertEquals(URI_SUBJECT.toString(), subject.toString());
     }
 
     // TODO AN Why do we need to call toString should they be equal?
-    private void checkPredicate(Triple triple) {
-        assertEquals(URI_PREDICATE.toString(), triple.getPredicate().toString());
+    private void checkPredicate(PredicateNode predicate) {
+        assertEquals(URI_PREDICATE.toString(), predicate.toString());
     }
 
-    private void checkLiteralObject(Triple triple) {
-        Literal object = (Literal) triple.getObject();
+    private void checkLiteral(Literal object) {
         assertEquals(LITERAL_TITLE, object.getLexicalForm());
-    }
-
-    private Graph createGraph() {
-        Graph graph = FACTORY.getNewGraph();
-        populateGraph(graph);
-        return graph;
-    }
-
-    private void populateGraph(Graph graph) {
-        try {
-            graph.add(createTriple(graph));
-        } catch (GraphException e) {
-            // FIXME TJA: Remove stack trace.
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Triple createTriple(Graph graph) {
-        SubjectNode subject = createResource(graph, URI_SUBJECT);
-        PredicateNode predicate = createResource(graph, URI_PREDICATE);
-        ObjectNode object = createLiteral(graph, LITERAL_TITLE);
-        return createTriple(graph, subject, predicate, object);
-    }
-
-    private Triple createTriple(Graph graph, SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        try {
-            return graph.getTripleFactory().createTriple(subject, predicate, object);
-        } catch (TripleFactoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private URIReference createResource(Graph graph, URI uri) {
-        try {
-            return graph.getElementFactory().createResource(uri);
-        } catch (GraphElementFactoryException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ObjectNode createLiteral(Graph graph, String literal) {
-        try {
-            return graph.getElementFactory().createLiteral(literal);
-        } catch (GraphElementFactoryException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

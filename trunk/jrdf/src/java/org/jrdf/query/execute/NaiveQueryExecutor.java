@@ -59,21 +59,17 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.query.Answer;
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.ConstraintTriple;
-import org.jrdf.query.DefaultAnswer;
-import org.jrdf.query.Query;
 import org.jrdf.query.JrdfQueryExecutor;
+import org.jrdf.query.Query;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairFactory;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairFactory;
 import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
@@ -127,14 +123,9 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
     /**
      * {@inheritDoc}
      */
-    public Answer executeQuery(Query query) throws GraphException {
-        List<Triple> triples = findTriples(query);
-        return new DefaultAnswer(triples);
-    }
-
-    public Relation newExecuteQuery(Query query) {
+    public Relation executeQuery(Query query) {
         Triple singleConstraint = getSingleConstraint(query);
-        final SortedSet<AttributeValuePair> avp = avpComparatorFactory.createAvp(singleConstraint);
+        SortedSet<AttributeValuePair> avp = avpComparatorFactory.createAvp(singleConstraint);
         GraphRelation graphRelation = graphRelationFactory.createRelation(graph);
         return restrict.restrict(graphRelation, avp);
     }
@@ -160,13 +151,6 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
             // FIXME TJA: See http://www.janeg.ca/scjp/gc/finalize.html
             super.finalize();
         }
-    }
-
-    // TODO: When the tests (& grammar) force it, get all the triples and iterate over them :)
-    private List<Triple> findTriples(Query query) throws GraphException {
-        Triple triple = getSingleConstraint(query);
-        ClosableIterator<Triple> iterator = graph.find(triple);
-        return iteratorToList(iterator);
     }
 
     private Triple getSingleConstraint(Query query) {

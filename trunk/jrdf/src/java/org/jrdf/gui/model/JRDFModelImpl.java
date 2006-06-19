@@ -62,7 +62,7 @@ import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.Answer;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.sparql.SparqlConnection;
 
 import java.net.URL;
@@ -82,7 +82,7 @@ public class JRDFModelImpl implements JRDFModel {
         }
     }
 
-    public Answer performQuery(String query) {
+    public Relation performQuery(String query) {
         try {
             return connection.executeQuery(query, graph);
         } catch (Exception e) {

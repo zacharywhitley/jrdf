@@ -62,12 +62,11 @@ import junit.framework.Assert;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.test.TripleTestUtil;
 import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Test fixture for creating graphs and queries that execute against those graphs.
@@ -93,9 +92,7 @@ public final class GraphFixture {
         return new MockQuery(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_SUBJECT);
     }
 
-    public static void checkAnswer(Triple expectedTriple, Answer actualAnswer) {
-        List<Triple> solutions = actualAnswer.getSolutions();
-        Triple actualTriple = solutions.iterator().next();
+    public static void checkAnswer(Triple expectedTriple, Triple actualTriple) {
         checkTriple(expectedTriple, actualTriple);
     }
 

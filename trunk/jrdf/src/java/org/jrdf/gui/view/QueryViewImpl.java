@@ -64,7 +64,7 @@ import org.springframework.richclient.application.PageComponentContext;
 import org.springframework.richclient.application.support.AbstractView;
 import org.jrdf.gui.command.RdfLoadedCommand;
 import org.jrdf.gui.command.QueryRanCommand;
-import org.jrdf.query.Answer;
+import org.jrdf.query.relation.Relation;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -103,10 +103,10 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
         getStatusBar().setMessage(message + numberOfTriples);
     }
 
-    public void setResults(Answer answer) {
+    public void setResults(Relation answer) {
         resultsPanelView.setResults(answer);
         String message = getMessage("resultsView.numResultsFound");
-        getStatusBar().setMessage(message + answer.getSolutions().size());
+        getStatusBar().setMessage(message + answer.getTuples().size());
     }
 
     protected JComponent createControl() {

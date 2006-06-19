@@ -60,10 +60,10 @@ package org.jrdf.gui.command;
 
 import org.jrdf.gui.model.JRDFModel;
 import org.jrdf.gui.view.QueryPanelView;
-import org.jrdf.query.Answer;
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+import org.jrdf.query.relation.Relation;
 import org.springframework.richclient.application.PageComponent;
 import org.springframework.richclient.application.PageComponentContext;
+import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
  * Run an SPARQL query.
@@ -88,7 +88,7 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
     }
 
     protected void doExecuteCommand() {
-        Answer answer = jrdfModel.performQuery(queryPanelView.getQuery());
+        Relation answer = jrdfModel.performQuery(queryPanelView.getQuery());
         QueryRanCommand queryRanCommand = getQueryRanCommand();
         queryRanCommand.setAnswer(answer);
         queryRanCommand.execute();
