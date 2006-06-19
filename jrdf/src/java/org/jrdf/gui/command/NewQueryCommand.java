@@ -60,11 +60,8 @@ package org.jrdf.gui.command;
 
 import org.jrdf.gui.view.QueryPanelView;
 import org.jrdf.gui.view.ResultsPanelView;
-import org.jrdf.query.DefaultAnswer;
-import org.jrdf.graph.Triple;
+import org.jrdf.query.relation.constants.RelationDUM;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
-
-import java.util.ArrayList;
 
 /**
  * Creates a new SPARQL query.
@@ -74,7 +71,6 @@ import java.util.ArrayList;
  */
 public class NewQueryCommand extends ApplicationWindowAwareCommand {
     private static final String BLANK = "";
-    private static final DefaultAnswer EMPTY_ANSWER = new DefaultAnswer(new ArrayList<Triple>());
 
     private QueryPanelView queryPanelView;
     private ResultsPanelView resultsPanelView;
@@ -93,6 +89,6 @@ public class NewQueryCommand extends ApplicationWindowAwareCommand {
 
     protected void doExecuteCommand() {
         queryPanelView.setQuery(BLANK);
-        resultsPanelView.setResults(EMPTY_ANSWER);
+        resultsPanelView.setResults(RelationDUM.RELATION_DUM);
     }
 }

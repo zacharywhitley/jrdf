@@ -61,7 +61,6 @@ package org.jrdf.query.execute;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.query.Answer;
 import org.jrdf.query.GraphFixture;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
@@ -71,7 +70,6 @@ import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.MockTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -128,19 +126,6 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     }
 
     public void testExecuteQuery() throws Exception {
-        JrdfQueryExecutor executor = new NaiveQueryExecutor(GraphFixture.createGraph(), NO_SECURITY_DOMAIN,
-                AVP_FACTORY, RESTRICT, GRAPH_RELATION_FACTORY);
-        Answer answer = executor.executeQuery(GraphFixture.createQuery());
-        GraphFixture.checkAnswer(TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, answer);
+        // TODO (AN) Write a proper unit test.
     }
-
-//    private Graph createGraph() throws Exception {
-//        IMocksControl control = factory.createControl();
-//        final Graph graph = control.createMock(Graph.class);
-//        Triple triple = TripleTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
-//        graph.find(triple);
-//        control.andThrow(new GraphException(""));
-//        return graph;
-//    }
-//
 }

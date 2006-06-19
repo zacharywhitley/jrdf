@@ -58,7 +58,7 @@
 
 package org.jrdf.gui.view;
 
-import org.jrdf.query.Answer;
+import org.jrdf.query.relation.Relation;
 
 /**
  * A builder that always throws exceptions.
@@ -73,5 +73,5 @@ public interface QueryView {
 
     void setTriplesLoaded(long numberOfTriples);
 
-    void setResults(Answer answer);
+    void setResults(Relation answer);
 }

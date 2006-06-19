@@ -60,12 +60,12 @@ package org.jrdf.sparql;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URL;
@@ -96,10 +96,7 @@ public final class SparqlConnectionImpl implements SparqlConnection {
         this.executorFactory = executorFactory;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Answer executeQuery(String queryText, Graph graph) throws InvalidQuerySyntaxException, GraphException {
+    public Relation executeQuery(String queryText, Graph graph) throws InvalidQuerySyntaxException, GraphException {
         ParameterUtil.checkNotEmptyString("queryText", queryText);
         Query builtQuery = builder.buildQuery(queryText);
         JrdfQueryExecutor executor = executorFactory.getExecutor(graph);

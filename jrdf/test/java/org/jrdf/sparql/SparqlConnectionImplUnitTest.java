@@ -63,12 +63,12 @@ import org.easymock.IMocksControl;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -97,7 +97,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final JrdfQueryExecutorFactory EXECUTOR_FACTORY
             = MockTestUtil.createFromInterface(JrdfQueryExecutorFactory.class);
     private static final QueryBuilder BUILDER = MockTestUtil.createFromInterface(QueryBuilder.class);
-    private static final Answer ANSWER = MockTestUtil.createFromInterface(Answer.class);
+    private static final Relation ANSWER = MockTestUtil.createFromInterface(Relation.class);
     private MockFactory factory;
     private static final String TEST_QUERY_1 = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final Query QUERY = MockTestUtil.createFromInterface(Query.class);
@@ -150,7 +150,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         JrdfQueryExecutorFactory executorFactory = createExecutorFactory(executor, GRAPH);
         SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, executorFactory);
         factory.replay();
-        Answer answer = connection.executeQuery(QUERY_ITQL, GRAPH);
+        Relation answer = connection.executeQuery(QUERY_ITQL, GRAPH);
         factory.verify();
         assertEquals(ANSWER, answer);
     }
@@ -209,7 +209,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         return executorFactory;
     }
 
-    private JrdfQueryExecutor createExecutor(Query query, Answer answer) throws Exception {
+    private JrdfQueryExecutor createExecutor(Query query, Relation answer) throws Exception {
         IMocksControl control = factory.createControl();
         JrdfQueryExecutor executor = control.createMock(JrdfQueryExecutor.class);
         executor.executeQuery(query);

@@ -59,12 +59,12 @@
 package org.jrdf.gui.model;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.Answer;
+import org.jrdf.query.relation.Relation;
 
 import java.net.URL;
 
 public interface JRDFModel {
     Graph loadModel(URL urlName);
 
-    Answer performQuery(String query);
+    Relation performQuery(String query);
 }

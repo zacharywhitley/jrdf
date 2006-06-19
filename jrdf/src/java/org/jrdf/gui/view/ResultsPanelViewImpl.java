@@ -58,15 +58,19 @@
 
 package org.jrdf.gui.view;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.query.Answer;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * The results panel.
@@ -86,7 +90,7 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
         return panel;
     }
 
-    public void setResults(Answer answer) {
+    public void setResults(Relation answer) {
         resultsTableModel.setResults(answer);
     }
 
@@ -106,7 +110,7 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
         String[] columnNames = {"Subject", "Predicate", "Object"};
         String[][] data = {};
 
-        public void setResults(Answer answer) {
+        public void setResults(Relation answer) {
             updateTableData(answer);
             fireTableDataChanged();
         }
@@ -127,18 +131,19 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
             return data[row][col];
         }
 
-        private void updateTableData(Answer answer) {
-            List<Triple> triples = answer.getSolutions();
-            data = new String[triples.size()][columnNames.length];
+        private void updateTableData(Relation answer) {
+            SortedSet<Tuple> sortedTuples = answer.getSortedTuples();
+            data = new String[sortedTuples.size()][columnNames.length];
             int i = 0;
-            for (Triple triple : triples) {
-                data[i++] = new String[] {
-                        triple.getSubject().toString(),
-                        triple.getPredicate().toString(),
-                        triple.getObject().toString()
-                };
+            for (Tuple tuple : sortedTuples) {
+                Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
+                List<String> results = new ArrayList<String>();
+                for (AttributeValuePair avp : sortedAttributeValues) {
+                    results.add(avp.getValue().toString());
+                }
+                data[i++] = results.toArray(new String[] {});
             }
         }
-
     }
+
 }
