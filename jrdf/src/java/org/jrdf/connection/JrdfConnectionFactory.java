@@ -8,6 +8,7 @@ import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
 import java.net.URL;
+import java.net.MalformedURLException;
 
 /**
  * Returns queriable connections to a graph.
@@ -29,6 +30,11 @@ public final class JrdfConnectionFactory {
     public static final URI NO_SECURITY_DOMAIN = URI.create(JRDF_CONNECTION_NAMESPACE + "#NO_SECURITY");
 
     /**
+     * URL version of NO_SECURITY_DOMAIN - for Spring wiring (it doesn't have a URI PropertyEditor).
+     */
+    public static final URL NO_SECURITY_DOMAIN_URL = tryConvertUri();
+
+    /**
      * Returns a connection to through which to send SPARQL queries.
      * <p>Note. A new connection is returned for each call, they are not pooled. Clients should ensure that they call
      * close on the connection once it is no longer required, the system will not clean up the connection
@@ -37,10 +43,18 @@ public final class JrdfConnectionFactory {
      * @param securityDomain The security domain.
      * @return A connection through which to issue SPARQL queries.
      */
-    public SparqlConnection createSparqlConnection(URL securityDomain, JrdfQueryExecutorFactory queryExecutorFactory,
-            QueryBuilder builder) {
+    public SparqlConnection createSparqlConnection(URL securityDomain, QueryBuilder builder,
+            JrdfQueryExecutorFactory queryExecutorFactory) {
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
         ParameterUtil.checkNotNull("queryExecutorFactory", queryExecutorFactory);
         return new SparqlConnectionImpl(securityDomain, builder, queryExecutorFactory);
+    }
+
+    private static URL tryConvertUri() {
+        try {
+            return NO_SECURITY_DOMAIN.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
