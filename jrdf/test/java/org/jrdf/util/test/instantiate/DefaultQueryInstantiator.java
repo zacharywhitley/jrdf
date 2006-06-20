@@ -59,7 +59,7 @@
 package org.jrdf.util.test.instantiate;
 
 import org.jrdf.query.ConstraintExpression;
-import org.jrdf.query.DefaultQuery;
+import org.jrdf.query.QueryImpl;
 import org.jrdf.query.Variable;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.ParamSpec;
@@ -67,14 +67,14 @@ import org.jrdf.util.test.ParamSpec;
 import java.util.List;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.DefaultQuery}.
+ * {@link Instantiator} for {@link org.jrdf.query.QueryImpl}.
  *
  * @author Tom Adams
  * @version $Id$
  */
 final class DefaultQueryInstantiator implements Instantiator {
 
-    private static final Class<DefaultQuery> CLASS_DEFAULT_QUERY = DefaultQuery.class;
+    private static final Class<QueryImpl> CLASS_DEFAULT_QUERY = QueryImpl.class;
 
     public Object instantiate() {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_QUERY, createParams());

@@ -84,10 +84,10 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
 
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
     private static final SortedAttributeValuePairHelper AVP_HELPER =
-            MockTestUtil.createFromInterface(SortedAttributeValuePairHelper.class);
-    private static final Restrict RESTRICT = MockTestUtil.createFromInterface(Restrict.class);
+            MockTestUtil.createMock(SortedAttributeValuePairHelper.class);
+    private static final Restrict RESTRICT = MockTestUtil.createMock(Restrict.class);
     private static final GraphRelationFactory GRAPH_RELATION_FACTORY =
-            MockTestUtil.createFromInterface(GraphRelationFactory.class);
+            MockTestUtil.createMock(GraphRelationFactory.class);
     private MockFactory mockFactory;
 
     public void setUp() {

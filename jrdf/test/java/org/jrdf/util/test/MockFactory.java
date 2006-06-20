@@ -57,8 +57,8 @@
  */
 package org.jrdf.util.test;
 
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
+import org.easymock.classextension.EasyMock;
+import org.easymock.classextension.IMocksControl;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -61,12 +61,12 @@ package org.jrdf.sparql.analysis;
 import junit.framework.TestCase;
 
 /**
- * Unit test for {@link DefaultSparqlAnalyser}.
+ * Unit test for {@link SparqlAnalyserImpl}.
  *
  * @author Tom Adams
  * @version $Id$
  */
-public final class DefaultSparqlAnalyserUnitTest extends TestCase {
+public final class SparqlAnalyserImplTest extends TestCase {
 
     // TODO (AN) Come back and re-enable 20th June.
     public void testBadMan() {
@@ -87,8 +87,8 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 //    public void testClassProperties() {
 //        ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
 //        ClassPropertiesTestUtil
-//                .checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, DefaultSparqlAnalyser.class);
-//        ClassPropertiesTestUtil.checkExtensionOf(DepthFirstAdapter.class, DefaultSparqlAnalyser.class);
+//                .checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, SparqlAnalyserImpl.class);
+//        ClassPropertiesTestUtil.checkExtensionOf(DepthFirstAdapter.class, SparqlAnalyserImpl.class);
 //    }
 //
 //    public void testNoQueryConstant() {
@@ -111,7 +111,7 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 //    }
 //
 //    public void testParsingSingleTripleReturnsCorrectQuery() {
-//        DefaultSparqlAnalyser analyser = createAnalyser();
+//        SparqlAnalyserImpl analyser = createAnalyser();
 //        ATriple expectedTriple = createTripleNodeWithVariable();
 //        ConstraintTriple actualTriple = parseATripleOnce(analyser, expectedTriple);
 //        checkAnalysedTriple(expectedTriple, actualTriple);
@@ -119,7 +119,7 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 //
 //    // FIXME TJA: Test using object as URI & blank node
 //    public void testParsingMultipleTriplesReturnsCorrectQuery() {
-//        DefaultSparqlAnalyser analyser = createAnalyser();
+//        SparqlAnalyserImpl analyser = createAnalyser();
 //        checkAnalysedTriple(analyser, createTripleNodeWithVariable());
 //        checkAnalysedTriple(analyser, createTripleNodeWithVariable());
 //        checkAnalysedTriple(analyser, createTripleNodeWithLiteral());
@@ -130,14 +130,14 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 //
 //    // FIXME TJA: Do we want this requirement? That we get the same query object back consequutive times?
 //    public void testGetQueryReturnsImmutableQueriesConsistently() {
-//        DefaultSparqlAnalyser analyser = createAnalyser();
+//        SparqlAnalyserImpl analyser = createAnalyser();
 //        analyser.outATriple(createTripleNodeWithLiteral());
 //        Query query1 = analyser.getQuery();
 //        Query query2 = analyser.getQuery();
 //        assertEquals(query1, query2);
 //    }
 //
-//    private void checkAnalysedTriple(DefaultSparqlAnalyser analyser, ATriple expectedTriple) {
+//    private void checkAnalysedTriple(SparqlAnalyserImpl analyser, ATriple expectedTriple) {
 //        ConstraintTriple actualTriple = parseTriple(analyser, expectedTriple);
 //        checkAnalysedTriple(expectedTriple, actualTriple);
 //    }
@@ -183,21 +183,21 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 //        assertEquals(expectedResource.getText(), actualUri.toString());
 //    }
 //
-//    private ConstraintTriple parseATripleOnce(DefaultSparqlAnalyser analyser, ATriple tripleToParse) {
+//    private ConstraintTriple parseATripleOnce(SparqlAnalyserImpl analyser, ATriple tripleToParse) {
 //        checkFirstGetQueryReturnsNoQuery(analyser);
 //        return parseTriple(analyser, tripleToParse);
 //    }
 //
-//    private ConstraintTriple parseTriple(DefaultSparqlAnalyser analyser, ATriple tripleToParse) {
+//    private ConstraintTriple parseTriple(SparqlAnalyserImpl analyser, ATriple tripleToParse) {
 //        return analyseTriple(analyser, tripleToParse);
 //    }
 //
-//    private ConstraintTriple analyseTriple(DefaultSparqlAnalyser analyser, ATriple triple) {
+//    private ConstraintTriple analyseTriple(SparqlAnalyserImpl analyser, ATriple triple) {
 //        Query query = analyseQuery(analyser, triple);
 //        return (ConstraintTriple) query.getConstraintExpression();
 //    }
 //
-//    private Query analyseQuery(DefaultSparqlAnalyser analyser, ATriple expectedTriple) {
+//    private Query analyseQuery(SparqlAnalyserImpl analyser, ATriple expectedTriple) {
 //        analyser.outATriple(expectedTriple);
 //        return analyser.getQuery();
 //    }
@@ -239,7 +239,7 @@ public final class DefaultSparqlAnalyserUnitTest extends TestCase {
 //        ClassPropertiesTestUtil.checkInstanceImplementsInterface(Query.class, SparqlAnalyser.NO_QUERY);
 //    }
 //
-//    private DefaultSparqlAnalyser createAnalyser() {
-//        return new DefaultSparqlAnalyser();
+//    private SparqlAnalyserImpl createAnalyser() {
+//        return new SparqlAnalyserImpl();
 //    }
 }

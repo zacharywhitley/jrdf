@@ -71,7 +71,7 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
     public void testBadMan() {
     }
 
-//    private static final SparqlParser SPARQL_PARSER = MockTestUtil.createFromInterface(SparqlParser.class);
+//    private static final SparqlParser SPARQL_PARSER = MockTestUtil.createMock(SparqlParser.class);
 //    private static final SparqlParser PARSER_BAD = new MockBadParser();
 //    private static final SparqlParser PARSER_GOOD = new MockParser();
 //    private static final String METHOD_BUILD_QUERY = "buildQuery";

@@ -76,7 +76,7 @@ import java.util.Collection;
  */
 public final class GraphFixture {
 
-    public static final Graph GRAPH_BAD = MockTestUtil.createFromInterface(Graph.class);
+    public static final Graph GRAPH_BAD = MockTestUtil.createMock(Graph.class);
     public static final MockGraph GRAPH_GOOD = createGraph();
 
     private GraphFixture() {

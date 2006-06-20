@@ -105,7 +105,8 @@ public class RelationImplUnitTest extends TestCase {
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
-        checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, Set.class, AttributeComparator.class,
+        // TODO (AN) Test drive type of set passed in.  It can be done!
+        checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, AttributeComparator.class,
             TupleComparator.class);
         checkFieldPrivate(RelationImpl.class, HEADING_NAME);
         isFieldOfType(RelationImpl.class, HEADING_NAME, Set.class);
