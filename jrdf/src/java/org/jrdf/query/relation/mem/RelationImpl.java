@@ -63,10 +63,13 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
  * Implementation of relations containing a set of tuples and a set of attributes.  The attribute constitute a heading
@@ -82,9 +85,9 @@ public final class RelationImpl extends Primordial implements Relation {
     private final TupleComparator tupleComparator;
 
     // TODO (AN) Headings can be gleaned from tuples
-    public RelationImpl(Set<Attribute> newHeading, Set<Tuple> newTuples, AttributeComparator attributeComparator,
-                        TupleComparator tupleComparator) {
-        heading = newHeading;
+    public RelationImpl(Set<Tuple> newTuples, AttributeComparator attributeComparator,
+            TupleComparator tupleComparator) {
+        heading = createHeadingFromTuples(newTuples);
         tuples = newTuples;
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
@@ -102,6 +105,7 @@ public final class RelationImpl extends Primordial implements Relation {
     public SortedSet<Attribute> getSortedHeading() {
         if (heading instanceof SortedSet) {
             if (((SortedSet) heading).comparator() != null) {
+                //noinspection unchecked
                 return (SortedSet) heading;
             }
         }
@@ -110,6 +114,7 @@ public final class RelationImpl extends Primordial implements Relation {
         Set<Attribute> sortedHeading = new TreeSet<Attribute>(attributeComparator);
         sortedHeading.addAll(heading);
         heading = sortedHeading;
+        //noinspection unchecked
         return (SortedSet) sortedHeading;
     }
 
@@ -117,6 +122,7 @@ public final class RelationImpl extends Primordial implements Relation {
     public SortedSet<Tuple> getSortedTuples() {
         if (tuples instanceof SortedSet) {
             if (((SortedSet) tuples).comparator() != null) {
+                //noinspection unchecked
                 return (SortedSet) tuples;
             }
         }
@@ -125,6 +131,24 @@ public final class RelationImpl extends Primordial implements Relation {
         Set<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
         sortedTuples.addAll(tuples);
         tuples = sortedTuples;
+        //noinspection unchecked
         return (SortedSet) sortedTuples;
+    }
+
+    private Set<Attribute> createHeadingFromTuples(Set<Tuple> newTuples) {
+        Set<Attribute> heading = new HashSet<Attribute>();
+        Iterator<Tuple> iterator = newTuples.iterator();
+        if (iterator.hasNext()) {
+            Tuple tuple = iterator.next();
+            addHeading(tuple, heading);
+        }
+        return heading;
+    }
+
+    private void addHeading(Tuple tuple, Set<Attribute> heading) {
+        Set<AttributeValuePair> attributeValues = tuple.getAttributeValues();
+        for (AttributeValuePair attributeValue : attributeValues) {
+            heading.add(attributeValue.getAttribute());
+        }
     }
 }

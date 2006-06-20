@@ -73,6 +73,6 @@ public final class VariableName extends Primordial implements AttributeName {
     }
 
     public String getLiteral() {
-        return "?" + variableName;
+        return variableName;
     }
 }
