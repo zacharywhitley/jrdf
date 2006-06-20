@@ -71,6 +71,8 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Allows the creation of sroted AttributeValuePairs.
@@ -92,6 +94,19 @@ public class SortedAttributeValuePairHelperImpl implements SortedAttributeValueP
     public SortedSet<AttributeValuePair> createAvp(Triple triple) {
         Attribute[] attributes = getAttributes();
         return createAttributeValuePairs(attributes, triple);
+    }
+
+    public SortedSet<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes) {
+        // TODO (AN) Check that there are only 3 attributes.
+        return createAttributeValuePairs(attributes, triple);
+    }
+
+    public Attribute[] createAttributes(SortedSet<AttributeValuePair> nameValues) {
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        for (AttributeValuePair avp : nameValues) {
+            attributes.add(avp.getAttribute());
+        }
+        return attributes.toArray(new Attribute[]{});
     }
 
     public SortedSet<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray) {

@@ -59,14 +59,11 @@
 package org.jrdf.query.execute;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.query.ConstraintExpression;
-import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.Query;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Restrict;
@@ -121,10 +118,9 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * {@inheritDoc}
      */
     public Relation executeQuery(Query query) {
-        Triple singleConstraint = getSingleConstraint(query);
-        SortedSet<AttributeValuePair> avp = avpComparatorHelper.createAvp(singleConstraint);
         GraphRelation graphRelation = graphRelationFactory.createRelation(graph);
-        return restrict.restrict(graphRelation, avp);
+        SortedSet<AttributeValuePair> singleAvp = query.getSingleAvp();
+        return restrict.restrict(graphRelation, singleAvp);
     }
 
     /**
@@ -148,10 +144,5 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
             // FIXME TJA: See http://www.janeg.ca/scjp/gc/finalize.html
             super.finalize();
         }
-    }
-
-    private Triple getSingleConstraint(Query query) {
-        ConstraintExpression constraints = query.getConstraintExpression();
-        return ((ConstraintTriple) constraints).getTriple();
     }
 }
