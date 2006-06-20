@@ -111,7 +111,9 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     }
 
     public Set<Tuple> getTuples() {
-        return getTuplesFromGraph(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        SortedSet<Attribute> heading = attributeFactory.createHeading();
+        Attribute[] attributes = heading.toArray(new Attribute[] {});
+        return getTuplesFromGraph(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, attributes);
     }
 
     public SortedSet<Attribute> getSortedHeading() {
@@ -124,15 +126,17 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
 
     public Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues) {
         Triple triple = avpHelper.createTriple(nameValues);
-        return getTuplesFromGraph(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        Attribute[] attributes = avpHelper.createAttributes(nameValues);
+        return getTuplesFromGraph(triple.getSubject(), triple.getPredicate(), triple.getObject(), attributes);
     }
 
-    private Set<Tuple> getTuplesFromGraph(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode) {
+    private Set<Tuple> getTuplesFromGraph(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
+            Attribute[] attributes) {
         ClosableIterator<Triple> closableIterator = tryGetTriples(subjectNode, predicateNode, objectNode);
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
-            addTripleToTuples(tuples, triple);
+            addTripleToTuples(tuples, triple, attributes);
         }
         return tuples;
     }
@@ -146,8 +150,8 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
         }
     }
 
-    private void addTripleToTuples(Set<Tuple> tuples, Triple triple) {
-        Set<AttributeValuePair> avp = avpHelper.createAvp(triple);
+    private void addTripleToTuples(Set<Tuple> tuples, Triple triple, Attribute[] attributes) {
+        Set<AttributeValuePair> avp = avpHelper.createAvp(triple, attributes);
         Tuple tuple = new TupleImpl(avp, attributeValuePairComparator);
         tuples.add(tuple);
     }

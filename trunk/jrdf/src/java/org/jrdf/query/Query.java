@@ -59,8 +59,10 @@
 package org.jrdf.query;
 
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * A query to a graph.
@@ -73,4 +75,6 @@ public interface Query {
     List<Attribute> getVariables();
 
     ConstraintExpression getConstraintExpression();
+
+    SortedSet<AttributeValuePair> getSingleAvp();
 }

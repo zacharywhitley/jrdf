@@ -105,4 +105,8 @@ public final class DefaultQuery implements Query, Serializable {
         return new ConstraintTriple(triple);
     }
 
+    public SortedSet<AttributeValuePair> getSingleAvp() {
+        return attributeValuePairs;
+    }
+
 }

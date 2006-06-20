@@ -63,12 +63,14 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.util.test.NodeTestUtil;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
+import java.util.SortedSet;
 
 /**
  * @author Tom Adams
@@ -91,6 +93,10 @@ public class MockQuery implements Query {
 
     public ConstraintExpression getConstraintExpression() {
         return createBook1DcTitleExpression();
+    }
+
+    public SortedSet<AttributeValuePair> getSingleAvp() {
+        return null;
     }
 
     private ConstraintExpression createBook1DcTitleExpression() {
