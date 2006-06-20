@@ -68,14 +68,11 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairFactory;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -96,7 +93,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
 
     private Graph graph;
     private URI securityDomain;
-    private final SortedAttributeValuePairFactory avpComparatorFactory;
+    private final SortedAttributeValuePairHelper avpComparatorHelper;
     private final Restrict restrict;
     private GraphRelationFactory graphRelationFactory;
 
@@ -106,16 +103,16 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
-    public NaiveQueryExecutor(Graph graph, URI securityDomain, SortedAttributeValuePairFactory avpComparatorFactory,
+    public NaiveQueryExecutor(Graph graph, URI securityDomain, SortedAttributeValuePairHelper avpComparatorHelper,
             Restrict restrict, GraphRelationFactory graphRelationFactory) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("avpComparatorFactory", avpComparatorFactory);
+        ParameterUtil.checkNotNull("avpComparatorHelper", avpComparatorHelper);
         ParameterUtil.checkNotNull("restrict", restrict);
         ParameterUtil.checkNotNull("graphRelationFactory", graphRelationFactory);
         this.graph = graph;
         this.securityDomain = securityDomain;
-        this.avpComparatorFactory = avpComparatorFactory;
+        this.avpComparatorHelper = avpComparatorHelper;
         this.restrict = restrict;
         this.graphRelationFactory = graphRelationFactory;
     }
@@ -125,7 +122,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      */
     public Relation executeQuery(Query query) {
         Triple singleConstraint = getSingleConstraint(query);
-        SortedSet<AttributeValuePair> avp = avpComparatorFactory.createAvp(singleConstraint);
+        SortedSet<AttributeValuePair> avp = avpComparatorHelper.createAvp(singleConstraint);
         GraphRelation graphRelation = graphRelationFactory.createRelation(graph);
         return restrict.restrict(graphRelation, avp);
     }
@@ -156,13 +153,5 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
     private Triple getSingleConstraint(Query query) {
         ConstraintExpression constraints = query.getConstraintExpression();
         return ((ConstraintTriple) constraints).getTriple();
-    }
-
-    private List<Triple> iteratorToList(Iterator<Triple> iterator) {
-        List<Triple> triples = new ArrayList<Triple>();
-        while (iterator.hasNext()) {
-            triples.add(iterator.next());
-        }
-        return triples;
     }
 }

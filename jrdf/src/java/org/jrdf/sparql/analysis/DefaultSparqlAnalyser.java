@@ -58,16 +58,16 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.query.ConstraintTriple;
+import org.jrdf.graph.Graph;
 import org.jrdf.query.DefaultQuery;
 import org.jrdf.query.Query;
-import org.jrdf.query.Variable;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
 
-import java.util.List;
+import java.util.SortedSet;
 
 /**
  * Default implementation of {@link SparqlAnalyser}.
@@ -78,11 +78,18 @@ import java.util.List;
 public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements SparqlAnalyser {
 
     // FIXME TJA: Should eventually be using a ConstraintExpression builder here.
-
-    private static final TripleBuilder TRIPLE_BUILDER = new TripleBuilder();
     private Query query = SparqlAnalyser.NO_QUERY;
-    private List<? extends Variable> variables = Variable.ALL_VARIABLES;
+    private TripleBuilder tripleBuilder;
+    private Graph graph;
+    private SortedAttributeValuePairHelper attributeValuePairHelper;
 
+
+    public DefaultSparqlAnalyser(TripleBuilder tripleBuilder, Graph graph,
+            SortedAttributeValuePairHelper attributeValuePairHelper) {
+        this.tripleBuilder = tripleBuilder;
+        this.graph = graph;
+        this.attributeValuePairHelper = attributeValuePairHelper;
+    }
 
     /**
      * {@inheritDoc}
@@ -93,7 +100,7 @@ public final class DefaultSparqlAnalyser extends DepthFirstAdapter implements Sp
 
     // FIXME TJA: This implementation will change once we have to parse variable lists.
     public void outATriple(ATriple tripleNode) {
-        Triple triple = TRIPLE_BUILDER.build(tripleNode);
-        query = new DefaultQuery(variables, new ConstraintTriple(triple));
+        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
+        query = new DefaultQuery(attributeValuePairs, attributeValuePairHelper);
     }
 }

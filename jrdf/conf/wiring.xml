@@ -95,14 +95,31 @@
         </constructor-arg>
     </bean>
 
-    <bean name="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser"/>
+    <bean name="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser">
+        <constructor-arg>
+            <ref bean="parserFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="tripleBuilder"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="sortedAttributeValuePairHelper"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
+    <bean name="tripleBuilder" class="org.jrdf.sparql.builder.TripleBuilder">
+        <constructor-arg>
+            <ref bean="sortedAttributeValuePairHelper"/>
+        </constructor-arg>
+    </bean>
 
     <bean name="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">
         <constructor-arg type="java.net.URL">
             <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="sortedAttributeValuePairFactory"/>
+            <ref bean="sortedAttributeValuePairHelper"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="restrict"/>
@@ -119,7 +136,7 @@
         </constructor-arg>
     </bean>
 
-    <bean name="sortedAttributeValuePairFactory" class="org.jrdf.query.relation.mem.SortedAttributeValuePairFactoryImpl">
+    <bean name="sortedAttributeValuePairHelper" class="org.jrdf.query.relation.mem.SortedAttributeValuePairHelperImpl">
         <constructor-arg>
             <ref bean="sortedAttributeFactory"/>
         </constructor-arg>
@@ -145,7 +162,7 @@
             <ref bean="sortedAttributeFactory"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="sortedAttributeValuePairFactory"/>
+            <ref bean="sortedAttributeValuePairHelper"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="avpComparator"/>

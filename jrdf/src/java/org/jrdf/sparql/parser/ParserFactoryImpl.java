@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,72 +58,28 @@
 
 package org.jrdf.sparql.parser;
 
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
-import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
-import org.jrdf.sparql.analysis.SparqlAnalyser;
-import org.jrdf.sparql.parser.lexer.Lexer;
-import org.jrdf.sparql.parser.lexer.LexerException;
-import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.Parser;
-import org.jrdf.sparql.parser.parser.ParserException;
-import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.sparql.parser.lexer.Lexer;
 
-import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.StringReader;
 
 /**
- * Default implementation of a {@link SparqlParser}.
+ * Creates new SPARQL Parsers.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class DefaultSparqlParser implements SparqlParser {
-
-    // FIXME TJA: Test drive out throwing of InvalidQuerySyntaxException.
-
-    private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
+public class ParserFactoryImpl implements ParserFactory {
     private static final int PUSHBACK_BUFFER_SIZE = 256;
-    private SparqlAnalyser analyser = new DefaultSparqlAnalyser();
 
-    /**
-     * Parses a textual query into a {@link org.jrdf.query.Query} object.
-     *
-     * @param queryText The textual query to applyAnalyser.
-     * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
-     * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
-     */
-    public Query parseQuery(String queryText) throws InvalidQuerySyntaxException {
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
-        Parser parser = createParser(queryText);
-        Start syntaxTree = parseQuerySyntax(parser);
-        applyAnalyser(syntaxTree);
-        return analyser.getQuery();
+    public ParserFactoryImpl() {
     }
 
-    private Start parseQuerySyntax(Parser parser) throws InvalidQuerySyntaxException {
-        try {
-            return parser.parse();
-        } catch (ParserException e) {
-            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
-        } catch (LexerException e) {
-            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
-        } catch (IOException e) {
-            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
-        }
-    }
-
-    private Parser createParser(String queryText) {
-        PushbackReader reader = createPushbackReader(queryText);
-        return new Parser(new Lexer(reader));
-    }
-
-    private PushbackReader createPushbackReader(String queryText) {
-        return new PushbackReader(new StringReader(queryText), PUSHBACK_BUFFER_SIZE);
-    }
-
-    private void applyAnalyser(Start start) {
-        start.apply(analyser);
+    public Parser getParser(String queryText) {
+        StringReader in = new StringReader(queryText);
+        PushbackReader reader = new PushbackReader(in, PUSHBACK_BUFFER_SIZE);
+        Lexer lexer = new Lexer(reader);
+        return new Parser(lexer);
     }
 }

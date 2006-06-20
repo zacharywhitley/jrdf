@@ -60,6 +60,7 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.Type;
+import au.net.netstorm.boost.primordial.Primordial;
 
 /**
  * Implementation of attribute-name:type-name combination.
@@ -67,7 +68,8 @@ import org.jrdf.query.relation.type.Type;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class AttributeImpl implements Attribute {
+// TODO (AN) Test drive Primordial usage.
+public final class AttributeImpl extends Primordial implements Attribute {
     private final AttributeName attributeName;
     private final Type type;
 

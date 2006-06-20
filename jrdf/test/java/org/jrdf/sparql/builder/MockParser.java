@@ -61,6 +61,7 @@ package org.jrdf.sparql.builder;
 import org.jrdf.query.GraphFixture;
 import org.jrdf.query.Query;
 import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.graph.Graph;
 
 /**
  * Parser that returns fixed good queries.
@@ -70,7 +71,7 @@ import org.jrdf.sparql.parser.SparqlParser;
  */
 final class MockParser implements SparqlParser {
 
-    public Query parseQuery(String queryText) {
+    public Query parseQuery(Graph graph, String queryText) {
         return GraphFixture.createQuery();
     }
 }

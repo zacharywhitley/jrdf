@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,57 +58,14 @@
 
 package org.jrdf.sparql.parser;
 
-import junit.framework.TestCase;
-import org.jrdf.query.ConstraintExpression;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
-import org.jrdf.util.test.SparqlQueryTestUtil;
+import org.jrdf.sparql.parser.parser.Parser;
 
 /**
- * Integration test for {@link DefaultSparqlParser}.
+ * A builder that always throws exceptions.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class DefaultSparqlParserIntegrationTest extends TestCase {
-
-    // FIXME TJA: Triangulate on variables.
-    // FIXME TJA: Triangulate on constraint expression.
-    // FIXME TJA: Write failing test for non-wildcard projection lists.
-    // FIXME TJA: Write tests to force trimming of query string.
-    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
-
-    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE =
-            SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
-    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE =
-            SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
-    private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-
-    public void testNeedThisForIntelliJRunner() {
-        assertTrue(true);
-    }
-
-    public void testSingleConstraint() {
-        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
-        checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
-    }
-
-    private void checkSingleConstraintExpression(String queryString, ConstraintExpression expectedExpression) {
-        Query query = parseQuery(queryString);
-        ConstraintExpression actualExpression = query.getConstraintExpression();
-        assertEquals(expectedExpression, actualExpression);
-    }
-
-    private Query parseQuery(String queryString) {
-        try {
-            return createParser().parseQuery(queryString);
-        } catch (InvalidQuerySyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SparqlParser createParser() {
-        return new DefaultSparqlParser();
-    }
+public interface ParserFactory {
+    Parser getParser(String queryText);
 }

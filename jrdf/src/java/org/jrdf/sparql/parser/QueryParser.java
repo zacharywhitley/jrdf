@@ -60,6 +60,7 @@ package org.jrdf.sparql.parser;
 
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.graph.Graph;
 
 /**
  * Parses {@link String}s into {@linkplain org.jrdf.query.Query queries}.
@@ -78,5 +79,5 @@ interface QueryParser {
      * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
      */
-    Query parseQuery(String queryText) throws InvalidQuerySyntaxException;
+    Query parseQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException;
 }

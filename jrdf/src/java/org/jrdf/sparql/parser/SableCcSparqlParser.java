@@ -60,18 +60,18 @@ package org.jrdf.sparql.parser;
 
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.analysis.SparqlAnalyser;
-import org.jrdf.sparql.parser.lexer.Lexer;
+import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.graph.Graph;
 
 import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.StringReader;
 
 /**
  * SableCC implementation of a {@link SparqlParser}.
@@ -82,10 +82,17 @@ import java.io.StringReader;
 public final class SableCcSparqlParser implements SparqlParser {
 
     // FIXME TJA: Test drive out throwing of InvalidQuerySyntaxException.
-
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
-    private static final int PUSHBACK_BUFFER_SIZE = 256;
-    private SparqlAnalyser analyser = new DefaultSparqlAnalyser();
+    private final ParserFactory parserFactory;
+    private TripleBuilder builder;
+    private SortedAttributeValuePairHelper sortedAttributeValuePairHelper;
+
+    public SableCcSparqlParser(ParserFactory parserFactory, TripleBuilder builder,
+            SortedAttributeValuePairHelper sortedAttributeValuePairHelper) {
+        this.parserFactory = parserFactory;
+        this.builder = builder;
+        this.sortedAttributeValuePairHelper = sortedAttributeValuePairHelper;
+    }
 
     /**
      * Parses a textual query into a {@link org.jrdf.query.Query} object.
@@ -94,11 +101,16 @@ public final class SableCcSparqlParser implements SparqlParser {
      * @return A query object representing the <var>queryText</var>, will never be <code>null</code>.
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
      */
-    public Query parseQuery(String queryText) throws InvalidQuerySyntaxException {
+    public Query parseQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
         ParameterUtil.checkNotEmptyString("queryText", queryText);
-        Parser parser = createParser(queryText);
+        Parser parser = parserFactory.getParser(queryText);
         Start syntaxTree = parseQuerySyntax(parser);
-        applyAnalyser(syntaxTree);
+        return analyseQuery(graph, syntaxTree);
+    }
+
+    private Query analyseQuery(Graph graph, Start syntaxTree) {
+        SparqlAnalyser analyser = new DefaultSparqlAnalyser(builder, graph, sortedAttributeValuePairHelper);
+        syntaxTree.apply(analyser);
         return analyser.getQuery();
     }
 
@@ -112,18 +124,5 @@ public final class SableCcSparqlParser implements SparqlParser {
         } catch (IOException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
         }
-    }
-
-    private Parser createParser(String queryText) {
-        PushbackReader reader = createPushbackReader(queryText);
-        return new Parser(new Lexer(reader));
-    }
-
-    private PushbackReader createPushbackReader(String queryText) {
-        return new PushbackReader(new StringReader(queryText), PUSHBACK_BUFFER_SIZE);
-    }
-
-    private void applyAnalyser(Start start) {
-        start.apply(analyser);
     }
 }

@@ -61,6 +61,7 @@ package org.jrdf.sparql;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
+import org.jrdf.graph.Graph;
 
 /**
  * A builder that always throws exceptions.
@@ -70,7 +71,7 @@ import org.jrdf.query.QueryBuilder;
  */
 final class BadQueryBuilder implements QueryBuilder {
 
-    public Query buildQuery(String queryText) throws InvalidQuerySyntaxException {
+    public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
         throw new InvalidQuerySyntaxException("HUZZAH!");
     }
 }

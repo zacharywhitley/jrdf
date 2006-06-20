@@ -195,7 +195,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private QueryBuilder createBuilder(String queryString, Query query) throws Exception {
         IMocksControl control = factory.createControl();
         QueryBuilder builder = control.createMock(QueryBuilder.class);
-        builder.buildQuery(queryString);
+        builder.buildQuery(GRAPH, queryString);
         control.andReturn(query);
         return builder;
     }

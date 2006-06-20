@@ -64,9 +64,11 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.test.NodeTestUtil;
+import org.jrdf.query.relation.Attribute;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * @author Tom Adams
@@ -83,8 +85,8 @@ public class MockQuery implements Query {
         this.predicateUri = predicateUri;
     }
 
-    public List<? extends Variable> getProjectedVariables() {
-        return Variable.ALL_VARIABLES;
+    public List<Attribute> getVariables() {
+        return Collections.emptyList();
     }
 
     public ConstraintExpression getConstraintExpression() {

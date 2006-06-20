@@ -58,14 +58,19 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.mem.TripleImpl;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Allows the creation of sroted AttributeValuePairs.
@@ -73,12 +78,12 @@ import java.util.Iterator;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class SortedAttributeValuePairFactoryImpl implements SortedAttributeValuePairFactory {
+public class SortedAttributeValuePairHelperImpl implements SortedAttributeValuePairHelper {
     private final SortedAttributeFactory sortedAttributeFactory;
     private final AttributeValuePairComparator avpComparator;
     private static final int TRIPLES = 3;
 
-    public SortedAttributeValuePairFactoryImpl(SortedAttributeFactory sortedAttributeFactory,
+    public SortedAttributeValuePairHelperImpl(SortedAttributeFactory sortedAttributeFactory,
             AttributeValuePairComparator avpComparator) {
         this.sortedAttributeFactory = sortedAttributeFactory;
         this.avpComparator = avpComparator;
@@ -87,6 +92,19 @@ public class SortedAttributeValuePairFactoryImpl implements SortedAttributeValue
     public SortedSet<AttributeValuePair> createAvp(Triple triple) {
         Attribute[] attributes = getAttributes();
         return createAttributeValuePairs(attributes, triple);
+    }
+
+    public SortedSet<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray) {
+        TreeSet<AttributeValuePair> attributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
+        for (AttributeValuePair attributeValuePair : attributeValuePairsArray) {
+            attributeValuePairs.add(attributeValuePair);
+        }
+        return attributeValuePairs;
+    }
+
+    public Triple createTriple(SortedSet<AttributeValuePair> avp) {
+        throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(avp);
+        return getNodes(avp);
     }
 
     private TreeSet<AttributeValuePair> createAttributeValuePairs(Attribute[] attributes, Triple triple) {
@@ -110,4 +128,17 @@ public class SortedAttributeValuePairFactoryImpl implements SortedAttributeValue
         return attributes;
     }
 
+    private void throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(Set<AttributeValuePair> nameValues) {
+        if (nameValues.size() != TRIPLES) {
+            throw new IllegalArgumentException("Can only get 3 tuples.");
+        }
+    }
+
+    private Triple getNodes(SortedSet<AttributeValuePair> nameValues) {
+        Iterator<AttributeValuePair> iterator = nameValues.iterator();
+        SubjectNode subject = (SubjectNode) iterator.next().getValue();
+        PredicateNode predicate = (PredicateNode) iterator.next().getValue();
+        ObjectNode object = (ObjectNode) iterator.next().getValue();
+        return new TripleImpl(subject, predicate, object);
+    }
 }

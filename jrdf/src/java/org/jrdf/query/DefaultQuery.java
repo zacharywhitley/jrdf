@@ -58,10 +58,16 @@
 
 package org.jrdf.query;
 
+import org.jrdf.graph.Triple;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * Default implementation of a {@link Query}.
@@ -75,27 +81,28 @@ public final class DefaultQuery implements Query, Serializable {
     // FIXME TJA: Implement equals() and hashCode()
 
     private static final long serialVersionUID = 409607492370028929L;
-    private List<? extends Variable> variables;
+    private SortedSet<AttributeValuePair> attributeValuePairs;
+    private final SortedAttributeValuePairHelper avpHelper;
 
-    // TODO ConstraintExpression is not serializable - this won't probably work correctly!
-    private ConstraintExpression expression;
-
-    public DefaultQuery(List<? extends Variable> variables, ConstraintExpression expression) {
-        checkParams(variables, expression);
-        this.variables = variables;
-        this.expression = expression;
+    // TODO (AN) This is an indication that we need an Sorted AVP object with behaviour - combine these two.
+    public DefaultQuery(SortedSet<AttributeValuePair> attributeValuePairs, SortedAttributeValuePairHelper avpHelper) {
+        ParameterUtil.checkNotNull("attributeValuePairs", attributeValuePairs);
+        ParameterUtil.checkNotNull("avpHelper", avpHelper);
+        this.attributeValuePairs = attributeValuePairs;
+        this.avpHelper = avpHelper;
     }
 
-    public List<? extends Variable> getProjectedVariables() {
-        return variables;
+    public List<Attribute> getVariables() {
+        List<Attribute> atts = new ArrayList<Attribute>();
+        for (AttributeValuePair avp : attributeValuePairs) {
+            atts.add(avp.getAttribute());
+        }
+        return atts;
     }
 
     public ConstraintExpression getConstraintExpression() {
-        return expression;
+        Triple triple = avpHelper.createTriple(attributeValuePairs);
+        return new ConstraintTriple(triple);
     }
 
-    private void checkParams(List<? extends Variable> variables, ConstraintExpression expression) {
-        ParameterUtil.checkNotNull("variables", variables);
-        ParameterUtil.checkNotNull("expression", expression);
-    }
 }

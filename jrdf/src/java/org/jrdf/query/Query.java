@@ -58,6 +58,8 @@
 
 package org.jrdf.query;
 
+import org.jrdf.query.relation.Attribute;
+
 import java.util.List;
 
 /**
@@ -68,7 +70,7 @@ import java.util.List;
  */
 public interface Query {
 
-    List<? extends Variable> getProjectedVariables();
+    List<Attribute> getVariables();
 
     ConstraintExpression getConstraintExpression();
 }

@@ -98,7 +98,7 @@ public final class SparqlConnectionImpl implements SparqlConnection {
 
     public Relation executeQuery(String queryText, Graph graph) throws InvalidQuerySyntaxException, GraphException {
         ParameterUtil.checkNotEmptyString("queryText", queryText);
-        Query builtQuery = builder.buildQuery(queryText);
+        Query builtQuery = builder.buildQuery(graph, queryText);
         JrdfQueryExecutor executor = executorFactory.getExecutor(graph);
         return executor.executeQuery(builtQuery);
     }

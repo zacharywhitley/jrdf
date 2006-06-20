@@ -60,7 +60,7 @@ package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.ConstraintExpression;
 import org.jrdf.query.Query;
-import org.jrdf.query.Variable;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.sparql.parser.analysis.Analysis;
 
 import java.util.List;
@@ -87,7 +87,7 @@ public interface SparqlAnalyser extends Analysis {
 
     class NoQuery implements Query {
 
-        public List<? extends Variable> getProjectedVariables() {
+        public List<Attribute> getVariables() {
             throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
         }
 
