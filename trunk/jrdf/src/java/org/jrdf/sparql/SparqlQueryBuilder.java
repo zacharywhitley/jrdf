@@ -58,6 +58,7 @@
 
 package org.jrdf.sparql;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
@@ -81,8 +82,8 @@ public final class SparqlQueryBuilder implements QueryBuilder {
     /**
      * {@inheritDoc}
      */
-    public Query buildQuery(String queryText) throws InvalidQuerySyntaxException {
+    public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
         ParameterUtil.checkNotEmptyString("queryText", queryText);
-        return parser.parseQuery(queryText);
+        return parser.parseQuery(graph, queryText);
     }
 }

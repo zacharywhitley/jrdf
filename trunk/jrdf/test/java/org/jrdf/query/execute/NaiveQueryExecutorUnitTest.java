@@ -64,7 +64,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.GraphFixture;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairFactory;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -83,8 +83,8 @@ import java.net.URI;
 public final class NaiveQueryExecutorUnitTest extends TestCase {
 
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final SortedAttributeValuePairFactory AVP_FACTORY =
-            MockTestUtil.createFromInterface(SortedAttributeValuePairFactory.class);
+    private static final SortedAttributeValuePairHelper AVP_HELPER =
+            MockTestUtil.createFromInterface(SortedAttributeValuePairHelper.class);
     private static final Restrict RESTRICT = MockTestUtil.createFromInterface(Restrict.class);
     private static final GraphRelationFactory GRAPH_RELATION_FACTORY =
             MockTestUtil.createFromInterface(GraphRelationFactory.class);
@@ -97,13 +97,13 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
         ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, Graph.class, URI.class,
-                SortedAttributeValuePairFactory.class, Restrict.class, GraphRelationFactory.class);
+                SortedAttributeValuePairHelper.class, Restrict.class, GraphRelationFactory.class);
     }
 
     public void testNullSessionInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN, AVP_FACTORY, RESTRICT, GRAPH_RELATION_FACTORY);
+                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN, AVP_HELPER, RESTRICT, GRAPH_RELATION_FACTORY);
             }
         });
     }
@@ -111,7 +111,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testNullSecurityDomainInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null, AVP_FACTORY, RESTRICT, GRAPH_RELATION_FACTORY);
+                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null, AVP_HELPER, RESTRICT, GRAPH_RELATION_FACTORY);
             }
         });
     }

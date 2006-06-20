@@ -68,7 +68,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.mem.TripleImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -77,7 +76,6 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -95,16 +93,15 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     private final Graph graph;
     private final TupleComparator tupleComparator;
     private final SortedAttributeFactory attributeFactory;
-    private final SortedAttributeValuePairFactory avpFactory;
+    private final SortedAttributeValuePairHelper avpHelper;
     private final AttributeValuePairComparator attributeValuePairComparator;
-    private static final int NUMBER_OF_NODES = 3;
 
     public GraphRelationImpl(Graph graph, SortedAttributeFactory attributeFactory,
-            SortedAttributeValuePairFactory avpFactory, AttributeValuePairComparator attributeValuePairComparator,
+            SortedAttributeValuePairHelper avpHelper, AttributeValuePairComparator attributeValuePairComparator,
             TupleComparator tupleComparator) {
         this.graph = graph;
         this.attributeFactory = attributeFactory;
-        this.avpFactory = avpFactory;
+        this.avpHelper = avpHelper;
         this.attributeValuePairComparator = attributeValuePairComparator;
         this.tupleComparator = tupleComparator;
     }
@@ -126,8 +123,7 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     }
 
     public Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues) {
-        throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(nameValues);
-        Triple triple = getNodes(nameValues);
+        Triple triple = avpHelper.createTriple(nameValues);
         return getTuplesFromGraph(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
@@ -151,22 +147,8 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     }
 
     private void addTripleToTuples(Set<Tuple> tuples, Triple triple) {
-        Set<AttributeValuePair> avp = avpFactory.createAvp(triple);
+        Set<AttributeValuePair> avp = avpHelper.createAvp(triple);
         Tuple tuple = new TupleImpl(avp, attributeValuePairComparator);
         tuples.add(tuple);
-    }
-
-    private void throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(Set<AttributeValuePair> nameValues) {
-        if (nameValues.size() != NUMBER_OF_NODES) {
-            throw new IllegalArgumentException("Can only get 3 tuples.");
-        }
-    }
-
-    private Triple getNodes(SortedSet<AttributeValuePair> nameValues) {
-        Iterator<AttributeValuePair> iterator = nameValues.iterator();
-        SubjectNode subject = (SubjectNode) iterator.next().getValue();
-        PredicateNode predicate = (PredicateNode) iterator.next().getValue();
-        ObjectNode object = (ObjectNode) iterator.next().getValue();
-        return new TripleImpl(subject, predicate, object);
     }
 }

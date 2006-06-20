@@ -61,6 +61,7 @@ package org.jrdf.sparql.builder;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.graph.Graph;
 
 /**
  * This parser always throws an exception when invoked.
@@ -70,7 +71,7 @@ import org.jrdf.sparql.parser.SparqlParser;
  */
 final class MockBadParser implements SparqlParser {
 
-    public Query parseQuery(String queryText) throws InvalidQuerySyntaxException {
+    public Query parseQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
         throw new InvalidQuerySyntaxException("HUZAH!");
     }
 }

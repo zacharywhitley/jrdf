@@ -61,6 +61,7 @@ package org.jrdf.sparql;
 import org.jrdf.query.GraphFixture;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
+import org.jrdf.graph.Graph;
 
 /**
  * @author Tom Adams
@@ -68,7 +69,7 @@ import org.jrdf.query.QueryBuilder;
  */
 final class MockQueryBuilder implements QueryBuilder {
 
-    public Query buildQuery(String queryText) {
+    public Query buildQuery(Graph graph, String queryText) {
         return GraphFixture.createQuery();
     }
 }

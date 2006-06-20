@@ -71,20 +71,20 @@ import org.jrdf.graph.Graph;
  */
 public class GraphRelationFactoryImpl implements GraphRelationFactory {
     private SortedAttributeFactory attributeFactory;
-    private SortedAttributeValuePairFactory avpFactory;
+    private SortedAttributeValuePairHelper avpHelper;
     private AttributeValuePairComparator attributeValuePairComparator;
     private TupleComparator tupleComparator;
 
-    public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, SortedAttributeValuePairFactory avpFactory,
+    public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, SortedAttributeValuePairHelper avpHelper,
             AttributeValuePairComparator attributeValuePairComparator, TupleComparator tupleComparator) {
         this.attributeFactory = attributeFactory;
         this.tupleComparator = tupleComparator;
         this.attributeValuePairComparator = attributeValuePairComparator;
-        this.avpFactory = avpFactory;
+        this.avpHelper = avpHelper;
     }
 
     public GraphRelation createRelation(Graph graph) {
-        return new GraphRelationImpl(graph, attributeFactory, avpFactory, attributeValuePairComparator,
+        return new GraphRelationImpl(graph, attributeFactory, avpHelper, attributeValuePairComparator,
                 tupleComparator);
     }
 }

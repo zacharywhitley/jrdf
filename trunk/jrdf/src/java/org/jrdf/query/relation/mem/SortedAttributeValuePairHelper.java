@@ -69,6 +69,10 @@ import java.util.SortedSet;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface SortedAttributeValuePairFactory {
+public interface SortedAttributeValuePairHelper {
     SortedSet<AttributeValuePair> createAvp(Triple triple);
+
+    SortedSet<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray);
+
+    Triple createTriple(SortedSet<AttributeValuePair> avp);
 }

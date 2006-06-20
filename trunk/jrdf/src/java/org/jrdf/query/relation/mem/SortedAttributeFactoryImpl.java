@@ -98,11 +98,12 @@ public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
             throw new IllegalArgumentException("Must supply three node types");
         }
 
-        return reallyCreateHeading(types.get(0), types.get(1), types.get(2));
+        return reallyCreateHeading((SubjectNodeType) types.get(0), (PredicateNodeType) types.get(1),
+                (ObjectNodeType) types.get(2));
     }
 
-    private SortedSet<Attribute> reallyCreateHeading(NodeType subjectType, NodeType predicateType,
-            NodeType objectType) {
+    private SortedSet<Attribute> reallyCreateHeading(SubjectNodeType subjectType, PredicateNodeType predicateType,
+            ObjectNodeType objectType) {
         SortedSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
         attributes.add(createSubjectAttribute(subjectType));
         attributes.add(createPredicateAttribute(predicateType));
@@ -111,17 +112,17 @@ public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
         return attributes;
     }
 
-    private Attribute createSubjectAttribute(NodeType type) {
+    private Attribute createSubjectAttribute(SubjectNodeType type) {
         PositionName positionName = new PositionName(DEFAULT_SUBJECT_NAME + nameCounter);
         return new AttributeImpl(positionName, type);
     }
 
-    private Attribute createPredicateAttribute(NodeType type) {
+    private Attribute createPredicateAttribute(PredicateNodeType type) {
         PositionName positionName = new PositionName(DEFAULT_PREDICATE_NAME + nameCounter);
         return new AttributeImpl(positionName, type);
     }
 
-    private Attribute createObjectAttribute(NodeType type) {
+    private Attribute createObjectAttribute(ObjectNodeType type) {
         PositionName positionName = new PositionName(DEFAULT_OBJECT_NAME + nameCounter);
         return new AttributeImpl(positionName, type);
     }
