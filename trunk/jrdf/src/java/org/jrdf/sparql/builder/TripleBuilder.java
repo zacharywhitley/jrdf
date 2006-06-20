@@ -177,12 +177,12 @@ public final class TripleBuilder {
 
     private String getVariableName(AVariableResourceTripleElement element) {
         AVariable variable = (AVariable) element.getVariable();
-        return variable.getIdentifier().toString().trim() + variable.getVariableprefix().toString().trim();
+        return variable.getVariableprefix().toString().trim() + variable.getIdentifier().toString().trim();
     }
 
     private String getVariableName(AVariableObjectTripleElement element) {
         AVariable variable = (AVariable) element.getVariable();
-        return variable.getIdentifier().toString().trim() + variable.getVariableprefix().toString().trim();
+        return variable.getVariableprefix().toString().trim() + variable.getIdentifier().toString().trim();
     }
 
 

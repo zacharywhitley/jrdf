@@ -98,6 +98,6 @@ public class RestrictImpl implements Restrict {
 
     public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
         Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
-        return new RelationImpl(relation.getHeading(), restrictedTuples, attributeComparator, tupleComparator);
+        return new RelationImpl(restrictedTuples, attributeComparator, tupleComparator);
     }
 }

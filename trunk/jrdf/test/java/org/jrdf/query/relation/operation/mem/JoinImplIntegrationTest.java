@@ -143,9 +143,9 @@ public class JoinImplIntegrationTest extends TestCase {
         Set<Attribute> heading1 = createHeading(ATTRIBUTE_1, ATTRIBUTE_2);
         Set<Attribute> heading2 = createHeading(ATTRIBUTE_3, ATTRIBUTE_4);
         Set<Attribute> resultHeading = createHeading(ATTRIBUTE_1, ATTRIBUTE_2, ATTRIBUTE_3, ATTRIBUTE_4);
-        Relation relation1 = createRelation(heading1, tuple1);
-        Relation relation2 = createRelation(heading2, tuple2);
-        Relation expectedResult = createRelation(resultHeading, resultTuple);
+        Relation relation1 = createRelation(tuple1);
+        Relation relation2 = createRelation(tuple2);
+        Relation expectedResult = createRelation(resultTuple);
 
         RelationComparator relationComparator = FACTORY.getNewRelationComparator();
         Set<Relation> tuples = new TreeSet<Relation>(relationComparator);
@@ -193,7 +193,7 @@ public class JoinImplIntegrationTest extends TestCase {
         assertEquals(expected, relation);
     }
 
-    private static Relation createRelation(Set<Attribute> newHeading, Set<Tuple> newTuples) {
-        return new RelationImpl(newHeading, newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
+    private static Relation createRelation(Set<Tuple> newTuples) {
+        return new RelationImpl(newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
     }
 }

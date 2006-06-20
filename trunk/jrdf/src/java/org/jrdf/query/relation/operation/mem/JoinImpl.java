@@ -125,7 +125,7 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         // Union all of the headings together.
         Set<Attribute> resultHeading = getHeadingUnions(relations);
 
-        return new RelationImpl(resultHeading, resultTuples, attributeComparator, tupleComparator);
+        return new RelationImpl(resultTuples, attributeComparator, tupleComparator);
     }
 
     private Set<Tuple> performCartesianProduct(Set<Relation> relations) {

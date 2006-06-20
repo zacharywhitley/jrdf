@@ -92,6 +92,6 @@ public class VariableNameUnitTest extends TestCase {
     private void checkStandardConstructor(String variableName) {
         AttributeName var = new VariableName(variableName);
         org.jrdf.util.test.ReflectTestUtil.checkFieldValue(var, VARIABLE_FIELD_NAME, variableName);
-        assertEquals("?" + variableName, var.getLiteral());
+        assertEquals(variableName, var.getLiteral());
     }
 }

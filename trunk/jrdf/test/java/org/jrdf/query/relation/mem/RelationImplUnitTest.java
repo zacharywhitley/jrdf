@@ -98,9 +98,9 @@ public class RelationImplUnitTest extends TestCase {
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
 
-    public static final Relation TEST_RELATION_1 = createRelation(createHeading(TUPLES_1), createTuple(TUPLES_1));
-    public static final Relation TEST_RELATION_2 = createRelation(createHeading(TUPLES_2), createTuple(TUPLES_2));
-    public static final Relation TEST_RELATION_3 = createRelation(createHeading(TUPLES_3), createTuple(TUPLES_3));
+    public static final Relation TEST_RELATION_1 = createRelation(createTuple(TUPLES_1));
+    public static final Relation TEST_RELATION_2 = createRelation(createTuple(TUPLES_2));
+    public static final Relation TEST_RELATION_3 = createRelation(createTuple(TUPLES_3));
 
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
@@ -144,7 +144,7 @@ public class RelationImplUnitTest extends TestCase {
         return sortedTuples;
     }
 
-    private static Relation createRelation(Set<Attribute> newHeading, Set<Tuple> newTuples) {
-        return new RelationImpl(newHeading, newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
+    private static Relation createRelation(Set<Tuple> newTuples) {
+        return new RelationImpl(newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
     }
 }
