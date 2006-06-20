@@ -68,6 +68,7 @@ import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
 import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.parser.SparqlParser;
 
 /**
  * A simple wrapper around Spring wiring to return types objects.
@@ -97,4 +98,6 @@ public interface JRDFFactory {
     JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory();
 
     QueryBuilder getNewQueryBuilder();
+
+    SparqlParser getNewSparqlParser();
 }

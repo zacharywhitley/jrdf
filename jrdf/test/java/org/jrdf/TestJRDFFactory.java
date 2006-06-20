@@ -67,6 +67,7 @@ import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
 import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.parser.SparqlParser;
 
 /**
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
@@ -126,5 +127,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public QueryBuilder getNewQueryBuilder() {
         return FACTORY.getNewQueryBuilder();
+    }
+
+    public SparqlParser getNewSparqlParser() {
+        return FACTORY.getNewSparqlParser();
     }
 }
