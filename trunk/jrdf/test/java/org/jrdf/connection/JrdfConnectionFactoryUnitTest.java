@@ -17,10 +17,10 @@ import java.net.URI;
 public class JrdfConnectionFactoryUnitTest extends TestCase {
 
     private static final String EXPECTED_NO_SECURITY_DOMAIN = "http://jrdf.sf.net/connection#NO_SECURITY";
-    private static final Graph MOCK_GRAPH = MockTestUtil.createFromInterface(Graph.class);
+    private static final Graph MOCK_GRAPH = MockTestUtil.createMock(Graph.class);
     private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final JrdfQueryExecutor QUERY_EXECUTOR = MockTestUtil.createFromInterface(JrdfQueryExecutor.class);
-    private static final QueryBuilder QUERY_BUILDER = MockTestUtil.createFromInterface(QueryBuilder.class);
+    private static final JrdfQueryExecutor QUERY_EXECUTOR = MockTestUtil.createMock(JrdfQueryExecutor.class);
+    private static final QueryBuilder QUERY_BUILDER = MockTestUtil.createMock(QueryBuilder.class);
 
     // TODO (AN) !! Come back a fix me!!
     public void testBadMan() {

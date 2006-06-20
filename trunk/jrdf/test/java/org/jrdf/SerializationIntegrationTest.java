@@ -62,7 +62,7 @@ import junit.framework.TestCase;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.query.ConstraintExpression;
-import org.jrdf.query.DefaultQuery;
+import org.jrdf.query.QueryImpl;
 import org.jrdf.query.DefaultVariable;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
@@ -122,7 +122,7 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(NullaryTuple.class);
         excludedClasses.add(ConstraintExpression.AllConstraintExpression.class);  // not sure why this doesn't work
         excludedClasses
-            .add(DefaultQuery.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
+            .add(QueryImpl.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
         excludedClasses.add(DefaultVariable.class); // implement equals() & hashCode()
         return excludedClasses;
     }

@@ -95,13 +95,13 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final String QUERY_ITQL = "select $s $p $o from <rmi://localhost/server1#> where $s $p $o ;";
     private static final String FIELD_BUILDER = "builder";
     private static final JrdfQueryExecutorFactory EXECUTOR_FACTORY
-            = MockTestUtil.createFromInterface(JrdfQueryExecutorFactory.class);
-    private static final QueryBuilder BUILDER = MockTestUtil.createFromInterface(QueryBuilder.class);
-    private static final Relation ANSWER = MockTestUtil.createFromInterface(Relation.class);
+            = MockTestUtil.createMock(JrdfQueryExecutorFactory.class);
+    private static final QueryBuilder BUILDER = MockTestUtil.createMock(QueryBuilder.class);
+    private static final Relation ANSWER = MockTestUtil.createMock(Relation.class);
     private MockFactory factory;
     private static final String TEST_QUERY_1 = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final Query QUERY = MockTestUtil.createFromInterface(Query.class);
-    private static final Graph GRAPH = MockTestUtil.createFromInterface(Graph.class);
+    private static final Query QUERY = MockTestUtil.createMock(Query.class);
+    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
 
     public void setUp() {
         factory = new MockFactory();

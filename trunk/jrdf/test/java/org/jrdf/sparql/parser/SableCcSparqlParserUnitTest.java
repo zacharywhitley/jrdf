@@ -59,6 +59,29 @@
 package org.jrdf.sparql.parser;
 
 import junit.framework.TestCase;
+import org.easymock.IMocksControl;
+import org.jrdf.graph.Graph;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.parser.lexer.LexerException;
+import org.jrdf.sparql.parser.node.AQueryStart;
+import org.jrdf.sparql.parser.node.EOF;
+import org.jrdf.sparql.parser.node.PStart;
+import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.sparql.parser.node.TBlank;
+import org.jrdf.sparql.parser.parser.Parser;
+import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.util.param.ParameterTestUtil;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
+
+import java.io.IOException;
+import java.lang.reflect.Modifier;
 
 /**
  * Unit test for {@link SableCcSparqlParser}.
@@ -68,80 +91,122 @@ import junit.framework.TestCase;
  */
 public final class SableCcSparqlParserUnitTest extends TestCase {
 
-    // TODO (AN) Come back and re-enable 20th June.
-    public void testBadMan() {
+    private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
+    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
+    private static final ParserFactory PARSER_FACTORY = MockTestUtil.createMock(ParserFactory.class);
+    private static final TripleBuilder TRIPLE_BUILDER = MockTestUtil.createMock(TripleBuilder.class);
+    private static final SortedAttributeValuePairHelper AVP_HELPER =
+            MockTestUtil.createMock(SortedAttributeValuePairHelper.class);
+    private static final String QUERY_TEXT_MESSAGE = "queryText parameter cannot be null";
+    private static final String QUERY_TEXT_EMPTY = "queryText parameter cannot be the empty string";
+    private static final String GRAPH_MESSAGE = "graph parameter cannot be null";
+    private static final String ERROR_MSG = "Unable to parse query syntax";
+    private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1,1), "bar");
+    private static final LexerException LEXER_EXECPTION = new LexerException("foo");
+    private static final Exception IO_EXCEPTION = new IOException();
+
+    private MockFactory mockFactory;
+
+    public void setUp() {
+        mockFactory = new MockFactory();
     }
-    
-//    private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-//    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE =
-//            SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
-//
-//    public void testClassProperties() {
-//        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
-//        ClassPropertiesTestUtil.checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
-//    }
-//
-//    // FIXME TJA: Triangulate to force parsing of the variable list (requires non-wildcard variable projection in grammar).
-//    public void testProjectedVariables() {
-//        checkVariablesOnParsedQuery(QUERY_BOOK_1_DC_TITLE, Variable.ALL_VARIABLES);
-//    }
-//
-//    public void testParseQueryFailsWithBadInput() {
-//        checkBadInput(ParameterTestUtil.NULL_STRING);
-//        checkBadInput(ParameterTestUtil.EMPTY_STRING);
-//        checkBadInput(ParameterTestUtil.SINGLE_SPACE);
-//    }
-//
-//    public void testSingleTriplePatternExpression() {
-//        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
-//    }
-//
-//    private void checkVariablesOnParsedQuery(String queryText, List<? extends Variable> expectedVariables) {
-//        Query query = parseQuery(queryText);
-//        List<? extends Variable> actualVariables = query.getVariables();
-//        assertEquals(expectedVariables, actualVariables);
-//    }
-//
-//    private void checkSingleConstraintExpression(String queryString, ConstraintExpression expectedExpression) {
-//        Query query = parseQuery(queryString);
-//        ConstraintExpression actualExpression = query.getConstraintExpression();
-//        assertEquals(expectedExpression, actualExpression);
-//    }
-//
-//    private void checkBadInput(String queryText) {
-//        try {
-//            parseQuery(queryText);
-//            fail("new SableCcSparqlParser().parseQuery(BAD_BAD_BAD) should have failed");
-//        } catch (IllegalArgumentException expected) {
-//        }
-//    }
-//
-//    private Query parseQuery(String queryString) {
-//        try {
-//            return createParser().parseQuery(queryString);
-//        } catch (InvalidQuerySyntaxException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    private SparqlParser createParser() {
-//        SableCcSparqlParser parser = new SableCcSparqlParser();
-//        insertMockAnalyser(parser);
-//        return parser;
-//    }
-//
-//    private void insertMockAnalyser(SableCcSparqlParser parser) {
-//        MockSparqlAnalyser mockAnalyser = createMockSparqlAnalyser();
-//        ReflectTestUtil.insertFieldValue(parser, "analyser", mockAnalyser);
-//    }
-//
-//    private MockSparqlAnalyser createMockSparqlAnalyser() {
-//        MockSparqlAnalyser mockAnalyser = new MockSparqlAnalyser();
-//        mockAnalyser.prepare(createQuery());
-//        return mockAnalyser;
-//    }
-//
-//    private MockQuery createQuery() {
-//        return new MockQuery(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
-//    }
+
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
+        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class,
+                SortedAttributeValuePairHelper.class);
+    }
+
+    public void testParseQueryFailsWithBadInput() {
+        checkBadInput(GRAPH, ParameterTestUtil.NULL_STRING, QUERY_TEXT_MESSAGE);
+        checkBadInput(GRAPH, ParameterTestUtil.EMPTY_STRING, QUERY_TEXT_EMPTY);
+        checkBadInput(GRAPH, ParameterTestUtil.SINGLE_SPACE, QUERY_TEXT_EMPTY);
+        checkBadInput(null, ParameterTestUtil.NON_EMPTY_STRING, GRAPH_MESSAGE);
+    }
+
+    public void testParseQuery() throws Exception {
+        Start start = createStart();
+        Parser parser = createParser(start);
+        ParserFactory parserFactory = createParserFactory(parser);
+        SableCcSparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER, AVP_HELPER);
+        mockFactory.replay();
+        sableCcSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
+        mockFactory.verify();
+    }
+
+    public void testParseThrowsParserException() throws Exception {
+        checkThrowsException(PARSER_EXECPTION);
+    }
+
+    public void testParseThrowsLexerException() throws Exception {
+        checkThrowsException(LEXER_EXECPTION);
+    }
+
+    public void testParseThrowsIOException() throws Exception {
+        checkThrowsException(IO_EXCEPTION);
+    }
+
+    private Start createStart() {
+        Start start = new Start();
+        PStart pStart = new AQueryStart();
+        EOF eof = new EOF();
+        start.setPStart(pStart);
+        start.setEOF(eof);
+        return start;
+    }
+
+    private Parser createParser(Start start) throws Exception {
+        IMocksControl control = mockFactory.createControl();
+        Parser parser = control.createMock(Parser.class);
+        parser.parse();
+        control.andReturn(start);
+        return parser;
+    }
+
+    private Parser createParser(Exception exception) throws Exception {
+        IMocksControl control = mockFactory.createControl();
+        Parser parser = control.createMock(Parser.class);
+        parser.parse();
+        control.andThrow(exception);
+        return parser;
+    }
+
+
+    private ParserFactory createParserFactory(Parser parser) {
+        IMocksControl control = mockFactory.createControl();
+        ParserFactory parserFactory = control.createMock(ParserFactory.class);
+        parserFactory.getParser(QUERY_BOOK_1_DC_TITLE);
+        control.andReturn(parser);
+        return parserFactory;
+    }
+
+    private void checkBadInput(final Graph graph, final String query, String errorMessage) {
+        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY, TRIPLE_BUILDER, AVP_HELPER);
+        AssertThrows.assertThrows(IllegalArgumentException.class, errorMessage, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                sableCcSparqlParser.parseQuery(graph, query);
+            }
+        });
+    }
+
+    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder,
+            SortedAttributeValuePairHelper avpHelper) {
+        return new SableCcSparqlParser(parserFactory, tripleBuilder, avpHelper);
+
+    }
+
+    private void checkThrowsException(Exception exception)
+            throws Exception {
+        Parser parser = createParser(exception);
+        ParserFactory parserFactory = createParserFactory(parser);
+        final SableCcSparqlParser sableCcSparqlParser =
+                createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER, AVP_HELPER);
+        mockFactory.replay();
+        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, ERROR_MSG, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                sableCcSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
+            }
+        });
+        mockFactory.verify();
+    }
 }

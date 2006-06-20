@@ -61,7 +61,7 @@ package org.jrdf.sparql.builder;
 import junit.framework.TestCase;
 
 /**
- * Unit test for {@link TripleBuilder}.
+ * Unit test for {@link TripleBuilderImpl}.
  *
  * @author Tom Adams
  * @version $Revision$

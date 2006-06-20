@@ -58,18 +58,18 @@
 
 package org.jrdf.sparql.parser;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
-import org.jrdf.sparql.analysis.SparqlAnalyser;
-import org.jrdf.sparql.analysis.DefaultSparqlAnalyser;
-import org.jrdf.sparql.parser.lexer.LexerException;
-import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
-import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.parser.lexer.LexerException;
+import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.sparql.analysis.SparqlAnalyser;
+import org.jrdf.sparql.analysis.SparqlAnalyserImpl;
 import org.jrdf.util.param.ParameterUtil;
-import org.jrdf.graph.Graph;
 
 import java.io.IOException;
 
@@ -83,7 +83,7 @@ public final class SableCcSparqlParser implements SparqlParser {
 
     // FIXME TJA: Test drive out throwing of InvalidQuerySyntaxException.
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
-    private final ParserFactory parserFactory;
+    private ParserFactory parserFactory;
     private TripleBuilder builder;
     private SortedAttributeValuePairHelper sortedAttributeValuePairHelper;
 
@@ -102,19 +102,14 @@ public final class SableCcSparqlParser implements SparqlParser {
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
      */
     public Query parseQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
+        ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotEmptyString("queryText", queryText);
         Parser parser = parserFactory.getParser(queryText);
-        Start syntaxTree = parseQuerySyntax(parser);
-        return analyseQuery(graph, syntaxTree);
+        Start start = tryParse(parser);
+        return analyseQuery(graph, start);
     }
 
-    private Query analyseQuery(Graph graph, Start syntaxTree) {
-        SparqlAnalyser analyser = new DefaultSparqlAnalyser(builder, graph, sortedAttributeValuePairHelper);
-        syntaxTree.apply(analyser);
-        return analyser.getQuery();
-    }
-
-    private Start parseQuerySyntax(Parser parser) throws InvalidQuerySyntaxException {
+    private Start tryParse(Parser parser) throws InvalidQuerySyntaxException {
         try {
             return parser.parse();
         } catch (ParserException e) {
@@ -124,5 +119,11 @@ public final class SableCcSparqlParser implements SparqlParser {
         } catch (IOException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
         }
+    }
+
+    private Query analyseQuery(Graph graph, Start start) {
+        SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph, sortedAttributeValuePairHelper);
+        start.apply(analyser);
+        return analyser.getQuery();
     }
 }

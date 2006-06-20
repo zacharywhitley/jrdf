@@ -58,8 +58,8 @@
 
 package org.jrdf.util.test;
 
-import org.easymock.EasyMock;
-import org.easymock.IMocksControl;
+import org.easymock.classextension.EasyMock;
+import org.easymock.classextension.IMocksControl;
 
 /**
  * Create a mock with no expectations.
@@ -68,7 +68,7 @@ import org.easymock.IMocksControl;
  * @version $Revision:$
  */
 public class MockTestUtil {
-    public static <T>T createFromInterface(Class<T> clazz) {
+    public static <T>T createMock(Class<T> clazz) {
         IMocksControl control = EasyMock.createControl();
         return control.createMock(clazz);
     }

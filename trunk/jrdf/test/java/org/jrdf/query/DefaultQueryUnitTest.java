@@ -61,7 +61,7 @@ package org.jrdf.query;
 import junit.framework.TestCase;
 
 /**
- * Unit test for {@link DefaultQuery}.
+ * Unit test for {@link QueryImpl}.
  *
  * @author Tom Adams
  * @version $Revision$
@@ -79,24 +79,24 @@ public final class DefaultQueryUnitTest extends TestCase {
 //    private static final ConstraintExpression CONSTRAINT_EXPRESSION = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
 //
 //    public void testClassProperties() {
-//        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, DefaultQuery.class);
-//        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, DefaultQuery.class);
-//        ClassPropertiesTestUtil.checkConstructor(DefaultQuery.class, Modifier.PUBLIC, List.class,
+//        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
+//        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, QueryImpl.class);
+//        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, List.class,
 //                ConstraintExpression.class);
 //    }
 //
 //    public void testSerialVersionUid() {
-//        SerializationTestUtil.checkSerialialVersionUid(DefaultQuery.class, 409607492370028929L);
+//        SerializationTestUtil.checkSerialialVersionUid(QueryImpl.class, 409607492370028929L);
 //    }
 //
 //    public void testNullsInConstructorThrowException() {
 //        try {
-//            new DefaultQuery(NULL_VARIABLES, CONSTRAINT_EXPRESSION);
+//            new QueryImpl(NULL_VARIABLES, CONSTRAINT_EXPRESSION);
 //            fail("null variables should have thrown IllegalArgumentException");
 //        } catch (IllegalArgumentException expected) {
 //        }
 //        try {
-//            new DefaultQuery(ONE_VARIABLE, NULL_EXPRESSION);
+//            new QueryImpl(ONE_VARIABLE, NULL_EXPRESSION);
 //            fail("null expression should have thrown IllegalArgumentException");
 //        } catch (IllegalArgumentException expected) {
 //        }
@@ -108,13 +108,13 @@ public final class DefaultQueryUnitTest extends TestCase {
 //    }
 //
 //    public void testGetConstraintExpression() {
-//        Query query = new DefaultQuery(ALL_VARIABLES, CONSTRAINT_EXPRESSION);
+//        Query query = new QueryImpl(ALL_VARIABLES, CONSTRAINT_EXPRESSION);
 //        ConstraintExpression actualExpression = query.getConstraintExpression();
 //        assertEquals(CONSTRAINT_EXPRESSION, actualExpression);
 //    }
 //
 //    private void checkGetProjectedVariables(List<? extends Variable> expected) {
-//        Query query = new DefaultQuery(expected, CONSTRAINT_EXPRESSION);
+//        Query query = new QueryImpl(expected, CONSTRAINT_EXPRESSION);
 //        assertEquals(expected, query.getVariables());
 //    }
 }

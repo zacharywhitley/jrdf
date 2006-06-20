@@ -56,20 +56,57 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.query;
 
-import org.jrdf.query.GraphFixture;
-import org.jrdf.query.Query;
-import org.jrdf.query.QueryBuilder;
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.util.param.ParameterUtil;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
 
 /**
+ * Default implementation of a {@link Query}.
+ *
  * @author Tom Adams
  * @version $Revision$
  */
-final class MockQueryBuilder implements QueryBuilder {
+public final class QueryImpl implements Query, Serializable {
 
-    public Query buildQuery(Graph graph, String queryText) {
-        return GraphFixture.createQuery();
+    // FIXME: Check for immutability of parameters.
+    // FIXME TJA: Implement equals() and hashCode()
+
+    private static final long serialVersionUID = 409607492370028929L;
+    private SortedSet<AttributeValuePair> attributeValuePairs;
+    private final SortedAttributeValuePairHelper avpHelper;
+
+    // TODO (AN) This is an indication that we need an Sorted AVP object with behaviour - combine these two.
+    public QueryImpl(SortedSet<AttributeValuePair> attributeValuePairs, SortedAttributeValuePairHelper avpHelper) {
+        ParameterUtil.checkNotNull("attributeValuePairs", attributeValuePairs);
+        ParameterUtil.checkNotNull("avpHelper", avpHelper);
+        this.attributeValuePairs = attributeValuePairs;
+        this.avpHelper = avpHelper;
     }
+
+    public List<Attribute> getVariables() {
+        List<Attribute> atts = new ArrayList<Attribute>();
+        for (AttributeValuePair avp : attributeValuePairs) {
+            atts.add(avp.getAttribute());
+        }
+        return atts;
+    }
+
+    public ConstraintExpression getConstraintExpression() {
+        Triple triple = avpHelper.createTriple(attributeValuePairs);
+        return new ConstraintTriple(triple);
+    }
+
+    public SortedSet<AttributeValuePair> getSingleAvp() {
+        return attributeValuePairs;
+    }
+
 }
