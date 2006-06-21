@@ -58,7 +58,16 @@
 
 package org.jrdf.sparql.builder;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
+
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Tom Adams
@@ -86,5 +95,16 @@ public final class LiteralTripleSpec {
 
     public String getLiteral() {
         return literal;
+    }
+
+    public Attribute[] asAttributes() {
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        Attribute subjectAtt = new AttributeImpl(new PositionName("SUBJECT"), new SubjectNodeType());
+        attributes.add(subjectAtt);
+        Attribute predciateAtt = new AttributeImpl(new PositionName("PREDICATE"), new PredicateNodeType());
+        attributes.add(predciateAtt);
+        Attribute objectAtt = new AttributeImpl(new PositionName("OBJECT"), new ObjectNodeType());
+        attributes.add(objectAtt);
+        return attributes.toArray(new Attribute[] {});
     }
 }

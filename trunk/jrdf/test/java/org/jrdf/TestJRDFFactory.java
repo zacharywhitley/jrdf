@@ -65,8 +65,10 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Join;
 import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.SparqlParser;
 
 /**
@@ -76,13 +78,10 @@ import org.jrdf.sparql.parser.SparqlParser;
  * @version $Id$
  */
 public final class TestJRDFFactory implements JRDFFactory {
-    private static final JRDFFactory FACTORY = new JRDFFactoryImpl();
+    private static final JRDFFactoryImpl FACTORY = new JRDFFactoryImpl();
 
-    private TestJRDFFactory() {
-    }
-
-    public static JRDFFactory getFactory() {
-        return FACTORY;
+    public static TestJRDFFactory getFactory() {
+        return new TestJRDFFactory();
     }
 
     public void refresh() {
@@ -130,6 +129,14 @@ public final class TestJRDFFactory implements JRDFFactory {
     }
 
     public SparqlParser getNewSparqlParser() {
-        return FACTORY.getNewSparqlParser();
+        return (SparqlParser) FACTORY.getContext().getBean("sparqlParser");
+    }
+
+    public TripleBuilder getNewTripleBuilder() {
+        return (TripleBuilder) FACTORY.getContext().getBean("tripleBuilder");
+    }
+
+    public SortedAttributeValuePairHelper getSortedAttributeValuePairHelper() {
+        return (SortedAttributeValuePairHelper) FACTORY.getContext().getBean("sortedAttributeValuePairHelper");
     }
 }

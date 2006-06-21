@@ -77,4 +77,12 @@ public class PredicateNodeType implements NodeType {
     public String getName() {
         return "Predicate";
     }
+
+    public int hashCode() {
+        return 2;
+    }    
+
+    public boolean equals(Object obj) {
+        return obj instanceof PredicateNodeType;
+    }
 }

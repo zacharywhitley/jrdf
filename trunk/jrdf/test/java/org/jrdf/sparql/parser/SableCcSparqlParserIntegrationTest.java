@@ -59,18 +59,17 @@
 package org.jrdf.sparql.parser;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.SparqlQueryTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
-import org.jrdf.query.Query;
-import org.jrdf.query.ConstraintExpression;
-import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.JRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.util.test.SparqlQueryTestUtil;
+import org.jrdf.util.test.TripleTestUtil;
 
 /**
  * Integration test for {@link SableCcSparqlParser}.
@@ -93,7 +92,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final QueryParser PARSER = FACTORY.getNewSparqlParser();
 

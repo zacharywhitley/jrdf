@@ -59,6 +59,7 @@ package org.jrdf.graph.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -110,6 +111,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
     }
 
     public void testIdentity() {
+        assertEquals(EQUAL, nodeComparator.compare(ANY_SUBJECT_NODE, ANY_SUBJECT_NODE));
         assertEquals(EQUAL, nodeComparator.compare(URI_1, URI_1));
     }
 

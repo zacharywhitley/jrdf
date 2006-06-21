@@ -80,4 +80,12 @@ public class SubjectNodeType implements NodeType {
     public String getName() {
         return "Subject";
     }
+
+    public int hashCode() {
+        return 3;
+    }
+
+    public boolean equals(Object obj) {
+        return obj instanceof SubjectNodeType;
+    }
 }
