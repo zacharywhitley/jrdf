@@ -135,10 +135,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SparqlAnalyserImplUnitTest.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/analysis/SparqlAnalyserImplUnitTest.java">
+      <file leaf-file-name="QueryImplUnitTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/QueryImplUnitTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="92" column="42" selection-start="3934" selection-end="3934" vertical-scroll-proportion="0.33795014">
+            <state line="82" column="0" selection-start="3308" selection-end="3308" vertical-scroll-proportion="0.389271">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -146,46 +146,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SparqlAnalyser.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SparqlAnalyser.java">
+      <file leaf-file-name="QueryImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/QueryImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="76" column="17" selection-start="3148" selection-end="3148" vertical-scroll-proportion="0.39889196">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SparqlAnalyserImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SparqlAnalyserImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="19" selection-start="3206" selection-end="3206" vertical-scroll-proportion="0.39889196">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SableCcSparqlParser.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/parser/SableCcSparqlParser.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="124" column="38" selection-start="5437" selection-end="5437" vertical-scroll-proportion="1.6814405">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="wiring.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conf/wiring.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestJRDFFactory.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/TestJRDFFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="79" column="19" selection-start="3537" selection-end="3537" vertical-scroll-proportion="-0.2797784">
+            <state line="86" column="41" selection-start="3528" selection-end="3528" vertical-scroll-proportion="0.34662998">
               <folding />
             </state>
           </provider>
@@ -397,7 +361,47 @@
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
       <PATH_ELEMENT>
+        <option name="myItemId" value="builder" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="org.jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="sparql" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
         <option name="myItemId" value="analysis" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="org.jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="query" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
     </PATH>
@@ -879,12 +883,12 @@
   </component>
   <component name="RunManager">
     <activeType name="JUnit" />
-    <tempConfiguration selected="true" default="false" name="SparqlAnalyserImplUnitTest" type="JUnit" factoryName="JUnit">
+    <tempConfiguration selected="true" default="false" name="QueryImplUnitTest" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.jrdf.sparql.analysis" />
-      <option name="MAIN_CLASS_NAME" value="org.jrdf.sparql.analysis.SparqlAnalyserImplUnitTest" />
+      <option name="PACKAGE_NAME" value="org.jrdf.query" />
+      <option name="MAIN_CLASS_NAME" value="org.jrdf.query.QueryImplUnitTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -1052,14 +1056,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1440" height="874" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="8" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32818532" order="7" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.2729885" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32818532" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.46203345" order="11" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.46203345" order="11" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="3" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="9" />
@@ -1179,29 +1183,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/type/ObjectNodeType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="3340" selection-end="3393" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/builder/TripleBuilderUnitTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="30" selection-start="4834" selection-end="4834" vertical-scroll-proportion="0.75928473">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/builder/TripleBuilderImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="109" selection-start="4164" selection-end="4164" vertical-scroll-proportion="-1.442916">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/SparqlQueryBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="73" column="19" selection-start="3127" selection-end="3127" vertical-scroll-proportion="0.30967742">
@@ -1234,7 +1215,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/TestJRDFFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="19" selection-start="3537" selection-end="3537" vertical-scroll-proportion="-0.2797784">
+        <state line="79" column="19" selection-start="3537" selection-end="3537" vertical-scroll-proportion="-0.2172043">
           <folding />
         </state>
       </provider>
@@ -1248,7 +1229,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/parser/SableCcSparqlParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="124" column="38" selection-start="5437" selection-end="5437" vertical-scroll-proportion="1.6814405">
+        <state line="124" column="38" selection-start="5437" selection-end="5437" vertical-scroll-proportion="1.3053763">
           <folding />
         </state>
       </provider>
@@ -1269,21 +1250,47 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SparqlAnalyserImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="19" selection-start="3206" selection-end="3206" vertical-scroll-proportion="0.39889196">
+        <state line="77" column="19" selection-start="3206" selection-end="3206" vertical-scroll-proportion="0.30967742">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SparqlAnalyser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="76" column="17" selection-start="3148" selection-end="3148" vertical-scroll-proportion="0.39889196">
-          <folding />
+        <state line="76" column="17" selection-start="3148" selection-end="3148" vertical-scroll-proportion="0.30967742">
+          <folding>
+            <marker date="1150870118000" expanded="true" signature="3124:3130" placeholder="/**...*/" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/analysis/SparqlAnalyserImplUnitTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="42" selection-start="3934" selection-end="3934" vertical-scroll-proportion="0.33795014">
+        <state line="92" column="42" selection-start="3934" selection-end="3934" vertical-scroll-proportion="0.26236558">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <marker date="1150870119000" expanded="true" signature="3876:3891" placeholder="/**...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/builder/TripleBuilderImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="3" selection-start="4327" selection-end="4327" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/QueryImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="86" column="41" selection-start="3528" selection-end="3528" vertical-scroll-proportion="0.34662998">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/QueryImplUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="82" column="0" selection-start="3308" selection-end="3308" vertical-scroll-proportion="0.389271">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
