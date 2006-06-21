@@ -63,6 +63,7 @@ import org.jrdf.query.Query;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.parser.analysis.Analysis;
+import org.jrdf.sparql.parser.node.ATriple;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -86,6 +87,9 @@ public interface SparqlAnalyser extends Analysis {
      * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
      */
     Query getQuery();
+
+    // FIXME TJA: This implementation will change once we have to parse variable lists.
+    void outATriple(ATriple tripleNode);
 
     class NoQuery implements Query {
 
