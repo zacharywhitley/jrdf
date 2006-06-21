@@ -58,7 +58,17 @@
 
 package org.jrdf.sparql.builder;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+
 import java.net.URI;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author Tom Adams
@@ -86,5 +96,16 @@ public final class VariableTripleSpec {
 
     public String getVariableName() {
         return variableName;
+    }
+
+    public Attribute[] asAttributes() {
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        Attribute subjectAtt = new AttributeImpl(new PositionName("SUBJECT"), new SubjectNodeType());
+        attributes.add(subjectAtt);
+        Attribute predciateAtt = new AttributeImpl(new PositionName("PREDICATE"), new PredicateNodeType());
+        attributes.add(predciateAtt);
+        Attribute objectAtt = new AttributeImpl(new VariableName("?" + variableName), new ObjectNodeType());
+        attributes.add(objectAtt);
+        return attributes.toArray(new Attribute[] {});
     }
 }

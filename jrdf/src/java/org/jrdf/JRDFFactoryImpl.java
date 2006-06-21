@@ -69,7 +69,6 @@ import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
 import org.jrdf.sparql.SparqlConnection;
-import org.jrdf.sparql.parser.SparqlParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -85,6 +84,10 @@ public final class JRDFFactoryImpl implements JRDFFactory {
 
     public void refresh() {
         beanFactory.refresh();
+    }
+
+    ClassPathXmlApplicationContext getContext() {
+        return beanFactory;
     }
 
     public Graph getNewGraph() {
@@ -126,9 +129,5 @@ public final class JRDFFactoryImpl implements JRDFFactory {
 
     public QueryBuilder getNewQueryBuilder() {
         return (QueryBuilder) beanFactory.getBean("queryBuilder");
-    }
-
-    public SparqlParser getNewSparqlParser() {
-        return (SparqlParser) beanFactory.getBean("sparqlParser");
     }
 }

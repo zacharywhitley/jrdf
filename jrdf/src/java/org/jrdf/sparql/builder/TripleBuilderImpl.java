@@ -169,7 +169,7 @@ public final class TripleBuilderImpl implements TripleBuilder {
         } else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
-            Attribute att = new AttributeImpl(new PositionName("PREDICATE"), new PredicateNodeType());
+            Attribute att = new AttributeImpl(new PositionName("OBJECT"), new ObjectNodeType());
             Literal literalNode = createLiteral(text);
             return new AttributeValuePairImpl(att, literalNode);
         }

@@ -81,4 +81,12 @@ public class ObjectNodeType implements NodeType {
     public String getName() {
         return "Object";
     }
+
+    public int hashCode() {
+        return 1;
+    }
+
+    public boolean equals(Object obj) {
+        return obj instanceof ObjectNodeType;
+    }
 }

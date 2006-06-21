@@ -80,10 +80,15 @@ public final class NodeComparatorImpl implements NodeComparator {
     }
 
     public int compare(Node o1, Node o2) {
+
+        if (o1.equals(o2)) {
+            return 0;
+        }
+
+        int result;
         NodeTypeEnum nodeType1Enum = getNodeType(o1.getClass());
         NodeTypeEnum nodeType2Enum = getNodeType(o2.getClass());
 
-        int result;
         if (areNodesDifferentType(nodeType1Enum, nodeType2Enum)) {
             result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
         } else {

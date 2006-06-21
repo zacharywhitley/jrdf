@@ -95,7 +95,7 @@ public final class SableCcNodeTestUtil {
     private SableCcNodeTestUtil() {
     }
 
-    public static ATriple createTripleNodeWithVariable(VariableTripleSpec tripleSpec) {
+    public static ATriple  createTripleNodeWithVariable(VariableTripleSpec tripleSpec) {
         PResourceTripleElement subject = createResourceElement(tripleSpec.getSubjectUri());
         PResourceTripleElement predicate = createResourceElement(tripleSpec.getPredicateUri());
         PObjectTripleElement object = createVariableElement(tripleSpec.getVariableName());
