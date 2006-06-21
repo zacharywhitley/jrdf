@@ -82,7 +82,7 @@ public class SubjectNodeType implements NodeType {
     }
 
     public int hashCode() {
-        return 3;
+        return getName().hashCode();
     }
 
     public boolean equals(Object obj) {

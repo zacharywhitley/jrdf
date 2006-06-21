@@ -83,7 +83,7 @@ public class ObjectNodeType implements NodeType {
     }
 
     public int hashCode() {
-        return 1;
+        return getName().hashCode();
     }
 
     public boolean equals(Object obj) {
