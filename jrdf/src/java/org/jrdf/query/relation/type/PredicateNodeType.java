@@ -79,8 +79,8 @@ public class PredicateNodeType implements NodeType {
     }
 
     public int hashCode() {
-        return 2;
-    }    
+        return getName().hashCode();        
+    }
 
     public boolean equals(Object obj) {
         return obj instanceof PredicateNodeType;
