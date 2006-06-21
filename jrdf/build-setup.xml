@@ -192,7 +192,7 @@
         <attribute name="grammar.file"/>
         <sequential>
             <mkdir dir="${gen.src.dir}"/>
-            <sablecc µsrc="${sablecc.src.dir}" outputdirectory="${gen.src.dir}">
+            <sablecc src="${sablecc.src.dir}" outputdirectory="${gen.src.dir}">
                 <include name="@{grammar.file}"/>
             </sablecc>
         </sequential>
