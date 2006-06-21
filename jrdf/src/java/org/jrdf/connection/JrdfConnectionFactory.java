@@ -18,9 +18,6 @@ import java.net.MalformedURLException;
  */
 public final class JrdfConnectionFactory {
 
-    // FIXME TJA: Should this implement an interface?
-    // FIXME TJA: Should createSparqlConnection() be static?
-
     private static final String JRDF_NAMESPACE = "http://jrdf.sf.net/";
     private static final String JRDF_CONNECTION_NAMESPACE = JRDF_NAMESPACE + "connection";
 
