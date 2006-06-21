@@ -59,6 +59,17 @@
 package org.jrdf.query;
 
 import junit.framework.TestCase;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Unit test for {@link QueryImpl}.
@@ -66,55 +77,37 @@ import junit.framework.TestCase;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class DefaultQueryUnitTest extends TestCase {
+public final class QueryImplUnitTest extends TestCase {
 
-    // TODO (AN) Come back and re-enable 20th June.
-    public void testBadMan() {
+    @SuppressWarnings({"unchecked"})
+    private static final SortedSet<AttributeValuePair> ALL_VARIABLES =
+            new TreeSet<AttributeValuePair>(Collections.EMPTY_SET);
+    private static final SortedSet<AttributeValuePair> NULL_AVP = null;
+    private static final SortedAttributeValuePairHelper NULL_AVP_HELPER = null;
+
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, QueryImpl.class);
+        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, SortedSet.class,
+                SortedAttributeValuePairHelper.class);
     }
-    
-//    static final List<Variable> ONE_VARIABLE = Arrays.asList(new Variable[]{new DefaultVariable("x")});
-//    private static final List<? extends Variable> ALL_VARIABLES = Variable.ALL_VARIABLES;
-//    private static final List<Variable> NULL_VARIABLES = null;
-//    private static final ConstraintExpression NULL_EXPRESSION = null;
-//    private static final ConstraintExpression CONSTRAINT_EXPRESSION = SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
-//
-//    public void testClassProperties() {
-//        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
-//        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, QueryImpl.class);
-//        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, List.class,
-//                ConstraintExpression.class);
-//    }
-//
-//    public void testSerialVersionUid() {
-//        SerializationTestUtil.checkSerialialVersionUid(QueryImpl.class, 409607492370028929L);
-//    }
-//
-//    public void testNullsInConstructorThrowException() {
-//        try {
-//            new QueryImpl(NULL_VARIABLES, CONSTRAINT_EXPRESSION);
-//            fail("null variables should have thrown IllegalArgumentException");
-//        } catch (IllegalArgumentException expected) {
-//        }
-//        try {
-//            new QueryImpl(ONE_VARIABLE, NULL_EXPRESSION);
-//            fail("null expression should have thrown IllegalArgumentException");
-//        } catch (IllegalArgumentException expected) {
-//        }
-//    }
-//
-//    public void testGetProjectedVariables() {
-//        checkGetProjectedVariables(ALL_VARIABLES);
-//        checkGetProjectedVariables(ONE_VARIABLE);
-//    }
-//
-//    public void testGetConstraintExpression() {
-//        Query query = new QueryImpl(ALL_VARIABLES, CONSTRAINT_EXPRESSION);
-//        ConstraintExpression actualExpression = query.getConstraintExpression();
-//        assertEquals(CONSTRAINT_EXPRESSION, actualExpression);
-//    }
-//
-//    private void checkGetProjectedVariables(List<? extends Variable> expected) {
-//        Query query = new QueryImpl(expected, CONSTRAINT_EXPRESSION);
-//        assertEquals(expected, query.getVariables());
-//    }
+
+    public void testSerialVersionUid() {
+        SerializationTestUtil.checkSerialialVersionUid(QueryImpl.class, 409607492370028929L);
+    }
+
+    public void testNullsInConstructorThrowException() {
+        try {
+            new QueryImpl(NULL_AVP, MockTestUtil.createMock(SortedAttributeValuePairHelper.class));
+            fail("null variables should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
+        }
+        try {
+            new QueryImpl(ALL_VARIABLES, NULL_AVP_HELPER);
+            fail("null expression should have thrown IllegalArgumentException");
+        } catch (IllegalArgumentException expected) {
+        }
+    }
+
+    // TODO: Test drive other methods - when stable.
 }
