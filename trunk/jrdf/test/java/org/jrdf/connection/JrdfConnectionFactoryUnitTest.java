@@ -38,31 +38,7 @@ public class JrdfConnectionFactoryUnitTest extends TestCase {
         ArgumentTestUtil.checkMethodNullAssertions(PARAM_DEFINITION, createFactory(), METHOD_NAME);
     }
 
-//    public void testNullSecurityDomainThrowsException() {
-//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                createFactory().createSparqlConnection(null, QUERY_BUILDER, QUERY_EXECUTOR_FACTORY);
-//            }
-//        });
-//    }
-//
-//    public void testNullQueryExecutorThrowsException() {
-//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                createFactory().createSparqlConnection(NO_SECURITY_DOMAIN, null, QUERY_EXECUTOR_FACTORY);
-//            }
-//        });
-//    }
-//
-//    public void testNullQueryBuilderThrowsException() {
-//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                createFactory().createSparqlConnection(NO_SECURITY_DOMAIN, QUERY_BUILDER, null);
-//            }
-//        });
-//    }
-
-    public void testGeSparqlConnection() {
+    public void testGetSparqlConnection() {
         assertNotNull(createConnectionWithBadGraph());
     }
 
