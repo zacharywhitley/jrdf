@@ -76,6 +76,7 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Revision:$
  */
+// TODO (AN) 23 June - Test Drive me!!!
 public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
     private static long nameCounter = 1;
     private static final SubjectNodeType SUBJECT_TYPE = new SubjectNodeType();
