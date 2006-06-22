@@ -65,7 +65,7 @@ package org.jrdf.graph;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class AlreadyReifiedException extends TripleFactoryException {
+public final class AlreadyReifiedException extends TripleFactoryException {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -87,19 +87,19 @@ public class AlreadyReifiedException extends TripleFactoryException {
     /**
      * Create a wrapper exception.
      *
-     * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
-    public AlreadyReifiedException(String message, Throwable newCause) {
-        super(message, newCause);
+    public AlreadyReifiedException(Throwable newCause) {
+        super(newCause);
     }
 
     /**
      * Create a wrapper exception.
      *
+     * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
-    public AlreadyReifiedException(Throwable newCause) {
-        super(newCause);
+    public AlreadyReifiedException(String message, Throwable newCause) {
+        super(message, newCause);
     }
 }

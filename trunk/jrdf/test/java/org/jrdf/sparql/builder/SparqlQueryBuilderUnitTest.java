@@ -63,12 +63,14 @@ import org.easymock.classextension.IMocksControl;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.Query;
+import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
+import org.jrdf.util.test.AssertThrows;
 
 import java.lang.reflect.Modifier;
 
@@ -98,24 +100,24 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkConstructor(SparqlQueryBuilder.class, Modifier.PUBLIC, SparqlParser.class);
     }
 
-//    public void testBadParams() throws Exception {
-//        SparqlQueryBuilder builder = new SparqlQueryBuilder(SPARQL_PARSER);
-//        checkBadParam(builder, NULL_STRING, CANNOT_BE_NULL);
-//        checkBadParam(builder, EMPTY_STRING, CANNOT_BE_EMPTY);
-//        checkBadParam(builder, SINGLE_SPACE, CANNOT_BE_EMPTY);
-//    }
-//
-//    public void testExceptionPassthroughFromParser() {
-//        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                SparqlParser parser = createParserThrowsException();
-//                QueryBuilder builder = new SparqlQueryBuilder(parser);
-//                mockFactory.replay();
-//                builder.buildQuery(GRAPH, QUERY_GOOD);
-//                mockFactory.verify();
-//            }
-//        });
-//    }
+    public void testBadParams() throws Exception {
+        SparqlQueryBuilder builder = new SparqlQueryBuilder(SPARQL_PARSER);
+        checkBadParam(builder, NULL_STRING, CANNOT_BE_NULL);
+        checkBadParam(builder, EMPTY_STRING, CANNOT_BE_EMPTY);
+        checkBadParam(builder, SINGLE_SPACE, CANNOT_BE_EMPTY);
+    }
+
+    public void testExceptionPassthroughFromParser() {
+        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                SparqlParser parser = createParserThrowsException();
+                QueryBuilder builder = new SparqlQueryBuilder(parser);
+                mockFactory.replay();
+                builder.buildQuery(GRAPH, QUERY_GOOD);
+                mockFactory.verify();
+            }
+        });
+    }
 
     public void testBuildQuery() throws Exception {
         SparqlParser parser = createParser();
@@ -125,21 +127,21 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
         mockFactory.verify();
     }
 
-//    private void checkBadParam(final SparqlQueryBuilder builder, final String param, String message) throws Exception {
-//        AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
-//            public void execute() throws Throwable {
-//                builder.buildQuery(GRAPH, param);
-//            }
-//        });
-//    }
-//
-//    private SparqlParser createParserThrowsException() throws Exception {
-//        IMocksControl control = mockFactory.createControl();
-//        SparqlParser parser = control.createMock(SparqlParser.class);
-//        parser.parseQuery(GRAPH, QUERY_GOOD);
-//        control.andThrow(new InvalidQuerySyntaxException(""));
-//        return parser;
-//    }
+    private void checkBadParam(final SparqlQueryBuilder builder, final String param, String message) throws Exception {
+        AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                builder.buildQuery(GRAPH, param);
+            }
+        });
+    }
+
+    private SparqlParser createParserThrowsException() throws Exception {
+        IMocksControl control = mockFactory.createControl();
+        SparqlParser parser = control.createMock(SparqlParser.class);
+        parser.parseQuery(GRAPH, QUERY_GOOD);
+        control.andThrow(new InvalidQuerySyntaxException(""));
+        return parser;
+    }
 
     private SparqlParser createParser() throws Exception {
         IMocksControl control = mockFactory.createControl();
