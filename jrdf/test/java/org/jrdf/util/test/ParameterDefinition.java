@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,56 +58,26 @@
 
 package org.jrdf.util.test;
 
-import org.easymock.classextension.EasyMock;
-import org.easymock.classextension.IMocksControl;
-
-import java.net.URL;
-import java.net.MalformedURLException;
-
 /**
- * Create a mock with no expectations.
+ * The definition of a parameter in a method.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class MockTestUtil {
-    public static <T>T createMock(Class<T> clazz) {
-        if (isFinalClass(clazz)) {
-            //noinspection unchecked
-            return (T) createFinalClass();
-        }
+public class ParameterDefinition {
+    private String[] parameterNames;
+    private Class[] parameterTypes;
 
-        IMocksControl control = EasyMock.createControl();
-        return control.createMock(clazz);
+    public ParameterDefinition(String[] parameterNames, Class[] parameterTypes) {
+        this.parameterNames = parameterNames;
+        this.parameterTypes = parameterTypes;
     }
 
-    /**
-     * Creates mocked implementations of the parameter type given.
-     *
-     * @param parameterTypes the types to create.
-     * @param index the index to use in which to create a null Object - can be -1 and will not create any nulls.
-     * @return an array of created types.
-     */
-    public static Object[] createArgs(Class[] parameterTypes, int index) {
-        Object[] objects = new Object[parameterTypes.length];
-        for (int i = 0; i < parameterTypes.length; i++) {
-            if (i != index) {
-                //noinspection unchecked
-                objects[i] = createMock(parameterTypes[i]);
-            }
-        }
-        return objects;
+    public String[] getParameterNames() {
+        return parameterNames;
     }
 
-    private static boolean isFinalClass(Class clazz) {
-        return clazz.equals(URL.class);
-    }
-
-    private static URL createFinalClass() {
-        try {
-            return new URL("file:///this/is/anything");
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    public Class[] getParameterTypes() {
+        return parameterTypes;
     }
 }

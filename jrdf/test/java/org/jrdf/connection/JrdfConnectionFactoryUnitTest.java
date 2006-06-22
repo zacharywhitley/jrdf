@@ -4,8 +4,9 @@ import junit.framework.TestCase;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.sparql.SparqlConnection;
-import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.ParameterDefinition;
 
 import java.net.URI;
 import java.net.URL;
@@ -23,34 +24,43 @@ public class JrdfConnectionFactoryUnitTest extends TestCase {
     private static final JrdfQueryExecutorFactory QUERY_EXECUTOR_FACTORY
             = MockTestUtil.createMock(JrdfQueryExecutorFactory.class);
     private static final QueryBuilder QUERY_BUILDER = MockTestUtil.createMock(QueryBuilder.class);
+    private static final String METHOD_NAME = "createSparqlConnection";
+    private static final String[] PARAMETER_NAMES = new String[] {"securityDomain", "builder", "queryExecutorFactory"};
+    private static final Class[] PARAMETER_TYPES =
+            new Class[] {URL.class, QueryBuilder.class, JrdfQueryExecutorFactory.class};
+    private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(PARAMETER_NAMES, PARAMETER_TYPES );
 
     public void testNoSecurityConstant() {
         assertEquals(URI.create(EXPECTED_NO_SECURITY_DOMAIN), JrdfConnectionFactory.NO_SECURITY_DOMAIN);
     }
 
-    public void testNullSecurityDomainThrowsException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                createFactory().createSparqlConnection(null, QUERY_BUILDER, QUERY_EXECUTOR_FACTORY);
-            }
-        });
+    public void testCreateSparqlConnectionNullContract() {
+        ArgumentTestUtil.checkMethodNullAssertions(PARAM_DEFINITION, createFactory(), METHOD_NAME);
     }
 
-    public void testNullQueryExecutorThrowsException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                createFactory().createSparqlConnection(NO_SECURITY_DOMAIN, null, QUERY_EXECUTOR_FACTORY);
-            }
-        });
-    }
-
-    public void testNullQueryBuilderThrowsException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                createFactory().createSparqlConnection(NO_SECURITY_DOMAIN, QUERY_BUILDER, null);
-            }
-        });
-    }
+//    public void testNullSecurityDomainThrowsException() {
+//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+//            public void execute() throws Throwable {
+//                createFactory().createSparqlConnection(null, QUERY_BUILDER, QUERY_EXECUTOR_FACTORY);
+//            }
+//        });
+//    }
+//
+//    public void testNullQueryExecutorThrowsException() {
+//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+//            public void execute() throws Throwable {
+//                createFactory().createSparqlConnection(NO_SECURITY_DOMAIN, null, QUERY_EXECUTOR_FACTORY);
+//            }
+//        });
+//    }
+//
+//    public void testNullQueryBuilderThrowsException() {
+//        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+//            public void execute() throws Throwable {
+//                createFactory().createSparqlConnection(NO_SECURITY_DOMAIN, QUERY_BUILDER, null);
+//            }
+//        });
+//    }
 
     public void testGeSparqlConnection() {
         assertNotNull(createConnectionWithBadGraph());

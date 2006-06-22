@@ -6,9 +6,9 @@ import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.util.param.ParameterUtil;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * Returns queriable connections to a graph.
@@ -43,6 +43,7 @@ public final class JrdfConnectionFactory {
     public SparqlConnection createSparqlConnection(URL securityDomain, QueryBuilder builder,
             JrdfQueryExecutorFactory queryExecutorFactory) {
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
+        ParameterUtil.checkNotNull("builder", builder);
         ParameterUtil.checkNotNull("queryExecutorFactory", queryExecutorFactory);
         return new SparqlConnectionImpl(securityDomain, builder, queryExecutorFactory);
     }

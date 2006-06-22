@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,56 +58,42 @@
 
 package org.jrdf.util.test;
 
-import org.easymock.classextension.EasyMock;
-import org.easymock.classextension.IMocksControl;
-
-import java.net.URL;
-import java.net.MalformedURLException;
-
 /**
- * Create a mock with no expectations.
+ * Tests the contract of a method or constructor so that the methods throw IllegalArgumentException if null is passed.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class MockTestUtil {
-    public static <T>T createMock(Class<T> clazz) {
-        if (isFinalClass(clazz)) {
-            //noinspection unchecked
-            return (T) createFinalClass();
+public class ArgumentTestUtil {
+    public static void checkMethodNullAssertions(final ParameterDefinition paramDefinition, final Object obj,
+            final String methodName) {
+        final Class[] parameterTypes = paramDefinition.getParameterTypes();
+        String[] parameterNames = paramDefinition.getParameterNames();
+        for (int index = 0; index < parameterTypes.length; index++) {
+            checkMethod(parameterTypes, index, parameterNames, methodName, obj);
         }
-
-        IMocksControl control = EasyMock.createControl();
-        return control.createMock(clazz);
     }
 
-    /**
-     * Creates mocked implementations of the parameter type given.
-     *
-     * @param parameterTypes the types to create.
-     * @param index the index to use in which to create a null Object - can be -1 and will not create any nulls.
-     * @return an array of created types.
-     */
-    public static Object[] createArgs(Class[] parameterTypes, int index) {
-        Object[] objects = new Object[parameterTypes.length];
-        for (int i = 0; i < parameterTypes.length; i++) {
-            if (i != index) {
-                //noinspection unchecked
-                objects[i] = createMock(parameterTypes[i]);
+    // TODO (AN) Remove duplication with previous method.
+    public static void checkMethodNullAssertions(final ParameterDefinition paramDefinition, final Object obj,
+            final String methodName, final boolean[] checkParameter) {
+        final Class[] parameterTypes = paramDefinition.getParameterTypes();
+        String[] parameterNames = paramDefinition.getParameterNames();
+        for (int index = 0; index < parameterTypes.length; index++) {
+            if (checkParameter[index]) {
+                checkMethod(parameterTypes, index, parameterNames, methodName, obj);
             }
         }
-        return objects;
     }
 
-    private static boolean isFinalClass(Class clazz) {
-        return clazz.equals(URL.class);
-    }
-
-    private static URL createFinalClass() {
-        try {
-            return new URL("file:///this/is/anything");
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    private static void checkMethod(final Class[] parameterTypes, int index, String[] parameterNames,
+            final String methodName, final Object obj) {
+        final Object[] args = MockTestUtil.createArgs(parameterTypes, index);
+        String message = parameterNames[index] +  " parameter cannot be null";
+        AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                ReflectTestUtil.callMethod(obj, methodName, parameterTypes, args);
+            }
+        });
     }
 }
