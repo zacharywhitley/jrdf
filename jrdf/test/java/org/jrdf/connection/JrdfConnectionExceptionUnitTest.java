@@ -71,7 +71,7 @@ public class JrdfConnectionExceptionUnitTest extends TestCase {
     private static final Class<JrdfConnectionException> CLASS = JrdfConnectionException.class;
 
     public void testClassProperties() {
-        ExceptionTestUtil.testClassProperties(CLASS);
+        ExceptionTestUtil.testFinalClassProperties(CLASS);
     }
 
     public void testConstructors() {

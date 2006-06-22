@@ -71,7 +71,7 @@ public class GraphExceptionUnitTest extends TestCase {
     private static final Class<GraphException> CLASS = GraphException.class;
 
     public void testClassProperties() {
-        ExceptionTestUtil.testClassProperties(CLASS);
+        ExceptionTestUtil.testInheritableClassProperties(CLASS);
     }
 
     public void testConstructors() {
