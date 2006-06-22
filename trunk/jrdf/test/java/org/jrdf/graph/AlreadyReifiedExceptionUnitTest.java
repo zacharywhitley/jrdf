@@ -71,7 +71,7 @@ public class AlreadyReifiedExceptionUnitTest extends TestCase {
     private static final Class<AlreadyReifiedException> CLASS = AlreadyReifiedException.class;
 
     public void testClassProperties() {
-        ExceptionTestUtil.testClassProperties(CLASS);
+        ExceptionTestUtil.testFinalClassProperties(CLASS);
     }
 
     public void testConstructors() {

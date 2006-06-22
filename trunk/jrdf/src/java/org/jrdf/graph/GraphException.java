@@ -64,7 +64,7 @@ package org.jrdf.graph;
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @version $Revision$
  */
-public final class GraphException extends Exception {
+public class GraphException extends Exception {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

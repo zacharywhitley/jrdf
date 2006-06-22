@@ -56,62 +56,27 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test;
+package org.jrdf.writer;
 
-import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ExceptionTestUtil;
 
 /**
- * Allows the overall test driving of generic exceptions.
+ * Test properties of an exception.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class ExceptionTestUtil {
-    private static final String FIRST_MESSAGE = "foo";
-    private static final String FIRST_SECOND = "bar";
+public class WriteExceptionUnitTest extends TestCase {
+    private static final Class<WriteException> CLASS = WriteException.class;
 
-    private ExceptionTestUtil() {
+    public void testClassProperties() {
+        ExceptionTestUtil.testInheritableClassProperties(CLASS);
     }
 
-    public static void testInheritableClassProperties(Class<?> clazz) {
-        ClassPropertiesTestUtil.checkExtensionOf(Exception.class, clazz);
-    }
-
-    public static void testFinalClassProperties(Class<?> clazz) {
-        ClassPropertiesTestUtil.checkClassFinal(clazz);
-        ClassPropertiesTestUtil.checkExtensionOf(Exception.class, clazz);
-    }
-
-    public static void testMessageConstructor(Class<?> clazz) {
-        checkGetMessage(clazz, FIRST_MESSAGE);
-        checkGetMessage(clazz, FIRST_SECOND);
-    }
-
-    public static void testMessageAndThrowableConstructor(Class<?> clazz) {
-        checkGetMessageAndThrowable(clazz, FIRST_MESSAGE, MockTestUtil.createMock(Throwable.class));
-        checkGetMessageAndThrowable(clazz, FIRST_SECOND, MockTestUtil.createMock(Throwable.class));
-    }
-
-    public static void testThrowableConstructor(Class<?> clazz) {
-        checkGetThrowable(clazz, MockTestUtil.createMock(Throwable.class));
-    }
-
-    private static void checkGetMessageAndThrowable(Class<?> clazz, String message, Throwable t) {
-        ParamSpec params = new ParamSpec(new Object[] {message, t}, new Class[] {String.class, Throwable.class});
-        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
-        Assert.assertEquals(message, exception.getMessage());
-        Assert.assertTrue(t == exception.getCause());
-    }
-
-    private static void checkGetMessage(Class<?> clazz, String message) {
-        ParamSpec params = new ParamSpec(message);
-        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
-        Assert.assertEquals(message, exception.getMessage());
-    }
-
-    private static void checkGetThrowable(Class<?> clazz, Throwable t) {
-        ParamSpec params = new ParamSpec(new Object[] {t}, new Class[] {Throwable.class});
-        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
-        Assert.assertTrue(t == exception.getCause());
+    public void testConstructors() {
+        ExceptionTestUtil.testMessageConstructor(CLASS);
+        ExceptionTestUtil.testThrowableConstructor(CLASS);
+        ExceptionTestUtil.testMessageAndThrowableConstructor(CLASS);
     }
 }

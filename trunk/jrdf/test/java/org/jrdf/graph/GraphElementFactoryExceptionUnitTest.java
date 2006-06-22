@@ -71,7 +71,7 @@ public class GraphElementFactoryExceptionUnitTest extends TestCase {
     private static final Class<GraphElementFactoryException> CLASS = GraphElementFactoryException.class;
 
     public void testClassProperties() {
-        ExceptionTestUtil.testClassProperties(CLASS);
+        ExceptionTestUtil.testFinalClassProperties(CLASS);
     }
 
     public void testConstructors() {

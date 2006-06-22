@@ -59,6 +59,11 @@ package org.jrdf.util;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.AnySubjectNode;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+
+import java.lang.reflect.Modifier;
 
 /**
  * Unit test for {@link org.jrdf.util.EqualsUtil}.
@@ -66,6 +71,11 @@ import org.jrdf.graph.AnySubjectNode;
  * @author Andrew Newman
  */
 public class EqualsUtilUnitTest extends TestCase {
+
+    public void testClassProperties() {
+        checkClassFinal(EqualsUtil.class);
+        checkConstructor(EqualsUtil.class, Modifier.PRIVATE, NO_ARG_CONSTRUCTOR);
+    }
 
     public void testIsNull() {
         assertTrue(EqualsUtil.isNull(null));
