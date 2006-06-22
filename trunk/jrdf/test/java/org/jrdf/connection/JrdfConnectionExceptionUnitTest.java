@@ -59,8 +59,7 @@
 package org.jrdf.connection;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.ExceptionTestUtil;
 
 /**
  * Test drive exception properties.
@@ -69,29 +68,14 @@ import org.jrdf.util.test.MockTestUtil;
  * @version $Revision:$
  */
 public class JrdfConnectionExceptionUnitTest extends TestCase {
+    private static final Class<JrdfConnectionException> CLASS = JrdfConnectionException.class;
+
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkClassFinal(JrdfConnectionException.class);
-        ClassPropertiesTestUtil.checkExtensionOf(Exception.class, JrdfConnectionException.class);
+        ExceptionTestUtil.testClassProperties(CLASS);
     }
 
-    public void testMessageConstructor() {
-        checkGetMessage("foo");
-        checkGetMessage("bar");
-    }
-
-    public void testMessageAndThrowableConstructor() {
-        checkGetMessageAndThrowable("foo", MockTestUtil.createMock(Throwable.class));
-        checkGetMessageAndThrowable("bar", MockTestUtil.createMock(Throwable.class));
-    }
-
-    private void checkGetMessageAndThrowable(String message, Throwable t) {
-        JrdfConnectionException jrdfConnectionException = new JrdfConnectionException(message, t);
-        assertEquals(message, jrdfConnectionException.getMessage());
-        assertTrue(t == jrdfConnectionException.getCause());
-    }
-
-    private void checkGetMessage(String message) {
-        JrdfConnectionException jrdfConnectionException = new JrdfConnectionException(message);
-        assertEquals(message, jrdfConnectionException.getMessage());
+    public void testConstructors() {
+        ExceptionTestUtil.testMessageConstructor(CLASS);
+        ExceptionTestUtil.testMessageAndThrowableConstructor(CLASS);
     }
 }
