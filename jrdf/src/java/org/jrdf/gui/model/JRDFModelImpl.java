@@ -84,7 +84,7 @@ public class JRDFModelImpl implements JRDFModel {
 
     public Relation performQuery(String query) {
         try {
-            return connection.executeQuery(query, graph);
+            return connection.executeQuery(graph, query);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

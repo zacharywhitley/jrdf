@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,22 +56,42 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.connection;
 
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
-import org.jrdf.query.QueryBuilder;
-import org.jrdf.graph.Graph;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.MockTestUtil;
 
 /**
- * A builder that always throws exceptions.
+ * Test drive exception properties.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-final class BadQueryBuilder implements QueryBuilder {
+public class JrdfConnectionExceptionUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkClassFinal(JrdfConnectionException.class);
+        ClassPropertiesTestUtil.checkExtensionOf(Exception.class, JrdfConnectionException.class);
+    }
 
-    public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
-        throw new InvalidQuerySyntaxException("HUZZAH!");
+    public void testMessageConstructor() {
+        checkGetMessage("foo");
+        checkGetMessage("bar");
+    }
+
+    public void testMessageAndThrowableConstructor() {
+        checkGetMessageAndThrowable("foo", MockTestUtil.createMock(Throwable.class));
+        checkGetMessageAndThrowable("bar", MockTestUtil.createMock(Throwable.class));
+    }
+
+    private void checkGetMessageAndThrowable(String message, Throwable t) {
+        JrdfConnectionException jrdfConnectionException = new JrdfConnectionException(message, t);
+        assertEquals(message, jrdfConnectionException.getMessage());
+        assertTrue(t == jrdfConnectionException.getCause());
+    }
+
+    private void checkGetMessage(String message) {
+        JrdfConnectionException jrdfConnectionException = new JrdfConnectionException(message);
+        assertEquals(message, jrdfConnectionException.getMessage());
     }
 }

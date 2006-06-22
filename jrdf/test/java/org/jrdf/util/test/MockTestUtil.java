@@ -60,9 +60,9 @@ package org.jrdf.util.test;
 
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
+import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * Create a mock with no expectations.
@@ -71,10 +71,12 @@ import java.net.MalformedURLException;
  * @version $Revision:$
  */
 public class MockTestUtil {
+    private static final ArnoldTheInstantiator INSTANTIATOR = new ArnoldTheInstantiator();
+
     public static <T>T createMock(Class<T> clazz) {
         if (isFinalClass(clazz)) {
             //noinspection unchecked
-            return (T) createFinalClass();
+            return (T) createFinalClass(clazz);
         }
 
         IMocksControl control = EasyMock.createControl();
@@ -85,7 +87,7 @@ public class MockTestUtil {
      * Creates mocked implementations of the parameter type given.
      *
      * @param parameterTypes the types to create.
-     * @param index the index to use in which to create a null Object - can be -1 and will not create any nulls.
+     * @param index          the index to use in which to create a null Object - can be -1 and will not create any nulls.
      * @return an array of created types.
      */
     public static Object[] createArgs(Class[] parameterTypes, int index) {
@@ -100,14 +102,10 @@ public class MockTestUtil {
     }
 
     private static boolean isFinalClass(Class clazz) {
-        return clazz.equals(URL.class);
+        return (clazz.equals(URL.class) || clazz.equals(String.class));
     }
 
-    private static URL createFinalClass() {
-        try {
-            return new URL("file:///this/is/anything");
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    private static Object createFinalClass(Class clazz) {
+        return INSTANTIATOR.instantiate(clazz);
     }
 }

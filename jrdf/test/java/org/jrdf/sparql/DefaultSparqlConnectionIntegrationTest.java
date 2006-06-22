@@ -137,7 +137,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     private Relation executeQuery(SparqlConnection connection, String query) {
         try {
-            return connection.executeQuery(query, GRAPH);
+            return connection.executeQuery(GRAPH, query);
         } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
         } catch (GraphException e) {
