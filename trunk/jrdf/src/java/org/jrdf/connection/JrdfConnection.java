@@ -16,12 +16,12 @@ public interface JrdfConnection {
     /**
      * Executes a query that returns results.
      *
-     * @param queryText The query to execute.
      * @param graph The graph to query.
+     * @param queryText The query to execute.
      * @return The answer to the query, will never be <code>null</code>.
      * @throws org.jrdf.query.InvalidQuerySyntaxException
      *                        If the syntax of the <code>queryText</code> is incorrect.
      * @throws GraphException If an error occurs while executing the query.
      */
-    Relation executeQuery(String queryText, Graph graph) throws InvalidQuerySyntaxException, GraphException;
+    Relation executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
 }

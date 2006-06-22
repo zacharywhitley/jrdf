@@ -68,11 +68,13 @@ import org.jrdf.graph.mem.LiteralImpl;
 import org.jrdf.graph.mem.URIReferenceImpl;
 import org.jrdf.query.ConstraintTriple;
 import org.jrdf.query.DefaultAnswer;
-import org.jrdf.query.QueryImpl;
 import org.jrdf.query.DefaultVariable;
+import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.util.test.ReflectTestUtil;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -115,5 +117,24 @@ public final class ArnoldTheInstantiator {
         instantiators.put(QueryImpl.class, new DefaultQueryInstantiator());
         instantiators.put(ConstraintTriple.class, new ConstraintTripleInstantiator());
         instantiators.put(DefaultVariable.class, new DefaultVariableInstantiator());
+        instantiators.put(URL.class, new URLInstantiator());
+        instantiators.put(String.class, new StringInstantiator());
+    }
+
+    private static class URLInstantiator implements Instantiator {
+        public Object instantiate() {
+            try {
+                return new java.net.URL("file:///this/is/anything");
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
+
+    private static class StringInstantiator implements Instantiator {
+        public Object instantiate() {
+            return "Hello";
+        }
     }
 }
