@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,62 +56,49 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.param;
+package org.jrdf.util.test;
 
-import junit.framework.TestCase;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-
-import static java.lang.reflect.Modifier.PRIVATE;
+import junit.framework.Assert;
 
 /**
- * Unit test for {@link ParameterUtil}.
+ * Allows the overall test driving of generic exceptions.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class ParameterUtilUnitTest extends TestCase {
+public class ExceptionTestUtil {
+    private static final String FIRST_MESSAGE = "foo";
+    private static final String FIRST_SECOND = "bar";
 
-    private static final String NULL = ParameterTestUtil.NULL_STRING;
-    private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
-    private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
-    private static final String NON_EMPTY_STRING = ParameterTestUtil.NON_EMPTY_STRING;
-    private static final Object NON_NULL_OBJECT = ParameterTestUtil.NON_NULL_OBJECT;
-    private static final String DUMMY_PARAM_NAME = "foo";
-
-    public void testClassProperties() {
-        checkConstructor(ParameterUtil.class, PRIVATE, NO_ARG_CONSTRUCTOR);
-        checkClassFinal(ParameterUtil.class);
+    private ExceptionTestUtil() {
     }
 
-    public void testNoNullsAllowed() {
-        try {
-            ParameterUtil.checkNotNull(DUMMY_PARAM_NAME, NULL);
-            fail("Nulls should not be allowed");
-        } catch (IllegalArgumentException expected) {
-        }
+    public static void testClassProperties(Class<?> clazz) {
+        ClassPropertiesTestUtil.checkClassFinal(clazz);
+        ClassPropertiesTestUtil.checkExtensionOf(Exception.class, clazz);
     }
 
-    public void testEmptyStringNotAllowed() {
-        checkStringNotAllowed(NULL);
-        checkStringNotAllowed(EMPTY_STRING);
-        checkStringNotAllowed(SINGLE_SPACE);
+    public static void testMessageConstructor(Class<?> clazz) {
+        checkGetMessage(clazz, FIRST_MESSAGE);
+        checkGetMessage(clazz, FIRST_SECOND);
     }
 
-    public void testNonEmptyStringAllowed() {
-        ParameterUtil.checkNotEmptyString(DUMMY_PARAM_NAME, NON_EMPTY_STRING);
+    public static void testMessageAndThrowableConstructor(Class<?> clazz) {
+        checkGetMessageAndThrowable(clazz, FIRST_MESSAGE, MockTestUtil.createMock(Throwable.class));
+        checkGetMessageAndThrowable(clazz, FIRST_SECOND, MockTestUtil.createMock(Throwable.class));
     }
 
-    public void testNonNullObjectAllowed() {
-        ParameterUtil.checkNotNull(DUMMY_PARAM_NAME, NON_NULL_OBJECT);
+    private static void checkGetMessageAndThrowable(Class<?> clazz, String message, Throwable t) {
+        ParamSpec params = new ParamSpec(new Object[] {message, t}, new Class[] {String.class, Throwable.class});
+        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
+        Assert.assertEquals(message, exception.getMessage());
+        Assert.assertTrue(t == exception.getCause());
     }
 
-    private void checkStringNotAllowed(String param) {
-        try {
-            ParameterUtil.checkNotEmptyString(DUMMY_PARAM_NAME, param);
-            fail("Empty strings should not be allowed");
-        } catch (IllegalArgumentException expected) {
-        }
+    private static void checkGetMessage(Class<?> clazz, String message) {
+        ParamSpec params = new ParamSpec(message);
+        Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
+        Assert.assertEquals(message, exception.getMessage());
     }
+
 }
