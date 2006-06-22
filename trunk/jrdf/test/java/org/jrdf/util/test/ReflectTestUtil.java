@@ -62,6 +62,7 @@ import junit.framework.Assert;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -94,6 +95,14 @@ public final class ReflectTestUtil {
         setFieldValue(ref, field, fieldValue);
     }
 
+    public static Field getField(Class<?> cls, String fieldName) {
+        try {
+            return cls.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static Object newInstance(Class<?> cls) {
         return createInstanceUsingConstructor(cls, PARAMS_NONE);
     }
@@ -101,6 +110,24 @@ public final class ReflectTestUtil {
     public static Object createInstanceUsingConstructor(Class<?> cls, ParamSpec params) {
         Constructor<?> constructor = ClassPropertiesTestUtil.tryGetConstructor(cls, params);
         return invokeConstructor(constructor, params);
+    }
+
+    public static Object callMethod(Object obj, String methodName, Class[] parameterTypes, Object...args) throws Throwable {
+        Method method = tryCallMethod(obj, methodName, parameterTypes);
+        return tryInvoke(method, obj, args);
+    }
+
+    private static Object tryInvoke(Method method, Object obj, Object... args) throws Throwable {
+        try {
+            return method.invoke(obj, args);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            if (e.getCause() != null) {
+                throw e.getCause();
+            }
+            throw e;
+        }
     }
 
     private static void setFieldValue(Object ref, Field field, Object fieldValue) {
@@ -115,19 +142,15 @@ public final class ReflectTestUtil {
     private static Object invokeConstructor(Constructor<?> constructor, ParamSpec params) {
         try {
             return constructor.newInstance(params.getParams());
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static Field getField(Class<?> cls, String fieldName) {
+    private static Method tryCallMethod(Object obj, String methodName, Class...parameterTypes) {
         try {
-            return cls.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e) {
+            return obj.getClass().getDeclaredMethod(methodName, parameterTypes);
+        } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }
