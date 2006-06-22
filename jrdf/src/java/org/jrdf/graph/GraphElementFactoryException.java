@@ -64,7 +64,7 @@ package org.jrdf.graph;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphElementFactoryException extends Exception {
+public final class GraphElementFactoryException extends Exception {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -86,6 +86,15 @@ public class GraphElementFactoryException extends Exception {
     /**
      * Create a wrapper exception.
      *
+     * @param newCause the original exception to wrap.
+     */
+    public GraphElementFactoryException(Throwable newCause) {
+        super(newCause);
+    }
+
+    /**
+     * Create a wrapper exception.
+     *
      * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
@@ -93,12 +102,4 @@ public class GraphElementFactoryException extends Exception {
         super(message, newCause);
     }
 
-    /**
-     * Create a wrapper exception.
-     *
-     * @param newCause the original exception to wrap.
-     */
-    public GraphElementFactoryException(Throwable newCause) {
-        super(newCause);
-    }
 }
