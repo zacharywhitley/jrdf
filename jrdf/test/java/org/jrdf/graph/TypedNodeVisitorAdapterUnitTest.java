@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,41 +58,36 @@
 
 package org.jrdf.graph;
 
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import org.jrdf.util.test.MockTestUtil;
+
+import java.lang.reflect.Modifier;
+
 /**
- * An adapter from {@link TypedNodeVisitor}.  Implements empty implementations
- * to reduce the burden of creating a concrete implementation that doesn't
- * need to implement all methods.
+ * Test the properties of the TypedNodeVisitorAdapter
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision:$
  */
+public class TypedNodeVisitorAdapterUnitTest extends TestCase {
+    private static final BlankNode BLANK_NODE = MockTestUtil.createMock(BlankNode.class);
+    private static final Literal LITERAL = MockTestUtil.createMock(Literal.class);
+    private static final URIReference URI_REFERENCE = MockTestUtil.createMock(URIReference.class);
 
-public class TypedNodeVisitorAdapter implements TypedNodeVisitor {
-
-    /**
-     * Visit blank node.
-     *
-     * @param blankNode the blank node to visit.
-     */
-    public void visitBlankNode(BlankNode blankNode) {
-        // this method is left intentionally blank.
+    public void testClassProperties() {
+        checkClassPublic(TypedNodeVisitorAdapter.class);
+        checkImplementationOfInterface(TypedNodeVisitor.class, TypedNodeVisitorAdapter.class);
+        checkConstructor(TypedNodeVisitorAdapter.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
     }
 
-    /**
-     * Visit URI Reference.
-     *
-     * @param uriReference the URI Reference to visit.
-     */
-    public void visitURIReference(URIReference uriReference) {
-        // this method is left intentionally blank.
-    }
-
-    /**
-     * Visit Literal.
-     *
-     * @param literal the Literal to visit.
-     */
-    public void visitLiteral(Literal literal) {
-        // this method is left intentionally blank.
+    public void testEmptyCalls() {
+        TypedNodeVisitorAdapter adapter = new TypedNodeVisitorAdapter();
+        adapter.visitBlankNode(BLANK_NODE);
+        adapter.visitLiteral(LITERAL);
+        adapter.visitURIReference(URI_REFERENCE);
     }
 }

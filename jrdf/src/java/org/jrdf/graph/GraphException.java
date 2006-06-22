@@ -64,7 +64,7 @@ package org.jrdf.graph;
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @version $Revision$
  */
-public class GraphException extends Exception {
+public final class GraphException extends Exception {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -86,19 +86,19 @@ public class GraphException extends Exception {
     /**
      * Create a wrapper exception.
      *
-     * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
-    public GraphException(String message, Throwable newCause) {
-        super(message, newCause);
+    public GraphException(Throwable newCause) {
+        super(newCause);
     }
 
     /**
      * Create a wrapper exception.
      *
+     * @param message  the message to wrap inside this exception.
      * @param newCause the original exception to wrap.
      */
-    public GraphException(Throwable newCause) {
-        super(newCause);
+    public GraphException(String message, Throwable newCause) {
+        super(message, newCause);
     }
 }

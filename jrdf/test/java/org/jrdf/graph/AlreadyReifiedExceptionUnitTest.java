@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,41 +58,25 @@
 
 package org.jrdf.graph;
 
+import junit.framework.TestCase;
+import org.jrdf.util.test.ExceptionTestUtil;
+
 /**
- * An adapter from {@link TypedNodeVisitor}.  Implements empty implementations
- * to reduce the burden of creating a concrete implementation that doesn't
- * need to implement all methods.
+ * Test properties of exception.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision:$
  */
+public class AlreadyReifiedExceptionUnitTest extends TestCase {
+    private static final Class<AlreadyReifiedException> CLASS = AlreadyReifiedException.class;
 
-public class TypedNodeVisitorAdapter implements TypedNodeVisitor {
-
-    /**
-     * Visit blank node.
-     *
-     * @param blankNode the blank node to visit.
-     */
-    public void visitBlankNode(BlankNode blankNode) {
-        // this method is left intentionally blank.
+    public void testClassProperties() {
+        ExceptionTestUtil.testClassProperties(CLASS);
     }
 
-    /**
-     * Visit URI Reference.
-     *
-     * @param uriReference the URI Reference to visit.
-     */
-    public void visitURIReference(URIReference uriReference) {
-        // this method is left intentionally blank.
-    }
-
-    /**
-     * Visit Literal.
-     *
-     * @param literal the Literal to visit.
-     */
-    public void visitLiteral(Literal literal) {
-        // this method is left intentionally blank.
+    public void testConstructors() {
+        ExceptionTestUtil.testMessageConstructor(CLASS);
+        ExceptionTestUtil.testThrowableConstructor(CLASS);
+        ExceptionTestUtil.testMessageAndThrowableConstructor(CLASS);
     }
 }
