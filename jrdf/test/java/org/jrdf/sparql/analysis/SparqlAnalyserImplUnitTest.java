@@ -81,6 +81,7 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.FieldPropertiesTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
+import org.jrdf.util.test.AssertThrows;
 
 import java.net.URI;
 
@@ -237,16 +238,22 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
     }
 
     private void checkNoQueryConstantDoesNothing() {
-        try {
-            SparqlAnalyser.NO_QUERY.getVariables();
-            fail("SparqlAnalysis.NO_QUERY.getVariables() should have thrown UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-        }
-        try {
-            SparqlAnalyser.NO_QUERY.getConstraintExpression();
-            fail("SparqlAnalysis.NO_QUERY.getConstraintExpression() should have thrown UnsupportedOperationException");
-        } catch (UnsupportedOperationException expected) {
-        }
+        AssertThrows.assertThrows(UnsupportedOperationException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                SparqlAnalyser.NO_QUERY.getVariables();
+            }
+        });
+        AssertThrows.assertThrows(UnsupportedOperationException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                SparqlAnalyser.NO_QUERY.getConstraintExpression();
+            }
+        });
+        AssertThrows.assertThrows(UnsupportedOperationException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                SparqlAnalyser.NO_QUERY.getSingleAvp();
+            }
+        });
+
     }
 
     private void checkNoQueryConstantImmutable() {
