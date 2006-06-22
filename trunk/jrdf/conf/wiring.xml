@@ -89,7 +89,7 @@
         </constructor-arg>
     </bean>
 
-    <bean name="queryBuilder" class="org.jrdf.sparql.SparqlQueryBuilder">
+    <bean name="queryBuilder" class="org.jrdf.sparql.builder.SparqlQueryBuilder">
         <constructor-arg>
             <ref bean="sparqlParser"/>
         </constructor-arg>
