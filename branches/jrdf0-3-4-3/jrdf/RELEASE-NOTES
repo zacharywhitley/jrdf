@@ -1,3 +1,9 @@
+JRDF Release 0.3.4.3
+====================
+* Still doesn't parser XML Literals correctly - can fail to parse who
+triples due to not flushing the output stream. Due to typo (and no test). 
+(Bug 1511751).
+
 JRDF Release 0.3.4.2
 ====================
 * XML Literals were not correctly parsed to include all data (Bug 1362610).

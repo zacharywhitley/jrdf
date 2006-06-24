@@ -158,7 +158,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
         this.rdfParser = rdfParser;
         th = ((SAXTransformerFactory) SAXTransformerFactory.newInstance()).
                 newTransformerHandler();
-        th.setResult(new StreamResult(os));
+        th.setResult(new StreamResult(osw));
     }
 
     public Locator getLocator() {
