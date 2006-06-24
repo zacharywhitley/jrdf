@@ -1,13 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-    <meta content="text/html; charset=ISO-8859-1"
-          http-equiv="content-type">
-    <title>JRDF - Java RDF API</title>
-    <meta content="Andrew Newman" name="author">
-    <meta content="A binding to RDF using Java." name="description">
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>JRDF - Java RDF API</title>
+  <meta content="Andrew Newman" name="author">
+  <meta content="A binding to RDF using Java." name="description">
 </head>
-
 <body>
 <h1><a href="http://sourceforge.net"></a>JRDF (Java RDF)<br>
 </h1>
@@ -25,24 +24,23 @@ features that are appropriate to certain use cases.&nbsp; Also, there
 are many common aspects to existing APIs with only slight differences
 in method names, package hierarchies and exception handling.<br>
 <br>
-
 <h2>APIs Provided<br>
 </h2>
 JRDF will include interfaces for storing, querying and creating RDF
 statements including:<br>
 <ul>
-    <li>A Graph API,</li>
-    <li>Creating and manipulating Graph objects (Statements, Nodes, etc.),</li>
-    <li>A standard system level interface for storing triples,<br>
-    </li>
-    <li>Transactions,</li>
-    <li>Event Handling (addition/removal of nodes from a graph),</li>
-    <li>Query Handling (including results, transport, etc),</li>
-    <li>RDF Datatypes,<br>
-    </li>
-    <li>Security,</li>
-    <li>Inferencing.<br>
-    </li>
+  <li>A Graph API,</li>
+  <li>Creating and manipulating Graph objects (Statements, Nodes, etc.),</li>
+  <li>A standard system level interface for storing triples,<br>
+  </li>
+  <li>Transactions,</li>
+  <li>Event Handling (addition/removal of nodes from a graph),</li>
+  <li>Query Handling (including results, transport, etc),</li>
+  <li>RDF Datatypes,<br>
+  </li>
+  <li>Security,</li>
+  <li>Inferencing.<br>
+  </li>
 </ul>
 Being able to talk directly to a triple store in a common manner with
 the ability to swap differing implementations is one of the key aims of
@@ -51,86 +49,73 @@ in the same JVM, that a common API provides.&nbsp; At the same time it
 will allow higher level APIs to be developed on top of the existing
 agreed upon APIs.<br>
 <br>
-
 <h2>Existing Work<br>
 </h2>
 This project is based on the existing RDF libraries and is
 designed to include the best features from all available sources.<br>
 <ul>
-    <li><a href="http://www.hpl.hp.com/semweb/jena.htm">Jena</a>,<br>
-    </li>
-    <li><a href="http://www.angelite.nl/aquamarine/">Aquamarine</a>,<br>
-    </li>
-    <li><a href="http://www.openrdf.org/">Sesame</a> and<br>
-    </li>
-    <li><a href="http://www-db.stanford.edu/%7Emelnik/rdf/api.html">Sergey
-        Melnik's RDF API</a>.</li>
+  <li><a href="http://www.hpl.hp.com/semweb/jena.htm">Jena</a>,<br>
+  </li>
+  <li><a href="http://www.angelite.nl/aquamarine/">Aquamarine</a>,<br>
+  </li>
+  <li><a href="http://www.openrdf.org/">Sesame</a> and<br>
+  </li>
+  <li><a href="http://www-db.stanford.edu/%7Emelnik/rdf/api.html">Sergey
+Melnik's RDF API</a>.</li>
 </ul>
 Other standard APIs will be used where possible.<br>
 <br>
-
 <h2>Documentation<br>
 </h2>
 Currently available documentation:<br>
 <ul>
-    <li><a href="http://jrdf.sourceforge.net/0.4.0/doc/javadoc/index.html">JRDF
-        0.4.0 Javadoc</a>.</li>
-    <li><a href="http://jrdf.sourceforge.net/0.3.4/doc/javadoc/index.html">JRDF
-        0.3.4 Javadoc</a>.</li>
-    <li><a href="http://jrdf.sourceforge.net/0.3.2/doc/javadoc/index.html">JRDF
-        0.3.2 Javadoc</a>.</li>
-    <li><a href="http://jrdf.sourceforge.net/0.3/doc/javadoc/index.html">JRDF
-        0.3 Javadoc</a>.</li>
+  <li><a href="http://jrdf.sourceforge.net/0.3.4/doc/javadoc/index.html">JRDF
+0.3.4 Javadoc</a>.</li>
+  <li><a href="http://jrdf.sourceforge.net/0.3.2/doc/javadoc/index.html">JRDF
+0.3.2 Javadoc</a>.</li>
+  <li><a href="http://jrdf.sourceforge.net/0.3/doc/javadoc/index.html">JRDF
+0.3 Javadoc</a>.</li>
 </ul>
-
 <h2>Status</h2>
-03/04/2006 - <A
-    HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=406779"
-    style="font-weight: bold;">0.4.0</A> - First Java 1.5 only release.
-Began work on relational and graph operations. Began work on NTriples
-parser and SPARQL support. RDF/XML improved to add proper handling of
-XML Literals, relative URIs and xml:base processing.<br>
 24/11/2005 - <A
-    HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=373455"
-    style="font-weight: bold;">0.3.4.2</A> - Another bug fix release. Fixes to RDF/XML literal parsing and
+HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=373455"  style="font-weight: bold;">0.3.4.2</A> - Another bug fix release.  Fixes to RDF/XML literal parsing and 
 NTriple escaping.<br>
 08/10/2005 - <A
-    HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=362121"
-    style="font-weight: bold;">0.3.4.1</A> - Bug Fix Release. Fixes to xml:base handling and
+HREF="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=362121" style="font-weight: bold;">0.3.4.1</A> - Bug Fix Release.  Fixes to xml:base handling and 
 resolving of relative URIs.<br>
 12/07/2005 - <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=341581"><span
-    style="font-weight: bold;">0.3.4</span></a> - RDF/XML parser based on RIO
+ href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=341581"><span
+ style="font-weight: bold;">0.3.4</span></a> - RDF/XML parser based on RIO
 released (with improved support for blank nodes), start of SPARQL and remote query support, bugs fixed, and general
 code refactoring and preparation for move to Java 1.5.<br>
 27/09/2004 - <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=270827"><span
-    style="font-weight: bold;">0.3.3</span></a> - Single bug fix - correction to reification
-semantics. No changes to API.<br>
+ href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=270827"><span
+ style="font-weight: bold;">0.3.3</span></a> - Single bug fix - correction to reification
+semantics.  No changes to API.<br>
 14/09/2004 - <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=267807"><span
-    style="font-weight: bold;">0.3.2</span></a> - Further in memory bug fixes and
+ href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=267807"><span
+ style="font-weight: bold;">0.3.2</span></a> - Further in memory bug fixes and
 improved iterator support.<br>
 23/08/2004 - <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=262565"><span
-    style="font-weight: bold;">0.3.1</span></a> - In memory bug fix release.<br>
+ href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=262565"><span
+ style="font-weight: bold;">0.3.1</span></a> - In memory bug fix release.<br>
 15/08/2004 - <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=260670"><span
-    style="font-weight: bold;">0.3</span></a> - In memory implementation,
+ href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=260670"><span
+ style="font-weight: bold;">0.3</span></a> - In memory implementation,
 visitor support, collection and container support.<br>
 21/02/2004 - <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=218562"><span
-    style="font-weight: bold;">0.2.1</span></a> - Updated graph, added
+ href="http://sourceforge.net/project/showfiles.php?group_id=96347&package_id=103763&release_id=218562"><span
+ style="font-weight: bold;">0.2.1</span></a> - Updated graph, added
 vocabularies and iterator for results.<br>
 18/12/2003 - <a
-    href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;release_id=203283"><span
-    style="font-weight: bold;">0.2</span></a> - Update of graph level interface.<br>
+ href="http://sourceforge.net/project/showfiles.php?group_id=96347&amp;release_id=203283"><span
+ style="font-weight: bold;">0.2</span></a> - Update of graph level interface.<br>
 <br>
 Contact: <a href="http://sourceforge.net/users/newmana/">Andrew Newman</a><br>
 <br>
 <a href="http://sourceforge.net"><img
-    style="border: 0px solid ; width: 88px; height: 31px;" alt="SF Logo"
-    src="http://sourceforge.net/sflogo.php?group_id=96347"></a><br>
+ style="border: 0px solid ; width: 88px; height: 31px;" alt="SF Logo"
+ src="http://sourceforge.net/sflogo.php?group_id=96347"></a><br>
 <a href="http://sf.net/projects/jrdf">JRDF SourceForge Project Page</a><br>
 </body>
 </html>
