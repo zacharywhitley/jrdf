@@ -1,8 +1,4 @@
 JRDF TODO List
 
-o Implement SPARQL parser.
-o Continue refactoring code.
-o Make GraphImpl IoCed.  Take in the constructor GraphHandlers, LongIndexes and TripleFactory.  Then test drive the lot - once the interfaces have settled down - currently it's a bit of a spike.
-o Once indices are refactored do indexed Graph operations.
-o Finish Relational operators.
-o Write a pull based RDF/XML parser.
+o Implement SPARQL parser o Add build.cmd and build.sh scripts for command
+line building without adding libs to ant bootstrap classpath 
