@@ -1,0 +1,4 @@
+JRDF TODO List
+
+o Implement SPARQL parser o Add build.cmd and build.sh scripts for command
+line building without adding libs to ant bootstrap classpath 
