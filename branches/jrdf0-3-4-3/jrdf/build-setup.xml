@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jrdf-setup" default="default" basedir=".">
+
+    <property name="project.longname" value="Java RDF API"/>
+    <property name="project.shortname" value="jrdf"/>
+    <property name="project.version.major" value="0"/>
+    <property name="project.version.minor" value="3.4.2"/>
+    <property name="version-status" value=""/>
+    <property name="project.version.full" value="${project.version.major}.${project.version.minor}${version-status}"/>
+    <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="dist.dir" value="${build.dir}/dist"/>
+    <property name="gen.src.dir" value="${build.dir}/gen"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="doc.dir" value="doc"/>
+    <property name="javadoc.dir" value="doc/javadoc"/>
+    <property name="test.results.dir" value="${build.dir}/test"/>
+    <property name="prod.classes.dir" value="${build.dir}/classes"/>
+    <property name="test.results" value="${test.results.dir}/All-Tests.xml"/>
+    <property name="compile.debug" value="true"/>
+    <property name="compile.debuglevel" value="source,lines"/>
+    <property name="compile.deprecation" value="false"/>
+    <property name="compile.optimize" value="true"/>
+    <property name="java.src.version" value="1.4"/>
+    <property name="web.site.url" value="http://jrdf.sourceforge.net/"/>
+
+    <patternset id="production.code.pattern">
+        <include name="**/*.java"/>
+        <exclude name="**/*Test*.java"/>
+        <exclude name="**/*Mock*.java"/>
+    </patternset>
+    <patternset id="test.code.pattern">
+        <include name="**/*Test*.java"/>
+        <!-- Why is this out? -->
+        <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*Mock*.java"/>
+        <exclude name="**/Abstract*"/>
+    </patternset>
+    <patternset id="all.code.pattern">
+        <include name="**/*.java"/>
+    </patternset>
+    <patternset id="test.class.pattern">
+        <include name="**/*Test*.class"/>
+        <!-- Why is this out? -->
+        <exclude name="**/*TestUtil*.java"/>
+        <exclude name="**/*Mock*.class"/>
+        <exclude name="**/Abstract*"/>
+    </patternset>
+
+
+    <!-- Note. Put other test code patterns here (integration, load, etc.) -->
+    <fileset id="production.code.fileset" dir="${src.dir}">
+        <patternset refid="production.code.pattern"/>
+    </fileset>
+    <fileset id="test.code.fileset" dir="${src.dir}">
+        <patternset refid="test.code.pattern"/>
+    </fileset>
+    <fileset id="all.code.fileset" dir="${src.dir}">
+        <patternset refid="all.code.pattern"/>
+    </fileset>
+
+    <!--
+    <path id="production.code.path">
+        <fileset refid="production.code.fileset"/>
+    </path>
+    <path id="test.code.path">
+        <pathelement location="${src.dir}"/>
+    </path>
+    <path id="gen.path" location="${gen.src.dir}"/>
+    -->
+    <path id="all.code.path">
+        <pathelement location="${src.dir}"/>
+        <!--<path refid="gen.path"/>-->
+    </path>
+    <path id="production.class.path">
+        <pathelement location="${lib.dir}/jsr173_1.0_api.jar"/>
+        <pathelement location="${lib.dir}/junit-3.8.1.jar"/>
+    </path>
+    <path id="test.class.path">
+        <pathelement location="${dist.dir}/${project.jar}"/>
+        <pathelement location="${classes.dir}"/>
+    </path>
+
+    <target name="default">
+        <echo message="Nothing to see here..."/>
+    </target>
+
+</project>
