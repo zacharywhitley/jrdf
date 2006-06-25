@@ -84,7 +84,6 @@ public final class RelationImpl extends Primordial implements Relation {
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
 
-    // TODO (AN) Headings can be gleaned from tuples
     public RelationImpl(Set<Tuple> newTuples, AttributeComparator attributeComparator,
             TupleComparator tupleComparator) {
         heading = createHeadingFromTuples(newTuples);
@@ -111,11 +110,10 @@ public final class RelationImpl extends Primordial implements Relation {
         }
 
         // TODO (AN) Turn this into a sort call instead?
-        Set<Attribute> sortedHeading = new TreeSet<Attribute>(attributeComparator);
+        SortedSet<Attribute> sortedHeading = new TreeSet<Attribute>(attributeComparator);
         sortedHeading.addAll(heading);
         heading = sortedHeading;
-        //noinspection unchecked
-        return (SortedSet) sortedHeading;
+        return sortedHeading;
     }
 
     // TODO (AN) Test drive me
@@ -126,13 +124,11 @@ public final class RelationImpl extends Primordial implements Relation {
                 return (SortedSet) tuples;
             }
         }
-
         // TODO (AN) Turn this into a sort call instead?
-        Set<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
+        SortedSet<Tuple> sortedTuples = new TreeSet<Tuple>(tupleComparator);
         sortedTuples.addAll(tuples);
         tuples = sortedTuples;
-        //noinspection unchecked
-        return (SortedSet) sortedTuples;
+        return sortedTuples;
     }
 
     private Set<Attribute> createHeadingFromTuples(Set<Tuple> newTuples) {

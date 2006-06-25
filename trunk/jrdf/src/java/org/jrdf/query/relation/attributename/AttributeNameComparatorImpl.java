@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,32 +58,56 @@
 
 package org.jrdf.query.relation.attributename;
 
-import au.net.netstorm.boost.primordial.Primordial;
-import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
-import junit.framework.TestCase;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-
-import java.lang.reflect.Modifier;
-
 /**
- * Stuff goes in here.
+ * Compares attribute names.
  *
  * @author Andrew Newman
- * @version $Id: PositionNameUnitTest.java 540 2006-06-06 20:03:16 +1000 (Tue, 06 Jun 2006) newmana $
+ * @version $Revision:$
  */
-public class AnyNameUnitTest extends TestCase {
-    private static final String FIXED_NAME_VALUE = "ANY_NAME";
+public class AttributeNameComparatorImpl implements AttributeNameComparator {
+    private static final int AFTER = 1;
+    private static final int BEFORE = -1;
+    private static final int EQUAL = 0;
 
-    public void testClassProperties() {
-        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, AnyName.class);
-        checkImplementationOfInterfaceAndFinal(AttributeName.class, AnyName.class);
-        checkConstructor(AnyName.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+    public int compare(AttributeName attName1, AttributeName attName2) {
+        int result;
+        result = compareAttributeNames(attName1, attName2);
+        if (result == EQUAL) {
+            result = compareByLiteralValue(attName1, attName2);
+        }
+        return result;
     }
 
-    public void testReturnsConstantNameValue() {
-        AnyName anyName = new AnyName();
-        assertEquals(FIXED_NAME_VALUE, anyName.getLiteral());
+    private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
+        boolean attIsVariable = attributeIsVariableName(attribute);
+        boolean att2IsVariable = attributeIsVariableName(attribute1);
+
+        if (attIsVariable && !att2IsVariable) {
+            return AFTER;
+        } else if (isSameNameType(attIsVariable, att2IsVariable)) {
+            return EQUAL;
+        } else {
+            return BEFORE;
+        }
+    }
+
+    private int compareByLiteralValue(AttributeName attributeName, AttributeName attributeName1) {
+        String attLit1 = attributeName.getLiteral();
+        String attLit2 = attributeName1.getLiteral();
+        int result = attLit1.compareTo(attLit2);
+        if (result > EQUAL) {
+            return AFTER;
+        } else if (result < EQUAL) {
+            return BEFORE;
+        }
+        return result;
+    }
+
+    private boolean isSameNameType(boolean attIsVariable, boolean att2IsVariable) {
+        return attIsVariable && att2IsVariable || !attIsVariable && !att2IsVariable;
+    }
+
+    private boolean attributeIsVariableName(AttributeName attribute) {
+        return attribute instanceof VariableName;
     }
 }
