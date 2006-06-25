@@ -58,63 +58,62 @@
 
 package org.jrdf.query.relation.attributename;
 
+import org.jrdf.TestJRDFFactory;
+import org.jrdf.util.test.AssertThrows;
+import junit.framework.TestCase;
+
 /**
- * Compares attribute names.
+ * Test that position names comes before variable names and if the same by name.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class AttributeNameComparatorImpl implements AttributeNameComparator {
-    private static final int AFTER = 1;
-    private static final int BEFORE = -1;
+public class AttributeNameComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
+    private static final int BEFORE = -1;
+    private static final int AFTER = 1;
+    private static final AttributeName VAR_BAR = new VariableName("bar");
+    private static final AttributeName VAR_FOO = new VariableName("foo");
+    private static final AttributeName POS_BAR = new PositionName("bar");
+    private static final AttributeName POS_FOO = new PositionName("foo");
+    private AttributeNameComparator attNameComparator;
 
-    public int compare(AttributeName attName1, AttributeName attName2) {
-        ifNullThrowException(attName1, attName2);
-
-        int result = compareAttributeNames(attName1, attName2);
-        if (result == EQUAL) {
-            result = compareByLiteralValue(attName1, attName2);
-        }
-        return result;
+    protected void setUp() throws Exception {
+        super.setUp();
+        attNameComparator = TestJRDFFactory.getFactory().getNewAttributeNameComparator();
     }
 
-    private void ifNullThrowException(AttributeName attName1, AttributeName attName2) {
-        if (attName1 == null || attName2 == null) {
-            throw new NullPointerException();
-        }
+    public void testNullPointerException() {
+        checkNullPointerException(attNameComparator, VAR_BAR, null);
+        checkNullPointerException(attNameComparator, null, VAR_BAR);
     }
 
-    private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
-        boolean attIsVariable = attributeIsVariableName(attribute);
-        boolean att2IsVariable = attributeIsVariableName(attribute1);
-
-        if (attIsVariable && !att2IsVariable) {
-            return AFTER;
-        } else if (isSameNameType(attIsVariable, att2IsVariable)) {
-            return EQUAL;
-        } else {
-            return BEFORE;
-        }
+    public void testIdentity() {
+        assertEquals(EQUAL, attNameComparator.compare(VAR_BAR, VAR_BAR));
     }
 
-    private int compareByLiteralValue(AttributeName attributeName, AttributeName attributeName1) {
-        String attLit1 = attributeName.getLiteral();
-        String attLit2 = attributeName1.getLiteral();
-        int result = attLit1.compareTo(attLit2);
-        if (result > EQUAL) {
-            return AFTER;
-        } else if (result < EQUAL) {
-            return BEFORE;
-        }
-        return result;
+    public void testAttributeNameTypeOrder() {
+        assertEquals(BEFORE, attNameComparator.compare(VAR_BAR, VAR_FOO));
+        assertEquals(BEFORE, attNameComparator.compare(POS_BAR, VAR_BAR));
+        assertEquals(BEFORE, attNameComparator.compare(POS_FOO, VAR_BAR));
+        assertEquals(BEFORE, attNameComparator.compare(POS_BAR, POS_FOO));
     }
 
-    private boolean isSameNameType(boolean attIsVariable, boolean att2IsVariable) {
-        return attIsVariable && att2IsVariable || !attIsVariable && !att2IsVariable;
+    public void testAttributeNameTypeAntiCommutation() {
+        assertEquals(AFTER, attNameComparator.compare(VAR_FOO, VAR_BAR));
+        assertEquals(AFTER, attNameComparator.compare(VAR_BAR, POS_BAR));
+        assertEquals(AFTER, attNameComparator.compare(VAR_BAR, POS_FOO));
+        assertEquals(AFTER, attNameComparator.compare(POS_FOO, POS_BAR));
     }
 
-    private boolean attributeIsVariableName(AttributeName attribute) {
-        return attribute instanceof VariableName;
+    // TODO (AN) Duplication with other comparator tests
+    private void checkNullPointerException(final AttributeNameComparator attNameComparator, final AttributeName att,
+                                           final AttributeName att2) {
+        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                //noinspection unchecked
+                attNameComparator.compare(att, att2);
+            }
+        });
     }
 }

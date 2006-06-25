@@ -139,15 +139,16 @@ public class JoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
         Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
             ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-        Relation relation1 = createRelation(tuple1);
-        Relation relation2 = createRelation(tuple2);
-        Relation expectedResult = createRelation(resultTuple);
-        Set<Relation> tuples = createRelations(relation1, relation2);
-        checkRelation(expectedResult, tuples);
+        checkJoin(tuple1, tuple2, resultTuple);
     }
 
     public void testNaturalJoin() {
-
+//        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
+//        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_4);
+        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
+                ATTRIBUTE_VALUE_PAIR_4);
+        System.err.println("Result Tuple: " + resultTuple);
+//        checkJoin(tuple1, tuple2, resultTuple);
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
@@ -171,6 +172,14 @@ public class JoinImplIntegrationTest extends TestCase {
             tuples.add(relation);
         }
         return tuples;
+    }
+
+    private void checkJoin(Set<Tuple> tuple1, Set<Tuple> tuple2, Set<Tuple> resultTuple) {
+        Relation relation1 = createRelation(tuple1);
+        Relation relation2 = createRelation(tuple2);
+        Relation expectedResult = createRelation(resultTuple);
+        Set<Relation> tuples = createRelations(relation1, relation2);
+        checkRelation(expectedResult, tuples);
     }
 
     private void checkRelation(Relation expected, Set<Relation> actual) {

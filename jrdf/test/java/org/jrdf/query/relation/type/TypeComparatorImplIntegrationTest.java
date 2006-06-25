@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,86 +55,89 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.query.relation.mem;
+
+package org.jrdf.query.relation.type;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.attributename.PositionName;
-import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.LiteralType;
-import org.jrdf.query.relation.type.ObjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
-import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.Type;
 import org.jrdf.util.test.AssertThrows;
 
 /**
- * Test for the implementation of NodeComparatorImpl.
+ * Tests the ordering of types - first comes S, P, O and then BNode, URI, Literal.
  *
  * @author Andrew Newman
- * @version $Id$
+ * @version $Revision:$
  */
-public class AttributeComparatorImplIntegrationTest extends TestCase {
+public class TypeComparatorImplIntegrationTest extends TestCase {
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
-    private AttributeComparator attComparator;
+    private TypeComparator typeComparator;
 
-    private static final AttributeName VARIABLE_NAME_1 = new VariableName("bar");
-    private static final AttributeName VARIABLE_NAME_2 = new VariableName("foo");
-    private static final AttributeName POSITION_NAME_3 = new PositionName("subject");
-    private static final AttributeName POSITION_NAME_4 = new PositionName("predicate");
-    private static final AttributeName POSITION_NAME_5 = new PositionName("object");
     private static final Type BNODE_TYPE = new BlankNodeType();
+    private static final Type URI_NODE_TYPE = new URIReferenceType();
     private static final Type LITERAL_NODE_TYPE = new LiteralType();
     private static final Type SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
     private static final Type PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
     private static final Type OBJECT_POSITIONAL_NODE = new ObjectNodeType();
 
-    public static final Attribute TEST_VAR_BAR_BNODE = new AttributeImpl(VARIABLE_NAME_1, BNODE_TYPE);
-    public static final Attribute TEST_VAR_BAR_LITERAL = new AttributeImpl(VARIABLE_NAME_1, LITERAL_NODE_TYPE);
-    public static final Attribute TEST_VAR_FOO_LITERAL = new AttributeImpl(VARIABLE_NAME_2, LITERAL_NODE_TYPE);
-    public static final Attribute TEST_POS_BAR_SNODE = new AttributeImpl(POSITION_NAME_3, SUBJECT_POSITIONAL_NODE);
-    public static final Attribute TEST_POS_BAR_PNODE = new AttributeImpl(POSITION_NAME_4, PREDICATE_POSITIONAL_NODE);
-    public static final Attribute TEST_POS_BAR_ONODE = new AttributeImpl(POSITION_NAME_5, OBJECT_POSITIONAL_NODE);
-
-    public void setUp() throws Exception {
+    protected void setUp() throws Exception {
         super.setUp();
-        attComparator = TestJRDFFactory.getFactory().getNewAttributeComparator();
+        typeComparator = TestJRDFFactory.getFactory().getNewTypeComparator();
     }
 
     public void testNullPointerException() {
-        checkNullPointerException(attComparator, AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS, null);
-        checkNullPointerException(attComparator, null, AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS);
+        checkNullPointerException(typeComparator, BNODE_TYPE, null);
+        checkNullPointerException(typeComparator, null, BNODE_TYPE);
     }
 
     public void testIdentity() {
-        assertEquals(EQUAL, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_BNODE));
+        assertEquals(EQUAL, typeComparator.compare(BNODE_TYPE, BNODE_TYPE));
     }
 
-    public void testSameAttributeNameDifferentNodeType() {
-        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_SNODE, TEST_POS_BAR_PNODE));
-        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_SNODE, TEST_POS_BAR_ONODE));
-        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_PNODE, TEST_POS_BAR_ONODE));
+    public void testNodeTypeOrder() {
+        assertEquals(BEFORE, typeComparator.compare(BNODE_TYPE, URI_NODE_TYPE));
+        assertEquals(BEFORE, typeComparator.compare(BNODE_TYPE, LITERAL_NODE_TYPE));
+        assertEquals(BEFORE, typeComparator.compare(URI_NODE_TYPE, LITERAL_NODE_TYPE));
     }
 
-    public void testSameAttributeNameDifferentNodeTypeAntiCommutation() {
-        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_PNODE, TEST_POS_BAR_SNODE));
-        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_ONODE, TEST_POS_BAR_PNODE));
-        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_ONODE, TEST_POS_BAR_SNODE));
+    public void testNodeTypeOrderAntiCommutation() {
+        assertEquals(AFTER, typeComparator.compare(URI_NODE_TYPE, BNODE_TYPE));
+        assertEquals(AFTER, typeComparator.compare(LITERAL_NODE_TYPE, BNODE_TYPE));
+        assertEquals(AFTER, typeComparator.compare(LITERAL_NODE_TYPE, URI_NODE_TYPE));
+    }
+
+    public void testPositionalNodeOrder() {
+        assertEquals(BEFORE, typeComparator.compare(SUBJECT_POSITIONAL_NODE, PREDICATE_POSITIONAL_NODE));
+        assertEquals(BEFORE, typeComparator.compare(SUBJECT_POSITIONAL_NODE, OBJECT_POSITIONAL_NODE));
+        assertEquals(BEFORE, typeComparator.compare(PREDICATE_POSITIONAL_NODE, OBJECT_POSITIONAL_NODE));
+    }
+
+    public void testPositionalNodeOrderAntiCommutation() {
+        assertEquals(AFTER, typeComparator.compare(PREDICATE_POSITIONAL_NODE, SUBJECT_POSITIONAL_NODE));
+        assertEquals(AFTER, typeComparator.compare(OBJECT_POSITIONAL_NODE, SUBJECT_POSITIONAL_NODE));
+        assertEquals(AFTER, typeComparator.compare(OBJECT_POSITIONAL_NODE, PREDICATE_POSITIONAL_NODE));
+    }
+
+    public void testNodeTypeAndPositionalTypeOrder() {
+        assertEquals(BEFORE, typeComparator.compare(BNODE_TYPE, SUBJECT_POSITIONAL_NODE));
+        assertEquals(BEFORE, typeComparator.compare(URI_NODE_TYPE, PREDICATE_POSITIONAL_NODE));
+        assertEquals(BEFORE, typeComparator.compare(LITERAL_NODE_TYPE, OBJECT_POSITIONAL_NODE));
+    }
+
+    public void testNodeTypeAndPositionalTypeOrderAntiCommutation() {
+        assertEquals(AFTER, typeComparator.compare(SUBJECT_POSITIONAL_NODE, BNODE_TYPE));
+        assertEquals(AFTER, typeComparator.compare(PREDICATE_POSITIONAL_NODE, URI_NODE_TYPE));
+        assertEquals(AFTER, typeComparator.compare(OBJECT_POSITIONAL_NODE, LITERAL_NODE_TYPE));
     }
 
     // TODO (AN) Duplication with other comparator tests
-    private void checkNullPointerException(final AttributeComparator attComparator, final Attribute att,
-                                           final Attribute att2) {
+    private void checkNullPointerException(final TypeComparator attComparator, final Type type1,
+                                           final Type type2) {
         AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 //noinspection unchecked
-                attComparator.compare(att, att2);
+                attComparator.compare(type1, type2);
             }
         });
     }
