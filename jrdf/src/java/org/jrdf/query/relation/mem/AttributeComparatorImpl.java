@@ -59,17 +59,8 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.LiteralType;
-import org.jrdf.query.relation.type.ObjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
-import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.Type;
-import org.jrdf.query.relation.type.URIReferenceType;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeEnum;
+import org.jrdf.query.relation.type.TypeComparator;
+import org.jrdf.query.relation.attributename.AttributeNameComparator;
 
 /**
  * Stuff goes in here.
@@ -78,67 +69,31 @@ import org.jrdf.util.NodeTypeEnum;
  * @version $Id$
  */
 public final class AttributeComparatorImpl implements AttributeComparator {
-    private NodeTypeComparator nodeTypeComparator;
-    private static final int AFTER = 1;
-    private static final int BEFORE = -AFTER;
     private static final int EQUAL = 0;
+    private final TypeComparator nodeTypeComparator;
+    private final AttributeNameComparator attributeNameComparator;
 
-    public AttributeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
+    public AttributeComparatorImpl(TypeComparator nodeTypeComparator, AttributeNameComparator attributeNameComparator) {
         this.nodeTypeComparator = nodeTypeComparator;
+        this.attributeNameComparator = attributeNameComparator;
     }
 
-    public int compare(Attribute attribute, Attribute attribute1) {
+    public int compare(Attribute attribute1, Attribute attribute2) {
         int result;
 
-        ifNullThrowException(attribute, attribute1);
+        ifNullThrowException(attribute1, attribute2);
 
         // TODO (AN) Test drive me!
-        if (attribute.equals(attribute1)) {
+        if (attribute1.equals(attribute2)) {
             return EQUAL;
         }
 
-        result = compareByNodeType(attribute, attribute1);
+        result = nodeTypeComparator.compare(attribute1.getType(), attribute2.getType());
 
         if (result == EQUAL) {
-            result = compareAttributeNames(attribute.getAttributeName(), attribute1.getAttributeName());
+            result = attributeNameComparator.compare(attribute1.getAttributeName(), attribute2.getAttributeName());
         }
 
-        if (result == EQUAL) {
-            result = compareByLiteralValue(attribute.getAttributeName(), attribute1.getAttributeName());
-        }
-
-
-        return result;
-    }
-
-    private int compareByNodeType(Attribute attribute, Attribute attribute1) {
-        int result;
-        Type type1 = attribute.getType();
-        Type type2 = attribute1.getType();
-        if ((isPositionNodeType(type1) && isPositionNodeType(type2)) ||
-                (!isPositionNodeType(type1) && !isPositionNodeType(type2))) {
-            result = compareSameNodeTypes(attribute, attribute1);
-        } else {
-            result = compareDifferentNodeTypes(type1, type2);
-        }
-        return result;
-    }
-
-    private int compareDifferentNodeTypes(Type type1, Type type2) {
-        if (isPositionNodeType(type1) && !isPositionNodeType(type2)) {
-            return AFTER;
-        }
-        return BEFORE;
-    }
-
-    private int compareSameNodeTypes(Attribute attribute, Attribute attribute1) {
-        int result;
-        Type type1 = attribute.getType();
-        if (isPositionNodeType(type1)) {
-            result = comparePositionalNodeTypes(attribute, attribute1);
-        } else {
-            result = compareNodeTypes(attribute, attribute1);
-        }
         return result;
     }
 
@@ -146,75 +101,5 @@ public final class AttributeComparatorImpl implements AttributeComparator {
         if (attribute == null || attribute1 == null) {
             throw new NullPointerException();
         }
-    }
-
-    private int comparePositionalNodeTypes(Attribute attribute, Attribute attribute1) {
-        if (attribute.getType() instanceof SubjectNodeType) {
-            return BEFORE;
-        } else if (attribute.getType() instanceof PredicateNodeType) {
-            if (attribute1.getType() instanceof ObjectNodeType) {
-                return BEFORE;
-            } else {
-                return AFTER;
-            }
-        } else {
-            return AFTER;
-        }
-    }
-
-    private int compareNodeTypes(Attribute attribute, Attribute attribute1) {
-        int result;
-        NodeTypeEnum nodeType1Enum = getNodeType(attribute.getType().getClass());
-        NodeTypeEnum nodeType2Enum = getNodeType(attribute1.getType().getClass());
-        result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
-        return result;
-    }
-
-    private boolean isPositionNodeType(Type type) {
-        return type instanceof SubjectNodeType || type instanceof PredicateNodeType || type instanceof ObjectNodeType;
-    }
-
-    private int compareByLiteralValue(AttributeName attributeName, AttributeName attributeName1) {
-        String attLit1 = attributeName.getLiteral();
-        String attLit2 = attributeName1.getLiteral();
-        int result = attLit1.compareTo(attLit2);
-        if (result > EQUAL) {
-            return AFTER;
-        } else if (result < EQUAL) {
-            return BEFORE;
-        }
-        return result;
-    }
-
-    private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
-        boolean attIsVariable = attributeIsVariableName(attribute);
-        boolean att2IsVariable = attributeIsVariableName(attribute1);
-        if (!attIsVariable && att2IsVariable) {
-            return AFTER;
-        } else if (isSameNameType(attIsVariable, att2IsVariable)) {
-            return EQUAL;
-        } else {
-            return BEFORE;
-        }
-    }
-
-    private NodeTypeEnum getNodeType(Class<? extends Type> nodeClass) {
-        if (BlankNodeType.class.isAssignableFrom(nodeClass)) {
-            return NodeTypeEnum.BLANK_NODE;
-        } else if (URIReferenceType.class.isAssignableFrom(nodeClass)) {
-            return NodeTypeEnum.URI_REFERENCE;
-        } else if (LiteralType.class.isAssignableFrom(nodeClass)) {
-            return NodeTypeEnum.LITERAL;
-        } else {
-            throw new IllegalArgumentException("Illegal node: " + nodeClass);
-        }
-    }
-
-    private boolean isSameNameType(boolean attIsVariable, boolean att2IsVariable) {
-        return attIsVariable && att2IsVariable || !attIsVariable && !att2IsVariable;
-    }
-
-    private boolean attributeIsVariableName(AttributeName attribute) {
-        return attribute instanceof VariableName;
     }
 }

@@ -92,27 +92,28 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     private static final AttributeName POSITION_NAME_3 = new PositionName("subject");
     private static final AttributeName POSITION_NAME_4 = new PositionName("predicate");
     private static final AttributeName POSITION_NAME_5 = new PositionName("object");
-    private static final Type NODE_TYPE_1 = new BlankNodeType();
-    private static final Type NODE_TYPE_2 = new URIReferenceType();
-    private static final Type NODE_TYPE_3 = new LiteralType();
-    private static final Type POSITIONAL_NODE_1 = new SubjectNodeType();
-    private static final Type POSITIONAL_NODE_2 = new PredicateNodeType();
-    private static final Type POSITIONAL_NODE_3 = new ObjectNodeType();
+    private static final Type BNODE_TYPE = new BlankNodeType();
+    private static final Type URI_NODE_TYPE = new URIReferenceType();
+    private static final Type LITERAL_NODE_TYPE = new LiteralType();
+    private static final Type SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
+    private static final Type PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
+    private static final Type OBJECT_POSITIONAL_NODE = new ObjectNodeType();
 
-    public static final Attribute TEST_VAR_BAR_BNODE = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_1);
-    public static final Attribute TEST_VAR_FOO_BNODE = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_1);
-    public static final Attribute TEST_POS_BAR_BNODE = new AttributeImpl(POSITION_NAME_1, NODE_TYPE_1);
-    public static final Attribute TEST_POS_FOO_BNODE = new AttributeImpl(POSITION_NAME_2, NODE_TYPE_1);
-    public static final Attribute TEST_VAR_BAR_URI_REF = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_2);
-    public static final Attribute TEST_VAR_FOO_URI_REF = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_2);
-    public static final Attribute TEST_VAR_BAR_LITERAL = new AttributeImpl(VARIABLE_NAME_1, NODE_TYPE_3);
-    public static final Attribute TEST_VAR_FOO_LITERAL = new AttributeImpl(VARIABLE_NAME_2, NODE_TYPE_3);
-    public static final Attribute TEST_VAR_BAR_SNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_1);
-    public static final Attribute TEST_VAR_BAR_PNODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_2);
-    public static final Attribute TEST_VAR_BAR_ONODE = new AttributeImpl(VARIABLE_NAME_1, POSITIONAL_NODE_3);
-    public static final Attribute TEST_POS_BAR_SNODE = new AttributeImpl(POSITION_NAME_3, POSITIONAL_NODE_1);
-    public static final Attribute TEST_POS_BAR_PNODE = new AttributeImpl(POSITION_NAME_4, POSITIONAL_NODE_2);
-    public static final Attribute TEST_POS_BAR_ONODE = new AttributeImpl(POSITION_NAME_5, POSITIONAL_NODE_3);
+    public static final Attribute TEST_VAR_BAR_BNODE = new AttributeImpl(VARIABLE_NAME_1, BNODE_TYPE);
+    public static final Attribute TEST_VAR_FOO_BNODE = new AttributeImpl(VARIABLE_NAME_2, BNODE_TYPE);
+    public static final Attribute TEST_POS_BAR_BNODE = new AttributeImpl(POSITION_NAME_1, BNODE_TYPE);
+    public static final Attribute TEST_POS_FOO_BNODE = new AttributeImpl(POSITION_NAME_2, BNODE_TYPE);
+    public static final Attribute TEST_VAR_BAR_URI_REF = new AttributeImpl(VARIABLE_NAME_1, URI_NODE_TYPE);
+    public static final Attribute TEST_VAR_FOO_URI_REF = new AttributeImpl(VARIABLE_NAME_2, URI_NODE_TYPE);
+    public static final Attribute TEST_VAR_BAR_LITERAL = new AttributeImpl(VARIABLE_NAME_1, LITERAL_NODE_TYPE);
+    public static final Attribute TEST_VAR_FOO_LITERAL = new AttributeImpl(VARIABLE_NAME_2, LITERAL_NODE_TYPE);
+    public static final Attribute TEST_VAR_BAR_SNODE = new AttributeImpl(VARIABLE_NAME_1, SUBJECT_POSITIONAL_NODE);
+    public static final Attribute TEST_VAR_BAR_PNODE = new AttributeImpl(VARIABLE_NAME_1, PREDICATE_POSITIONAL_NODE);
+    public static final Attribute TEST_VAR_BAR_ONODE = new AttributeImpl(VARIABLE_NAME_1, OBJECT_POSITIONAL_NODE);
+    public static final Attribute TEST_POS_BAR_SNODE = new AttributeImpl(POSITION_NAME_3, SUBJECT_POSITIONAL_NODE);
+    public static final Attribute TEST_POS_FOO_SNODE = new AttributeImpl(POSITION_NAME_2, SUBJECT_POSITIONAL_NODE);
+    public static final Attribute TEST_POS_BAR_PNODE = new AttributeImpl(POSITION_NAME_4, PREDICATE_POSITIONAL_NODE);
+    public static final Attribute TEST_POS_BAR_ONODE = new AttributeImpl(POSITION_NAME_5, OBJECT_POSITIONAL_NODE);
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -130,13 +131,15 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
 
     public void testAttributeNameTypeOrder() {
         assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_FOO_BNODE));
-        assertEquals(BEFORE, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_POS_BAR_BNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_BNODE, TEST_VAR_BAR_BNODE));
+        assertEquals(BEFORE, attComparator.compare(TEST_POS_FOO_SNODE, TEST_VAR_BAR_SNODE));
         assertEquals(BEFORE, attComparator.compare(TEST_POS_BAR_BNODE, TEST_POS_FOO_BNODE));
     }
 
     public void testAttributeNameTypeAntiCommutation() {
         assertEquals(AFTER, attComparator.compare(TEST_VAR_FOO_BNODE, TEST_VAR_BAR_BNODE));
-        assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_BNODE, TEST_VAR_BAR_BNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_POS_BAR_BNODE));
+        assertEquals(AFTER, attComparator.compare(TEST_VAR_BAR_SNODE, TEST_POS_FOO_SNODE));
         assertEquals(AFTER, attComparator.compare(TEST_POS_FOO_BNODE, TEST_POS_BAR_BNODE));
     }
 

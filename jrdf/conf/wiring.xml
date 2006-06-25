@@ -25,12 +25,20 @@
     </bean>
 
     <!-- Relational Classes -->
-    <bean name="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl">
+    <bean name="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl"/>
+
+    <bean name="typeComparator" class="org.jrdf.query.relation.type.TypeComparatorImpl">
+        <constructor-arg>
+            <ref bean="nodeTypeComparator"/>
+        </constructor-arg>
     </bean>
 
     <bean name="attributeComparator" class="org.jrdf.query.relation.mem.AttributeComparatorImpl">
         <constructor-arg>
-            <ref bean="nodeTypeComparator"/>
+            <ref bean="typeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <bean class="org.jrdf.query.relation.attributename.AttributeNameComparatorImpl"/>
         </constructor-arg>
     </bean>
 

@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,48 +55,87 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
-package org.jrdf.util;
+
+package org.jrdf.query.relation.type;
+
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeEnum;
 
 /**
- * Test me!
+ * Compares only the type of attributes.
+ *
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public class NodeTypeComparatorImpl implements NodeTypeComparator {
+public class TypeComparatorImpl implements TypeComparator {
+    private static final int EQUAL = 0;
+    private static final int AFTER = 1;
+    private static final int BEFORE = -1;
+    private final NodeTypeComparator nodeTypeComparator;
 
-    // TODO (AN) Move to different class - TypeComparatorImpl
-    public int compare(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        // TODO (AN) Test drive.
-        if (nodeType1Enum.equals(nodeType2Enum)) {
-            return 0;
-        }
-        return compareNodeType(nodeType1Enum, nodeType2Enum);
+    public TypeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
+        this.nodeTypeComparator = nodeTypeComparator;
     }
 
-    private int compareNodeType(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
+    public int compare(Type type1, Type type2) {
+        if (type1.equals(type2)) {
+            return EQUAL;
+        }
+
         int result;
-        if (nodeType1Enum.isBlankNode()) {
-            result = -1;
-        } else if (nodeType1Enum.isURIReferenceNode()) {
-            result = uriComparison(nodeType1Enum, nodeType2Enum);
-        } else if (nodeType1Enum.isURIReferenceNode() && nodeType2Enum.isBlankNode()) {
-            result = 1;
-        } else if (nodeType1Enum.isLiteralNode()) {
-            result = 1;
+        if (!bothPositionalOrNode(type1, type2)) {
+            result = compareDifferentCategoryOfTypes(type1, type2);
         } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
+            result = compareSameCategoryOfTypes(type1, type2);
         }
         return result;
     }
 
-    // TODO (AN) Move to different class - TypeComparatorImpl
-    private int uriComparison(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        int result;
-        if (nodeType2Enum.isLiteralNode()) {
-            result = -1;
-        } else if (nodeType2Enum.isBlankNode()) {
-            result = 1;
-        } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
+    private boolean bothPositionalOrNode(Type type1, Type type2) {
+        return (isPositionNodeType(type1) && isPositionNodeType(type2)) ||
+                (!isPositionNodeType(type1) && !isPositionNodeType(type2));
+    }
+
+    private int compareDifferentCategoryOfTypes(Type type1, Type type2) {
+        if (isPositionNodeType(type1) && !isPositionNodeType(type2)) {
+            return AFTER;
         }
+        return BEFORE;
+    }
+
+    private int compareSameCategoryOfTypes(Type type1, Type type2) {
+        int result;
+        if (isPositionNodeType(type1)) {
+            result = comparePositionalNodeTypes(type1, type2);
+        } else {
+            result = compareNodeTypes(type1, type2);
+        }
+        return result;
+    }
+
+    private boolean isPositionNodeType(Type type) {
+        return type instanceof SubjectNodeType || type instanceof PredicateNodeType || type instanceof ObjectNodeType;
+    }
+
+    private int comparePositionalNodeTypes(Type type1, Type type2) {
+        if (type1 instanceof SubjectNodeType) {
+            return BEFORE;
+        } else if (type1 instanceof PredicateNodeType) {
+            if (type2 instanceof ObjectNodeType) {
+                return BEFORE;
+            } else {
+                return AFTER;
+            }
+        } else {
+            return AFTER;
+        }
+    }
+
+    private int compareNodeTypes(Type type, Type type2) {
+        int result;
+        NodeTypeEnum nodeType1Enum = NodeTypeEnum.getNodeType(type.getClass());
+        NodeTypeEnum nodeType2Enum = NodeTypeEnum.getNodeType(type2.getClass());
+        result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
         return result;
     }
 }

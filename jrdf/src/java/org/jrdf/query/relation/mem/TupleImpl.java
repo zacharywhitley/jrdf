@@ -76,9 +76,9 @@ public final class TupleImpl extends Primordial implements Tuple {
     private Set<AttributeValuePair> attributeValues;
     private final AttributeValuePairComparator attributeValuePairComparator;
 
-    public TupleImpl(Set<AttributeValuePair> newAttributeValues,
+    public TupleImpl(Set<AttributeValuePair> attributeValues,
                      AttributeValuePairComparator attributeValuePairComparator) {
-        attributeValues = newAttributeValues;
+        this.attributeValues = attributeValues;
         this.attributeValuePairComparator = attributeValuePairComparator;
     }
 
@@ -95,7 +95,7 @@ public final class TupleImpl extends Primordial implements Tuple {
         }
 
         // TODO (AN) Turn this into a sort call instead?
-        Set<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
+        SortedSet<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
         sortedPairs.addAll(attributeValues);
         attributeValues = sortedPairs;
         return sortedPairs;

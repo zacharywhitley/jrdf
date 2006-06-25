@@ -68,6 +68,9 @@ import org.jrdf.query.relation.AttributeValuePair;
  * @author Andrew Newman
  * @version $Id$
  */
+
+// TODO (AN) Add a check that the attribute type is consistent with the node type - or add it into the Factory.
+
 public final class AttributeValuePairImpl extends Primordial implements AttributeValuePair {
     private final Attribute attribute;
     private final Node value;

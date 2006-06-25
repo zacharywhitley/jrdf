@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,17 +56,15 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.attributename;
+package org.jrdf.query.relation.type;
+
+import java.util.Comparator;
 
 /**
- * A name that indicates a wildcard name - this will match any name.
+ * Compares only the type of attributes.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public final class AnyName implements AttributeName {
-
-    public String getLiteral() {
-        return "ANY_NAME";
-    }
+public interface TypeComparator extends Comparator<Type> {
 }

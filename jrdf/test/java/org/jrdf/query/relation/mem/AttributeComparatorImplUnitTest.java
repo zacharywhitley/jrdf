@@ -59,7 +59,8 @@ package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.query.relation.attributename.AttributeNameComparator;
+import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -75,6 +76,6 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         ClassPropertiesTestUtil
                 .checkImplementationOfInterfaceAndFinal(AttributeComparator.class, AttributeComparatorImpl.class);
         ClassPropertiesTestUtil.checkConstructor(AttributeComparatorImpl.class, Modifier.PUBLIC,
-                NodeTypeComparator.class);
+                TypeComparator.class, AttributeNameComparator.class);
     }
 }
