@@ -33,12 +33,14 @@
         </constructor-arg>
     </bean>
 
+    <bean name="attributeNameComparator" class="org.jrdf.query.relation.attributename.AttributeNameComparatorImpl"/>
+
     <bean name="attributeComparator" class="org.jrdf.query.relation.mem.AttributeComparatorImpl">
         <constructor-arg>
             <ref bean="typeComparator"/>
         </constructor-arg>
         <constructor-arg>
-            <bean class="org.jrdf.query.relation.attributename.AttributeNameComparatorImpl"/>
+            <ref bean="attributeNameComparator"/>
         </constructor-arg>
     </bean>
 
