@@ -104,8 +104,8 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     private URIReference ref2;
     private URIReference ref3;
 
-    private final String TEST_STR1 = "A test string";
-    private final String TEST_STR2 = "Another test string";
+    private static final String TEST_STR1 = "A test string";
+    private static final String TEST_STR2 = "Another test string";
     private Literal l1;
     private Literal l2;
 

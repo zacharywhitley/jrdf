@@ -117,12 +117,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     /**
      * Literal 1.
      */
-    protected static Literal l1;
+    protected Literal l1;
 
     /**
      * Literal 2.
      */
-    protected static Literal l2;
+    protected Literal l2;
 
     private Triple t1;
     private Triple t2;

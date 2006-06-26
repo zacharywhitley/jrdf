@@ -58,6 +58,7 @@
 package org.jrdf.graph;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Provides a comparison of the three different node types: BNode, URI and Literal.  Given two different types of node
@@ -66,5 +67,5 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Id$
  */
-public interface NodeComparator extends Comparator<Node> {
+public interface NodeComparator extends Comparator<Node>, Serializable {
 }
