@@ -119,6 +119,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         checkNodeTypeComparator(AFTER);
     }
 
+    // TODO (AN) Ensure that it's Serializable - as the set won't be if the Comparator isn't.
     // TODO (AN) Finish testAttributeNameComparator
 
     private void checkNodeTypeComparator(int expectedResult) {
@@ -189,6 +190,10 @@ public class AttributeComparatorImplUnitTest extends TestCase {
 
         public boolean isEqualsCalled() {
             return correctObjectCalled;
+        }
+
+        public int hashCode() {
+            return 1;
         }
 
         public boolean equals(Object obj) {

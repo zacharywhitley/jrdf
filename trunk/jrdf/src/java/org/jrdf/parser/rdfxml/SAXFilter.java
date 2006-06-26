@@ -46,6 +46,9 @@ import java.util.Stack;
  * startElement() that is directly followed by a call to
  * endElement() to a single call to emptyElement().
  */
+
+// TODO (AN) Dependent on RdfXmlParser
+
 class SAXFilter implements org.xml.sax.ContentHandler {
 
     /**
