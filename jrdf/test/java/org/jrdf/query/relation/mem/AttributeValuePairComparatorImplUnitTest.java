@@ -63,8 +63,10 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
+import java.io.Serializable;
 
 /**
  * Stuff goes in here.
@@ -76,6 +78,7 @@ public class AttributeValuePairComparatorImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeValuePairComparator.class,
                 AttributeValuePairComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AttributeValuePairComparator.class);
         checkConstructor(AttributeValuePairComparatorImpl.class, Modifier.PUBLIC,
                 AttributeComparator.class, NodeComparator.class);
     }

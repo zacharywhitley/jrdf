@@ -74,8 +74,13 @@ import java.util.Set;
  * @version $Id$
  */
 public final class RelationComparatorImpl implements RelationComparator {
-    private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
+    private static final long serialVersionUID = 9186461012818411817L;
+
+    private AttributeComparator attributeComparator;
+    private TupleComparator tupleComparator;
+
+    private RelationComparatorImpl() {
+    }
 
     public RelationComparatorImpl(AttributeComparator newAttributeComparator, TupleComparator newTupleComparator) {
         attributeComparator = newAttributeComparator;

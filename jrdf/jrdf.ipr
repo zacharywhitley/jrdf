@@ -5,6 +5,7 @@
     <buildFile url="file://$PROJECT_DIR$/build.xml">
       <additionalClassPath>
         <entry path="file://$PROJECT_DIR$/lib/junit-3.8.1.jar" />
+        <entry path="file://$PROJECT_DIR$/lib/sablecc-3.2.jar" />
       </additionalClassPath>
       <antReference projectDefault="true" />
       <customJdkName value="" />
