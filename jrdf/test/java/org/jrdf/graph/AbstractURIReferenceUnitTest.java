@@ -262,7 +262,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         assertEquals(testRef1, testRef2);
     }
 
-    private class TestURIReference extends AbstractURIReference {
+    private static class TestURIReference extends AbstractURIReference {
         private static final long serialVersionUID = -443111126777106029L;
 
         public TestURIReference(URI newUri) throws IllegalArgumentException {
@@ -270,7 +270,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         }
     }
 
-    private class TestURIReference2 extends AbstractURIReference {
+    private static class TestURIReference2 extends AbstractURIReference {
         private static final long serialVersionUID = 8196131420240571434L;
 
         public TestURIReference2(URI newUri) throws IllegalArgumentException {

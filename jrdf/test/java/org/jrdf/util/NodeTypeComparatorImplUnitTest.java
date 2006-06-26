@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,49 +55,27 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.util;
 
+import junit.framework.TestCase;
+import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+
 /**
- * Test me!
+ * Test NodeTypeComparatorImpl.
+ *
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class NodeTypeComparatorImpl implements NodeTypeComparator {
-    private static final long serialVersionUID = 31512609314856094L;
-
-    // TODO (AN) Move to different class - TypeComparatorImpl
-    public int compare(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        // TODO (AN) Test drive.
-        if (nodeType1Enum.equals(nodeType2Enum)) {
-            return 0;
-        }
-        return compareNodeType(nodeType1Enum, nodeType2Enum);
-    }
-
-    private int compareNodeType(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        int result;
-        if (nodeType1Enum.isBlankNode()) {
-            result = -1;
-        } else if (nodeType1Enum.isURIReferenceNode()) {
-            result = uriComparison(nodeType1Enum, nodeType2Enum);
-        } else if (nodeType1Enum.isURIReferenceNode() && nodeType2Enum.isBlankNode()) {
-            result = 1;
-        } else if (nodeType1Enum.isLiteralNode()) {
-            result = 1;
-        } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
-        }
-        return result;
-    }
-
-    // TODO (AN) Move to different class - TypeComparatorImpl
-    private int uriComparison(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
-        int result;
-        if (nodeType2Enum.isLiteralNode()) {
-            result = -1;
-        } else if (nodeType2Enum.isBlankNode()) {
-            result = 1;
-        } else {
-            throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
-        }
-        return result;
+public class NodeTypeComparatorImplUnitTest extends TestCase {
+    public void testClassProperties() throws Exception {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeTypeComparator.class, NodeTypeComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, NodeTypeComparator.class);
+        ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC,
+                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 }

@@ -73,7 +73,12 @@ import org.jrdf.util.NodeTypeEnum;
  * @version $Id$
  */
 public final class NodeComparatorImpl implements NodeComparator {
+    private static final long serialVersionUID = 1941872400257968398L;
     private NodeTypeComparator nodeTypeComparator;
+
+    public NodeComparatorImpl() {
+
+    }
 
     public NodeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
         this.nodeTypeComparator = nodeTypeComparator;

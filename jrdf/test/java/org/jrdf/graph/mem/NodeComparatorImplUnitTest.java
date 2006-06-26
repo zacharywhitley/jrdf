@@ -62,6 +62,7 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
 
@@ -74,6 +75,7 @@ import java.util.Comparator;
 public class NodeComparatorImplUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, NodeComparator.class);        
         ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
         ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
     }

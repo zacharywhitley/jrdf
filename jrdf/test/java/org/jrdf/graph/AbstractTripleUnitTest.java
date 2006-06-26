@@ -256,7 +256,7 @@ public abstract class AbstractTripleUnitTest extends TestCase {
         assertEquals(t1, t2);
     }
 
-    private class TestTriple extends AbstractTriple {
+    private static class TestTriple extends AbstractTriple {
 
         private static final long serialVersionUID = -2638294178260916848L;
 

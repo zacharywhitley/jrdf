@@ -59,10 +59,11 @@
 package org.jrdf.util;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Test me!
  */
-public interface NodeTypeComparator extends Comparator<NodeTypeEnum> {
+public interface NodeTypeComparator extends Comparator<NodeTypeEnum>, Serializable {
 
 }
