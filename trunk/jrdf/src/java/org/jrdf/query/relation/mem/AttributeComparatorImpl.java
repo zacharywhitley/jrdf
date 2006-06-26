@@ -83,16 +83,11 @@ public final class AttributeComparatorImpl implements AttributeComparator {
 
         ifNullThrowException(attribute1, attribute2);
 
-        // TODO (AN) Test drive me!
         if (attribute1.equals(attribute2)) {
             return EQUAL;
         }
 
         result = nodeTypeComparator.compare(attribute1.getType(), attribute2.getType());
-
-        System.err.println("Att1: " + attribute1);
-        System.err.println("Att2: " + attribute2);
-        System.err.println("Got: " + result);
 
         if (result == EQUAL) {
             result = attributeNameComparator.compare(attribute1.getAttributeName(), attribute2.getAttributeName());

@@ -70,7 +70,6 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.Type;
-import org.jrdf.util.test.AssertThrows;
 
 /**
  * Test for the implementation of NodeComparatorImpl.
@@ -107,11 +106,6 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         attComparator = TestJRDFFactory.getFactory().getNewAttributeComparator();
     }
 
-    public void testNullPointerException() {
-        checkNullPointerException(attComparator, AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS, null);
-        checkNullPointerException(attComparator, null, AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS);
-    }
-
     public void testIdentity() {
         assertEquals(EQUAL, attComparator.compare(TEST_VAR_BAR_BNODE, TEST_VAR_BAR_BNODE));
     }
@@ -126,16 +120,5 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_PNODE, TEST_POS_BAR_SNODE));
         assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_ONODE, TEST_POS_BAR_PNODE));
         assertEquals(AFTER, attComparator.compare(TEST_POS_BAR_ONODE, TEST_POS_BAR_SNODE));
-    }
-
-    // TODO (AN) Duplication with other comparator tests
-    private void checkNullPointerException(final AttributeComparator attComparator, final Attribute att,
-                                           final Attribute att2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                attComparator.compare(att, att2);
-            }
-        });
     }
 }
