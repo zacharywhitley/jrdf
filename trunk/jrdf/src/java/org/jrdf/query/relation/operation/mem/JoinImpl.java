@@ -59,7 +59,6 @@
 
 package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -107,28 +106,12 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
             return relations.iterator().next();
         }
 
-        // Do a proper join.
-        Relation result = null;
-
-        // Get the common attributes that are being joined
-        Set<Attribute> intersectionHeading = getHeadingIntersections(relations);
-        Set<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
-
-        // No common attributes
-        if (intersectionHeading.size() == 0) {
-            // Perform cartesian product
-            resultTuples = performCartesianProduct(relations);
-        }
-
-        // Perform join using common headings.
-
-        // Union all of the headings together.
-        Set<Attribute> resultHeading = getHeadingUnions(relations);
-
+        // Perform natural join.
+        Set<Tuple> resultTuples = performNaturalJoin(relations);
         return new RelationImpl(resultTuples, attributeComparator, tupleComparator);
     }
 
-    private Set<Tuple> performCartesianProduct(Set<Relation> relations) {
+    private Set<Tuple> performNaturalJoin(Set<Relation> relations) {
         Iterator<Relation> iterator = relations.iterator();
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
@@ -150,27 +133,5 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
             result.add(t);
         }
         return result;
-    }
-
-    private Set<Attribute> getHeadingUnions(Set<Relation> relations) {
-        Set<Attribute> headings = new TreeSet<Attribute>(attributeComparator);
-        for (Relation relation : relations) {
-            Set<Attribute> heading = relation.getHeading();
-            headings.addAll(heading);
-        }
-        return headings;
-    }
-
-    private Set<Attribute> getHeadingIntersections(Set<Relation> relations) {
-        Set<Attribute> headings = new TreeSet<Attribute>(attributeComparator);
-        Iterator<Relation> iterator = relations.iterator();
-        Relation firstRelation = iterator.next();
-        headings.addAll(firstRelation.getHeading());
-        while (iterator.hasNext()) {
-            Relation relation = iterator.next();
-            Set<Attribute> heading = relation.getHeading();
-            headings.retainAll(heading);
-        }
-        return headings;
     }
 }

@@ -80,12 +80,15 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.mem.RelationImpl;
 import org.jrdf.query.relation.mem.TupleImpl;
+import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -105,10 +108,13 @@ public class JoinImplIntegrationTest extends TestCase {
     private static final AttributeName ATTRIBUTE_NAME_2 = new PositionName("foo2");
     private static final AttributeName ATTRIBUTE_NAME_3 = new VariableName("bar1");
     private static final AttributeName ATTRIBUTE_NAME_4 = new VariableName("bar2");
+    private static final AttributeName ATTRIBUTE_NAME_5 = new PositionName("baz1");
     private static final Attribute ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, new SubjectNodeType());
     private static final Attribute ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, new PredicateNodeType());
     private static final Attribute ATTRIBUTE_3 = new AttributeImpl(ATTRIBUTE_NAME_3, new SubjectNodeType());
     private static final Attribute ATTRIBUTE_4 = new AttributeImpl(ATTRIBUTE_NAME_4, new PredicateNodeType());
+    private static final Attribute ATTRIBUTE_5 = new AttributeImpl(ATTRIBUTE_NAME_5, new ObjectNodeType());
+    private static final Attribute ATTRIBUTE_6 = new AttributeImpl(ATTRIBUTE_NAME_1, new ObjectNodeType());
     private static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
     private static final URIReference RESOURCE_2 = NodeTestUtil.createResource(RDF.BAG);
     private static final URIReference RESOURCE_3 = NodeTestUtil.createResource(RDF.FIRST);
@@ -121,6 +127,10 @@ public class JoinImplIntegrationTest extends TestCase {
         new AttributeValuePairImpl(ATTRIBUTE_3, RESOURCE_3);
     private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_4 =
         new AttributeValuePairImpl(ATTRIBUTE_4, RESOURCE_4);
+    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_5 =
+        new AttributeValuePairImpl(ATTRIBUTE_5, RESOURCE_4);
+    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_6 =
+        new AttributeValuePairImpl(ATTRIBUTE_6, RESOURCE_1);
     private static final org.jrdf.query.relation.operation.Join JOIN = FACTORY.getNewJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
@@ -139,7 +149,7 @@ public class JoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
         Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
             ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-        checkJoin(tuple1, tuple2, resultTuple);
+        checkJoin(resultTuple, tuple1, tuple2);
     }
 
     public void testNaturalJoin() {
@@ -147,7 +157,17 @@ public class JoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_4);
         Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
                 ATTRIBUTE_VALUE_PAIR_4);
-        checkJoin(tuple1, tuple2, resultTuple);
+        checkJoin(resultTuple, tuple1, tuple2);
+    }
+
+    public void testNaturalJoin2() {
+        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
+        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_4);
+        Set<Tuple> tuple3 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_5);
+        Set<Tuple> tuple4 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_6);
+        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
+                ATTRIBUTE_VALUE_PAIR_4, ATTRIBUTE_VALUE_PAIR_5, ATTRIBUTE_VALUE_PAIR_6);
+        checkJoin(resultTuple, tuple1, tuple2, tuple3, tuple4);
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
@@ -164,6 +184,17 @@ public class JoinImplIntegrationTest extends TestCase {
         return tuples;
     }
 
+    private void checkJoin(Set<Tuple> resultTuple, Set<Tuple>... tuple1) {
+        List<Relation> relations = new ArrayList<Relation>();
+        for (Set<Tuple> tuples : tuple1) {
+            Relation relation = createRelation(tuples);
+            relations.add(relation);
+        }
+        Relation expectedResult = createRelation(resultTuple);
+        Set<Relation> tuples = createRelations(relations.toArray(new Relation[] {}));
+        checkRelation(expectedResult, tuples);
+    }
+
     private Set<Relation> createRelations(Relation... relations) {
         RelationComparator relationComparator = FACTORY.getNewRelationComparator();
         Set<Relation> tuples = new TreeSet<Relation>(relationComparator);
@@ -171,14 +202,6 @@ public class JoinImplIntegrationTest extends TestCase {
             tuples.add(relation);
         }
         return tuples;
-    }
-
-    private void checkJoin(Set<Tuple> tuple1, Set<Tuple> tuple2, Set<Tuple> resultTuple) {
-        Relation relation1 = createRelation(tuple1);
-        Relation relation2 = createRelation(tuple2);
-        Relation expectedResult = createRelation(resultTuple);
-        Set<Relation> tuples = createRelations(relation1, relation2);
-        checkRelation(expectedResult, tuples);
     }
 
     private void checkRelation(Relation expected, Set<Relation> actual) {
@@ -193,7 +216,7 @@ public class JoinImplIntegrationTest extends TestCase {
 //        System.err.println("Sorted Expected tuples relation1: " + isEqual);
 //        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
 //        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
-
+        System.err.println("Got: " + relation.getSortedTuples());
         assertEquals(expected, relation);
     }
 
