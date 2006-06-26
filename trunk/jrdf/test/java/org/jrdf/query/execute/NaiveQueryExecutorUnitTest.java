@@ -61,7 +61,6 @@ package org.jrdf.query.execute;
 import junit.framework.TestCase;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.query.GraphFixture;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
@@ -89,6 +88,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     private static final GraphRelationFactory GRAPH_RELATION_FACTORY =
             MockTestUtil.createMock(GraphRelationFactory.class);
     private MockFactory mockFactory;
+    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
 
     public void setUp() {
         mockFactory = new MockFactory();
@@ -111,7 +111,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testNullSecurityDomainInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, null, AVP_HELPER, RESTRICT, GRAPH_RELATION_FACTORY);
+                new NaiveQueryExecutor(GRAPH, null, AVP_HELPER, RESTRICT, GRAPH_RELATION_FACTORY);
             }
         });
     }
@@ -119,7 +119,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testNullAvpComparatorInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(GraphFixture.GRAPH_BAD, NO_SECURITY_DOMAIN, null, RESTRICT,
+                new NaiveQueryExecutor(GRAPH, NO_SECURITY_DOMAIN, null, RESTRICT,
                         GRAPH_RELATION_FACTORY);
             }
         });
