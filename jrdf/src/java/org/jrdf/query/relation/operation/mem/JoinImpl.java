@@ -73,6 +73,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.HashSet;
 
 /**
  * A simple memory based implementation of JoinImpl.
@@ -125,12 +126,13 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
     private Set<Tuple> joinTuples(Set<Tuple> tuples1, Set<Tuple> tuples2) {
         Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple1 : tuples1) {
-            Set<AttributeValuePair> resultantAttributeValues = tuple1.getAttributeValues();
             for (Tuple tuple2 : tuples2) {
+                Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
+                resultantAttributeValues.addAll(tuple1.getAttributeValues());
                 resultantAttributeValues.addAll(tuple2.getAttributeValues());
+                Tuple t = new TupleImpl(resultantAttributeValues, attributeValuePairComparator);
+                result.add(t);
             }
-            Tuple t = new TupleImpl(resultantAttributeValues, attributeValuePairComparator);
-            result.add(t);
         }
         return result;
     }

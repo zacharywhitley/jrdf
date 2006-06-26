@@ -104,33 +104,58 @@ public class JoinImplIntegrationTest extends TestCase {
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
 
-    private static final AttributeName ATTRIBUTE_NAME_1 = new PositionName("foo1");
-    private static final AttributeName ATTRIBUTE_NAME_2 = new PositionName("foo2");
-    private static final AttributeName ATTRIBUTE_NAME_3 = new VariableName("bar1");
-    private static final AttributeName ATTRIBUTE_NAME_4 = new VariableName("bar2");
-    private static final AttributeName ATTRIBUTE_NAME_5 = new PositionName("baz1");
-    private static final Attribute ATTRIBUTE_1 = new AttributeImpl(ATTRIBUTE_NAME_1, new SubjectNodeType());
-    private static final Attribute ATTRIBUTE_2 = new AttributeImpl(ATTRIBUTE_NAME_2, new PredicateNodeType());
-    private static final Attribute ATTRIBUTE_3 = new AttributeImpl(ATTRIBUTE_NAME_3, new SubjectNodeType());
-    private static final Attribute ATTRIBUTE_4 = new AttributeImpl(ATTRIBUTE_NAME_4, new PredicateNodeType());
-    private static final Attribute ATTRIBUTE_5 = new AttributeImpl(ATTRIBUTE_NAME_5, new ObjectNodeType());
-    private static final Attribute ATTRIBUTE_6 = new AttributeImpl(ATTRIBUTE_NAME_1, new ObjectNodeType());
+    private static final AttributeName POS_FOO1 = new PositionName("foo1");
+    private static final AttributeName POS_FOO2 = new PositionName("foo2");
+    private static final AttributeName POS_FOO3 = new PositionName("foo3");
+    private static final AttributeName POS_FOO4 = new PositionName("foo4");
+    private static final AttributeName POS_FOO5 = new PositionName("foo5");
+
+    private static final AttributeName VAR_BAR1 = new VariableName("bar1");
+    private static final AttributeName VAR_BAR2 = new VariableName("bar2");
+    private static final AttributeName POS_BAR3 = new PositionName("bar3");
+
+    private static final Attribute POS_FOO1_SUBJECT = new AttributeImpl(POS_FOO1, new SubjectNodeType());
+    private static final Attribute POS_FOO2_PREDICATE = new AttributeImpl(POS_FOO2, new PredicateNodeType());
+    private static final Attribute POS_FOO3_OBJECT = new AttributeImpl(POS_FOO3, new ObjectNodeType());
+    private static final Attribute POS_FOO4_PREDICATE = new AttributeImpl(POS_FOO4, new PredicateNodeType());
+    private static final Attribute POS_FOO5_OBJECT = new AttributeImpl(POS_FOO5, new ObjectNodeType());
+
+    private static final Attribute VAR_BAR1_SUBJECT = new AttributeImpl(VAR_BAR1, new SubjectNodeType());
+    private static final Attribute VAR_BAR2_PREDICATE = new AttributeImpl(VAR_BAR2, new PredicateNodeType());
+    private static final Attribute VAR_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
+
     private static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
     private static final URIReference RESOURCE_2 = NodeTestUtil.createResource(RDF.BAG);
     private static final URIReference RESOURCE_3 = NodeTestUtil.createResource(RDF.FIRST);
     private static final URIReference RESOURCE_4 = NodeTestUtil.createResource(RDF.LI);
-    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_1 =
-        new AttributeValuePairImpl(ATTRIBUTE_1, RESOURCE_1);
-    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_2 =
-        new AttributeValuePairImpl(ATTRIBUTE_2, RESOURCE_2);
-    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_3 =
-        new AttributeValuePairImpl(ATTRIBUTE_3, RESOURCE_3);
-    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_4 =
-        new AttributeValuePairImpl(ATTRIBUTE_4, RESOURCE_4);
-    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_5 =
-        new AttributeValuePairImpl(ATTRIBUTE_5, RESOURCE_4);
-    private static final AttributeValuePair ATTRIBUTE_VALUE_PAIR_6 =
-        new AttributeValuePairImpl(ATTRIBUTE_6, RESOURCE_1);
+    private static final URIReference RESOURCE_5 = NodeTestUtil.createResource(RDF.SUBJECT);
+    private static final URIReference RESOURCE_6 = NodeTestUtil.createResource(RDF.PREDICATE);
+
+    private static final AttributeValuePair POS_FOO1_SUBJECT_R1 =
+            new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_1);
+    private static final AttributeValuePair POS_FOO2_PREDICATE_R2 =
+            new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_2);
+    private static final AttributeValuePair POS_FOO3_OBJECT_R3 =
+            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_3);
+
+    private static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
+            new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
+    private static final AttributeValuePair VAR_BAR2_PREDICATE_R4 =
+            new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
+    private static final AttributeValuePair VAR_BAR3_OBJECT_R1 =
+            new AttributeValuePairImpl(VAR_BAR3_OBJECT, RESOURCE_1);
+
+    private static final AttributeValuePair POS_FOO4_PREDICATE_R3 =
+            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_3);
+    private static final AttributeValuePair POS_FOO5_OBJECT_R4 =
+            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
+
+    private static final AttributeValuePair POS_FOO4_PREDICATE_R5 =
+            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_5);
+    private static final AttributeValuePair POS_FOO5_OBJECT_R6 =
+            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_6);
+
+
     private static final org.jrdf.query.relation.operation.Join JOIN = FACTORY.getNewJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
@@ -145,29 +170,61 @@ public class JoinImplIntegrationTest extends TestCase {
     }
 
     public void testCartesianProduct() {
-        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
-        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
-            ATTRIBUTE_VALUE_PAIR_3, ATTRIBUTE_VALUE_PAIR_4);
-        checkJoin(resultTuple, tuple1, tuple2);
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
+                VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
+        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
     }
 
     public void testNaturalJoin() {
-        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
-        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_4);
-        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
-                ATTRIBUTE_VALUE_PAIR_4);
-        checkJoin(resultTuple, tuple1, tuple2);
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
+                VAR_BAR2_PREDICATE_R4);
+        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
     }
 
     public void testNaturalJoin2() {
-        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
-        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_4);
-        Set<Tuple> tuple3 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_5);
-        Set<Tuple> tuple4 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_6);
-        Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
-                ATTRIBUTE_VALUE_PAIR_4, ATTRIBUTE_VALUE_PAIR_5, ATTRIBUTE_VALUE_PAIR_6);
-        checkJoin(resultTuple, tuple1, tuple2, tuple3, tuple4);
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR3_OBJECT_R1);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
+                VAR_BAR2_PREDICATE_R4, POS_FOO3_OBJECT_R3, VAR_BAR3_OBJECT_R1);
+        checkJoin(createRelation(tuple1, tuple2, tuple3, tuple4), createRelation(resultTuple));
+    }
+
+    public void testNaturalJoin3() {
+        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+        tuple2.addAll(tmpTuple);
+
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
+                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
+                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+        resultTuple.addAll(tmpTuple);
+
+        Relation relation = createRelation(resultTuple);
+        checkJoin(createRelation(tuple1, tuple2), relation);
+    }
+
+    public void testNaturalJoin4() {
+        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+        tuple1.addAll(tmpTuple);
+        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
+                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
+                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+        resultTuple.addAll(tmpTuple);
+
+        Relation relation = createRelation(resultTuple);
+        checkJoin(createRelation(tuple1, tuple2), relation);
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
@@ -184,15 +241,22 @@ public class JoinImplIntegrationTest extends TestCase {
         return tuples;
     }
 
-    private void checkJoin(Set<Tuple> resultTuple, Set<Tuple>... tuple1) {
+    private void checkJoin(List<Relation> relations, Relation expectedResult) {
+        Set<Relation> tuples = createRelations(relations.toArray(new Relation[]{}));
+        checkRelation(expectedResult, tuples);
+    }
+
+    private List<Relation> createRelation(Set<Tuple>... tuple1) {
         List<Relation> relations = new ArrayList<Relation>();
         for (Set<Tuple> tuples : tuple1) {
             Relation relation = createRelation(tuples);
             relations.add(relation);
         }
-        Relation expectedResult = createRelation(resultTuple);
-        Set<Relation> tuples = createRelations(relations.toArray(new Relation[] {}));
-        checkRelation(expectedResult, tuples);
+        return relations;
+    }
+
+    private static Relation createRelation(Set<Tuple> newTuples) {
+        return new RelationImpl(newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
     }
 
     private Set<Relation> createRelations(Relation... relations) {
@@ -218,9 +282,5 @@ public class JoinImplIntegrationTest extends TestCase {
 //        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
         System.err.println("Got: " + relation.getSortedTuples());
         assertEquals(expected, relation);
-    }
-
-    private static Relation createRelation(Set<Tuple> newTuples) {
-        return new RelationImpl(newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
     }
 }
