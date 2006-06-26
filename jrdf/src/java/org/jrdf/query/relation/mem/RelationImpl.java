@@ -86,8 +86,8 @@ public final class RelationImpl extends Primordial implements Relation {
 
     public RelationImpl(Set<Tuple> newTuples, AttributeComparator attributeComparator,
             TupleComparator tupleComparator) {
-        heading = createHeadingFromTuples(newTuples);
-        tuples = newTuples;
+        this.heading = createHeadingFromTuples(newTuples);
+        this.tuples = newTuples;
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
     }

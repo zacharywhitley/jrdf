@@ -143,12 +143,11 @@ public class JoinImplIntegrationTest extends TestCase {
     }
 
     public void testNaturalJoin() {
-//        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
-//        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_4);
+        Set<Tuple> tuple1 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2);
+        Set<Tuple> tuple2 = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_4);
         Set<Tuple> resultTuple = createASingleTuple(ATTRIBUTE_VALUE_PAIR_1, ATTRIBUTE_VALUE_PAIR_2,
                 ATTRIBUTE_VALUE_PAIR_4);
-        System.err.println("Result Tuple: " + resultTuple);
-//        checkJoin(tuple1, tuple2, resultTuple);
+        checkJoin(tuple1, tuple2, resultTuple);
     }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
