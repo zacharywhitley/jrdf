@@ -79,10 +79,10 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
     private static final int AFTER = 1;
     private AttributeValuePairComparator avpComparator;
 
-    public static AttributeValuePair TEST_AVP_1 = new AttributeValuePairImpl(TEST_VAR_BAR_LITERAL, LITERAL_1);
-    public static AttributeValuePair TEST_AVP_2 = new AttributeValuePairImpl(TEST_VAR_FOO_LITERAL, LITERAL_1);
-    public static AttributeValuePair TEST_AVP_3 = new AttributeValuePairImpl(TEST_VAR_BAR_LITERAL, LITERAL_2);
-    public static AttributeValuePair TEST_AVP_4 = new AttributeValuePairImpl(TEST_VAR_FOO_LITERAL, LITERAL_2);
+    public static final AttributeValuePair TEST_AVP_1 = new AttributeValuePairImpl(TEST_VAR_BAR_LITERAL, LITERAL_1);
+    public static final AttributeValuePair TEST_AVP_2 = new AttributeValuePairImpl(TEST_VAR_FOO_LITERAL, LITERAL_1);
+    public static final AttributeValuePair TEST_AVP_3 = new AttributeValuePairImpl(TEST_VAR_BAR_LITERAL, LITERAL_2);
+    public static final AttributeValuePair TEST_AVP_4 = new AttributeValuePairImpl(TEST_VAR_FOO_LITERAL, LITERAL_2);
 
     protected void setUp() throws Exception {
         super.setUp();

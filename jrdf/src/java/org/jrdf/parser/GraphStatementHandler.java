@@ -84,7 +84,8 @@ public class GraphStatementHandler implements StatementHandler {
         try {
             jrdfMem.add(subject, predicate, object);
         } catch (Exception e) {
-            new RuntimeException("Failed to add: " + subject + ", " + predicate + ", " + object + " to the graph.");
+            throw new RuntimeException("Failed to add: " + subject + ", " + predicate + ", " + object +
+                    " to the graph.");
         }
     }
 
