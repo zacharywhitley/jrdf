@@ -109,6 +109,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
     }
 
+    public void testTwoConstraints() {
+        //checkSingleConstraintExpression(SparqlQueryTestUtil.QUERY_BOOK_1_AND_2, null);
+    }
+
     private void checkSingleConstraintExpression(String queryString, ConstraintExpression expectedExpression) {
         Query query = parseQuery(queryString);
         ConstraintExpression actualExpression = query.getConstraintExpression();
