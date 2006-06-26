@@ -78,7 +78,7 @@ public final class SerializationTestUtil {
 
     private static final String FIELD_SERIAL_VERSION_UID = "serialVersionUID";
     private static final Class<Long> CLASS_LONG_PRIMITIVE = long.class;
-    private static final boolean WHO_KNOWS_WHAT_THIS_MEANS = true;
+    private static final boolean CHECK_BY_EQUALITY = false;
 
     public static void checkSerializability(Class<? extends Serializable> cls) {
         checkContainsSerialVersionUid(cls);
@@ -100,7 +100,7 @@ public final class SerializationTestUtil {
     // Note. Re-throwing exceptions below as we lose the class that caused the problem.
     public static void checkSerialization(Object instanceToBeSerialized) {
         try {
-            TestUtil.testSerialization(instanceToBeSerialized, WHO_KNOWS_WHAT_THIS_MEANS);
+            TestUtil.testSerialization(instanceToBeSerialized, CHECK_BY_EQUALITY);
         } catch (AssertionFailedError afe) {
             throw new AssertionFailedError("Class " + getClassName(instanceToBeSerialized) + ", " + afe.getMessage());
         } catch (IOException ioe) {

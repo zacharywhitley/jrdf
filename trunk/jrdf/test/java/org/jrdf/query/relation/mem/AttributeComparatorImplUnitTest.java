@@ -71,6 +71,7 @@ import org.jrdf.util.test.MockTestUtil;
 import org.easymock.classextension.IMocksControl;
 
 import java.lang.reflect.Modifier;
+import java.io.Serializable;
 
 /**
  * Test AttributeComparator.
@@ -91,10 +92,12 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         mockFactory = new MockFactory();
     }
 
+    // TODO (AN) Ensure that it's Serializable - as the set won't be if the Comparator isn't.
     // TODO (AN) These next three methods could become some sort of comparator test util.
     public void testClassProperties() {
         ClassPropertiesTestUtil
                 .checkImplementationOfInterfaceAndFinal(AttributeComparator.class, AttributeComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AttributeComparator.class);
         ClassPropertiesTestUtil.checkConstructor(AttributeComparatorImpl.class, Modifier.PUBLIC,
                 TypeComparator.class, AttributeNameComparator.class);
     }
@@ -119,7 +122,6 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         checkNodeTypeComparator(AFTER);
     }
 
-    // TODO (AN) Ensure that it's Serializable - as the set won't be if the Comparator isn't.
     // TODO (AN) Finish testAttributeNameComparator
 
     private void checkNodeTypeComparator(int expectedResult) {

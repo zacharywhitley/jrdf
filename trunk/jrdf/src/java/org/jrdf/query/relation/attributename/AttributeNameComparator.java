@@ -59,6 +59,7 @@
 package org.jrdf.query.relation.attributename;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Compares attribute names.
@@ -66,5 +67,5 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface AttributeNameComparator extends Comparator<AttributeName> {
+public interface AttributeNameComparator extends Comparator<AttributeName>, Serializable {
 }

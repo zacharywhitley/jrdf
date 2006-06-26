@@ -59,6 +59,7 @@
 package org.jrdf.query.relation.type;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Compares only the type of attributes.
@@ -66,5 +67,5 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface TypeComparator extends Comparator<Type> {
+public interface TypeComparator extends Comparator<Type>, Serializable {
 }

@@ -58,64 +58,24 @@
 
 package org.jrdf.query.relation.attributename;
 
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+
 /**
- * Compares attribute names.
+ * Test the AttributeNameComparatorImpl
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public final class AttributeNameComparatorImpl implements AttributeNameComparator {
-    private static final long serialVersionUID = -1713813222274855404L;
-    private static final int AFTER = 1;
-    private static final int BEFORE = -1;
-    private static final int EQUAL = 0;
-
-    public int compare(AttributeName attName1, AttributeName attName2) {
-        ifNullThrowException(attName1, attName2);
-
-        int result = compareAttributeNames(attName1, attName2);
-        if (result == EQUAL) {
-            result = compareByLiteralValue(attName1, attName2);
-        }
-        return result;
-    }
-
-    private void ifNullThrowException(AttributeName attName1, AttributeName attName2) {
-        if (attName1 == null || attName2 == null) {
-            throw new NullPointerException();
-        }
-    }
-
-    private int compareAttributeNames(AttributeName attribute, AttributeName attribute1) {
-        boolean attIsVariable = attributeIsVariableName(attribute);
-        boolean att2IsVariable = attributeIsVariableName(attribute1);
-
-        if (attIsVariable && !att2IsVariable) {
-            return AFTER;
-        } else if (isSameNameType(attIsVariable, att2IsVariable)) {
-            return EQUAL;
-        } else {
-            return BEFORE;
-        }
-    }
-
-    private int compareByLiteralValue(AttributeName attributeName, AttributeName attributeName1) {
-        String attLit1 = attributeName.getLiteral();
-        String attLit2 = attributeName1.getLiteral();
-        int result = attLit1.compareTo(attLit2);
-        if (result > EQUAL) {
-            return AFTER;
-        } else if (result < EQUAL) {
-            return BEFORE;
-        }
-        return result;
-    }
-
-    private boolean isSameNameType(boolean attIsVariable, boolean att2IsVariable) {
-        return attIsVariable && att2IsVariable || !attIsVariable && !att2IsVariable;
-    }
-
-    private boolean attributeIsVariableName(AttributeName attribute) {
-        return attribute instanceof VariableName;
+public class AttributeNameComparatorImplUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil
+                .checkImplementationOfInterfaceAndFinal(AttributeNameComparator.class, AttributeNameComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AttributeNameComparator.class);
+        ClassPropertiesTestUtil.checkConstructor(AttributeNameComparatorImpl.class, Modifier.PUBLIC,
+                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 }

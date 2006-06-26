@@ -67,11 +67,16 @@ import org.jrdf.util.NodeTypeEnum;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class TypeComparatorImpl implements TypeComparator {
+public final class TypeComparatorImpl implements TypeComparator {
+    private static final long serialVersionUID = -534102244020655491L;
     private static final int EQUAL = 0;
     private static final int AFTER = 1;
     private static final int BEFORE = -1;
-    private final NodeTypeComparator nodeTypeComparator;
+    private NodeTypeComparator nodeTypeComparator;
+
+    public TypeComparatorImpl() {
+
+    }
 
     public TypeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
         this.nodeTypeComparator = nodeTypeComparator;

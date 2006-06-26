@@ -58,6 +58,7 @@
 package org.jrdf.query.relation;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Sort attributes by their type.
@@ -65,5 +66,5 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Id$
  */
-public interface AttributeComparator extends Comparator<Attribute> {
+public interface AttributeComparator extends Comparator<Attribute>, Serializable {
 }
