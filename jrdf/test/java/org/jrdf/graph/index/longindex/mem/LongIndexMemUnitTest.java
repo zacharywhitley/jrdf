@@ -82,7 +82,7 @@ public class LongIndexMemUnitTest extends TestCase {
     }
 
     public void testNoArgs() {
-        LongIndexMem index = new LongIndexMem();
+        //LongIndexMem index = new LongIndexMem();
         //ReflectTestUtil.getField(index, "index");
     }
 }

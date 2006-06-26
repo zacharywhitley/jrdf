@@ -79,9 +79,7 @@ public final class UuidGeneratorIntegrationTest extends TestCase {
     private static final String UUID_GENERATOR_CLASS_NAME_FULL = UuidGenerator.class.getName();
     private static final String UUID_GENERATOR_CLASS_NAME_SIMPLE = UuidGenerator.class.getSimpleName();
     private static final String GENERATE_UUID_METHOD_NAME = "generateUuid";
-    private static final Class[] NO_PARAMS = null;
     private static final Object[] NO_ARGS = (Object[]) null;
-    private static final Object UUID_GENERATOR_INSTANCE = null;
     private static final int NUM_THREADS = 10;
     private static final int NUM_CLASSLOADERS = 10;
     private static final int NUM_UIDS = 5000;
@@ -109,7 +107,7 @@ public final class UuidGeneratorIntegrationTest extends TestCase {
     }
 
     private void checkUuidGenerator(Class uuidGenerator) throws Exception {
-        Method generateUuidMethod = uuidGenerator.getMethod(GENERATE_UUID_METHOD_NAME, NO_PARAMS);
+        Method generateUuidMethod = uuidGenerator.getMethod(GENERATE_UUID_METHOD_NAME);
         generateUuids(generateUuidMethod);
     }
 
@@ -123,7 +121,7 @@ public final class UuidGeneratorIntegrationTest extends TestCase {
     }
 
     private String invokeGenerateUuidMethod(Method generateUuidMethod) throws Exception {
-        return (String) generateUuidMethod.invoke(UUID_GENERATOR_INSTANCE, NO_ARGS);
+        return (String) generateUuidMethod.invoke(null, NO_ARGS);
     }
 
     public static void testMultipleThreadsGenerateUniqueUuids() throws Exception {
