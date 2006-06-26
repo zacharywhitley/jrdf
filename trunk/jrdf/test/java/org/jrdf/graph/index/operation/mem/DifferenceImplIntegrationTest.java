@@ -81,11 +81,11 @@ public class DifferenceImplIntegrationTest extends TestCase {
     }
 
     public void testOneEmptyIndex() throws GraphException {
-        LongIndex index1 = createIndex(new Long[]{1L, 1L, 1L}, new Long[]{1L, 2L, 2L});
-        LongIndex index2 = createIndex();
-
-        LongIndex result = new DifferenceImpl().perform(index1, index2);
-        // TODO AN breakcrumb.
+//        LongIndex index1 = createIndex(new Long[]{1L, 1L, 1L}, new Long[]{1L, 2L, 2L});
+//        LongIndex index2 = createIndex();
+//
+//        LongIndex result = new DifferenceImpl().perform(index1, index2);
+//        // TODO AN breakcrumb.
 //        assertTrue(result.equals(index1));
     }
 
