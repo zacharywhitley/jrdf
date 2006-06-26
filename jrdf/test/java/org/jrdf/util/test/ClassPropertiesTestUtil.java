@@ -192,7 +192,7 @@ public final class ClassPropertiesTestUtil {
         try {
             return cls.getDeclaredConstructor(parameters);
         } catch (NoSuchMethodException e) {
-            assertParameters(parameters);
+            assertParameters(cls, parameters);
             throw new RuntimeException(e);
         }
     }
@@ -213,11 +213,11 @@ public final class ClassPropertiesTestUtil {
         return parentClasses;
     }
 
-    private static void assertParameters(Class... parameters) {
+    private static void assertParameters(Class cls, Class... parameters) {
         if (parameters != null) {
-            Assert.fail("No constructor found with types: " + Arrays.asList(parameters));
+            Assert.fail("No constructor for: " + cls + " found with types: " + Arrays.asList(parameters));
         } else {
-            Assert.fail("No nullary constructor found");
+            Assert.fail("No nullary constructor found for: " + cls);
         }
     }
 }

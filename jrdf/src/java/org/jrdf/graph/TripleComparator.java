@@ -58,6 +58,7 @@
 package org.jrdf.graph;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
 /**
  * Provides a comparison between triples - this will usually be implemented using the order Subject, Predicate,
@@ -66,5 +67,5 @@ import java.util.Comparator;
  * @author Andrew Newman
  * @version $Id$
  */
-public interface TripleComparator extends Comparator<Triple> {
+public interface TripleComparator extends Comparator<Triple>, Serializable {
 }
