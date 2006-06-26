@@ -65,7 +65,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.constraint.ConstraintExpression;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.util.test.SparqlQueryTestUtil;

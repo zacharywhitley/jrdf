@@ -58,7 +58,7 @@
 
 package org.jrdf.util.test;
 
-import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.constraint.ConstraintExpression;
 
 /**
  * Artefacts used in tests.
@@ -98,14 +98,22 @@ public final class SparqlQueryTestUtil {
     private static String createQueryString(String[] constraints) {
         StringBuffer buffer = new StringBuffer("SELECT * WHERE  { ");
         for (int i = 0; i < (constraints.length / 3); i++) {
-            buffer.append(delimitUri(constraints[i * 3]) + " " + delimitUri(constraints[i * 3 + 1]) + " " +
-                    constraints[i * 3 + 2]);
-            if (i < (constraints.length / 3 -1)) {
-                buffer.append(" . ");
-            }
+            createConstraint(buffer, constraints, i);
+            appendAnd(i, constraints, buffer);
         }
         buffer.append(" }");
         return buffer.toString();
+    }
+
+    private static void createConstraint(StringBuffer buffer, String[] constraints, int i) {
+        buffer.append(delimitUri(constraints[i * 3])).append(" ").append(delimitUri(constraints[i * 3 + 1]))
+                .append(" ").append(constraints[i * 3 + 2]);
+    }
+
+    private static void appendAnd(int i, String[] constraints, StringBuffer buffer) {
+        if (i < (constraints.length / 3 -1)) {
+            buffer.append(" . ");
+        }
     }
 
     public static String delimitUri(String str) {

@@ -61,7 +61,7 @@ package org.jrdf;
 import junit.framework.TestCase;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.constraint.ConstraintExpression;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.DefaultVariable;
 import org.jrdf.query.relation.constants.NullaryTuple;

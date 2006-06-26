@@ -65,7 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.query.ConstraintTriple;
+import org.jrdf.query.constraint.ConstraintTriple;
 import org.jrdf.query.Query;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.builder.LiteralTripleSpec;

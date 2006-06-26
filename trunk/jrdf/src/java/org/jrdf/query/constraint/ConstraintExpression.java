@@ -56,49 +56,36 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.query.constraint;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.SerializationTestUtil;
-import org.jrdf.util.test.FieldPropertiesTestUtil;
+import java.io.ObjectStreamException;
+import java.io.Serializable;
 
 /**
- * Unit test for {@link ConstraintExpression}.
+ * A pattern of triples applied to a graph to constrain the results of a query.
+ * <p>Maps to a <code>GraphPattern</code> in the SPARQL grammar.</p>
  *
  * @author Tom Adams
  * @version $Revision$
  */
-public final class ConstraintExpressionUnitTest extends TestCase {
+public interface ConstraintExpression {
 
-    private static final String FIELD_ALL = "ALL";
-    private static final Class<ConstraintExpression.AllConstraintExpression> CLASS_CONSTRAINT_EXPRESSION_ALL =
-            ConstraintExpression.AllConstraintExpression.class;
+    /**
+     * A constraint that matches all triples.
+     * <p>i.e. The constraint in a query of the form <code>SELECT { ?subject ?predicate ?object }</code>.</p>
+     */
+    ConstraintExpression ALL = AllConstraintExpression.INSTANCE;
 
-    public void testAllConstant() throws Exception {
-        checkAllConstantStaticFinal();
-        checkAllConstantImmutable();
-        checkAllConstantType();
-    }
+    static final class AllConstraintExpression implements ConstraintExpression, Serializable {
 
-    public void testAllInnerClassSerializable() {
-        SerializationTestUtil.checkSerialialVersionUid(CLASS_CONSTRAINT_EXPRESSION_ALL, 604673293181195659L);
-    }
+        private static final long serialVersionUID = 604673293181195659L;
+        private static final AllConstraintExpression INSTANCE = new AllConstraintExpression();
 
-    private void checkAllConstantStaticFinal() throws Exception {
-        FieldPropertiesTestUtil.checkFieldFinal(ConstraintExpression.class, FIELD_ALL);
-        FieldPropertiesTestUtil.checkFieldStatic(ConstraintExpression.class, FIELD_ALL);
-    }
+        private AllConstraintExpression() {
+        }
 
-    private void checkAllConstantImmutable() {
-        assertNotNull(ConstraintExpression.ALL);
-        ConstraintExpression x = ConstraintExpression.ALL;
-        ConstraintExpression y = ConstraintExpression.ALL;
-        assertEquals(x, y);
-        assertTrue(x == y);
-    }
-
-    private void checkAllConstantType() {
-        ClassPropertiesTestUtil.checkInstanceImplementsInterface(ConstraintExpression.class, ConstraintExpression.ALL);
+        private Object readResolve() throws ObjectStreamException {
+            return INSTANCE;
+        }
     }
 }

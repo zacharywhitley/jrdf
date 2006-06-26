@@ -66,7 +66,7 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralImpl;
 import org.jrdf.graph.mem.URIReferenceImpl;
-import org.jrdf.query.ConstraintTriple;
+import org.jrdf.query.constraint.ConstraintTriple;
 import org.jrdf.query.DefaultAnswer;
 import org.jrdf.query.DefaultVariable;
 import org.jrdf.query.QueryImpl;

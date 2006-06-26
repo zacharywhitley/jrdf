@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.query.constraint;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;

@@ -62,6 +62,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.constraint.ConstraintExpression;
+import org.jrdf.query.constraint.ConstraintTriple;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
