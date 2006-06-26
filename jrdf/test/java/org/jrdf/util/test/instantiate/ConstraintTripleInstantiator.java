@@ -59,13 +59,13 @@
 package org.jrdf.util.test.instantiate;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.query.ConstraintTriple;
+import org.jrdf.query.constraint.ConstraintTriple;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 import org.jrdf.util.test.ParamSpec;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.ConstraintTriple}.
+ * {@link Instantiator} for {@link org.jrdf.query.constraint.ConstraintTriple}.
  *
  * @author Tom Adams
  * @version $Id$

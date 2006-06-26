@@ -60,6 +60,7 @@ package org.jrdf.query;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.constraint.ConstraintExpression;
 
 import java.util.List;
 import java.util.SortedSet;

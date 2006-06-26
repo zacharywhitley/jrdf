@@ -58,7 +58,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.constraint.ConstraintExpression;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.Variable;
 import org.jrdf.util.test.ReflectTestUtil;

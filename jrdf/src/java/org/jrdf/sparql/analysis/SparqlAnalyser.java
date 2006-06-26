@@ -58,7 +58,7 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.ConstraintExpression;
+import org.jrdf.query.constraint.ConstraintExpression;
 import org.jrdf.query.Query;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
