@@ -60,8 +60,6 @@ package org.jrdf.util.test;
 
 import org.jrdf.query.ConstraintExpression;
 
-import java.net.URI;
-
 /**
  * Artefacts used in tests.
  *
@@ -75,10 +73,16 @@ public final class SparqlQueryTestUtil {
     public static final String VARIABLE_NAME_TITLE = "title";
     public static final String VARIABLE_NAME_SUBJECT = "subject";
     public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
+    private static final String SUBJECT_URI_1 = TripleTestUtil.URI_BOOK_1.toString();
+    private static final String SUBJECT_URI_2 = TripleTestUtil.URI_BOOK_2.toString();
+    private static final String PREDICATE_URI_1 = TripleTestUtil.URI_DC_TITLE.toString();
     public static final String QUERY_BOOK_1_DC_TITLE =
-            createQueryString(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
+            createQueryString(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE);
     public static final String QUERY_BOOK_2_DC_TITLE =
-            createQueryString(TripleTestUtil.URI_BOOK_2, TripleTestUtil.URI_DC_TITLE, VARIABLE_TITLE);
+            createQueryString(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE);
+    public static final String QUERY_BOOK_1_AND_2 =
+            createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
+                    PREDICATE_URI_1, VARIABLE_TITLE});
     public static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE =
             TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_1);
     public static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE =
@@ -87,13 +91,25 @@ public final class SparqlQueryTestUtil {
     private SparqlQueryTestUtil() {
     }
 
-    private static String createQueryString(URI subjectUri, URI predicateUri, String objectVariable) {
-        return "SELECT * WHERE  { " +
-                delimitUri(subjectUri) + " " + delimitUri(predicateUri) + " " + objectVariable + " }";
+    private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {
+        return createQueryString(new String[]{subjectUri, predicateUri, objectVariable});
     }
 
-    public static String delimitUri(URI uri) {
-        return "<" + uri + ">";
+    private static String createQueryString(String[] constraints) {
+        StringBuffer buffer = new StringBuffer("SELECT * WHERE  { ");
+        for (int i = 0; i < (constraints.length / 3); i++) {
+            buffer.append(delimitUri(constraints[i * 3]) + " " + delimitUri(constraints[i * 3 + 1]) + " " +
+                    constraints[i * 3 + 2]);
+            if (i < (constraints.length / 3 -1)) {
+                buffer.append(" . ");
+            }
+        }
+        buffer.append(" }");
+        return buffer.toString();
+    }
+
+    public static String delimitUri(String str) {
+        return "<" + str + ">";
     }
 
 }
