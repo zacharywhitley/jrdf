@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,49 +55,27 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.graph.mem;
 
+import junit.framework.TestCase;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
 
 /**
- * Provides a comparison between triples using a NodeComparator and the order of the nodes Subject, Predicate and
- * Object.
+ * TripleComparator unit test
  *
  * @author Andrew Newman
- * @version $Id$
+ * @version $Revision:$
  */
-public final class TripleComparatorImpl implements TripleComparator {
-    private static final long serialVersionUID = -1495143472207557345L;
-
-    private NodeComparator nodeComparator;
-
-    private TripleComparatorImpl() {
-
-    }
-
-    public TripleComparatorImpl(NodeComparator nodeComparator) {
-        this.nodeComparator = nodeComparator;
-    }
-
-    public int compare(Triple o1, Triple o2) {
-        int subjectComparison = nodeComparator.compare(o1.getSubject(), o2.getSubject());
-        if (subjectComparison == 0) {
-            return comparePredicates(o1, o2);
-        }
-        return subjectComparison;
-    }
-
-    private int comparePredicates(Triple o1, Triple o2) {
-        int predicateComparison = nodeComparator.compare(o1.getPredicate(), o2.getPredicate());
-        if (predicateComparison == 0) {
-            return compareObjects(o1, o2);
-        }
-        return predicateComparison;
-    }
-
-    private int compareObjects(Triple o1, Triple o2) {
-        return nodeComparator.compare(o1.getObject(), o2.getObject());
+public class TripleComparatorImplUnitTest extends TestCase {
+    public void testClassProperties() throws Exception {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleComparator.class, TripleComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, TripleComparator.class);
+        ClassPropertiesTestUtil.checkConstructor(TripleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class);
     }
 }
