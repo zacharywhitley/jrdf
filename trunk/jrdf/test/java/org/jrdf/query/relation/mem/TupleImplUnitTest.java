@@ -81,6 +81,7 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 /**
  * Test for tuple implementation.
@@ -144,8 +145,8 @@ public class TupleImplUnitTest extends TestCase {
     }
 
     private static Set<AttributeValuePair> createSet(AttributeValuePair[] attributeValuePair) {
-        //noinspection unchecked
-        return new HashSet(Arrays.asList(attributeValuePair));
+        List<AttributeValuePair> avpList = Arrays.asList(attributeValuePair);
+        return new HashSet<AttributeValuePair>(avpList);
     }
 
 }

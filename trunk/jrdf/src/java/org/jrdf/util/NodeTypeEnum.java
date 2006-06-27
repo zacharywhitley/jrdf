@@ -70,6 +70,7 @@ import org.jrdf.query.relation.type.LiteralType;
  */
 // TODO (AN) Test drive me.
 public enum NodeTypeEnum {
+
     /**
      * The order of the three different types of RDF nodes.
      */

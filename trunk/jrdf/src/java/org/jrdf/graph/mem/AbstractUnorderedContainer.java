@@ -90,6 +90,7 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
         return elements.values().isEmpty();
     }
 
+    @SuppressWarnings({ "SuspiciousMethodCalls" })
     public boolean contains(Object o) {
         return elements.values().contains(o);
     }
@@ -98,8 +99,8 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
         return elements.values().iterator();
     }
 
+    @SuppressWarnings({ "unchecked" })
     public ObjectNode[] toArray() {
-        //noinspection unchecked
         return (ObjectNode[]) elements.values().toArray();
     }
 
@@ -112,6 +113,7 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
         return true;
     }
 
+    @SuppressWarnings({ "SuspiciousMethodCalls" })
     public boolean remove(Object o) {
         Iterator iter = elements.entrySet().iterator();
         boolean found = false;

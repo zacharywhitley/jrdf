@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,78 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test.filter;
+package org.jrdf.gui.view;
 
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 
-import java.util.Collection;
+import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
-import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
- * Accepts classes that are marked as being {@link java.io.Serializable}.
+ * Display and Update results to a table.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class MarkedAsSerializableClassFilter implements ClassFilter {
+public class ResultsTableModel extends AbstractTableModel {
+    private static final long serialVersionUID = -7636712377178626351L;
+    private String[] columnNames = {"Subject", "Predicate", "Object"};
+    private String[][] data = {};
 
-    public boolean accept(Class cls) {
-        if (cls.getName().contains("Results")) {
-            System.err.println("Cls: " + cls);
-            System.err.println("Cls: " + ClassPropertiesTestUtil.isImplicitlyMarkedAsSerializable(cls));
-            Collection<Class<?>> parentClasses = new ArrayList<Class<?>>();
-            Collection<? extends Class<?>> foo = ClassPropertiesTestUtil.findParentClasses(cls);
-            System.err.println("Parent Classes: " + foo);
-            parentClasses.addAll(foo);
-            for (Class<?> parent : parentClasses) {
-                if (parent.equals(Serializable.class)) {
-                    System.err.println("Parent: " + parent);
-                    return true;
-                }
+    public void setResults(Relation answer) {
+        updateTableData(answer);
+        fireTableDataChanged();
+        fireTableStructureChanged();
+    }
+
+    public int getRowCount() {
+        return data.length;
+    }
+
+    public int getColumnCount() {
+        return columnNames.length;
+    }
+
+    public String getColumnName(int col) {
+        return columnNames[col];
+    }
+
+    public Object getValueAt(int row, int col) {
+        return data[row][col];
+    }
+
+    private void updateTableData(Relation answer) {
+        SortedSet<Tuple> sortedTuples = answer.getSortedTuples();
+        SortedSet<Attribute> sortedHeading = answer.getSortedHeading();
+        setColumnNames(sortedHeading);
+        setColumnValues(sortedHeading, sortedTuples);
+    }
+
+    private void setColumnValues(SortedSet<Attribute> sortedHeading, SortedSet<Tuple> sortedTuples) {
+        int i = 0;
+        data = new String[sortedTuples.size()][sortedHeading.size()];
+        for (Tuple tuple : sortedTuples) {
+            Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
+            List<String> results = new ArrayList<String>();
+            for (AttributeValuePair avp : sortedAttributeValues) {
+                results.add(avp.getValue().toString());
             }
-            return false;
-
+            data[i++] = results.toArray(new String[]{});
         }
-        return ClassPropertiesTestUtil.isImplicitlyMarkedAsSerializable(cls);
+    }
+
+    private void setColumnNames(SortedSet<Attribute> sortedHeading) {
+        List<String> resultColumnNames = new ArrayList<String>();
+        for (Attribute attribute : sortedHeading) {
+            resultColumnNames.add(attribute.getAttributeName().getLiteral() + " | " +
+                    attribute.getType().getName());
+        }
+        columnNames = resultColumnNames.toArray(new String[]{});
     }
 }

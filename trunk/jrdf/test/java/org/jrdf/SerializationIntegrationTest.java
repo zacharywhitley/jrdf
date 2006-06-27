@@ -59,18 +59,19 @@
 package org.jrdf;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.query.constraint.ConstraintExpression;
-import org.jrdf.query.QueryImpl;
 import org.jrdf.query.DefaultVariable;
+import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.constants.NullaryTuple;
+import org.jrdf.query.constraint.ConstraintExpression;
+import org.jrdf.util.NodeTypeEnum;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.filter.JavaClassFileFilter;
 import org.jrdf.util.test.filter.MarkedAsSerializableClassFilter;
 import org.jrdf.util.test.filter.RecursiveFileFinder;
 import org.jrdf.vocabulary.Vocabulary;
+import org.jrdf.graph.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.mem.GraphImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,9 +121,13 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(GraphImpl.class);
         excludedClasses.add(LongIndexMem.class);
         excludedClasses.add(NullaryTuple.class);
+        excludedClasses.add(NodeTypeEnum.class);
+        excludedClasses.add(org.jrdf.parser.ntriples.lexer.LexerException.class);
+        excludedClasses.add(org.jrdf.parser.ntriples.parser.ParserException.class);
+        excludedClasses.add(org.jrdf.sparql.parser.lexer.LexerException.class);
+        excludedClasses.add(org.jrdf.sparql.parser.parser.ParserException.class);
         excludedClasses.add(ConstraintExpression.AllConstraintExpression.class);  // not sure why this doesn't work
-        excludedClasses
-            .add(QueryImpl.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
+        excludedClasses.add(QueryImpl.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
         excludedClasses.add(DefaultVariable.class); // implement equals() & hashCode()
         return excludedClasses;
     }

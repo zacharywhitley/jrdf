@@ -87,6 +87,10 @@ public abstract class AbstractURIReference implements URIReference, Serializable
      */
     private URI uri;
 
+    protected AbstractURIReference() {
+
+    }
+
     /**
      * Constructor.
      * <p/>

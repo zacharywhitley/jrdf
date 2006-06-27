@@ -208,6 +208,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         });
     }
 
+    @SuppressWarnings({ "unchecked" })
     private QueryBuilder createBuilder(String queryString, Query query) throws Exception {
         IMocksControl control = factory.createControl();
         QueryBuilder builder = control.createMock(QueryBuilder.class);
@@ -217,6 +218,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
 
+    @SuppressWarnings({ "unchecked" })
     private JrdfQueryExecutorFactory createExecutorFactory(JrdfQueryExecutor executor, Graph graph) {
         IMocksControl control = factory.createControl();
         JrdfQueryExecutorFactory executorFactory = control.createMock(JrdfQueryExecutorFactory.class);
@@ -225,6 +227,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         return executorFactory;
     }
 
+    @SuppressWarnings({ "unchecked" })
     private JrdfQueryExecutor createExecutor(Query query, Relation answer) throws Exception {
         IMocksControl control = factory.createControl();
         JrdfQueryExecutor executor = control.createMock(JrdfQueryExecutor.class);

@@ -75,6 +75,10 @@ public final class AlreadyReifiedException extends TripleFactoryException {
      */
     private static final long serialVersionUID = 1411562510088882899L;
 
+    private AlreadyReifiedException() {
+        
+    }
+
     /**
      * Create an exception.
      *

@@ -155,6 +155,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         return start;
     }
 
+    @SuppressWarnings({ "unchecked" })
     private Parser createParser(Start start) throws Exception {
         IMocksControl control = mockFactory.createControl();
         Parser parser = control.createMock(Parser.class);
@@ -172,6 +173,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
 
+    @SuppressWarnings({ "unchecked" })
     private ParserFactory createParserFactory(Parser parser) {
         IMocksControl control = mockFactory.createControl();
         ParserFactory parserFactory = control.createMock(ParserFactory.class);

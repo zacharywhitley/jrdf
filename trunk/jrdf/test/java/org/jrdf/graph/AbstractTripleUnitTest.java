@@ -260,6 +260,9 @@ public abstract class AbstractTripleUnitTest extends TestCase {
 
         private static final long serialVersionUID = -2638294178260916848L;
 
+        private TestTriple() {
+        }
+
         public TestTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
             this.subjectNode = subject;
             this.predicateNode = predicate;
@@ -267,9 +270,12 @@ public abstract class AbstractTripleUnitTest extends TestCase {
         }
     }
 
-    private class TestTriple2 extends AbstractTriple {
+    private static class TestTriple2 extends AbstractTriple {
 
         private static final long serialVersionUID = 4936449745021045497L;
+
+        private TestTriple2() {
+        }
 
         public TestTriple2(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
             this.subjectNode = subject;

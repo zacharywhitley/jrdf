@@ -265,6 +265,10 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     private static class TestURIReference extends AbstractURIReference {
         private static final long serialVersionUID = -443111126777106029L;
 
+        private TestURIReference() {
+
+        }
+
         public TestURIReference(URI newUri) throws IllegalArgumentException {
             super(newUri);
         }
@@ -272,6 +276,10 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
     private static class TestURIReference2 extends AbstractURIReference {
         private static final long serialVersionUID = 8196131420240571434L;
+
+        private TestURIReference2() {
+
+        }
 
         public TestURIReference2(URI newUri) throws IllegalArgumentException {
             super(newUri);
