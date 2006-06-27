@@ -64,8 +64,9 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.query.constraint.Constraint;
 import org.jrdf.query.constraint.ConstraintExpression;
-import org.jrdf.query.constraint.ConstraintTriple;
+import org.jrdf.query.constraint.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.PositionName;
@@ -118,7 +119,7 @@ public class TripleTestUtil {
     public static ConstraintExpression createBookDcTitleExpression(URI bookUri) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, ATTRIBUTES);
-        return new ConstraintTriple(avp);
+        return new Constraint<ExpressionVisitor>(avp);
     }
 
     public static Triple createTripleAllSame(URI uri) {

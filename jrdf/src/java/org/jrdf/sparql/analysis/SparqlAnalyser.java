@@ -59,6 +59,7 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.constraint.ConstraintExpression;
+import org.jrdf.query.constraint.ExpressionVisitor;
 import org.jrdf.query.Query;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -97,7 +98,7 @@ public interface SparqlAnalyser extends Analysis {
             throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
         }
 
-        public ConstraintExpression getConstraintExpression() {
+        public ConstraintExpression<ExpressionVisitor> getConstraintExpression() {
             throw new UnsupportedOperationException("Retrieving the constraint expression is not supported");
         }
 

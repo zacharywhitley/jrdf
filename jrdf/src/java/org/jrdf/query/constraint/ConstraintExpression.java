@@ -65,6 +65,6 @@ package org.jrdf.query.constraint;
  * @author Tom Adams
  * @version $Revision$
  */
-public interface ConstraintExpression {
-
+public interface ConstraintExpression<V extends ExpressionVisitor> {
+    void accept(V v);
 }

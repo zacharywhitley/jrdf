@@ -58,7 +58,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.constraint.ConstraintTriple;
+import org.jrdf.query.constraint.Constraint;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -67,14 +67,14 @@ import org.jrdf.util.test.TripleTestUtil;
 import java.util.SortedSet;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.constraint.ConstraintTriple}.
+ * {@link Instantiator} for {@link org.jrdf.query.constraint.Constraint}.
  *
  * @author Tom Adams
  * @version $Id$
  */
 final class ConstraintTripleInstantiator implements Instantiator {
 
-    private static final Class<ConstraintTriple> CLASS_CONSTRAINT_TRIPLE = ConstraintTriple.class;
+    private static final Class<Constraint> CLASS_CONSTRAINT_TRIPLE = Constraint.class;
 
     public Object instantiate() {
         return ReflectTestUtil.createInstanceUsingConstructor(CLASS_CONSTRAINT_TRIPLE, createParams());

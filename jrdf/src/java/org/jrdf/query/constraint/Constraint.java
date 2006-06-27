@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,28 +58,64 @@
 
 package org.jrdf.query.constraint;
 
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.util.EqualsUtil;
+import org.jrdf.util.param.ParameterUtil;
+
 import java.io.Serializable;
-import java.io.ObjectStreamException;
+import java.util.SortedSet;
 
 /**
- * A constraint that matches all triples.
- * <p>i.e. The constraint in a query of the form <code>SELECT { ?subject ?predicate ?object }</code>.</p>
+ * A constraint expression comprising a single constraint.
+ *
+ * @author Tom Adams
+ * @version $Revision$
  */
-public final class AllConstraintExpression implements ConstraintExpression, Serializable {
+public final class Constraint<V extends ExpressionVisitor> implements ConstraintExpression<V>, Serializable {
 
-    private static final AllConstraintExpression INSTANCE = new AllConstraintExpression();
+    private static final long serialVersionUID = 4538228991602138679L;
+    private static final int DUMMY_HASHCODE = 47;
+    private SortedSet<AttributeValuePair> avp;
 
-    /**
-     * The ALL Constraint - or unconstrained.
-     */
-    public static final ConstraintExpression ALL = AllConstraintExpression.INSTANCE;
-
-    private static final long serialVersionUID = 604673293181195659L;
-
-    private AllConstraintExpression() {
+    public Constraint(SortedSet<AttributeValuePair> avp) {
+        ParameterUtil.checkNotNull("avp", avp);
+        this.avp = avp;
     }
 
-    private Object readResolve() throws ObjectStreamException {
-        return INSTANCE;
+    public SortedSet<AttributeValuePair> getAvp() {
+        return avp;
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (EqualsUtil.differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields(this, (Constraint) obj);
+    }
+
+    public int hashCode() {
+        // FIXME TJA: Test drive out values of triple.hashCode()
+        return DUMMY_HASHCODE;
+    }
+
+    /**
+     * Delegates to <code>getAvp().toString()</code>.
+     */
+    public String toString() {
+        return avp.toString();
+    }
+
+    public void accept(V v) {
+        v.visitConstraint(this);
+    }
+
+    private boolean determineEqualityFromFields(Constraint o1, Constraint o2) {
+        return o1.getAvp().equals(o2.getAvp());
     }
 }
