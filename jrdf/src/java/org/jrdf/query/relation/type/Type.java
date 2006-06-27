@@ -59,13 +59,15 @@
 
 package org.jrdf.query.relation.type;
 
+import java.io.Serializable;
+
 /**
  * Based on the concept Type found in the Relational model especially from Rel.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Type {
+public interface Type extends Serializable {
 
     /**
      * Returns true if this Type is a super-type of the given type.

@@ -58,6 +58,7 @@
 
 package org.jrdf.util.test;
 
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -65,12 +66,22 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.constraint.ConstraintExpression;
 import org.jrdf.query.constraint.ConstraintTriple;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.SortedSet;
 
 
 /**
@@ -92,9 +103,22 @@ public class TripleTestUtil {
     public static final Triple TRIPLE_BOOK_3_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_3);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = createDcSubjectTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = createDcSubjectTriple(URI_BOOK_1, LITERAL_BOOK_TITLE);
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
+    public static final SortedSet<AttributeValuePair> AVP_BOOK_1_DC_SUBJECT_LITERAL
+            = createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+    private static final PositionName SUBJECT_POS_NAME = new PositionName("SUBJECT");
+    private static final PositionName PREDICATE_POS_NAME = new PositionName("PREDICATE");
+    private static final VariableName OBJECT_POS_NAME = new VariableName("?title");
+    private static final AttributeImpl ATT_1 = new AttributeImpl(SUBJECT_POS_NAME, new SubjectNodeType());
+    private static final AttributeImpl ATT_2 = new AttributeImpl(PREDICATE_POS_NAME, new PredicateNodeType());
+    private static final AttributeImpl ATT_3 = new AttributeImpl(OBJECT_POS_NAME, new ObjectNodeType());
+    private static final Attribute[] ATTRIBUTES = new Attribute[]{ATT_1, ATT_2, ATT_3};
 
     public static ConstraintExpression createBookDcTitleExpression(URI bookUri) {
-        return new ConstraintTriple(createDcTitleTriple(bookUri));
+        Triple dcTitleTriple = createDcTitleTriple(bookUri);
+        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, ATTRIBUTES);
+        return new ConstraintTriple(avp);
     }
 
     public static Triple createTripleAllSame(URI uri) {
@@ -139,6 +163,10 @@ public class TripleTestUtil {
 
     private static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         return NodeTestUtil.createTriple(subject, predicate, object);
+    }
+
+    private static SortedSet<AttributeValuePair> createAvp(Triple tripleBook1DcSubjectLiteral) {
+        return AVP_HELPER.createAvp(tripleBook1DcSubjectLiteral);
     }
 
     private static class SimpleClosableIterator<Triple> implements ClosableIterator<Triple> {

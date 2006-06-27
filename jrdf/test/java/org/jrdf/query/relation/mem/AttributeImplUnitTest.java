@@ -69,7 +69,8 @@ import org.jrdf.query.relation.type.LiteralType;
 import org.jrdf.query.relation.type.Type;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkMarkedAsSerializable;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypeAndPrivate;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
@@ -94,9 +95,10 @@ public class AttributeImplUnitTest extends TestCase {
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
+        checkMarkedAsSerializable(Attribute.class);
         checkConstructor(AttributeImpl.class, Modifier.PUBLIC, AttributeName.class, Type.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, ATTRIBUTE_NAME, AttributeName.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeImpl.class, TYPE_NAME, Type.class);
+        checkFieldIsOfTypeAndPrivate(AttributeImpl.class, ATTRIBUTE_NAME, AttributeName.class);
+        checkFieldIsOfTypeAndPrivate(AttributeImpl.class, TYPE_NAME, Type.class);
     }
 
     public void testConstructor() {

@@ -60,13 +60,15 @@ package org.jrdf.query.relation;
 
 import org.jrdf.graph.Node;
 
+import java.io.Serializable;
+
 /**
  * An attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface AttributeValuePair {
+public interface AttributeValuePair extends Serializable {
     /**
      * Returns the attribute.
      *

@@ -107,7 +107,7 @@ public final class TripleBuilderUnitTest extends TestCase {
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
     private static final String NULL_TRIPLE_NODE = "tripleNode parameter cannot be null";
     private static final String NULL_GRAPH = "graph parameter cannot be null";
-    private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getSortedAttributeValuePairHelper();
+    private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
 
     public void testClassProperties() {
         // FIXME TJA: Reenable this if we figure out how to do it generically.

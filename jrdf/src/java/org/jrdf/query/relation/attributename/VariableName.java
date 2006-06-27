@@ -66,7 +66,11 @@ import au.net.netstorm.boost.primordial.Primordial;
  * @version $Id$
  */
 public final class VariableName extends Primordial implements AttributeName {
-    private final String variableName;
+    private static final long serialVersionUID = 504817351812142680L;
+    private String variableName;
+
+    private VariableName() {
+    }
 
     public VariableName(String newVariableName) {
         variableName = newVariableName;

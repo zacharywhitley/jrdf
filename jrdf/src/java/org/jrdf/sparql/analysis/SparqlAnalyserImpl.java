@@ -59,13 +59,12 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.QueryImpl;
 import org.jrdf.query.Query;
+import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.builder.TripleBuilder;
 
 import java.util.SortedSet;
 
@@ -81,14 +80,11 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private Query query = SparqlAnalyser.NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;
-    private SortedAttributeValuePairHelper attributeValuePairHelper;
 
 
-    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph,
-            SortedAttributeValuePairHelper attributeValuePairHelper) {
+    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
-        this.attributeValuePairHelper = attributeValuePairHelper;
     }
 
     /**
@@ -101,6 +97,6 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     // FIXME TJA: This implementation will change once we have to parse variable lists.
     public void outATriple(ATriple tripleNode) {
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
-        query = new QueryImpl(attributeValuePairs, attributeValuePairHelper);
+        query = new QueryImpl(attributeValuePairs);
     }
 }

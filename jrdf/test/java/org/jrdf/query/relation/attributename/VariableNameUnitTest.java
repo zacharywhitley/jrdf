@@ -62,7 +62,8 @@ import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfType;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
 
@@ -80,8 +81,9 @@ public class VariableNameUnitTest extends TestCase {
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, PositionName.class);
         checkImplementationOfInterfaceAndFinal(AttributeName.class, VariableName.class);
+        ClassPropertiesTestUtil.checkMarkedAsSerializable(AttributeName.class);
         checkConstructor(VariableName.class, Modifier.PUBLIC, String.class);
-        checkFieldIsOfTypePrivateAndFinal(VariableName.class, VARIABLE_FIELD_NAME, String.class);
+        checkFieldIsOfType(VariableName.class, VARIABLE_FIELD_NAME, String.class);
     }
 
     public void testConstructor() {

@@ -58,12 +58,10 @@
 
 package org.jrdf.query;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.constraint.ConstraintExpression;
 import org.jrdf.query.constraint.ConstraintTriple;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
@@ -84,14 +82,11 @@ public final class QueryImpl implements Query, Serializable {
 
     private static final long serialVersionUID = 409607492370028929L;
     private SortedSet<AttributeValuePair> attributeValuePairs;
-    private final SortedAttributeValuePairHelper avpHelper;
 
     // TODO (AN) This is an indication that we need an Sorted AVP object with behaviour - combine these two.
-    public QueryImpl(SortedSet<AttributeValuePair> attributeValuePairs, SortedAttributeValuePairHelper avpHelper) {
+    public QueryImpl(SortedSet<AttributeValuePair> attributeValuePairs) {
         ParameterUtil.checkNotNull("attributeValuePairs", attributeValuePairs);
-        ParameterUtil.checkNotNull("avpHelper", avpHelper);
         this.attributeValuePairs = attributeValuePairs;
-        this.avpHelper = avpHelper;
     }
 
     public List<Attribute> getVariables() {
@@ -103,8 +98,7 @@ public final class QueryImpl implements Query, Serializable {
     }
 
     public ConstraintExpression getConstraintExpression() {
-        Triple triple = avpHelper.createTriple(attributeValuePairs);
-        return new ConstraintTriple(triple);
+        return new ConstraintTriple(attributeValuePairs);
     }
 
     public SortedSet<AttributeValuePair> getSingleAvp() {

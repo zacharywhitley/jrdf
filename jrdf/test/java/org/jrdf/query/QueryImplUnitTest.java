@@ -60,16 +60,12 @@ package org.jrdf.query;
 
 import junit.framework.TestCase;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Unit test for {@link QueryImpl}.
@@ -79,17 +75,12 @@ import java.util.TreeSet;
  */
 public final class QueryImplUnitTest extends TestCase {
 
-    @SuppressWarnings({"unchecked"})
-    private static final SortedSet<AttributeValuePair> ALL_VARIABLES =
-            new TreeSet<AttributeValuePair>(Collections.EMPTY_SET);
     private static final SortedSet<AttributeValuePair> NULL_AVP = null;
-    private static final SortedAttributeValuePairHelper NULL_AVP_HELPER = null;
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, QueryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, SortedSet.class,
-                SortedAttributeValuePairHelper.class);
+        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, SortedSet.class);
     }
 
     public void testSerialVersionUid() {
@@ -98,13 +89,8 @@ public final class QueryImplUnitTest extends TestCase {
 
     public void testNullsInConstructorThrowException() {
         try {
-            new QueryImpl(NULL_AVP, MockTestUtil.createMock(SortedAttributeValuePairHelper.class));
+            new QueryImpl(NULL_AVP);
             fail("null variables should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-        }
-        try {
-            new QueryImpl(ALL_VARIABLES, NULL_AVP_HELPER);
-            fail("null expression should have thrown IllegalArgumentException");
         } catch (IllegalArgumentException expected) {
         }
     }

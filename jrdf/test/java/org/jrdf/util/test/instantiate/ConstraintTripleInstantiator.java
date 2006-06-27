@@ -58,11 +58,13 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.Triple;
 import org.jrdf.query.constraint.ConstraintTriple;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
-import org.jrdf.util.test.ParamSpec;
+
+import java.util.SortedSet;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.constraint.ConstraintTriple}.
@@ -79,8 +81,9 @@ final class ConstraintTripleInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        Object[] params = new Object[]{TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL};
-        Class<?>[] types = new Class[]{Triple.class};
+        SortedSet<AttributeValuePair> avp = TripleTestUtil.AVP_BOOK_1_DC_SUBJECT_LITERAL;
+        Object[] params = new Object[]{avp};
+        Class<?>[] types = new Class[]{SortedSet.class};
         return new ParamSpec(params, types);
     }
 }

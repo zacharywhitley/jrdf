@@ -66,6 +66,8 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public class PredicateNodeType implements NodeType {
+    private static final long serialVersionUID = -5313315028523572144L;
+
     public boolean isAssignableFrom(Type type) {
         return type instanceof PredicateNodeType;
     }

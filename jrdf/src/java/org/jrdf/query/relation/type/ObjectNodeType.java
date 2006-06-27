@@ -69,6 +69,8 @@ import org.jrdf.graph.SubjectNode;
  * @version $Revision$
  */
 public class ObjectNodeType implements NodeType {
+    private static final long serialVersionUID = 8047443471499147543L;
+
     public boolean isAssignableFrom(Type type) {
         return type instanceof SubjectNode || type instanceof PredicateNodeType || type instanceof ObjectNode;
     }

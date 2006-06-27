@@ -64,9 +64,10 @@ import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
-import org.jrdf.query.constraint.ConstraintTriple;
 import org.jrdf.query.Query;
+import org.jrdf.query.constraint.ConstraintTriple;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
 import org.jrdf.sparql.builder.TripleBuilder;
@@ -77,11 +78,11 @@ import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.TResource;
+import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.FieldPropertiesTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
-import org.jrdf.util.test.AssertThrows;
 
 import java.net.URI;
 
@@ -106,6 +107,7 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
             new LiteralTripleSpec(URI_BOOK_1, URI_DC_TITLE, LITERAL_BOOK_TITLE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
+    private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
@@ -173,19 +175,22 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
 
     private void checkSubject(ATriple expectedTriple, ConstraintTriple actualTriple) {
         AResourceResourceTripleElement expectedSubject = (AResourceResourceTripleElement) expectedTriple.getSubject();
-        URIReference actualSubject = (URIReference) actualTriple.getTriple().getSubject();
+        Triple triple = AVP_HELPER.createTriple(actualTriple.getAvp());
+        URIReference actualSubject = (URIReference) triple.getSubject();
         checkResource(expectedSubject.getResource(), actualSubject.getURI());
     }
 
     private void checkPredicate(ATriple expectedTriple, ConstraintTriple actualTriple) {
         AResourceResourceTripleElement expectedPredicate =
                 (AResourceResourceTripleElement) expectedTriple.getPredicate();
-        URIReference actualPredicate = (URIReference) actualTriple.getTriple().getPredicate();
+        Triple triple = AVP_HELPER.createTriple(actualTriple.getAvp());
+        URIReference actualPredicate = (URIReference) triple.getPredicate();
         checkResource(expectedPredicate.getResource(), actualPredicate.getURI());
     }
 
     private void checkObject(ConstraintTriple actualTriple) {
-        checkObject(actualTriple.getTriple().getObject());
+        Triple triple = AVP_HELPER.createTriple(actualTriple.getAvp());
+        checkObject(triple.getObject());
     }
 
     private void checkObject(ObjectNode actualObject) {
@@ -270,7 +275,6 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
 
     private SparqlAnalyser createAnalyser(Graph graph) {
         TripleBuilder tripleBuilder = FACTORY.getNewTripleBuilder();
-        SortedAttributeValuePairHelper avpHelper = FACTORY.getSortedAttributeValuePairHelper();
-        return new SparqlAnalyserImpl(tripleBuilder, graph, avpHelper);
+        return new SparqlAnalyserImpl(tripleBuilder, graph);
     }
 }

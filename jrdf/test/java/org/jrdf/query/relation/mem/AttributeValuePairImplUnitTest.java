@@ -69,7 +69,8 @@ import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_B
 import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkMarkedAsSerializable;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypeAndPrivate;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
@@ -80,7 +81,7 @@ import java.lang.reflect.Modifier;
  * @author Andrew Newman
  * @version $Id$
  */
-public class AttributeValuePairUnitTest extends TestCase {
+public class AttributeValuePairImplUnitTest extends TestCase {
     private static final String ATTRIBUTE_NAME = "attribute";
     private static final String VALUE_NAME = "value";
 
@@ -92,9 +93,10 @@ public class AttributeValuePairUnitTest extends TestCase {
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(AttributeValuePair.class, AttributeValuePairImpl.class);
+        checkMarkedAsSerializable(AttributeValuePair.class);
         checkConstructor(AttributeValuePairImpl.class, Modifier.PUBLIC, Attribute.class, Node.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeValuePairImpl.class, ATTRIBUTE_NAME, Attribute.class);
-        checkFieldIsOfTypePrivateAndFinal(AttributeValuePairImpl.class, VALUE_NAME, Node.class);
+        checkFieldIsOfTypeAndPrivate(AttributeValuePairImpl.class, ATTRIBUTE_NAME, Attribute.class);
+        checkFieldIsOfTypeAndPrivate(AttributeValuePairImpl.class, VALUE_NAME, Node.class);
     }
 
     public void testConstructor() {

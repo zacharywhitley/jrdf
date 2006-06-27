@@ -66,6 +66,8 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public class URIReferenceType implements NodeType {
+    private static final long serialVersionUID = -46947819855688266L;
+
     public boolean isAssignableFrom(Type type) {
         return type instanceof URIReferenceType;
     }

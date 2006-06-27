@@ -116,6 +116,11 @@ public class FieldPropertiesTestUtil {
             expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
     }
 
+    public static void checkFieldIsOfTypeAndPrivate(Class<?> cls, String fieldName, Class<?> expectedType) {
+        checkFieldIsOfType(cls, fieldName, expectedType);
+        checkFieldPrivate(cls, fieldName);
+    }
+
     public static void checkFieldIsOfTypePrivateAndFinal(Class<?> cls, String fieldName, Class<?> expectedType) {
         checkFieldIsOfType(cls, fieldName, expectedType);
         checkFieldPrivate(cls, fieldName);

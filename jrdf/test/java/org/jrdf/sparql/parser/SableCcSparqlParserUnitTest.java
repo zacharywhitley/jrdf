@@ -62,7 +62,6 @@ import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.AQueryStart;
@@ -95,8 +94,6 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
     private static final ParserFactory PARSER_FACTORY = MockTestUtil.createMock(ParserFactory.class);
     private static final TripleBuilder TRIPLE_BUILDER = MockTestUtil.createMock(TripleBuilder.class);
-    private static final SortedAttributeValuePairHelper AVP_HELPER =
-            MockTestUtil.createMock(SortedAttributeValuePairHelper.class);
     private static final String QUERY_TEXT_MESSAGE = "queryText parameter cannot be null";
     private static final String QUERY_TEXT_EMPTY = "queryText parameter cannot be the empty string";
     private static final String GRAPH_MESSAGE = "graph parameter cannot be null";
@@ -113,8 +110,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
-        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class,
-                SortedAttributeValuePairHelper.class);
+        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class);
     }
 
     public void testParseQueryFailsWithBadInput() {
@@ -128,7 +124,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         Start start = createStart();
         Parser parser = createParser(start);
         ParserFactory parserFactory = createParserFactory(parser);
-        SableCcSparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER, AVP_HELPER);
+        SableCcSparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER);
         mockFactory.replay();
         sableCcSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
         mockFactory.verify();
@@ -183,7 +179,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private void checkBadInput(final Graph graph, final String query, String errorMessage) {
-        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY, TRIPLE_BUILDER, AVP_HELPER);
+        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY, TRIPLE_BUILDER);
         AssertThrows.assertThrows(IllegalArgumentException.class, errorMessage, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 sableCcSparqlParser.parseQuery(graph, query);
@@ -191,9 +187,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         });
     }
 
-    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder,
-            SortedAttributeValuePairHelper avpHelper) {
-        return new SableCcSparqlParser(parserFactory, tripleBuilder, avpHelper);
+    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder) {
+        return new SableCcSparqlParser(parserFactory, tripleBuilder);
 
     }
 
@@ -202,7 +197,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         Parser parser = createParser(exception);
         ParserFactory parserFactory = createParserFactory(parser);
         final SableCcSparqlParser sableCcSparqlParser =
-                createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER, AVP_HELPER);
+                createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER);
         mockFactory.replay();
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, ERROR_MSG, new AssertThrows.Block() {
             public void execute() throws Throwable {
