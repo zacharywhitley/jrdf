@@ -50,7 +50,6 @@ public class StatementHandlerException extends Exception {
     private Exception source;
 
     private StatementHandlerException() {
-        
     }
 
     /**

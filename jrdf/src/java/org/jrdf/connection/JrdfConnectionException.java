@@ -10,7 +10,7 @@ public final class JrdfConnectionException extends Exception {
 
     private static final long serialVersionUID = 8620551289077269764L;
 
-    private JrdfConnectionException() {        
+    private JrdfConnectionException() {
     }
 
     public JrdfConnectionException(String message) {
