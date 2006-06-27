@@ -56,34 +56,49 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test.instantiate;
+package org.jrdf.query.constraint;
 
-import org.jrdf.query.constraint.ConstraintExpression;
-import org.jrdf.query.constraint.AllConstraintExpression;
-import org.jrdf.query.QueryImpl;
-import org.jrdf.query.Variable;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.ParamSpec;
-
-import java.util.List;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.FieldPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.QueryImpl}.
+ * Unit test for {@link ConstraintExpression}.
  *
  * @author Tom Adams
- * @version $Id$
+ * @version $Revision$
  */
-final class DefaultQueryInstantiator implements Instantiator {
+public final class AllConstraintExpressionUnitTest extends TestCase {
 
-    private static final Class<QueryImpl> CLASS_DEFAULT_QUERY = QueryImpl.class;
+    private static final String FIELD_ALL = "ALL";
+    private static final Class<AllConstraintExpression> CLASS_CONSTRAINT_EXPRESSION_ALL =
+            AllConstraintExpression.class;
 
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_QUERY, createParams());
+    public void testAllConstant() throws Exception {
+        checkAllConstantStaticFinal();
+        checkAllConstantImmutable();
+        checkAllConstantType();
     }
 
-    private ParamSpec createParams() {
-        Object[] params = new Object[]{Variable.ALL_VARIABLES, AllConstraintExpression.ALL};
-        Class<?>[] types = new Class[]{List.class, ConstraintExpression.class};
-        return new ParamSpec(params, types);
+    public void testAllInnerClassSerializable() {
+        SerializationTestUtil.checkSerialialVersionUid(CLASS_CONSTRAINT_EXPRESSION_ALL, 604673293181195659L);
+    }
+
+    private void checkAllConstantStaticFinal() throws Exception {
+        FieldPropertiesTestUtil.checkFieldFinal(AllConstraintExpression.class, FIELD_ALL);
+        FieldPropertiesTestUtil.checkFieldStatic(AllConstraintExpression.class, FIELD_ALL);
+    }
+
+    private void checkAllConstantImmutable() {
+        assertNotNull(AllConstraintExpression.ALL);
+        ConstraintExpression x = AllConstraintExpression.ALL;
+        ConstraintExpression y = AllConstraintExpression.ALL;
+        assertEquals(x, y);
+        assertTrue(x == y);
+    }
+
+    private void checkAllConstantType() {
+        ClassPropertiesTestUtil.checkInstanceImplementsInterface(ConstraintExpression.class, AllConstraintExpression.ALL);
     }
 }
