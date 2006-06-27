@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,47 +58,28 @@
 
 package org.jrdf.query.constraint;
 
-import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.FieldPropertiesTestUtil;
-import org.jrdf.util.test.SerializationTestUtil;
+import java.io.Serializable;
+import java.io.ObjectStreamException;
 
 /**
- * Unit test for {@link ConstraintExpression}.
- *
- * @author Tom Adams
- * @version $Revision$
+ * A constraint that matches all triples.
+ * <p>i.e. The constraint in a query of the form <code>SELECT { ?subject ?predicate ?object }</code>.</p>
  */
-public final class ConstraintExpressionUnitTest extends TestCase {
+public final class AllConstraintExpression implements ConstraintExpression, Serializable {
 
-    private static final String FIELD_ALL = "ALL";
-    private static final Class<ConstraintExpression.AllConstraintExpression> CLASS_CONSTRAINT_EXPRESSION_ALL =
-            ConstraintExpression.AllConstraintExpression.class;
+    private static final AllConstraintExpression INSTANCE = new AllConstraintExpression();
 
-    public void testAllConstant() throws Exception {
-        checkAllConstantStaticFinal();
-        checkAllConstantImmutable();
-        checkAllConstantType();
+    /**
+     * The ALL Constraint - or unconstrained.
+     */
+    public static final ConstraintExpression ALL = AllConstraintExpression.INSTANCE;
+
+    private static final long serialVersionUID = 604673293181195659L;
+
+    private AllConstraintExpression() {
     }
 
-    public void testAllInnerClassSerializable() {
-        SerializationTestUtil.checkSerialialVersionUid(CLASS_CONSTRAINT_EXPRESSION_ALL, 604673293181195659L);
-    }
-
-    private void checkAllConstantStaticFinal() throws Exception {
-        FieldPropertiesTestUtil.checkFieldFinal(ConstraintExpression.class, FIELD_ALL);
-        FieldPropertiesTestUtil.checkFieldStatic(ConstraintExpression.class, FIELD_ALL);
-    }
-
-    private void checkAllConstantImmutable() {
-        assertNotNull(ConstraintExpression.ALL);
-        ConstraintExpression x = ConstraintExpression.ALL;
-        ConstraintExpression y = ConstraintExpression.ALL;
-        assertEquals(x, y);
-        assertTrue(x == y);
-    }
-
-    private void checkAllConstantType() {
-        ClassPropertiesTestUtil.checkInstanceImplementsInterface(ConstraintExpression.class, ConstraintExpression.ALL);
+    private Object readResolve() throws ObjectStreamException {
+        return INSTANCE;
     }
 }

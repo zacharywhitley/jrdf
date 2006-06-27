@@ -62,7 +62,7 @@ import junit.framework.TestCase;
 import org.jrdf.query.DefaultVariable;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.constants.NullaryTuple;
-import org.jrdf.query.constraint.ConstraintExpression;
+import org.jrdf.query.constraint.AllConstraintExpression;
 import org.jrdf.util.NodeTypeEnum;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
@@ -126,7 +126,7 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(org.jrdf.parser.ntriples.parser.ParserException.class);
         excludedClasses.add(org.jrdf.sparql.parser.lexer.LexerException.class);
         excludedClasses.add(org.jrdf.sparql.parser.parser.ParserException.class);
-        excludedClasses.add(ConstraintExpression.AllConstraintExpression.class);  // not sure why this doesn't work
+        excludedClasses.add(AllConstraintExpression.class);  // not sure why this doesn't work
         excludedClasses.add(QueryImpl.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
         excludedClasses.add(DefaultVariable.class); // implement equals() & hashCode()
         return excludedClasses;
