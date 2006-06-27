@@ -101,10 +101,10 @@ public final class RelationImpl extends Primordial implements Relation {
     }
 
     // TODO (AN) Test drive me
+    @SuppressWarnings({ "unchecked" })
     public SortedSet<Attribute> getSortedHeading() {
         if (heading instanceof SortedSet) {
             if (((SortedSet) heading).comparator() != null) {
-                //noinspection unchecked
                 return (SortedSet) heading;
             }
         }
@@ -117,10 +117,10 @@ public final class RelationImpl extends Primordial implements Relation {
     }
 
     // TODO (AN) Test drive me
+    @SuppressWarnings({ "unchecked" })
     public SortedSet<Tuple> getSortedTuples() {
         if (tuples instanceof SortedSet) {
             if (((SortedSet) tuples).comparator() != null) {
-                //noinspection unchecked
                 return (SortedSet) tuples;
             }
         }

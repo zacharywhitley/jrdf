@@ -138,6 +138,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         assertEquals(expectedResult, result);
     }
 
+    @SuppressWarnings({"unchecked"})
     private Attribute createAttribute(Type type) {
         IMocksControl control = mockFactory.createControl();
         Attribute att = control.createMock(Attribute.class);
@@ -146,6 +147,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         return att;
     }
 
+    @SuppressWarnings({"unchecked"})
     private TypeComparator createTypeComparator(Type t1, Type t2, int expectedResult) {
         IMocksControl control = mockFactory.createControl();
         TypeComparator typeComparator = control.createMock(TypeComparator.class);

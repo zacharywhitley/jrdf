@@ -58,20 +58,12 @@
 
 package org.jrdf.gui.view;
 
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.Attribute;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * The results panel.
@@ -80,7 +72,7 @@ import java.util.SortedSet;
  * @version $Revision:$
  */
 public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
-    ResultsTableModel resultsTableModel = new ResultsTableModel();
+    private ResultsTableModel resultsTableModel = new ResultsTableModel();
 
     public JPanel getJPanel() {
         JTable table = createTable();
@@ -106,61 +98,4 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
         table.getTableHeader().setReorderingAllowed(false);
         return table;
     }
-
-    private static class ResultsTableModel extends AbstractTableModel {
-        String[] columnNames = {"Subject", "Predicate", "Object"};
-        String[][] data = {};
-
-        public void setResults(Relation answer) {
-            updateTableData(answer);
-            fireTableDataChanged();
-            fireTableStructureChanged();
-        }
-
-        public int getRowCount() {
-            return data.length;
-        }
-
-        public int getColumnCount() {
-            return columnNames.length;
-        }
-
-        public String getColumnName(int col) {
-            return columnNames[col];
-        }
-
-        public Object getValueAt(int row, int col) {
-            return data[row][col];
-        }
-
-        private void updateTableData(Relation answer) {
-            SortedSet<Tuple> sortedTuples = answer.getSortedTuples();
-            SortedSet<Attribute> sortedHeading = answer.getSortedHeading();
-            setColumnNames(sortedHeading);
-            setColumnValues(sortedHeading, sortedTuples);
-        }
-
-        private void setColumnValues(SortedSet<Attribute> sortedHeading, SortedSet<Tuple> sortedTuples) {
-            int i = 0;
-            data = new String[sortedTuples.size()][sortedHeading.size()];
-            for (Tuple tuple : sortedTuples) {
-                Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
-                List<String> results = new ArrayList<String>();
-                for (AttributeValuePair avp : sortedAttributeValues) {
-                    results.add(avp.getValue().toString());
-                }
-                data[i++] = results.toArray(new String[] {});
-            }
-        }
-
-        private void setColumnNames(SortedSet<Attribute> sortedHeading) {
-            List<String> resultColumnNames = new ArrayList<String>();
-            for (Attribute attribute : sortedHeading) {
-                resultColumnNames.add(attribute.getAttributeName().getLiteral() + " | " +
-                    attribute.getType().getName());
-            }
-            columnNames = resultColumnNames.toArray(new String[] {});
-        }
-    }
-
 }

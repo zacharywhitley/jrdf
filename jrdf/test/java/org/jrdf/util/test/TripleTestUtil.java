@@ -70,6 +70,7 @@ import org.jrdf.util.ClosableIterator;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -104,8 +105,9 @@ public class TripleTestUtil {
     }
 
     public static ClosableIterator<Triple> createTripleIterator(Triple[] triples) {
-        Iterator<Triple> iterator = Arrays.asList(triples).iterator();
-        return new SimpleClosableIterator(iterator);
+        List<Triple> triplesList = Arrays.asList(triples);
+        Iterator<Triple> iterator = triplesList.iterator();
+        return new SimpleClosableIterator<Triple>(iterator);
     }
 
     public static Triple createDcSubjectTriple(URI bookUri, String literal) {
@@ -139,8 +141,8 @@ public class TripleTestUtil {
         return NodeTestUtil.createTriple(subject, predicate, object);
     }
 
-    private static class SimpleClosableIterator implements ClosableIterator {
-        private Iterator iter;
+    private static class SimpleClosableIterator<Triple> implements ClosableIterator<Triple> {
+        private Iterator<Triple> iter;
 
         private SimpleClosableIterator(Iterator<Triple> iter) {
             this.iter = iter;
@@ -154,7 +156,7 @@ public class TripleTestUtil {
             return iter.hasNext();
         }
 
-        public Object next() {
+        public Triple next() {
             return iter.next();
         }
 

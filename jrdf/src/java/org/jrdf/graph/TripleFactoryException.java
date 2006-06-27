@@ -74,6 +74,10 @@ public class TripleFactoryException extends Exception {
      */
     private static final long serialVersionUID = 285284678430193536L;
 
+    protected TripleFactoryException() {
+
+    }
+
     /**
      * Create an exception.
      *

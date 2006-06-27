@@ -203,12 +203,17 @@ public final class ClassPropertiesTestUtil {
         return constructor;
     }
 
-    private static Collection<? extends Class<?>> findParentClasses(Class<?> cls) {
+    public static Collection<? extends Class<?>> findParentClasses(Class<?> cls) {
         Collection<Class<?>> parentClasses = new ArrayList<Class<?>>();
         Class[] parents = cls.getInterfaces();
         for (Class parent : parents) {
             parentClasses.addAll(findParentClasses(parent));
         }
+        Class<?> superclass = cls.getSuperclass();
+        if (null != superclass && !superclass.equals(Object.class)) {
+            parentClasses.addAll(findParentClasses(superclass));
+        }
+
         parentClasses.add(cls);
         return parentClasses;
     }

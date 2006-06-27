@@ -74,6 +74,10 @@ public class GraphException extends Exception {
      */
     private static final long serialVersionUID = -5259349384211599957L;
 
+    protected GraphException() {
+        
+    }
+
     /**
      * Create an exception.
      *

@@ -74,6 +74,10 @@ public final class GraphElementFactoryException extends Exception {
      */
     private static final long serialVersionUID = -8660240321973373993L;
 
+    private GraphElementFactoryException() {
+        
+    }
+
     /**
      * Create an exception.
      *

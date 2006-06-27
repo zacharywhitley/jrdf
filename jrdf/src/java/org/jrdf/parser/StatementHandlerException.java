@@ -49,6 +49,10 @@ public class StatementHandlerException extends Exception {
      */
     private Exception source;
 
+    private StatementHandlerException() {
+        
+    }
+
     /**
      * Creates a new StatementHandlerException.
      *

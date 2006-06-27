@@ -36,6 +36,9 @@ public class ParseException extends Exception {
 
     private Exception source;
 
+    private ParseException() {
+    }
+
     /**
      * Creates a new ParseException.
      *

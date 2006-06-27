@@ -79,6 +79,9 @@ public class TripleImpl extends AbstractTriple {
      */
     private static final long serialVersionUID = 7468341140195609635L;
 
+    private TripleImpl() {
+    }
+
     /**
      * Constructor for this Triple, only to be used by the NodeFactory.
      *

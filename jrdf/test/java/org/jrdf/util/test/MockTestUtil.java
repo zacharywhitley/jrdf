@@ -73,9 +73,9 @@ import java.net.URL;
 public class MockTestUtil {
     private static final ArnoldTheInstantiator INSTANTIATOR = new ArnoldTheInstantiator();
 
+    @SuppressWarnings({ "unchecked" })
     public static <T>T createMock(Class<T> clazz) {
         if (isFinalClass(clazz)) {
-            //noinspection unchecked
             return (T) createFinalClass(clazz);
         }
 
@@ -90,11 +90,11 @@ public class MockTestUtil {
      * @param index          the index to use in which to create a null Object - can be -1 and will not create any nulls.
      * @return an array of created types.
      */
+    @SuppressWarnings({"unchecked"})
     public static Object[] createArgs(Class[] parameterTypes, int index) {
         Object[] objects = new Object[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
             if (i != index) {
-                //noinspection unchecked
                 objects[i] = createMock(parameterTypes[i]);
             }
         }

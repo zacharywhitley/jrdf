@@ -83,7 +83,7 @@ public class FieldPropertiesTestUtil {
     }
 
     public static void checkContainsField(Class<?> cls, String fieldName) {
-        Assert.assertTrue(cls.getSimpleName() + " must contain the field " + fieldName, containsField(cls, fieldName));
+        Assert.assertTrue(cls.getName() + " must contain the field " + fieldName, containsField(cls, fieldName));
     }
 
     public static boolean isFieldFinal(Class<?> cls, String fieldName) {

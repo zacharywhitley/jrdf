@@ -66,6 +66,10 @@ public final class NamespaceException extends WriteException {
 
     private static final long serialVersionUID = 1203480737664217791L;
 
+    private NamespaceException() {
+
+    }
+
     public NamespaceException(String message) {
         super(message);
     }

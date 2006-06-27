@@ -143,6 +143,7 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
         return parser;
     }
 
+    @SuppressWarnings({"unchecked"})
     private SparqlParser createParser() throws Exception {
         IMocksControl control = mockFactory.createControl();
         SparqlParser parser = control.createMock(SparqlParser.class);
