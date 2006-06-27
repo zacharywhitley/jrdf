@@ -112,9 +112,6 @@
         <constructor-arg>
             <ref bean="tripleBuilder"/>
         </constructor-arg>
-        <constructor-arg>
-            <ref bean="sortedAttributeValuePairHelper"/>
-        </constructor-arg>
     </bean>
 
     <bean name="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>

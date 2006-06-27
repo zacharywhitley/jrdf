@@ -91,7 +91,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final QueryParser PARSER = FACTORY.getNewSparqlParser();

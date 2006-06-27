@@ -58,11 +58,13 @@
 
 package org.jrdf.query.constraint;
 
-import org.jrdf.graph.Triple;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.EqualsUtil;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * A constraint expression comprising a single constraint, i.e. a single triple.
@@ -75,15 +77,15 @@ public final class ConstraintTriple implements ConstraintExpression, Serializabl
 
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
-    private Triple triple;
+    private SortedSet<AttributeValuePair> avp;
 
-    public ConstraintTriple(Triple triple) {
-        ParameterUtil.checkNotNull("triple", triple);
-        this.triple = triple;
+    public ConstraintTriple(SortedSet<AttributeValuePair> avp) {
+        ParameterUtil.checkNotNull("avp", avp);
+        this.avp = avp;
     }
 
-    public Triple getTriple() {
-        return triple;
+    public SortedSet<AttributeValuePair> getAvp() {
+        return avp;
     }
 
     public boolean equals(Object obj) {
@@ -105,15 +107,15 @@ public final class ConstraintTriple implements ConstraintExpression, Serializabl
     }
 
     /**
-     * Delegates to <code>getTriple().toString()</code>.
+     * Delegates to <code>getAvp().toString()</code>.
      */
     public String toString() {
-        return triple.toString();
+        return avp.toString();
     }
 
     private boolean determineEqualityFromFields(Object o1, Object o2) {
-        Triple triple1 = ((ConstraintTriple) o1).getTriple();
-        Triple triple2 = ((ConstraintTriple) o2).getTriple();
-        return triple1.equals(triple2);
+        Set<AttributeValuePair> avp1 = ((ConstraintTriple) o1).getAvp();
+        Set<AttributeValuePair> avp2 = ((ConstraintTriple) o2).getAvp();
+        return avp1.equals(avp2);
     }
 }

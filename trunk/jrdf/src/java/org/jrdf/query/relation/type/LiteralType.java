@@ -66,6 +66,8 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public class LiteralType implements NodeType {
+    private static final long serialVersionUID = 8059107808615405657L;
+
     public boolean isAssignableFrom(Type type) {
         return type instanceof LiteralType;
     }

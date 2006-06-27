@@ -70,8 +70,12 @@ import au.net.netstorm.boost.primordial.Primordial;
  */
 // TODO (AN) Test drive Primordial usage.
 public final class AttributeImpl extends Primordial implements Attribute {
-    private final AttributeName attributeName;
-    private final Type type;
+    private static final long serialVersionUID = 6078409285334034368L;
+    private AttributeName attributeName;
+    private Type type;
+
+    private AttributeImpl() {
+    }
 
     public AttributeImpl(AttributeName newAttributeName, Type newType) {
         attributeName = newAttributeName;

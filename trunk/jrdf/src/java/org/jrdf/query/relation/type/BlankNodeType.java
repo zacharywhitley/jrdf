@@ -66,6 +66,8 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public class BlankNodeType implements NodeType {
+    private static final long serialVersionUID = 1645735853855887744L;
+
     public boolean isAssignableFrom(Type type) {
         return type instanceof BlankNodeType;
     }

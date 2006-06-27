@@ -59,13 +59,20 @@
 package org.jrdf.query.constraint;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.Triple;
+import org.jrdf.TestJRDFFactory;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_1;
+import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_2;
+import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.SerializationTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
 
 import java.lang.reflect.Modifier;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Unit test for {@link ConstraintTriple}.
@@ -74,15 +81,16 @@ import java.lang.reflect.Modifier;
  * @version $Revision$
  */
 public final class ConstraintTripleUnitTest extends TestCase {
-
-    private static final Triple TRIPLE_1 = TripleTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
-    private static final Triple TRIPLE_2 = TripleTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
-    private static final ConstraintTriple CONSTRAINT_TRIPLE_1 = new ConstraintTriple(TRIPLE_1);
-    private static final ConstraintTriple CONSTRAINT_TRIPLE_2 = new ConstraintTriple(TRIPLE_2);
+    private static final SortedSet<AttributeValuePair> AVP_1 =  createAvpSet(TEST_ATTRIBUTE_VALUE_1);
+    private static final SortedSet<AttributeValuePair> AVP_2 =  createAvpSet(TEST_ATTRIBUTE_VALUE_2);
+    private static final ConstraintTriple CONSTRAINT_TRIPLE_1 = new ConstraintTriple(AVP_1);
+    private static final ConstraintTriple CONSTRAINT_TRIPLE_2 = new ConstraintTriple(AVP_2);
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final AttributeValuePairComparator AVP_COMPARATOR = FACTORY.getNewAttributeValuePairComparator();
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(ConstraintExpression.class, ConstraintTriple.class);
-        checkConstructor(ConstraintTriple.class, Modifier.PUBLIC, Triple.class);
+        checkConstructor(ConstraintTriple.class, Modifier.PUBLIC, SortedSet.class);
     }
 
     public void testSerialVersionUID() {
@@ -90,17 +98,22 @@ public final class ConstraintTripleUnitTest extends TestCase {
     }
 
     public void testNullToConstructorThrowsException() {
-        try {
-            new ConstraintTriple(null);
-            fail("null to constructor should have thrown IllegalArgumentException");
-        }
-        catch (IllegalArgumentException expected) {
-        }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new ConstraintTriple(null);
+            }
+        });
     }
 
-    public void testGetTriple() {
-        ConstraintTriple constraintTriple = new ConstraintTriple(TRIPLE_1);
-        assertEquals(TRIPLE_1, constraintTriple.getTriple());
+    public void getAvp() {
+        ConstraintTriple constraintTriple = new ConstraintTriple(AVP_1);
+        assertEquals(AVP_1, constraintTriple.getAvp());
+    }
+
+    private static SortedSet<AttributeValuePair> createAvpSet(AttributeValuePair testAttributeValue) {
+        SortedSet<AttributeValuePair> set = new TreeSet<AttributeValuePair>(AVP_COMPARATOR);
+        set.add(testAttributeValue);
+        return set;
     }
 
     public void testEquals() {
@@ -119,8 +132,8 @@ public final class ConstraintTripleUnitTest extends TestCase {
     }
 
     public void testToString() {
-        checkToStringDelegatesToTriple(TRIPLE_1, CONSTRAINT_TRIPLE_1);
-        checkToStringDelegatesToTriple(TRIPLE_2, CONSTRAINT_TRIPLE_2);
+        checkToStringDelegatesToTriple(AVP_1, CONSTRAINT_TRIPLE_1);
+        checkToStringDelegatesToTriple(AVP_2, CONSTRAINT_TRIPLE_2);
     }
 
     private void checkNull() {
@@ -139,34 +152,34 @@ public final class ConstraintTripleUnitTest extends TestCase {
     }
 
     private void checkSameValueDifferentReference() {
-        ConstraintTriple x = new ConstraintTriple(TRIPLE_1);
-        ConstraintTriple y = new ConstraintTriple(TRIPLE_1);
+        ConstraintTriple x = new ConstraintTriple(AVP_1);
+        ConstraintTriple y = new ConstraintTriple(AVP_1);
         checkEquals(x, y);
     }
 
     private void checkDifferentClass() {
-        checkNotEquals(CONSTRAINT_TRIPLE_1, TRIPLE_1);
+        checkNotEquals(CONSTRAINT_TRIPLE_1, AVP_1);
     }
 
     private void checkSymmetric() {
-        ConstraintTriple x = new ConstraintTriple(TRIPLE_1);
-        ConstraintTriple y = new ConstraintTriple(TRIPLE_1);
+        ConstraintTriple x = new ConstraintTriple(AVP_1);
+        ConstraintTriple y = new ConstraintTriple(AVP_1);
         checkEquals(x, y);
         checkEquals(y, y);
     }
 
     private void checkTransitive() {
-        ConstraintTriple x = new ConstraintTriple(TRIPLE_1);
-        ConstraintTriple y = new ConstraintTriple(TRIPLE_1);
-        ConstraintTriple z = new ConstraintTriple(TRIPLE_1);
+        ConstraintTriple x = new ConstraintTriple(AVP_1);
+        ConstraintTriple y = new ConstraintTriple(AVP_1);
+        ConstraintTriple z = new ConstraintTriple(AVP_1);
         checkEquals(x, y);
         checkEquals(y, z);
         checkEquals(x, z);
     }
 
     private void checkConsistentEquals() {
-        ConstraintTriple x = new ConstraintTriple(TRIPLE_1);
-        ConstraintTriple y = new ConstraintTriple(TRIPLE_1);
+        ConstraintTriple x = new ConstraintTriple(AVP_1);
+        ConstraintTriple y = new ConstraintTriple(AVP_1);
         checkEquals(x, y);
         checkEquals(x, y);
     }
@@ -178,8 +191,8 @@ public final class ConstraintTripleUnitTest extends TestCase {
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
-        ConstraintTriple x = new ConstraintTriple(TRIPLE_1);
-        ConstraintTriple y = new ConstraintTriple(TRIPLE_1);
+        ConstraintTriple x = new ConstraintTriple(AVP_1);
+        ConstraintTriple y = new ConstraintTriple(AVP_1);
         checkEquals(x, y);
         assertEquals(x.hashCode(), y.hashCode());
     }
@@ -196,7 +209,7 @@ public final class ConstraintTripleUnitTest extends TestCase {
         assertFalse(x.equals(y));
     }
 
-    private void checkToStringDelegatesToTriple(Triple triple, ConstraintTriple contraintTriple) {
-        assertEquals(triple.toString(), contraintTriple.toString());
+    private void checkToStringDelegatesToTriple(Set<AttributeValuePair> avp, ConstraintTriple contraintTriple) {
+        assertEquals(avp.toString(), contraintTriple.toString());
     }
 }

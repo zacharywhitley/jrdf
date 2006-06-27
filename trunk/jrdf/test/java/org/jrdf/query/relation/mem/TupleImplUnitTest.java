@@ -69,8 +69,8 @@ import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegr
 import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegrationTest.TEST_AVP_2;
 import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegrationTest.TEST_AVP_3;
 import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegrationTest.TEST_AVP_4;
-import static org.jrdf.query.relation.mem.AttributeValuePairUnitTest.TEST_ATTRIBUTE_VALUE_1;
-import static org.jrdf.query.relation.mem.AttributeValuePairUnitTest.TEST_ATTRIBUTE_VALUE_2;
+import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_1;
+import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_2;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;

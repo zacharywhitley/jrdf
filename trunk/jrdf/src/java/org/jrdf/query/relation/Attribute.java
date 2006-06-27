@@ -62,13 +62,15 @@ package org.jrdf.query.relation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.Type;
 
+import java.io.Serializable;
+
 /**
  * The attribute-name:type-name combination.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Attribute {
+public interface Attribute extends Serializable {
 
     /**
      * The name of the attribute - either a variable name or some assigned name.

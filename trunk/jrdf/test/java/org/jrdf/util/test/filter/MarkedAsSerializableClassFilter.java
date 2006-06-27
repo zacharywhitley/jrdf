@@ -60,10 +60,6 @@ package org.jrdf.util.test.filter;
 
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
-import java.util.Collection;
-import java.util.ArrayList;
-import java.io.Serializable;
-
 /**
  * Accepts classes that are marked as being {@link java.io.Serializable}.
  *
@@ -73,22 +69,6 @@ import java.io.Serializable;
 public final class MarkedAsSerializableClassFilter implements ClassFilter {
 
     public boolean accept(Class cls) {
-        if (cls.getName().contains("Results")) {
-            System.err.println("Cls: " + cls);
-            System.err.println("Cls: " + ClassPropertiesTestUtil.isImplicitlyMarkedAsSerializable(cls));
-            Collection<Class<?>> parentClasses = new ArrayList<Class<?>>();
-            Collection<? extends Class<?>> foo = ClassPropertiesTestUtil.findParentClasses(cls);
-            System.err.println("Parent Classes: " + foo);
-            parentClasses.addAll(foo);
-            for (Class<?> parent : parentClasses) {
-                if (parent.equals(Serializable.class)) {
-                    System.err.println("Parent: " + parent);
-                    return true;
-                }
-            }
-            return false;
-
-        }
         return ClassPropertiesTestUtil.isImplicitlyMarkedAsSerializable(cls);
     }
 }

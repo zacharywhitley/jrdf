@@ -138,7 +138,7 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (TripleBuilder) FACTORY.getContext().getBean("tripleBuilder");
     }
 
-    public SortedAttributeValuePairHelper getSortedAttributeValuePairHelper() {
+    public SortedAttributeValuePairHelper getNewSortedAttributeValuePairHelper() {
         return (SortedAttributeValuePairHelper) FACTORY.getContext().getBean("sortedAttributeValuePairHelper");
     }
 

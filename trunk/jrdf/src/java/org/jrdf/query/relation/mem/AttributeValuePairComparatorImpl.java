@@ -70,7 +70,6 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
  */
 public final class AttributeValuePairComparatorImpl implements AttributeValuePairComparator {
     private static final long serialVersionUID = -1770166629461241873L;
-
     private AttributeComparator attributeComparator;
     private NodeComparator valueComparator;
 

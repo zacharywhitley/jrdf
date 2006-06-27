@@ -109,7 +109,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
 
     public void testIdentity() {
         AttributeComparator comparator = createComparator(NODE_COMPARATOR, ATTRIBUTE_NAME_COMPARATOR);
-        Attribute att2 = new TestAttribute();
+        Attribute att2 = new TestAttribute(MockTestUtil.createMock(Attribute.class));
         TestAttribute att1 = new TestAttribute(att2);
         int result = comparator.compare(att1, att2);
         assertTrue("Should return equal for att1, att2", result == 0);
@@ -173,11 +173,11 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     }
 
     private static class TestAttribute implements Attribute {
-        private final Attribute expectedObject;
+        private static final long serialVersionUID = 1;
+        private Attribute expectedObject;
         private boolean correctObjectCalled;
 
-        public TestAttribute() {
-            this.expectedObject = MockTestUtil.createMock(Attribute.class);
+        private TestAttribute() {
         }
 
         public TestAttribute(Attribute expectedObject) {
