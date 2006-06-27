@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,64 +58,14 @@
 
 package org.jrdf.query.constraint;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.util.EqualsUtil;
-import org.jrdf.util.param.ParameterUtil;
-
-import java.io.Serializable;
-import java.util.Set;
-import java.util.SortedSet;
-
 /**
- * A constraint expression comprising a single constraint, i.e. a single triple.
+ * A builder that always throws exceptions.
  *
- * @author Tom Adams
- * @version $Revision$
- * @see org.jrdf.graph.Triple
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class ConstraintTriple implements ConstraintExpression, Serializable {
-
-    private static final long serialVersionUID = 4538228991602138679L;
-    private static final int DUMMY_HASHCODE = 47;
-    private SortedSet<AttributeValuePair> avp;
-
-    public ConstraintTriple(SortedSet<AttributeValuePair> avp) {
-        ParameterUtil.checkNotNull("avp", avp);
-        this.avp = avp;
-    }
-
-    public SortedSet<AttributeValuePair> getAvp() {
-        return avp;
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, obj);
-    }
-
-    public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE;
-    }
-
-    /**
-     * Delegates to <code>getAvp().toString()</code>.
-     */
-    public String toString() {
-        return avp.toString();
-    }
-
-    private boolean determineEqualityFromFields(Object o1, Object o2) {
-        Set<AttributeValuePair> avp1 = ((ConstraintTriple) o1).getAvp();
-        Set<AttributeValuePair> avp2 = ((ConstraintTriple) o2).getAvp();
-        return avp1.equals(avp2);
+public class ExpressionVisitorAdapter implements ExpressionVisitor {
+    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
+        // DO NOTHING.
     }
 }

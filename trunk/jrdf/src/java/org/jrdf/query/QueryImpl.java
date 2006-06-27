@@ -59,7 +59,8 @@
 package org.jrdf.query;
 
 import org.jrdf.query.constraint.ConstraintExpression;
-import org.jrdf.query.constraint.ConstraintTriple;
+import org.jrdf.query.constraint.Constraint;
+import org.jrdf.query.constraint.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.param.ParameterUtil;
@@ -97,8 +98,8 @@ public final class QueryImpl implements Query, Serializable {
         return atts;
     }
 
-    public ConstraintExpression getConstraintExpression() {
-        return new ConstraintTriple(attributeValuePairs);
+    public ConstraintExpression<ExpressionVisitor> getConstraintExpression() {
+        return new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 
     public SortedSet<AttributeValuePair> getSingleAvp() {

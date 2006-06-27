@@ -67,7 +67,8 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.Query;
-import org.jrdf.query.constraint.ConstraintTriple;
+import org.jrdf.query.constraint.Constraint;
+import org.jrdf.query.constraint.ExpressionVisitor;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
 import org.jrdf.sparql.builder.TripleBuilder;
@@ -138,8 +139,8 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
     public void testParsingSingleTripleReturnsCorrectQuery() {
         SparqlAnalyser analyser = createAnalyser(GRAPH);
         ATriple expectedTriple = createTripleNodeWithVariable();
-        ConstraintTriple actualTriple = parseATripleOnce(analyser, expectedTriple);
-        checkAnalysedTriple(expectedTriple, actualTriple);
+        Constraint<ExpressionVisitor> actual = parseATripleOnce(analyser, expectedTriple);
+        checkAnalysedTriple(expectedTriple, actual);
     }
 
     // FIXME TJA: Test using object as URI & blank node
@@ -163,33 +164,33 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
     }
 
     private void checkAnalysedTriple(SparqlAnalyser analyser, ATriple expectedTriple) {
-        ConstraintTriple actualTriple = parseTriple(analyser, expectedTriple);
-        checkAnalysedTriple(expectedTriple, actualTriple);
+        Constraint<ExpressionVisitor> actual = parseTriple(analyser, expectedTriple);
+        checkAnalysedTriple(expectedTriple, actual);
     }
 
-    private void checkAnalysedTriple(ATriple expectedTriple, ConstraintTriple actualTriple) {
-        checkSubject(expectedTriple, actualTriple);
-        checkPredicate(expectedTriple, actualTriple);
-        checkObject(actualTriple);
+    private void checkAnalysedTriple(ATriple expectedTriple, Constraint<ExpressionVisitor> actual) {
+        checkSubject(expectedTriple, actual);
+        checkPredicate(expectedTriple, actual);
+        checkObject(actual);
     }
 
-    private void checkSubject(ATriple expectedTriple, ConstraintTriple actualTriple) {
+    private void checkSubject(ATriple expectedTriple, Constraint<ExpressionVisitor> actual) {
         AResourceResourceTripleElement expectedSubject = (AResourceResourceTripleElement) expectedTriple.getSubject();
-        Triple triple = AVP_HELPER.createTriple(actualTriple.getAvp());
+        Triple triple = AVP_HELPER.createTriple(actual.getAvp());
         URIReference actualSubject = (URIReference) triple.getSubject();
         checkResource(expectedSubject.getResource(), actualSubject.getURI());
     }
 
-    private void checkPredicate(ATriple expectedTriple, ConstraintTriple actualTriple) {
+    private void checkPredicate(ATriple expectedTriple, Constraint<ExpressionVisitor> actual) {
         AResourceResourceTripleElement expectedPredicate =
                 (AResourceResourceTripleElement) expectedTriple.getPredicate();
-        Triple triple = AVP_HELPER.createTriple(actualTriple.getAvp());
+        Triple triple = AVP_HELPER.createTriple(actual.getAvp());
         URIReference actualPredicate = (URIReference) triple.getPredicate();
         checkResource(expectedPredicate.getResource(), actualPredicate.getURI());
     }
 
-    private void checkObject(ConstraintTriple actualTriple) {
-        Triple triple = AVP_HELPER.createTriple(actualTriple.getAvp());
+    private void checkObject(Constraint<ExpressionVisitor> actual) {
+        Triple triple = AVP_HELPER.createTriple(actual.getAvp());
         checkObject(triple.getObject());
     }
 
@@ -211,18 +212,18 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
         assertEquals(expectedResource.getText(), actualUri.toString());
     }
 
-    private ConstraintTriple parseATripleOnce(SparqlAnalyser analyser, ATriple tripleToParse) {
+    private Constraint<ExpressionVisitor> parseATripleOnce(SparqlAnalyser analyser, ATriple tripleToParse) {
         checkFirstGetQueryReturnsNoQuery(analyser);
         return parseTriple(analyser, tripleToParse);
     }
 
-    private ConstraintTriple parseTriple(SparqlAnalyser analyser, ATriple tripleToParse) {
+    private Constraint<ExpressionVisitor> parseTriple(SparqlAnalyser analyser, ATriple tripleToParse) {
         return analyseTriple(analyser, tripleToParse);
     }
 
-    private ConstraintTriple analyseTriple(SparqlAnalyser analyser, ATriple triple) {
+    private Constraint<ExpressionVisitor> analyseTriple(SparqlAnalyser analyser, ATriple triple) {
         Query query = analyseQuery(analyser, triple);
-        return (ConstraintTriple) query.getConstraintExpression();
+        return (Constraint<ExpressionVisitor>) query.getConstraintExpression();
     }
 
     private Query analyseQuery(SparqlAnalyser analyser, ATriple expectedTriple) {
