@@ -85,7 +85,6 @@ public final class QueryImpl implements Query, Serializable {
     public QueryImpl(Expression<ExpressionVisitor> expression) {
         ParameterUtil.checkNotNull("expression", expression);
         this.expression = expression;
-
     }
 
 
