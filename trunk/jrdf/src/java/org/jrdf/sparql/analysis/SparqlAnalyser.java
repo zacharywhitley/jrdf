@@ -89,6 +89,13 @@ public interface SparqlAnalyser extends Analysis {
      */
     Query getQuery();
 
+    /**
+     * Returns the current value of the expression.
+     *
+     * @return the expression to return.
+     */
+    Expression getExpression();
+
     // FIXME TJA: This implementation will change once we have to parse variable lists.
     void outATriple(ATriple tripleNode);
 

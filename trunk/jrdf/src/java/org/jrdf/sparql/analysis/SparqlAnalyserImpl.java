@@ -61,8 +61,9 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
@@ -82,6 +83,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private Query query = SparqlAnalyser.NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;
+    private Expression<ExpressionVisitor> expression;
 
 
     public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
@@ -93,13 +95,19 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
      * {@inheritDoc}
      */
     public Query getQuery() {
+        if (getExpression() != null && query == SparqlAnalyser.NO_QUERY) {
+            query = new QueryImpl(expression);
+        }
         return query;
+    }
+
+    public Expression getExpression() {
+        return expression;
     }
 
     // FIXME TJA: This implementation will change once we have to parse variable lists.
     public void outATriple(ATriple tripleNode) {
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
-        Constraint<ExpressionVisitor> constraint = new Constraint<ExpressionVisitor>(attributeValuePairs);
-        query = new QueryImpl(constraint);
+        expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 }
