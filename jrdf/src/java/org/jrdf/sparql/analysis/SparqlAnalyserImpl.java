@@ -61,13 +61,16 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
+import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.APatternElementsList;
 import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.Node;
 
 import java.util.SortedSet;
 
@@ -101,13 +104,28 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
         return query;
     }
 
-    public Expression getExpression() {
+    public Expression<ExpressionVisitor> getExpression() {
         return expression;
     }
 
-    // FIXME TJA: This implementation will change once we have to parse variable lists.
-    public void outATriple(ATriple tripleNode) {
+    public void caseATriple(ATriple tripleNode) {
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
+    }
+
+    public void caseAPatternElementsList(APatternElementsList node) {
+        if (node.getPatternElementsListTail() != null)  {
+            Expression<ExpressionVisitor> lhs = getExpression(node.getPatternElement());
+            Expression<ExpressionVisitor> rhs = getExpression(node.getPatternElementsListTail());
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        } else {
+            super.caseAPatternElementsList(node);
+        }
+    }
+
+    private Expression<ExpressionVisitor> getExpression(Node node) {
+        SparqlAnalyserImpl analyser = new SparqlAnalyserImpl(tripleBuilder, graph);
+        node.apply(analyser);
+        return analyser.getExpression();
     }
 }

@@ -116,7 +116,7 @@ public class TripleTestUtil {
     private static final AttributeImpl ATT_3 = new AttributeImpl(OBJECT_POS_NAME, new ObjectNodeType());
     private static final Attribute[] ATTRIBUTES = new Attribute[]{ATT_1, ATT_2, ATT_3};
 
-    public static Expression createBookDcTitleExpression(URI bookUri) {
+    public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, ATTRIBUTES);
         return new Constraint<ExpressionVisitor>(avp);

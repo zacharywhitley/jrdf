@@ -59,6 +59,8 @@
 package org.jrdf.util.test;
 
 import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
+import static org.jrdf.util.test.TripleTestUtil.*;
 
 /**
  * Artefacts used in tests.
@@ -73,9 +75,9 @@ public final class SparqlQueryTestUtil {
     public static final String VARIABLE_NAME_TITLE = "title";
     public static final String VARIABLE_NAME_SUBJECT = "subject";
     public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
-    private static final String SUBJECT_URI_1 = TripleTestUtil.URI_BOOK_1.toString();
-    private static final String SUBJECT_URI_2 = TripleTestUtil.URI_BOOK_2.toString();
-    private static final String PREDICATE_URI_1 = TripleTestUtil.URI_DC_TITLE.toString();
+    private static final String SUBJECT_URI_1 = URI_BOOK_1.toString();
+    private static final String SUBJECT_URI_2 = URI_BOOK_2.toString();
+    private static final String PREDICATE_URI_1 = URI_DC_TITLE.toString();
     public static final String QUERY_BOOK_1_DC_TITLE =
             createQueryString(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE);
     public static final String QUERY_BOOK_2_DC_TITLE =
@@ -83,10 +85,8 @@ public final class SparqlQueryTestUtil {
     public static final String QUERY_BOOK_1_AND_2 =
             createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
                     PREDICATE_URI_1, VARIABLE_TITLE});
-    public static final Expression BOOK_1_DC_TITLE =
-            TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_1);
-    public static final Expression BOOK_2_DC_TITLE =
-            TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_2);
+    public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE = createBookDcTitleExpression(URI_BOOK_1);
+    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE = createBookDcTitleExpression(URI_BOOK_2);
 
     private SparqlQueryTestUtil() {
     }
