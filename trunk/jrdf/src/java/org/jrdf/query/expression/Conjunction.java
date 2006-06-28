@@ -68,8 +68,26 @@ import java.io.Serializable;
  */
 public final class Conjunction<V extends ExpressionVisitor> implements Expression<V>, Serializable {
     private static final long serialVersionUID = -7871756371628747688L;
+    private Expression<V> lhs;
+    private Expression<V> rhs;
+
+    private Conjunction() {
+    }
+
+    public Conjunction(Expression<V> lhs, Expression<V> rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
+    }
+
+    public Expression<V> getLhs() {
+        return lhs;
+    }
+
+    public Expression<V> getRhs() {
+        return rhs;
+    }
 
     public void accept(V v) {
-
+        v.visitConjunction(this);
     }
 }

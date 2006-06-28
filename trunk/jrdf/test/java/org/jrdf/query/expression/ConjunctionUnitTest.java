@@ -59,10 +59,12 @@
 package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkInstanceImplementsInterface;
 
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
 
 /**
  * Conjunction test case.
@@ -74,5 +76,6 @@ public class ConjunctionUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Expression.class, Conjunction.class);
         checkInstanceImplementsInterface(Serializable.class, Conjunction.class);
+        checkConstructor(Conjunction.class, Modifier.PUBLIC, Expression.class, Expression.class);
     }
 }

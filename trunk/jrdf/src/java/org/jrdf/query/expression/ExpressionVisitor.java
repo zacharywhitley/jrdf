@@ -66,5 +66,5 @@ package org.jrdf.query.expression;
  */
 public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint);
-    <V extends ExpressionVisitor> void visitJoin(Conjunction<V> conjunction);
+    <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction);
 }
