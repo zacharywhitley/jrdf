@@ -58,9 +58,9 @@
 
 package org.jrdf.query;
 
-import org.jrdf.query.constraint.ConstraintExpression;
-import org.jrdf.query.constraint.Constraint;
-import org.jrdf.query.constraint.ExpressionVisitor;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.param.ParameterUtil;
@@ -98,7 +98,7 @@ public final class QueryImpl implements Query, Serializable {
         return atts;
     }
 
-    public ConstraintExpression<ExpressionVisitor> getConstraintExpression() {
+    public Expression<ExpressionVisitor> getConstraintExpression() {
         return new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 

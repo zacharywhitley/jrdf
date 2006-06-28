@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,66 +56,20 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.constraint;
-
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.util.EqualsUtil;
-import org.jrdf.util.param.ParameterUtil;
+package org.jrdf.query.expression;
 
 import java.io.Serializable;
-import java.util.SortedSet;
 
 /**
- * A constraint expression comprising a single constraint.
+ * Conjunction - represents an AND between two expressions.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public final class Constraint<V extends ExpressionVisitor> implements ConstraintExpression<V>, Serializable {
-
-    private static final long serialVersionUID = 4538228991602138679L;
-    private static final int DUMMY_HASHCODE = 47;
-    private SortedSet<AttributeValuePair> avp;
-
-    public Constraint(SortedSet<AttributeValuePair> avp) {
-        ParameterUtil.checkNotNull("avp", avp);
-        this.avp = avp;
-    }
-
-    public SortedSet<AttributeValuePair> getAvp() {
-        return avp;
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields(this, (Constraint) obj);
-    }
-
-    public int hashCode() {
-        // FIXME TJA: Test drive out values of triple.hashCode()
-        return DUMMY_HASHCODE;
-    }
-
-    /**
-     * Delegates to <code>getAvp().toString()</code>.
-     */
-    public String toString() {
-        return avp.toString();
-    }
+public final class Conjunction<V extends ExpressionVisitor> implements Expression<V>, Serializable {
+    private static final long serialVersionUID = -7871756371628747688L;
 
     public void accept(V v) {
-        v.visitConstraint(this);
-    }
 
-    private boolean determineEqualityFromFields(Constraint o1, Constraint o2) {
-        return o1.getAvp().equals(o2.getAvp());
     }
 }

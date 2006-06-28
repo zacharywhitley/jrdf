@@ -58,7 +58,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.constraint.Constraint;
+import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -67,7 +67,7 @@ import org.jrdf.util.test.TripleTestUtil;
 import java.util.SortedSet;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.constraint.Constraint}.
+ * {@link Instantiator} for {@link org.jrdf.query.expression.Constraint}.
  *
  * @author Tom Adams
  * @version $Id$

@@ -125,7 +125,7 @@ public final class SerializationIntegrationTest extends TestCase {
         excludedClasses.add(org.jrdf.parser.ntriples.parser.ParserException.class);
         excludedClasses.add(org.jrdf.sparql.parser.lexer.LexerException.class);
         excludedClasses.add(org.jrdf.sparql.parser.parser.ParserException.class);
-        excludedClasses.add(QueryImpl.class); // not sure why this doesn't work, it references ConstraintExpression.ALL
+        excludedClasses.add(QueryImpl.class); // not sure why this doesn't work, it references Expression.ALL
         excludedClasses.add(DefaultVariable.class); // implement equals() & hashCode()
         return excludedClasses;
     }

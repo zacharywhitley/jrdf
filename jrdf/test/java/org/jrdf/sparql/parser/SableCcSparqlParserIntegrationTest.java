@@ -65,7 +65,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.query.constraint.ConstraintExpression;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.util.test.SparqlQueryTestUtil;
@@ -80,15 +80,15 @@ import org.jrdf.util.test.TripleTestUtil;
 public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     // FIXME TJA: Triangulate on variables.
-    // FIXME TJA: Triangulate on constraint expression.
+    // FIXME TJA: Triangulate on expression expression.
     // FIXME TJA: Write failing test for non-wildcard projection lists.
     // FIXME TJA: Write tests to force trimming of query string.
     // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
 
-    private static final ConstraintExpression CONSTRAINT_BOOK_1_DC_TITLE =
-            SparqlQueryTestUtil.CONSTRAINT_BOOK_1_DC_TITLE;
-    private static final ConstraintExpression CONSTRAINT_BOOK_2_DC_TITLE =
-            SparqlQueryTestUtil.CONSTRAINT_BOOK_2_DC_TITLE;
+    private static final Expression BOOK_1_DC_TITLE =
+            SparqlQueryTestUtil.BOOK_1_DC_TITLE;
+    private static final Expression BOOK_2_DC_TITLE =
+            SparqlQueryTestUtil.BOOK_2_DC_TITLE;
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final String QUERY_BOOK_2_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -104,17 +104,17 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testSingleConstraint() {
-        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, CONSTRAINT_BOOK_1_DC_TITLE);
-        checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, CONSTRAINT_BOOK_2_DC_TITLE);
+        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE);
+        checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE);
     }
 
     public void testTwoConstraints() {
         //checkSingleConstraintExpression(SparqlQueryTestUtil.QUERY_BOOK_1_AND_2, null);
     }
 
-    private void checkSingleConstraintExpression(String queryString, ConstraintExpression expectedExpression) {
+    private void checkSingleConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);
-        ConstraintExpression actualExpression = query.getConstraintExpression();
+        Expression actualExpression = query.getConstraintExpression();
         assertEquals(expectedExpression, actualExpression);
     }
 

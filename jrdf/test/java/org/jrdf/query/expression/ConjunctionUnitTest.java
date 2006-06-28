@@ -56,16 +56,23 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.constraint;
+package org.jrdf.query.expression;
+
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkInstanceImplementsInterface;
+
+import java.io.Serializable;
 
 /**
- * A builder that always throws exceptions.
+ * Conjunction test case.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class ExpressionVisitorAdapter implements ExpressionVisitor {
-    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
-        // DO NOTHING.
+public class ConjunctionUnitTest extends TestCase {
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(Expression.class, Conjunction.class);
+        checkInstanceImplementsInterface(Serializable.class, Conjunction.class);
     }
 }

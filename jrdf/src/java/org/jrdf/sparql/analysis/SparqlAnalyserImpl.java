@@ -76,7 +76,7 @@ import java.util.SortedSet;
  */
 public final class SparqlAnalyserImpl extends DepthFirstAdapter implements SparqlAnalyser {
 
-    // FIXME TJA: Should eventually be using a ConstraintExpression builder here.
+    // FIXME TJA: Should eventually be using a Expression builder here.
     private Query query = SparqlAnalyser.NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;

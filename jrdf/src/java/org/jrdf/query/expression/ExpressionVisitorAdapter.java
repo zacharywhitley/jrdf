@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,15 +56,20 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.constraint;
+package org.jrdf.query.expression;
 
 /**
- * A pattern of triples applied to a graph to constrain the results of a query.
- * <p>Maps to a <code>GraphPattern</code> in the SPARQL grammar.</p>
+ * A builder that always throws exceptions.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public interface ConstraintExpression<V extends ExpressionVisitor> {
-    void accept(V v);
+public class ExpressionVisitorAdapter implements ExpressionVisitor {
+    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
+        // DO NOTHING.
+    }
+
+    public <V extends ExpressionVisitor> void visitJoin(Conjunction<V> conjunction) {
+        // DO NOTHING.
+    }
 }

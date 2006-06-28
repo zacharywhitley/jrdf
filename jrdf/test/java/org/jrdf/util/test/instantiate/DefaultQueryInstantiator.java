@@ -60,9 +60,9 @@ package org.jrdf.util.test.instantiate;
 
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.Variable;
-import org.jrdf.query.constraint.Constraint;
-import org.jrdf.query.constraint.ConstraintExpression;
-import org.jrdf.query.constraint.ExpressionVisitor;
+import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -89,7 +89,7 @@ final class DefaultQueryInstantiator implements Instantiator {
         SortedSet<AttributeValuePair> avp = new TreeSet<AttributeValuePair>();
         Constraint<ExpressionVisitor> constraint = new Constraint<ExpressionVisitor>(avp);
         Object[] params = new Object[]{Variable.ALL_VARIABLES, constraint};
-        Class<?>[] types = new Class[]{List.class, ConstraintExpression.class};
+        Class<?>[] types = new Class[]{List.class, Expression.class};
         return new ParamSpec(params, types);
     }
 }
