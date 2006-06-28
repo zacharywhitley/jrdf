@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.constraint;
+package org.jrdf.query.expression;
 
 /**
  * A builder that always throws exceptions.
@@ -66,4 +66,5 @@ package org.jrdf.query.constraint;
  */
 public interface ExpressionVisitor {
     <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint);
+    <V extends ExpressionVisitor> void visitJoin(Conjunction<V> conjunction);
 }

@@ -56,68 +56,65 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test;
+package org.jrdf.query.expression;
 
-import org.jrdf.query.expression.Expression;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.util.EqualsUtil;
+import org.jrdf.util.param.ParameterUtil;
+
+import java.io.Serializable;
+import java.util.SortedSet;
 
 /**
- * Artefacts used in tests.
+ * A expression expression comprising a single expression.
  *
  * @author Tom Adams
- * @author Andrew Newman
  * @version $Revision$
  */
-public final class SparqlQueryTestUtil {
+public final class Constraint<V extends ExpressionVisitor> implements Expression<V>, Serializable {
+    private static final long serialVersionUID = 4538228991602138679L;
+    private static final int DUMMY_HASHCODE = 47;
+    private SortedSet<AttributeValuePair> avp;
 
-    public static final String VARIABLE_PREFIX = "?";
-    public static final String VARIABLE_NAME_TITLE = "title";
-    public static final String VARIABLE_NAME_SUBJECT = "subject";
-    public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
-    private static final String SUBJECT_URI_1 = TripleTestUtil.URI_BOOK_1.toString();
-    private static final String SUBJECT_URI_2 = TripleTestUtil.URI_BOOK_2.toString();
-    private static final String PREDICATE_URI_1 = TripleTestUtil.URI_DC_TITLE.toString();
-    public static final String QUERY_BOOK_1_DC_TITLE =
-            createQueryString(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE);
-    public static final String QUERY_BOOK_2_DC_TITLE =
-            createQueryString(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE);
-    public static final String QUERY_BOOK_1_AND_2 =
-            createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
-                    PREDICATE_URI_1, VARIABLE_TITLE});
-    public static final Expression BOOK_1_DC_TITLE =
-            TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_1);
-    public static final Expression BOOK_2_DC_TITLE =
-            TripleTestUtil.createBookDcTitleExpression(TripleTestUtil.URI_BOOK_2);
-
-    private SparqlQueryTestUtil() {
+    public Constraint(SortedSet<AttributeValuePair> avp) {
+        ParameterUtil.checkNotNull("avp", avp);
+        this.avp = avp;
     }
 
-    private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {
-        return createQueryString(new String[]{subjectUri, predicateUri, objectVariable});
+    public SortedSet<AttributeValuePair> getAvp() {
+        return avp;
     }
 
-    private static String createQueryString(String[] constraints) {
-        StringBuffer buffer = new StringBuffer("SELECT * WHERE  { ");
-        for (int i = 0; i < (constraints.length / 3); i++) {
-            createConstraint(buffer, constraints, i);
-            appendAnd(i, constraints, buffer);
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
         }
-        buffer.append(" }");
-        return buffer.toString();
-    }
-
-    private static void createConstraint(StringBuffer buffer, String[] constraints, int i) {
-        buffer.append(delimitUri(constraints[i * 3])).append(" ").append(delimitUri(constraints[i * 3 + 1]))
-                .append(" ").append(constraints[i * 3 + 2]);
-    }
-
-    private static void appendAnd(int i, String[] constraints, StringBuffer buffer) {
-        if (i < (constraints.length / 3 -1)) {
-            buffer.append(" . ");
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
         }
+        if (EqualsUtil.differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields(this, (Constraint) obj);
     }
 
-    public static String delimitUri(String str) {
-        return "<" + str + ">";
+    public int hashCode() {
+        // FIXME TJA: Test drive out values of triple.hashCode()
+        return DUMMY_HASHCODE;
     }
 
+    /**
+     * Delegates to <code>getAvp().toString()</code>.
+     */
+    public String toString() {
+        return avp.toString();
+    }
+
+    public void accept(V v) {
+        v.visitConstraint(this);
+    }
+
+    private boolean determineEqualityFromFields(Constraint o1, Constraint o2) {
+        return o1.getAvp().equals(o2.getAvp());
+    }
 }

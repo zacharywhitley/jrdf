@@ -60,8 +60,8 @@ package org.jrdf.query;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.constraint.ConstraintExpression;
-import org.jrdf.query.constraint.ExpressionVisitor;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -76,7 +76,7 @@ public interface Query {
 
     List<Attribute> getVariables();
 
-    ConstraintExpression<ExpressionVisitor> getConstraintExpression();
+    Expression<ExpressionVisitor> getConstraintExpression();
 
     SortedSet<AttributeValuePair> getSingleAvp();
 }

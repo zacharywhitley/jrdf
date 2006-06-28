@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.constraint;
+package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
@@ -67,12 +67,14 @@ import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_AT
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkInstanceImplementsInterface;
 import org.jrdf.util.test.SerializationTestUtil;
 
 import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.io.Serializable;
 
 /**
  * Unit test for {@link Constraint}.
@@ -89,7 +91,8 @@ public final class ConstraintUnitTest extends TestCase {
     private static final AttributeValuePairComparator AVP_COMPARATOR = FACTORY.getNewAttributeValuePairComparator();
 
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(ConstraintExpression.class, Constraint.class);
+        checkImplementationOfInterfaceAndFinal(Expression.class, Constraint.class);
+        checkInstanceImplementsInterface(Serializable.class, Constraint.class);
         checkConstructor(Constraint.class, Modifier.PUBLIC, SortedSet.class);
     }
 
