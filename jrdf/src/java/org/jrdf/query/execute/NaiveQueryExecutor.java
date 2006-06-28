@@ -61,6 +61,8 @@ package org.jrdf.query.execute;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.Query;
+import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -119,7 +121,8 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      */
     public Relation executeQuery(Query query) {
         GraphRelation graphRelation = graphRelationFactory.createRelation(graph);
-        SortedSet<AttributeValuePair> singleAvp = query.getSingleAvp();
+        Constraint<ExpressionVisitor> constraint = (Constraint<ExpressionVisitor>) query.getConstraintExpression();
+        SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
         return restrict.restrict(graphRelation, singleAvp);
     }
 

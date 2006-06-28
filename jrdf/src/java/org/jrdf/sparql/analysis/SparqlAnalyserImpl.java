@@ -61,6 +61,8 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
@@ -97,6 +99,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     // FIXME TJA: This implementation will change once we have to parse variable lists.
     public void outATriple(ATriple tripleNode) {
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
-        query = new QueryImpl(attributeValuePairs);
+        Constraint<ExpressionVisitor> constraint = new Constraint<ExpressionVisitor>(attributeValuePairs);
+        query = new QueryImpl(constraint);
     }
 }
