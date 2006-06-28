@@ -157,7 +157,7 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
     // FIXME TJA: Do we want this requirement? That we get the same query object back consequutive times?
     public void testGetQueryReturnsImmutableQueriesConsistently() {
         SparqlAnalyser analyser = createAnalyser(GRAPH);
-        analyser.outATriple(createTripleNodeWithLiteral());
+        analyser.caseATriple(createTripleNodeWithLiteral());
         Query query1 = analyser.getQuery();
         Query query2 = analyser.getQuery();
         assertEquals(query1, query2);
@@ -227,7 +227,7 @@ public final class SparqlAnalyserImplUnitTest extends TestCase {
     }
 
     private Query analyseQuery(SparqlAnalyser analyser, ATriple expectedTriple) {
-        analyser.outATriple(expectedTriple);
+        analyser.caseATriple(expectedTriple);
         return analyser.getQuery();
     }
 

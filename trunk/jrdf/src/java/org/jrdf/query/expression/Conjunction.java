@@ -58,6 +58,8 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.util.EqualsUtil;
+
 import java.io.Serializable;
 
 /**
@@ -68,6 +70,7 @@ import java.io.Serializable;
  */
 public final class Conjunction<V extends ExpressionVisitor> implements Expression<V>, Serializable {
     private static final long serialVersionUID = -7871756371628747688L;
+    private static final int DUMMY_HASHCODE = 47;
     private Expression<V> lhs;
     private Expression<V> rhs;
 
@@ -89,5 +92,39 @@ public final class Conjunction<V extends ExpressionVisitor> implements Expressio
 
     public void accept(V v) {
         v.visitConjunction(this);
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (EqualsUtil.differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields(this, (Conjunction) obj);
+    }
+
+    public int hashCode() {
+        // FIXME TJA: Test drive out values of triple.hashCode()
+        return DUMMY_HASHCODE;
+    }
+
+    public String toString() {
+        return lhs.toString() + " . " + rhs.toString();
+    }
+
+    private boolean determineEqualityFromFields(Conjunction o1, Conjunction o2) {
+        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
+    }
+
+    private boolean rhsEqual(Conjunction o1, Conjunction o2) {
+        return o1.getRhs().equals(o2.getRhs());
+    }
+
+    private boolean lhsEqual(Conjunction o1, Conjunction o2) {
+        return o1.getLhs().equals(o2.getLhs());
     }
 }

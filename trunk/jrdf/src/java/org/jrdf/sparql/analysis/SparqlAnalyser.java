@@ -58,13 +58,12 @@
 
 package org.jrdf.sparql.analysis;
 
+import org.jrdf.query.Query;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.Query;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.parser.analysis.Analysis;
-import org.jrdf.sparql.parser.node.ATriple;
 
 import java.util.List;
 import java.util.SortedSet;
@@ -94,10 +93,7 @@ public interface SparqlAnalyser extends Analysis {
      *
      * @return the expression to return.
      */
-    Expression getExpression();
-
-    // FIXME TJA: This implementation will change once we have to parse variable lists.
-    void outATriple(ATriple tripleNode);
+    Expression<ExpressionVisitor> getExpression();
 
     class NoQuery implements Query {
 

@@ -78,4 +78,6 @@ public class ConjunctionUnitTest extends TestCase {
         checkInstanceImplementsInterface(Serializable.class, Conjunction.class);
         checkConstructor(Conjunction.class, Modifier.PUBLIC, Expression.class, Expression.class);
     }
+
+    // TODO (AN) Use Gsbase EqualsTester to test drive equality and hashcode.
 }
