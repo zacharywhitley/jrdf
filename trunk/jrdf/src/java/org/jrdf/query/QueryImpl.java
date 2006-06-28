@@ -83,12 +83,18 @@ public final class QueryImpl implements Query, Serializable {
 
     private static final long serialVersionUID = 409607492370028929L;
     private SortedSet<AttributeValuePair> attributeValuePairs;
+    private Expression<ExpressionVisitor> expression;
 
-    // TODO (AN) This is an indication that we need an Sorted AVP object with behaviour - combine these two.
     public QueryImpl(SortedSet<AttributeValuePair> attributeValuePairs) {
         ParameterUtil.checkNotNull("attributeValuePairs", attributeValuePairs);
         this.attributeValuePairs = attributeValuePairs;
+        this.expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
+
+    public QueryImpl(Expression<ExpressionVisitor> expression) {
+        this.expression = expression;
+    }
+
 
     public List<Attribute> getVariables() {
         List<Attribute> atts = new ArrayList<Attribute>();
@@ -99,7 +105,7 @@ public final class QueryImpl implements Query, Serializable {
     }
 
     public Expression<ExpressionVisitor> getConstraintExpression() {
-        return new Constraint<ExpressionVisitor>(attributeValuePairs);
+        return expression;
     }
 
     public SortedSet<AttributeValuePair> getSingleAvp() {

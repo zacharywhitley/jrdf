@@ -60,6 +60,7 @@ package org.jrdf.query;
 
 import junit.framework.TestCase;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 
@@ -81,6 +82,7 @@ public final class QueryImplUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, QueryImpl.class);
         ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, SortedSet.class);
+        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, Expression.class);
     }
 
     public void testSerialVersionUid() {
