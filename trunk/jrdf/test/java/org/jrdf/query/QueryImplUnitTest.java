@@ -59,14 +59,13 @@
 package org.jrdf.query;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.expression.Expression;
+import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.SortedSet;
 
 /**
  * Unit test for {@link QueryImpl}.
@@ -76,12 +75,9 @@ import java.util.SortedSet;
  */
 public final class QueryImplUnitTest extends TestCase {
 
-    private static final SortedSet<AttributeValuePair> NULL_AVP = null;
-
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, QueryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, SortedSet.class);
         ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, Expression.class);
     }
 
@@ -90,11 +86,11 @@ public final class QueryImplUnitTest extends TestCase {
     }
 
     public void testNullsInConstructorThrowException() {
-        try {
-            new QueryImpl(NULL_AVP);
-            fail("null variables should have thrown IllegalArgumentException");
-        } catch (IllegalArgumentException expected) {
-        }
+        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                new QueryImpl(null);
+            }
+        });
     }
 
     // TODO: Test drive other methods - when stable.

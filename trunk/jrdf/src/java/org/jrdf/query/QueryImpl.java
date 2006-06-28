@@ -59,14 +59,12 @@
 package org.jrdf.query;
 
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -82,26 +80,22 @@ public final class QueryImpl implements Query, Serializable {
     // FIXME TJA: Implement equals() and hashCode()
 
     private static final long serialVersionUID = 409607492370028929L;
-    private SortedSet<AttributeValuePair> attributeValuePairs;
     private Expression<ExpressionVisitor> expression;
 
-    public QueryImpl(SortedSet<AttributeValuePair> attributeValuePairs) {
-        ParameterUtil.checkNotNull("attributeValuePairs", attributeValuePairs);
-        this.attributeValuePairs = attributeValuePairs;
-        this.expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
-    }
-
     public QueryImpl(Expression<ExpressionVisitor> expression) {
+        ParameterUtil.checkNotNull("expression", expression);
         this.expression = expression;
+
     }
 
 
     public List<Attribute> getVariables() {
-        List<Attribute> atts = new ArrayList<Attribute>();
-        for (AttributeValuePair avp : attributeValuePairs) {
-            atts.add(avp.getAttribute());
-        }
-        return atts;
+//        List<Attribute> atts = new ArrayList<Attribute>();
+//        for (AttributeValuePair avp : attributeValuePairs) {
+//            atts.add(avp.getAttribute());
+//        }
+//        return atts;
+        throw new UnsupportedOperationException();
     }
 
     public Expression<ExpressionVisitor> getConstraintExpression() {
@@ -109,7 +103,8 @@ public final class QueryImpl implements Query, Serializable {
     }
 
     public SortedSet<AttributeValuePair> getSingleAvp() {
-        return attributeValuePairs;
+//        return attributeValuePairs;
+        throw new UnsupportedOperationException();
     }
 
 }
