@@ -108,17 +108,10 @@ public class TripleTestUtil {
     private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
     public static final SortedSet<AttributeValuePair> AVP_BOOK_1_DC_SUBJECT_LITERAL
             = createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
-    private static final PositionName SUBJECT_POS_NAME = new PositionName("SUBJECT");
-    private static final PositionName PREDICATE_POS_NAME = new PositionName("PREDICATE");
-    private static final VariableName OBJECT_POS_NAME = new VariableName("?title");
-    private static final AttributeImpl ATT_1 = new AttributeImpl(SUBJECT_POS_NAME, new SubjectNodeType());
-    private static final AttributeImpl ATT_2 = new AttributeImpl(PREDICATE_POS_NAME, new PredicateNodeType());
-    private static final AttributeImpl ATT_3 = new AttributeImpl(OBJECT_POS_NAME, new ObjectNodeType());
-    private static final Attribute[] ATTRIBUTES = new Attribute[]{ATT_1, ATT_2, ATT_3};
 
-    public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri) {
+    public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
-        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, ATTRIBUTES);
+        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, createAttributes(suffix));
         return new Constraint<ExpressionVisitor>(avp);
     }
 
@@ -168,6 +161,16 @@ public class TripleTestUtil {
 
     private static SortedSet<AttributeValuePair> createAvp(Triple tripleBook1DcSubjectLiteral) {
         return AVP_HELPER.createAvp(tripleBook1DcSubjectLiteral);
+    }
+
+    private static final Attribute[] createAttributes(long suffix) {
+        PositionName SUBJECT_POS_NAME = new PositionName("SUBJECT" + suffix);
+        PositionName PREDICATE_POS_NAME = new PositionName("PREDICATE" + suffix);
+        VariableName OBJECT_POS_NAME = new VariableName("?title");
+        Attribute ATT_1 = new AttributeImpl(SUBJECT_POS_NAME, new SubjectNodeType());
+        Attribute ATT_2 = new AttributeImpl(PREDICATE_POS_NAME, new PredicateNodeType());
+        Attribute ATT_3 = new AttributeImpl(OBJECT_POS_NAME, new ObjectNodeType());
+        return new Attribute[]{ATT_1, ATT_2, ATT_3};
     }
 
     private static class SimpleClosableIterator<Triple> implements ClosableIterator<Triple> {

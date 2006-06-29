@@ -99,11 +99,11 @@ public final class LiteralTripleSpec {
 
     public Attribute[] asAttributes() {
         List<Attribute> attributes = new ArrayList<Attribute>();
-        Attribute subjectAtt = new AttributeImpl(new PositionName("SUBJECT"), new SubjectNodeType());
+        Attribute subjectAtt = new AttributeImpl(new PositionName("SUBJECT1"), new SubjectNodeType());
         attributes.add(subjectAtt);
-        Attribute predciateAtt = new AttributeImpl(new PositionName("PREDICATE"), new PredicateNodeType());
+        Attribute predciateAtt = new AttributeImpl(new PositionName("PREDICATE1"), new PredicateNodeType());
         attributes.add(predciateAtt);
-        Attribute objectAtt = new AttributeImpl(new PositionName("OBJECT"), new ObjectNodeType());
+        Attribute objectAtt = new AttributeImpl(new PositionName("OBJECT1"), new ObjectNodeType());
         attributes.add(objectAtt);
         return attributes.toArray(new Attribute[] {});
     }

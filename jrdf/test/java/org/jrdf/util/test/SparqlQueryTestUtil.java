@@ -85,8 +85,9 @@ public final class SparqlQueryTestUtil {
     public static final String QUERY_BOOK_1_AND_2 =
             createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
                     PREDICATE_URI_1, VARIABLE_TITLE});
-    public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE = createBookDcTitleExpression(URI_BOOK_1);
-    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE = createBookDcTitleExpression(URI_BOOK_2);
+    public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
+    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
+    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
 
     private SparqlQueryTestUtil() {
     }
