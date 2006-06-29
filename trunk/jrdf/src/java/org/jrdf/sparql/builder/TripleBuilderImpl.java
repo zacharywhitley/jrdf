@@ -104,6 +104,10 @@ public final class TripleBuilderImpl implements TripleBuilder {
     private static final String SINGLE_QUOTE = "'";
     private final SortedAttributeValuePairHelper avpHelper;
     private Graph currentGraph;
+    private static long TRIPLE_COUNTER = 1;
+    private PositionName subjectAttName;
+    private PositionName predicateAttName;
+    private PositionName objectAttName;
 
     public TripleBuilderImpl(SortedAttributeValuePairHelper avpHelper) {
         this.avpHelper = avpHelper;
@@ -120,6 +124,11 @@ public final class TripleBuilderImpl implements TripleBuilder {
         ParameterUtil.checkNotNull("graph", graph);
 
         currentGraph = graph;
+
+        subjectAttName = new PositionName("SUBJECT" + TRIPLE_COUNTER);
+        predicateAttName = new PositionName("PREDICATE" + TRIPLE_COUNTER);
+        objectAttName = new PositionName("OBJECT" + TRIPLE_COUNTER);
+        TRIPLE_COUNTER++;
 
         // FIXME TJA: Check format () of triple here (is this done by the grammar now?).
         AttributeValuePair subject = buildSubject(tripleNode);
@@ -138,7 +147,7 @@ public final class TripleBuilderImpl implements TripleBuilder {
             return new AttributeValuePairImpl(att, ANY_SUBJECT_NODE);
         } else {
             AResourceResourceTripleElement resource = (AResourceResourceTripleElement) tripleNode.getSubject();
-            Attribute att = new AttributeImpl(new PositionName("SUBJECT"), new SubjectNodeType());
+            Attribute att = new AttributeImpl(subjectAttName, new SubjectNodeType());
             return new AttributeValuePairImpl(att, createResource(getStringForm(resource)));
         }
     }
@@ -152,7 +161,7 @@ public final class TripleBuilderImpl implements TripleBuilder {
             return new AttributeValuePairImpl(att, ANY_PREDICATE_NODE);
         } else {
             AResourceResourceTripleElement resource = (AResourceResourceTripleElement) tripleNode.getPredicate();
-            Attribute att = new AttributeImpl(new PositionName("PREDICATE"), new PredicateNodeType());
+            Attribute att = new AttributeImpl(predicateAttName, new PredicateNodeType());
             return new AttributeValuePairImpl(att, createResource(getStringForm(resource)));
         }
 
@@ -169,7 +178,7 @@ public final class TripleBuilderImpl implements TripleBuilder {
         } else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
-            Attribute att = new AttributeImpl(new PositionName("OBJECT"), new ObjectNodeType());
+            Attribute att = new AttributeImpl(objectAttName, new ObjectNodeType());
             Literal literalNode = createLiteral(text);
             return new AttributeValuePairImpl(att, literalNode);
         }

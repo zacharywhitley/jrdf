@@ -376,7 +376,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         ClosableIterator iter = graph.find(ANY_SUBJECT_NODE, rdfFirst, ANY_OBJECT_NODE);
         int counter = 0;
         while (iter.hasNext()) {
-//      System.err.println(iter.next());
             iter.next();
             counter++;
         }
@@ -393,7 +392,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         iter = graph.find(ANY_SUBJECT_NODE, rdfRest, ANY_OBJECT_NODE);
         counter = 0;
         while (iter.hasNext()) {
-//      System.err.println(iter.next());
             iter.next();
             counter++;
         }
@@ -403,7 +401,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         iter = graph.find(ANY_SUBJECT_NODE, rdfRest, rdfNil);
         counter = 0;
         while (iter.hasNext()) {
-//      System.err.println(iter.next());
             iter.next();
             counter++;
         }
