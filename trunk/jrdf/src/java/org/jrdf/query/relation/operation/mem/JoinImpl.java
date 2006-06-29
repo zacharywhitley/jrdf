@@ -186,6 +186,12 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
 
             // If we didn't find one for the current heading end early.
             if (!added) {
+                System.err.println("Did not find: " + attribute);
+                System.err.println("Headings: " + headings);
+                System.err.println("Avp 1: " + avp1);
+                System.err.println("Avp 2: " + avp2);
+                System.err.println("-- Avp 1: " + avps1);
+                System.err.println("-- Avp 2: " + avps2);
                 break;
             }
         }
