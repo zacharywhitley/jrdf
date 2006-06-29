@@ -113,14 +113,32 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
             return relations.iterator().next();
         }
 
-        Set<Attribute> headings = getHeadingUnions(relations);
-
         // Perform natural join.
-        Set<Tuple> resultTuples = performNaturalJoin(headings, relations);
-        return new RelationImpl(resultTuples, attributeComparator, tupleComparator);
+        Relation relation = performNaturalJoin(relations);
+        if (relation.getTuples().size() == 0) {
+            return RelationDEE.RELATION_DEE;
+        }
+        return relation;
     }
 
-    private Set<Attribute> getHeadingUnions(Set<Relation> relations) {
+    private Relation performNaturalJoin(Set<Relation> relations) {
+        Iterator<Relation> iterator = relations.iterator();
+        Relation relation1 = iterator.next();
+        Relation relation2 = iterator.next();
+        Set<Attribute> headings = getHeadingUnions(relation1, relation2);
+        Set<Tuple> tuples = joinTuples(headings, relation1.getTuples(), relation2.getTuples());
+        Relation resultRelation = new RelationImpl(tuples, attributeComparator, tupleComparator);
+
+        while (iterator.hasNext()) {
+            Relation nextRelation = iterator.next();
+            headings = getHeadingUnions(resultRelation, nextRelation);
+            tuples = joinTuples(headings, tuples, nextRelation.getTuples());
+            resultRelation = new RelationImpl(tuples, attributeComparator, tupleComparator);
+        }
+        return resultRelation;
+    }
+
+    private Set<Attribute> getHeadingUnions(Relation... relations) {
         Set<Attribute> headings = new TreeSet<Attribute>(attributeComparator);
 
         for (Relation relation : relations) {
@@ -129,17 +147,6 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         }
 
         return headings;
-    }
-
-    private Set<Tuple> performNaturalJoin(Set<Attribute> headings, Set<Relation> relations) {
-        Iterator<Relation> iterator = relations.iterator();
-        Relation relation1 = iterator.next();
-        Relation relation2 = iterator.next();
-        Set<Tuple> tuples = joinTuples(headings, relation1.getTuples(), relation2.getTuples());
-        while (iterator.hasNext()) {
-            tuples = joinTuples(headings, tuples, iterator.next().getTuples());
-        }
-        return tuples;
     }
 
     private Set<Tuple> joinTuples(Set<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2) {
@@ -179,7 +186,6 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
 
             // If we didn't find one for the current heading end early.
             if (!added) {
-                System.err.println("Did not find: " + attribute);
                 break;
             }
         }
