@@ -60,6 +60,7 @@ package org.jrdf.sparql.parser;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.sparql.builder.TripleBuilderImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.ObjectNode;
@@ -70,8 +71,9 @@ import org.jrdf.query.Query;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE;
-import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_1;
+import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_1;
+import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
@@ -93,9 +95,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
-    private static final QueryParser PARSER = FACTORY.getNewSparqlParser();
+    private QueryParser parser;
     private static final Expression BOOK1_AND_2_EXPRESSION
-            = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE, BOOK_2_DC_TITLE);
+            = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_1, BOOK_2_DC_TITLE_2);
 
     public void setUp() throws Exception {
         GraphElementFactory elementFactory = GRAPH.getElementFactory();
@@ -103,11 +105,16 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         PredicateNode predicate = elementFactory.createResource(TripleTestUtil.URI_DC_TITLE);
         ObjectNode object = elementFactory.createLiteral(TripleTestUtil.LITERAL_BOOK_TITLE);
         GRAPH.add(subject, predicate, object);
+        TripleBuilderImpl builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(), 1);
+        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder);
     }
 
     public void testSingleConstraint() {
-        checkConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE);
-        checkConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE);
+        checkConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE_1);
+    }
+
+    public void testSingleConstraint2() {
+        checkConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE_1);
     }
 
     public void testTwoConstraints() {
@@ -122,7 +129,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private Query parseQuery(String queryString) {
         try {
-            return PARSER.parseQuery(GRAPH, queryString);
+            return parser.parseQuery(GRAPH, queryString);
         } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
         }

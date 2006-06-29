@@ -72,6 +72,7 @@ import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.sparql.parser.ParserFactory;
 
 /**
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
@@ -148,5 +149,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public AttributeNameComparator getNewAttributeNameComparator() {
         return (AttributeNameComparator) FACTORY.getContext().getBean("attributeNameComparator");
+    }
+
+    public ParserFactory getNewParserFactory() {
+        return (ParserFactory) FACTORY.getContext().getBean("parserFactory");
     }
 }

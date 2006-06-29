@@ -122,7 +122,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     public void testNullAvpComparatorInConstructor() {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                new NaiveQueryExecutor(GRAPH, NO_SECURITY_DOMAIN, RESTRICT, JOIN,
+                new NaiveQueryExecutor(GRAPH, NO_SECURITY_DOMAIN, null, JOIN,
                         GRAPH_RELATION_FACTORY);
             }
         });

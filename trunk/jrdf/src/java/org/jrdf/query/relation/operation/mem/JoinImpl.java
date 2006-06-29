@@ -56,9 +56,13 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
+// TODO (AN) An
+
+// TODO (AN)
 
 package org.jrdf.query.relation.operation.mem;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -70,10 +74,12 @@ import org.jrdf.query.relation.mem.RelationImpl;
 import org.jrdf.query.relation.mem.TupleImpl;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.HashSet;
+
+// TODO (AN) An ugly and hideous attempt to get it going.
 
 /**
  * A simple memory based implementation of JoinImpl.
@@ -89,8 +95,8 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
     /**
      * Cannot create join.
      */
-    public JoinImpl(AttributeComparator attributeComparator, AttributeValuePairComparator attributeValuePairComparator, TupleComparator tupleComparator
-    ) {
+    public JoinImpl(AttributeComparator attributeComparator, AttributeValuePairComparator attributeValuePairComparator,
+            TupleComparator tupleComparator) {
         this.tupleComparator = tupleComparator;
         this.attributeComparator = attributeComparator;
         this.attributeValuePairComparator = attributeValuePairComparator;
@@ -107,33 +113,90 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
             return relations.iterator().next();
         }
 
+        Set<Attribute> headings = getHeadingUnions(relations);
+
         // Perform natural join.
-        Set<Tuple> resultTuples = performNaturalJoin(relations);
+        Set<Tuple> resultTuples = performNaturalJoin(headings, relations);
         return new RelationImpl(resultTuples, attributeComparator, tupleComparator);
     }
 
-    private Set<Tuple> performNaturalJoin(Set<Relation> relations) {
+    private Set<Attribute> getHeadingUnions(Set<Relation> relations) {
+        Set<Attribute> headings = new TreeSet<Attribute>(attributeComparator);
+
+        for (Relation relation : relations) {
+            Set<Attribute> heading = relation.getHeading();
+            headings.addAll(heading);
+        }
+
+        return headings;
+    }
+
+    private Set<Tuple> performNaturalJoin(Set<Attribute> headings, Set<Relation> relations) {
         Iterator<Relation> iterator = relations.iterator();
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
-        Set<Tuple> tuples = joinTuples(relation1.getTuples(), relation2.getTuples());
+        Set<Tuple> tuples = joinTuples(headings, relation1.getTuples(), relation2.getTuples());
         while (iterator.hasNext()) {
-            tuples = joinTuples(tuples, iterator.next().getTuples());
+            tuples = joinTuples(headings, tuples, iterator.next().getTuples());
         }
         return tuples;
     }
 
-    private Set<Tuple> joinTuples(Set<Tuple> tuples1, Set<Tuple> tuples2) {
+    private Set<Tuple> joinTuples(Set<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2) {
         Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple1 : tuples1) {
             for (Tuple tuple2 : tuples2) {
-                Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
-                resultantAttributeValues.addAll(tuple1.getAttributeValues());
-                resultantAttributeValues.addAll(tuple2.getAttributeValues());
-                Tuple t = new TupleImpl(resultantAttributeValues, attributeValuePairComparator);
-                result.add(t);
+                joinRhs(headings, tuple1, tuple2, result);
             }
         }
         return result;
+    }
+
+    private void joinRhs(Set<Attribute> headings, Tuple tuple1, Tuple tuple2, Set<Tuple> result) {
+        Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
+        Set<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
+        Set<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
+
+        boolean added;
+        for (Attribute attribute : headings) {
+            added = false;
+            AttributeValuePair avp1 = getAttributeValuePair(attribute, avps1);
+            AttributeValuePair avp2 = getAttributeValuePair(attribute, avps2);
+
+            // Add if avp1 is not null and avp2 is or they are both equal.
+            if (avp1 != null) {
+                if (avp2 == null || avp1.equals(avp2)) {
+                    resultantAttributeValues.add(avp1);
+                    added = true;
+                }
+            }
+
+            // Add if avp1 is null and avp2 is not.
+            if (avp1 == null && avp2 != null) {
+                resultantAttributeValues.add(avp2);
+                added = true;
+            }
+
+            // If we didn't find one for the current heading end early.
+            if (!added) {
+                System.err.println("Did not find: " + attribute);
+                break;
+            }
+        }
+
+        // Only add results if they are the same size
+        if (resultantAttributeValues.size() == headings.size()) {
+            Tuple t = new TupleImpl(resultantAttributeValues, attributeValuePairComparator);
+            result.add(t);
+        }
+    }
+
+    private AttributeValuePair getAttributeValuePair(Attribute attribute, Set<AttributeValuePair> avps) {
+        for (AttributeValuePair avp : avps) {
+            if (avp.getAttribute().equals(attribute)) {
+                return avp;
+            }
+        }
+        return null;
     }
 }

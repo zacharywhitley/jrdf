@@ -104,13 +104,14 @@ public final class TripleBuilderImpl implements TripleBuilder {
     private static final String SINGLE_QUOTE = "'";
     private final SortedAttributeValuePairHelper avpHelper;
     private Graph currentGraph;
-    private static long TRIPLE_COUNTER = 1;
+    private long tripleCounter;
     private PositionName subjectAttName;
     private PositionName predicateAttName;
     private PositionName objectAttName;
 
-    public TripleBuilderImpl(SortedAttributeValuePairHelper avpHelper) {
+    public TripleBuilderImpl(SortedAttributeValuePairHelper avpHelper, long counterStart) {
         this.avpHelper = avpHelper;
+        this.tripleCounter = counterStart;
     }
 
     /**
@@ -125,10 +126,10 @@ public final class TripleBuilderImpl implements TripleBuilder {
 
         currentGraph = graph;
 
-        subjectAttName = new PositionName("SUBJECT" + TRIPLE_COUNTER);
-        predicateAttName = new PositionName("PREDICATE" + TRIPLE_COUNTER);
-        objectAttName = new PositionName("OBJECT" + TRIPLE_COUNTER);
-        TRIPLE_COUNTER++;
+        subjectAttName = new PositionName("SUBJECT" + tripleCounter);
+        predicateAttName = new PositionName("PREDICATE" + tripleCounter);
+        objectAttName = new PositionName("OBJECT" + tripleCounter);
+        tripleCounter++;
 
         // FIXME TJA: Check format () of triple here (is this done by the grammar now?).
         AttributeValuePair subject = buildSubject(tripleNode);
