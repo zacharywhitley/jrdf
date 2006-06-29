@@ -62,6 +62,8 @@ import org.jrdf.util.EqualsUtil;
 
 import java.io.Serializable;
 
+// TODO (AN) Not test driven
+
 /**
  * Conjunction - represents an AND between two expressions.
  *

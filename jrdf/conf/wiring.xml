@@ -126,10 +126,10 @@
             <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="sortedAttributeValuePairHelper"/>
+            <ref bean="restrict"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="restrict"/>
+            <ref bean="join"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="graphRelationFactory"/>
@@ -153,6 +153,18 @@
     </bean>
 
     <bean name="restrict" class="org.jrdf.query.relation.operation.mem.RestrictImpl">
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean name="join" class="org.jrdf.query.relation.operation.mem.JoinImpl">
         <constructor-arg>
             <ref bean="attributeComparator"/>
         </constructor-arg>

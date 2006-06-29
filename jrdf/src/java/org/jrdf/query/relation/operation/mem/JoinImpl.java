@@ -89,8 +89,8 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
     /**
      * Cannot create join.
      */
-    public JoinImpl(TupleComparator tupleComparator, AttributeComparator attributeComparator,
-                AttributeValuePairComparator attributeValuePairComparator) {
+    public JoinImpl(AttributeComparator attributeComparator, AttributeValuePairComparator attributeValuePairComparator, TupleComparator tupleComparator
+    ) {
         this.tupleComparator = tupleComparator;
         this.attributeComparator = attributeComparator;
         this.attributeValuePairComparator = attributeValuePairComparator;

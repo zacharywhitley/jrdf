@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,51 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.execute;
 
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.mem.RelationImpl;
-import org.jrdf.query.relation.operation.Restrict;
-
-import java.util.Set;
-import java.util.SortedSet;
 
 /**
- * The relational operation that remove tuples that don't meet a specific criteria.
+ * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class RestrictImpl implements Restrict {
-    private final AttributeValuePairComparator avpComparator;
-    private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
-
-    // TODO (AN) These comparators should be injected into a factory for Tuples rather than having them exposed to
-    // all objects that need to create various tuples, relations, etc.
-    public RestrictImpl(AttributeComparator attributeComparator, AttributeValuePairComparator avpComparator,
-            TupleComparator tupleComparator) {
-        this.attributeComparator = attributeComparator;
-        this.avpComparator = avpComparator;
-        this.tupleComparator = tupleComparator;
-    }
-
-    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
-        if (nameValues instanceof SortedSet && relation instanceof GraphRelation) {
-            return restrict((GraphRelation) relation, (SortedSet<AttributeValuePair>) nameValues);
-        }
-        throw new UnsupportedOperationException();
-    }
-
-    public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
-        Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
-        return new RelationImpl(restrictedTuples, attributeComparator, tupleComparator);
-    }
+public interface NaiveQueryEngine extends ExpressionVisitor {
+    Relation getResult();
 }

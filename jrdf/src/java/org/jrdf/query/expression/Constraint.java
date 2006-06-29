@@ -98,6 +98,10 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
         return determineEqualityFromFields(this, (Constraint) obj);
     }
 
+    public void accept(V v) {
+        v.visitConstraint(this);
+    }
+
     public int hashCode() {
         // FIXME TJA: Test drive out values of triple.hashCode()
         return DUMMY_HASHCODE;
@@ -108,10 +112,6 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
      */
     public String toString() {
         return avp.toString();
-    }
-
-    public void accept(V v) {
-        v.visitConstraint(this);
     }
 
     private boolean determineEqualityFromFields(Constraint o1, Constraint o2) {
