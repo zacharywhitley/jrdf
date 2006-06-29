@@ -122,7 +122,7 @@ public class JoinImplIntegrationTest extends TestCase {
 
     private static final Attribute VAR_BAR1_SUBJECT = new AttributeImpl(VAR_BAR1, new SubjectNodeType());
     private static final Attribute VAR_BAR2_PREDICATE = new AttributeImpl(VAR_BAR2, new PredicateNodeType());
-    private static final Attribute VAR_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
+    private static final Attribute POS_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
 
     private static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
     private static final URIReference RESOURCE_2 = NodeTestUtil.createResource(RDF.BAG);
@@ -148,8 +148,8 @@ public class JoinImplIntegrationTest extends TestCase {
             new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
     private static final AttributeValuePair VAR_BAR2_PREDICATE_R4 =
             new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
-    private static final AttributeValuePair VAR_BAR3_OBJECT_R1 =
-            new AttributeValuePairImpl(VAR_BAR3_OBJECT, RESOURCE_1);
+    private static final AttributeValuePair POS_BAR3_OBJECT_R1 =
+            new AttributeValuePairImpl(POS_BAR3_OBJECT, RESOURCE_1);
 
     private static final AttributeValuePair POS_FOO4_PREDICATE_R2 =
             new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_2);
@@ -215,15 +215,15 @@ public class JoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
     }
 
-//    public void testNaturalJoin2() {
-//        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-//        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
-//        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
-//        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR3_OBJECT_R1);
-//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
-//                VAR_BAR2_PREDICATE_R4, POS_FOO3_OBJECT_R3, VAR_BAR3_OBJECT_R1);
-//        checkJoin(createRelation(tuple1, tuple2, tuple3, tuple4), createRelation(resultTuple));
-//    }
+    public void testNaturalJoin2() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
+                VAR_BAR2_PREDICATE_R4, POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
+        checkJoin(createRelation(tuple1, tuple2, tuple3, tuple4), createRelation(resultTuple));
+    }
 
     public void testNaturalJoin3() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
@@ -257,12 +257,12 @@ public class JoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(tuple1, tuple2), relation);
     }
 
-//    public void testNaturalJoin5() {
-//        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
-//        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-//
-//        checkJoin(createRelation(tuple1, tuple2), RelationDEE.RELATION_DEE);
-//    }
+    public void testNaturalJoin5() {
+        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
+        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+
+        checkJoin(createRelation(tuple1, tuple2), RelationDEE.RELATION_DEE);
+    }
 
     private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
@@ -283,9 +283,9 @@ public class JoinImplIntegrationTest extends TestCase {
         checkRelation(expectedResult, tuples);
     }
 
-    private List<Relation> createRelation(Set<Tuple>... tuple1) {
+    private List<Relation> createRelation(Set<Tuple>... tuple) {
         List<Relation> relations = new ArrayList<Relation>();
-        for (Set<Tuple> tuples : tuple1) {
+        for (Set<Tuple> tuples : tuple) {
             Relation relation = createRelation(tuples);
             relations.add(relation);
         }
