@@ -106,15 +106,15 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testSingleConstraint() {
-        checkSingleConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE);
-        checkSingleConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE);
+        checkConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE);
+        checkConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE);
     }
 
     public void testTwoConstraints() {
-        checkSingleConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_EXPRESSION);
+        checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_EXPRESSION);
     }
 
-    private void checkSingleConstraintExpression(String queryString, Expression expectedExpression) {
+    private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);
         Expression actualExpression = query.getConstraintExpression();
         assertEquals(expectedExpression, actualExpression);

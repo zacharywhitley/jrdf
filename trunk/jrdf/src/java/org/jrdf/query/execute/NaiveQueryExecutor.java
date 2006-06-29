@@ -61,18 +61,17 @@ package org.jrdf.query.execute;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.Query;
+import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.operation.Join;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
-import java.util.SortedSet;
 
 /**
  * A naive query executor that uses an iterator-based approach to finding triples.
@@ -91,10 +90,11 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
     // TODO: Filter out the variables in the projection list.
 
     private Graph graph;
-    private URI securityDomain;
-    private final SortedAttributeValuePairHelper avpComparatorHelper;
     private final Restrict restrict;
+    private final Join join;
     private GraphRelationFactory graphRelationFactory;
+    private Relation result;
+    private final URI securityDomain;
 
     /**
      * Creates executor to execute queries.
@@ -102,28 +102,35 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
-    public NaiveQueryExecutor(Graph graph, URI securityDomain, SortedAttributeValuePairHelper avpComparatorHelper,
-            Restrict restrict, GraphRelationFactory graphRelationFactory) {
+    public NaiveQueryExecutor(Graph graph, URI securityDomain, Restrict restrict, Join join,
+            GraphRelationFactory graphRelationFactory) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("avpComparatorHelper", avpComparatorHelper);
         ParameterUtil.checkNotNull("restrict", restrict);
         ParameterUtil.checkNotNull("graphRelationFactory", graphRelationFactory);
         this.graph = graph;
         this.securityDomain = securityDomain;
-        this.avpComparatorHelper = avpComparatorHelper;
         this.restrict = restrict;
+        this.join = join;
         this.graphRelationFactory = graphRelationFactory;
+        result = graphRelationFactory.createRelation(graph);
     }
 
     /**
      * {@inheritDoc}
      */
     public Relation executeQuery(Query query) {
-        GraphRelation graphRelation = graphRelationFactory.createRelation(graph);
-        Constraint<ExpressionVisitor> constraint = (Constraint<ExpressionVisitor>) query.getConstraintExpression();
-        SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
-        return restrict.restrict(graphRelation, singleAvp);
+        Expression<ExpressionVisitor> expression = query.getConstraintExpression();
+        NaiveQueryEngineImpl naiveQueryEngine = new NaiveQueryEngineImpl(result, restrict, join);
+        if (expression instanceof Constraint) {
+            naiveQueryEngine.visitConstraint((Constraint<ExpressionVisitor>) expression);
+        } else if (expression instanceof Conjunction) {
+            naiveQueryEngine.visitConjunction((Conjunction<ExpressionVisitor>) expression);
+        } else {
+            throw new RuntimeException();
+        }
+        result = naiveQueryEngine.getResult();
+        return result;
     }
 
     /**

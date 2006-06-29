@@ -62,7 +62,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.operation.Join;
 import org.jrdf.query.relation.operation.Restrict;
 
 import java.net.URI;
@@ -77,20 +77,20 @@ import java.net.URL;
  */
 public class NaiveQueryExecutorFactory implements JrdfQueryExecutorFactory {
     private final URL securityDomain;
-    private final SortedAttributeValuePairHelper avpComparatorHelper;
     private final Restrict restrict;
     private final GraphRelationFactory graphRelationFactory;
+    private final Join join;
 
-    public NaiveQueryExecutorFactory(URL securityDomain, SortedAttributeValuePairHelper avpComparatorHelper,
-            Restrict restrict, GraphRelationFactory graphRelationFactory) {
+    public NaiveQueryExecutorFactory(URL securityDomain, Restrict restrict, Join join,
+            GraphRelationFactory graphRelationFactory) {
         this.securityDomain = securityDomain;
-        this.avpComparatorHelper = avpComparatorHelper;
         this.restrict = restrict;
+        this.join = join;
         this.graphRelationFactory = graphRelationFactory;
     }
 
     public JrdfQueryExecutor getExecutor(Graph graph) {
-        return new NaiveQueryExecutor(graph, tryGetUri(), avpComparatorHelper, restrict, graphRelationFactory);
+        return new NaiveQueryExecutor(graph, tryGetUri(), restrict, join, graphRelationFactory);
     }
 
     // TODO (AN) Remove this when Spring handles a URI as a Property type.
