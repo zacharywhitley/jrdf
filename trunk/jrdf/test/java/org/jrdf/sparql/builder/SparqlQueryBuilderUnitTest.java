@@ -61,16 +61,17 @@ package org.jrdf.sparql.builder;
 import junit.framework.TestCase;
 import org.easymock.classextension.IMocksControl;
 import org.jrdf.graph.Graph;
-import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.Query;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.query.QueryBuilder;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterTestUtil;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
-import org.jrdf.util.test.AssertThrows;
 
 import java.lang.reflect.Modifier;
 
@@ -90,6 +91,8 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
     private static final String CANNOT_BE_NULL = "queryText parameter cannot be null";
     private static final String CANNOT_BE_EMPTY = "queryText parameter cannot be the empty string";
     private MockFactory mockFactory;
+    private static final Class[] PARAM_TYPES = new Class[] {SparqlParser.class};
+    private static final String[] PARAM_NAMES = new String[] {"parser"};
 
     public void setUp() {
         mockFactory = new MockFactory();
@@ -98,6 +101,10 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(QueryBuilder.class, SparqlQueryBuilder.class);
         ClassPropertiesTestUtil.checkConstructor(SparqlQueryBuilder.class, Modifier.PUBLIC, SparqlParser.class);
+    }
+
+    public void testNullsInConstructor() {
+        ArgumentTestUtil.checkConstructNullAssertion(SparqlQueryBuilder.class, PARAM_TYPES, PARAM_NAMES);
     }
 
     public void testBadParams() throws Exception {
