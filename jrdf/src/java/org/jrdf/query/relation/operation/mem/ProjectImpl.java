@@ -91,12 +91,22 @@ public class ProjectImpl implements Project {
     }
 
     public Relation include(Relation relation, Set<Attribute> attributes) {
+        // TODO (AN) Test drive short circuit
+        if (relation.getHeading().equals(attributes)) {
+            return relation;
+        }
+
         Set<Attribute> newHeading = relation.getHeading();
         newHeading.retainAll(attributes);
         return project(relation, newHeading);
     }
 
     public Relation exclude(Relation relation, Set<Attribute> attributes) {
+        // TODO (AN) Test drive short circuit
+        if (attributes.size() == 0) {
+            return relation;
+        }
+
         Set<Attribute> newHeading = relation.getHeading();
         newHeading.removeAll(attributes);
         return project(relation, newHeading);
