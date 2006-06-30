@@ -60,16 +60,17 @@ package org.jrdf.query.relation.mem;
 import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.AttributeValuePair;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.HashSet;
-import java.util.Iterator;
 
 /**
  * Implementation of relations containing a set of tuples and a set of attributes.  The attribute constitute a heading
@@ -84,10 +85,12 @@ public final class RelationImpl extends Primordial implements Relation {
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
 
-    public RelationImpl(Set<Tuple> newTuples, AttributeComparator attributeComparator,
-            TupleComparator tupleComparator) {
-        this.heading = createHeadingFromTuples(newTuples);
-        this.tuples = newTuples;
+    public RelationImpl(Set<Tuple> tuples, AttributeComparator attributeComparator, TupleComparator tupleComparator) {
+        checkNotNull("tuples", tuples);
+        checkNotNull("attributeComparator", attributeComparator);
+        checkNotNull("tupleComparator", tupleComparator);
+        this.heading = createHeadingFromTuples(tuples);
+        this.tuples = tuples;
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
     }

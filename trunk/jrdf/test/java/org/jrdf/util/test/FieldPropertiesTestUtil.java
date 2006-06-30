@@ -105,35 +105,35 @@ public class FieldPropertiesTestUtil {
         checkFieldHasModifier(cls, fieldName, Modifier.PRIVATE);
     }
 
-    public static boolean isFieldOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
-        Field field = ReflectTestUtil.getField(cls, fieldName);
+    public static boolean isFieldOfType(Class<?> clazz, Class<?> expectedType, String fieldName) {
+        Field field = ReflectTestUtil.getField(clazz, fieldName);
         return field.getType().equals(expectedType);
     }
 
-    public static void checkFieldIsOfType(Class<?> cls, String fieldName, Class<?> expectedType) {
-        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must be of type " +
-            expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
+    public static void checkFieldIsOfType(Class<?> clazz, Class<?> expectedType, String fieldName) {
+        Assert.assertTrue("Field " + fieldName + " of class " + clazz.getSimpleName() + " must be of type " +
+            expectedType.getSimpleName(), isFieldOfType(clazz, expectedType, fieldName));
     }
 
-    public static void checkFieldIsOfTypeAndPrivate(String fieldName, Class<?> cls, Class<?> expectedType) {
-        checkFieldIsOfType(cls, fieldName, expectedType);
-        checkFieldPrivate(cls, fieldName);
+    public static void checkFieldIsOfTypeAndPrivate(Class<?> clazz, Class<?> expectedType, String fieldName) {
+        checkFieldIsOfType(clazz, expectedType, fieldName);
+        checkFieldPrivate(clazz, fieldName);
     }
 
-    public static void checkFieldIsOfTypePrivateAndFinal(Class<?> cls, Class<?> expectedType, String fieldName) {
-        checkFieldIsOfType(cls, fieldName, expectedType);
-        checkFieldPrivate(cls, fieldName);
-        checkFieldFinal(cls, fieldName);
+    public static void checkFieldIsOfTypePrivateAndFinal(Class<?> clazz, Class<?> expectedType, String fieldName) {
+        checkFieldIsOfType(clazz, expectedType, fieldName);
+        checkFieldPrivate(clazz, fieldName);
+        checkFieldFinal(clazz, fieldName);
     }
 
-    private static void checkFieldHasModifier(Class<?> cls, String fieldName, int modifier) {
-        boolean hasModifier = hasModifier(cls, fieldName, modifier);
-        Assert.assertTrue("Field " + fieldName + " of class " + cls.getSimpleName() + " must have modifier " +
+    private static void checkFieldHasModifier(Class<?> clazz, String fieldName, int modifier) {
+        boolean hasModifier = hasModifier(clazz, fieldName, modifier);
+        Assert.assertTrue("Field " + fieldName + " of class " + clazz.getSimpleName() + " must have modifier " +
             Modifier.toString(modifier), hasModifier);
     }
 
-    private static boolean hasModifier(Class<?> cls, String fieldName, int modifier) {
-        Field field = ReflectTestUtil.getField(cls, fieldName);
+    private static boolean hasModifier(Class<?> clazz, String fieldName, int modifier) {
+        Field field = ReflectTestUtil.getField(clazz, fieldName);
         return (field.getModifiers() & modifier) != 0;
     }
 }

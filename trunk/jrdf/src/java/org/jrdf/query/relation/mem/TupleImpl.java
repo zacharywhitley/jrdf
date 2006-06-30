@@ -61,6 +61,7 @@ import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -78,6 +79,8 @@ public final class TupleImpl extends Primordial implements Tuple {
 
     public TupleImpl(Set<AttributeValuePair> attributeValues,
                      AttributeValuePairComparator attributeValuePairComparator) {
+        checkNotNull("attributeValues", attributeValues);
+        checkNotNull("attributeValuePairComparator", attributeValuePairComparator);
         this.attributeValues = attributeValues;
         this.attributeValuePairComparator = attributeValuePairComparator;
     }

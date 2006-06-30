@@ -80,6 +80,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Instantiates classes for use in testing.
@@ -124,6 +126,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(URI.class, new URIInstantiator());
         instantiators.put(String.class, new StringInstantiator());
         instantiators.put(ATriple.class, new ATripleInstantiator());
+        instantiators.put(Set.class, new SetInstantiator());
     }
 
     private static class URLInstantiator implements Instantiator {
@@ -158,4 +161,11 @@ public final class ArnoldTheInstantiator {
             return new ATriple();
         }
     }
+
+    private static class SetInstantiator implements Instantiator {
+        public Object instantiate() {
+            return new HashSet();
+        }
+    }
 }
+

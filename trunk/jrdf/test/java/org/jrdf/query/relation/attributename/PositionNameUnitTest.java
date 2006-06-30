@@ -60,10 +60,10 @@ package org.jrdf.query.relation.attributename;
 import au.net.netstorm.boost.primordial.Primordial;
 import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.FieldPropertiesTestUtil;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
 
@@ -83,18 +83,17 @@ public class PositionNameUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(AttributeName.class, PositionName.class);
         ClassPropertiesTestUtil.checkMarkedAsSerializable(AttributeName.class);
         checkConstructor(PositionName.class, Modifier.PUBLIC, String.class);
-        FieldPropertiesTestUtil.checkFieldIsOfType(PositionName.class,
-            PositionNameUnitTest.POSITION_FIELD_NAME, String.class);
+        FieldPropertiesTestUtil.checkFieldIsOfType(PositionName.class, String.class, POSITION_FIELD_NAME);
     }
 
     public void testConstructor() {
-        checkStandardConstructor(PositionNameUnitTest.POSITION_NAME_1);
-        checkStandardConstructor(PositionNameUnitTest.POSITION_NAME_2);
+        checkStandardConstructor(POSITION_NAME_1);
+        checkStandardConstructor(POSITION_NAME_2);
     }
 
     private void checkStandardConstructor(String positionName) {
         AttributeName pos = new PositionName(positionName);
-        org.jrdf.util.test.ReflectTestUtil.checkFieldValue(pos, PositionNameUnitTest.POSITION_FIELD_NAME, positionName);
+        org.jrdf.util.test.ReflectTestUtil.checkFieldValue(pos, POSITION_FIELD_NAME, positionName);
         assertEquals(positionName, pos.getLiteral());
     }
 }

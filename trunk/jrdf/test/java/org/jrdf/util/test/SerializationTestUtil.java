@@ -120,7 +120,7 @@ public final class SerializationTestUtil {
         FieldPropertiesTestUtil.checkFieldPrivate(cls, FIELD_SERIAL_VERSION_UID);
         FieldPropertiesTestUtil.checkFieldStatic(cls, FIELD_SERIAL_VERSION_UID);
         FieldPropertiesTestUtil.checkFieldFinal(cls, FIELD_SERIAL_VERSION_UID);
-        FieldPropertiesTestUtil.checkFieldIsOfType(cls, FIELD_SERIAL_VERSION_UID, CLASS_LONG_PRIMITIVE);
+        FieldPropertiesTestUtil.checkFieldIsOfType(cls, CLASS_LONG_PRIMITIVE, FIELD_SERIAL_VERSION_UID);
     }
 
     // FIXME TJA: Think about whether interfaces need a serialVersionUID

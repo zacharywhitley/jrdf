@@ -83,7 +83,7 @@ public class VariableNameUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(AttributeName.class, VariableName.class);
         ClassPropertiesTestUtil.checkMarkedAsSerializable(AttributeName.class);
         checkConstructor(VariableName.class, Modifier.PUBLIC, String.class);
-        checkFieldIsOfType(VariableName.class, VARIABLE_FIELD_NAME, String.class);
+        checkFieldIsOfType(VariableName.class, String.class, VARIABLE_FIELD_NAME);
     }
 
     public void testConstructor() {
