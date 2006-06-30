@@ -104,11 +104,13 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final String TEST_QUERY_1 = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final Query QUERY = MockTestUtil.createMock(Query.class);
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
-    private static final String[] PARAMETER_NAMES = {"graph", "queryText"};
-    private static final Class[] PARAMETER_TYPES = {Graph.class, String.class};
-    private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(PARAMETER_NAMES,
-            PARAMETER_TYPES);
     private static final String METHOD_NAME = "executeQuery";
+    private static final Class[] PARAM_TYPES = { URL.class, QueryBuilder.class, JrdfQueryExecutorFactory.class};
+    private static final String[] PARAM_NAMES = { "securityDomain", "builder", "executorFactory"};
+    private static final String[] METHOD_PARAM_NAMES = {"graph", "queryText"};
+    private static final Class[] METHOD_PARAM_TYPES = {Graph.class, String.class};
+    private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(METHOD_PARAM_NAMES,
+            METHOD_PARAM_TYPES);
 
     public void setUp() {
         factory = new MockFactory();
@@ -120,35 +122,14 @@ public class SparqlConnectionImplUnitTest extends TestCase {
                 QueryBuilder.class, JrdfQueryExecutorFactory.class);
     }
 
-    public void testNullSecurityDomainInConstructor() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new SparqlConnectionImpl(null, BUILDER, EXECUTOR_FACTORY);
-            }
-        });
-    }
-
-    public void testNullBuilder() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new SparqlConnectionImpl(NO_SECURITY_DOMAIN, null, EXECUTOR_FACTORY);
-            }
-        });
-    }
-
-    public void testNullQueryExecutor() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new SparqlConnectionImpl(NO_SECURITY_DOMAIN, BUILDER, null);
-            }
-        });
+    public void testNullsInConstructor() {
+        ArgumentTestUtil.checkConstructNullAssertion(SparqlConnectionImpl.class, PARAM_TYPES, PARAM_NAMES);
     }
 
     public void testCreateSparqlConnectionNullContract() {
         SparqlConnection sparqlConnection = createSparqlConnection();
         ArgumentTestUtil.checkMethodNullAssertions(PARAM_DEFINITION, sparqlConnection, METHOD_NAME);
     }
-
 
     public void testExecuteSimpleBadQuery() throws Exception {
         SparqlConnection connection = createSparqlConnection();
