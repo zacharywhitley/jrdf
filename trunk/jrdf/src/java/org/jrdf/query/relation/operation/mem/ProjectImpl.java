@@ -56,71 +56,71 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.execute;
+package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.query.expression.Conjunction;
-import org.jrdf.query.expression.Constraint;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.ExpressionVisitorAdapter;
-import org.jrdf.query.expression.Projection;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.mem.RelationImpl;
+import org.jrdf.query.relation.mem.TupleImpl;
+import org.jrdf.query.relation.operation.Project;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
- * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
- * query tree by performing restrinctions, other operations (join, etc) and then project.
+ * Implements restrict by going through the relation and removing the columns.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements QueryEngine {
-    private Restrict restrict;
-    private Relation result;
-    private Join join;
+public class ProjectImpl implements Project {
+    private final AttributeValuePairComparator attributeValuePairComparator;
+    private final AttributeComparator attributeComparator;
+    private final TupleComparator tupleComparator;
 
-    public NaiveQueryEngineImpl(Restrict restrict, Join join) {
-        this.restrict = restrict;
-        this.join = join;
+    public ProjectImpl(AttributeValuePairComparator attributeValuePairComparator,
+            AttributeComparator attributeComparator, TupleComparator tupleComparator) {
+        this.attributeValuePairComparator = attributeValuePairComparator;
+        this.attributeComparator = attributeComparator;
+        this.tupleComparator = tupleComparator;
     }
 
-    public Relation getResult() {
-        return result;
+    public Relation include(Relation relation, Set<Attribute> attributes) {
+        Set<Attribute> newHeading = relation.getHeading();
+        newHeading.retainAll(attributes);
+        return project(relation, newHeading);
     }
 
-    public void setResult(Relation newResult) {
-        result = newResult;
+    public Relation exclude(Relation relation, Set<Attribute> attributes) {
+        Set<Attribute> newHeading = relation.getHeading();
+        newHeading.removeAll(attributes);
+        return project(relation, newHeading);
     }
 
-    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
-        projection.getAttributes();
+    private Relation project(Relation relation, Set<Attribute> newHeading) {
+        Set<Tuple> newTuples = new HashSet<Tuple>();
+        RelationImpl newRelation = new RelationImpl(newTuples, attributeComparator, tupleComparator);
+        Set<Tuple> tuples = relation.getTuples();
+        for (Tuple tuple : tuples) {
+            TupleImpl newTuple = createNewTuples(tuple, newHeading);
+            newTuples.add(newTuple);
+        }
+        return newRelation;
     }
 
-    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
-        SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
-        result = restrict.restrict(result, singleAvp);
-    }
-
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        Relation lhs = getExpression(conjunction.getLhs());
-        Relation rhs = getExpression(conjunction.getRhs());
-        Set<Relation> relations = new HashSet<Relation>();
-        relations.add(lhs);
-        relations.add(rhs);
-        result = join.join(relations);
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    private <V extends ExpressionVisitor>Relation getExpression(Expression<V> lhsExpression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(restrict, join);
-        queryEngine.setResult(result);
-        lhsExpression.accept((V) queryEngine);
-        return queryEngine.getResult();
+    private TupleImpl createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
+        Set<AttributeValuePair> avps = tuple.getAttributeValues();
+        Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
+        for (AttributeValuePair avp : avps) {
+            if (newHeading.contains(avp.getAttribute())) {
+                newAvps.add(avp);
+            }
+        }
+        return new TupleImpl(newAvps, attributeValuePairComparator);
     }
 }
