@@ -59,7 +59,8 @@
 package org.jrdf.query.expression;
 
 /**
- * A builder that always throws exceptions.
+ * An adapter for ExpressionVisitor - allows an implementation to avoid having to implement all the methods.
+ * Currently, these methods do nothing.
  *
  * @author Andrew Newman
  * @version $Revision:$

@@ -72,24 +72,28 @@ import java.util.Set;
 import java.util.SortedSet;
 
 /**
- * A builder that always throws exceptions.
+ * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
+ * query as written.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class NaiveQueryEngineImpl implements NaiveQueryEngine {
+public class NaiveQueryEngineImpl implements QueryEngine {
     private Restrict restrict;
     private Relation result;
     private Join join;
 
-    public NaiveQueryEngineImpl(Relation result, Restrict restrict, Join join) {
-        this.result = result;
+    public NaiveQueryEngineImpl(Restrict restrict, Join join) {
         this.restrict = restrict;
         this.join = join;
     }
 
     public Relation getResult() {
         return result;
+    }
+
+    public void setResult(Relation newResult) {
+        result = newResult;
     }
 
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
@@ -106,9 +110,11 @@ public class NaiveQueryEngineImpl implements NaiveQueryEngine {
         result = join.join(relations);
     }
 
+    @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor>Relation getExpression(Expression<V> lhsExpression) {
-        NaiveQueryEngine naiveQueryEngine = new NaiveQueryEngineImpl(result, restrict, join);
-        lhsExpression.accept((V) naiveQueryEngine);
-        return naiveQueryEngine.getResult();
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(restrict, join);
+        queryEngine.setResult(result);
+        lhsExpression.accept((V) queryEngine);
+        return queryEngine.getResult();
     }
 }

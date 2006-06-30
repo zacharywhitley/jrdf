@@ -62,11 +62,12 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Relation;
 
 /**
- * A builder that always throws exceptions.
+ * An expression visitor that produces a relation result.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface NaiveQueryEngine extends ExpressionVisitor {
+public interface QueryEngine extends ExpressionVisitor {
     Relation getResult();
+    void setResult(Relation newRelation);
 }
