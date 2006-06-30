@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,60 +55,51 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
-import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
-import static org.jrdf.graph.AnyNode.ANY_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.Node;
-import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.AttributeValuePair;
-import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_BAR_VAR;
-import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkMarkedAsSerializable;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypeAndPrivate;
-import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.MockTestUtil;
 
 import java.lang.reflect.Modifier;
+import java.util.Set;
 
 /**
- * Test for attribute value pair implementation.
+ * Test for in memory tuple factory.
  *
  * @author Andrew Newman
- * @version $Id$
+ * @version $Revision:$
  */
-public class AttributeValuePairImplUnitTest extends TestCase {
-    private static final String ATTRIBUTE_NAME = "attribute";
-    private static final String VALUE_NAME = "value";
-
-    public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_1 =
-        new AttributeValuePairImpl(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
-    public static final AttributeValuePair TEST_ATTRIBUTE_VALUE_2 =
-        new AttributeValuePairImpl(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
+public class TupleFactoryImplUnitTest extends TestCase {
+    private static final Class[] CONSTRUCTOR_TYPES = { AttributeValuePairComparator.class };
+    private static final String[] CONSTRUCTOR_NAMES = new String[] {"attributeValuePairComparator"};
+    private static final AttributeValuePairComparator AVP_COMPARATOR =
+            MockTestUtil.createMock(AttributeValuePairComparator.class);
+    @SuppressWarnings({ "unchecked" })
+    private static final Set<AttributeValuePair> AVP = MockTestUtil.createMock(Set.class);
 
     public void testClassProperties() {
-        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
-        checkImplementationOfInterfaceAndFinal(AttributeValuePair.class, AttributeValuePairImpl.class);
-        checkMarkedAsSerializable(AttributeValuePair.class);
-        checkConstructor(AttributeValuePairImpl.class, Modifier.PUBLIC, Attribute.class, Node.class);
-        checkFieldIsOfTypeAndPrivate(ATTRIBUTE_NAME, AttributeValuePairImpl.class, Attribute.class);
-        checkFieldIsOfTypeAndPrivate(VALUE_NAME, AttributeValuePairImpl.class, Node.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TupleFactory.class, TupleFactoryImpl.class);
+        ClassPropertiesTestUtil.checkConstructor(TupleFactoryImpl.class, Modifier.PUBLIC,
+                CONSTRUCTOR_TYPES);
     }
 
-    public void testConstructor() {
-        checkStandardConstructor(TEST_ATTRIBUTE_FOO_POS, ANY_NODE);
-        checkStandardConstructor(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
+    public void testConstructorWithNulls() {
+        ArgumentTestUtil.checkConstructNullAssertion(TupleFactoryImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
+        ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsFinal(TupleFactoryImpl.class, CONSTRUCTOR_TYPES,
+                CONSTRUCTOR_NAMES);
     }
 
-    private void checkStandardConstructor(Attribute attributeName, Node node) {
-        AttributeValuePair attributeValuePair = new AttributeValuePairImpl(attributeName, node);
-        checkFieldValue(attributeValuePair, ATTRIBUTE_NAME, attributeName);
-        checkFieldValue(attributeValuePair, VALUE_NAME, node);
-        assertEquals(attributeName, attributeValuePair.getAttribute());
-        assertEquals(node, attributeValuePair.getValue());
+    public void testGetTuple() {
+        TupleFactory tupleFactory = new TupleFactoryImpl(AVP_COMPARATOR);
+        Tuple tuple = tupleFactory.getTuple(AVP);
+        assertSame(AVP, tuple.getAttributeValues());
+        assertTrue(tuple instanceof TupleImpl);
     }
 }
