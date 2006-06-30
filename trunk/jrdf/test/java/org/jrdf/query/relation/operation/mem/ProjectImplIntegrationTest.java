@@ -89,6 +89,19 @@ public class ProjectImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Project PROJECT = FACTORY.getNewProject();
 
+    public void testRemoveNothing() {
+        Set<Tuple> tuple = createTestTuples();
+
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
+        resultTuple.addAll(tmpTuple);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO3_OBJECT_R4);
+        resultTuple.addAll(tmpTuple);
+
+        Set<Attribute> remove = new HashSet<Attribute>();
+        checkExcludeProject(remove, createRelation(tuple), createRelation(resultTuple));
+    }
+
     public void testRemoveSubject() {
         Set<Tuple> tuple = createTestTuples();
 
