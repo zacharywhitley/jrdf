@@ -104,13 +104,12 @@ public class ProjectImpl implements Project {
 
     private Relation project(Relation relation, Set<Attribute> newHeading) {
         Set<Tuple> newTuples = new HashSet<Tuple>();
-        RelationImpl newRelation = new RelationImpl(newTuples, attributeComparator, tupleComparator);
         Set<Tuple> tuples = relation.getTuples();
         for (Tuple tuple : tuples) {
             TupleImpl newTuple = createNewTuples(tuple, newHeading);
             newTuples.add(newTuple);
         }
-        return newRelation;
+        return new RelationImpl(newTuples, attributeComparator, tupleComparator);
     }
 
     private TupleImpl createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
