@@ -62,6 +62,7 @@ import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.Join;
@@ -78,7 +79,7 @@ import java.util.SortedSet;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class NaiveQueryEngineImpl implements QueryEngine {
+public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements QueryEngine {
     private Restrict restrict;
     private Relation result;
     private Join join;

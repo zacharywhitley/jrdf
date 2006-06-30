@@ -70,7 +70,9 @@ import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APatternElementsList;
 import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.node.Node;
+import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 
 import java.util.SortedSet;
 
@@ -108,11 +110,23 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
         return expression;
     }
 
+    @Override
+    public void caseAWildcardSelectClause(AWildcardSelectClause node) {
+        super.caseAWildcardSelectClause(node);
+    }
+
+    @Override
+    public void caseAVariableListSelectClause(AVariableListSelectClause node) {
+        super.caseAVariableListSelectClause(node);
+    }
+
+    @Override
     public void caseATriple(ATriple tripleNode) {
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 
+    @Override
     public void caseAPatternElementsList(APatternElementsList node) {
         if (node.getPatternElementsListTail() != null)  {
             Expression<ExpressionVisitor> lhs = getExpression(node.getPatternElement());

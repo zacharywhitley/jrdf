@@ -91,7 +91,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     // FIXME TJA: Triangulate on expression expression.
     // FIXME TJA: Write failing test for non-wildcard projection lists.
     // FIXME TJA: Write tests to force trimming of query string.
-    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Variable.ALL_VARIABLES is the empty list.
+    // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Projection.ALL_VARIABLES is the empty list.
 
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();

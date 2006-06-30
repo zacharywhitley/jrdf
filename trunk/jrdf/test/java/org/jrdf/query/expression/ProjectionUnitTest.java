@@ -58,14 +58,22 @@
 
 package org.jrdf.query.expression;
 
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+
 /**
- * Visits the various expression objects.  Can be used to execute or optimize (transform) expressions.
+ * Projection test case.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface ExpressionVisitor {
-    <V extends ExpressionVisitor> void visitProjection(Projection<V> projection);
-    <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint);
-    <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction);
+public class ProjectionUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Expression.class, Projection.class);
+        ClassPropertiesTestUtil.checkInstanceImplementsInterface(Serializable.class, Projection.class);
+        ClassPropertiesTestUtil.checkConstructor(Projection.class, Modifier.PUBLIC);
+    }
 }
