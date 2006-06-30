@@ -177,6 +177,7 @@ public class JoinImplIntegrationTest extends TestCase {
         checkRelation(RelationDUM.RELATION_DUM, Collections.singleton(RelationDUM.RELATION_DUM));
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void testCartesianProduct() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
@@ -207,6 +208,7 @@ public class JoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void testNaturalJoin() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
@@ -225,6 +227,7 @@ public class JoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(tuple1, tuple2, tuple3, tuple4), createRelation(resultTuple));
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void testNaturalJoin3() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
@@ -241,6 +244,7 @@ public class JoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(tuple1, tuple2), relation);
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void testNaturalJoin4() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
         Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
