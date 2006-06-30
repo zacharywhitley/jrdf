@@ -59,14 +59,12 @@
 package org.jrdf.query.execute;
 
 import junit.framework.TestCase;
-import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.MockTestUtil;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -78,13 +76,11 @@ import java.net.URI;
  * @version $Revision$
  */
 public final class NaiveQueryExecutorUnitTest extends TestCase {
-
-    private static final URI NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN;
-    private static final GraphRelationFactory GRAPH_RELATION_FACTORY =
-            MockTestUtil.createMock(GraphRelationFactory.class);
+    private static final Class[] PARAM_TYPES = new Class[] {Graph.class, URI.class,
+                QueryEngine.class, GraphRelationFactory.class};
+    private static final String[] PARAM_NAMES = new String[] { "graph", "securityDomain", "queryEngine",
+            "graphRelationFactory"};
     private MockFactory mockFactory;
-    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
-    private static final QueryEngine QUERY_ENGINE = MockTestUtil.createMock(QueryEngine.class);
 
     public void setUp() {
         mockFactory = new MockFactory();
@@ -92,33 +88,11 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterface(JrdfQueryExecutor.class, NaiveQueryExecutor.class);
-        ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, Graph.class, URI.class,
-                QueryEngine.class, GraphRelationFactory.class);
+        ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, PARAM_TYPES);
     }
 
-    // TODO (AN) Replace this with an argument helper.
     public void testNullGraphConstructor() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new NaiveQueryExecutor(null, NO_SECURITY_DOMAIN, QUERY_ENGINE, GRAPH_RELATION_FACTORY);
-            }
-        });
-    }
-
-    public void testNullSecurityDomainInConstructor() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new NaiveQueryExecutor(GRAPH, null, QUERY_ENGINE, GRAPH_RELATION_FACTORY);
-            }
-        });
-    }
-
-    public void testNullQueryEngine() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new NaiveQueryExecutor(GRAPH, NO_SECURITY_DOMAIN, null, GRAPH_RELATION_FACTORY);
-            }
-        });
+        ArgumentTestUtil.checkConstructNullAssertion(NaiveQueryExecutor.class, PARAM_TYPES, PARAM_NAMES);
     }
 
     public void testExecuteQuery() throws Exception {

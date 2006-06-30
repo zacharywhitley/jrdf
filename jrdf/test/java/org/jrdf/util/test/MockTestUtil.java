@@ -63,6 +63,7 @@ import org.easymock.classextension.IMocksControl;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 import java.net.URL;
+import java.net.URI;
 
 /**
  * Create a mock with no expectations.
@@ -102,7 +103,8 @@ public class MockTestUtil {
     }
 
     private static boolean isFinalClass(Class clazz) {
-        return (clazz.equals(URL.class) || clazz.equals(String.class));
+        return (clazz.equals(URL.class) || clazz.equals(URI.class) ||
+                clazz.equals(String.class));
     }
 
     private static Object createFinalClass(Class clazz) {

@@ -97,7 +97,7 @@ public class ExceptionTestUtil {
     }
 
     private static void checkGetMessageAndThrowable(Class<?> clazz, String message, Throwable t) {
-        ParamSpec params = new ParamSpec(new Object[] {message, t}, new Class[] {String.class, Throwable.class});
+        ParamSpec params = new ParamSpec(new Class[] {String.class, Throwable.class}, new Object[] {message, t});
         Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
         Assert.assertEquals(message, exception.getMessage());
         Assert.assertTrue(t == exception.getCause());
@@ -110,7 +110,7 @@ public class ExceptionTestUtil {
     }
 
     private static void checkGetThrowable(Class<?> clazz, Throwable t) {
-        ParamSpec params = new ParamSpec(new Object[] {t}, new Class[] {Throwable.class});
+        ParamSpec params = new ParamSpec(new Class[] {Throwable.class}, new Object[] {t});
         Exception exception = (Exception) ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
         Assert.assertTrue(t == exception.getCause());
     }

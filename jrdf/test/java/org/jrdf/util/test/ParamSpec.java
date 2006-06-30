@@ -75,7 +75,7 @@ public final class ParamSpec {
         setTypes(this.params);
     }
 
-    public ParamSpec(Object[] params, Class[] types) {
+    public ParamSpec(Class[] types, Object[] params) {
         if (params.length != types.length) {
             throw new IllegalArgumentException("params and types arrays must be of same length");
         }
