@@ -59,13 +59,17 @@
 package org.jrdf.query.expression;
 
 /**
- * Visits the various expression objects.  Can be used to execute or optimize (transform) expressions.
+ * Variables in a SELECT cause.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface ExpressionVisitor {
-    <V extends ExpressionVisitor> void visitProjection(Projection<V> projection);
-    <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint);
-    <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction);
+public final class Projection<V extends ExpressionVisitor> implements Expression<V> {
+
+    public Projection() {
+    }
+
+    public void accept(ExpressionVisitor v) {
+        v.visitProjection(this);
+    }
 }

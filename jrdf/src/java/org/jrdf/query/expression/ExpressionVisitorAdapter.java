@@ -66,6 +66,9 @@ package org.jrdf.query.expression;
  * @version $Revision:$
  */
 public class ExpressionVisitorAdapter implements ExpressionVisitor {
+    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
+    }
+
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
     }
 
