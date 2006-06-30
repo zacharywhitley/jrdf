@@ -69,6 +69,17 @@ import java.lang.reflect.InvocationTargetException;
 public class ArgumentTestUtil {
     private static final String PARAMETER_CANNOT_BE_NULL = " parameter cannot be null";
 
+    public static void checkConstructorSetsFieldsAndFieldsFinal(final Class<?> clazz, final Class[] paramTypes,
+            String[] parameterNames) {
+        verifyFields(clazz, paramTypes, parameterNames);
+        Object[] args = MockTestUtil.createArgs(paramTypes, -1);
+        ParamSpec spec = new ParamSpec(paramTypes, args);
+        Object obj = ReflectTestUtil.createInstanceUsingConstructor(clazz, spec);
+        for (int index = 0; index < parameterNames.length; index++) {
+            ReflectTestUtil.checkFieldValue(obj, parameterNames[index], args[index]);
+        }
+    }
+
     public static void checkConstructNullAssertion(final Class<?> clazz, final Class[] paramTypes,
             String[] parameterNames) {
         for (int index = 0; index < paramTypes.length; index++) {
@@ -123,6 +134,12 @@ public class ArgumentTestUtil {
             if (cause instanceof InvocationTargetException) {
                 throw (IllegalArgumentException) cause.getCause();
             }
+        }
+    }
+
+    private static void verifyFields(Class<?> clazz, Class[] fieldTypes, String[] fieldNames) {
+        for (int i = 0; i < fieldNames.length; i++) {
+            FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal(clazz, fieldTypes[i], fieldNames[i]);
         }
     }
 }

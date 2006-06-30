@@ -95,6 +95,10 @@ public final class ReflectTestUtil {
         setFieldValue(ref, field, fieldValue);
     }
 
+    public static Field[] getFields(Class<?> cls) {
+        return cls.getDeclaredFields();
+    }
+
     public static Field getField(Class<?> cls, String fieldName) {
         try {
             return cls.getDeclaredField(fieldName);

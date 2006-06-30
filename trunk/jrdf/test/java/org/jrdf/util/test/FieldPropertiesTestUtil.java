@@ -72,7 +72,6 @@ import java.lang.reflect.Modifier;
  * @version $Revision$
  */
 public class FieldPropertiesTestUtil {
-    // Note. This smells, can we do something else? We can iterate over getDeclaredFields() for example.
     public static boolean containsField(Class<?> cls, String fieldName) {
         try {
             cls.getDeclaredField(fieldName);
@@ -116,12 +115,12 @@ public class FieldPropertiesTestUtil {
             expectedType.getSimpleName(), isFieldOfType(cls, fieldName, expectedType));
     }
 
-    public static void checkFieldIsOfTypeAndPrivate(Class<?> cls, String fieldName, Class<?> expectedType) {
+    public static void checkFieldIsOfTypeAndPrivate(String fieldName, Class<?> cls, Class<?> expectedType) {
         checkFieldIsOfType(cls, fieldName, expectedType);
         checkFieldPrivate(cls, fieldName);
     }
 
-    public static void checkFieldIsOfTypePrivateAndFinal(Class<?> cls, String fieldName, Class<?> expectedType) {
+    public static void checkFieldIsOfTypePrivateAndFinal(Class<?> cls, Class<?> expectedType, String fieldName) {
         checkFieldIsOfType(cls, fieldName, expectedType);
         checkFieldPrivate(cls, fieldName);
         checkFieldFinal(cls, fieldName);

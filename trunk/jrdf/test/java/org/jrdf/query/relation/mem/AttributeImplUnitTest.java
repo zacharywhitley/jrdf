@@ -97,8 +97,8 @@ public class AttributeImplUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
         checkMarkedAsSerializable(Attribute.class);
         checkConstructor(AttributeImpl.class, Modifier.PUBLIC, AttributeName.class, Type.class);
-        checkFieldIsOfTypeAndPrivate(AttributeImpl.class, ATTRIBUTE_NAME, AttributeName.class);
-        checkFieldIsOfTypeAndPrivate(AttributeImpl.class, TYPE_NAME, Type.class);
+        checkFieldIsOfTypeAndPrivate(ATTRIBUTE_NAME, AttributeImpl.class, AttributeName.class);
+        checkFieldIsOfTypeAndPrivate(TYPE_NAME, AttributeImpl.class, Type.class);
     }
 
     public void testConstructor() {
