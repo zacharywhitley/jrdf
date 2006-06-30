@@ -72,6 +72,7 @@ import org.jrdf.query.DefaultVariable;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.parser.ntriples.node.ATriple;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -122,6 +123,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(URL.class, new URLInstantiator());
         instantiators.put(URI.class, new URIInstantiator());
         instantiators.put(String.class, new StringInstantiator());
+        instantiators.put(ATriple.class, new ATripleInstantiator());
     }
 
     private static class URLInstantiator implements Instantiator {
@@ -148,6 +150,12 @@ public final class ArnoldTheInstantiator {
     private static class StringInstantiator implements Instantiator {
         public Object instantiate() {
             return "Hello";
+        }
+    }
+
+    private static class ATripleInstantiator implements Instantiator {
+        public Object instantiate() {
+            return new ATriple();
         }
     }
 }

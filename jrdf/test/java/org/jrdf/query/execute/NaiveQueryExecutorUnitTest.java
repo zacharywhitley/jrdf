@@ -91,7 +91,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkConstructor(NaiveQueryExecutor.class, Modifier.PUBLIC, PARAM_TYPES);
     }
 
-    public void testNullGraphConstructor() {
+    public void testNullsInConstructor() {
         ArgumentTestUtil.checkConstructNullAssertion(NaiveQueryExecutor.class, PARAM_TYPES, PARAM_NAMES);
     }
 

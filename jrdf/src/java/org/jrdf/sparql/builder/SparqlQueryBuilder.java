@@ -76,6 +76,7 @@ public final class SparqlQueryBuilder implements QueryBuilder {
     private SparqlParser parser;
 
     public SparqlQueryBuilder(SparqlParser parser) {
+        ParameterUtil.checkNotNull("parser", parser);
         this.parser = parser;
     }
 

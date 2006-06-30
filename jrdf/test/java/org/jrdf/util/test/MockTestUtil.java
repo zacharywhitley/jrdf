@@ -61,6 +61,7 @@ package org.jrdf.util.test;
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
+import org.jrdf.sparql.parser.node.ATriple;
 
 import java.net.URL;
 import java.net.URI;
@@ -104,7 +105,7 @@ public class MockTestUtil {
 
     private static boolean isFinalClass(Class clazz) {
         return (clazz.equals(URL.class) || clazz.equals(URI.class) ||
-                clazz.equals(String.class));
+                clazz.equals(String.class)) || clazz.equals(ATriple.class);
     }
 
     private static Object createFinalClass(Class clazz) {

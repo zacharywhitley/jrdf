@@ -66,20 +66,20 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.parser.SableCcNodeTestUtil;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
+import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_SUBJECT;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
-import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
 
 import java.lang.reflect.Modifier;
 import java.util.SortedSet;
@@ -103,11 +103,11 @@ public final class TripleBuilderUnitTest extends TestCase {
     private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL =
             new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
-    private static final String NULL_TRIPLE_NODE = "tripleNode parameter cannot be null";
-    private static final String NULL_GRAPH = "graph parameter cannot be null";
     private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
     private TripleBuilder tripleBuilder;
+    private static final String[] METHOD_PARAM_NAMES = {"tripleNode", "graph"};
+    private static final Class[] METHOD_PARAM_TYPES = {ATriple.class, Graph.class};
+    private static final ParameterDefinition PARAMS = new ParameterDefinition(METHOD_PARAM_NAMES, METHOD_PARAM_TYPES);
 
     public void setUp() throws Exception {
         super.setUp();
@@ -115,11 +115,13 @@ public final class TripleBuilderUnitTest extends TestCase {
     }
 
     public void testClassProperties() {
-        // FIXME TJA: Reenable this if we figure out how to do it generically.
-        //ClassPropertiesTestUtil.checkExtensionOf(LocalObjectBuilder.class, TripleBuilder.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilderImpl.class);
         ClassPropertiesTestUtil.checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC,
                 SortedAttributeValuePairHelper.class, Long.TYPE);
+    }
+
+    public void testBuildNullParameters() {
+        ArgumentTestUtil.checkMethodNullAssertions(PARAMS, tripleBuilder, "build");
     }
 
     public void testBuildTripleFromParserNode() {
@@ -136,22 +138,6 @@ public final class TripleBuilderUnitTest extends TestCase {
 
     public void testBuildTripleForParserNode4() {
         checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL);
-    }
-
-    public void testNullTripleNodeThrowsException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, NULL_TRIPLE_NODE, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                tripleBuilder.build(null, GRAPH);
-            }
-        });
-    }
-
-    public void testNullGraphThrowsException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, NULL_GRAPH, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                tripleBuilder.build(new ATriple(), null);
-            }
-        });
     }
 
     private void checkBuiltTripleWithVariable(Triple expectedTriple, VariableTripleSpec actualTriple) {
