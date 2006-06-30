@@ -77,7 +77,7 @@ public final class TupleImpl extends Primordial implements Tuple {
     private Set<AttributeValuePair> attributeValues;
     private final AttributeValuePairComparator attributeValuePairComparator;
 
-    public TupleImpl(Set<AttributeValuePair> attributeValues,
+    TupleImpl(Set<AttributeValuePair> attributeValues,
                      AttributeValuePairComparator attributeValuePairComparator) {
         checkNotNull("attributeValues", attributeValues);
         checkNotNull("attributeValuePairComparator", attributeValuePairComparator);

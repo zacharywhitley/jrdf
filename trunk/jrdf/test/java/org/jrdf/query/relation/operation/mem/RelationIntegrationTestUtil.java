@@ -58,34 +58,35 @@
 
 package org.jrdf.query.relation.operation.mem;
 
+import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
-import org.jrdf.query.relation.mem.TupleImpl;
 import org.jrdf.query.relation.mem.RelationImpl;
+import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
-import org.jrdf.JRDFFactory;
-import org.jrdf.TestJRDFFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Class description goes here.
@@ -164,7 +165,8 @@ public class RelationIntegrationTestUtil {
 
         TupleComparator tupleComparator = FACTORY.getNewTupleComparator();
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
-        Tuple t = new TupleImpl(values, FACTORY.getNewAttributeValuePairComparator());
+        TupleFactory tf = new TupleFactoryImpl(FACTORY.getNewAttributeValuePairComparator());
+        Tuple t = tf.getTuple(values);
         tuples.add(t);
         return tuples;
     }

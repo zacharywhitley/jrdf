@@ -65,13 +65,12 @@ package org.jrdf.query.relation.operation.mem;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.mem.RelationImpl;
-import org.jrdf.query.relation.mem.TupleImpl;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -88,18 +87,18 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
+    private final TupleFactory tupleFactory;
     private final TupleComparator tupleComparator;
     private final AttributeComparator attributeComparator;
-    private AttributeValuePairComparator attributeValuePairComparator;
 
     /**
      * Cannot create join.
      */
-    public JoinImpl(AttributeComparator attributeComparator, AttributeValuePairComparator attributeValuePairComparator,
+    public JoinImpl(TupleFactory tupleFactory, AttributeComparator attributeComparator,
             TupleComparator tupleComparator) {
-        this.tupleComparator = tupleComparator;
+        this.tupleFactory = tupleFactory;
         this.attributeComparator = attributeComparator;
-        this.attributeValuePairComparator = attributeValuePairComparator;
+        this.tupleComparator = tupleComparator;
     }
 
     public Relation join(Set<Relation> relations) {
@@ -192,7 +191,7 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
 
         // Only add results if they are the same size
         if (resultantAttributeValues.size() == headings.size()) {
-            Tuple t = new TupleImpl(resultantAttributeValues, attributeValuePairComparator);
+            Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
     }
