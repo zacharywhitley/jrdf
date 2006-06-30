@@ -58,10 +58,9 @@
 package org.jrdf.query.relation.mem;
 
 import au.net.netstorm.boost.primordial.Primordial;
-import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
 import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
@@ -71,17 +70,18 @@ import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegr
 import static org.jrdf.query.relation.mem.AttributeValuePairComparatorImplIntegrationTest.TEST_AVP_4;
 import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_1;
 import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_2;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.isFieldOfType;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Test for tuple implementation.
@@ -92,6 +92,8 @@ import java.util.List;
 public class TupleImplUnitTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairComparator comparator = FACTORY.getNewAttributeValuePairComparator();
+    private static final Class[] CONSTRUCTOR_TYPES = { Set.class, AttributeValuePairComparator.class };
+    private static final String[] CONSTRUCTOR_NAMES = { "attributeValues", "attributeValuePairComparator" };
 
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_1 = {TEST_ATTRIBUTE_VALUE_1};
     private static final AttributeValuePair[] TEST_ATTRIBUTE_VALUE_PAIRS_2 = {TEST_ATTRIBUTE_VALUE_1,
@@ -126,14 +128,14 @@ public class TupleImplUnitTest extends TestCase {
     public static final Tuple TEST_TUPLES_3_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_3_1, comparator);
 
     public void testClassProperties() {
-        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
+        checkExtensionOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Tuple.class, TupleImpl.class);
-        checkConstructor(TupleImpl.class, Modifier.PUBLIC, Set.class, AttributeValuePairComparator.class);
-        checkFieldPrivate(TupleImpl.class, TUPLES_NAME);
-        isFieldOfType(TupleImpl.class, TUPLES_NAME, Set.class);
     }
 
     public void testConstructor() {
+        checkConstructor(TupleImpl.class, Modifier.PUBLIC, CONSTRUCTOR_TYPES);
+        checkConstructNullAssertion(TupleImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
+        checkConstructorSetsFieldsAndFieldsPrivate(TupleImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
         checkStandardConstructor(ATTRIBUTE_VALUE_SET_1);
         checkStandardConstructor(ATTRIBUTE_VALUE_SET_2);
     }

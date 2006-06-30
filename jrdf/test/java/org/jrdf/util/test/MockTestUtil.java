@@ -65,6 +65,7 @@ import org.jrdf.sparql.parser.node.ATriple;
 
 import java.net.URL;
 import java.net.URI;
+import java.util.Set;
 
 /**
  * Create a mock with no expectations.
@@ -77,8 +78,8 @@ public class MockTestUtil {
 
     @SuppressWarnings({ "unchecked" })
     public static <T>T createMock(Class<T> clazz) {
-        if (isFinalClass(clazz)) {
-            return (T) createFinalClass(clazz);
+        if (isStubClass(clazz)) {
+            return (T) createStubClass(clazz);
         }
 
         IMocksControl control = EasyMock.createControl();
@@ -103,12 +104,13 @@ public class MockTestUtil {
         return objects;
     }
 
-    private static boolean isFinalClass(Class clazz) {
+    private static boolean isStubClass(Class clazz) {
         return (clazz.equals(URL.class) || clazz.equals(URI.class) ||
-                clazz.equals(String.class)) || clazz.equals(ATriple.class);
+                clazz.equals(String.class)) || clazz.equals(ATriple.class) ||
+                clazz.equals(Set.class);
     }
 
-    private static Object createFinalClass(Class clazz) {
+    private static Object createStubClass(Class clazz) {
         return INSTANTIATOR.instantiate(clazz);
     }
 }

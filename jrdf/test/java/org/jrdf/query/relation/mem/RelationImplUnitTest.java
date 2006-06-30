@@ -60,8 +60,8 @@ package org.jrdf.query.relation.mem;
 import au.net.netstorm.boost.primordial.Primordial;
 import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
 import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -71,6 +71,8 @@ import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
@@ -97,6 +99,9 @@ public class RelationImplUnitTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
+    private static final Class[] PARAM_TYPES = { Set.class, AttributeComparator.class,
+            TupleComparator.class };
+    private static final String[] PARAM_NAMES = { "tuples", "attributeComparator", "tupleComparator" };
 
     public static final Relation TEST_RELATION_1 = createRelation(createTuple(TUPLES_1));
     public static final Relation TEST_RELATION_2 = createRelation(createTuple(TUPLES_2));
@@ -105,13 +110,14 @@ public class RelationImplUnitTest extends TestCase {
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
-        // TODO (AN) Test drive type of set passed in.  It can be done!
-        checkConstructor(RelationImpl.class, Modifier.PUBLIC, Set.class, AttributeComparator.class,
-            TupleComparator.class);
+        checkConstructor(RelationImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+    }
+
+    public void testConstructorAndFields() {
+        checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES, PARAM_NAMES);
+        checkConstructorSetsFieldsAndFieldsPrivate(RelationImpl.class, PARAM_TYPES, PARAM_NAMES);
         checkFieldPrivate(RelationImpl.class, HEADING_NAME);
-        isFieldOfType(RelationImpl.class, HEADING_NAME, Set.class);
-        checkFieldPrivate(RelationImpl.class, TUPLES_NAME);
-        isFieldOfType(RelationImpl.class, TUPLES_NAME, Set.class);
+        isFieldOfType(RelationImpl.class, Set.class, HEADING_NAME);
     }
 
     public void testConstructor() {
