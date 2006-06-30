@@ -120,34 +120,40 @@ public class RelationIntegrationTestUtil {
     public static final URIReference RESOURCE_4 = NodeTestUtil.createResource(RDF.LI);
     public static final URIReference RESOURCE_5 = NodeTestUtil.createResource(RDF.SUBJECT);
     public static final URIReference RESOURCE_6 = NodeTestUtil.createResource(RDF.PREDICATE);
+
     public static final AttributeValuePair POS_FOO1_SUBJECT_R1 =
             new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_1);
     public static final AttributeValuePair POS_FOO1_SUBJECT_R3 =
             new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_3);
+
     public static final AttributeValuePair POS_FOO2_PREDICATE_R2 =
             new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_2);
     public static final AttributeValuePair POS_FOO2_PREDICATE_R4 =
             new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_4);
+    public static final AttributeValuePair POS_FOO4_PREDICATE_R2 =
+            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_2);
+    public static final AttributeValuePair POS_FOO4_PREDICATE_R3 =
+            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_3);
+    public static final AttributeValuePair POS_FOO4_PREDICATE_R5 =
+            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_5);
+    public static final AttributeValuePair POS_FOO5_OBJECT_R6 =
+            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_6);
+
     public static final AttributeValuePair POS_FOO3_OBJECT_R3 =
             new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_3);
     public static final AttributeValuePair POS_FOO3_OBJECT_R4 =
             new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
+    public static final AttributeValuePair POS_FOO3_OBJECT_R5 =
+            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
+    public static final AttributeValuePair POS_FOO5_OBJECT_R4 =
+            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
+
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
             new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR2_PREDICATE_R4 =
             new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
     public static final AttributeValuePair POS_BAR3_OBJECT_R1 =
             new AttributeValuePairImpl(POS_BAR3_OBJECT, RESOURCE_1);
-    public static final AttributeValuePair POS_FOO4_PREDICATE_R2 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_2);
-    public static final AttributeValuePair POS_FOO4_PREDICATE_R3 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_3);
-    public static final AttributeValuePair POS_FOO5_OBJECT_R4 =
-            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
-    public static final AttributeValuePair POS_FOO4_PREDICATE_R5 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_5);
-    public static final AttributeValuePair POS_FOO5_OBJECT_R6 =
-            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_6);
 
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();

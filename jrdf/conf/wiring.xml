@@ -86,6 +86,18 @@
         </constructor-arg>
     </bean>
 
+    <bean name="project" class="org.jrdf.query.relation.operation.mem.ProjectImpl">
+        <constructor-arg>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
+    </bean>
+
     <!-- Query Classes -->
     <bean name="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
         <constructor-arg type="java.net.URL">

@@ -59,6 +59,25 @@
 package org.jrdf.query.relation.operation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.operation.Project;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Tests the integration between project and other classes such as relations, attribute value pairs, etc.
@@ -67,6 +86,75 @@ import junit.framework.TestCase;
  * @version $Revision:$
  */
 public class ProjectImplIntegrationTest extends TestCase {
-    public void testFoo() {
+    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final Project PROJECT = FACTORY.getNewProject();
+
+    public void testRemoveSubject() {
+        Set<Tuple> tuple = createTestTuples();
+
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tmpTuple = createASingleTuple(POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
+        resultTuple.addAll(tmpTuple);
+        tmpTuple = createASingleTuple(POS_FOO4_PREDICATE_R5, POS_FOO3_OBJECT_R4);
+        resultTuple.addAll(tmpTuple);
+
+        Set<Attribute> remove = new HashSet<Attribute>();
+        remove.add(VAR_BAR1_SUBJECT);
+        checkExcludeProject(remove, createRelation(tuple), createRelation(resultTuple));
+    }
+
+    public void testRemovePredicate() {
+        Set<Tuple> tuple = createTestTuples();
+
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO3_OBJECT_R4);
+        resultTuple.addAll(tmpTuple);
+
+        Set<Attribute> remove = new HashSet<Attribute>();
+        remove.add(POS_FOO4_PREDICATE);
+        checkExcludeProject(remove, createRelation(tuple), createRelation(resultTuple));
+    }
+
+    public void testKeepSubject() {
+        Set<Tuple> tuple = createTestTuples();
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3);
+        Set<Attribute> keep = new HashSet<Attribute>();
+        keep.add(VAR_BAR1_SUBJECT);
+        checkIncludeProject(keep, createRelation(tuple), createRelation(resultTuple));
+    }
+
+    public void testKeepSubjectPredicate() {
+        Set<Tuple> tuple = createTestTuples();
+
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3);
+        resultTuple.addAll(tmpTuple);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5);
+        resultTuple.addAll(tmpTuple);
+
+        Set<Attribute> keep = new HashSet<Attribute>();
+        keep.add(VAR_BAR1_SUBJECT);
+        keep.add(POS_FOO4_PREDICATE);
+        checkIncludeProject(keep, createRelation(tuple), createRelation(resultTuple));
+    }
+
+    private Set<Tuple> createTestTuples() {
+        Set<Tuple> tuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
+        tuple.addAll(tmpTuple);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO3_OBJECT_R4);
+        tuple.addAll(tmpTuple);
+        return tuple;
+    }
+
+    private void checkExcludeProject(Set<Attribute> remove, Relation relation, Relation expectedRelation) {
+        Relation actualRelation = PROJECT.exclude(relation, remove);
+        assertEquals(expectedRelation, actualRelation);
+    }
+
+    private void checkIncludeProject(Set<Attribute> keep, Relation relation, Relation expectedRelation) {
+        Relation actualRelation = PROJECT.include(relation, keep);
+        System.err.println("Actual: " + actualRelation);
+        assertEquals(expectedRelation, actualRelation);
     }
 }

@@ -68,6 +68,7 @@ import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Join;
+import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.builder.TripleBuilder;
@@ -129,6 +130,10 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public QueryBuilder getNewQueryBuilder() {
         return FACTORY.getNewQueryBuilder();
+    }
+
+    public Project getNewProject() {
+        return FACTORY.getNewProject();
     }
 
     public SparqlParser getNewSparqlParser() {
