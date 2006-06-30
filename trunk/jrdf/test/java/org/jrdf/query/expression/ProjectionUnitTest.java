@@ -60,9 +60,13 @@ package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.query.relation.Attribute;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
+import java.util.Set;
 
 /**
  * Projection test case.
@@ -71,9 +75,23 @@ import java.lang.reflect.Modifier;
  * @version $Revision:$
  */
 public class ProjectionUnitTest extends TestCase {
+    private static final Class[] PARAM_TYPES = {Set.class};
+    private static final String[] PARAMETER_NAMES = { "attributes" };
+
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Expression.class, Projection.class);
         ClassPropertiesTestUtil.checkInstanceImplementsInterface(Serializable.class, Projection.class);
-        ClassPropertiesTestUtil.checkConstructor(Projection.class, Modifier.PUBLIC);
+        ClassPropertiesTestUtil.checkConstructor(Projection.class, Modifier.PUBLIC, PARAM_TYPES);
+    }
+
+    public void testNullToConstructorThrowsException() {
+        ArgumentTestUtil.checkConstructNullAssertion(Projection.class, PARAM_TYPES, PARAMETER_NAMES);
+    }
+
+    @SuppressWarnings( {"unchecked"} )
+    public void testGetAttributes() {
+        Set<Attribute> expectedSet = MockTestUtil.createMock(Set.class);
+        Projection projection = new Projection(expectedSet);
+        assertSame(expectedSet, projection.getAttributes());
     }
 }
