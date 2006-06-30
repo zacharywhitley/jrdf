@@ -64,17 +64,17 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_1;
 import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_2;
-import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ArgumentTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkInstanceImplementsInterface;
 import org.jrdf.util.test.SerializationTestUtil;
 
+import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.io.Serializable;
 
 /**
  * Unit test for {@link Constraint}.
@@ -89,6 +89,8 @@ public final class ConstraintUnitTest extends TestCase {
     private static final Constraint CONSTRAINT_TRIPLE_2 = new Constraint<ExpressionVisitor>(AVP_2);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairComparator AVP_COMPARATOR = FACTORY.getNewAttributeValuePairComparator();
+    private static final Class[] PARAM_TYPES = new Class[] {SortedSet.class};
+    private static final String[] PARAMETER_NAMES = new String[] {"avp"};
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Expression.class, Constraint.class);
@@ -101,11 +103,7 @@ public final class ConstraintUnitTest extends TestCase {
     }
 
     public void testNullToConstructorThrowsException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                new Constraint<ExpressionVisitor>(null);
-            }
-        });
+        ArgumentTestUtil.checkConstructNullAssertion(Constraint.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 
     public void getAvp() {

@@ -186,6 +186,7 @@ public class JoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void testCartesianProduct2() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4);
@@ -261,6 +262,7 @@ public class JoinImplIntegrationTest extends TestCase {
         checkJoin(createRelation(tuple1, tuple2), relation);
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void testNaturalJoin5() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);

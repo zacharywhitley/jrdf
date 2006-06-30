@@ -59,8 +59,8 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.util.EqualsUtil;
 import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.util.EqualsUtil;
 
 import java.io.Serializable;
 import java.util.SortedSet;
@@ -85,6 +85,10 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
         return avp;
     }
 
+    public void accept(V v) {
+        v.visitConstraint(this);
+    }
+
     public boolean equals(Object obj) {
         if (EqualsUtil.isNull(obj)) {
             return false;
@@ -96,10 +100,6 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
             return false;
         }
         return determineEqualityFromFields(this, (Constraint) obj);
-    }
-
-    public void accept(V v) {
-        v.visitConstraint(this);
     }
 
     public int hashCode() {

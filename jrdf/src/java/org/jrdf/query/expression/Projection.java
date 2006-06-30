@@ -58,6 +58,12 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.util.EqualsUtil;
+
+import java.util.Set;
+
 /**
  * Variables in a SELECT cause.
  *
@@ -65,11 +71,47 @@ package org.jrdf.query.expression;
  * @version $Revision:$
  */
 public final class Projection<V extends ExpressionVisitor> implements Expression<V> {
+    private static final int DUMMY_HASHCODE = 47;
+    private final Set<Attribute> attributes;
 
-    public Projection() {
+    public Projection(Set<Attribute> attributes) {
+        ParameterUtil.checkNotNull("attributes", attributes);
+        this.attributes = attributes;
     }
 
     public void accept(ExpressionVisitor v) {
         v.visitProjection(this);
+    }
+
+    public Set<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (EqualsUtil.differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields(this, (Projection) obj);
+    }
+
+    public int hashCode() {
+        return DUMMY_HASHCODE;
+    }
+
+    /**
+     * Delegates to <code>getAvp().toString()</code>.
+     */
+    public String toString() {
+        return attributes.toString();
+    }
+
+    private boolean determineEqualityFromFields(Projection o1, Projection o2) {
+        return o1.getAttributes().equals(o2.getAttributes());
     }
 }
