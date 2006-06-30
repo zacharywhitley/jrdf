@@ -58,14 +58,11 @@
 
 package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.mem.RelationImpl;
 import org.jrdf.query.relation.operation.Restrict;
 
 import java.util.Set;
@@ -78,17 +75,12 @@ import java.util.SortedSet;
  * @version $Revision:$
  */
 public class RestrictImpl implements Restrict {
-    private final AttributeValuePairComparator avpComparator;
-    private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
+    private final RelationFactory relationFactory;
 
     // TODO (AN) These comparators should be injected into a factory for Tuples rather than having them exposed to
     // all objects that need to create various tuples, relations, etc.
-    public RestrictImpl(AttributeComparator attributeComparator, AttributeValuePairComparator avpComparator,
-            TupleComparator tupleComparator) {
-        this.attributeComparator = attributeComparator;
-        this.avpComparator = avpComparator;
-        this.tupleComparator = tupleComparator;
+    public RestrictImpl(RelationFactory relationFactory) {
+        this.relationFactory = relationFactory;
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
@@ -101,6 +93,6 @@ public class RestrictImpl implements Restrict {
 
     public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
         Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
-        return new RelationImpl(restrictedTuples, attributeComparator, tupleComparator);
+        return relationFactory.getRelation(restrictedTuples);
     }
 }
