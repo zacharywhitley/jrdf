@@ -61,12 +61,11 @@ package org.jrdf.query.relation.operation.mem;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationImpl;
-import org.jrdf.query.relation.mem.TupleImpl;
 import org.jrdf.query.relation.operation.Project;
 
 import java.util.HashSet;
@@ -79,13 +78,13 @@ import java.util.Set;
  * @version $Revision:$
  */
 public class ProjectImpl implements Project {
-    private final AttributeValuePairComparator attributeValuePairComparator;
+    private final TupleFactory tupleFactory;
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
 
-    public ProjectImpl(AttributeValuePairComparator attributeValuePairComparator,
-            AttributeComparator attributeComparator, TupleComparator tupleComparator) {
-        this.attributeValuePairComparator = attributeValuePairComparator;
+    public ProjectImpl(TupleFactory tupleFactory, AttributeComparator attributeComparator,
+            TupleComparator tupleComparator) {
+        this.tupleFactory = tupleFactory;
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
     }
@@ -116,13 +115,13 @@ public class ProjectImpl implements Project {
         Set<Tuple> newTuples = new HashSet<Tuple>();
         Set<Tuple> tuples = relation.getTuples();
         for (Tuple tuple : tuples) {
-            TupleImpl newTuple = createNewTuples(tuple, newHeading);
+            Tuple newTuple = createNewTuples(tuple, newHeading);
             newTuples.add(newTuple);
         }
         return new RelationImpl(newTuples, attributeComparator, tupleComparator);
     }
 
-    private TupleImpl createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
+    private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
         Set<AttributeValuePair> avps = tuple.getAttributeValues();
         Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
         for (AttributeValuePair avp : avps) {
@@ -130,6 +129,6 @@ public class ProjectImpl implements Project {
                 newAvps.add(avp);
             }
         }
-        return new TupleImpl(newAvps, attributeValuePairComparator);
+        return tupleFactory.getTuple(newAvps);
     }
 }

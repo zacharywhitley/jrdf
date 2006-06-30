@@ -77,7 +77,6 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -133,7 +132,7 @@ public class TupleImplUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        checkConstructor(TupleImpl.class, Modifier.PUBLIC, CONSTRUCTOR_TYPES);
+        checkConstructor(TupleImpl.class, 0, CONSTRUCTOR_TYPES);
         checkConstructNullAssertion(TupleImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
         checkConstructorSetsFieldsAndFieldsPrivate(TupleImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
         checkStandardConstructor(ATTRIBUTE_VALUE_SET_1);

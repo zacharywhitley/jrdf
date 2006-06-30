@@ -81,7 +81,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public final class JRDFFactoryImpl implements JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
     private static ClassPathXmlApplicationContext beanFactory =
-        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+            new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
     public void refresh() {
         beanFactory.refresh();
