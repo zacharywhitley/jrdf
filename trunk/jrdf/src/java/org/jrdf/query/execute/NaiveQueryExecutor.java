@@ -67,20 +67,12 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
 
 /**
- * A naive query executor that uses an iterator-based approach to finding triples.
- * <p>This is an initial attempt at a very basic JRDF query layer, before the real one gets written.</p>
- * <p>The basic algorithm is:</p>
- * <ul>
- * <li>Get all triples from the graph;</li>
- * <li>Iterate over them and match the query constraints against them.</li>
- * </ul>
+ * Simply takes a query and then executes it by calling the QueryEngine - there are no extra steps.
  *
  * @author Tom Adams
  * @version $Id: NaiveQueryExecutor.java 582 2006-06-18 07:34:10Z newmana $
@@ -90,11 +82,9 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
     // TODO: Filter out the variables in the projection list.
 
     private Graph graph;
-    private final Restrict restrict;
-    private final Join join;
-    private GraphRelationFactory graphRelationFactory;
-    private Relation result;
     private final URI securityDomain;
+    private final QueryEngine queryEngine;
+    private final GraphRelationFactory graphRelationFactory;
 
     /**
      * Creates executor to execute queries.
@@ -102,35 +92,32 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      * @param graph          The graph to communicate with.
      * @param securityDomain The security domain of the graph.
      */
-    public NaiveQueryExecutor(Graph graph, URI securityDomain, Restrict restrict, Join join,
+    public NaiveQueryExecutor(Graph graph, URI securityDomain, QueryEngine queryEngine,
             GraphRelationFactory graphRelationFactory) {
         ParameterUtil.checkNotNull("graph", graph);
         ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("restrict", restrict);
+        ParameterUtil.checkNotNull("queryEngine", queryEngine);
         ParameterUtil.checkNotNull("graphRelationFactory", graphRelationFactory);
         this.graph = graph;
         this.securityDomain = securityDomain;
-        this.restrict = restrict;
-        this.join = join;
+        this.queryEngine = queryEngine;
         this.graphRelationFactory = graphRelationFactory;
-        result = graphRelationFactory.createRelation(graph);
     }
 
     /**
      * {@inheritDoc}
      */
     public Relation executeQuery(Query query) {
+        queryEngine.setResult(graphRelationFactory.createRelation(graph));
         Expression<ExpressionVisitor> expression = query.getConstraintExpression();
-        NaiveQueryEngineImpl naiveQueryEngine = new NaiveQueryEngineImpl(result, restrict, join);
         if (expression instanceof Constraint) {
-            naiveQueryEngine.visitConstraint((Constraint<ExpressionVisitor>) expression);
+            queryEngine.visitConstraint((Constraint<ExpressionVisitor>) expression);
         } else if (expression instanceof Conjunction) {
-            naiveQueryEngine.visitConjunction((Conjunction<ExpressionVisitor>) expression);
+            queryEngine.visitConjunction((Conjunction<ExpressionVisitor>) expression);
         } else {
             throw new RuntimeException();
         }
-        result = naiveQueryEngine.getResult();
-        return result;
+        return queryEngine.getResult();
     }
 
     /**

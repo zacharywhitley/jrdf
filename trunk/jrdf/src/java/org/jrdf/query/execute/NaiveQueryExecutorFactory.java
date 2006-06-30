@@ -62,8 +62,6 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Restrict;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -77,20 +75,18 @@ import java.net.URL;
  */
 public class NaiveQueryExecutorFactory implements JrdfQueryExecutorFactory {
     private final URL securityDomain;
-    private final Restrict restrict;
     private final GraphRelationFactory graphRelationFactory;
-    private final Join join;
+    private QueryEngine queryEngine;
 
-    public NaiveQueryExecutorFactory(URL securityDomain, Restrict restrict, Join join,
+    public NaiveQueryExecutorFactory(URL securityDomain, QueryEngine queryEngine,
             GraphRelationFactory graphRelationFactory) {
         this.securityDomain = securityDomain;
-        this.restrict = restrict;
-        this.join = join;
+        this.queryEngine = queryEngine;
         this.graphRelationFactory = graphRelationFactory;
     }
 
     public JrdfQueryExecutor getExecutor(Graph graph) {
-        return new NaiveQueryExecutor(graph, tryGetUri(), restrict, join, graphRelationFactory);
+        return new NaiveQueryExecutor(graph, tryGetUri(), queryEngine, graphRelationFactory);
     }
 
     // TODO (AN) Remove this when Spring handles a URI as a Property type.

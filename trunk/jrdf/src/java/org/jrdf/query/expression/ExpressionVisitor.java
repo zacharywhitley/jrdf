@@ -59,7 +59,7 @@
 package org.jrdf.query.expression;
 
 /**
- * A builder that always throws exceptions.
+ * Visits the various expression objects.  Can be used to execute or optimize (transform) expressions.
  *
  * @author Andrew Newman
  * @version $Revision:$

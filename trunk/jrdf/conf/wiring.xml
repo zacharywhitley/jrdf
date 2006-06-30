@@ -124,15 +124,22 @@
         </constructor-arg>
     </bean>
 
-    <bean name="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">
-        <constructor-arg type="java.net.URL">
-            <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
-        </constructor-arg>
+    <bean name="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
         <constructor-arg>
             <ref bean="restrict"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="join"/>
+        </constructor-arg>
+
+    </bean>
+
+    <bean name="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">
+        <constructor-arg type="java.net.URL">
+            <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="queryEngine"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="graphRelationFactory"/>
