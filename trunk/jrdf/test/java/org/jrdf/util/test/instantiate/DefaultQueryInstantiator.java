@@ -90,6 +90,6 @@ final class DefaultQueryInstantiator implements Instantiator {
         Constraint<ExpressionVisitor> constraint = new Constraint<ExpressionVisitor>(avp);
         Object[] params = new Object[]{Variable.ALL_VARIABLES, constraint};
         Class<?>[] types = new Class[]{List.class, Expression.class};
-        return new ParamSpec(params, types);
+        return new ParamSpec(types, params);
     }
 }

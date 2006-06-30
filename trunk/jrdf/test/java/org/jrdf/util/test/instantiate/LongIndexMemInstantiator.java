@@ -82,6 +82,6 @@ final class LongIndexMemInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        return new ParamSpec(new Object[]{INDEX}, new Class[]{Map.class});
+        return new ParamSpec(new Class[]{Map.class}, new Object[]{INDEX});
     }
 }

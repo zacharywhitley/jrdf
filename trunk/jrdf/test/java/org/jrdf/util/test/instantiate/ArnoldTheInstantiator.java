@@ -75,6 +75,8 @@ import org.jrdf.util.test.ReflectTestUtil;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,6 +120,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(Constraint.class, new ConstraintTripleInstantiator());
         instantiators.put(DefaultVariable.class, new DefaultVariableInstantiator());
         instantiators.put(URL.class, new URLInstantiator());
+        instantiators.put(URI.class, new URIInstantiator());
         instantiators.put(String.class, new StringInstantiator());
     }
 
@@ -129,6 +132,16 @@ public final class ArnoldTheInstantiator {
                 throw new RuntimeException(e);
             }
 
+        }
+    }
+
+    private static class URIInstantiator implements Instantiator {
+        public Object instantiate() {
+            try {
+                return new java.net.URI("http://www.slashdot.org");
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

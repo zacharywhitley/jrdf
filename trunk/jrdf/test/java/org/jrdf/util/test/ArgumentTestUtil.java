@@ -58,6 +58,8 @@
 
 package org.jrdf.util.test;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Tests the contract of a method or constructor so that the methods throw IllegalArgumentException if null is passed.
  *
@@ -65,6 +67,22 @@ package org.jrdf.util.test;
  * @version $Revision:$
  */
 public class ArgumentTestUtil {
+    private static final String PARAMETER_CANNOT_BE_NULL = " parameter cannot be null";
+
+    public static void checkConstructNullAssertion(final Class<?> clazz, final Class[] paramTypes,
+            String[] parameterNames) {
+        for (int index = 0; index < paramTypes.length; index++) {
+            Object[] args = MockTestUtil.createArgs(paramTypes, index);
+            String message = parameterNames[index] + PARAMETER_CANNOT_BE_NULL;
+            final ParamSpec params = new ParamSpec(paramTypes, args);
+            AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
+                public void execute() throws Throwable {
+                    createInstanceAndRethrow(clazz, params);
+                }
+            });
+        }
+    }
+
     public static void checkMethodNullAssertions(final ParameterDefinition paramDefinition, final Object obj,
             final String methodName) {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
@@ -89,11 +107,22 @@ public class ArgumentTestUtil {
     private static void checkMethod(final Class[] parameterTypes, int index, String[] parameterNames,
             final String methodName, final Object obj) {
         final Object[] args = MockTestUtil.createArgs(parameterTypes, index);
-        String message = parameterNames[index] +  " parameter cannot be null";
+        String message = parameterNames[index] + PARAMETER_CANNOT_BE_NULL;
         AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 ReflectTestUtil.callMethod(obj, methodName, parameterTypes, args);
             }
         });
+    }
+
+    private static void createInstanceAndRethrow(Class<?> clazz, ParamSpec params) {
+        try {
+            ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
+        } catch (RuntimeException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof InvocationTargetException) {
+                throw (IllegalArgumentException) cause.getCause();
+            }
+        }
     }
 }

@@ -82,6 +82,6 @@ final class DefaultAnswerInstantiator implements Instantiator {
 
     private ParamSpec createParams() {
         List<Triple> triples = new ArrayList<Triple>();
-        return new ParamSpec(new Object[]{triples}, new Class[]{List.class});
+        return new ParamSpec(new Class[]{List.class}, new Object[]{triples});
     }
 }

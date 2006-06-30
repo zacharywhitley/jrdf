@@ -188,6 +188,12 @@ public final class ClassPropertiesTestUtil {
             expectedModifier == constructorModifier);
     }
 
+    public static Constructor tryGetConstructor(Class<?> cls, ParamSpec params) {
+        Constructor constructor = tryGetConstructor(cls, params.getTypes());
+        constructor.setAccessible(true);
+        return constructor;
+    }
+
     public static Constructor tryGetConstructor(Class<?> cls, Class... parameters) {
         try {
             return cls.getDeclaredConstructor(parameters);
@@ -195,12 +201,6 @@ public final class ClassPropertiesTestUtil {
             assertParameters(cls, parameters);
             throw new RuntimeException(e);
         }
-    }
-
-    public static Constructor tryGetConstructor(Class<?> cls, ParamSpec params) {
-        Constructor constructor = tryGetConstructor(cls, params.getTypes());
-        constructor.setAccessible(true);
-        return constructor;
     }
 
     public static Collection<? extends Class<?>> findParentClasses(Class<?> cls) {
