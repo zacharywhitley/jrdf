@@ -61,8 +61,6 @@ package org.jrdf.query.execute;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.Query;
-import org.jrdf.query.expression.Conjunction;
-import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Relation;
@@ -110,13 +108,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
     public Relation executeQuery(Query query) {
         queryEngine.setResult(graphRelationFactory.createRelation(graph));
         Expression<ExpressionVisitor> expression = query.getConstraintExpression();
-        if (expression instanceof Constraint) {
-            queryEngine.visitConstraint((Constraint<ExpressionVisitor>) expression);
-        } else if (expression instanceof Conjunction) {
-            queryEngine.visitConjunction((Conjunction<ExpressionVisitor>) expression);
-        } else {
-            throw new RuntimeException();
-        }
+        expression.accept(queryEngine);
         return queryEngine.getResult();
     }
 
