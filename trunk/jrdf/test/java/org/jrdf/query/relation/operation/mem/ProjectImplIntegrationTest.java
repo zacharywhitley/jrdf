@@ -154,7 +154,6 @@ public class ProjectImplIntegrationTest extends TestCase {
 
     private void checkIncludeProject(Set<Attribute> keep, Relation relation, Relation expectedRelation) {
         Relation actualRelation = PROJECT.include(relation, keep);
-        System.err.println("Actual: " + actualRelation);
         assertEquals(expectedRelation, actualRelation);
     }
 }
