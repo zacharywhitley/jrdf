@@ -62,127 +62,59 @@ package org.jrdf.query.relation.operation.mem;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.attributename.PositionName;
-import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.constants.RelationDUM;
-import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
-import org.jrdf.query.relation.mem.RelationImpl;
-import org.jrdf.query.relation.mem.TupleImpl;
-import org.jrdf.query.relation.type.ObjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
-import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.util.test.NodeTestUtil;
-import org.jrdf.vocabulary.RDF;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import org.jrdf.query.relation.operation.Join;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
- * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other
- * relations.
+ * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other relations.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
 public class JoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
-    private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
-
-    private static final AttributeName POS_FOO1 = new PositionName("foo1");
-    private static final AttributeName POS_FOO2 = new PositionName("foo2");
-    private static final AttributeName POS_FOO3 = new PositionName("foo3");
-    private static final AttributeName POS_FOO4 = new PositionName("foo4");
-    private static final AttributeName POS_FOO5 = new PositionName("foo5");
-
-    private static final AttributeName VAR_BAR1 = new VariableName("bar1");
-    private static final AttributeName VAR_BAR2 = new VariableName("bar2");
-    private static final AttributeName POS_BAR3 = new PositionName("bar3");
-
-    private static final Attribute POS_FOO1_SUBJECT = new AttributeImpl(POS_FOO1, new SubjectNodeType());
-    private static final Attribute POS_FOO2_PREDICATE = new AttributeImpl(POS_FOO2, new PredicateNodeType());
-    private static final Attribute POS_FOO3_OBJECT = new AttributeImpl(POS_FOO3, new ObjectNodeType());
-    private static final Attribute POS_FOO4_PREDICATE = new AttributeImpl(POS_FOO4, new PredicateNodeType());
-    private static final Attribute POS_FOO5_OBJECT = new AttributeImpl(POS_FOO5, new ObjectNodeType());
-
-    private static final Attribute VAR_BAR1_SUBJECT = new AttributeImpl(VAR_BAR1, new SubjectNodeType());
-    private static final Attribute VAR_BAR2_PREDICATE = new AttributeImpl(VAR_BAR2, new PredicateNodeType());
-    private static final Attribute POS_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
-
-    private static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
-    private static final URIReference RESOURCE_2 = NodeTestUtil.createResource(RDF.BAG);
-    private static final URIReference RESOURCE_3 = NodeTestUtil.createResource(RDF.FIRST);
-    private static final URIReference RESOURCE_4 = NodeTestUtil.createResource(RDF.LI);
-    private static final URIReference RESOURCE_5 = NodeTestUtil.createResource(RDF.SUBJECT);
-    private static final URIReference RESOURCE_6 = NodeTestUtil.createResource(RDF.PREDICATE);
-
-    private static final AttributeValuePair POS_FOO1_SUBJECT_R1 =
-            new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_1);
-    private static final AttributeValuePair POS_FOO1_SUBJECT_R3 =
-            new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_3);
-    private static final AttributeValuePair POS_FOO2_PREDICATE_R2 =
-            new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_2);
-    private static final AttributeValuePair POS_FOO2_PREDICATE_R4 =
-            new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_4);
-    private static final AttributeValuePair POS_FOO3_OBJECT_R3 =
-            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_3);
-    private static final AttributeValuePair POS_FOO3_OBJECT_R4 =
-            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
-
-    private static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
-    private static final AttributeValuePair VAR_BAR2_PREDICATE_R4 =
-            new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
-    private static final AttributeValuePair POS_BAR3_OBJECT_R1 =
-            new AttributeValuePairImpl(POS_BAR3_OBJECT, RESOURCE_1);
-
-    private static final AttributeValuePair POS_FOO4_PREDICATE_R2 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_2);
-    private static final AttributeValuePair POS_FOO4_PREDICATE_R3 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_3);
-    private static final AttributeValuePair POS_FOO5_OBJECT_R4 =
-            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
-
-    private static final AttributeValuePair POS_FOO4_PREDICATE_R5 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_5);
-    private static final AttributeValuePair POS_FOO5_OBJECT_R6 =
-            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_6);
-
-
-    private static final org.jrdf.query.relation.operation.Join JOIN = FACTORY.getNewJoin();
+    private static final Join JOIN = FACTORY.getNewJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
-
 
     public void testRelationDEEandDUM() {
         // The JOIN of empty is DEE.
-        checkRelation(RelationDEE.RELATION_DEE, EMPTY);
+        checkRelation(RELATION_DEE, EMPTY);
         // The JOIN of DEE is DEE.
-        checkRelation(RelationDEE.RELATION_DEE, Collections.singleton(RelationDEE.RELATION_DEE));
+        checkRelation(RELATION_DEE, Collections.singleton(RELATION_DEE));
         // The JOIN of DUM is DUM.
-        checkRelation(RelationDUM.RELATION_DUM, Collections.singleton(RelationDUM.RELATION_DUM));
+        checkRelation(RELATION_DUM, Collections.singleton(RELATION_DUM));
     }
 
     @SuppressWarnings({ "unchecked" })
     public void testCartesianProduct() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
-        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
-                VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR1_SUBJECT_R3,
+                VAR_BAR2_PREDICATE_R4);
         checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
     }
 
@@ -213,8 +145,7 @@ public class JoinImplIntegrationTest extends TestCase {
     public void testNaturalJoin() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
-        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
-                VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4);
         checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
     }
 
@@ -223,8 +154,8 @@ public class JoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
         Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
-        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2,
-                VAR_BAR2_PREDICATE_R4, POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4,
+                POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
         checkJoin(createRelation(tuple1, tuple2, tuple3, tuple4), createRelation(resultTuple));
     }
 
@@ -235,10 +166,10 @@ public class JoinImplIntegrationTest extends TestCase {
         Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         tuple2.addAll(tmpTuple);
 
-        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
-                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
-        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
-                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
 
         Relation relation = createRelation(resultTuple);
@@ -252,10 +183,10 @@ public class JoinImplIntegrationTest extends TestCase {
         tuple1.addAll(tmpTuple);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
 
-        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
-                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
-        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2,
-                POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
 
         Relation relation = createRelation(resultTuple);
@@ -266,48 +197,12 @@ public class JoinImplIntegrationTest extends TestCase {
     public void testNaturalJoin5() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-        checkJoin(createRelation(tuple1, tuple2), RelationDEE.RELATION_DEE);
-    }
-
-    private Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
-        AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
-        Set<AttributeValuePair> values = new TreeSet<AttributeValuePair>(avpComparator);
-        for (AttributeValuePair attributeValuePair : attributeValuePairs) {
-            values.add(attributeValuePair);
-        }
-
-        TupleComparator tupleComparator = FACTORY.getNewTupleComparator();
-        Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
-        Tuple t = new TupleImpl(values, FACTORY.getNewAttributeValuePairComparator());
-        tuples.add(t);
-        return tuples;
+        checkJoin(createRelation(tuple1, tuple2), RELATION_DEE);
     }
 
     private void checkJoin(List<Relation> relations, Relation expectedResult) {
         Set<Relation> tuples = createRelations(relations.toArray(new Relation[]{}));
         checkRelation(expectedResult, tuples);
-    }
-
-    private List<Relation> createRelation(Set<Tuple>... tuple) {
-        List<Relation> relations = new ArrayList<Relation>();
-        for (Set<Tuple> tuples : tuple) {
-            Relation relation = createRelation(tuples);
-            relations.add(relation);
-        }
-        return relations;
-    }
-
-    private static Relation createRelation(Set<Tuple> newTuples) {
-        return new RelationImpl(newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
-    }
-
-    private Set<Relation> createRelations(Relation... relations) {
-        RelationComparator relationComparator = FACTORY.getNewRelationComparator();
-        Set<Relation> tuples = new TreeSet<Relation>(relationComparator);
-        for (Relation relation : relations) {
-            tuples.add(relation);
-        }
-        return tuples;
     }
 
     private void checkRelation(Relation expected, Set<Relation> actual) {

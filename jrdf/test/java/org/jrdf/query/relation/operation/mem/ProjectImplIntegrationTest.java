@@ -56,71 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.execute;
+package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.query.expression.Conjunction;
-import org.jrdf.query.expression.Constraint;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.ExpressionVisitorAdapter;
-import org.jrdf.query.expression.Projection;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Restrict;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
+import junit.framework.TestCase;
 
 /**
- * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
- * query tree by performing restrinctions, other operations (join, etc) and then project.
+ * Tests the integration between project and other classes such as relations, attribute value pairs, etc.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements QueryEngine {
-    private Restrict restrict;
-    private Relation result;
-    private Join join;
-
-    public NaiveQueryEngineImpl(Restrict restrict, Join join) {
-        this.restrict = restrict;
-        this.join = join;
-    }
-
-    public Relation getResult() {
-        return result;
-    }
-
-    public void setResult(Relation newResult) {
-        result = newResult;
-    }
-
-    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
-        projection.getAttributes();
-    }
-
-    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
-        SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
-        result = restrict.restrict(result, singleAvp);
-    }
-
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        Relation lhs = getExpression(conjunction.getLhs());
-        Relation rhs = getExpression(conjunction.getRhs());
-        Set<Relation> relations = new HashSet<Relation>();
-        relations.add(lhs);
-        relations.add(rhs);
-        result = join.join(relations);
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    private <V extends ExpressionVisitor>Relation getExpression(Expression<V> lhsExpression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(restrict, join);
-        queryEngine.setResult(result);
-        lhsExpression.accept((V) queryEngine);
-        return queryEngine.getResult();
+public class ProjectImplIntegrationTest extends TestCase {
+    public void testFoo() {
     }
 }
