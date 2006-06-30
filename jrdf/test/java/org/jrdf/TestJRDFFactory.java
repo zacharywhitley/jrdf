@@ -65,6 +65,7 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Join;
@@ -158,5 +159,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public ParserFactory getNewParserFactory() {
         return (ParserFactory) FACTORY.getContext().getBean("parserFactory");
+    }
+
+    public RelationFactory getNewRelationFactory() {
+        return (RelationFactory) FACTORY.getContext().getBean("relationFactory");
     }
 }

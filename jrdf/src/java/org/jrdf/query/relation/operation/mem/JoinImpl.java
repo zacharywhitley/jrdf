@@ -66,11 +66,11 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.mem.RelationImpl;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -88,15 +88,17 @@ import java.util.TreeSet;
  */
 public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
     private final TupleFactory tupleFactory;
-    private final TupleComparator tupleComparator;
+    private final RelationFactory relationFactory;
     private final AttributeComparator attributeComparator;
+    private final TupleComparator tupleComparator;
 
     /**
      * Cannot create join.
      */
-    public JoinImpl(TupleFactory tupleFactory, AttributeComparator attributeComparator,
-            TupleComparator tupleComparator) {
+    public JoinImpl(TupleFactory tupleFactory, RelationFactory relationFactory,
+            AttributeComparator attributeComparator, TupleComparator tupleComparator) {
         this.tupleFactory = tupleFactory;
+        this.relationFactory = relationFactory;
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
     }
@@ -126,13 +128,13 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         Relation relation2 = iterator.next();
         Set<Attribute> headings = getHeadingUnions(relation1, relation2);
         Set<Tuple> tuples = joinTuples(headings, relation1.getTuples(), relation2.getTuples());
-        Relation resultRelation = new RelationImpl(tuples, attributeComparator, tupleComparator);
+        Relation resultRelation = relationFactory.getRelation(tuples);
 
         while (iterator.hasNext()) {
             Relation nextRelation = iterator.next();
             headings = getHeadingUnions(resultRelation, nextRelation);
             tuples = joinTuples(headings, tuples, nextRelation.getTuples());
-            resultRelation = new RelationImpl(tuples, attributeComparator, tupleComparator);
+            resultRelation = relationFactory.getRelation(tuples);
         }
         return resultRelation;
     }

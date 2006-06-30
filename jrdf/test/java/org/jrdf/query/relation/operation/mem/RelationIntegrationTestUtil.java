@@ -58,15 +58,14 @@
 
 package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
+import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
@@ -75,7 +74,6 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
-import org.jrdf.query.relation.mem.RelationImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
@@ -95,9 +93,8 @@ import java.util.TreeSet;
  * @version $Revision:$
  */
 public class RelationIntegrationTestUtil {
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
-    private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final RelationFactory RELATION_FACTORY = FACTORY.getNewRelationFactory();
 
     public static final AttributeName POS_FOO1 = new PositionName("foo1");
     public static final AttributeName POS_FOO2 = new PositionName("foo2");
@@ -181,7 +178,7 @@ public class RelationIntegrationTestUtil {
     }
 
     public static Relation createRelation(Set<Tuple> newTuples) {
-        return new RelationImpl(newTuples, ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
+        return RELATION_FACTORY.getRelation(newTuples);
     }
 
     public static Set<Relation> createRelations(Relation... relations) {

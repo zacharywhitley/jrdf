@@ -56,74 +56,16 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationFactory;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.operation.Project;
-
-import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implements restrict by going through the relation and removing the columns.
+ * Factory that creates Relations.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class ProjectImpl implements Project {
-    private final TupleFactory tupleFactory;
-    private final RelationFactory relationFactory;
-
-    public ProjectImpl(TupleFactory tupleFactory, RelationFactory relationFactory) {
-        this.tupleFactory = tupleFactory;
-        this.relationFactory = relationFactory;
-    }
-
-    public Relation include(Relation relation, Set<Attribute> attributes) {
-        // TODO (AN) Test drive short circuit
-        if (relation.getHeading().equals(attributes)) {
-            return relation;
-        }
-
-        Set<Attribute> newHeading = relation.getHeading();
-        newHeading.retainAll(attributes);
-        return project(relation, newHeading);
-    }
-
-    public Relation exclude(Relation relation, Set<Attribute> attributes) {
-        // TODO (AN) Test drive short circuit
-        if (attributes.size() == 0) {
-            return relation;
-        }
-
-        Set<Attribute> newHeading = relation.getHeading();
-        newHeading.removeAll(attributes);
-        return project(relation, newHeading);
-    }
-
-    private Relation project(Relation relation, Set<Attribute> newHeading) {
-        Set<Tuple> newTuples = new HashSet<Tuple>();
-        Set<Tuple> tuples = relation.getTuples();
-        for (Tuple tuple : tuples) {
-            Tuple newTuple = createNewTuples(tuple, newHeading);
-            newTuples.add(newTuple);
-        }
-        return relationFactory.getRelation(newTuples);
-    }
-
-    private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
-        Set<AttributeValuePair> avps = tuple.getAttributeValues();
-        Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
-        for (AttributeValuePair avp : avps) {
-            if (newHeading.contains(avp.getAttribute())) {
-                newAvps.add(avp);
-            }
-        }
-        return tupleFactory.getTuple(newAvps);
-    }
+public interface RelationFactory {
+    Relation getRelation(Set<Tuple> tuples);
 }

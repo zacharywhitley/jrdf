@@ -79,7 +79,6 @@ import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivate;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.isFieldOfType;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -110,7 +109,7 @@ public class RelationImplUnitTest extends TestCase {
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
-        checkConstructor(RelationImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructor(RelationImpl.class, 0, PARAM_TYPES);
     }
 
     public void testConstructorAndFields() {
