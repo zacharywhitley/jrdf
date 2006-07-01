@@ -58,10 +58,10 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.graph.Graph;
+import org.jrdf.query.relation.GraphRelation;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.TupleFactory;
 
 /**
  * A factory that produces graph relations.
@@ -72,19 +72,18 @@ import org.jrdf.graph.Graph;
 public class GraphRelationFactoryImpl implements GraphRelationFactory {
     private SortedAttributeFactory attributeFactory;
     private SortedAttributeValuePairHelper avpHelper;
-    private AttributeValuePairComparator attributeValuePairComparator;
     private TupleComparator tupleComparator;
+    private TupleFactory tupleFactory;
 
     public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, SortedAttributeValuePairHelper avpHelper,
-            AttributeValuePairComparator attributeValuePairComparator, TupleComparator tupleComparator) {
+            TupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.attributeFactory = attributeFactory;
         this.tupleComparator = tupleComparator;
-        this.attributeValuePairComparator = attributeValuePairComparator;
         this.avpHelper = avpHelper;
+        this.tupleFactory = tupleFactory;
     }
 
     public GraphRelation createRelation(Graph graph) {
-        return new GraphRelationImpl(graph, attributeFactory, avpHelper, attributeValuePairComparator,
-                tupleComparator);
+        return new GraphRelationImpl(graph, attributeFactory, avpHelper, tupleComparator, tupleFactory);
     }
 }

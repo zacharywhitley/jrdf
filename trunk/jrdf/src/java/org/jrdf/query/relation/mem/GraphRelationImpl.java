@@ -70,10 +70,10 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Set;
@@ -92,18 +92,17 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
 
     private final Graph graph;
     private final TupleComparator tupleComparator;
+    private final TupleFactory tupleFactory;
     private final SortedAttributeFactory attributeFactory;
     private final SortedAttributeValuePairHelper avpHelper;
-    private final AttributeValuePairComparator attributeValuePairComparator;
 
     public GraphRelationImpl(Graph graph, SortedAttributeFactory attributeFactory,
-            SortedAttributeValuePairHelper avpHelper, AttributeValuePairComparator attributeValuePairComparator,
-            TupleComparator tupleComparator) {
+            SortedAttributeValuePairHelper avpHelper, TupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.graph = graph;
         this.attributeFactory = attributeFactory;
         this.avpHelper = avpHelper;
-        this.attributeValuePairComparator = attributeValuePairComparator;
         this.tupleComparator = tupleComparator;
+        this.tupleFactory = tupleFactory;
     }
 
     public Set<Attribute> getHeading() {
@@ -117,11 +116,11 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
     }
 
     public SortedSet<Attribute> getSortedHeading() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public SortedSet<Tuple> getSortedTuples() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     public Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues) {
@@ -152,7 +151,7 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
 
     private void addTripleToTuples(Set<Tuple> tuples, Triple triple, Attribute[] attributes) {
         Set<AttributeValuePair> avp = avpHelper.createAvp(triple, attributes);
-        Tuple tuple = new TupleImpl(avp, attributeValuePairComparator);
+        Tuple tuple = tupleFactory.getTuple(avp);
         tuples.add(tuple);
     }
 }
