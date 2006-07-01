@@ -10,7 +10,7 @@
     <bean class="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl" singleton="false">
     </bean>
 
-    <bean name="graphFactory" class="org.jrdf.graph.mem.OrderedGraphFactoryImpl" singleton="false">
+    <bean id="graphFactory" class="org.jrdf.graph.mem.OrderedGraphFactoryImpl" singleton="false">
         <constructor-arg>
             <list>
                 <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
@@ -25,17 +25,17 @@
     </bean>
 
     <!-- Relational Classes -->
-    <bean name="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl"/>
+    <bean id="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl"/>
 
-    <bean name="typeComparator" class="org.jrdf.query.relation.type.TypeComparatorImpl">
+    <bean id="typeComparator" class="org.jrdf.query.relation.type.TypeComparatorImpl">
         <constructor-arg>
             <ref bean="nodeTypeComparator"/>
         </constructor-arg>
     </bean>
 
-    <bean name="attributeNameComparator" class="org.jrdf.query.relation.attributename.AttributeNameComparatorImpl"/>
+    <bean id="attributeNameComparator" class="org.jrdf.query.relation.attributename.AttributeNameComparatorImpl"/>
 
-    <bean name="attributeComparator" class="org.jrdf.query.relation.mem.AttributeComparatorImpl">
+    <bean id="attributeComparator" class="org.jrdf.query.relation.mem.AttributeComparatorImpl">
         <constructor-arg>
             <ref bean="typeComparator"/>
         </constructor-arg>
@@ -44,13 +44,13 @@
         </constructor-arg>
     </bean>
 
-    <bean name="nodeComparator" class="org.jrdf.graph.mem.NodeComparatorImpl">
+    <bean id="nodeComparator" class="org.jrdf.graph.mem.NodeComparatorImpl">
         <constructor-arg>
             <ref bean="nodeTypeComparator"/>
         </constructor-arg>
     </bean>
 
-    <bean name="avpComparator" class="org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl">
+    <bean id="avpComparator" class="org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl">
         <constructor-arg>
             <ref bean="nodeComparator"/>
         </constructor-arg>
@@ -59,19 +59,19 @@
         </constructor-arg>
     </bean>
 
-    <bean name="tupleComparator" class="org.jrdf.query.relation.mem.TupleComparatorImpl">
+    <bean id="tupleComparator" class="org.jrdf.query.relation.mem.TupleComparatorImpl">
         <constructor-arg>
             <ref bean="avpComparator"/>
         </constructor-arg>
     </bean>
 
-    <bean name="tupleFactory" class="org.jrdf.query.relation.mem.TupleFactoryImpl">
+    <bean id="tupleFactory" class="org.jrdf.query.relation.mem.TupleFactoryImpl">
         <constructor-arg>
             <ref bean="avpComparator"/>
         </constructor-arg>
     </bean>
 
-    <bean name="relationComparator" class="org.jrdf.query.relation.mem.RelationComparatorImpl">
+    <bean id="relationComparator" class="org.jrdf.query.relation.mem.RelationComparatorImpl">
         <constructor-arg>
             <ref bean="attributeComparator"/>
         </constructor-arg>
@@ -80,49 +80,17 @@
         </constructor-arg>
     </bean>
 
-    <bean name="relationFactory" class="org.jrdf.query.relation.mem.RelationFactoryImpl">
+    <bean id="relationFactory" class="org.jrdf.query.relation.mem.RelationFactoryImpl">
         <constructor-arg>
             <ref bean="attributeComparator"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="tupleComparator"/>
-        </constructor-arg>
-    </bean>
-
-    <!-- Relational Operators -->
-
-    <bean name="join" class="org.jrdf.query.relation.operation.mem.JoinImpl">
-        <constructor-arg>
-            <ref bean="tupleFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="relationFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="attributeComparator"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="tupleComparator"/>
-        </constructor-arg>
-    </bean>
-
-    <bean name="project" class="org.jrdf.query.relation.operation.mem.ProjectImpl">
-        <constructor-arg>
-            <ref bean="tupleFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="relationFactory"/>
-        </constructor-arg>
-    </bean>
-
-    <bean name="restrict" class="org.jrdf.query.relation.operation.mem.RestrictImpl">
-        <constructor-arg>
-            <ref bean="relationFactory"/>
         </constructor-arg>
     </bean>
 
     <!-- Query Classes -->
-    <bean name="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
+    <bean id="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
         <constructor-arg type="java.net.URL">
             <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
         </constructor-arg>
@@ -134,13 +102,13 @@
         </constructor-arg>
     </bean>
 
-    <bean name="queryBuilder" class="org.jrdf.sparql.builder.SparqlQueryBuilder">
+    <bean id="queryBuilder" class="org.jrdf.sparql.builder.SparqlQueryBuilder">
         <constructor-arg>
             <ref bean="sparqlParser"/>
         </constructor-arg>
     </bean>
 
-    <bean name="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser">
+    <bean id="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser">
         <constructor-arg>
             <ref bean="parserFactory"/>
         </constructor-arg>
@@ -149,8 +117,8 @@
         </constructor-arg>
     </bean>
 
-    <bean name="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
-    <bean name="tripleBuilder" class="org.jrdf.sparql.builder.TripleBuilderImpl">
+    <bean id="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
+    <bean id="tripleBuilder" class="org.jrdf.sparql.builder.TripleBuilderImpl">
         <constructor-arg>
             <ref bean="sortedAttributeValuePairHelper"/>
         </constructor-arg>
@@ -159,7 +127,7 @@
         </constructor-arg>
     </bean>
 
-    <bean name="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
+    <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
         <constructor-arg>
             <ref bean="restrict"/>
         </constructor-arg>
@@ -169,7 +137,7 @@
 
     </bean>
 
-    <bean name="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">
+    <bean id="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">
         <constructor-arg type="java.net.URL">
             <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
         </constructor-arg>
@@ -182,13 +150,13 @@
     </bean>
 
     <!-- Relational Operations and Supporting Classes -->
-    <bean name="sortedAttributeFactory" class="org.jrdf.query.relation.mem.SortedAttributeFactoryImpl">
+    <bean id="sortedAttributeFactory" class="org.jrdf.query.relation.mem.SortedAttributeFactoryImpl">
         <constructor-arg>
             <ref bean="attributeComparator"/>
         </constructor-arg>
     </bean>
 
-    <bean name="sortedAttributeValuePairHelper" class="org.jrdf.query.relation.mem.SortedAttributeValuePairHelperImpl">
+    <bean id="sortedAttributeValuePairHelper" class="org.jrdf.query.relation.mem.SortedAttributeValuePairHelperImpl">
         <constructor-arg>
             <ref bean="sortedAttributeFactory"/>
         </constructor-arg>
@@ -197,7 +165,7 @@
         </constructor-arg>
     </bean>
 
-    <bean name="graphRelationFactory" class="org.jrdf.query.relation.mem.GraphRelationFactoryImpl">
+    <bean id="graphRelationFactory" class="org.jrdf.query.relation.mem.GraphRelationFactoryImpl">
         <constructor-arg>
             <ref bean="sortedAttributeFactory"/>
         </constructor-arg>
@@ -205,10 +173,41 @@
             <ref bean="sortedAttributeValuePairHelper"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="avpComparator"/>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="tupleFactory"/>
+        </constructor-arg>
+    </bean>
+
+    <!-- Relational Operators -->
+    <bean id="join" class="org.jrdf.query.relation.operation.mem.JoinImpl">
+        <constructor-arg>
+            <ref bean="tupleFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="tupleComparator"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="project" class="org.jrdf.query.relation.operation.mem.ProjectImpl">
+        <constructor-arg>
+            <ref bean="tupleFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationFactory"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="restrict" class="org.jrdf.query.relation.operation.mem.RestrictImpl">
+        <constructor-arg>
+            <ref bean="relationFactory"/>
         </constructor-arg>
     </bean>
 </beans>
