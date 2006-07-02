@@ -75,8 +75,8 @@ import java.util.Set;
  * @version $Revision:$
  */
 public class ProjectionUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = {Set.class};
-    private static final String[] PARAMETER_NAMES = { "attributes" };
+    private static final Class[] PARAM_TYPES = {Set.class, Expression.class};
+    private static final String[] PARAMETER_NAMES = { "attributes", "nextExpression" };
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Expression.class, Projection.class);
@@ -91,7 +91,8 @@ public class ProjectionUnitTest extends TestCase {
     @SuppressWarnings( {"unchecked"} )
     public void testGetAttributes() {
         Set<Attribute> expectedSet = MockTestUtil.createMock(Set.class);
-        Projection projection = new Projection(expectedSet);
+        Expression expectedExpression = MockTestUtil.createMock(Expression.class);
+        Projection projection = new Projection(expectedSet, expectedExpression);
         assertSame(expectedSet, projection.getAttributes());
     }
 }
