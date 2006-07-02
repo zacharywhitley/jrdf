@@ -58,10 +58,8 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.AVariable;
 
@@ -72,16 +70,15 @@ import org.jrdf.sparql.parser.node.AVariable;
  * @version $Revision:$
  */
 public class VariableAnalyser extends DepthFirstAdapter {
-    private Attribute attribute;
+    private AttributeName variableName;
 
     public void caseAVariable(AVariable node) {
         String prefix = node.getVariableprefix().getText();
         String attributeName = node.getIdentifier().getText();
-        VariableName newAttributeName = new VariableName(prefix + attributeName);
-        attribute = new AttributeImpl(newAttributeName, new SubjectNodeType());
+        variableName = new VariableName(prefix + attributeName);
     }
 
-    public Attribute getAttribute() {
-        return attribute;
+    public AttributeName getVariableName() {
+        return variableName;
     }
 }
