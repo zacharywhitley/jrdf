@@ -70,9 +70,7 @@ import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APatternElementsList;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 
 import java.util.SortedSet;
 
@@ -110,15 +108,18 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
         return expression;
     }
 
-    @Override
-    public void caseAWildcardSelectClause(AWildcardSelectClause node) {
-        super.caseAWildcardSelectClause(node);
-    }
-
-    @Override
-    public void caseAVariableListSelectClause(AVariableListSelectClause node) {
-        super.caseAVariableListSelectClause(node);
-    }
+//    @Override
+//    public void caseAVariableListSelectClause(AVariableListSelectClause node) {
+//        LinkedList<PVariable> variables = node.getVariable();
+//        Set<Attribute> attributes = new HashSet<Attribute>();
+//        for (PVariable variable : variables) {
+//            VariableAnalyser variableAnalyser = new VariableAnalyser();
+//            variable.apply(variableAnalyser);
+//            attributes.add(variableAnalyser.getAttribute());
+//        }
+//        Expression<ExpressionVisitor> expression = getExpression((Node) node.clone());
+//        this.expression = new Projection<ExpressionVisitor>(attributes, expression);
+//    }
 
     @Override
     public void caseATriple(ATriple tripleNode) {
