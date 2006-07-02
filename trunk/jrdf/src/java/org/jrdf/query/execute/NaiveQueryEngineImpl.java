@@ -103,10 +103,9 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, join, restrict);
-        queryEngine.setResult(result);
+        Relation expression = getExpression(projection.getNextExpression());
         Set<Attribute> attributes = projection.getAttributes();
-        result = project.include(queryEngine.getResult(), attributes);
+        result = project.include(expression, attributes);
     }
 
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
@@ -124,10 +123,10 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     @SuppressWarnings({ "unchecked" })
-    private <V extends ExpressionVisitor>Relation getExpression(Expression<V> lhsExpression) {
+    private <V extends ExpressionVisitor>Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, join, restrict);
         queryEngine.setResult(result);
-        lhsExpression.accept((V) queryEngine);
+        expression.accept((V) queryEngine);
         return queryEngine.getResult();
     }
 }
