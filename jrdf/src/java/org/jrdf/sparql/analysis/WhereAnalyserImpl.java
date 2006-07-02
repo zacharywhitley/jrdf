@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,48 +58,62 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.Query;
+import org.jrdf.graph.Graph;
+import org.jrdf.query.expression.Conjunction;
+import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.sparql.parser.analysis.Analysis;
+import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.APatternElementsList;
+import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.Node;
 
-import java.util.List;
 import java.util.SortedSet;
 
 /**
- * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
+ * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
  *
  * @author Tom Adams
- * @version $Revision$
+ * @version $Revision: 683 $
  */
-public interface SparqlAnalyser extends Analysis {
+public final class WhereAnalyserImpl extends DepthFirstAdapter {
 
-    /**
-     * Indicates that this analyser has not processed a query yet.
-     */
-    Query NO_QUERY = new NoQuery();
+    // FIXME TJA: Should eventually be using a Expression builder here.
+    private TripleBuilder tripleBuilder;
+    private Graph graph;
+    private Expression<ExpressionVisitor> expression;
 
-    /**
-     * Returns the query processed by this analyser.
-     *
-     * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
-     */
-    Query getQuery();
+    public WhereAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
+        this.tripleBuilder = tripleBuilder;
+        this.graph = graph;
+    }
 
-    class NoQuery implements Query {
+    public Expression<ExpressionVisitor>getExpression() {
+        return expression;
+    }
 
-        public List<Attribute> getVariables() {
-            throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
+    @Override
+    public void caseATriple(ATriple tripleNode) {
+        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
+        expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
+    }
+
+    @Override
+    public void caseAPatternElementsList(APatternElementsList node) {
+        if (node.getPatternElementsListTail() != null)  {
+            Expression<ExpressionVisitor> lhs = getExpression((Node) node.getPatternElement().clone());
+            Expression<ExpressionVisitor> rhs = getExpression((Node) node.getPatternElementsListTail().clone());
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        } else {
+            super.caseAPatternElementsList(node);
         }
+    }
 
-        public Expression<ExpressionVisitor> getConstraintExpression() {
-            throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
-        }
-
-        public SortedSet<AttributeValuePair> getSingleAvp() {
-            throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
-        }
+    private Expression<ExpressionVisitor> getExpression(Node node) {
+        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph);
+        node.apply(analyser);
+        return analyser.getExpression();
     }
 }

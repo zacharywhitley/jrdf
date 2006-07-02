@@ -73,10 +73,13 @@ import java.util.Set;
 public final class Projection<V extends ExpressionVisitor> implements Expression<V> {
     private static final int DUMMY_HASHCODE = 47;
     private final Set<Attribute> attributes;
+    private final Expression<ExpressionVisitor> nextExpression;
 
-    public Projection(Set<Attribute> attributes) {
+    public Projection(Set<Attribute> attributes, Expression<ExpressionVisitor> nextExpression) {
         ParameterUtil.checkNotNull("attributes", attributes);
+        ParameterUtil.checkNotNull("nextExpression", nextExpression);
         this.attributes = attributes;
+        this.nextExpression = nextExpression;
     }
 
     public void accept(ExpressionVisitor v) {
@@ -85,6 +88,10 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
 
     public Set<Attribute> getAttributes() {
         return attributes;
+    }
+
+    public Expression<ExpressionVisitor> getNextExpression() {
+        return nextExpression;
     }
 
     public boolean equals(Object obj) {

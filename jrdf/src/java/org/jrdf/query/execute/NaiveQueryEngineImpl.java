@@ -64,10 +64,12 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Projection;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.Join;
 import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.operation.Project;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -81,13 +83,15 @@ import java.util.SortedSet;
  * @version $Revision:$
  */
 public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements QueryEngine {
-    private Restrict restrict;
     private Relation result;
+    private Project project;
+    private Restrict restrict;
     private Join join;
 
-    public NaiveQueryEngineImpl(Restrict restrict, Join join) {
-        this.restrict = restrict;
+    public NaiveQueryEngineImpl(Project project, Join join, Restrict restrict) {
+        this.project = project;
         this.join = join;
+        this.restrict = restrict;
     }
 
     public Relation getResult() {
@@ -99,7 +103,10 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     }
 
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
-        projection.getAttributes();
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, join, restrict);
+        queryEngine.setResult(result);
+        Set<Attribute> attributes = projection.getAttributes();
+        result = project.include(queryEngine.getResult(), attributes);
     }
 
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
@@ -118,7 +125,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor>Relation getExpression(Expression<V> lhsExpression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(restrict, join);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, join, restrict);
         queryEngine.setResult(result);
         lhsExpression.accept((V) queryEngine);
         return queryEngine.getResult();

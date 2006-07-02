@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,48 +58,30 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.Query;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.sparql.parser.analysis.Analysis;
-
-import java.util.List;
-import java.util.SortedSet;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.AVariable;
 
 /**
- * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
+ * Class description goes here.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public interface SparqlAnalyser extends Analysis {
+public class VariableAnalyser extends DepthFirstAdapter {
+    private Attribute attribute;
 
-    /**
-     * Indicates that this analyser has not processed a query yet.
-     */
-    Query NO_QUERY = new NoQuery();
+    public void caseAVariable(AVariable node) {
+        String prefix = node.getVariableprefix().getText();
+        String attributeName = node.getIdentifier().getText();
+        VariableName newAttributeName = new VariableName(prefix + attributeName);
+        attribute = new AttributeImpl(newAttributeName, new ObjectNodeType());
+    }
 
-    /**
-     * Returns the query processed by this analyser.
-     *
-     * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
-     */
-    Query getQuery();
-
-    class NoQuery implements Query {
-
-        public List<Attribute> getVariables() {
-            throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
-        }
-
-        public Expression<ExpressionVisitor> getConstraintExpression() {
-            throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
-        }
-
-        public SortedSet<AttributeValuePair> getSingleAvp() {
-            throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
-        }
+    public Attribute getAttribute() {
+        return attribute;
     }
 }

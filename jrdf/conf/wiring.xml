@@ -129,12 +129,14 @@
 
     <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
         <constructor-arg>
-            <ref bean="restrict"/>
+            <ref bean="project"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="join"/>
         </constructor-arg>
-
+        <constructor-arg>
+            <ref bean="restrict"/>
+        </constructor-arg>
     </bean>
 
     <bean id="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">

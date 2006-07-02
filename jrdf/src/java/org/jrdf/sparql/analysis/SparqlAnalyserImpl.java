@@ -61,18 +61,12 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
-import org.jrdf.query.expression.Conjunction;
-import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.APatternElementsList;
-import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.Node;
-
-import java.util.SortedSet;
+import org.jrdf.sparql.parser.node.Start;
 
 /**
  * Default implementation of {@link SparqlAnalyser}.
@@ -88,7 +82,6 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private Graph graph;
     private Expression<ExpressionVisitor> expression;
 
-
     public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
@@ -98,48 +91,19 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
      * {@inheritDoc}
      */
     public Query getQuery() {
-        if (getExpression() != null && query == SparqlAnalyser.NO_QUERY) {
+        if (expression != null && query == SparqlAnalyser.NO_QUERY) {
             query = new QueryImpl(expression);
         }
         return query;
     }
 
-    public Expression<ExpressionVisitor> getExpression() {
-        return expression;
-    }
-
-//    @Override
-//    public void caseAVariableListSelectClause(AVariableListSelectClause node) {
-//        LinkedList<PVariable> variables = node.getVariable();
-//        Set<Attribute> attributes = new HashSet<Attribute>();
-//        for (PVariable variable : variables) {
-//            VariableAnalyser variableAnalyser = new VariableAnalyser();
-//            variable.apply(variableAnalyser);
-//            attributes.add(variableAnalyser.getAttribute());
-//        }
-//        Expression<ExpressionVisitor> expression = getExpression((Node) node.clone());
-//        this.expression = new Projection<ExpressionVisitor>(attributes, expression);
-//    }
-
     @Override
-    public void caseATriple(ATriple tripleNode) {
-        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
-        expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
-    }
-
-    @Override
-    public void caseAPatternElementsList(APatternElementsList node) {
-        if (node.getPatternElementsListTail() != null)  {
-            Expression<ExpressionVisitor> lhs = getExpression(node.getPatternElement());
-            Expression<ExpressionVisitor> rhs = getExpression(node.getPatternElementsListTail());
-            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-        } else {
-            super.caseAPatternElementsList(node);
-        }
+    public void inStart(Start node) {
+        expression = getExpression(node);
     }
 
     private Expression<ExpressionVisitor> getExpression(Node node) {
-        SparqlAnalyserImpl analyser = new SparqlAnalyserImpl(tripleBuilder, graph);
+        SelectAnalyserImpl analyser = new SelectAnalyserImpl(tripleBuilder, graph);
         node.apply(analyser);
         return analyser.getExpression();
     }
