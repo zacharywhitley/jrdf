@@ -123,6 +123,10 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         return analyser.getExpression();
     }
 
+    // TODO (AN) Add a variable collector to caseATriple and return the determined type from that instead of the
+    // hardcoded SubjectNodeType.  Potentially add a subjectpredicate node type, subjectobject node type and
+    // subjectpredicateobject node type that are equal to any of the given types.  Or modify existing NodeTypes
+    // equal() method to call join compatible.  See what works best.
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
         Set<Attribute> newAttributes = new LinkedHashSet<Attribute>();
         for (AttributeName variable : declaredVariables) {
