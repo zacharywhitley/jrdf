@@ -63,6 +63,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.AVariableListSelectClause;
@@ -98,25 +99,33 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter {
 
     @Override
     public void caseAWildcardSelectClause(AWildcardSelectClause node) {
-        expression = getExpression(node.parent());
+        WhereAnalyserImpl analyser = analyseWhereClause(node.parent());
+        expression = analyser.getExpression();
     }
 
     @Override
     public void caseAVariableListSelectClause(AVariableListSelectClause node) {
-        LinkedList<PVariable> variables = node.getVariable();
-        Set<Attribute> attributes = new HashSet<Attribute>();
-        for (PVariable variable : variables) {
-            VariableAnalyser variableAnalyser = new VariableAnalyser();
-            variable.apply(variableAnalyser);
-            attributes.add(variableAnalyser.getAttribute());
-        }
-        Expression<ExpressionVisitor> nextExpression = getExpression(node.parent());
+        WhereAnalyserImpl analyser = analyseWhereClause(node.parent());
+        Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
+        Set<AttributeName> declaredVariables = getDeclaredVariables(node);
+        Set<Attribute> attributes = analyser.getAttributes(declaredVariables);
         expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
     }
 
-    private Expression<ExpressionVisitor> getExpression(Node node) {
+    private WhereAnalyserImpl analyseWhereClause(Node node) {
         WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph);
         node.apply(analyser);
-        return analyser.getExpression();
+        return analyser;
+    }
+
+    private Set<AttributeName> getDeclaredVariables(AVariableListSelectClause node) {
+        LinkedList<PVariable> variables = node.getVariable();
+        Set<AttributeName> variableNames = new HashSet<AttributeName>();
+        for (PVariable variable : variables) {
+            VariableAnalyser variableAnalyser = new VariableAnalyser();
+            variable.apply(variableAnalyser);
+            variableNames.add(variableAnalyser.getVariableName());
+        }
+        return variableNames;
     }
 }

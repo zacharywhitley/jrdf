@@ -63,13 +63,19 @@ import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APatternElementsList;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.Node;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -115,5 +121,14 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph);
         node.apply(analyser);
         return analyser.getExpression();
+    }
+
+    public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
+        Set<Attribute> newAttributes = new LinkedHashSet<Attribute>();
+        for (AttributeName variable : declaredVariables) {
+            Attribute attribute = new AttributeImpl(variable, new SubjectNodeType());
+            newAttributes.add(attribute);
+        }
+        return newAttributes;
     }
 }
