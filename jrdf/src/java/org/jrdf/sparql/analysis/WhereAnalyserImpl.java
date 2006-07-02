@@ -80,9 +80,6 @@ import java.util.SortedSet;
 
 /**
  * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
- *
- * @author Tom Adams
- * @version $Revision: 683 $
  */
 public final class WhereAnalyserImpl extends DepthFirstAdapter {
 
