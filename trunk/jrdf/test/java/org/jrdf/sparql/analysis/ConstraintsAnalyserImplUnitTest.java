@@ -70,12 +70,6 @@ import org.jrdf.util.test.TripleTestUtil;
 
 import java.net.URI;
 
-/**
- * Unit test for {@link SparqlAnalyserImpl}.
- *
- * @author Tom Adams
- * @version $Id$
- */
 public final class ConstraintsAnalyserImplUnitTest extends TestCase {
 
     private static final URI URI_BOOK_1 = TripleTestUtil.URI_BOOK_1;

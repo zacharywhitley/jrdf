@@ -72,6 +72,7 @@ import org.jrdf.sparql.parser.node.AVariable;
 public class VariableAnalyser extends DepthFirstAdapter {
     private AttributeName variableName;
 
+    @Override
     public void caseAVariable(AVariable node) {
         String prefix = node.getVariableprefix().getText();
         String attributeName = node.getIdentifier().getText();

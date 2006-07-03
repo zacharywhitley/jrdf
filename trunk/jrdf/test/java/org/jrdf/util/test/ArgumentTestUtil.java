@@ -62,9 +62,6 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * Tests the contract of a method or constructor so that the methods throw IllegalArgumentException if null is passed.
- *
- * @author Andrew Newman
- * @version $Revision:$
  */
 public class ArgumentTestUtil {
     private static final String PARAMETER_CANNOT_BE_NULL = " parameter cannot be null";

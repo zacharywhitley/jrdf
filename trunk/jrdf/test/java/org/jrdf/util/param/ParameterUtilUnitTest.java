@@ -58,26 +58,23 @@
 
 package org.jrdf.util.param;
 
+import static org.jrdf.util.param.ParameterTestUtil.EMPTY_STRING;
+import static org.jrdf.util.param.ParameterTestUtil.NON_EMPTY_STRING;
 import junit.framework.TestCase;
+import static org.jrdf.util.param.ParameterTestUtil.NON_NULL_OBJECT;
+import static org.jrdf.util.param.ParameterTestUtil.NULL_STRING;
+import static org.jrdf.util.param.ParameterTestUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 
 import static java.lang.reflect.Modifier.PRIVATE;
 
-/**
- * Unit test for {@link ParameterUtil}.
- *
- * @author Tom Adams
- * @version $Revision$
- */
 public final class ParameterUtilUnitTest extends TestCase {
-
-    private static final String NULL = ParameterTestUtil.NULL_STRING;
-    private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
-    private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
-    private static final String NON_EMPTY_STRING = ParameterTestUtil.NON_EMPTY_STRING;
-    private static final Object NON_NULL_OBJECT = ParameterTestUtil.NON_NULL_OBJECT;
     private static final String DUMMY_PARAM_NAME = "foo";
 
     public void testClassProperties() {
@@ -86,32 +83,32 @@ public final class ParameterUtilUnitTest extends TestCase {
     }
 
     public void testNoNullsAllowed() {
-        try {
-            ParameterUtil.checkNotNull(DUMMY_PARAM_NAME, NULL);
-            fail("Nulls should not be allowed");
-        } catch (IllegalArgumentException expected) {
-        }
+        assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                checkNotNull(DUMMY_PARAM_NAME, NULL_STRING);
+            }
+        });
     }
 
     public void testEmptyStringNotAllowed() {
-        checkStringNotAllowed(NULL);
+        checkStringNotAllowed(null);
         checkStringNotAllowed(EMPTY_STRING);
         checkStringNotAllowed(SINGLE_SPACE);
     }
 
     public void testNonEmptyStringAllowed() {
-        ParameterUtil.checkNotEmptyString(DUMMY_PARAM_NAME, NON_EMPTY_STRING);
+        checkNotEmptyString(DUMMY_PARAM_NAME, NON_EMPTY_STRING);
     }
 
     public void testNonNullObjectAllowed() {
-        ParameterUtil.checkNotNull(DUMMY_PARAM_NAME, NON_NULL_OBJECT);
+        checkNotNull(DUMMY_PARAM_NAME, NON_NULL_OBJECT);
     }
 
-    private void checkStringNotAllowed(String param) {
-        try {
-            ParameterUtil.checkNotEmptyString(DUMMY_PARAM_NAME, param);
-            fail("Empty strings should not be allowed");
-        } catch (IllegalArgumentException expected) {
-        }
+    private void checkStringNotAllowed(final String param) {
+        assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                checkNotEmptyString(DUMMY_PARAM_NAME, param);
+            }
+        });
     }
 }

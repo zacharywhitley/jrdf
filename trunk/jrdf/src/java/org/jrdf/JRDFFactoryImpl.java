@@ -62,13 +62,11 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.query.JrdfQueryExecutorFactory;
-import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Project;
 import org.jrdf.sparql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -128,11 +126,4 @@ public final class JRDFFactoryImpl implements JRDFFactory {
         return (JrdfQueryExecutorFactory) beanFactory.getBean("jrdfQueryExecutorFactory");
     }
 
-    public QueryBuilder getNewQueryBuilder() {
-        return (QueryBuilder) beanFactory.getBean("queryBuilder");
-    }
-
-    public Project getNewProject() {
-        return (Project) beanFactory.getBean("project");
-    }
 }

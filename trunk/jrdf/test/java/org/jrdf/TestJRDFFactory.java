@@ -130,11 +130,11 @@ public final class TestJRDFFactory implements JRDFFactory {
     }
 
     public QueryBuilder getNewQueryBuilder() {
-        return FACTORY.getNewQueryBuilder();
+        return (QueryBuilder) FACTORY.getContext().getBean("queryBuilder");
     }
 
     public Project getNewProject() {
-        return FACTORY.getNewProject();
+        return (Project) FACTORY.getContext().getBean("project");
     }
 
     public SparqlParser getNewSparqlParser() {
