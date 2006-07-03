@@ -58,12 +58,12 @@
 
 package org.jrdf.util.param;
 
+import junit.framework.TestCase;
 import static org.jrdf.util.param.ParameterTestUtil.EMPTY_STRING;
 import static org.jrdf.util.param.ParameterTestUtil.NON_EMPTY_STRING;
-import junit.framework.TestCase;
 import static org.jrdf.util.param.ParameterTestUtil.NON_NULL_OBJECT;
 import static org.jrdf.util.param.ParameterTestUtil.NULL_STRING;
-import static org.jrdf.util.param.ParameterTestUtil.*;
+import static org.jrdf.util.param.ParameterTestUtil.SINGLE_SPACE;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.test.AssertThrows;
@@ -89,6 +89,14 @@ public final class ParameterUtilUnitTest extends TestCase {
             }
         });
     }
+
+    public void testNotNullInASingleMethodCall() {
+        String message = "Parameter 1 cannot be null";
+        AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                ParameterUtil.checkNotNull(ParameterTestUtil.NON_NULL_OBJECT, null);
+            }
+        });    }
 
     public void testEmptyStringNotAllowed() {
         checkStringNotAllowed(null);
