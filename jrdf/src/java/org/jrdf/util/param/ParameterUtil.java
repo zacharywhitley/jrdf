@@ -60,24 +60,11 @@ package org.jrdf.util.param;
 
 /**
  * Utility for checking parameters to methods.
- *
- * @author Tom Adams
- * @version $Revision$
  */
 public final class ParameterUtil {
-    /**
-     * Create a null checker.
-     */
     private static final ParameterChecker NULL_CHECKER = new NullChecker();
-
-    /**
-     * Create a empty string checker.
-     */
     private static final ParameterChecker EMPTY_STRING_CHECKER = new EmtpyStringChecker();
 
-    /**
-     * This is a collection of static classes - cannot construct.
-     */
     private ParameterUtil() {
     }
 

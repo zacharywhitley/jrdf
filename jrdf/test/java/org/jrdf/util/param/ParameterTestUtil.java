@@ -65,12 +65,8 @@ import java.lang.reflect.Method;
 
 /**
  * Test utility for checking bad parameters to methods.
- *
- * @author Tom Adams
- * @version $Revision$
  */
 public final class ParameterTestUtil {
-
     public static final String NULL_STRING = null;
     public static final String EMPTY_STRING = "";
     public static final String SINGLE_SPACE = " ";
@@ -90,7 +86,7 @@ public final class ParameterTestUtil {
     }
 
     private static void invokeMethod(Object cls, String methodName, Class paramClass, String paramValue)
-        throws Exception {
+            throws Exception {
         try {
             Method method = cls.getClass().getMethod(methodName, paramClass);
             method.invoke(cls, paramValue);

@@ -59,7 +59,6 @@
 package org.jrdf.sparql;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
@@ -96,7 +95,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     private static final URI URI_SUBJECT = TripleTestUtil.URI_BOOK_1;
     private static final URI URI_PREDICATE = TripleTestUtil.URI_DC_TITLE;
     private static final String LITERAL_TITLE = TripleTestUtil.LITERAL_BOOK_TITLE;
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final JrdfQueryExecutorFactory EXECUTOR_FACTORY = FACTORY.getNewJrdfQueryExecutorFactory();
     private static final QueryBuilder QUERY_BUILDER = FACTORY.getNewQueryBuilder();
     private static final Graph GRAPH = FACTORY.getNewGraph();

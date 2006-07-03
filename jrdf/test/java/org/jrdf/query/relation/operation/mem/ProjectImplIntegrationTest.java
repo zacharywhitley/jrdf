@@ -59,7 +59,6 @@
 package org.jrdf.query.relation.operation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
@@ -86,7 +85,7 @@ import java.util.Set;
  * @version $Revision:$
  */
 public class ProjectImplIntegrationTest extends TestCase {
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Project PROJECT = FACTORY.getNewProject();
 
     public void testRemoveNothing() {

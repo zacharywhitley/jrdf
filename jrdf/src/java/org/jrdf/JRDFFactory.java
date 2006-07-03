@@ -61,13 +61,11 @@ package org.jrdf;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.JrdfQueryExecutorFactory;
-import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Project;
 import org.jrdf.sparql.SparqlConnection;
 
 /**
@@ -96,8 +94,4 @@ public interface JRDFFactory {
     SparqlConnection getNewSparqlConnection();
 
     JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory();
-
-    QueryBuilder getNewQueryBuilder();
-
-    Project getNewProject();
 }
