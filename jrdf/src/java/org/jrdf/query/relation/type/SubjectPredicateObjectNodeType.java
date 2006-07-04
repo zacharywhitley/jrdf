@@ -62,6 +62,9 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
 
+import java.util.Set;
+import java.util.HashSet;
+
 /**
  * An subjectpredicate node type.
  *
@@ -69,6 +72,12 @@ import org.jrdf.graph.ObjectNode;
  * @version $Revision: 651 $
  */
 public class SubjectPredicateObjectNodeType implements NodeType {
+    private static final HashSet<NodeType> COMPOSITION_NODE_TYPE = new HashSet<NodeType>() {{
+        add(new SubjectNodeType());
+        add(new PredicateNodeType());
+        add(new ObjectNodeType());
+    }};
+
     private static final long serialVersionUID = 799086809870140765L;
 
     public boolean isAssignableFrom(Type type) {
@@ -76,7 +85,7 @@ public class SubjectPredicateObjectNodeType implements NodeType {
     }
 
     public boolean isJoinCompatible(Type type) {
-        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType ||
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType ||
                 type instanceof ObjectNodeType;
     }
 
@@ -90,5 +99,9 @@ public class SubjectPredicateObjectNodeType implements NodeType {
 
     public boolean equals(Object obj) {
         return obj instanceof SubjectPredicateObjectNodeType;
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }

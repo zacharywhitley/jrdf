@@ -58,8 +58,11 @@
 
 package org.jrdf.query.relation.type;
 
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * An subjectpredicate node type.
@@ -69,13 +72,17 @@ import org.jrdf.graph.ObjectNode;
  */
 public class PredicateObjectNodeType implements NodeType {
     private static final long serialVersionUID = 799086809870140765L;
+    private static final HashSet<NodeType> COMPOSITION_NODE_TYPE = new HashSet<NodeType>() {{
+        add(new PredicateNodeType());
+        add(new ObjectNodeType());
+    }};
 
     public boolean isAssignableFrom(Type type) {
         return type instanceof PredicateNode || type instanceof ObjectNode;
     }
 
     public boolean isJoinCompatible(Type type) {
-        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType ||
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType ||
                 type instanceof LiteralNodeType;
     }
 
@@ -89,5 +96,9 @@ public class PredicateObjectNodeType implements NodeType {
 
     public boolean equals(Object obj) {
         return obj instanceof PredicateObjectNodeType;
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }

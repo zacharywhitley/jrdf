@@ -59,17 +59,22 @@
 
 package org.jrdf.query.relation.type;
 
+import java.util.Set;
+import java.util.Collections;
+
 /**
  * An URI Reference node type.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
-public class URIReferenceType implements NodeType {
+public class URIReferenceNodeType implements NodeType {
+    private static final NodeType INSTANCE = new URIReferenceNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = -46947819855688266L;
 
     public boolean isAssignableFrom(Type type) {
-        return type instanceof URIReferenceType;
+        return type instanceof URIReferenceNodeType;
     }
 
     public boolean isJoinCompatible(Type type) {
@@ -78,5 +83,9 @@ public class URIReferenceType implements NodeType {
 
     public String getName() {
         return "URI Reference";
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }

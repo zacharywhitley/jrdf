@@ -62,6 +62,9 @@ package org.jrdf.query.relation.type;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 
+import java.util.Set;
+import java.util.Collections;
+
 /**
  * An subject node type.
  *
@@ -70,13 +73,15 @@ import org.jrdf.graph.SubjectNode;
  */
 public class SubjectNodeType implements NodeType {
     private static final long serialVersionUID = 2422061978414712391L;
+    private static final NodeType INSTANCE = new SubjectNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
 
     public boolean isAssignableFrom(Type type) {
         return type instanceof SubjectNode || type instanceof PredicateNode;
     }
 
     public boolean isJoinCompatible(Type type) {
-        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType;
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType;
     }
 
     public String getName() {
@@ -89,5 +94,9 @@ public class SubjectNodeType implements NodeType {
 
     public boolean equals(Object obj) {
         return obj instanceof SubjectNodeType;
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }

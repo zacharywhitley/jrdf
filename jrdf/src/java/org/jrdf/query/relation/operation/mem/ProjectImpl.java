@@ -113,7 +113,8 @@ public class ProjectImpl implements Project {
         for (Attribute attribute : attributes) {
             if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class) ||
                     attribute.getType().getClass().equals(SubjectObjectNodeType.class) ||
-                    attribute.getType().getClass().equals(PredicateObjectNodeType.class)) {
+                    attribute.getType().getClass().equals(PredicateObjectNodeType.class) ||
+                    attribute.getType().getClass().equals(SubjectPredicateObjectNodeType.class)) {
                 return true;
             }
         }
