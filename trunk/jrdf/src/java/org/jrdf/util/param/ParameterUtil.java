@@ -70,6 +70,7 @@ public final class ParameterUtil {
 
     /**
      * Checks if <var>param</var> is <code>null</code> and throws an exception if it is.
+     *
      * @param name  The name of the parameter to check.
      * @param param The parameter to check.
      * @throws IllegalArgumentException If <var>param</var> is <code>null</code>.
@@ -82,6 +83,7 @@ public final class ParameterUtil {
 
     /**
      * Checks if <var>param</var> is <code>null</code> or the empty string and throws an exception if it is.
+     *
      * @param name  The name of the parameter to check.
      * @param param The parameter to check.
      * @throws IllegalArgumentException If <var>param</var> is <code>null</code> or the empty string.
@@ -93,9 +95,24 @@ public final class ParameterUtil {
         }
     }
 
-    public static void checkNotNull(Object param1, Object param2) {
-        if (null == param1 || null == param2) {
-            throw new IllegalArgumentException("Parameter 1 cannot be null");
+    public static void checkNotNull(Object... params) {
+        if (params == null) {
+            raise(1);
+        } else {
+            checkEachParameter(params);
         }
+    }
+
+
+    private static void checkEachParameter(Object... params) {
+        for (int i = 0; i < params.length; i++) {
+            if (params[i] == null) {
+                raise((i + 1));
+            }
+        }
+    }
+
+    private static void raise(int i) {
+        throw new IllegalArgumentException("Parameter " + i + " cannot be null");
     }
 }
