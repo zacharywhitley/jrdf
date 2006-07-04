@@ -91,12 +91,10 @@ public final class ParameterUtilUnitTest extends TestCase {
     }
 
     public void testNotNullInASingleMethodCall() {
-        String message = "Parameter 1 cannot be null";
-        AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                ParameterUtil.checkNotNull(ParameterTestUtil.NON_NULL_OBJECT, null);
-            }
-        });    }
+        checkVarArgsNullCheck(1, (Object) null);
+        checkVarArgsNullCheck(2, NON_NULL_OBJECT, null);
+        checkVarArgsNullCheck(3, NON_NULL_OBJECT, NON_NULL_OBJECT, null);
+    }
 
     public void testEmptyStringNotAllowed() {
         checkStringNotAllowed(null);
@@ -110,6 +108,15 @@ public final class ParameterUtilUnitTest extends TestCase {
 
     public void testNonNullObjectAllowed() {
         checkNotNull(DUMMY_PARAM_NAME, NON_NULL_OBJECT);
+    }
+
+    private void checkVarArgsNullCheck(int nullParamNumber, final Object... params) {
+        String message = "Parameter " + nullParamNumber + " cannot be null";
+        AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                ParameterUtil.checkNotNull(params);
+            }
+        });
     }
 
     private void checkStringNotAllowed(final String param) {

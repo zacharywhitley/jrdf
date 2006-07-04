@@ -74,57 +74,47 @@ import java.util.TreeSet;
  * Allows the creation of headings.
  *
  * @author Andrew Newman
- * @version $Revision:$
  */
 // TODO (AN) 23 June - Test Drive me!!!
+// TODO (AN) Make me final.
 public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
-    private static long nameCounter = 1;
     private static final SubjectNodeType SUBJECT_TYPE = new SubjectNodeType();
     private static final PredicateNodeType PREDICATE_TYPE = new PredicateNodeType();
     private static final ObjectNodeType OBJECT_TYPE = new ObjectNodeType();
-
+    private static final int THREE_TRIPLES = 3;
     private final AttributeComparator attributeComparator;
-    private static final int TRIPLES = 3;
+    private static long nameCounter = 1;
 
     public SortedAttributeFactoryImpl(AttributeComparator attributeComparator) {
         this.attributeComparator = attributeComparator;
     }
 
     public SortedSet<Attribute> createHeading() {
-        return reallyCreateHeading(SUBJECT_TYPE, PREDICATE_TYPE, OBJECT_TYPE);
+        return doCreateHeading(SUBJECT_TYPE, PREDICATE_TYPE, OBJECT_TYPE);
     }
 
     public SortedSet<Attribute> createHeading(List<NodeType> types) throws IllegalArgumentException {
-        if (types.size() != TRIPLES) {
-            throw new IllegalArgumentException("Must supply three node types");
-        }
-
-        return reallyCreateHeading((SubjectNodeType) types.get(0), (PredicateNodeType) types.get(1),
-                (ObjectNodeType) types.get(2));
+        checkIsATriple(types);
+        return doCreateHeading(types.get(0), types.get(1), types.get(2));
     }
 
-    private SortedSet<Attribute> reallyCreateHeading(SubjectNodeType subjectType, PredicateNodeType predicateType,
-            ObjectNodeType objectType) {
+    private SortedSet<Attribute> doCreateHeading(NodeType subjectType, NodeType predicateType, NodeType objectType) {
         SortedSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
-        attributes.add(createSubjectAttribute(subjectType));
-        attributes.add(createPredicateAttribute(predicateType));
-        attributes.add(createObjectAttribute(objectType));
+        attributes.add(createAttribute(DEFAULT_SUBJECT_NAME, subjectType));
+        attributes.add(createAttribute(DEFAULT_PREDICATE_NAME, predicateType));
+        attributes.add(createAttribute(DEFAULT_OBJECT_NAME, objectType));
         nameCounter++;
         return attributes;
     }
 
-    private Attribute createSubjectAttribute(SubjectNodeType type) {
-        PositionName positionName = new PositionName(DEFAULT_SUBJECT_NAME + nameCounter);
-        return new AttributeImpl(positionName, type);
+    private void checkIsATriple(List<NodeType> types) {
+        if (types.size() != THREE_TRIPLES) {
+            throw new IllegalArgumentException("Must supply three node types");
+        }
     }
 
-    private Attribute createPredicateAttribute(PredicateNodeType type) {
-        PositionName positionName = new PositionName(DEFAULT_PREDICATE_NAME + nameCounter);
-        return new AttributeImpl(positionName, type);
-    }
-
-    private Attribute createObjectAttribute(ObjectNodeType type) {
-        PositionName positionName = new PositionName(DEFAULT_OBJECT_NAME + nameCounter);
+    private Attribute createAttribute(String name, NodeType type) {
+        PositionName positionName = new PositionName(name + nameCounter);
         return new AttributeImpl(positionName, type);
     }
 }
