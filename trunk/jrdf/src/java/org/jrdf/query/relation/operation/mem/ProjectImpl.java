@@ -73,6 +73,8 @@ import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.SubjectObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateNodeType;
+import org.jrdf.query.relation.type.PredicateObjectNodeType;
+import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -106,16 +108,19 @@ public class ProjectImpl implements Project {
         return project(relation, newHeading);
     }
 
+    // TODO (AN) Piece of bollocks.
     private boolean requiresMerge(Set<Attribute> attributes) {
         for (Attribute attribute : attributes) {
             if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class) ||
-                    attribute.getType().getClass().equals(SubjectObjectNodeType.class)) {
+                    attribute.getType().getClass().equals(SubjectObjectNodeType.class) ||
+                    attribute.getType().getClass().equals(PredicateObjectNodeType.class)) {
                 return true;
             }
         }
         return false;
     }
 
+    // TODO (AN) Piece of bollocks.
     private Relation mergeRelationHeading(Relation relation, Set<Attribute> attributes) {
         Set<Tuple> newTuples = new HashSet<Tuple>();
         Set<Tuple> tuples = relation.getTuples();
@@ -123,31 +128,34 @@ public class ProjectImpl implements Project {
             Set<AttributeValuePair> avps = tuple.getAttributeValues();
             Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
             for (Attribute attribute : attributes) {
-                Node matchedValue1 = null;
-                Node matchedValue2 = null;
-                Attribute attributeMatch1;
-                Attribute attributeMatch2;
-                if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
-                    attributeMatch1 = new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType());
-                    attributeMatch2 = new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType());
+                Set<Node> matchedValues = new HashSet<Node>();
+                Set<Attribute> attributesToMatch = new HashSet<Attribute>();
+                if (attribute.getType().getClass().equals(SubjectPredicateObjectNodeType.class)) {
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
+                }
+                else if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
                 } else if (attribute.getType().getClass().equals(SubjectObjectNodeType.class)) {
-                    attributeMatch1 = new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType());
-                    attributeMatch2 = new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType());
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
+                } else if (attribute.getType().getClass().equals(PredicateObjectNodeType.class)) {
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
                 } else {
-                    attributeMatch1 = attribute;
-                    attributeMatch2 = attribute;
+                    attributesToMatch.add(attribute);
                 }
 
                 for (AttributeValuePair avp : avps) {
-                    if (avp.getAttribute().equals(attributeMatch1)) {
-                        matchedValue1 = avp.getValue();
-                    } else if (avp.getAttribute().equals(attributeMatch2)) {
-                        matchedValue2 = avp.getValue();
+                    if (attributesToMatch.contains(avp.getAttribute())) {
+                        matchedValues.add(avp.getValue());
                     }
                 }
-                if ((matchedValue1 != null) && ((matchedValue1.equals(matchedValue2)) ||
-                        attributeMatch1 == attributeMatch2)) {
-                    AttributeValuePair newAvp = new AttributeValuePairImpl(attribute, matchedValue1);
+                if (matchedValues.size() == 1) {
+                    Node matchedValue = matchedValues.iterator().next();
+                    AttributeValuePair newAvp = new AttributeValuePairImpl(attribute, matchedValue);
                     newAvps.add(newAvp);
                 }
             }
