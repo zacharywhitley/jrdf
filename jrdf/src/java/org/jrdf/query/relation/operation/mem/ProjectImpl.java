@@ -58,13 +58,19 @@
 
 package org.jrdf.query.relation.operation.mem;
 
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -90,9 +96,60 @@ public class ProjectImpl implements Project {
             return relation;
         }
 
+        if (requiresMerge(attributes)) {
+            System.err.println("Before merge: " + relation);
+            relation = mergeRelationHeading(relation, attributes);
+            System.err.println("Result after merge: " + relation);
+        }
         Set<Attribute> newHeading = relation.getHeading();
         newHeading.retainAll(attributes);
         return project(relation, newHeading);
+    }
+
+    private boolean requiresMerge(Set<Attribute> attributes) {
+        for (Attribute attribute : attributes) {
+            if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Relation mergeRelationHeading(Relation relation, Set<Attribute> attributes) {
+        Set<Tuple> newTuples = new HashSet<Tuple>();
+        Set<Tuple> tuples = relation.getTuples();
+        for (Tuple tuple : tuples) {
+            Set<AttributeValuePair> avps = tuple.getAttributeValues();
+            Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
+            for (Attribute attribute : attributes) {
+                Node matchedValue1 = null;
+                Node matchedValue2 = null;
+                Attribute attributeMatch1;
+                Attribute attributeMatch2;
+                if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
+                    attributeMatch1 = new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType());
+                    attributeMatch2 = new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType());
+                } else {
+                    attributeMatch1 = attribute;
+                    attributeMatch2 = attribute;
+                }
+                for (AttributeValuePair avp : avps) {
+                    if (avp.getAttribute().equals(attributeMatch1)) {
+                        matchedValue1 = avp.getValue();
+                    } else if (avp.getAttribute().equals(attributeMatch2)) {
+                        matchedValue2 = avp.getValue();
+                    }
+                }
+                if ((matchedValue1 != null && matchedValue1.equals(matchedValue2)) ||
+                        attributeMatch1 == attributeMatch2) {
+                    newAvps.add(new AttributeValuePairImpl(attribute, matchedValue1));
+                }
+            }
+            if (newAvps.size() > 0) {
+                newTuples.add(tupleFactory.getTuple(newAvps));
+            }
+        }
+        return relationFactory.getRelation(newTuples);
     }
 
     public Relation exclude(Relation relation, Set<Attribute> attributes) {
