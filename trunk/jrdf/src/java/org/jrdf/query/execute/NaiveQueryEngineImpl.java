@@ -105,7 +105,6 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
         Relation expression = getExpression(projection.getNextExpression());
         Set<Attribute> attributes = projection.getAttributes();
-        System.err.println("Projecting: " + attributes);
         result = project.include(expression, attributes);
     }
 

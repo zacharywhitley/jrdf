@@ -136,7 +136,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
             if (type == null) {
                 throw new RuntimeException("Failed to find: " + variable);
             } else {
-                System.err.println("Got: " + type + " for: " + variable);
                 Attribute attribute = new AttributeImpl(variable, type);
                 newAttributes.add(attribute);
             }

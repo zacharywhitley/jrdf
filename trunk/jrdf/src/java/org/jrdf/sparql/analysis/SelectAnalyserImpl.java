@@ -111,7 +111,6 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter {
         Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
         Set<AttributeName> declaredVariables = getDeclaredVariables(node);
         Set<Attribute> attributes = analyser.getAttributes(declaredVariables);
-        System.err.println("Projecting: " + attributes);
         expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
     }
 

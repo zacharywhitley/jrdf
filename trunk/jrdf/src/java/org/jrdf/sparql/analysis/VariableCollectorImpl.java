@@ -86,10 +86,8 @@ public class VariableCollectorImpl implements VariableCollector {
             if (attribute.getAttributeName() instanceof VariableName) {
                 String attributeName = attribute.getAttributeName().getLiteral();
                 if (variables.containsKey(attributeName)) {
-                    System.err.println("Updating: " + attribute);
                     updateEntry(attribute);
                 } else {
-                    System.err.println("Adding: " + attribute);
                     addNewEntry(attribute);
                 }
             }
