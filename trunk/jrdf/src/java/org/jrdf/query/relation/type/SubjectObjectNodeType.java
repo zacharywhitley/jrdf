@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,27 +56,38 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-
 package org.jrdf.query.relation.type;
 
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
+
 /**
- * A literal node type.
+ * An subjectpredicate node type.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 651 $
  */
-public class LiteralType implements NodeType {
-    private static final long serialVersionUID = 8059107808615405657L;
+public class SubjectObjectNodeType implements NodeType {
+    private static final long serialVersionUID = 799086809870140765L;
 
     public boolean isAssignableFrom(Type type) {
-        return type instanceof LiteralType;
+        return type instanceof SubjectNode || type instanceof ObjectNode;
     }
 
     public boolean isJoinCompatible(Type type) {
-        return isAssignableFrom(type);
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType ||
+                type instanceof LiteralNodeType;
     }
 
     public String getName() {
-        return "Literal";
+        return "SubjectObject";
+    }
+
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        return obj instanceof SubjectObjectNodeType;
     }
 }

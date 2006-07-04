@@ -135,37 +135,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SparqlAnalyserImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SparqlAnalyserImpl.java">
+      <file leaf-file-name="VariableCollectorImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/VariableCollectorImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="105" column="26" selection-start="4067" selection-end="4085" vertical-scroll-proportion="1.355372">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ConstraintsAnalyserImplUnitTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/analysis/ConstraintsAnalyserImplUnitTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="19" selection-start="3307" selection-end="3307" vertical-scroll-proportion="0.41379312">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SelectAnalyserImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SelectAnalyserImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="82" column="19" selection-start="3447" selection-end="3447" vertical-scroll-proportion="0.3966942">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VariableAnalyser.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/VariableAnalyser.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="73" column="13" selection-start="3099" selection-end="3099" vertical-scroll-proportion="0.56198347">
+            <state line="174" column="0" selection-start="7487" selection-end="7487" vertical-scroll-proportion="1.8821839">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -173,11 +146,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WhereAnalyserImpl.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/WhereAnalyserImpl.java">
+      <file leaf-file-name="suppressions.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/conf/suppressions.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="110" column="9" selection-start="4559" selection-end="4626" vertical-scroll-proportion="1.3884298">
+            <state line="9" column="42" selection-start="537" selection-end="537" vertical-scroll-proportion="0.31034482">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SelectAnalyserImpl.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SelectAnalyserImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="72" column="0" selection-start="3270" selection-end="3270" vertical-scroll-proportion="0.33333334">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -278,76 +262,6 @@
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
       <PATH_ELEMENT>
-        <option name="myItemId" value="parser" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="sparql" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="parser" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="node" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="sparql" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="builder" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="sparql" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
         <option name="myItemId" value="analysis" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
@@ -415,28 +329,6 @@
       </PATH_ELEMENT>
       <PATH_ELEMENT>
         <option name="myItemId" value="type" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="query" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="expression" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
     </PATH>
@@ -857,7 +749,7 @@
       <hideEmptyPackages />
       <abbreviatePackageNames />
       <showStructure PackagesPane="false" ProjectPane="false" />
-      <autoscrollToSource PackagesPane="true" ProjectPane="true" />
+      <autoscrollToSource PackagesPane="false" ProjectPane="true" />
       <autoscrollFromSource PackagesPane="true" ProjectPane="true" />
       <sortByType />
     </navigator>
@@ -897,11 +789,11 @@
       <recent name="org.jrdf.query.relation.operation.mem.RelationIntegrationTestHelper" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.jrdf.query.relation.type" />
       <recent name="org.jrdf.sparql.analysis" />
       <recent name="org.jrdf.query.relation.mem" />
       <recent name="org.jrdf.query.expression" />
       <recent name="org.jrdf.writer" />
-      <recent name="org.jrdf.graph" />
     </key>
     <key name="IntroduceConstantDialog.RECENTS_KEY">
       <recent name="" />
@@ -933,6 +825,22 @@
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
     </tempConfiguration>
+    <configuration selected="false" default="true" type="JUnit" factoryName="JUnit">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ADDITIONAL_CLASS_PATH" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="wholeProject" />
+      </option>
+    </configuration>
     <configuration selected="false" default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
@@ -960,22 +868,6 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <module name="" />
-    </configuration>
-    <configuration selected="false" default="true" type="JUnit" factoryName="JUnit">
-      <module name="" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="ADDITIONAL_CLASS_PATH" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="wholeProject" />
-      </option>
     </configuration>
     <configuration selected="true" default="false" name="SparqlGui" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="org.jrdf.gui.SparqlGui" />
@@ -1120,17 +1012,17 @@
     <editor active="false" />
     <layout>
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="8" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32818532" order="7" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.31321838" order="0" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32818532" order="7" x="355" y="118" width="922" height="618" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.32327586" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32689834" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.45945945" order="11" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.45945945" order="11" x="-43" y="425" width="1278" height="404" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="3" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="9" />
       <window_info id="Favorites" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3297414" order="5" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.19827586" order="1" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4864865" order="2" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.19827586" order="1" x="321" y="22" width="356" height="617" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33333334" order="2" x="45" y="371" width="1279" height="404" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
       <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="4" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.399137" order="4" />
@@ -1153,7 +1045,7 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="PUT_FOCUS_INTO_COMMENT" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added project and refactored parsing." />
+    <option name="LAST_COMMIT_MESSAGE" value="First check in to support projection with multiple types." />
     <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
     <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -1167,16 +1059,16 @@
     <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Modified grammar to have variables - removed compile time warnings." />
-    <MESSAGE value="Removed code - replaced with call to method." />
-    <MESSAGE value="Added projection." />
-    <MESSAGE value="Added tuple factory." />
-    <MESSAGE value="Refactoring of tests." />
     <MESSAGE value="Removed creating Tuple directly." />
     <MESSAGE value="Created and wired in RelationFactory." />
     <MESSAGE value="Removed last usage of directly creating a Tuple.  Changed wiring to use ids instead of names." />
     <MESSAGE value="Checkin." />
     <MESSAGE value="Added project and refactored parsing." />
+    <MESSAGE value="Enabled project - only produces projects on subjectnodes at the moment." />
+    <MESSAGE value="Modified creation of variables to be aware of where clause." />
+    <MESSAGE value="Removed tags." />
+    <MESSAGE value="Removed some usages of ParameterTestUtil." />
+    <MESSAGE value="First check in to support projection with multiple types." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1214,31 +1106,31 @@
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
-    <option name="FILTER_TARGETS" value="false" />
+    <option name="FILTER_TARGETS" value="true" />
     <buildFile url="file://$PROJECT_DIR$/build.xml">
       <antCommandLine value="" />
-      <runInBackground value="false" />
+      <runInBackground value="true" />
       <targetFilters>
         <filter targetName="-compile" isVisible="false" />
         <filter targetName="-copy-ntriples-sablecc-resources" isVisible="false" />
         <filter targetName="-copy-sparql-sablecc-resources" isVisible="false" />
-        <filter targetName="-emma" isVisible="true" />
+        <filter targetName="-emma" isVisible="false" />
         <filter targetName="-ntriples-parser-uptodate" isVisible="false" />
         <filter targetName="-sparql-parser-uptodate" isVisible="false" />
         <filter targetName="checkstyle" isVisible="false" />
-        <filter targetName="clean" isVisible="false" />
+        <filter targetName="clean" isVisible="true" />
         <filter targetName="compile" isVisible="false" />
         <filter targetName="default" isVisible="false" />
-        <filter targetName="dist" isVisible="false" />
-        <filter targetName="emma-unit-test" isVisible="false" />
+        <filter targetName="dist" isVisible="true" />
+        <filter targetName="emma-unit-test" isVisible="true" />
         <filter targetName="gen-ntriples-parser" isVisible="false" />
         <filter targetName="gen-sparql-parser" isVisible="false" />
-        <filter targetName="gen-src" isVisible="false" />
-        <filter targetName="integration-test" isVisible="false" />
+        <filter targetName="gen-src" isVisible="true" />
+        <filter targetName="integration-test" isVisible="true" />
         <filter targetName="javadoc" isVisible="false" />
         <filter targetName="jester" isVisible="false" />
-        <filter targetName="test" isVisible="false" />
-        <filter targetName="unit-test" isVisible="false" />
+        <filter targetName="test" isVisible="true" />
+        <filter targetName="unit-test" isVisible="true" />
       </targetFilters>
       <treeView value="true" />
       <verbose value="true" />
@@ -1246,110 +1138,114 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/execute/NaiveQueryExecutor.java">
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/TestJRDFFactory.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="109" column="0" selection-start="4487" selection-end="4487" vertical-scroll-proportion="0.33333334">
+        <state line="169" column="85" selection-start="6557" selection-end="6557" vertical-scroll-proportion="1.8099415">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/SparqlConnectionImpl.java">
+    <entry file="file://$PROJECT_DIR$/conf/wiring.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="0" selection-start="4363" selection-end="4363" vertical-scroll-proportion="0.68421054">
+        <state line="120" column="43" selection-start="4267" selection-end="4267" vertical-scroll-proportion="0.7003058">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/expression/Conjunction.java">
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/parser/SableCcSparqlParserUnitTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="11" selection-start="3233" selection-end="3233" vertical-scroll-proportion="0.33333334">
+        <state line="115" column="39" selection-start="5397" selection-end="5397" vertical-scroll-proportion="0.17331499">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/gen/org/jrdf/sparql/parser/node/AVariableListSelectClause.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/parser/SableCcSparqlParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="11" selection-start="1933" selection-end="1933" vertical-scroll-proportion="0.9298246">
+        <state line="100" column="19" selection-start="4208" selection-end="4208" vertical-scroll-proportion="0.43878955">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/gen/org/jrdf/sparql/parser/node/PSelectClause.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/VariableCollector.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="47" selection-start="154" selection-end="154" vertical-scroll-proportion="0.14035088">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/expression/ProjectionUnitTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="83" selection-start="3282" selection-end="3282" vertical-scroll-proportion="0.49122807">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/gen/org/jrdf/sparql/parser/node/Switchable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="17" selection-start="154" selection-end="154" vertical-scroll-proportion="0.09903714">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/execute/NaiveQueryEngineImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="126" column="38" selection-start="5163" selection-end="5163" vertical-scroll-proportion="0.7854195">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/expression/Projection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="0" selection-start="3325" selection-end="3325" vertical-scroll-proportion="0.15818432">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/sparql/analysis/ConstraintsAnalyserImplUnitTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="19" selection-start="3307" selection-end="3307" vertical-scroll-proportion="0.41379312">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/VariableAnalyser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="13" selection-start="3099" selection-end="3099" vertical-scroll-proportion="0.56198347">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SparqlAnalyserImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="105" column="26" selection-start="4067" selection-end="4085" vertical-scroll-proportion="1.355372">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SelectAnalyserImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="19" selection-start="3447" selection-end="3447" vertical-scroll-proportion="0.3966942">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SparqlAnalyser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="97" column="0" selection-start="3795" selection-end="3795" vertical-scroll-proportion="0.50877196">
+        <state line="69" column="17" selection-start="2888" selection-end="2888" vertical-scroll-proportion="0.23427331">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/WhereAnalyserImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="110" column="9" selection-start="4559" selection-end="4626" vertical-scroll-proportion="1.3884298">
+        <state line="130" column="31" selection-start="5684" selection-end="5684" vertical-scroll-proportion="1.0043384">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/ProjectImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="86" column="20" selection-start="3548" selection-end="3548" vertical-scroll-proportion="0.33287483">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/type/SubjectPredicateObjectNodeType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="70" column="13" selection-start="2909" selection-end="2909" vertical-scroll-proportion="0.19807428">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/type/SubjectPredicateNodeType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="13" selection-start="2875" selection-end="2875" vertical-scroll-proportion="0.19807428">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/type/SubjectObjectNodeType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="13" selection-start="2872" selection-end="2872" vertical-scroll-proportion="0.19807428">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/type/PredicateObjectNodeType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="13" selection-start="2874" selection-end="2874" vertical-scroll-proportion="0.44827586">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/execute/NaiveQueryEngineImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="108" column="27" selection-start="4448" selection-end="4448" vertical-scroll-proportion="1.2758621">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/VariableCollectorImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="174" column="0" selection-start="7487" selection-end="7487" vertical-scroll-proportion="1.8821839">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/conf/suppressions.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="42" selection-start="537" selection-end="537" vertical-scroll-proportion="0.31034482">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/sparql/analysis/SelectAnalyserImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="72" column="0" selection-start="3270" selection-end="3270" vertical-scroll-proportion="0.33333334">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

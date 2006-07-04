@@ -77,7 +77,7 @@ public class ObjectNodeType implements NodeType {
 
     public boolean isJoinCompatible(Type type) {
         return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType ||
-                type instanceof LiteralType;
+                type instanceof LiteralNodeType;
     }
 
     public String getName() {

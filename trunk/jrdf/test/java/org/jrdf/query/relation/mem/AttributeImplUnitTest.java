@@ -65,7 +65,7 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.LiteralNodeType;
 import org.jrdf.query.relation.type.Type;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
@@ -86,7 +86,7 @@ public class AttributeImplUnitTest extends TestCase {
     private static final String TYPE_NAME = "type";
     private static final AttributeName TEST_NAME_FOO_POS = new PositionName("foo");
     private static final AttributeName TEST_NAME_BAR_VAR = new VariableName("bar");
-    private static final Type LITERAL_TYPE = new LiteralType();
+    private static final Type LITERAL_TYPE = new LiteralNodeType();
     private static final Type BLANK_NODE_TYPE = new BlankNodeType();
 
     public static final Attribute TEST_ATTRIBUTE_FOO_POS = new AttributeImpl(TEST_NAME_FOO_POS, LITERAL_TYPE);

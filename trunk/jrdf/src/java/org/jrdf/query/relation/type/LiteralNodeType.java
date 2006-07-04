@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,41 +56,27 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.GraphRelation;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationFactory;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.operation.Restrict;
-
-import java.util.Set;
-import java.util.SortedSet;
+package org.jrdf.query.relation.type;
 
 /**
- * The relational operation that remove tuples that don't meet a specific criteria.
+ * A literal node type.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Revision$
  */
-public class RestrictImpl implements Restrict {
-    private final RelationFactory relationFactory;
+public class LiteralNodeType implements NodeType {
+    private static final long serialVersionUID = 8059107808615405657L;
 
-    public RestrictImpl(RelationFactory relationFactory) {
-        this.relationFactory = relationFactory;
+    public boolean isAssignableFrom(Type type) {
+        return type instanceof LiteralNodeType;
     }
 
-    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
-        if (nameValues instanceof SortedSet && relation instanceof GraphRelation) {
-            return restrict((GraphRelation) relation, (SortedSet<AttributeValuePair>) nameValues);
-        }
-        throw new UnsupportedOperationException();
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type);
     }
 
-    public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
-        Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
-        return relationFactory.getRelation(restrictedTuples);
+    public String getName() {
+        return "Literal";
     }
 }

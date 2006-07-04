@@ -76,7 +76,7 @@ public class TypeComparatorImplIntegrationTest extends TestCase {
 
     private static final Type BNODE_TYPE = new BlankNodeType();
     private static final Type URI_NODE_TYPE = new URIReferenceType();
-    private static final Type LITERAL_NODE_TYPE = new LiteralType();
+    private static final Type LITERAL_NODE_TYPE = new LiteralNodeType();
     private static final Type SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
     private static final Type PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
     private static final Type OBJECT_POSITIONAL_NODE = new ObjectNodeType();

@@ -86,11 +86,13 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter {
     // FIXME TJA: Should eventually be using a Expression builder here.
     private TripleBuilder tripleBuilder;
     private Graph graph;
+    private final VariableCollector variableCollector;
     private Expression<ExpressionVisitor> expression;
 
-    public SelectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
+    public SelectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, VariableCollector variableCollector) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
+        this.variableCollector = variableCollector;
     }
 
     public Expression<ExpressionVisitor> getExpression() {
@@ -109,11 +111,12 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter {
         Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
         Set<AttributeName> declaredVariables = getDeclaredVariables(node);
         Set<Attribute> attributes = analyser.getAttributes(declaredVariables);
+        System.err.println("Projecting: " + attributes);
         expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
     }
 
     private WhereAnalyserImpl analyseWhereClause(Node node) {
-        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph);
+        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, variableCollector);
         node.apply(analyser);
         return analyser;
     }

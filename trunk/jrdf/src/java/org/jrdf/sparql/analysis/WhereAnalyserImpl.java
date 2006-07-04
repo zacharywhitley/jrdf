@@ -67,7 +67,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.Type;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APatternElementsList;
@@ -75,6 +75,7 @@ import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.Node;
 
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -86,11 +87,13 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     // FIXME TJA: Should eventually be using a Expression builder here.
     private TripleBuilder tripleBuilder;
     private Graph graph;
+    private VariableCollector collector;
     private Expression<ExpressionVisitor> expression;
 
-    public WhereAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
+    public WhereAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, VariableCollector collector) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
+        this.collector = collector;
     }
 
     public Expression<ExpressionVisitor>getExpression() {
@@ -100,6 +103,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     @Override
     public void caseATriple(ATriple tripleNode) {
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
+        collector.addVariables(attributeValuePairs);
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 
@@ -115,7 +119,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     private Expression<ExpressionVisitor> getExpression(Node node) {
-        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph);
+        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
         node.apply(analyser);
         return analyser.getExpression();
     }
@@ -126,9 +130,16 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     // equal() method to call join compatible.  See what works best.
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
         Set<Attribute> newAttributes = new LinkedHashSet<Attribute>();
+        Map<String, Type> variables = collector.getVariables();
         for (AttributeName variable : declaredVariables) {
-            Attribute attribute = new AttributeImpl(variable, new SubjectNodeType());
-            newAttributes.add(attribute);
+            Type type = variables.get(variable.getLiteral());
+            if (type == null) {
+                throw new RuntimeException("Failed to find: " + variable);
+            } else {
+                System.err.println("Got: " + type + " for: " + variable);
+                Attribute attribute = new AttributeImpl(variable, type);
+                newAttributes.add(attribute);
+            }
         }
         return newAttributes;
     }

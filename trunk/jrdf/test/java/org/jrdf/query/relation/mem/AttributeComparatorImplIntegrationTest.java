@@ -65,7 +65,7 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.LiteralNodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
@@ -89,7 +89,7 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     private static final AttributeName POSITION_NAME_4 = new PositionName("predicate");
     private static final AttributeName POSITION_NAME_5 = new PositionName("object");
     private static final Type BNODE_TYPE = new BlankNodeType();
-    private static final Type LITERAL_NODE_TYPE = new LiteralType();
+    private static final Type LITERAL_NODE_TYPE = new LiteralNodeType();
     private static final Type SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
     private static final Type PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
     private static final Type OBJECT_POSITIONAL_NODE = new ObjectNodeType();
