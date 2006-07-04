@@ -133,7 +133,7 @@ public class TupleImplUnitTest extends TestCase {
 
     public void testConstructor() {
         checkConstructor(TupleImpl.class, 0, CONSTRUCTOR_TYPES);
-        checkConstructNullAssertion(TupleImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
+        checkConstructNullAssertion(TupleImpl.class, CONSTRUCTOR_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivate(TupleImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
         checkStandardConstructor(ATTRIBUTE_VALUE_SET_1);
         checkStandardConstructor(ATTRIBUTE_VALUE_SET_2);

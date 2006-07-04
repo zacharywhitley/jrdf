@@ -59,8 +59,8 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.util.param.ParameterUtil;
 import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Set;
 
@@ -76,8 +76,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     private final Expression<ExpressionVisitor> nextExpression;
 
     public Projection(Set<Attribute> attributes, Expression<ExpressionVisitor> nextExpression) {
-        ParameterUtil.checkNotNull("attributes", attributes);
-        ParameterUtil.checkNotNull("nextExpression", nextExpression);
+        checkNotNull(attributes, nextExpression);
         this.attributes = attributes;
         this.nextExpression = nextExpression;
     }

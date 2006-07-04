@@ -94,9 +94,9 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
     private static final ParserFactory PARSER_FACTORY = MockTestUtil.createMock(ParserFactory.class);
     private static final TripleBuilder TRIPLE_BUILDER = MockTestUtil.createMock(TripleBuilder.class);
-    private static final String QUERY_TEXT_MESSAGE = "queryText parameter cannot be null";
-    private static final String QUERY_TEXT_EMPTY = "queryText parameter cannot be the empty string";
-    private static final String GRAPH_MESSAGE = "graph parameter cannot be null";
+    private static final String QUERY_TEXT_MESSAGE = "queryText cannot be null";
+    private static final String QUERY_TEXT_EMPTY = "queryText cannot be the empty string";
+    private static final String GRAPH_MESSAGE = "graph cannot be null";
     private static final String ERROR_MSG = "Unable to parse query syntax";
     private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1,1), "bar");
     private static final LexerException LEXER_EXECPTION = new LexerException("foo");

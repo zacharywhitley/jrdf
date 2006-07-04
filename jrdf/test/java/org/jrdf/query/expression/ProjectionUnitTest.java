@@ -85,7 +85,7 @@ public class ProjectionUnitTest extends TestCase {
     }
 
     public void testNullToConstructorThrowsException() {
-        ArgumentTestUtil.checkConstructNullAssertion(Projection.class, PARAM_TYPES, PARAMETER_NAMES);
+        ArgumentTestUtil.checkConstructNullAssertion(Projection.class, PARAM_TYPES);
     }
 
     @SuppressWarnings( {"unchecked"} )

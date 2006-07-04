@@ -76,10 +76,8 @@ import java.net.URI;
  * @version $Revision$
  */
 public final class NaiveQueryExecutorUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = new Class[] {Graph.class, URI.class,
+    private static final Class[] PARAM_TYPES = {Graph.class, URI.class,
                 QueryEngine.class, GraphRelationFactory.class};
-    private static final String[] PARAM_NAMES = new String[] { "graph", "securityDomain", "queryEngine",
-            "graphRelationFactory"};
     private MockFactory mockFactory;
 
     public void setUp() {
@@ -92,7 +90,7 @@ public final class NaiveQueryExecutorUnitTest extends TestCase {
     }
 
     public void testNullsInConstructor() {
-        ArgumentTestUtil.checkConstructNullAssertion(NaiveQueryExecutor.class, PARAM_TYPES, PARAM_NAMES);
+        ArgumentTestUtil.checkConstructNullAssertion(NaiveQueryExecutor.class, PARAM_TYPES);
     }
 
     public void testExecuteQuery() throws Exception {

@@ -66,9 +66,10 @@ import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterTestUtil;
-import org.jrdf.util.test.ArgumentTestUtil;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
@@ -88,23 +89,22 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
     private static final String QUERY_GOOD = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
-    private static final String CANNOT_BE_NULL = "queryText parameter cannot be null";
-    private static final String CANNOT_BE_EMPTY = "queryText parameter cannot be the empty string";
+    private static final String CANNOT_BE_NULL = "queryText cannot be null";
+    private static final String CANNOT_BE_EMPTY = "queryText cannot be the empty string";
     private MockFactory mockFactory;
-    private static final Class[] PARAM_TYPES = new Class[] {SparqlParser.class};
-    private static final String[] PARAM_NAMES = new String[] {"parser"};
+    private static final Class[] PARAM_TYPES = {SparqlParser.class};
 
     public void setUp() {
         mockFactory = new MockFactory();
     }
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(QueryBuilder.class, SparqlQueryBuilder.class);
-        ClassPropertiesTestUtil.checkConstructor(SparqlQueryBuilder.class, Modifier.PUBLIC, SparqlParser.class);
+        checkImplementationOfInterfaceAndFinal(QueryBuilder.class, SparqlQueryBuilder.class);
+        checkConstructor(SparqlQueryBuilder.class, Modifier.PUBLIC, SparqlParser.class);
     }
 
     public void testNullsInConstructor() {
-        ArgumentTestUtil.checkConstructNullAssertion(SparqlQueryBuilder.class, PARAM_TYPES, PARAM_NAMES);
+        checkConstructNullAssertion(SparqlQueryBuilder.class, PARAM_TYPES);
     }
 
     public void testBadParams() throws Exception {

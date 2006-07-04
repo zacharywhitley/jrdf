@@ -87,7 +87,6 @@ import java.util.TreeSet;
  * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
 // TODO (AN) Come back and add unit tests and integration tests!!!!!
-// TODO (AN) This class is doing too much - given the abstractcoupling failure.
 public final class GraphRelationImpl extends Primordial implements GraphRelation {
 
     private final Graph graph;

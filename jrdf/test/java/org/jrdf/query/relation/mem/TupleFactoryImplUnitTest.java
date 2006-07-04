@@ -91,7 +91,7 @@ public class TupleFactoryImplUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        ArgumentTestUtil.checkConstructNullAssertion(TupleFactoryImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
+        ArgumentTestUtil.checkConstructNullAssertion(TupleFactoryImpl.class, CONSTRUCTOR_TYPES);
         ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal(TupleFactoryImpl.class, CONSTRUCTOR_TYPES,
                 CONSTRUCTOR_NAMES);
     }

@@ -86,9 +86,7 @@ public final class RelationImpl extends Primordial implements Relation {
     private final TupleComparator tupleComparator;
 
     RelationImpl(Set<Tuple> tuples, AttributeComparator attributeComparator, TupleComparator tupleComparator) {
-        checkNotNull("tuples", tuples);
-        checkNotNull("attributeComparator", attributeComparator);
-        checkNotNull("tupleComparator", tupleComparator);
+        checkNotNull(tuples, attributeComparator, tupleComparator);
         this.heading = createHeadingFromTuples(tuples);
         this.tuples = tuples;
         this.attributeComparator = attributeComparator;

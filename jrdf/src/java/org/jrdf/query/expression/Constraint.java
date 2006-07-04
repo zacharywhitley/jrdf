@@ -59,8 +59,8 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.util.param.ParameterUtil;
 import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
 import java.util.SortedSet;
@@ -77,7 +77,7 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
     private SortedSet<AttributeValuePair> avp;
 
     public Constraint(SortedSet<AttributeValuePair> avp) {
-        ParameterUtil.checkNotNull("avp", avp);
+        checkNotNull(avp);
         this.avp = avp;
     }
 
