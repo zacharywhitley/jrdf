@@ -76,7 +76,7 @@ public final class TupleFactoryImpl implements TupleFactory {
     private final AttributeValuePairComparator attributeValuePairComparator;
 
     public TupleFactoryImpl(AttributeValuePairComparator attributeValuePairComparator) {
-        checkNotNull("attributeValuePairComparator", attributeValuePairComparator);
+        checkNotNull(attributeValuePairComparator);
         this.attributeValuePairComparator = attributeValuePairComparator;
     }
 

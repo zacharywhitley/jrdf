@@ -68,6 +68,7 @@ public final class ParameterUtil {
     private ParameterUtil() {
     }
 
+    // TODO (AN) Remove other users of this.
     /**
      * Checks if <var>param</var> is <code>null</code> and throws an exception if it is.
      *
@@ -77,7 +78,7 @@ public final class ParameterUtil {
      */
     public static void checkNotNull(String name, Object param) throws IllegalArgumentException {
         if (!NULL_CHECKER.paramAllowed(param)) {
-            throw new IllegalArgumentException(name + " parameter cannot be null");
+            throw new IllegalArgumentException(name + " cannot be null");
         }
     }
 
@@ -91,7 +92,7 @@ public final class ParameterUtil {
     public static void checkNotEmptyString(String name, String param) throws IllegalArgumentException {
         checkNotNull(name, param);
         if (!EMPTY_STRING_CHECKER.paramAllowed(param)) {
-            throw new IllegalArgumentException(name + " parameter cannot be the empty string");
+            throw new IllegalArgumentException(name + " cannot be the empty string");
         }
     }
 

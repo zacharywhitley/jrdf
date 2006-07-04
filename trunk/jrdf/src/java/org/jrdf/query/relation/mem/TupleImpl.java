@@ -79,8 +79,7 @@ public final class TupleImpl extends Primordial implements Tuple {
 
     TupleImpl(Set<AttributeValuePair> attributeValues,
                      AttributeValuePairComparator attributeValuePairComparator) {
-        checkNotNull("attributeValues", attributeValues);
-        checkNotNull("attributeValuePairComparator", attributeValuePairComparator);
+        checkNotNull(attributeValues, attributeValuePairComparator);
         this.attributeValues = attributeValues;
         this.attributeValuePairComparator = attributeValuePairComparator;
     }

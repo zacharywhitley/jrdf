@@ -82,7 +82,7 @@ import java.util.Set;
  */
 public class RelationFactoryImplUnitTest extends TestCase {
     private static final Class[] CONSTRUCTOR_TYPES = { AttributeComparator.class, TupleComparator.class };
-    private static final String[] CONSTRUCTOR_NAMES = new String[] {"attributeComparator", "tupleComparator"};
+    private static final String[] CONSTRUCTOR_NAMES = {"attributeComparator", "tupleComparator"};
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = MockTestUtil.createMock(AttributeComparator.class);
     private static final TupleComparator TUPLE_COMPARATOR = MockTestUtil.createMock(TupleComparator.class);
     private static final Set<Tuple> tuples = new HashSet<Tuple>();
@@ -93,7 +93,7 @@ public class RelationFactoryImplUnitTest extends TestCase {
     }
 
     public void testConstructor() {
-        checkConstructNullAssertion(RelationFactoryImpl.class, CONSTRUCTOR_TYPES, CONSTRUCTOR_NAMES);
+        checkConstructNullAssertion(RelationFactoryImpl.class, CONSTRUCTOR_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivateFinal(RelationFactoryImpl.class, CONSTRUCTOR_TYPES,
                 CONSTRUCTOR_NAMES);
     }

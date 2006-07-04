@@ -113,7 +113,7 @@ public class RelationImplUnitTest extends TestCase {
     }
 
     public void testConstructorAndFields() {
-        checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES, PARAM_NAMES);
+        checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivate(RelationImpl.class, PARAM_TYPES, PARAM_NAMES);
         checkFieldPrivate(RelationImpl.class, HEADING_NAME);
         isFieldOfType(RelationImpl.class, Set.class, HEADING_NAME);

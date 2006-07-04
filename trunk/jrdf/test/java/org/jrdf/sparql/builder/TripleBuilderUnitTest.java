@@ -121,7 +121,7 @@ public final class TripleBuilderUnitTest extends TestCase {
     }
 
     public void testBuildNullParameters() {
-        ArgumentTestUtil.checkMethodNullAssertions(PARAMS, tripleBuilder, "build");
+        ArgumentTestUtil.checkMethodNullAssertions(tripleBuilder, "build", PARAMS);
     }
 
     public void testBuildTripleFromParserNode() {

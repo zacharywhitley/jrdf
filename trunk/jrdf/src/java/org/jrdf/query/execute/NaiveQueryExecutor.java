@@ -65,7 +65,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
 
@@ -92,10 +92,7 @@ final class NaiveQueryExecutor implements JrdfQueryExecutor {
      */
     public NaiveQueryExecutor(Graph graph, URI securityDomain, QueryEngine queryEngine,
             GraphRelationFactory graphRelationFactory) {
-        ParameterUtil.checkNotNull("graph", graph);
-        ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("queryEngine", queryEngine);
-        ParameterUtil.checkNotNull("graphRelationFactory", graphRelationFactory);
+        checkNotNull(graph, securityDomain, queryEngine, graphRelationFactory);
         this.graph = graph;
         this.securityDomain = securityDomain;
         this.queryEngine = queryEngine;

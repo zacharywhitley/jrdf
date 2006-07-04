@@ -66,7 +66,8 @@ import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URL;
 
@@ -89,16 +90,14 @@ public final class SparqlConnectionImpl implements SparqlConnection {
      * @param securityDomain The security domain of the graph.
      */
     public SparqlConnectionImpl(URL securityDomain, QueryBuilder builder, JrdfQueryExecutorFactory executorFactory) {
-        ParameterUtil.checkNotNull("securityDomain", securityDomain);
-        ParameterUtil.checkNotNull("builder", builder);
-        ParameterUtil.checkNotNull("executorFactory", executorFactory);
+        checkNotNull(securityDomain, builder, executorFactory);
         this.builder = builder;
         this.executorFactory = executorFactory;
     }
 
     public Relation executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException {
-        ParameterUtil.checkNotNull("graph", graph);
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
+        checkNotNull("graph", graph);
+        checkNotEmptyString("queryText", queryText);
         Query builtQuery = builder.buildQuery(graph, queryText);
         JrdfQueryExecutor executor = executorFactory.getExecutor(graph);
         return executor.executeQuery(builtQuery);

@@ -25,9 +25,8 @@ public class JrdfConnectionFactoryUnitTest extends TestCase {
             = MockTestUtil.createMock(JrdfQueryExecutorFactory.class);
     private static final QueryBuilder QUERY_BUILDER = MockTestUtil.createMock(QueryBuilder.class);
     private static final String METHOD_NAME = "createSparqlConnection";
-    private static final String[] PARAMETER_NAMES = new String[] {"securityDomain", "builder", "queryExecutorFactory"};
-    private static final Class[] PARAMETER_TYPES =
-            new Class[] {URL.class, QueryBuilder.class, JrdfQueryExecutorFactory.class};
+    private static final String[] PARAMETER_NAMES = {"securityDomain", "builder", "queryExecutorFactory"};
+    private static final Class[] PARAMETER_TYPES = {URL.class, QueryBuilder.class, JrdfQueryExecutorFactory.class};
     private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(PARAMETER_NAMES, PARAMETER_TYPES );
 
     public void testNoSecurityConstant() {
@@ -35,7 +34,7 @@ public class JrdfConnectionFactoryUnitTest extends TestCase {
     }
 
     public void testCreateSparqlConnectionNullContract() {
-        ArgumentTestUtil.checkMethodNullAssertions(PARAM_DEFINITION, createFactory(), METHOD_NAME);
+        ArgumentTestUtil.checkMethodNullAssertions(createFactory(), METHOD_NAME, PARAM_DEFINITION);
     }
 
     public void testGetSparqlConnection() {

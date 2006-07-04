@@ -79,8 +79,9 @@ public final class RelationFactoryImpl implements RelationFactory {
 
     public RelationFactoryImpl(AttributeComparator attributeComparator, TupleComparator tupleComparator) {
         // TODO Move paramter checking into varargs call.
-        ParameterUtil.checkNotNull("attributeComparator", attributeComparator);
-        ParameterUtil.checkNotNull("tupleComparator", tupleComparator);
+        ParameterUtil.checkNotNull(attributeComparator, tupleComparator);
+//        ParameterUtil.checkNotNull("attributeComparator", attributeComparator);
+//        ParameterUtil.checkNotNull("tupleComparator", tupleComparator);
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
     }

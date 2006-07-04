@@ -186,7 +186,7 @@ public class GraphImpl implements Graph, Serializable {
         // protect each field allocation with a test for null
         initIndexes();
 
-        LongIndex[] indexes = new LongIndex[]{longIndex012, longIndex120, longIndex201};
+        LongIndex[] indexes = {longIndex012, longIndex120, longIndex201};
 
         if (null == nodePool) {
             nodePool = new NodePoolMemImpl();

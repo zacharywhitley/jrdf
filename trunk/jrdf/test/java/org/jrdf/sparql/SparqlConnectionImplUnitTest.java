@@ -106,7 +106,6 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
     private static final String METHOD_NAME = "executeQuery";
     private static final Class[] PARAM_TYPES = { URL.class, QueryBuilder.class, JrdfQueryExecutorFactory.class};
-    private static final String[] PARAM_NAMES = { "securityDomain", "builder", "executorFactory"};
     private static final String[] METHOD_PARAM_NAMES = {"graph", "queryText"};
     private static final Class[] METHOD_PARAM_TYPES = {Graph.class, String.class};
     private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(METHOD_PARAM_NAMES,
@@ -123,12 +122,12 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     public void testNullsInConstructor() {
-        ArgumentTestUtil.checkConstructNullAssertion(SparqlConnectionImpl.class, PARAM_TYPES, PARAM_NAMES);
+        ArgumentTestUtil.checkConstructNullAssertion(SparqlConnectionImpl.class, PARAM_TYPES);
     }
 
     public void testCreateSparqlConnectionNullContract() {
         SparqlConnection sparqlConnection = createSparqlConnection();
-        ArgumentTestUtil.checkMethodNullAssertions(PARAM_DEFINITION, sparqlConnection, METHOD_NAME);
+        ArgumentTestUtil.checkMethodNullAssertions(sparqlConnection, METHOD_NAME, PARAM_DEFINITION);
     }
 
     public void testExecuteSimpleBadQuery() throws Exception {

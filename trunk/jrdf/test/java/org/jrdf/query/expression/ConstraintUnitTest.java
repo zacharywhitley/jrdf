@@ -103,7 +103,7 @@ public final class ConstraintUnitTest extends TestCase {
     }
 
     public void testNullToConstructorThrowsException() {
-        ArgumentTestUtil.checkConstructNullAssertion(Constraint.class, PARAM_TYPES, PARAMETER_NAMES);
+        ArgumentTestUtil.checkConstructNullAssertion(Constraint.class, PARAM_TYPES);
     }
 
     public void getAvp() {
