@@ -97,9 +97,7 @@ public class ProjectImpl implements Project {
         }
 
         if (requiresMerge(attributes)) {
-            System.err.println("Before merge: " + relation);
             relation = mergeRelationHeading(relation, attributes);
-            System.err.println("Result after merge: " + relation);
         }
         Set<Attribute> newHeading = relation.getHeading();
         newHeading.retainAll(attributes);
@@ -140,12 +138,13 @@ public class ProjectImpl implements Project {
                         matchedValue2 = avp.getValue();
                     }
                 }
-                if ((matchedValue1 != null && matchedValue1.equals(matchedValue2)) ||
-                        attributeMatch1 == attributeMatch2) {
-                    newAvps.add(new AttributeValuePairImpl(attribute, matchedValue1));
+                if ((matchedValue1 != null) && ((matchedValue1.equals(matchedValue2)) ||
+                        attributeMatch1 == attributeMatch2)) {
+                    AttributeValuePair newAvp = new AttributeValuePairImpl(attribute, matchedValue1);
+                    newAvps.add(newAvp);
                 }
             }
-            if (newAvps.size() > 0) {
+            if (newAvps.size() == attributes.size()) {
                 newTuples.add(tupleFactory.getTuple(newAvps));
             }
         }
