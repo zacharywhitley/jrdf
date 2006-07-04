@@ -81,12 +81,10 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private Expression<ExpressionVisitor> expression;
-    private VariableCollector variableCollector;
 
-    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, VariableCollector variableCollector) {
+    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
-        this.variableCollector = variableCollector;
     }
 
     /**
@@ -105,6 +103,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     }
 
     private Expression<ExpressionVisitor> getExpression(Node node) {
+        VariableCollector variableCollector = new VariableCollectorImpl();
         SelectAnalyserImpl analyser = new SelectAnalyserImpl(tripleBuilder, graph, variableCollector);
         node.apply(analyser);
         return analyser.getExpression();

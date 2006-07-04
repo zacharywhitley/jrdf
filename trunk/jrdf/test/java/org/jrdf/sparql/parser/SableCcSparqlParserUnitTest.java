@@ -112,8 +112,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
-        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class,
-                VariableCollector.class);
+        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class);
     }
 
     public void testParseQueryFailsWithBadInput() {
@@ -194,7 +193,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder,
             VariableCollector variableCollector) {
-        return new SableCcSparqlParser(parserFactory, tripleBuilder, variableCollector);
+        return new SableCcSparqlParser(parserFactory, tripleBuilder);
 
     }
 

@@ -63,7 +63,6 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.sparql.analysis.SparqlAnalyser;
 import org.jrdf.sparql.analysis.SparqlAnalyserImpl;
-import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.Start;
@@ -85,13 +84,10 @@ public final class SableCcSparqlParser implements SparqlParser {
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
     private ParserFactory parserFactory;
     private TripleBuilder builder;
-    private VariableCollector variableCollector;
 
-    public SableCcSparqlParser(ParserFactory parserFactory, TripleBuilder builder,
-            VariableCollector variableCollector) {
+    public SableCcSparqlParser(ParserFactory parserFactory, TripleBuilder builder) {
         this.parserFactory = parserFactory;
         this.builder = builder;
-        this.variableCollector = variableCollector;
     }
 
     /**
@@ -122,7 +118,7 @@ public final class SableCcSparqlParser implements SparqlParser {
     }
 
     private Query analyseQuery(Graph graph, Start start) {
-        SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph, variableCollector);
+        SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph);
         start.apply(analyser);
         return analyser.getQuery();
     }

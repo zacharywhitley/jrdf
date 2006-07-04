@@ -68,8 +68,10 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.SubjectObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 
 import java.util.HashSet;
@@ -106,7 +108,8 @@ public class ProjectImpl implements Project {
 
     private boolean requiresMerge(Set<Attribute> attributes) {
         for (Attribute attribute : attributes) {
-            if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
+            if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class) ||
+                    attribute.getType().getClass().equals(SubjectObjectNodeType.class)) {
                 return true;
             }
         }
@@ -127,10 +130,14 @@ public class ProjectImpl implements Project {
                 if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
                     attributeMatch1 = new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType());
                     attributeMatch2 = new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType());
+                } else if (attribute.getType().getClass().equals(SubjectObjectNodeType.class)) {
+                    attributeMatch1 = new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType());
+                    attributeMatch2 = new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType());
                 } else {
                     attributeMatch1 = attribute;
                     attributeMatch2 = attribute;
                 }
+
                 for (AttributeValuePair avp : avps) {
                     if (avp.getAttribute().equals(attributeMatch1)) {
                         matchedValue1 = avp.getValue();
