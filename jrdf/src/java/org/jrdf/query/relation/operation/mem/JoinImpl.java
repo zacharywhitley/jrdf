@@ -56,10 +56,6 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-// TODO (AN) An
-
-// TODO (AN)
-
 package org.jrdf.query.relation.operation.mem;
 
 import org.jrdf.query.relation.Attribute;

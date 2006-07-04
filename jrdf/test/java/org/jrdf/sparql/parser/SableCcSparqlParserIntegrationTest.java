@@ -61,6 +61,8 @@ package org.jrdf.sparql.parser;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.sparql.builder.TripleBuilderImpl;
+import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.ObjectNode;
@@ -105,8 +107,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         PredicateNode predicate = elementFactory.createResource(TripleTestUtil.URI_DC_TITLE);
         ObjectNode object = elementFactory.createLiteral(TripleTestUtil.LITERAL_BOOK_TITLE);
         GRAPH.add(subject, predicate, object);
-        TripleBuilderImpl builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(), 1);
-        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder);
+        TripleBuilder builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(), 1);
+        VariableCollector variableCollector = FACTORY.getNewVariableCollector();
+        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder, variableCollector);
     }
 
     public void testSingleConstraint() {

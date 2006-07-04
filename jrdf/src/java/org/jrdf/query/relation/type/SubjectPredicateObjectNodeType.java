@@ -56,78 +56,39 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.execute;
+package org.jrdf.query.relation.type;
 
-import org.jrdf.query.expression.Conjunction;
-import org.jrdf.query.expression.Constraint;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.ExpressionVisitorAdapter;
-import org.jrdf.query.expression.Projection;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.Project;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
 
 /**
- * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
- * query tree by performing restrinctions, other operations (join, etc) and then project.
+ * An subjectpredicate node type.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Revision: 651 $
  */
-public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements QueryEngine {
-    private Relation result;
-    private Project project;
-    private Restrict restrict;
-    private Join join;
+public class SubjectPredicateObjectNodeType implements NodeType {
+    private static final long serialVersionUID = 799086809870140765L;
 
-    public NaiveQueryEngineImpl(Project project, Join join, Restrict restrict) {
-        this.project = project;
-        this.join = join;
-        this.restrict = restrict;
+    public boolean isAssignableFrom(Type type) {
+        return type instanceof SubjectNode || type instanceof PredicateNode || type instanceof ObjectNode;
     }
 
-    public Relation getResult() {
-        return result;
+    public boolean isJoinCompatible(Type type) {
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType ||
+                type instanceof ObjectNodeType;
     }
 
-    public void setResult(Relation newResult) {
-        result = newResult;
+    public String getName() {
+        return "SubjectPredicateObject";
     }
 
-    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
-        Relation expression = getExpression(projection.getNextExpression());
-        Set<Attribute> attributes = projection.getAttributes();
-        System.err.println("Projecting: " + attributes);
-        result = project.include(expression, attributes);
+    public int hashCode() {
+        return getName().hashCode();
     }
 
-    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
-        SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
-        result = restrict.restrict(result, singleAvp);
-    }
-
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-        Relation lhs = getExpression(conjunction.getLhs());
-        Relation rhs = getExpression(conjunction.getRhs());
-        Set<Relation> relations = new HashSet<Relation>();
-        relations.add(lhs);
-        relations.add(rhs);
-        result = join.join(relations);
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    private <V extends ExpressionVisitor>Relation getExpression(Expression<V> expression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, join, restrict);
-        queryEngine.setResult(result);
-        expression.accept((V) queryEngine);
-        return queryEngine.getResult();
+    public boolean equals(Object obj) {
+        return obj instanceof SubjectPredicateObjectNodeType;
     }
 }

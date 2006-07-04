@@ -72,6 +72,7 @@ import org.jrdf.query.relation.operation.Join;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.sparql.parser.ParserFactory;
@@ -163,5 +164,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public RelationFactory getNewRelationFactory() {
         return (RelationFactory) FACTORY.getContext().getBean("relationFactory");
+    }
+
+    public VariableCollector getNewVariableCollector() {
+        return (VariableCollector) FACTORY.getContext().getBean("variableCollector");
     }
 }

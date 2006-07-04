@@ -7,6 +7,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="TripleBuilderImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="JoinImpl.java"/>
+    <suppress checks="CyclomaticComplexity" files="VariableCollectorImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="EscapeUtil.java"/>
     <suppress checks="JavaNCSS" files="RDF.java"/>
@@ -15,6 +16,7 @@
     <suppress checks="JavaNCSS" files="RdfXmlParserExample.java"/>
     <suppress checks="JavaNCSS" files="NodeTypeComparatorImpl.java"/>
     <suppress checks="JavaNCSS" files="JoinImpl.java"/>
+    <suppress checks="JavaNCSS" files="VariableCollectorImpl.java"/>
 
     <!-- RDF/XML Writer -->
     <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter.java"/>

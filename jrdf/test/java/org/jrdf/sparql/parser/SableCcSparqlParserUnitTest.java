@@ -71,6 +71,7 @@ import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.node.TBlank;
 import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
@@ -92,6 +93,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
+    private static final VariableCollector VARIABLE_COLLECTOR = MockTestUtil.createMock(VariableCollector.class);
     private static final ParserFactory PARSER_FACTORY = MockTestUtil.createMock(ParserFactory.class);
     private static final TripleBuilder TRIPLE_BUILDER = MockTestUtil.createMock(TripleBuilder.class);
     private static final String QUERY_TEXT_MESSAGE = "queryText cannot be null";
@@ -110,7 +112,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
-        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class);
+        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class,
+                VariableCollector.class);
     }
 
     public void testParseQueryFailsWithBadInput() {
@@ -124,7 +127,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         Start start = createStart();
         Parser parser = createParser(start);
         ParserFactory parserFactory = createParserFactory(parser);
-        SableCcSparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER);
+        SableCcSparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER,
+                VARIABLE_COLLECTOR);
         mockFactory.replay();
         sableCcSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
         mockFactory.verify();
@@ -179,7 +183,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private void checkBadInput(final Graph graph, final String query, String errorMessage) {
-        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY, TRIPLE_BUILDER);
+        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY, TRIPLE_BUILDER,
+                VARIABLE_COLLECTOR);
         AssertThrows.assertThrows(IllegalArgumentException.class, errorMessage, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 sableCcSparqlParser.parseQuery(graph, query);
@@ -187,8 +192,9 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         });
     }
 
-    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder) {
-        return new SableCcSparqlParser(parserFactory, tripleBuilder);
+    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder,
+            VariableCollector variableCollector) {
+        return new SableCcSparqlParser(parserFactory, tripleBuilder, variableCollector);
 
     }
 
@@ -197,7 +203,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         Parser parser = createParser(exception);
         ParserFactory parserFactory = createParserFactory(parser);
         final SableCcSparqlParser sableCcSparqlParser =
-                createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER);
+                createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER, VARIABLE_COLLECTOR);
         mockFactory.replay();
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, ERROR_MSG, new AssertThrows.Block() {
             public void execute() throws Throwable {

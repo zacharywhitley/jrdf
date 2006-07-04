@@ -108,12 +108,17 @@
         </constructor-arg>
     </bean>
 
+    <bean id="variableCollector" class="org.jrdf.sparql.analysis.VariableCollectorImpl"/>
+
     <bean id="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser">
         <constructor-arg>
             <ref bean="parserFactory"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="tripleBuilder"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="variableCollector"/>
         </constructor-arg>
     </bean>
 

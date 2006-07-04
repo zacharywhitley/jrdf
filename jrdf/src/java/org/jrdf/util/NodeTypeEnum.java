@@ -60,7 +60,7 @@ package org.jrdf.util;
 import org.jrdf.query.relation.type.Type;
 import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.URIReferenceType;
-import org.jrdf.query.relation.type.LiteralType;
+import org.jrdf.query.relation.type.LiteralNodeType;
 
 /**
  * Enumeration for node types.
@@ -93,7 +93,7 @@ public enum NodeTypeEnum {
             return NodeTypeEnum.BLANK_NODE;
         } else if (URIReferenceType.class.isAssignableFrom(nodeClass)) {
             return NodeTypeEnum.URI_REFERENCE;
-        } else if (LiteralType.class.isAssignableFrom(nodeClass)) {
+        } else if (LiteralNodeType.class.isAssignableFrom(nodeClass)) {
             return NodeTypeEnum.LITERAL;
         } else {
             throw new IllegalArgumentException("Illegal node: " + nodeClass);
