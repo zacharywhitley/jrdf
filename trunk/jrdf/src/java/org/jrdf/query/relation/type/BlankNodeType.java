@@ -59,6 +59,9 @@
 
 package org.jrdf.query.relation.type;
 
+import java.util.Set;
+import java.util.Collections;
+
 /**
  * A blank node type.
  *
@@ -66,6 +69,8 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public class BlankNodeType implements NodeType {
+    private static final NodeType INSTANCE = new BlankNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 1645735853855887744L;
 
     public boolean isAssignableFrom(Type type) {
@@ -77,6 +82,10 @@ public class BlankNodeType implements NodeType {
     }
 
     public String getName() {
-        return "Blank Node";
+        return "BlankNode";
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }

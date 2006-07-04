@@ -59,6 +59,8 @@
 
 package org.jrdf.query.relation.type;
 
+import java.util.Set;
+
 /**
  * Node types - data types belong to RDF nodes.
  *
@@ -66,4 +68,5 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public interface NodeType extends Type {
+    Set<NodeType> composedOf();
 }

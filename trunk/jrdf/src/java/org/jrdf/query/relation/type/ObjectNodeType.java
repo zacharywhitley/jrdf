@@ -62,6 +62,9 @@ package org.jrdf.query.relation.type;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 
+import java.util.Set;
+import java.util.Collections;
+
 /**
  * An object node type.
  *
@@ -69,6 +72,8 @@ import org.jrdf.graph.SubjectNode;
  * @version $Revision$
  */
 public class ObjectNodeType implements NodeType {
+    private static final NodeType INSTANCE = new ObjectNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 8047443471499147543L;
 
     public boolean isAssignableFrom(Type type) {
@@ -76,7 +81,7 @@ public class ObjectNodeType implements NodeType {
     }
 
     public boolean isJoinCompatible(Type type) {
-        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceType ||
+        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType ||
                 type instanceof LiteralNodeType;
     }
 
@@ -90,5 +95,9 @@ public class ObjectNodeType implements NodeType {
 
     public boolean equals(Object obj) {
         return obj instanceof ObjectNodeType;
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }

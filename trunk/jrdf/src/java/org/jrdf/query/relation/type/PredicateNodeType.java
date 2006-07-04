@@ -59,6 +59,9 @@
 
 package org.jrdf.query.relation.type;
 
+import java.util.Set;
+import java.util.Collections;
+
 /**
  * An predicate node type.
  *
@@ -66,6 +69,8 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public class PredicateNodeType implements NodeType {
+    private static final NodeType INSTANCE = new PredicateNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = -5313315028523572144L;
 
     public boolean isAssignableFrom(Type type) {
@@ -73,7 +78,7 @@ public class PredicateNodeType implements NodeType {
     }
 
     public boolean isJoinCompatible(Type type) {
-        return isAssignableFrom(type) || type instanceof URIReferenceType;
+        return isAssignableFrom(type) || type instanceof URIReferenceNodeType;
     }
 
     public String getName() {
@@ -86,5 +91,9 @@ public class PredicateNodeType implements NodeType {
 
     public boolean equals(Object obj) {
         return obj instanceof PredicateNodeType;
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }

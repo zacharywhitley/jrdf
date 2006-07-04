@@ -59,6 +59,9 @@
 
 package org.jrdf.query.relation.type;
 
+import java.util.Set;
+import java.util.Collections;
+
 /**
  * A literal node type.
  *
@@ -66,6 +69,8 @@ package org.jrdf.query.relation.type;
  * @version $Revision$
  */
 public class LiteralNodeType implements NodeType {
+    private static final NodeType INSTANCE = new LiteralNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 8059107808615405657L;
 
     public boolean isAssignableFrom(Type type) {
@@ -78,5 +83,9 @@ public class LiteralNodeType implements NodeType {
 
     public String getName() {
         return "Literal";
+    }
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
     }
 }
