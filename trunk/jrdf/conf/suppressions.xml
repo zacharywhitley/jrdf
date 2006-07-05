@@ -15,7 +15,6 @@
     <suppress checks="JavaNCSS" files="RDFS.java"/>
     <suppress checks="JavaNCSS" files="JrdfExample.java"/>
     <suppress checks="JavaNCSS" files="RdfXmlParserExample.java"/>
-    <suppress checks="JavaNCSS" files="NodeTypeComparatorImpl.java"/>
     <suppress checks="JavaNCSS" files="JoinImpl.java"/>
     <suppress checks="JavaNCSS" files="MergeHeadingsImpl.java"/>
     <suppress checks="JavaNCSS" files="VariableCollectorImpl.java"/>
