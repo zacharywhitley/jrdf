@@ -67,5 +67,5 @@ import java.io.Serializable;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface TypeComparator extends Comparator<Type>, Serializable {
+public interface TypeComparator extends Comparator<NodeType>, Serializable {
 }

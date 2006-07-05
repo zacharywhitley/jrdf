@@ -74,12 +74,12 @@ public class TypeComparatorImplIntegrationTest extends TestCase {
     private static final int AFTER = 1;
     private TypeComparator typeComparator;
 
-    private static final Type BNODE_TYPE = new BlankNodeType();
-    private static final Type URI_NODE_TYPE = new URIReferenceNodeType();
-    private static final Type LITERAL_NODE_TYPE = new LiteralNodeType();
-    private static final Type SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
-    private static final Type PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
-    private static final Type OBJECT_POSITIONAL_NODE = new ObjectNodeType();
+    private static final NodeType BNODE_TYPE = new BlankNodeType();
+    private static final NodeType URI_NODE_TYPE = new URIReferenceNodeType();
+    private static final NodeType LITERAL_NODE_TYPE = new LiteralNodeType();
+    private static final NodeType SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
+    private static final NodeType PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
+    private static final NodeType OBJECT_POSITIONAL_NODE = new ObjectNodeType();
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -132,8 +132,8 @@ public class TypeComparatorImplIntegrationTest extends TestCase {
     }
 
     // TODO (AN) Duplication with other comparator tests
-    private void checkNullPointerException(final TypeComparator attComparator, final Type type1,
-                                           final Type type2) {
+    private void checkNullPointerException(final TypeComparator attComparator, final NodeType type1,
+                                           final NodeType type2) {
         AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 //noinspection unchecked

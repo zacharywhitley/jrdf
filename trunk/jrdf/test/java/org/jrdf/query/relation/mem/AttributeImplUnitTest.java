@@ -66,7 +66,7 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.LiteralNodeType;
-import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkMarkedAsSerializable;
@@ -86,8 +86,8 @@ public class AttributeImplUnitTest extends TestCase {
     private static final String TYPE_NAME = "type";
     private static final AttributeName TEST_NAME_FOO_POS = new PositionName("foo");
     private static final AttributeName TEST_NAME_BAR_VAR = new VariableName("bar");
-    private static final Type LITERAL_TYPE = new LiteralNodeType();
-    private static final Type BLANK_NODE_TYPE = new BlankNodeType();
+    private static final NodeType LITERAL_TYPE = new LiteralNodeType();
+    private static final NodeType BLANK_NODE_TYPE = new BlankNodeType();
 
     public static final Attribute TEST_ATTRIBUTE_FOO_POS = new AttributeImpl(TEST_NAME_FOO_POS, LITERAL_TYPE);
     public static final Attribute TEST_ATTRIBUTE_BAR_VAR = new AttributeImpl(TEST_NAME_BAR_VAR, BLANK_NODE_TYPE);
@@ -96,9 +96,9 @@ public class AttributeImplUnitTest extends TestCase {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Attribute.class, AttributeImpl.class);
         checkMarkedAsSerializable(Attribute.class);
-        checkConstructor(AttributeImpl.class, Modifier.PUBLIC, AttributeName.class, Type.class);
+        checkConstructor(AttributeImpl.class, Modifier.PUBLIC, AttributeName.class, NodeType.class);
         checkFieldIsOfTypeAndPrivate(AttributeImpl.class, AttributeName.class, ATTRIBUTE_NAME);
-        checkFieldIsOfTypeAndPrivate(AttributeImpl.class, Type.class, TYPE_NAME);
+        checkFieldIsOfTypeAndPrivate(AttributeImpl.class, NodeType.class, TYPE_NAME);
     }
 
     public void testConstructor() {
@@ -106,7 +106,7 @@ public class AttributeImplUnitTest extends TestCase {
         checkStandardConstructor(TEST_NAME_BAR_VAR, BLANK_NODE_TYPE);
     }
 
-    private void checkStandardConstructor(AttributeName attributeName, Type type) {
+    private void checkStandardConstructor(AttributeName attributeName, NodeType type) {
         Attribute attribute = new AttributeImpl(attributeName, type);
         checkFieldValue(attribute, ATTRIBUTE_NAME, attributeName);
         checkFieldValue(attribute, TYPE_NAME, type);

@@ -59,7 +59,7 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.NodeType;
 
 import java.util.Map;
 import java.util.SortedSet;
@@ -70,5 +70,5 @@ import java.util.SortedSet;
 public interface VariableCollector {
     void addVariables(SortedSet<AttributeValuePair> avps);
 
-    Map<String, Type> getVariables();
+    Map<String, NodeType> getVariables();
 }

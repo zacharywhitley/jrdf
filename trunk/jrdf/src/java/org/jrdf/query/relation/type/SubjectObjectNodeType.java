@@ -73,11 +73,11 @@ import java.util.Set;
 public class SubjectObjectNodeType implements NodeType {
     private static final long serialVersionUID = 799086809870140765L;
 
-    public boolean isAssignableFrom(Type type) {
+    public boolean isAssignableFrom(NodeType type) {
         return type instanceof SubjectNode || type instanceof ObjectNode;
     }
 
-    public boolean isJoinCompatible(Type type) {
+    public boolean isJoinCompatible(NodeType type) {
         return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType ||
                 type instanceof LiteralNodeType;
     }

@@ -61,6 +61,7 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.PredicateObjectNodeType;
@@ -68,7 +69,6 @@ import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.SubjectObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
-import org.jrdf.query.relation.type.Type;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +78,7 @@ import java.util.SortedSet;
  * Class description goes here.
  */
 public class VariableCollectorImpl implements VariableCollector {
-    private Map<String, Type> variables = new HashMap<String, Type>();
+    private Map<String, NodeType> variables = new HashMap<String, NodeType>();
 
     public void addVariables(SortedSet<AttributeValuePair> avps) {
         for (AttributeValuePair avp : avps) {
@@ -94,21 +94,22 @@ public class VariableCollectorImpl implements VariableCollector {
         }
     }
 
-    public Map<String, Type> getVariables() {
+    public Map<String, NodeType> getVariables() {
         return variables;
     }
 
     private void updateEntry(Attribute newAttribute) {
         String key = newAttribute.getAttributeName().getLiteral();
-        Type currentEntry = variables.get(key);
-        Class<? extends Type> currentClazz = currentEntry.getClass();
-        Class<? extends Type> newClazz = newAttribute.getType().getClass();
+        NodeType currentEntry = variables.get(key);
+        Class<? extends NodeType> currentClazz = currentEntry.getClass();
+        Class<? extends NodeType> newClazz = newAttribute.getType().getClass();
         if (!currentClazz.equals(newClazz)) {
             upgradeNodeType(currentClazz, newClazz, key);
         }
     }
 
-    private void upgradeNodeType(Class<? extends Type> currentClazz, Class<? extends Type> newClazz, String key) {
+    private void upgradeNodeType(Class<? extends NodeType> currentClazz, Class<? extends NodeType> newClazz,
+            String key) {
         if (currentClazz.equals(SubjectNodeType.class)) {
             upgradeSubjectNodeType(newClazz, key);
         } else if (currentClazz.equals(PredicateNodeType.class)) {
@@ -124,25 +125,25 @@ public class VariableCollectorImpl implements VariableCollector {
         }
     }
 
-    private void upgradePredicateObjectNodeType(Class<? extends Type> newClazz, String key) {
+    private void upgradePredicateObjectNodeType(Class<? extends NodeType> newClazz, String key) {
         if (newClazz.equals(SubjectNodeType.class)) {
             variables.put(key, new SubjectPredicateObjectNodeType());
         }
     }
 
-    private void upgradeSubjectObjectNodeType(Class<? extends Type> newClazz, String key) {
+    private void upgradeSubjectObjectNodeType(Class<? extends NodeType> newClazz, String key) {
         if (newClazz.equals(PredicateNodeType.class)) {
             variables.put(key, new SubjectPredicateObjectNodeType());
         }
     }
 
-    private void upgradeSubjectPredicateNodeType(Class<? extends Type> newClazz, String key) {
+    private void upgradeSubjectPredicateNodeType(Class<? extends NodeType> newClazz, String key) {
         if (newClazz.equals(ObjectNodeType.class)) {
             variables.put(key, new SubjectPredicateObjectNodeType());
         }
     }
 
-    private void upgradeObjectNodeType(Class<? extends Type> newClazz, String key) {
+    private void upgradeObjectNodeType(Class<? extends NodeType> newClazz, String key) {
         if (newClazz.equals(SubjectNodeType.class)) {
             variables.put(key, new SubjectObjectNodeType());
         } else if (newClazz.equals(PredicateNodeType.class)) {
@@ -150,7 +151,7 @@ public class VariableCollectorImpl implements VariableCollector {
         }
     }
 
-    private void upgradePredicateNodeType(Class<? extends Type> newClazz, String key) {
+    private void upgradePredicateNodeType(Class<? extends NodeType> newClazz, String key) {
         if (newClazz.equals(SubjectNodeType.class)) {
             variables.put(key, new SubjectPredicateNodeType());
         } else if (newClazz.equals(ObjectNodeType.class)) {
@@ -158,7 +159,7 @@ public class VariableCollectorImpl implements VariableCollector {
         }
     }
 
-    private void upgradeSubjectNodeType(Class<? extends Type> newClazz, String key) {
+    private void upgradeSubjectNodeType(Class<? extends NodeType> newClazz, String key) {
         if (newClazz.equals(PredicateNodeType.class)) {
             variables.put(key, new SubjectPredicateNodeType());
         } else if (newClazz.equals(ObjectNodeType.class)) {

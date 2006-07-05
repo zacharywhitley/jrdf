@@ -73,11 +73,11 @@ public class URIReferenceNodeType implements NodeType {
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = -46947819855688266L;
 
-    public boolean isAssignableFrom(Type type) {
+    public boolean isAssignableFrom(NodeType type) {
         return type instanceof URIReferenceNodeType;
     }
 
-    public boolean isJoinCompatible(Type type) {
+    public boolean isJoinCompatible(NodeType type) {
         return isAssignableFrom(type) || type instanceof PredicateNodeType;
     }
 

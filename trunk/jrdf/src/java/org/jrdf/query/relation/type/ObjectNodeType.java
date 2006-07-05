@@ -76,11 +76,11 @@ public class ObjectNodeType implements NodeType {
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 8047443471499147543L;
 
-    public boolean isAssignableFrom(Type type) {
+    public boolean isAssignableFrom(NodeType type) {
         return type instanceof SubjectNode || type instanceof PredicateNodeType || type instanceof ObjectNode;
     }
 
-    public boolean isJoinCompatible(Type type) {
+    public boolean isJoinCompatible(NodeType type) {
         return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType ||
                 type instanceof LiteralNodeType;
     }

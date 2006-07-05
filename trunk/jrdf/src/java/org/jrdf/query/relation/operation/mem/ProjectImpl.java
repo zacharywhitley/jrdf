@@ -68,12 +68,10 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.operation.Project;
-import org.jrdf.query.relation.type.ObjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
-import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.PredicateObjectNodeType;
 import org.jrdf.query.relation.type.SubjectObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateNodeType;
-import org.jrdf.query.relation.type.PredicateObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 
 import java.util.HashSet;
@@ -131,22 +129,26 @@ public class ProjectImpl implements Project {
             for (Attribute attribute : attributes) {
                 Set<Node> matchedValues = new HashSet<Node>();
                 Set<Attribute> attributesToMatch = new HashSet<Attribute>();
-                if (attribute.getType().getClass().equals(SubjectPredicateObjectNodeType.class)) {
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
-                } else if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
-                } else if (attribute.getType().getClass().equals(SubjectObjectNodeType.class)) {
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
-                } else if (attribute.getType().getClass().equals(PredicateObjectNodeType.class)) {
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
-                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
-                } else {
-                    attributesToMatch.add(attribute);
+                Set<NodeType> nodeTypes = attribute.getType().composedOf();
+                for (NodeType nodeType : nodeTypes) {
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), nodeType));
                 }
+//                if (attribute.getType().getClass().equals(SubjectPredicateObjectNodeType.class)) {
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
+//                } else if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
+//                } else if (attribute.getType().getClass().equals(SubjectObjectNodeType.class)) {
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
+//                } else if (attribute.getType().getClass().equals(PredicateObjectNodeType.class)) {
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
+//                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
+//                } else {
+//                    attributesToMatch.add(attribute);
+//                }
 
                 for (AttributeValuePair avp : avps) {
                     if (attributesToMatch.contains(avp.getAttribute())) {

@@ -57,10 +57,10 @@
  */
 package org.jrdf.query.relation.mem;
 
+import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.type.Type;
-import au.net.netstorm.boost.primordial.Primordial;
+import org.jrdf.query.relation.type.NodeType;
 
 /**
  * Implementation of attribute-name:type-name combination.
@@ -72,12 +72,12 @@ import au.net.netstorm.boost.primordial.Primordial;
 public final class AttributeImpl extends Primordial implements Attribute {
     private static final long serialVersionUID = 6078409285334034368L;
     private AttributeName attributeName;
-    private Type type;
+    private NodeType type;
 
     private AttributeImpl() {
     }
 
-    public AttributeImpl(AttributeName newAttributeName, Type newType) {
+    public AttributeImpl(AttributeName newAttributeName, NodeType newType) {
         attributeName = newAttributeName;
         type = newType;
     }
@@ -86,7 +86,7 @@ public final class AttributeImpl extends Primordial implements Attribute {
         return attributeName;
     }
 
-    public Type getType() {
+    public NodeType getType() {
         return type;
     }
 }

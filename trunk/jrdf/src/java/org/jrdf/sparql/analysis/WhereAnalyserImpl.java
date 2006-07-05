@@ -67,7 +67,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APatternElementsList;
@@ -130,9 +130,9 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     // equal() method to call join compatible.  See what works best.
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
         Set<Attribute> newAttributes = new LinkedHashSet<Attribute>();
-        Map<String, Type> variables = collector.getVariables();
+        Map<String, NodeType> variables = collector.getVariables();
         for (AttributeName variable : declaredVariables) {
-            Type type = variables.get(variable.getLiteral());
+            NodeType type = variables.get(variable.getLiteral());
             if (type == null) {
                 throw new RuntimeException("Failed to find: " + variable);
             } else {

@@ -60,6 +60,7 @@
 package org.jrdf.query.relation.type;
 
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * Node types - data types belong to RDF nodes.
@@ -67,6 +68,33 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface NodeType extends Type {
+public interface NodeType extends Serializable {
+    /**
+     * Returns true if this NodeType is a super-type of the given type.
+     *
+     * @param type the type to test to see if it can be accepted into this type.
+     * @return true if this NodeType is a super-type of the given type.
+     */
+    boolean isAssignableFrom(NodeType type);
+
+    /**
+     * Returns true if this NodeType is join compatible with the given type.  JoinImpl compatible means that the given
+     * type can be joined and considered to be this type i.e. blank nodes and uri references to subject nodes, uri
+     * references to any positional node type, predicate nodes to uri references, etc.
+     */
+    boolean isJoinCompatible(NodeType type);
+
+    /**
+     * Returns the name of the type.
+     *
+     * @return the name of the type.
+     */
+    String getName();
+
+    /**
+     * Returns the sub-types of a composite type.
+     *
+     * @return the sub-types of a composite type.
+     */
     Set<NodeType> composedOf();
 }

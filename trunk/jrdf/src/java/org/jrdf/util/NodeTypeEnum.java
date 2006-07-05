@@ -57,10 +57,10 @@
  */
 package org.jrdf.util;
 
-import org.jrdf.query.relation.type.Type;
 import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.URIReferenceNodeType;
 import org.jrdf.query.relation.type.LiteralNodeType;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.URIReferenceNodeType;
 
 /**
  * Enumeration for node types.
@@ -88,7 +88,7 @@ public enum NodeTypeEnum {
         return equals(LITERAL);
     }
 
-    public static NodeTypeEnum getNodeType(Class<? extends Type> nodeClass) {
+    public static NodeTypeEnum getNodeType(Class<? extends NodeType> nodeClass) {
         if (BlankNodeType.class.isAssignableFrom(nodeClass)) {
             return NodeTypeEnum.BLANK_NODE;
         } else if (URIReferenceNodeType.class.isAssignableFrom(nodeClass)) {
