@@ -70,14 +70,20 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTPREDICATE;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTOBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTPREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTPREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTOBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTOBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 
@@ -167,6 +173,20 @@ public class ProjectImplIntegrationTest extends TestCase {
 
         Set<Attribute> keep = new HashSet<Attribute>();
         keep.add(VAR_BAR1_SUBJECTPREDICATE);
+        checkIncludeProject(keep, createRelation(tuple), createRelation(resultTuple));
+    }
+
+    public void testSameSubjectObject() {
+        Set<Tuple> tuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4, VAR_BAR1_OBJECT_R3);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R4, VAR_BAR1_PREDICATE_R4, VAR_BAR1_OBJECT_R4);
+        tuple.addAll(tmpTuple);
+
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECTOBJECT_R3);
+        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECTOBJECT_R4);
+        resultTuple.addAll(tmpTuple);
+
+        Set<Attribute> keep = new HashSet<Attribute>();
+        keep.add(VAR_BAR1_SUBJECTOBJECT);
         checkIncludeProject(keep, createRelation(tuple), createRelation(resultTuple));
     }
 
