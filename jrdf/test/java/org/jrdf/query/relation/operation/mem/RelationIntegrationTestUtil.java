@@ -78,6 +78,7 @@ import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
 
@@ -110,6 +111,8 @@ public class RelationIntegrationTestUtil {
     public static final Attribute POS_FOO4_PREDICATE = new AttributeImpl(POS_FOO4, new PredicateNodeType());
     public static final Attribute POS_FOO5_OBJECT = new AttributeImpl(POS_FOO5, new ObjectNodeType());
     public static final Attribute VAR_BAR1_SUBJECT = new AttributeImpl(VAR_BAR1, new SubjectNodeType());
+    public static final Attribute VAR_BAR1_PREDICATE = new AttributeImpl(VAR_BAR1, new PredicateNodeType());
+    public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1, new SubjectPredicateNodeType());
     public static final Attribute VAR_BAR2_PREDICATE = new AttributeImpl(VAR_BAR2, new PredicateNodeType());
     public static final Attribute POS_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
     public static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
@@ -148,10 +151,21 @@ public class RelationIntegrationTestUtil {
 
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
             new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
+    public static final AttributeValuePair VAR_BAR1_SUBJECT_R4 =
+            new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
+    public static final AttributeValuePair VAR_BAR1_PREDICATE_R3 =
+            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_3);
+    public static final AttributeValuePair VAR_BAR1_PREDICATE_R4 =
+            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR2_PREDICATE_R4 =
             new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
     public static final AttributeValuePair POS_BAR3_OBJECT_R1 =
             new AttributeValuePairImpl(POS_BAR3_OBJECT, RESOURCE_1);
+
+    public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATE_R3 = 
+            new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
+    public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATE_R4 =
+            new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
 
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();

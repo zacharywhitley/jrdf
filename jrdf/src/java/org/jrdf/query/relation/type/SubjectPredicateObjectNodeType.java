@@ -72,12 +72,6 @@ import java.util.HashSet;
  * @version $Revision: 651 $
  */
 public class SubjectPredicateObjectNodeType implements NodeType {
-    private static final HashSet<NodeType> COMPOSITION_NODE_TYPE = new HashSet<NodeType>() {{
-        add(new SubjectNodeType());
-        add(new PredicateNodeType());
-        add(new ObjectNodeType());
-    }};
-
     private static final long serialVersionUID = 799086809870140765L;
 
     public boolean isAssignableFrom(Type type) {
@@ -102,6 +96,10 @@ public class SubjectPredicateObjectNodeType implements NodeType {
     }
 
     public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
+        HashSet<NodeType> nodeTypes = new HashSet<NodeType>();
+        nodeTypes.add(new SubjectNodeType());
+        nodeTypes.add(new PredicateNodeType());
+        nodeTypes.add(new ObjectNodeType());
+        return nodeTypes;
     }
 }

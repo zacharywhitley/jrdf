@@ -135,8 +135,7 @@ public class ProjectImpl implements Project {
                     attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
                     attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
                     attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new ObjectNodeType()));
-                }
-                else if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
+                } else if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class)) {
                     attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new SubjectNodeType()));
                     attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), new PredicateNodeType()));
                 } else if (attribute.getType().getClass().equals(SubjectObjectNodeType.class)) {

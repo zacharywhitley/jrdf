@@ -72,10 +72,6 @@ import java.util.Set;
  */
 public class PredicateObjectNodeType implements NodeType {
     private static final long serialVersionUID = 799086809870140765L;
-    private static final HashSet<NodeType> COMPOSITION_NODE_TYPE = new HashSet<NodeType>() {{
-        add(new PredicateNodeType());
-        add(new ObjectNodeType());
-    }};
 
     public boolean isAssignableFrom(Type type) {
         return type instanceof PredicateNode || type instanceof ObjectNode;
@@ -99,6 +95,9 @@ public class PredicateObjectNodeType implements NodeType {
     }
 
     public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
+        HashSet<NodeType> nodeTypes = new HashSet<NodeType>();
+        nodeTypes.add(new PredicateNodeType());
+        nodeTypes.add(new ObjectNodeType());
+        return nodeTypes;
     }
 }
