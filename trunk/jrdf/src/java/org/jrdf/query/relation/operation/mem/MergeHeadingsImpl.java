@@ -58,76 +58,86 @@
 
 package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import org.jrdf.query.relation.type.SubjectPredicateNodeType;
+import org.jrdf.query.relation.type.SubjectObjectNodeType;
+import org.jrdf.query.relation.type.PredicateObjectNodeType;
+import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.graph.Node;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
 
 /**
- * Implements restrict by going through the relation and removing the columns.
- *
- * @author Andrew Newman
- * @version $Revision:$
+ * Class description goes here.
  */
-public class ProjectImpl implements Project {
-    private final TupleFactory tupleFactory;
-    private final RelationFactory relationFactory;
-    private final MergeHeadings mergeHeadings;
+public class MergeHeadingsImpl implements MergeHeadings {
+    private TupleFactory tupleFactory;
+    private RelationFactory relationFactory;
 
-    public ProjectImpl(TupleFactory tupleFactory, RelationFactory relationFactory, MergeHeadings mergeHeadings) {
+    public MergeHeadingsImpl(TupleFactory tupleFactory, RelationFactory relationFactory) {
         this.tupleFactory = tupleFactory;
         this.relationFactory = relationFactory;
-        this.mergeHeadings = mergeHeadings;
     }
 
-    public Relation include(Relation relation, Set<Attribute> attributes) {
-        // TODO (AN) Test drive short circuit
-        if (relation.getHeading().equals(attributes)) {
-            return relation;
+    public Relation merge(Relation relation, Set<Attribute> attributes) {
+        Relation newRelation = relation;
+        if (requiresMerge(attributes)) {
+            newRelation = mergeRelation(relation, attributes);
         }
-
-        relation = mergeHeadings.merge(relation, attributes);
-        Set<Attribute> newHeading = relation.getHeading();
-        newHeading.retainAll(attributes);
-        return project(relation, newHeading);
+        return newRelation;
     }
 
-    public Relation exclude(Relation relation, Set<Attribute> attributes) {
-        // TODO (AN) Test drive short circuit
-        if (attributes.size() == 0) {
-            return relation;
+    // TODO (AN) Piece of bollocks.
+    private boolean requiresMerge(Set<Attribute> attributes) {
+        for (Attribute attribute : attributes) {
+            if (attribute.getType().getClass().equals(SubjectPredicateNodeType.class) ||
+                    attribute.getType().getClass().equals(SubjectObjectNodeType.class) ||
+                    attribute.getType().getClass().equals(PredicateObjectNodeType.class) ||
+                    attribute.getType().getClass().equals(SubjectPredicateObjectNodeType.class)) {
+                return true;
+            }
         }
-
-        relation = mergeHeadings.merge(relation, attributes);
-        Set<Attribute> newHeading = relation.getHeading();
-        newHeading.removeAll(attributes);
-        return project(relation, newHeading);
+        return false;
     }
 
-    private Relation project(Relation relation, Set<Attribute> newHeading) {
+    // TODO (AN) Piece of bollocks.
+    private Relation mergeRelation(Relation relation, Set<Attribute> attributes) {
         Set<Tuple> newTuples = new HashSet<Tuple>();
         Set<Tuple> tuples = relation.getTuples();
         for (Tuple tuple : tuples) {
-            Tuple newTuple = createNewTuples(tuple, newHeading);
-            newTuples.add(newTuple);
-        }
-        return relationFactory.getRelation(newTuples);
-    }
-
-    private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
-        Set<AttributeValuePair> avps = tuple.getAttributeValues();
-        Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
-        for (AttributeValuePair avp : avps) {
-            if (newHeading.contains(avp.getAttribute())) {
-                newAvps.add(avp);
+            Set<AttributeValuePair> avps = tuple.getAttributeValues();
+            Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
+            for (Attribute attribute : attributes) {
+                Set<Node> matchedValues = new HashSet<Node>();
+                Set<Attribute> attributesToMatch = new HashSet<Attribute>();
+                Set<NodeType> nodeTypes = attribute.getType().composedOf();
+                for (NodeType nodeType : nodeTypes) {
+                    attributesToMatch.add(new AttributeImpl(attribute.getAttributeName(), nodeType));
+                }
+                for (AttributeValuePair avp : avps) {
+                    if (attributesToMatch.contains(avp.getAttribute())) {
+                        matchedValues.add(avp.getValue());
+                    }
+                }
+                if (matchedValues.size() == 1) {
+                    Node matchedValue = matchedValues.iterator().next();
+                    AttributeValuePair newAvp = new AttributeValuePairImpl(attribute, matchedValue);
+                    newAvps.add(newAvp);
+                }
+            }
+            if (newAvps.size() == attributes.size()) {
+                newTuples.add(tupleFactory.getTuple(newAvps));
             }
         }
-        return tupleFactory.getTuple(newAvps);
+        return relationFactory.getRelation(newTuples);
     }
 }
