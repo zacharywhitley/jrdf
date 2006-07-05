@@ -101,5 +101,5 @@ public interface SortedAttributeFactory {
      * @return a heading based on the given node types.
      * @throws IllegalArgumentException currently if there are any more or less than 3.
      */
-    SortedSet<Attribute> createHeading(List<NodeType> types) throws IllegalArgumentException;
+    List<Attribute> createHeading(List<NodeType> types) throws IllegalArgumentException;
 }

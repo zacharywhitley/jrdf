@@ -123,7 +123,7 @@
             <ref bean="sortedAttributeValuePairHelper"/>
         </constructor-arg>
         <constructor-arg>
-            <value>1</value>
+            <ref bean="sortedAttributeFactory"/>
         </constructor-arg>
     </bean>
 
@@ -155,6 +155,9 @@
     <bean id="sortedAttributeFactory" class="org.jrdf.query.relation.mem.SortedAttributeFactoryImpl">
         <constructor-arg>
             <ref bean="attributeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <value>1</value>
         </constructor-arg>
     </bean>
 

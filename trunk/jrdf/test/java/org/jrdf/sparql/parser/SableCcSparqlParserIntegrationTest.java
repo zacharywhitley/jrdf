@@ -70,6 +70,9 @@ import org.jrdf.query.Query;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.mem.SortedAttributeFactory;
+import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.builder.TripleBuilderImpl;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_1;
@@ -106,7 +109,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         PredicateNode predicate = elementFactory.createResource(TripleTestUtil.URI_DC_TITLE);
         ObjectNode object = elementFactory.createLiteral(TripleTestUtil.LITERAL_BOOK_TITLE);
         GRAPH.add(subject, predicate, object);
-        TripleBuilder builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(), 1);
+        AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
+        SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
+        TripleBuilder builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(),
+                newSortedAttributeFactory);
         parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder);
     }
 

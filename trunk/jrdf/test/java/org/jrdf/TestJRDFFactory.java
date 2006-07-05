@@ -64,8 +64,8 @@ import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Join;
@@ -74,8 +74,8 @@ import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.sparql.parser.ParserFactory;
+import org.jrdf.sparql.parser.SparqlParser;
 
 /**
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
