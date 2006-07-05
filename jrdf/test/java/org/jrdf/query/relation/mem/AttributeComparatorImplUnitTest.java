@@ -58,20 +58,20 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.easymock.classextension.IMocksControl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
-import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.MockTestUtil;
-import org.easymock.classextension.IMocksControl;
 
-import java.lang.reflect.Modifier;
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
 
 /**
  * Test AttributeComparator.
@@ -125,8 +125,8 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     // TODO (AN) Finish testAttributeNameComparator
 
     private void checkNodeTypeComparator(int expectedResult) {
-        Type t1 = MockTestUtil.createMock(Type.class);
-        Type t2 = MockTestUtil.createMock(Type.class);
+        NodeType t1 = MockTestUtil.createMock(NodeType.class);
+        NodeType t2 = MockTestUtil.createMock(NodeType.class);
         Attribute attribute1 = createAttribute(t1);
         Attribute attribute2 = createAttribute(t2);
         TypeComparator typeComparator = createTypeComparator(t1, t2, expectedResult);
@@ -139,7 +139,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private Attribute createAttribute(Type type) {
+    private Attribute createAttribute(NodeType type) {
         IMocksControl control = mockFactory.createControl();
         Attribute att = control.createMock(Attribute.class);
         att.getType();
@@ -148,7 +148,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private TypeComparator createTypeComparator(Type t1, Type t2, int expectedResult) {
+    private TypeComparator createTypeComparator(NodeType t1, NodeType t2, int expectedResult) {
         IMocksControl control = mockFactory.createControl();
         TypeComparator typeComparator = control.createMock(TypeComparator.class);
         typeComparator.compare(t1, t2);
@@ -188,7 +188,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
             throw new UnsupportedOperationException();
         }
 
-        public Type getType() {
+        public NodeType getType() {
             throw new UnsupportedOperationException();
         }
 

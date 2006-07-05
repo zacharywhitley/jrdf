@@ -82,7 +82,7 @@ public final class TypeComparatorImpl implements TypeComparator {
         this.nodeTypeComparator = nodeTypeComparator;
     }
 
-    public int compare(Type type1, Type type2) {
+    public int compare(NodeType type1, NodeType type2) {
         if (type1.equals(type2)) {
             return EQUAL;
         }
@@ -96,19 +96,19 @@ public final class TypeComparatorImpl implements TypeComparator {
         return result;
     }
 
-    private boolean bothPositionalOrNode(Type type1, Type type2) {
+    private boolean bothPositionalOrNode(NodeType type1, NodeType type2) {
         return (isPositionNodeType(type1) && isPositionNodeType(type2)) ||
                 (!isPositionNodeType(type1) && !isPositionNodeType(type2));
     }
 
-    private int compareDifferentCategoryOfTypes(Type type1, Type type2) {
+    private int compareDifferentCategoryOfTypes(NodeType type1, NodeType type2) {
         if (isPositionNodeType(type1) && !isPositionNodeType(type2)) {
             return AFTER;
         }
         return BEFORE;
     }
 
-    private int compareSameCategoryOfTypes(Type type1, Type type2) {
+    private int compareSameCategoryOfTypes(NodeType type1, NodeType type2) {
         int result;
         if (isPositionNodeType(type1)) {
             result = comparePositionalNodeTypes(type1, type2);
@@ -118,11 +118,11 @@ public final class TypeComparatorImpl implements TypeComparator {
         return result;
     }
 
-    private boolean isPositionNodeType(Type type) {
+    private boolean isPositionNodeType(NodeType type) {
         return type instanceof SubjectNodeType || type instanceof PredicateNodeType || type instanceof ObjectNodeType;
     }
 
-    private int comparePositionalNodeTypes(Type type1, Type type2) {
+    private int comparePositionalNodeTypes(NodeType type1, NodeType type2) {
         if (type1 instanceof SubjectNodeType) {
             return BEFORE;
         } else if (type1 instanceof PredicateNodeType) {
@@ -136,7 +136,7 @@ public final class TypeComparatorImpl implements TypeComparator {
         }
     }
 
-    private int compareNodeTypes(Type type, Type type2) {
+    private int compareNodeTypes(NodeType type, NodeType type2) {
         int result;
         NodeTypeEnum nodeType1Enum = NodeTypeEnum.getNodeType(type.getClass());
         NodeTypeEnum nodeType2Enum = NodeTypeEnum.getNodeType(type2.getClass());

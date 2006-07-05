@@ -66,10 +66,10 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.BlankNodeType;
 import org.jrdf.query.relation.type.LiteralNodeType;
+import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.Type;
 
 /**
  * Test for the implementation of NodeComparatorImpl.
@@ -88,11 +88,11 @@ public class AttributeComparatorImplIntegrationTest extends TestCase {
     private static final AttributeName POSITION_NAME_3 = new PositionName("subject");
     private static final AttributeName POSITION_NAME_4 = new PositionName("predicate");
     private static final AttributeName POSITION_NAME_5 = new PositionName("object");
-    private static final Type BNODE_TYPE = new BlankNodeType();
-    private static final Type LITERAL_NODE_TYPE = new LiteralNodeType();
-    private static final Type SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
-    private static final Type PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
-    private static final Type OBJECT_POSITIONAL_NODE = new ObjectNodeType();
+    private static final NodeType BNODE_TYPE = new BlankNodeType();
+    private static final NodeType LITERAL_NODE_TYPE = new LiteralNodeType();
+    private static final NodeType SUBJECT_POSITIONAL_NODE = new SubjectNodeType();
+    private static final NodeType PREDICATE_POSITIONAL_NODE = new PredicateNodeType();
+    private static final NodeType OBJECT_POSITIONAL_NODE = new ObjectNodeType();
 
     public static final Attribute TEST_VAR_BAR_BNODE = new AttributeImpl(VARIABLE_NAME_1, BNODE_TYPE);
     public static final Attribute TEST_VAR_BAR_LITERAL = new AttributeImpl(VARIABLE_NAME_1, LITERAL_NODE_TYPE);

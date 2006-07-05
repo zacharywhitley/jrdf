@@ -76,11 +76,11 @@ public class SubjectNodeType implements NodeType {
     private static final NodeType INSTANCE = new SubjectNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
 
-    public boolean isAssignableFrom(Type type) {
+    public boolean isAssignableFrom(NodeType type) {
         return type instanceof SubjectNode || type instanceof PredicateNode;
     }
 
-    public boolean isJoinCompatible(Type type) {
+    public boolean isJoinCompatible(NodeType type) {
         return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType;
     }
 

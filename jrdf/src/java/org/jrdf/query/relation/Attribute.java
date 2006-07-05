@@ -60,7 +60,7 @@
 package org.jrdf.query.relation;
 
 import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.type.Type;
+import org.jrdf.query.relation.type.NodeType;
 
 import java.io.Serializable;
 
@@ -86,5 +86,5 @@ public interface Attribute extends Serializable {
      *
      * @return the type of the attribute.
      */
-    Type getType();
+    NodeType getType();
 }
