@@ -64,14 +64,16 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
@@ -87,6 +89,8 @@ import org.jrdf.sparql.parser.node.PResourceTripleElement;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -102,16 +106,18 @@ public final class TripleBuilderImpl implements TripleBuilder {
     // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
 
     private static final String SINGLE_QUOTE = "'";
+    private static final NodeType SUBJECT_NODE_TYPE = new SubjectNodeType();
+    private static final NodeType PREDICATE_NODE_TYPE = new PredicateNodeType();
+    private static final NodeType OBJECT_NODE_TYPE = new ObjectNodeType();
+    private static final NodeType[] TYPES = {SUBJECT_NODE_TYPE, PREDICATE_NODE_TYPE, OBJECT_NODE_TYPE};
     private final SortedAttributeValuePairHelper avpHelper;
+    private final SortedAttributeFactory sortedAttributeFactory;
     private Graph currentGraph;
-    private long tripleCounter;
-    private PositionName subjectAttName;
-    private PositionName predicateAttName;
-    private PositionName objectAttName;
+    private List<Attribute> heading;
 
-    public TripleBuilderImpl(SortedAttributeValuePairHelper avpHelper, long counterStart) {
+    public TripleBuilderImpl(SortedAttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
         this.avpHelper = avpHelper;
-        this.tripleCounter = counterStart;
+        this.sortedAttributeFactory = sortedAttributeFactory;
     }
 
     /**
@@ -125,45 +131,37 @@ public final class TripleBuilderImpl implements TripleBuilder {
         ParameterUtil.checkNotNull("graph", graph);
 
         currentGraph = graph;
-
-        subjectAttName = new PositionName("SUBJECT" + tripleCounter);
-        predicateAttName = new PositionName("PREDICATE" + tripleCounter);
-        objectAttName = new PositionName("OBJECT" + tripleCounter);
-        tripleCounter++;
+        heading = sortedAttributeFactory.createHeading(Arrays.asList(TYPES));
 
         // FIXME TJA: Check format () of triple here (is this done by the grammar now?).
         AttributeValuePair subject = buildSubject(tripleNode);
         AttributeValuePair predicate = buildPredicate(tripleNode);
         AttributeValuePair object = buildObject(tripleNode);
-        return avpHelper.createAvp(new AttributeValuePair[] {subject, predicate, object});
+        return avpHelper.createAvp(new AttributeValuePair[]{subject, predicate, object});
     }
 
     // FIXME TJA: We should not get to here, having to check that the field is a resource. Should be handled earlier.
     private AttributeValuePair buildSubject(ATriple tripleNode) {
         PResourceTripleElement subject = tripleNode.getSubject();
         if (subject instanceof AVariableResourceTripleElement) {
-            AVariableResourceTripleElement element = (AVariableResourceTripleElement) subject;
-            String variableName = getVariableName(element);
-            Attribute att = new AttributeImpl(new VariableName(variableName), new SubjectNodeType());
-            return new AttributeValuePairImpl(att, ANY_SUBJECT_NODE);
+            String variableName = getVariableName((AVariableResourceTripleElement) subject);
+            return createAttributeValuePair(SUBJECT_NODE_TYPE, ANY_SUBJECT_NODE, variableName);
         } else {
             AResourceResourceTripleElement resource = (AResourceResourceTripleElement) tripleNode.getSubject();
-            Attribute att = new AttributeImpl(subjectAttName, new SubjectNodeType());
-            return new AttributeValuePairImpl(att, createResource(getStringForm(resource)));
+            URIReference uriReference = createResource(getStringForm(resource));
+            return new AttributeValuePairImpl(heading.get(0), uriReference);
         }
     }
 
     private AttributeValuePair buildPredicate(ATriple tripleNode) {
         PResourceTripleElement predicate = tripleNode.getPredicate();
         if (predicate instanceof AVariableResourceTripleElement) {
-            AVariableResourceTripleElement element = (AVariableResourceTripleElement) predicate;
-            String variableName = getVariableName(element);
-            Attribute att = new AttributeImpl(new VariableName(variableName), new PredicateNodeType());
-            return new AttributeValuePairImpl(att, ANY_PREDICATE_NODE);
+            String variableName = getVariableName((AVariableResourceTripleElement) predicate);
+            return createAttributeValuePair(PREDICATE_NODE_TYPE, ANY_PREDICATE_NODE, variableName);
         } else {
             AResourceResourceTripleElement resource = (AResourceResourceTripleElement) tripleNode.getPredicate();
-            Attribute att = new AttributeImpl(predicateAttName, new PredicateNodeType());
-            return new AttributeValuePairImpl(att, createResource(getStringForm(resource)));
+            URIReference uriReference = createResource(getStringForm(resource));
+            return new AttributeValuePairImpl(heading.get(1), uriReference);
         }
 
     }
@@ -172,17 +170,20 @@ public final class TripleBuilderImpl implements TripleBuilder {
         // FIXME TJA: Use the visitor pattern to do this.
         PObjectTripleElement object = tripleNode.getObject();
         if (object instanceof AVariableObjectTripleElement) {
-            AVariableObjectTripleElement element = (AVariableObjectTripleElement) object;
-            String variableName = getVariableName(element);
-            Attribute att = new AttributeImpl(new VariableName(variableName), new ObjectNodeType());
-            return new AttributeValuePairImpl(att, ANY_OBJECT_NODE);
+            String variableName = getVariableName((AVariableObjectTripleElement) object);
+            return createAttributeValuePair(OBJECT_NODE_TYPE, ANY_OBJECT_NODE, variableName);
         } else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
-            Attribute att = new AttributeImpl(objectAttName, new ObjectNodeType());
             Literal literalNode = createLiteral(text);
-            return new AttributeValuePairImpl(att, literalNode);
+            return new AttributeValuePairImpl(heading.get(2), literalNode);
         }
+    }
+
+    private AttributeValuePair createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
+        VariableName newAttributeName = new VariableName(variableName);
+        Attribute att = new AttributeImpl(newAttributeName, type);
+        return new AttributeValuePairImpl(att, anyNode);
     }
 
     private String getVariableName(AVariableResourceTripleElement element) {

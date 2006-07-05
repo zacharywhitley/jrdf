@@ -69,6 +69,7 @@ import org.jrdf.query.relation.type.SubjectNodeType;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.ArrayList;
 
 /**
  * Allows the creation of headings.
@@ -83,19 +84,21 @@ public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
     private static final ObjectNodeType OBJECT_TYPE = new ObjectNodeType();
     private static final int THREE_TRIPLES = 3;
     private final AttributeComparator attributeComparator;
-    private static long nameCounter = 1;
+    private long nameCounter;
 
-    public SortedAttributeFactoryImpl(AttributeComparator attributeComparator) {
+    public SortedAttributeFactoryImpl(AttributeComparator attributeComparator, long nameCounter) {
         this.attributeComparator = attributeComparator;
+        this.nameCounter = nameCounter;
     }
 
     public SortedSet<Attribute> createHeading() {
         return doCreateHeading(SUBJECT_TYPE, PREDICATE_TYPE, OBJECT_TYPE);
     }
 
-    public SortedSet<Attribute> createHeading(List<NodeType> types) throws IllegalArgumentException {
+    public List<Attribute> createHeading(List<NodeType> types) throws IllegalArgumentException {
         checkIsATriple(types);
-        return doCreateHeading(types.get(0), types.get(1), types.get(2));
+        SortedSet<Attribute> attributes = doCreateHeading(types.get(0), types.get(1), types.get(2));
+        return new ArrayList<Attribute>(attributes);
     }
 
     private SortedSet<Attribute> doCreateHeading(NodeType subjectType, NodeType predicateType, NodeType objectType) {

@@ -63,7 +63,10 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.mem.SortedAttributeFactory;
+import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.sparql.parser.SableCcNodeTestUtil;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.ArgumentTestUtil;
@@ -111,13 +114,16 @@ public final class TripleBuilderUnitTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        tripleBuilder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(), 1);
+        AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
+        SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
+        tripleBuilder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(),
+                newSortedAttributeFactory);
     }
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilderImpl.class);
         ClassPropertiesTestUtil.checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC,
-                SortedAttributeValuePairHelper.class, Long.TYPE);
+                SortedAttributeValuePairHelper.class, SortedAttributeFactory.class);
     }
 
     public void testBuildNullParameters() {
