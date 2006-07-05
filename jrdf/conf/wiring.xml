@@ -182,6 +182,15 @@
         </constructor-arg>
     </bean>
 
+    <bean id="mergeHeadings" class="org.jrdf.query.relation.operation.mem.MergeHeadingsImpl">
+        <constructor-arg>
+            <ref bean="tupleFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationFactory"/>
+        </constructor-arg>
+    </bean>
+
     <!-- Relational Operators -->
     <bean id="join" class="org.jrdf.query.relation.operation.mem.JoinImpl">
         <constructor-arg>
@@ -198,12 +207,16 @@
         </constructor-arg>
     </bean>
 
+
     <bean id="project" class="org.jrdf.query.relation.operation.mem.ProjectImpl">
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="relationFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="mergeHeadings"/>
         </constructor-arg>
     </bean>
 
