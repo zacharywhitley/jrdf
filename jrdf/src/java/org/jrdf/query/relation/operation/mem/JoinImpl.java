@@ -99,6 +99,7 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         this.tupleComparator = tupleComparator;
     }
 
+    // TODO (AN) Use semijoin if the relations to the right have a subset of attributes to the one on the left.
     public Relation join(Set<Relation> relations) {
         // Is it the empty set - if so return DEE.
         if (relations.equals(Collections.<Relation>emptySet())) {
