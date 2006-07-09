@@ -58,11 +58,11 @@
 
 package org.jrdf.gui.view;
 
+import org.jdesktop.swingx.JXTable;
 import org.jrdf.query.relation.Relation;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import java.awt.BorderLayout;
 
 /**
@@ -75,7 +75,7 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
     private ResultsTableModel resultsTableModel = new ResultsTableModel();
 
     public JPanel getJPanel() {
-        JTable table = createTable();
+        JXTable table = createTable();
         table.setModel(resultsTableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         JPanel panel = createPanel();
@@ -93,8 +93,9 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
         return panel;
     }
 
-    private JTable createTable() {
-        JTable table = new JTable();
+    private JXTable createTable() {
+        JXTable table = new JXTable();
+        table.setColumnControlVisible(true);
         table.getTableHeader().setReorderingAllowed(false);
         return table;
     }

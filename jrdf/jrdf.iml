@@ -184,6 +184,10 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="junit" level="project" />
+    <orderEntry type="library" name="spring" level="project" />
+    <orderEntry type="library" name="spring-rcp" level="project" />
+    <orderEntry type="library" name="spring-richclient-full-0.1.0" level="project" />
     <orderEntryProperties />
   </component>
 </module>
