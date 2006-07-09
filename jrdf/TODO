@@ -10,7 +10,7 @@ o Finish Relational operators.
   o Currently implemented: Projet, Join and Restrict.
   o Implement the rest as follows:
     o Union, Intersection (maybe) and Difference,
-    o Semi-join, anti-join,
+    o Semi-join (join + project), anti-join (difference + semi-join),
     o Outerjoin (left, right, full).
 o Put in SPARQL Union and Optional.
 o Write a pull based RDF/XML parser.
