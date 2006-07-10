@@ -76,7 +76,8 @@ public class NaturalJoinEngine implements JoinEngine {
         this.tupleFactory = tupleFactory;
     }
 
-    public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2, Set<Tuple> result) {
+    public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
+            Set<Tuple> result) {
         Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = getAttribute(avps1, attribute);
