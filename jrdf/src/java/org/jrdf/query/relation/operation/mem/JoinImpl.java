@@ -161,12 +161,13 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
         Set<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
         Set<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
+        int expectedResultSize = headings.size();
 
         boolean added;
         for (Attribute attribute : headings) {
             added = false;
-            AttributeValuePair avp1 = getAttributeValuePair(attribute, avps1);
-            AttributeValuePair avp2 = getAttributeValuePair(attribute, avps2);
+            AttributeValuePair avp1 = avpsContainsAttribute(avps1, attribute);
+            AttributeValuePair avp2 = avpsContainsAttribute(avps2, attribute);
 
             // Add if avp1 is not null and avp2 is or they are both equal.
             if (avp1 != null) {
@@ -174,12 +175,12 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
                     resultantAttributeValues.add(avp1);
                     added = true;
                 }
-            }
-
-            // Add if avp1 is null and avp2 is not.
-            if (avp1 == null && avp2 != null) {
-                resultantAttributeValues.add(avp2);
-                added = true;
+            } else {
+                // Add if avp1 is null and avp2 is not.
+                if (avp2 != null) {
+                    resultantAttributeValues.add(avp2);
+                    added = true;
+                }
             }
 
             // If we didn't find one for the current heading end early.
@@ -189,15 +190,15 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         }
 
         // Only add results if they are the same size
-        if (resultantAttributeValues.size() == headings.size()) {
+        if (expectedResultSize == resultantAttributeValues.size()) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
     }
 
-    private AttributeValuePair getAttributeValuePair(Attribute attribute, Set<AttributeValuePair> avps) {
-        for (AttributeValuePair avp : avps) {
-            if (avp.getAttribute().equals(attribute)) {
+    private AttributeValuePair avpsContainsAttribute(Set<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
+        for (AttributeValuePair avp : actualAvps) {
+            if (avp.getAttribute().equals(expectedAttribute)) {
                 return avp;
             }
         }

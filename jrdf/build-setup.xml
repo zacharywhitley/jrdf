@@ -134,6 +134,7 @@
         <pathelement location="${lib.dir}/spring/spring-context-2.0M5.jar"/>
         <pathelement location="${lib.dir}/spring/spring-core-2.0M5.jar"/>
         <pathelement location="${lib.dir}/spring/spring-dao-2.0M5.jar"/>
+        <pathelement location="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <pathelement location="${lib.dir}/spring-rcp/forms-1.0.5.jar"/>
         <pathelement location="${lib.dir}/spring-rcp/jhelp-2.0.jar"/>
         <pathelement location="${lib.dir}/spring-rcp/looks-1.3.2.jar"/>
@@ -155,6 +156,7 @@
         <pathelement location="${lib.dir}/spring/spring-context-2.0M5.jar"/>
         <pathelement location="${lib.dir}/spring/spring-core-2.0M5.jar"/>
         <pathelement location="${lib.dir}/spring/spring-dao-2.0M5.jar"/>
+        <pathelement location="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <pathelement location="${lib.dir}/spring-rcp/forms-1.0.5.jar"/>
         <pathelement location="${lib.dir}/spring-rcp/jhelp-2.0.jar"/>
         <pathelement location="${lib.dir}/spring-rcp/looks-1.3.2.jar"/>
