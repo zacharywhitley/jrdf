@@ -110,14 +110,14 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         }
 
         // Perform natural join.
-        Relation relation = performNaturalJoin(relations);
+        Relation relation = performJoin(relations);
         if (relation.getTuples().size() == 0) {
             return RelationDEE.RELATION_DEE;
         }
         return relation;
     }
 
-    private Relation performNaturalJoin(Set<Relation> relations) {
+    private Relation performJoin(Set<Relation> relations) {
         Iterator<Relation> iterator = relations.iterator();
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();

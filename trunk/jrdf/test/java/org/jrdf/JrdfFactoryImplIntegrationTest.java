@@ -73,5 +73,7 @@ public class JrdfFactoryImplIntegrationTest extends TestCase {
         jrdfFactory.getNewTupleComparator();
         jrdfFactory.getNewSparqlConnection();
         jrdfFactory.getNewJrdfQueryExecutorFactory();
+        jrdfFactory.getNewNaturalJoin();
+        jrdfFactory.getNewSemiJoin();
     }
 }
