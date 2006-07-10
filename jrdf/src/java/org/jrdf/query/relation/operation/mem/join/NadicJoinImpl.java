@@ -60,8 +60,8 @@ package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
+import org.jrdf.query.relation.operation.NadicJoin;
 
 import java.util.Collections;
 import java.util.Set;
