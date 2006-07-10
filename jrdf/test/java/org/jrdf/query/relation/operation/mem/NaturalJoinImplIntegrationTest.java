@@ -95,7 +95,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class JoinImplIntegrationTest extends TestCase {
+public class NaturalJoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Join JOIN = FACTORY.getNewNaturalJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
