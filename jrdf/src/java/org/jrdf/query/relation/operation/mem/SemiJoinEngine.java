@@ -78,12 +78,13 @@ public class SemiJoinEngine implements JoinEngine {
 
     public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
             Set<Tuple> result) {
-        Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
+        Set<AttributeValuePair> allAttributeValuePairs = new HashSet<AttributeValuePair>();
+        Set<AttributeValuePair> lhsAttributeValuePairs = new HashSet<AttributeValuePair>();
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = getAttribute(avps1, attribute);
             AttributeValuePair avp2 = getAttribute(avps2, attribute);
 
-            boolean added = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
+            boolean added = addAttributeValuePair(avp1, avp2, allAttributeValuePairs, lhsAttributeValuePairs);
 
             // If we didn't find one for the current heading end early.
             if (!added) {
@@ -92,8 +93,8 @@ public class SemiJoinEngine implements JoinEngine {
         }
 
         // Only add results if they are the same size
-        if (headings.size() == resultantAttributeValues.size()) {
-            Tuple t = tupleFactory.getTuple(resultantAttributeValues);
+        if (headings.size() == allAttributeValuePairs.size()) {
+            Tuple t = tupleFactory.getTuple(lhsAttributeValuePairs);
             result.add(t);
         }
     }
@@ -108,13 +109,14 @@ public class SemiJoinEngine implements JoinEngine {
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
-            Set<AttributeValuePair> resultantAttributeValues) {
+            Set<AttributeValuePair> resultantAttributeValues, Set<AttributeValuePair> lhsAttributeValuePairs) {
         boolean added = false;
 
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
             if (avp2 == null || avp1.equals(avp2)) {
                 resultantAttributeValues.add(avp1);
+                lhsAttributeValuePairs.add(avp1);
                 added = true;
             }
         } else {

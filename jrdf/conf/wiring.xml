@@ -222,6 +222,20 @@
         </constructor-arg>
     </bean>
 
+    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.JoinImpl">
+        <constructor-arg>
+            <ref bean="semiJoinEngine"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+    </bean>
 
     <bean id="project" class="org.jrdf.query.relation.operation.mem.ProjectImpl">
         <constructor-arg>
