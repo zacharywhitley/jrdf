@@ -63,16 +63,16 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Implementation of natural join.
+ * Implementation of semijoin.
  */
-public class NaturalJoinEngine implements JoinEngine {
+public class SemiJoinEngine implements JoinEngine {
     private final TupleFactory tupleFactory;
 
-    public NaturalJoinEngine(TupleFactory tupleFactory) {
+    public SemiJoinEngine(TupleFactory tupleFactory) {
         this.tupleFactory = tupleFactory;
     }
 
