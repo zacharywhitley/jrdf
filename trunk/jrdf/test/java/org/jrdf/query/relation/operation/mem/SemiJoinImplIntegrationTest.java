@@ -63,10 +63,7 @@ import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.constants.RelationDUM;
-import org.jrdf.query.relation.operation.Join;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
+import org.jrdf.query.relation.operation.SemiJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
@@ -80,10 +77,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -94,24 +88,14 @@ import java.util.Set;
  */
 public class SemiJoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Join JOIN = FACTORY.getNewSemiJoin();
-    private static final Set<Relation> EMPTY = Collections.emptySet();
-
-    public void testRelationDEEandDUM() {
-        // The JOIN of empty is DEE.
-        checkRelation(RelationDEE.RELATION_DEE, SemiJoinImplIntegrationTest.EMPTY);
-        // The JOIN of DEE is DEE.
-        checkRelation(RelationDEE.RELATION_DEE, Collections.singleton(RelationDEE.RELATION_DEE));
-        // The JOIN of DUM is DUM.
-        checkRelation(RelationDUM.RELATION_DUM, Collections.singleton(RelationDUM.RELATION_DUM));
-    }
+    private static final SemiJoin JOIN = FACTORY.getNewSemiJoin();
 
     @SuppressWarnings({ "unchecked" })
     public void testCartesianProductSemiJoin() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -126,7 +110,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4);
         resultTuple.addAll(tmpTuple);
-        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -134,18 +118,18 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public void testSemiJoin2() {
-        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
-        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
-        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
-        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2, tuple3, tuple4));
-    }
+//    @SuppressWarnings({ "unchecked" })
+//    public void testSemiJoin2() {
+//        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+//        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
+//        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
+//        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
+//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+//        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2, tuple3, tuple4));
+//    }
 
     @SuppressWarnings({ "unchecked" })
     public void testSemiJoin3() {
@@ -157,7 +141,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
 
         Relation relation = createRelation(resultTuple);
-        checkJoin(relation, createRelation(tuple1, tuple2));
+        checkJoin(relation, createRelation(tuple1), createRelation(tuple2));
     }
 
 //    @SuppressWarnings({ "unchecked" })
@@ -182,13 +166,8 @@ public class SemiJoinImplIntegrationTest extends TestCase {
 //        checkJoin(createRelation(tuple1, tuple2), RelationDEE.RELATION_DEE);
 //    }
 
-    private void checkJoin(Relation expectedResult, List<Relation> relations) {
-        Set<Relation> tuples = createRelations(relations.toArray(new Relation[]{}));
-        checkRelation(expectedResult, tuples);
-    }
-
-    private void checkRelation(Relation expected, Set<Relation> actual) {
-        Relation relation = SemiJoinImplIntegrationTest.JOIN.join(actual);
+    private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
+        Relation relation = SemiJoinImplIntegrationTest.JOIN.semiJoin(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();
@@ -199,6 +178,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
 //        System.err.println("Sorted Expected tuples relation1: " + isEqual);
 //        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
 //        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
-        assertEquals(expected, relation);
+        assertEquals(expectedResult, relation);
     }
+
 }

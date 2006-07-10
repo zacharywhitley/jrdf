@@ -70,6 +70,7 @@ import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.Join;
 import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.operation.SemiJoin;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.analysis.VariableCollector;
@@ -122,7 +123,7 @@ public final class TestJRDFFactory implements JRDFFactory {
         return FACTORY.getNewNaturalJoin();
     }
 
-    public Join getNewSemiJoin() {
+    public SemiJoin getNewSemiJoin() {
         return FACTORY.getNewSemiJoin();
     }
 
