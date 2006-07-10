@@ -91,6 +91,8 @@ public interface JRDFFactory {
 
     Join getNewNaturalJoin();
 
+    Join getNewSemiJoin();
+
     SparqlConnection getNewSparqlConnection();
 
     JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory();

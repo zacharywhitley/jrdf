@@ -118,6 +118,10 @@ public final class JRDFFactoryImpl implements JRDFFactory {
         return (Join) beanFactory.getBean("naturalJoin");
     }
 
+    public Join getNewSemiJoin() {
+        return (Join) beanFactory.getBean("semiJoin");
+    }
+
     public SparqlConnection getNewSparqlConnection() {
         return (SparqlConnection) beanFactory.getBean("sparqlConnection");
     }
