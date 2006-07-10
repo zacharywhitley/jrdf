@@ -58,9 +58,9 @@
 
 package org.jrdf.sparql.builder;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.graph.Graph;
 
 import java.util.SortedSet;
 

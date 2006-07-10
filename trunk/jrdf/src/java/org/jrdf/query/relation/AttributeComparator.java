@@ -57,8 +57,8 @@
  */
 package org.jrdf.query.relation;
 
-import java.util.Comparator;
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Sort attributes by their type.

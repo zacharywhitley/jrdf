@@ -58,8 +58,8 @@
 
 package org.jrdf.query.relation.type;
 
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 
 import java.util.HashSet;
 import java.util.Set;

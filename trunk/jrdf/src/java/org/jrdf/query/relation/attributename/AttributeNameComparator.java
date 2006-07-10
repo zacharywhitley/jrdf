@@ -58,8 +58,8 @@
 
 package org.jrdf.query.relation.attributename;
 
-import java.util.Comparator;
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Compares attribute names.

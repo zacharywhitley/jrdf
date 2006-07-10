@@ -61,8 +61,8 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.type.NodeType;
 
-import java.util.SortedSet;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * Allows the creation of headings.

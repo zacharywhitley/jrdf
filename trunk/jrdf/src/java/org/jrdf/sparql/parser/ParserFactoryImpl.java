@@ -58,8 +58,8 @@
 
 package org.jrdf.sparql.parser;
 
-import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.lexer.Lexer;
+import org.jrdf.sparql.parser.parser.Parser;
 
 import java.io.PushbackReader;
 import java.io.StringReader;

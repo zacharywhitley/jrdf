@@ -56,18 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.join.common;
 
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
-import java.util.Set;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**

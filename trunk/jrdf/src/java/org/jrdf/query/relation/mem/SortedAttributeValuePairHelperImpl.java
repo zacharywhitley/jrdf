@@ -58,21 +58,21 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.mem.TripleImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Set;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * Allows the creation of sroted AttributeValuePairs.

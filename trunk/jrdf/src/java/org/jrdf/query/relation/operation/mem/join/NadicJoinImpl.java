@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,31 +56,51 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.command;
+package org.jrdf.query.relation.operation.mem.join;
 
-import org.jrdf.gui.view.QueryView;
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.constants.RelationDEE;
+import org.jrdf.query.relation.operation.NadicJoin;
+import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
- * Loads an RDF file from the file system.
+ * A simple memory based implementation of NadicJoin.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Revision$
  */
-public class RdfLoadedCommand extends ApplicationWindowAwareCommand {
-    private long numberOfTriples;
-    private QueryView queryView;
+public final class NadicJoinImpl implements NadicJoin {
+    private final JoinEngine joinEngine;
+    private final CommonJoin commonJoin;
 
-    public RdfLoadedCommand(QueryView queryView) {
-        super("rdfCommand");
-        this.queryView = queryView;
+    /**
+     * Cannot create join.
+     */
+    public NadicJoinImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
+        this.joinEngine = joinEngine;
+        this.commonJoin = commonJoin;
     }
 
-    public void setTriplesLoaded(long numberOfTriples) {
-        this.numberOfTriples = numberOfTriples;
-    }
+    // TODO (AN) Use semijoin if the relations to the right have a subset of attributes to the one on the left.
+    public Relation join(Set<Relation> relations) {
+        // Is it the empty set - if so return DEE.
+        if (relations.equals(Collections.<Relation>emptySet())) {
+            return RelationDEE.RELATION_DEE;
+        }
 
-    protected void doExecuteCommand() {
-        queryView.setTriplesLoaded(numberOfTriples);
+        // Is it just one relations - if so just return it back.
+        if (relations.size() == 1) {
+            return relations.iterator().next();
+        }
+
+        // Perform natural join.
+        Relation relation = commonJoin.performJoin(relations, joinEngine);
+        if (relation.getTuples().size() == 0) {
+            return RelationDEE.RELATION_DEE;
+        }
+        return relation;
     }
 }
