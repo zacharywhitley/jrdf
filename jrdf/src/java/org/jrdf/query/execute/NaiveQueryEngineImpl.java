@@ -67,9 +67,9 @@ import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.operation.Join;
-import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.operation.NadicJoin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -77,7 +77,7 @@ import java.util.SortedSet;
 
 /**
  * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
- * query tree by performing restrinctions, other operations (join, etc) and then project.
+ * query tree by performing restrinctions, other operations (natural join, etc) and then project.
  *
  * @author Andrew Newman
  * @version $Revision:$
@@ -86,11 +86,11 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private Relation result;
     private Project project;
     private Restrict restrict;
-    private Join join;
+    private NadicJoin naturalJoin;
 
-    public NaiveQueryEngineImpl(Project project, Join join, Restrict restrict) {
+    public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict) {
         this.project = project;
-        this.join = join;
+        this.naturalJoin = naturalJoin;
         this.restrict = restrict;
     }
 
@@ -119,12 +119,12 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         Set<Relation> relations = new HashSet<Relation>();
         relations.add(lhs);
         relations.add(rhs);
-        result = join.join(relations);
+        result = naturalJoin.join(relations);
     }
 
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor>Relation getExpression(Expression<V> expression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, join, restrict);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict);
         queryEngine.setResult(result);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();

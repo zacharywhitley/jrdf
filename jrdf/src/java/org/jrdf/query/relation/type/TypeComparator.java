@@ -58,8 +58,8 @@
 
 package org.jrdf.query.relation.type;
 
-import java.util.Comparator;
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Compares only the type of attributes.

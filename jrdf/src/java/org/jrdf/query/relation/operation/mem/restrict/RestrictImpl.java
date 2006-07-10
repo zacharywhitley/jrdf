@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,78 +56,41 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.restrict;
 
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.operation.Restrict;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
- * Implements restrict by going through the relation and removing the columns.
+ * The relational operation that remove tuples that don't meet a specific criteria.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class ProjectImpl implements Project {
-    private final TupleFactory tupleFactory;
+public class RestrictImpl implements Restrict {
     private final RelationFactory relationFactory;
-    private final MergeHeadings mergeHeadings;
 
-    public ProjectImpl(TupleFactory tupleFactory, RelationFactory relationFactory, MergeHeadings mergeHeadings) {
-        this.tupleFactory = tupleFactory;
+    public RestrictImpl(RelationFactory relationFactory) {
         this.relationFactory = relationFactory;
-        this.mergeHeadings = mergeHeadings;
     }
 
-    public Relation include(Relation relation, Set<Attribute> attributes) {
-        // TODO (AN) Test drive short circuit
-        if (relation.getHeading().equals(attributes)) {
-            return relation;
+    // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
+    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
+        if (nameValues instanceof SortedSet && relation instanceof GraphRelation) {
+            return restrict((GraphRelation) relation, (SortedSet<AttributeValuePair>) nameValues);
         }
-
-        relation = mergeHeadings.merge(relation, attributes);
-        Set<Attribute> newHeading = relation.getHeading();
-        newHeading.retainAll(attributes);
-        return project(relation, newHeading);
+        throw new UnsupportedOperationException();
     }
 
-    public Relation exclude(Relation relation, Set<Attribute> attributes) {
-        // TODO (AN) Test drive short circuit
-        if (attributes.size() == 0) {
-            return relation;
-        }
-
-        relation = mergeHeadings.merge(relation, attributes);
-        Set<Attribute> newHeading = relation.getHeading();
-        newHeading.removeAll(attributes);
-        return project(relation, newHeading);
-    }
-
-    private Relation project(Relation relation, Set<Attribute> newHeading) {
-        Set<Tuple> newTuples = new HashSet<Tuple>();
-        Set<Tuple> tuples = relation.getTuples();
-        for (Tuple tuple : tuples) {
-            Tuple newTuple = createNewTuples(tuple, newHeading);
-            newTuples.add(newTuple);
-        }
-        return relationFactory.getRelation(newTuples);
-    }
-
-    private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
-        Set<AttributeValuePair> avps = tuple.getAttributeValues();
-        Set<AttributeValuePair> newAvps = new HashSet<AttributeValuePair>();
-        for (AttributeValuePair avp : avps) {
-            if (newHeading.contains(avp.getAttribute())) {
-                newAvps.add(avp);
-            }
-        }
-        return tupleFactory.getTuple(newAvps);
+    public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
+        Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
+        return relationFactory.getRelation(restrictedTuples);
     }
 }

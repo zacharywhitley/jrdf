@@ -56,25 +56,25 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.project;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
-import org.jrdf.query.relation.type.SubjectPredicateNodeType;
-import org.jrdf.query.relation.type.SubjectObjectNodeType;
-import org.jrdf.query.relation.type.PredicateObjectNodeType;
-import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.graph.Node;
+import org.jrdf.query.relation.type.PredicateObjectNodeType;
+import org.jrdf.query.relation.type.SubjectObjectNodeType;
+import org.jrdf.query.relation.type.SubjectPredicateNodeType;
+import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Class description goes here.

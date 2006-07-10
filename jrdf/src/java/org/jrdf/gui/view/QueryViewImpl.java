@@ -58,13 +58,13 @@
 
 package org.jrdf.gui.view;
 
+import org.jrdf.gui.command.QueryRanCommand;
+import org.jrdf.gui.command.RdfLoadedCommand;
+import org.jrdf.query.relation.Relation;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.richclient.application.PageComponentContext;
 import org.springframework.richclient.application.support.AbstractView;
-import org.jrdf.gui.command.RdfLoadedCommand;
-import org.jrdf.gui.command.QueryRanCommand;
-import org.jrdf.query.relation.Relation;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;

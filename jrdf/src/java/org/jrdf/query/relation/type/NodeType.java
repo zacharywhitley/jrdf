@@ -59,8 +59,8 @@
 
 package org.jrdf.query.relation.type;
 
-import java.util.Set;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Node types - data types belong to RDF nodes.
@@ -78,9 +78,9 @@ public interface NodeType extends Serializable {
     boolean isAssignableFrom(NodeType type);
 
     /**
-     * Returns true if this NodeType is join compatible with the given type.  JoinImpl compatible means that the given
-     * type can be joined and considered to be this type i.e. blank nodes and uri references to subject nodes, uri
-     * references to any positional node type, predicate nodes to uri references, etc.
+     * Returns true if this NodeType is join compatible with the given type.  NadicJoinImpl compatible means that the
+     * given type can be joined and considered to be this type i.e. blank nodes and uri references to subject nodes,
+     * uri references to any positional node type, predicate nodes to uri references, etc.
      */
     boolean isJoinCompatible(NodeType type);
 

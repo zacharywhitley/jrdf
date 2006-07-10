@@ -58,10 +58,10 @@
 
 package org.jrdf.query;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.List;
 import java.util.SortedSet;

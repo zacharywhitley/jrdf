@@ -59,8 +59,8 @@ package org.jrdf.query.relation.mem;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
+import org.jrdf.query.relation.type.TypeComparator;
 
 /**
  * Stuff goes in here.

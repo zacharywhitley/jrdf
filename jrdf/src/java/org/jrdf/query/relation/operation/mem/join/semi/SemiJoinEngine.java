@@ -56,18 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.join.semi;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implementation of semijoin.
+ *  Join two relations if they have common tuple values and projects the results back onto the first relation.
  */
 public class SemiJoinEngine implements JoinEngine {
     private final TupleFactory tupleFactory;

@@ -59,8 +59,8 @@
 
 package org.jrdf.query.relation.type;
 
-import java.util.Set;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * An predicate node type.

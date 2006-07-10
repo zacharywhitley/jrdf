@@ -66,10 +66,10 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.ArrayList;
 
 /**
  * Allows the creation of headings.

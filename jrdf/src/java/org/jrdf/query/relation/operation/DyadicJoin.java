@@ -61,12 +61,11 @@ package org.jrdf.query.relation.operation;
 import org.jrdf.query.relation.Relation;
 
 /**
- * Combines two relations attributes if they have common tuple values and projects the results back onto the first
- * relation.
+ * Combines two relations.
  *
  * @author Andrew Newman
  * @version $Revision: 436 $
  */
-public interface SemiJoin extends Operation {
-    Relation semiJoin(Relation relation1, Relation relation2);
+public interface DyadicJoin extends Operation {
+    Relation join(Relation relation1, Relation relation2);
 }

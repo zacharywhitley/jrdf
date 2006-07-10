@@ -62,8 +62,8 @@ package org.jrdf.query.relation.type;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 
-import java.util.Set;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * An subject node type.

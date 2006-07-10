@@ -58,8 +58,8 @@
 
 package org.jrdf.gui.model;
 
-import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.JRDFFactory;
+import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.query.relation.Relation;

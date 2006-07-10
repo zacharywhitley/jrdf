@@ -58,9 +58,9 @@
 
 package org.jrdf.sparql.parser;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.graph.Graph;
 
 /**
  * Parses {@link String}s into {@linkplain org.jrdf.query.Query queries}.

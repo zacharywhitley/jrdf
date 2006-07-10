@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,15 +56,20 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation;
 
 import org.jrdf.query.relation.Relation;
 
 import java.util.Set;
 
+
 /**
- * Class description goes here.
+ * Combines n-relations.
+ *
+ * @author Andrew Newman
+ * @version $Revision$
  */
-public interface CommonJoin {
-    Relation performJoin(Set<Relation> relations, JoinEngine joinEngine);
+public interface NadicJoin extends Operation {
+
+    Relation join(Set<Relation> relation);
 }

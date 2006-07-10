@@ -58,11 +58,11 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.util.Set;

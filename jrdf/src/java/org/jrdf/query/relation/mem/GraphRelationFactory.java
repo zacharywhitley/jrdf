@@ -58,8 +58,8 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.graph.Graph;
+import org.jrdf.query.relation.GraphRelation;
 
 /**
  * A builder that always throws exceptions.

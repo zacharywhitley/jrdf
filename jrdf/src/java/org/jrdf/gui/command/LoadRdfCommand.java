@@ -61,15 +61,15 @@ package org.jrdf.gui.command;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.gui.model.JRDFModel;
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 import org.springframework.richclient.application.PageComponent;
 import org.springframework.richclient.application.PageComponentContext;
+import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 import org.springframework.richclient.filechooser.FileChooserUtils;
 
 import javax.swing.JFrame;
 import java.io.File;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Loads an RDF file from the file system.

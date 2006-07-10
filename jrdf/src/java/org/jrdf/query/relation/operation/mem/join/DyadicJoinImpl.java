@@ -56,33 +56,34 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.operation.SemiJoin;
+import org.jrdf.query.relation.operation.DyadicJoin;
+import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
 
 import java.util.LinkedHashSet;
 
 /**
- * A simple memory based implementation of JoinImpl.
+ * A simple memory based implementation of DyadicJoin.
  *
  * @author Andrew Newman
  * @version $Revision: 722 $
  */
-public final class SemiJoinImpl implements SemiJoin {
+public final class DyadicJoinImpl implements DyadicJoin {
     private final JoinEngine joinEngine;
     private final CommonJoin commonJoin;
 
     /**
      * Cannot create join.
      */
-    public SemiJoinImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
+    public DyadicJoinImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
         this.joinEngine = joinEngine;
         this.commonJoin = commonJoin;
     }
 
-    public Relation semiJoin(Relation relation1, Relation relation2) {
+    public Relation join(Relation relation1, Relation relation2) {
         // Perform natural join.
         LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
         relations.add(relation1);

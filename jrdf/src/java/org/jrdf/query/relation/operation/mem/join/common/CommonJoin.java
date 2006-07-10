@@ -56,17 +56,16 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.join.common;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
 import java.util.Set;
 
 /**
- * Class description goes here.
+ * Common join engine - basically gets headings and then calls join on the join engine.
  */
-public interface JoinEngine {
-    void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2, Set<Tuple> result);
+public interface CommonJoin {
+    Relation performJoin(Set<Relation> relations, JoinEngine joinEngine);
 }
