@@ -122,6 +122,10 @@ public final class TestJRDFFactory implements JRDFFactory {
         return FACTORY.getNewNaturalJoin();
     }
 
+    public Join getNewSemiJoin() {
+        return FACTORY.getNewSemiJoin();
+    }
+
     public SparqlConnection getNewSparqlConnection() {
         return FACTORY.getNewSparqlConnection();
     }

@@ -201,6 +201,12 @@
         </constructor-arg>
     </bean>
 
+    <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.SemiJoinEngine">
+        <constructor-arg>
+            <ref bean="tupleFactory"/>
+        </constructor-arg>
+    </bean>
+
     <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.JoinImpl">
         <constructor-arg>
             <ref bean="naturalJoinEngine"/>
