@@ -115,7 +115,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR1_SUBJECT_R3,
                 VAR_BAR2_PREDICATE_R4);
-        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -138,7 +138,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4, POS_FOO4_PREDICATE_R5,
                 POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
-        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -146,7 +146,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4);
-        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -157,7 +157,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4,
                 POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
-        checkJoin(createRelation(tuple1, tuple2, tuple3, tuple4), createRelation(resultTuple));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2, tuple3, tuple4));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -174,7 +174,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         resultTuple.addAll(tmpTuple);
 
         Relation relation = createRelation(resultTuple);
-        checkJoin(createRelation(tuple1, tuple2), relation);
+        checkJoin(relation, createRelation(tuple1, tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -191,17 +191,17 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         resultTuple.addAll(tmpTuple);
 
         Relation relation = createRelation(resultTuple);
-        checkJoin(createRelation(tuple1, tuple2), relation);
+        checkJoin(relation, createRelation(tuple1, tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
     public void testNaturalJoin5() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-        checkJoin(createRelation(tuple1, tuple2), RELATION_DEE);
+        checkJoin(RELATION_DEE, createRelation(tuple1, tuple2));
     }
 
-    private void checkJoin(List<Relation> relations, Relation expectedResult) {
+    private void checkJoin(Relation expectedResult, List<Relation> relations) {
         Set<Relation> tuples = createRelations(relations.toArray(new Relation[]{}));
         checkRelation(expectedResult, tuples);
     }
