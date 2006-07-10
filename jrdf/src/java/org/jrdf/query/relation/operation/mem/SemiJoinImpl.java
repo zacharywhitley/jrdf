@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,79 +56,41 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.mem.GraphFactory;
-import org.jrdf.query.JrdfQueryExecutorFactory;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.operation.Join;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.operation.SemiJoin;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.util.LinkedHashSet;
 
 /**
- * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
+ * A simple memory based implementation of JoinImpl.
  *
  * @author Andrew Newman
- * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
+ * @version $Revision: 722 $
  */
-public final class JRDFFactoryImpl implements JRDFFactory {
-    private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
-    private static ClassPathXmlApplicationContext beanFactory =
-            new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+public final class SemiJoinImpl implements SemiJoin {
+    private final JoinEngine joinEngine;
+    private final CommonJoin commonJoin;
 
-    public void refresh() {
-        beanFactory.refresh();
+    /**
+     * Cannot create join.
+     */
+    public SemiJoinImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
+        this.joinEngine = joinEngine;
+        this.commonJoin = commonJoin;
     }
 
-    ClassPathXmlApplicationContext getContext() {
-        return beanFactory;
+    public Relation semiJoin(Relation relation1, Relation relation2) {
+        // Perform natural join.
+        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+        relations.add(relation1);
+        relations.add(relation2);
+        Relation relation = commonJoin.performJoin(relations, joinEngine);
+        if (relation.getTuples().size() == 0) {
+            return RelationDEE.RELATION_DEE;
+        }
+        return relation;
     }
-
-    public Graph getNewGraph() {
-        GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("graphFactory");
-        return graphFactory.getGraph();
-    }
-
-    public AttributeValuePairComparator getNewAttributeValuePairComparator() {
-        return (AttributeValuePairComparator) beanFactory.getBean("avpComparator");
-    }
-
-    public NodeComparator getNewNodeComparator() {
-        return (NodeComparator) beanFactory.getBean("nodeComparator");
-    }
-
-    public AttributeComparator getNewAttributeComparator() {
-        return (AttributeComparator) beanFactory.getBean("attributeComparator");
-    }
-
-    public TupleComparator getNewTupleComparator() {
-        return (TupleComparator) beanFactory.getBean("tupleComparator");
-    }
-
-    public RelationComparator getNewRelationComparator() {
-        return (RelationComparator) beanFactory.getBean("relationComparator");
-    }
-
-    public Join getNewNaturalJoin() {
-        return (Join) beanFactory.getBean("naturalJoin");
-    }
-
-    public SemiJoin getNewSemiJoin() {
-        return (SemiJoin) beanFactory.getBean("semiJoin");
-    }
-
-    public SparqlConnection getNewSparqlConnection() {
-        return (SparqlConnection) beanFactory.getBean("sparqlConnection");
-    }
-
-    public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
-        return (JrdfQueryExecutorFactory) beanFactory.getBean("jrdfQueryExecutorFactory");
-    }
-
 }

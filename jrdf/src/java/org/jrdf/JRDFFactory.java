@@ -66,6 +66,7 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.Join;
+import org.jrdf.query.relation.operation.SemiJoin;
 import org.jrdf.sparql.SparqlConnection;
 
 /**
@@ -91,7 +92,7 @@ public interface JRDFFactory {
 
     Join getNewNaturalJoin();
 
-    Join getNewSemiJoin();
+    SemiJoin getNewSemiJoin();
 
     SparqlConnection getNewSparqlConnection();
 

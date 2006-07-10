@@ -59,12 +59,11 @@
 package org.jrdf.query.relation.operation.mem;
 
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.operation.Join;
 import org.jrdf.query.relation.constants.RelationDEE;
 
 import java.util.Collections;
 import java.util.Set;
-
-// TODO (AN) An ugly and hideous attempt to get it going.
 
 /**
  * A simple memory based implementation of JoinImpl.
@@ -72,7 +71,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
+public final class JoinImpl implements Join {
     private final JoinEngine joinEngine;
     private final CommonJoin commonJoin;
 

@@ -228,7 +228,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.JoinImpl">
+    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.SemiJoinImpl">
         <constructor-arg>
             <ref bean="commonJoin"/>
         </constructor-arg>
