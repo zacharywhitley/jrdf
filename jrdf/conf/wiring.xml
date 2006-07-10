@@ -185,7 +185,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="mergeHeadings" class="org.jrdf.query.relation.operation.mem.MergeHeadingsImpl">
+    <bean id="mergeHeadings" class="org.jrdf.query.relation.operation.mem.project.MergeHeadingsImpl">
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
@@ -195,7 +195,7 @@
     </bean>
 
     <!-- Relational Operators -->
-    <bean id="commonJoin" class="org.jrdf.query.relation.operation.mem.CommonJoinImpl">
+    <bean id="commonJoin" class="org.jrdf.query.relation.operation.mem.join.common.CommonJoinImpl">
         <constructor-arg>
             <ref bean="relationFactory"/>
         </constructor-arg>
@@ -207,19 +207,19 @@
         </constructor-arg>
     </bean>
 
-    <bean id="naturalJoinEngine" class="org.jrdf.query.relation.operation.mem.NaturalJoinEngine">
+    <bean id="naturalJoinEngine" class="org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine">
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
     </bean>
 
-    <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.SemiJoinEngine">
+    <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinEngine">
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
     </bean>
 
-    <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.JoinImpl">
+    <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
         <constructor-arg>
             <ref bean="commonJoin"/>
         </constructor-arg>
@@ -228,7 +228,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.SemiJoinImpl">
+    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.join.DyadicJoinImpl">
         <constructor-arg>
             <ref bean="commonJoin"/>
         </constructor-arg>
@@ -237,7 +237,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="project" class="org.jrdf.query.relation.operation.mem.ProjectImpl">
+    <bean id="project" class="org.jrdf.query.relation.operation.mem.project.ProjectImpl">
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
@@ -249,7 +249,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="restrict" class="org.jrdf.query.relation.operation.mem.RestrictImpl">
+    <bean id="restrict" class="org.jrdf.query.relation.operation.mem.restrict.RestrictImpl">
         <constructor-arg>
             <ref bean="relationFactory"/>
         </constructor-arg>
