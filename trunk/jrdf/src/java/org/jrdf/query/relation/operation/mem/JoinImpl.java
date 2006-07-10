@@ -65,11 +65,9 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.RelationDEE;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -83,7 +81,7 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
-    private final TupleFactory tupleFactory;
+    private final JoinEngine joinEngine;
     private final RelationFactory relationFactory;
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
@@ -91,9 +89,9 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
     /**
      * Cannot create join.
      */
-    public JoinImpl(TupleFactory tupleFactory, RelationFactory relationFactory,
+    public JoinImpl(JoinEngine joinEngine, RelationFactory relationFactory,
             AttributeComparator attributeComparator, TupleComparator tupleComparator) {
-        this.tupleFactory = tupleFactory;
+        this.joinEngine = joinEngine;
         this.relationFactory = relationFactory;
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
@@ -158,56 +156,8 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
     }
 
     private void joinRhs(Set<Attribute> headings, Tuple tuple1, Tuple tuple2, Set<Tuple> result) {
-        Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
-        int expectedResultSize = headings.size();
         Set<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
         Set<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
-
-        for (Attribute attribute : headings) {
-            AttributeValuePair avp1 = getAttribute(avps1, attribute);
-            AttributeValuePair avp2 = getAttribute(avps2, attribute);
-
-            boolean added = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
-
-            // If we didn't find one for the current heading end early.
-            if (!added) {
-                break;
-            }
-        }
-
-        // Only add results if they are the same size
-        if (expectedResultSize == resultantAttributeValues.size()) {
-            Tuple t = tupleFactory.getTuple(resultantAttributeValues);
-            result.add(t);
-        }
-    }
-
-    private AttributeValuePair getAttribute(Set<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
-        for (AttributeValuePair avp : actualAvps) {
-            if (avp.getAttribute().equals(expectedAttribute)) {
-                return avp;
-            }
-        }
-        return null;
-    }
-
-    private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
-            Set<AttributeValuePair> resultantAttributeValues) {
-        boolean added = false;
-
-        // Add if avp1 is not null and avp2 is or they are both equal.
-        if (avp1 != null) {
-            if (avp2 == null || avp1.equals(avp2)) {
-                resultantAttributeValues.add(avp1);
-                added = true;
-            }
-        } else {
-            // Add if avp1 is null and avp2 is not.
-            if (avp2 != null) {
-                resultantAttributeValues.add(avp2);
-                added = true;
-            }
-        }
-        return added;
+        joinEngine.join(headings, avps1, avps2, result);
     }
 }

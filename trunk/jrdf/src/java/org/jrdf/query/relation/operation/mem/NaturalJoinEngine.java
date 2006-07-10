@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,42 +56,73 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.query.relation.operation.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.JrdfQueryExecutorFactory;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.operation.Join;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
+
+import java.util.Set;
+import java.util.HashSet;
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
- *
- * @author Andrew Newman
- * @version $Revision:$
+ * Class description goes here.
  */
-public interface JRDFFactory {
-    void refresh();
+public class NaturalJoinEngine implements JoinEngine {
+    private final TupleFactory tupleFactory;
 
-    Graph getNewGraph();
+    public NaturalJoinEngine(TupleFactory tupleFactory) {
+        this.tupleFactory = tupleFactory;
+    }
 
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
+    public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2, Set<Tuple> result) {
+        Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
+        for (Attribute attribute : headings) {
+            AttributeValuePair avp1 = getAttribute(avps1, attribute);
+            AttributeValuePair avp2 = getAttribute(avps2, attribute);
 
-    NodeComparator getNewNodeComparator();
+            boolean added = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
 
-    AttributeComparator getNewAttributeComparator();
+            // If we didn't find one for the current heading end early.
+            if (!added) {
+                break;
+            }
+        }
 
-    TupleComparator getNewTupleComparator();
+        // Only add results if they are the same size
+        if (headings.size() == resultantAttributeValues.size()) {
+            Tuple t = tupleFactory.getTuple(resultantAttributeValues);
+            result.add(t);
+        }
+    }
 
-    RelationComparator getNewRelationComparator();
+    private AttributeValuePair getAttribute(Set<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
+        for (AttributeValuePair avp : actualAvps) {
+            if (avp.getAttribute().equals(expectedAttribute)) {
+                return avp;
+            }
+        }
+        return null;
+    }
 
-    Join getNewNaturalJoin();
+    private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
+            Set<AttributeValuePair> resultantAttributeValues) {
+        boolean added = false;
 
-    SparqlConnection getNewSparqlConnection();
-
-    JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory();
+        // Add if avp1 is not null and avp2 is or they are both equal.
+        if (avp1 != null) {
+            if (avp2 == null || avp1.equals(avp2)) {
+                resultantAttributeValues.add(avp1);
+                added = true;
+            }
+        } else {
+            // Add if avp1 is null and avp2 is not.
+            if (avp2 != null) {
+                resultantAttributeValues.add(avp2);
+                added = true;
+            }
+        }
+        return added;
+    }
 }

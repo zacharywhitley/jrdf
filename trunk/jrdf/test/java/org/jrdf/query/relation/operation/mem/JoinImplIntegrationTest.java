@@ -97,7 +97,7 @@ import java.util.Set;
  */
 public class JoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Join JOIN = FACTORY.getNewJoin();
+    private static final Join JOIN = FACTORY.getNewNaturalJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
     public void testRelationDEEandDUM() {

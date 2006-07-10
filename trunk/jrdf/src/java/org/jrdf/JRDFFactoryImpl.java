@@ -114,8 +114,8 @@ public final class JRDFFactoryImpl implements JRDFFactory {
         return (RelationComparator) beanFactory.getBean("relationComparator");
     }
 
-    public Join getNewJoin() {
-        return (Join) beanFactory.getBean("join");
+    public Join getNewNaturalJoin() {
+        return (Join) beanFactory.getBean("naturalJoin");
     }
 
     public SparqlConnection getNewSparqlConnection() {
