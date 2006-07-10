@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -59,48 +59,12 @@
 package org.jrdf.query.relation.operation.mem;
 
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.constants.RelationDEE;
 
-import java.util.Collections;
 import java.util.Set;
 
-// TODO (AN) An ugly and hideous attempt to get it going.
-
 /**
- * A simple memory based implementation of JoinImpl.
- *
- * @author Andrew Newman
- * @version $Revision$
+ * Class description goes here.
  */
-public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
-    private final JoinEngine joinEngine;
-    private final CommonJoin commonJoin;
-
-    /**
-     * Cannot create join.
-     */
-    public JoinImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
-        this.joinEngine = joinEngine;
-        this.commonJoin = commonJoin;
-    }
-
-    // TODO (AN) Use semijoin if the relations to the right have a subset of attributes to the one on the left.
-    public Relation join(Set<Relation> relations) {
-        // Is it the empty set - if so return DEE.
-        if (relations.equals(Collections.<Relation>emptySet())) {
-            return RelationDEE.RELATION_DEE;
-        }
-
-        // Is it just one relations - if so just return it back.
-        if (relations.size() == 1) {
-            return relations.iterator().next();
-        }
-
-        // Perform natural join.
-        Relation relation = commonJoin.performJoin(relations, joinEngine);
-        if (relation.getTuples().size() == 0) {
-            return RelationDEE.RELATION_DEE;
-        }
-        return relation;
-    }
+public interface CommonJoin {
+    Relation performJoin(Set<Relation> relations, JoinEngine joinEngine);
 }
