@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.join.semi;
 
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
@@ -64,7 +64,7 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.operation.SemiJoin;
+import org.jrdf.query.relation.operation.DyadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
@@ -84,14 +84,14 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import java.util.Set;
 
 /**
- * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other relations.
+ * Tests the integration between semijoin and other classes.
  *
  * @author Andrew Newman
  * @version $Revision: 717 $
  */
 public class SemiJoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final SemiJoin JOIN = FACTORY.getNewSemiJoin();
+    private static final DyadicJoin JOIN = FACTORY.getNewSemiJoin();
 
     @SuppressWarnings({ "unchecked" })
     public void testCartesianProductSemiJoin() {
@@ -170,7 +170,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
     }
 
     private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = SemiJoinImplIntegrationTest.JOIN.semiJoin(relation1, relation2);
+        Relation relation = SemiJoinImplIntegrationTest.JOIN.join(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

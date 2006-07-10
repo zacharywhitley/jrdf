@@ -57,7 +57,7 @@
  */
 
 
-package org.jrdf.query.relation.operation.mem;
+package org.jrdf.query.relation.operation.mem.join.natural;
 
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
@@ -66,7 +66,7 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import org.jrdf.query.relation.operation.Join;
+import org.jrdf.query.relation.operation.NadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
@@ -97,15 +97,15 @@ import java.util.Set;
  */
 public class NaturalJoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Join JOIN = FACTORY.getNewNaturalJoin();
+    private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
     public void testRelationDEEandDUM() {
-        // The JOIN of empty is DEE.
+        // The NADIC_JOIN of empty is DEE.
         checkRelation(RELATION_DEE, EMPTY);
-        // The JOIN of DEE is DEE.
+        // The NADIC_JOIN of DEE is DEE.
         checkRelation(RELATION_DEE, Collections.singleton(RELATION_DEE));
-        // The JOIN of DUM is DUM.
+        // The NADIC_JOIN of DUM is DUM.
         checkRelation(RELATION_DUM, Collections.singleton(RELATION_DUM));
     }
 
@@ -207,7 +207,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     }
 
     private void checkRelation(Relation expected, Set<Relation> actual) {
-        Relation relation = JOIN.join(actual);
+        Relation relation = NADIC_JOIN.join(actual);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();
