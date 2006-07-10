@@ -195,6 +195,18 @@
     </bean>
 
     <!-- Relational Operators -->
+    <bean id="commonJoin" class="org.jrdf.query.relation.operation.mem.CommonJoinImpl">
+        <constructor-arg>
+            <ref bean="relationFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="tupleComparator"/>
+        </constructor-arg>
+    </bean>
+
     <bean id="naturalJoinEngine" class="org.jrdf.query.relation.operation.mem.NaturalJoinEngine">
         <constructor-arg>
             <ref bean="tupleFactory"/>
@@ -209,31 +221,19 @@
 
     <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.JoinImpl">
         <constructor-arg>
+            <ref bean="commonJoin"/>
+        </constructor-arg>
+        <constructor-arg>
             <ref bean="naturalJoinEngine"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="relationFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="attributeComparator"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="tupleComparator"/>
         </constructor-arg>
     </bean>
 
     <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.JoinImpl">
         <constructor-arg>
+            <ref bean="commonJoin"/>
+        </constructor-arg>
+        <constructor-arg>
             <ref bean="semiJoinEngine"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="relationFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="attributeComparator"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="tupleComparator"/>
         </constructor-arg>
     </bean>
 
