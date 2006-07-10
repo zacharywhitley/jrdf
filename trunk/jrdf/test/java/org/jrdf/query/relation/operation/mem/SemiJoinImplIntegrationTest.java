@@ -61,16 +61,30 @@ package org.jrdf.query.relation.operation.mem;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.query.relation.operation.Join;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.*;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.constants.RelationDEE;
 import org.jrdf.query.relation.constants.RelationDUM;
+import org.jrdf.query.relation.operation.Join;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
 
-import java.util.Set;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other relations.
@@ -97,7 +111,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -112,7 +126,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4);
         resultTuple.addAll(tmpTuple);
-        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -120,61 +134,55 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-        checkJoin(createRelation(tuple1, tuple2), createRelation(resultTuple));
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
-//    public void testSemiJoin2() {
-//        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
-//        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
-//        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
-//        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
-//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4,
-//                POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
-//        checkJoin(createRelation(tuple1, tuple2, tuple3, tuple4), createRelation(resultTuple));
-//    }
-//
+    @SuppressWarnings({ "unchecked" })
+    public void testSemiJoin2() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+        checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2, tuple3, tuple4));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public void testSemiJoin3() {
+        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+        tuple2.addAll(tmpTuple);
+
+        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+
+        Relation relation = createRelation(resultTuple);
+        checkJoin(relation, createRelation(tuple1, tuple2));
+    }
+
 //    @SuppressWarnings({ "unchecked" })
-//    public void testNaturalJoin3() {
-//        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3);
-//        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4);
-//        Set<Tuple> tmpTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6);
-//        tuple2.addAll(tmpTuple);
-//
-//        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3,
-//                RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4);
-//        tmpTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3,
-//                RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6);
-//        resultTuple.addAll(tmpTuple);
-//
-//        Relation relation = RelationIntegrationTestUtil.createRelation(resultTuple);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(tuple1, tuple2), relation);
-//    }
-//
-//    @SuppressWarnings({ "unchecked" })
-//    public void testNaturalJoin4() {
-//        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4);
-//        Set<Tuple> tmpTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6);
+//    public void testSemiJoin4() {
+//        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+//        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
 //        tuple1.addAll(tmpTuple);
-//        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3);
+//        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
 //
-//        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3,
-//                RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4);
-//        tmpTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3,
-//                RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5, RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6);
+//        Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+//        tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
 //        resultTuple.addAll(tmpTuple);
 //
-//        Relation relation = RelationIntegrationTestUtil.createRelation(resultTuple);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(tuple1, tuple2), relation);
-//    }
-//
-//    @SuppressWarnings({ "unchecked" })
-//    public void testNaturalJoin5() {
-//        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4);
-//        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(tuple1, tuple2), RelationDEE.RELATION_DEE);
+//        Relation relation = createRelation(resultTuple);
+//        checkJoin(relation, createRelation(tuple1, tuple2));
 //    }
 
-    private void checkJoin(List<Relation> relations, Relation expectedResult) {
+//    @SuppressWarnings({ "unchecked" })
+//    public void testSemiJoin5() {
+//        Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
+//        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+//        checkJoin(createRelation(tuple1, tuple2), RelationDEE.RELATION_DEE);
+//    }
+
+    private void checkJoin(Relation expectedResult, List<Relation> relations) {
         Set<Relation> tuples = createRelations(relations.toArray(new Relation[]{}));
         checkRelation(expectedResult, tuples);
     }
