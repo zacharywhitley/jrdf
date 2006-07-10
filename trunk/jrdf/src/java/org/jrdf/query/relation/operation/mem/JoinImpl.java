@@ -159,29 +159,15 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
 
     private void joinRhs(Set<Attribute> headings, Tuple tuple1, Tuple tuple2, Set<Tuple> result) {
         Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
+        int expectedResultSize = headings.size();
         Set<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
         Set<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
-        int expectedResultSize = headings.size();
 
-        boolean added;
         for (Attribute attribute : headings) {
-            added = false;
-            AttributeValuePair avp1 = avpsContainsAttribute(avps1, attribute);
-            AttributeValuePair avp2 = avpsContainsAttribute(avps2, attribute);
+            AttributeValuePair avp1 = getAttribute(avps1, attribute);
+            AttributeValuePair avp2 = getAttribute(avps2, attribute);
 
-            // Add if avp1 is not null and avp2 is or they are both equal.
-            if (avp1 != null) {
-                if (avp2 == null || avp1.equals(avp2)) {
-                    resultantAttributeValues.add(avp1);
-                    added = true;
-                }
-            } else {
-                // Add if avp1 is null and avp2 is not.
-                if (avp2 != null) {
-                    resultantAttributeValues.add(avp2);
-                    added = true;
-                }
-            }
+            boolean added = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
 
             // If we didn't find one for the current heading end early.
             if (!added) {
@@ -196,12 +182,32 @@ public final class JoinImpl implements org.jrdf.query.relation.operation.Join {
         }
     }
 
-    private AttributeValuePair avpsContainsAttribute(Set<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
+    private AttributeValuePair getAttribute(Set<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
         for (AttributeValuePair avp : actualAvps) {
             if (avp.getAttribute().equals(expectedAttribute)) {
                 return avp;
             }
         }
         return null;
+    }
+
+    private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
+            Set<AttributeValuePair> resultantAttributeValues) {
+        boolean added = false;
+
+        // Add if avp1 is not null and avp2 is or they are both equal.
+        if (avp1 != null) {
+            if (avp2 == null || avp1.equals(avp2)) {
+                resultantAttributeValues.add(avp1);
+                added = true;
+            }
+        } else {
+            // Add if avp1 is null and avp2 is not.
+            if (avp2 != null) {
+                resultantAttributeValues.add(avp2);
+                added = true;
+            }
+        }
+        return added;
     }
 }
