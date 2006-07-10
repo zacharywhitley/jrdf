@@ -118,8 +118,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return FACTORY.getNewRelationComparator();
     }
 
-    public Join getNewJoin() {
-        return FACTORY.getNewJoin();
+    public Join getNewNaturalJoin() {
+        return FACTORY.getNewNaturalJoin();
     }
 
     public SparqlConnection getNewSparqlConnection() {

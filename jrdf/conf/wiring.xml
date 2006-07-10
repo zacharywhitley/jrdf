@@ -132,7 +132,7 @@
             <ref bean="project"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="join"/>
+            <ref bean="naturalJoin"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="restrict"/>
@@ -195,9 +195,15 @@
     </bean>
 
     <!-- Relational Operators -->
-    <bean id="join" class="org.jrdf.query.relation.operation.mem.JoinImpl">
+    <bean id="naturalJoinEngine" class="org.jrdf.query.relation.operation.mem.NaturalJoinEngine">
         <constructor-arg>
             <ref bean="tupleFactory"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.JoinImpl">
+        <constructor-arg>
+            <ref bean="naturalJoinEngine"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="relationFactory"/>
