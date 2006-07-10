@@ -86,7 +86,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private Relation result;
     private Project project;
     private Restrict restrict;
-    private NadicJoin naturalJoin;
+    private org.jrdf.query.relation.operation.NadicJoin naturalJoin;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict) {
         this.project = project;

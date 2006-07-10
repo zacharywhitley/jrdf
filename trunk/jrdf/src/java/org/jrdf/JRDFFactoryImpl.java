@@ -67,7 +67,6 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.DyadicJoin;
-import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.sparql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -115,8 +114,8 @@ public final class JRDFFactoryImpl implements JRDFFactory {
         return (RelationComparator) beanFactory.getBean("relationComparator");
     }
 
-    public NadicJoin getNewNaturalJoin() {
-        return (NadicJoin) beanFactory.getBean("naturalJoin");
+    public org.jrdf.query.relation.operation.NadicJoin getNewNaturalJoin() {
+        return (org.jrdf.query.relation.operation.NadicJoin) beanFactory.getBean("naturalJoin");
     }
 
     public DyadicJoin getNewSemiJoin() {

@@ -66,7 +66,6 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.operation.DyadicJoin;
-import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.sparql.SparqlConnection;
 
 /**
@@ -90,7 +89,7 @@ public interface JRDFFactory {
 
     RelationComparator getNewRelationComparator();
 
-    NadicJoin getNewNaturalJoin();
+    org.jrdf.query.relation.operation.NadicJoin getNewNaturalJoin();
 
     DyadicJoin getNewSemiJoin();
 

@@ -68,7 +68,6 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
-import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.type.TypeComparator;
@@ -119,7 +118,7 @@ public final class TestJRDFFactory implements JRDFFactory {
         return FACTORY.getNewRelationComparator();
     }
 
-    public NadicJoin getNewNaturalJoin() {
+    public org.jrdf.query.relation.operation.NadicJoin getNewNaturalJoin() {
         return FACTORY.getNewNaturalJoin();
     }
 

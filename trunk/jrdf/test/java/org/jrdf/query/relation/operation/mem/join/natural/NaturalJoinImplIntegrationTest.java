@@ -66,7 +66,6 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import org.jrdf.query.relation.operation.NadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
@@ -97,7 +96,7 @@ import java.util.Set;
  */
 public class NaturalJoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
+    private static final org.jrdf.query.relation.operation.NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
     public void testRelationDEEandDUM() {
