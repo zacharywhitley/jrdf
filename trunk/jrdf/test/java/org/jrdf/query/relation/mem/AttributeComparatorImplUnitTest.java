@@ -66,7 +66,9 @@ import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.MockTestUtil;
 
@@ -95,10 +97,9 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     // TODO (AN) Ensure that it's Serializable - as the set won't be if the Comparator isn't.
     // TODO (AN) These next three methods could become some sort of comparator test util.
     public void testClassProperties() {
-        ClassPropertiesTestUtil
-                .checkImplementationOfInterfaceAndFinal(AttributeComparator.class, AttributeComparatorImpl.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AttributeComparator.class);
-        ClassPropertiesTestUtil.checkConstructor(AttributeComparatorImpl.class, Modifier.PUBLIC,
+        checkImplementationOfInterfaceAndFinal(AttributeComparator.class, AttributeComparatorImpl.class);
+        checkImplementationOfInterface(Serializable.class, AttributeComparator.class);
+        checkConstructor(AttributeComparatorImpl.class, Modifier.PUBLIC,
                 TypeComparator.class, AttributeNameComparator.class);
     }
 
