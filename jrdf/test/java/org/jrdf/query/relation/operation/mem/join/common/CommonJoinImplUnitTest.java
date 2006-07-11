@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,16 +56,30 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation;
+package org.jrdf.query.relation.operation.mem.join.common;
 
-import org.jrdf.query.relation.Relation;
+import junit.framework.TestCase;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.mem.RelationHelper;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-/**
- * Similar to Union in SPARQL or OR in Algebra A.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public interface Union extends Operation {
-    Relation union(Relation relation1, Relation relation2);
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+
+public class CommonJoinImplUnitTest extends TestCase {
+    private static final Class[] PARAMETERS = { RelationFactory.class, RelationHelper.class, TupleComparator.class };
+    private static final String[] PARAMETER_NAMES = { "relationFactory", "relationHelper", "tupleComparator"};
+
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(CommonJoin.class, CommonJoinImpl.class);
+        checkImplementationOfInterface(Serializable.class, CommonJoinImpl.class);
+        checkConstructor(CommonJoinImpl.class, Modifier.PUBLIC, PARAMETERS);
+        checkConstructorSetsFieldsAndFieldsPrivate(CommonJoinImpl.class, PARAMETERS, PARAMETER_NAMES);
+        checkConstructNullAssertion(CommonJoinImpl.class, PARAMETERS);
+    }
 }

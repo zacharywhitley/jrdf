@@ -65,7 +65,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 import java.util.SortedSet;
 
 /**
- * Allows the creation of sroted AttributeValuePairs.
+ * Allows the creation of sorted AttributeValuePairs.
  *
  * @author Andrew Newman
  * @version $Revision:$

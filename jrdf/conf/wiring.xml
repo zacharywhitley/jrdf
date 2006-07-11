@@ -195,12 +195,18 @@
     </bean>
 
     <!-- Relational Operators -->
+    <bean id="relationHelper" class="org.jrdf.query.relation.mem.RelationHelperImpl">
+        <constructor-arg>
+            <ref bean="attributeComparator"/>
+        </constructor-arg>
+    </bean>
+
     <bean id="commonJoin" class="org.jrdf.query.relation.operation.mem.join.common.CommonJoinImpl">
         <constructor-arg>
             <ref bean="relationFactory"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="attributeComparator"/>
+            <ref bean="relationHelper"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="tupleComparator"/>

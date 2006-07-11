@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,16 +56,16 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation;
+package org.jrdf.query.relation.operation.mem.union;
 
+import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.Relation;
 
 /**
- * Similar to Union in SPARQL or OR in Algebra A.
- *
- * @author Andrew Newman
- * @version $Revision$
+ * Class description goes here.
  */
-public interface Union extends Operation {
-    Relation union(Relation relation1, Relation relation2);
+public class UnionImpl implements Union {
+    public Relation union(Relation relation1, Relation relation2) {
+        return null;
+    }
 }
