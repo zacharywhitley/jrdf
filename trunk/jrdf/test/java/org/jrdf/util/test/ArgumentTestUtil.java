@@ -58,6 +58,9 @@
 
 package org.jrdf.util.test;
 
+import static org.jrdf.util.test.MockTestUtil.*;
+import static org.jrdf.util.test.ReflectTestUtil.*;
+
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -79,17 +82,17 @@ public class ArgumentTestUtil {
     }
 
     public static void checkConstructorSetsFields(Class[] paramTypes, Class<?> clazz, String[] parameterNames) {
-        Object[] args = MockTestUtil.createArgs(paramTypes, -1);
+        Object[] args = createArgs(paramTypes, -1);
         ParamSpec spec = new ParamSpec(paramTypes, args);
-        Object obj = ReflectTestUtil.createInstanceUsingConstructor(clazz, spec);
+        Object obj = createInstanceUsingConstructor(clazz, spec);
         for (int index = 0; index < parameterNames.length; index++) {
-            ReflectTestUtil.checkFieldValue(obj, parameterNames[index], args[index]);
+            checkFieldValue(obj, parameterNames[index], args[index]);
         }
     }
 
     public static void checkConstructNullAssertion(final Class<?> clazz, final Class[] paramTypes) {
         for (int index = 0; index < paramTypes.length; index++) {
-            Object[] args = MockTestUtil.createArgs(paramTypes, index);
+            Object[] args = createArgs(paramTypes, index);
             String message = "Parameter " + (index+1) + PARAMETER_CANNOT_BE_NULL;
             final ParamSpec params = new ParamSpec(paramTypes, args);
             AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
@@ -123,18 +126,18 @@ public class ArgumentTestUtil {
 
     private static void checkMethod(final Class[] parameterTypes, int index, String[] parameterNames,
             final String methodName, final Object obj) {
-        final Object[] args = MockTestUtil.createArgs(parameterTypes, index);
+        final Object[] args = createArgs(parameterTypes, index);
         String message = parameterNames[index] + PARAMETER_CANNOT_BE_NULL;
         AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                ReflectTestUtil.callMethod(obj, methodName, parameterTypes, args);
+                callMethod(obj, methodName, parameterTypes, args);
             }
         });
     }
 
     private static void createInstanceAndRethrow(Class<?> clazz, ParamSpec params) {
         try {
-            ReflectTestUtil.createInstanceUsingConstructor(clazz, params);
+            createInstanceUsingConstructor(clazz, params);
         } catch (RuntimeException e) {
             Throwable cause = e.getCause();
             if (cause instanceof InvocationTargetException) {

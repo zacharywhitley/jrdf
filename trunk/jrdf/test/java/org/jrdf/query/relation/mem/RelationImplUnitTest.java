@@ -83,24 +83,19 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Test for tuple implementation.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class RelationImplUnitTest extends TestCase {
-    private static final Tuple[] TUPLES_1 = new Tuple[]{TEST_TUPLE_3};
-    private static final Tuple[] TUPLES_2 = new Tuple[]{TEST_TUPLE_4};
-    private static final Tuple[] TUPLES_3 = new Tuple[]{TEST_TUPLE_6};
+    private static final Tuple[] TUPLES_1 = {TEST_TUPLE_3};
+    private static final Tuple[] TUPLES_2 = {TEST_TUPLE_4};
+    private static final Tuple[] TUPLES_3 = {TEST_TUPLE_6};
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
-    private static final Class[] PARAM_TYPES = { Set.class, AttributeComparator.class,
-            TupleComparator.class };
-    private static final String[] PARAM_NAMES = { "tuples", "attributeComparator", "tupleComparator" };
+    private static final Class[] PARAM_TYPES_1 = {Set.class, AttributeComparator.class, TupleComparator.class};
+    private static final Class[] PARAM_TYPES_2 = {Set.class, Set.class, AttributeComparator.class, TupleComparator.class};
+    private static final String[] PARAM_NAMES_1 = {"tuples", "attributeComparator", "tupleComparator"};
+    private static final String[] PARAM_NAMES_2 = {"heading", "tuples", "attributeComparator", "tupleComparator"};
 
     public static final Relation TEST_RELATION_1 = createRelation(createTuple(TUPLES_1));
     public static final Relation TEST_RELATION_2 = createRelation(createTuple(TUPLES_2));
@@ -109,12 +104,15 @@ public class RelationImplUnitTest extends TestCase {
     public void testClassProperties() {
         new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
-        checkConstructor(RelationImpl.class, 0, PARAM_TYPES);
+        checkConstructor(RelationImpl.class, 0, PARAM_TYPES_1);
+        checkConstructor(RelationImpl.class, 0, PARAM_TYPES_2);
     }
 
     public void testConstructorAndFields() {
-        checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES);
-        checkConstructorSetsFieldsAndFieldsPrivate(RelationImpl.class, PARAM_TYPES, PARAM_NAMES);
+        checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES_1);
+        checkConstructNullAssertion(RelationImpl.class, PARAM_TYPES_2);
+        checkConstructorSetsFieldsAndFieldsPrivate(RelationImpl.class, PARAM_TYPES_1, PARAM_NAMES_1);
+        checkConstructorSetsFieldsAndFieldsPrivate(RelationImpl.class, PARAM_TYPES_2, PARAM_NAMES_2);
         checkFieldPrivate(RelationImpl.class, HEADING_NAME);
         isFieldOfType(RelationImpl.class, Set.class, HEADING_NAME);
     }

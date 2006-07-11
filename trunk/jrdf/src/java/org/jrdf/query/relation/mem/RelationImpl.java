@@ -82,12 +82,23 @@ import java.util.TreeSet;
 public final class RelationImpl extends Primordial implements Relation {
     private Set<Attribute> heading;
     private Set<Tuple> tuples;
-    private final AttributeComparator attributeComparator;
-    private final TupleComparator tupleComparator;
+    private AttributeComparator attributeComparator;
+    private TupleComparator tupleComparator;
 
     RelationImpl(Set<Tuple> tuples, AttributeComparator attributeComparator, TupleComparator tupleComparator) {
         checkNotNull(tuples, attributeComparator, tupleComparator);
-        this.heading = createHeadingFromTuples(tuples);
+        create(createHeadingFromTuples(tuples), tuples, attributeComparator, tupleComparator);
+    }
+
+    RelationImpl(Set<Attribute> heading, Set<Tuple> tuples, AttributeComparator attributeComparator,
+            TupleComparator tupleComparator) {
+        checkNotNull(heading, tuples, attributeComparator, tupleComparator);
+        create(heading, tuples, attributeComparator, tupleComparator);
+    }
+
+    private void create(Set<Attribute> heading, Set<Tuple> tuples, AttributeComparator attributeComparator,
+            TupleComparator tupleComparator) {
+        this.heading = heading;
         this.tuples = tuples;
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;

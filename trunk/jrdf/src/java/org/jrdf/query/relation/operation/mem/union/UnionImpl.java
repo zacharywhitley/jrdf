@@ -60,12 +60,26 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.mem.RelationHelper;
 
-/**
- * Class description goes here.
- */
+import java.util.Collections;
+import java.util.Set;
+
 public class UnionImpl implements Union {
+    private final RelationFactory relationFactory;
+    private final RelationHelper relationHelper;
+
+    public UnionImpl(RelationFactory relationFactory, RelationHelper relationHelper) {
+        this.relationFactory = relationFactory;
+        this.relationHelper = relationHelper;
+    }
+
     public Relation union(Relation relation1, Relation relation2) {
-        return null;
+        Set<Attribute> headings = relationHelper.getHeadingUnions(relation1, relation2);
+        Set<Tuple> tuples = Collections.emptySet();
+        return relationFactory.getRelation(headings, tuples);
     }
 }
