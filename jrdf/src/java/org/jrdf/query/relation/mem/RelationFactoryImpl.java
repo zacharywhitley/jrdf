@@ -63,30 +63,26 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.util.Set;
 
-/**
- * Implementation of relation factory.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
 public final class RelationFactoryImpl implements RelationFactory {
     private final AttributeComparator attributeComparator;
     private final TupleComparator tupleComparator;
 
     public RelationFactoryImpl(AttributeComparator attributeComparator, TupleComparator tupleComparator) {
-        // TODO Move paramter checking into varargs call.
         ParameterUtil.checkNotNull(attributeComparator, tupleComparator);
-//        ParameterUtil.checkNotNull("attributeComparator", attributeComparator);
-//        ParameterUtil.checkNotNull("tupleComparator", tupleComparator);
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
     }
 
     public Relation getRelation(Set<Tuple> tuples) {
         return new RelationImpl(tuples, attributeComparator, tupleComparator);
+    }
+
+    public Relation getRelation(Set<Attribute> heading, Set<Tuple> tuples) {
+        return new RelationImpl(heading, tuples, attributeComparator, tupleComparator);
     }
 }

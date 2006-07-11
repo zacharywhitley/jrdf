@@ -59,6 +59,7 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
@@ -74,34 +75,38 @@ import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Test for in memory relation factory.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
 public class RelationFactoryImplUnitTest extends TestCase {
-    private static final Class[] CONSTRUCTOR_TYPES = { AttributeComparator.class, TupleComparator.class };
+    private static final Class[] CONSTRUCTOR_TYPES = {AttributeComparator.class, TupleComparator.class};
     private static final String[] CONSTRUCTOR_NAMES = {"attributeComparator", "tupleComparator"};
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = MockTestUtil.createMock(AttributeComparator.class);
     private static final TupleComparator TUPLE_COMPARATOR = MockTestUtil.createMock(TupleComparator.class);
     private static final Set<Tuple> tuples = new HashSet<Tuple>();
+    private static final Set<Attribute> HEADING = new HashSet<Attribute>();
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(RelationFactory.class, RelationFactoryImpl.class);
         checkConstructor(RelationFactoryImpl.class, Modifier.PUBLIC, CONSTRUCTOR_TYPES);
-    }
-
-    public void testConstructor() {
         checkConstructNullAssertion(RelationFactoryImpl.class, CONSTRUCTOR_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivateFinal(RelationFactoryImpl.class, CONSTRUCTOR_TYPES,
                 CONSTRUCTOR_NAMES);
     }
 
-    public void testGetTuple() {
+    public void testGetRelation() {
         RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
         Relation relation = relationFactory.getRelation(tuples);
+        checkRelation(relation);
+    }
+
+    public void testGetRelationWithHeading() {
+        RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
+        Relation relation = relationFactory.getRelation(HEADING, tuples);
+        checkRelation(relation);
+        assertSame(HEADING, relation.getHeading());
+    }
+
+    private void checkRelation(Relation relation) {
         assertSame(tuples, relation.getTuples());
         assertTrue(relation instanceof RelationImpl);
     }
+
 }

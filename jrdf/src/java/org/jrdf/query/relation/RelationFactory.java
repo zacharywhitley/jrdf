@@ -68,4 +68,5 @@ import java.util.Set;
  */
 public interface RelationFactory {
     Relation getRelation(Set<Tuple> tuples);
+    Relation getRelation(Set<Attribute> heading, Set<Tuple> tuples);
 }
