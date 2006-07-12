@@ -134,16 +134,18 @@ public class NaturalJoinEngine implements JoinEngine {
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
             if (avp2 == null) {
-                resultantAttributeValues.add(avp1);
+                addResults(avp1, resultantAttributeValues);
                 added = true;
-            } else if (avp1.equals(avp2)) {
+                // TODO (AN) This is a hack because of the problem with comparing things with equal
+                // TODO (AN) Create a better equals method or add AVP Comparator with Nullary knowledge
+            } else if (avp1.equals(avp2) || avp2.equals(avp1)) {
                 addNonNullaryAvp(avp1, avp2, resultantAttributeValues);
                 added = true;
             }
         } else {
             // Add if avp1 is null and avp2 is not.
             if (avp2 != null) {
-                resultantAttributeValues.add(avp2);
+                addResults(avp2, resultantAttributeValues);
                 added = true;
             }
         }
@@ -153,9 +155,14 @@ public class NaturalJoinEngine implements JoinEngine {
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
             Set<AttributeValuePair> resultantAttributeValues) {
         if (!(avp1 instanceof NullaryAttributeValuePair)) {
-            resultantAttributeValues.add(avp1);
+            addResults(avp1, resultantAttributeValues);
         } else {
-            resultantAttributeValues.add(avp2);
+            addResults(avp2, resultantAttributeValues);
         }
     }
+
+    private void addResults(AttributeValuePair avp, Set<AttributeValuePair> resultantAttributeValues) {
+        resultantAttributeValues.add(avp);
+    }
+
 }

@@ -64,7 +64,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
@@ -78,13 +77,14 @@ import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.query.relation.type.SubjectObjectNodeType;
+import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -213,8 +213,7 @@ public class RelationIntegrationTestUtil {
     }
 
     public static Set<Relation> createRelations(Relation... relations) {
-        RelationComparator relationComparator = FACTORY.getNewRelationComparator();
-        Set<Relation> tuples = new TreeSet<Relation>(relationComparator);
+        Set<Relation> tuples = new HashSet<Relation>();
         for (Relation relation : relations) {
             tuples.add(relation);
         }
