@@ -80,12 +80,11 @@ public class UnionImplIntegrationTest extends TestCase {
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
     public void testRelationDEEandDUM() {
-//        // The Union of empty is DEE.
-//        checkRelation(RelationDEE.RELATION_DEE, EMPTY);
-//        // The Union of DEE is DEE.
-//        checkRelation(RelationDEE.RELATION_DEE, Collections.singleton(RelationDEE.RELATION_DEE));
-//        // The Union of DUM is DUM.
-//        checkRelation(RelationDUM.RELATION_DUM, Collections.singleton(RelationDUM.RELATION_DUM));
+        // The union of DEE and DUM together.
+//        checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+//        checkJoin(RELATION_DEE, RELATION_DUM, RELATION_DEE);
+//        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DUM);
+//        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
     }
 
 //    @SuppressWarnings({ "unchecked" })
