@@ -62,6 +62,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
 import java.util.HashSet;
@@ -102,7 +103,6 @@ public class NaturalJoinEngine implements JoinEngine {
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = getAttribute(avps1, attribute);
             AttributeValuePair avp2 = getAttribute(avps2, attribute);
-
             boolean added = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
 
             // If we didn't find one for the current heading end early.
@@ -133,8 +133,11 @@ public class NaturalJoinEngine implements JoinEngine {
 
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            if (avp2 == null || avp1.equals(avp2)) {
+            if (avp2 == null) {
                 resultantAttributeValues.add(avp1);
+                added = true;
+            } else if (avp1.equals(avp2)) {
+                addNonNullaryAvp(avp1, avp2, resultantAttributeValues);
                 added = true;
             }
         } else {
@@ -145,5 +148,14 @@ public class NaturalJoinEngine implements JoinEngine {
             }
         }
         return added;
+    }
+
+    private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
+            Set<AttributeValuePair> resultantAttributeValues) {
+        if (!(avp1 instanceof NullaryAttributeValuePair)) {
+            resultantAttributeValues.add(avp1);
+        } else {
+            resultantAttributeValues.add(avp2);
+        }
     }
 }

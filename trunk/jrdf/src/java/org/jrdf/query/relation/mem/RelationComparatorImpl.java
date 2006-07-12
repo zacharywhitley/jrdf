@@ -118,9 +118,24 @@ public final class RelationComparatorImpl implements RelationComparator {
     }
 
     private int compareTuples(Relation relation1, Relation relation2) {
-        int result = 0;
         Set<Tuple> sortedTuples1 = relation1.getSortedTuples();
         Set<Tuple> sortedTuples2 = relation2.getSortedTuples();
+
+        int tuplesSize1 = sortedTuples1.size();
+        int tuplesSize2 = sortedTuples2.size();
+        if (tuplesSize1 == tuplesSize2) {
+            return compareTuplesWithSameCardinality(sortedTuples1, sortedTuples2);
+        } else {
+            if (tuplesSize1 > tuplesSize2) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    private int compareTuplesWithSameCardinality(Set<Tuple> sortedTuples1, Set<Tuple> sortedTuples2) {
+        int result = 0;
         Iterator<Tuple> iterator1 = sortedTuples1.iterator();
         Iterator<Tuple> iterator2 = sortedTuples2.iterator();
         boolean equal = true;
