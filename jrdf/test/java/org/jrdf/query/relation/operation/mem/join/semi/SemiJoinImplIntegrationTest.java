@@ -98,15 +98,14 @@ public class SemiJoinImplIntegrationTest extends TestCase {
 
     public void testRelationDEEandDUM() {
         Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
-        // The natural join of DEE and DEE is DEE.
-        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
-        // The natural join of DEE and R1 is DEE.
-        checkJoin(relation, relation, RELATION_DEE);
-        checkJoin(relation, RELATION_DEE, relation);
-        // The natural join of DEE and DUM is DUM.
-        checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DEE);
-        // The natural join of DUM and DUM is DUM.
+        // The semijoin of DEE and DUM together.
         checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+        checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DEE);
+        checkJoin(RELATION_DUM, RELATION_DEE, RELATION_DUM);
+//        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
+        // The natural join of DEE and R1 is DEE.
+//        checkJoin(relation, relation, RELATION_DEE);
+//        checkJoin(relation, RELATION_DEE, relation);
         // The natural join of DUM and R1 is R1.
         checkJoin(RELATION_DUM, relation, RELATION_DUM);
         checkJoin(RELATION_DUM, RELATION_DUM, relation);
