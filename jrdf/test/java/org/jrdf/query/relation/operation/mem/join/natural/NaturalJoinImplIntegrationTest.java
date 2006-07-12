@@ -110,9 +110,12 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         // The natural join of DEE and DUM is DUM.
         checkRelation(RELATION_DUM, createRelations(RELATION_DUM, RELATION_DEE));
         checkRelation(RELATION_DUM, createRelations(RELATION_DEE, RELATION_DUM));
-        // The natural join of DEE and R1 is DEE.
+        // The natural join of DEE and R1 is R1.
         checkRelation(relation, createRelations(relation, RELATION_DEE));
         checkRelation(relation, createRelations(RELATION_DEE, relation));
+        // The natural join of DUM and R1 is DUM.
+        checkRelation(RELATION_DUM, createRelations(relation, RELATION_DUM));
+        checkRelation(RELATION_DUM, createRelations(RELATION_DUM, relation));
     }
 
     @SuppressWarnings({ "unchecked" })
