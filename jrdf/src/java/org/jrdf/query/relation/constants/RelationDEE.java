@@ -61,6 +61,7 @@ package org.jrdf.query.relation.constants;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import static org.jrdf.query.relation.constants.NullaryTuple.*;
 
 import java.util.Collections;
 import java.util.Set;
@@ -99,7 +100,7 @@ public final class RelationDEE implements Relation {
      * @return the TUPLE_ZERO.
      */
     public Set<Tuple> getTuples() {
-        return Collections.singleton(NullaryTuple.NULLARY_TUPLE);
+        return Collections.singleton(NULLARY_TUPLE);
     }
 
     // TODO (AN) Test drive me

@@ -60,6 +60,7 @@ package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
 
@@ -85,14 +86,19 @@ public final class NadicJoinImpl implements NadicJoin {
     }
 
     public Relation join(Set<Relation> relations) {
-        // Is it the empty set - if so return DEE.
-        if (relations.equals(Collections.<Relation>emptySet()) || relations.contains(RELATION_DEE)) {
+        // Is it the empty set return DEE.
+        if (relations.equals(Collections.<Relation>emptySet())) {
             return RELATION_DEE;
         }
 
         // Is it just one relations - if so just return it back.
         if (relations.size() == 1) {
             return relations.iterator().next();
+        }
+
+        // If DEE is involved it can only be DEE in more than one operation.
+        if (relations.contains(RELATION_DUM)) {
+            return RELATION_DUM;
         }
 
         // Perform natural join.
