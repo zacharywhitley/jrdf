@@ -59,9 +59,9 @@
 package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.constants.RelationDEE;
-import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.NadicJoin;
+import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
 
 import java.util.Collections;
 import java.util.Set;
@@ -84,11 +84,10 @@ public final class NadicJoinImpl implements NadicJoin {
         this.commonJoin = commonJoin;
     }
 
-    // TODO (AN) Use semijoin if the relations to the right have a subset of attributes to the one on the left.
     public Relation join(Set<Relation> relations) {
         // Is it the empty set - if so return DEE.
-        if (relations.equals(Collections.<Relation>emptySet())) {
-            return RelationDEE.RELATION_DEE;
+        if (relations.equals(Collections.<Relation>emptySet()) || relations.contains(RELATION_DEE)) {
+            return RELATION_DEE;
         }
 
         // Is it just one relations - if so just return it back.
@@ -99,7 +98,7 @@ public final class NadicJoinImpl implements NadicJoin {
         // Perform natural join.
         Relation relation = commonJoin.performJoin(relations, joinEngine);
         if (relation.getTuples().size() == 0) {
-            return RelationDEE.RELATION_DEE;
+            return RELATION_DEE;
         }
         return relation;
     }

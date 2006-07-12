@@ -116,6 +116,11 @@ public final class NullaryTuple implements Tuple, Serializable {
         }
 
         @Override
+        public int hashCode() {
+            return 1;
+        }
+
+        @Override
         public boolean equals(Object obj) {
             return true;
         }
@@ -136,6 +141,11 @@ public final class NullaryTuple implements Tuple, Serializable {
         }
 
         @Override
+        public int hashCode() {
+            return 1;
+        }
+
+        @Override
         public boolean equals(Object obj) {
             return true;
         }
@@ -149,6 +159,11 @@ public final class NullaryTuple implements Tuple, Serializable {
 
         public String getLiteral() {
             return "TRUE";
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
         }
 
         @Override
@@ -175,9 +190,14 @@ public final class NullaryTuple implements Tuple, Serializable {
             return "TRUE";
         }
 
-        @SuppressWarnings({"unchecked"})
+        @SuppressWarnings({ "unchecked" })
         public Set<NodeType> composedOf() {
             return Collections.EMPTY_SET;
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
         }
 
         @Override
@@ -190,6 +210,11 @@ public final class NullaryTuple implements Tuple, Serializable {
         private static final long serialVersionUID = 1808216129525892250L;
 
         private NullaryNode() {
+        }
+
+        @Override
+        public int hashCode() {
+            return 1;
         }
 
         @Override
