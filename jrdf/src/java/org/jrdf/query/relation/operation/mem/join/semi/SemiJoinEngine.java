@@ -62,6 +62,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
 import java.util.HashSet;
@@ -112,12 +113,15 @@ public class SemiJoinEngine implements JoinEngine {
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
             Set<AttributeValuePair> resultantAttributeValues, Set<AttributeValuePair> lhsAttributeValuePairs) {
         boolean added = false;
-
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            if (avp2 == null || avp1.equals(avp2)) {
-                resultantAttributeValues.add(avp1);
-                lhsAttributeValuePairs.add(avp1);
+            if (avp2 == null) {
+                addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
+                added = true;
+                // TODO (AN) This is a hack because of the problem with comparing things with equal
+                // TODO (AN) Create a better equals method or add AVP Comparator with Nullary knowledge
+            } else if (avp1.equals(avp2) || avp2.equals(avp1)) {
+                addNonNullaryAvp(avp1, avp2, resultantAttributeValues, lhsAttributeValuePairs);
                 added = true;
             }
         } else {
@@ -129,4 +133,20 @@ public class SemiJoinEngine implements JoinEngine {
         }
         return added;
     }
+
+    private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
+            Set<AttributeValuePair> resultantAttributeValues, Set<AttributeValuePair> lhsAttributeValuePairs) {
+        if (!(avp1 instanceof NullaryAttributeValuePair)) {
+            addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
+        } else {
+            addResults(avp2, resultantAttributeValues, lhsAttributeValuePairs);
+        }
+    }
+
+    private void addResults(AttributeValuePair avp, Set<AttributeValuePair> resultantAttributeValues,
+            Set<AttributeValuePair> lhsAttributeValuePairs) {
+        resultantAttributeValues.add(avp);
+        lhsAttributeValuePairs.add(avp);
+    }
+
 }

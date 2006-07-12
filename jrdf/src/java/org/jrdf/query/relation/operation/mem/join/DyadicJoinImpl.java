@@ -89,6 +89,9 @@ public final class DyadicJoinImpl implements DyadicJoin {
             return RELATION_DUM;
         }
 
+        if (relation1 == relation2) {
+            return relation1;
+        }
         // Perform natural join.
         LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
         relations.add(relation1);
