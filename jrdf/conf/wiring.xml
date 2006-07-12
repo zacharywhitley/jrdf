@@ -260,4 +260,13 @@
             <ref bean="relationFactory"/>
         </constructor-arg>
     </bean>
+
+    <bean id="union" class="org.jrdf.query.relation.operation.mem.union.UnionImpl">
+        <constructor-arg>
+            <ref bean="relationFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationHelper"/>
+        </constructor-arg>
+    </bean>
 </beans>

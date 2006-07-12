@@ -59,12 +59,6 @@ package org.jrdf.query.relation.attributename;
 
 import au.net.netstorm.boost.primordial.Primordial;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public final class PositionName extends Primordial implements AttributeName {
     private static final long serialVersionUID = -7189416083387906477L;
     private String positionName;

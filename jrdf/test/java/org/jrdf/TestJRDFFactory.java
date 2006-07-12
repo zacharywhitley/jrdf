@@ -68,8 +68,9 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
-import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.DyadicJoin;
+import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.analysis.VariableCollector;
@@ -172,5 +173,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public VariableCollector getNewVariableCollector() {
         return (VariableCollector) FACTORY.getContext().getBean("variableCollector");
+    }
+
+    public Union getNewUnion() {
+        return (Union) FACTORY.getContext().getBean("union");
     }
 }
