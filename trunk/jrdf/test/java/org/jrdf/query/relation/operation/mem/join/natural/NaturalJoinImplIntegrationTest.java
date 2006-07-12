@@ -107,9 +107,11 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         checkRelation(RELATION_DEE, Collections.singleton(RELATION_DEE));
         // The natural join of DUM is DUM.
         checkRelation(RELATION_DUM, Collections.singleton(RELATION_DUM));
-        // The natural join of DEE and DUM is DUM.
+        // The natural joins of DEE and DUM together.
+        checkRelation(RELATION_DUM, createRelations(RELATION_DUM, RELATION_DUM));
         checkRelation(RELATION_DUM, createRelations(RELATION_DUM, RELATION_DEE));
         checkRelation(RELATION_DUM, createRelations(RELATION_DEE, RELATION_DUM));
+        checkRelation(RELATION_DEE, createRelations(RELATION_DEE, RELATION_DEE));
         // The natural join of DEE and R1 is R1.
         checkRelation(relation, createRelations(relation, RELATION_DEE));
         checkRelation(relation, createRelations(RELATION_DEE, relation));
