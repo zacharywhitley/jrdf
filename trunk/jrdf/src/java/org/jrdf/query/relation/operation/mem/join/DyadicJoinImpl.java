@@ -59,7 +59,7 @@
 package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.constants.RelationDEE;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
 
@@ -84,13 +84,17 @@ public final class DyadicJoinImpl implements DyadicJoin {
     }
 
     public Relation join(Relation relation1, Relation relation2) {
+        if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
+            return RELATION_DEE;
+        }
+
         // Perform natural join.
         LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
         relations.add(relation1);
         relations.add(relation2);
         Relation relation = commonJoin.performJoin(relations, joinEngine);
         if (relation.getTuples().size() == 0) {
-            return RelationDEE.RELATION_DEE;
+            return RELATION_DEE;
         }
         return relation;
     }

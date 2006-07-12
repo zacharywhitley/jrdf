@@ -64,7 +64,10 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.constants.RelationDEE;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.DyadicJoin;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
@@ -76,7 +79,6 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
@@ -93,6 +95,22 @@ import java.util.Set;
 public class SemiJoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final DyadicJoin JOIN = FACTORY.getNewSemiJoin();
+
+    public void testRelationDEEandDUM() {
+        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        // The natural join of DEE and DEE is DEE.
+        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
+        // The natural join of DEE and R1 is DEE.
+        checkJoin(RELATION_DEE, relation, RELATION_DEE);
+        checkJoin(RELATION_DEE, RELATION_DEE, relation);
+        // The natural join of DEE and DUM is DEE.
+        checkJoin(RELATION_DEE, RELATION_DUM, RELATION_DEE);
+        // The natural join of DUM and DUM is DUM.
+//        checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+        // The natural join of DUM and R1 is R1.
+//        checkJoin(relation, relation, RELATION_DUM);
+//        checkJoin(relation, RELATION_DUM, relation);
+    }
 
     @SuppressWarnings({ "unchecked" })
     public void testCartesianProductSemiJoin() {

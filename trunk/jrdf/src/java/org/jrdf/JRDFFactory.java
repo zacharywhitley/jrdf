@@ -89,8 +89,6 @@ public interface JRDFFactory {
 
     RelationComparator getNewRelationComparator();
 
-    org.jrdf.query.relation.operation.NadicJoin getNewNaturalJoin();
-
     DyadicJoin getNewSemiJoin();
 
     SparqlConnection getNewSparqlConnection();

@@ -60,12 +60,12 @@
 package org.jrdf.query.relation.operation.mem.join.natural;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import org.jrdf.query.relation.operation.NadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
@@ -95,17 +95,26 @@ import java.util.Set;
  * @version $Revision$
  */
 public class NaturalJoinImplIntegrationTest extends TestCase {
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final org.jrdf.query.relation.operation.NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
     public void testRelationDEEandDUM() {
-        // The NADIC_JOIN of empty is DEE.
+        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        // The natural join of empty is DEE.
         checkRelation(RELATION_DEE, EMPTY);
-        // The NADIC_JOIN of DEE is DEE.
+        // The natural join of DEE is DEE.
         checkRelation(RELATION_DEE, Collections.singleton(RELATION_DEE));
-        // The NADIC_JOIN of DUM is DUM.
+        // The natural join of DEE and R1 is DEE.
+        checkRelation(RELATION_DEE, createRelations(relation, RELATION_DEE));
+        checkRelation(RELATION_DEE, createRelations(RELATION_DEE, relation));
+        // The natural join of DEE and DUM is DEE.
+        checkRelation(RELATION_DEE, createRelations(RELATION_DUM, RELATION_DEE));
+        // The natural join of DUM is DUM.
         checkRelation(RELATION_DUM, Collections.singleton(RELATION_DUM));
+        // The natural join of DUM and R1 is R1.
+        checkRelation(relation, createRelations(relation, RELATION_DUM));
+//        checkRelation(relation, createRelations(RELATION_DUM, relation));
     }
 
     @SuppressWarnings({ "unchecked" })
