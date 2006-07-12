@@ -60,6 +60,7 @@ package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
 
@@ -84,8 +85,8 @@ public final class DyadicJoinImpl implements DyadicJoin {
     }
 
     public Relation join(Relation relation1, Relation relation2) {
-        if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
-            return RELATION_DEE;
+        if (relation1 == RELATION_DUM || relation2 == RELATION_DUM) {
+            return RELATION_DUM;
         }
 
         // Perform natural join.
