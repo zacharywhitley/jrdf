@@ -61,6 +61,7 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 
 /**
  * Stuff goes in here.
@@ -84,11 +85,19 @@ public final class AttributeValuePairComparatorImpl implements AttributeValuePai
     public int compare(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
         int result;
         ifNullThrowException(attributeValuePair, attributeValuePair1);
+        if (isNullary(attributeValuePair, attributeValuePair1)) {
+            return 0;
+        }
         result = attributeComparator.compare(attributeValuePair.getAttribute(), attributeValuePair1.getAttribute());
         if (result == 0) {
             result = valueComparator.compare(attributeValuePair.getValue(), attributeValuePair1.getValue());
         }
         return result;
+    }
+
+    private boolean isNullary(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
+        return ((attributeValuePair instanceof NullaryAttributeValuePair) ||
+            (attributeValuePair1 instanceof NullaryAttributeValuePair));
     }
 
     private void ifNullThrowException(AttributeValuePair attributeValuePair, AttributeValuePair attributeValuePair1) {
