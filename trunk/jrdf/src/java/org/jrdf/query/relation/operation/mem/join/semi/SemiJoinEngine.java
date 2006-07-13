@@ -62,6 +62,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
@@ -73,9 +74,11 @@ import java.util.Set;
  */
 public class SemiJoinEngine implements JoinEngine {
     private final TupleFactory tupleFactory;
+    private final AttributeValuePairComparator avpComparator;
 
-    public SemiJoinEngine(TupleFactory tupleFactory) {
+    public SemiJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator) {
         this.tupleFactory = tupleFactory;
+        this.avpComparator = avpComparator;
     }
 
     public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
@@ -118,9 +121,7 @@ public class SemiJoinEngine implements JoinEngine {
             if (avp2 == null) {
                 addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
                 added = true;
-                // TODO (AN) This is a hack because of the problem with comparing things with equal
-                // TODO (AN) Create a better equals method or add AVP Comparator with Nullary knowledge
-            } else if (avp1.equals(avp2) || avp2.equals(avp1)) {
+            } else if (avpComparator.compare(avp1, avp2) == 0) {
                 addNonNullaryAvp(avp1, avp2, resultantAttributeValues, lhsAttributeValuePairs);
                 added = true;
             }
@@ -148,5 +149,4 @@ public class SemiJoinEngine implements JoinEngine {
         resultantAttributeValues.add(avp);
         lhsAttributeValuePairs.add(avp);
     }
-
 }

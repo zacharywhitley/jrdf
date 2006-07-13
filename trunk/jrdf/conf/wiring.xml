@@ -217,11 +217,17 @@
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
     </bean>
 
     <bean id="semiJoinEngine" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinEngine">
         <constructor-arg>
             <ref bean="tupleFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
         </constructor-arg>
     </bean>
 

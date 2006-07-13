@@ -60,6 +60,7 @@ package org.jrdf.query.relation.constants;
 
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
+import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.*;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -79,7 +80,7 @@ public final class NullaryTuple implements Tuple, Serializable {
      */
     public static final Tuple NULLARY_TUPLE = new NullaryTuple();
     private static final long serialVersionUID = 1808216129525892255L;
-    private static final AttributeValuePair NULLARY_AVP = new NullaryAttributeValuePair();
+    private static final AttributeValuePair NULLARY_AVP = NULLARY_ATTRIBUTE_VALUE_PAIR;
     private static final Set<AttributeValuePair> NULLARY_AVP_SET = Collections.singleton(NULLARY_AVP);
 
     private NullaryTuple() {

@@ -70,8 +70,9 @@ import java.util.Set;
 
 public final class NullaryAttributeValuePair implements AttributeValuePair, Serializable {
     private static final long serialVersionUID = 1808216129525892254L;
+    public static final AttributeValuePair NULLARY_ATTRIBUTE_VALUE_PAIR = new NullaryAttributeValuePair();
 
-    NullaryAttributeValuePair() {
+    private NullaryAttributeValuePair() {
     }
 
     public Attribute getAttribute() {
@@ -80,16 +81,6 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
 
     public Node getValue() {
         return new NullaryNode();
-    }
-
-    @Override
-    public int hashCode() {
-        return 1;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return true;
     }
 
     private static final class NullaryAttribute implements Attribute, Serializable {

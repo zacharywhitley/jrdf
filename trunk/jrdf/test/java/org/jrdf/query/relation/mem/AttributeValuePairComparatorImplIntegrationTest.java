@@ -63,6 +63,7 @@ import static org.jrdf.graph.mem.NodeComparatorImplIntegrationTest.LITERAL_1;
 import static org.jrdf.graph.mem.NodeComparatorImplIntegrationTest.LITERAL_2;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
+import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_BAR_LITERAL;
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_FOO_LITERAL;
 import org.jrdf.util.test.AssertThrows;
@@ -96,6 +97,8 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
 
     public void testIdentity() {
         assertEquals(EQUAL, avpComparator.compare(TEST_AVP_1, TEST_AVP_1));
+        assertEquals(EQUAL, avpComparator.compare(TEST_AVP_1, NULLARY_ATTRIBUTE_VALUE_PAIR));
+        assertEquals(EQUAL, avpComparator.compare(NULLARY_ATTRIBUTE_VALUE_PAIR, TEST_AVP_1));
     }
 
     public void testOrderOfAttributeValues() {
