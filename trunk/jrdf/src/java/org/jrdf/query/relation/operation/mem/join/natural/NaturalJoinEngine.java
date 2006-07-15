@@ -63,6 +63,8 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
@@ -94,10 +96,16 @@ import java.util.Set;
 public class NaturalJoinEngine implements JoinEngine {
     private final TupleFactory tupleFactory;
     private final AttributeValuePairComparator avpComparator;
+    private final RelationHelper relationHelper;
 
-    public NaturalJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator) {
+    public NaturalJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator, RelationHelper relationHelper) {
         this.tupleFactory = tupleFactory;
         this.avpComparator = avpComparator;
+        this.relationHelper = relationHelper;
+    }
+
+    public Set<Attribute> getHeading(Relation relation1, Relation relation2) {
+        return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
     public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,

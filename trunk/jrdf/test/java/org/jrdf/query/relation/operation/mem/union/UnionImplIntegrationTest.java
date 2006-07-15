@@ -62,10 +62,8 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -81,11 +79,12 @@ public class UnionImplIntegrationTest extends TestCase {
 
     public void testRelationDEEandDUM() {
         // The union of DEE and DUM together.
-//        checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DUM);
-//        checkJoin(RELATION_DEE, RELATION_DUM, RELATION_DEE);
-//        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DUM);
-//        checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
+//        checkUnion(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+//        checkUnion(RELATION_DEE, RELATION_DUM, RELATION_DEE);
+//        checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DUM);
+//        checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DEE);
     }
+
 
 //    @SuppressWarnings({ "unchecked" })
 //    public void testCartesianProduct() {
@@ -93,7 +92,7 @@ public class UnionImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3,
 //                RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
+//        checkUnion(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -116,7 +115,7 @@ public class UnionImplIntegrationTest extends TestCase {
 //        tmpTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5,
 //                RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6);
 //        resultTuple.addAll(tmpTuple);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
+//        checkUnion(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -124,7 +123,7 @@ public class UnionImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2);
 //        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
+//        checkUnion(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -135,7 +134,7 @@ public class UnionImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple4 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1);
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4,
 //                RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3, RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2, tuple3, tuple4));
+//        checkUnion(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1, tuple2, tuple3, tuple4));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -152,7 +151,7 @@ public class UnionImplIntegrationTest extends TestCase {
 //        resultTuple.addAll(tmpTuple);
 //
 //        Relation relation = RelationIntegrationTestUtil.createRelation(resultTuple);
-//        checkJoin(relation, RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
+//        checkUnion(relation, RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -169,22 +168,17 @@ public class UnionImplIntegrationTest extends TestCase {
 //        resultTuple.addAll(tmpTuple);
 //
 //        Relation relation = RelationIntegrationTestUtil.createRelation(resultTuple);
-//        checkJoin(relation, RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
+//        checkUnion(relation, RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
 //    public void testNaturalJoin5() {
 //        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4);
 //        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3);
-//        checkJoin(RelationDEE.RELATION_DEE, RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
+//        checkUnion(RelationDEE.RELATION_DEE, RelationIntegrationTestUtil.createRelation(tuple1, tuple2));
 //    }
 
-    private void checkJoin(Relation expectedResult, List<Relation> relations) {
-        Set<Relation> tuples = RelationIntegrationTestUtil.createRelations(relations.toArray(new Relation[]{}));
-        //checkRelation(expectedResult, tuples);
-    }
-
-    private void checkRelation(Relation expected, Relation relation1, Relation relation2) {
+    private void checkUnion(Relation expectedResult, Relation relation1, Relation relation2) {
         Relation relation = UNION.union(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
@@ -196,6 +190,6 @@ public class UnionImplIntegrationTest extends TestCase {
 //        System.err.println("Sorted Expected tuples relation1: " + isEqual);
 //        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
 //        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
-        assertEquals(expected, relation);
+        assertEquals(expectedResult, relation);
     }
 }

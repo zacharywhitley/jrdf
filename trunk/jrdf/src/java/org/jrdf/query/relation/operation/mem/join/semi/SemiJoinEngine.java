@@ -63,6 +63,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
@@ -81,6 +82,10 @@ public class SemiJoinEngine implements JoinEngine {
         this.avpComparator = avpComparator;
     }
 
+    public Set<Attribute> getHeading(Relation relation1, Relation relation2) {
+        return relation1.getHeading();
+    }
+    
     public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
             Set<Tuple> result) {
         Set<AttributeValuePair> allAttributeValuePairs = new HashSet<AttributeValuePair>();
