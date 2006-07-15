@@ -98,7 +98,8 @@ public class NaturalJoinEngine implements JoinEngine {
     private final AttributeValuePairComparator avpComparator;
     private final RelationHelper relationHelper;
 
-    public NaturalJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator, RelationHelper relationHelper) {
+    public NaturalJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
+            RelationHelper relationHelper) {
         this.tupleFactory = tupleFactory;
         this.avpComparator = avpComparator;
         this.relationHelper = relationHelper;

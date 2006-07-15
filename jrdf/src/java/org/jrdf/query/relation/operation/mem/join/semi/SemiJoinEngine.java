@@ -85,7 +85,7 @@ public class SemiJoinEngine implements JoinEngine {
     public Set<Attribute> getHeading(Relation relation1, Relation relation2) {
         return relation1.getHeading();
     }
-    
+
     public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
             Set<Tuple> result) {
         Set<AttributeValuePair> allAttributeValuePairs = new HashSet<AttributeValuePair>();

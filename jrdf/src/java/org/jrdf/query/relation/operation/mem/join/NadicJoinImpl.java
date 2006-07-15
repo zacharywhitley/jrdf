@@ -104,7 +104,7 @@ public final class NadicJoinImpl implements NadicJoin {
         // Perform natural join.
         Relation relation = commonJoin.performJoin(relations, joinEngine);
 
-        // TODO (AN) Put inside common join.        
+        // TODO (AN) Put inside common join.
         // Convert create relation back into available constants.  If tuples has no heading and no tuples DUM, if it
         // has tuples then DEE.
         if (relation.getHeading().size() == 0) {

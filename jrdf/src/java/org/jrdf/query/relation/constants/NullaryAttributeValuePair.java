@@ -70,6 +70,10 @@ import java.util.Set;
 
 public final class NullaryAttributeValuePair implements AttributeValuePair, Serializable {
     private static final long serialVersionUID = 1808216129525892254L;
+
+    /**
+     * Nullary Attribute Value Pair - should always be true when compared.
+     */
     public static final AttributeValuePair NULLARY_ATTRIBUTE_VALUE_PAIR = new NullaryAttributeValuePair();
 
     private NullaryAttributeValuePair() {
