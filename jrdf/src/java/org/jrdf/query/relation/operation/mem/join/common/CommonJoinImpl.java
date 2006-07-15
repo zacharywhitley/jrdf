@@ -96,6 +96,7 @@ public final class CommonJoinImpl implements CommonJoin, Serializable {
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
         Set<Attribute> headings = joinEngine.getHeading(relation1, relation2);
+
         Set<Tuple> tuples = joinTuples(headings, relation1.getTuples(), relation2.getTuples(), joinEngine);
         Relation resultRelation = relationFactory.getRelation(headings, tuples);
 

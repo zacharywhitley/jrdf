@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation;
 import org.jrdf.query.relation.Relation;
 
 /**
- * Similar to Union in SPARQL or OR in Algebra A.
+ * Similar to UnionImpl in SPARQL or OR in Algebra A.
  *
  * @author Andrew Newman
  * @version $Revision$

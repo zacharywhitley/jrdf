@@ -58,55 +58,44 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.RelationFactory;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
-import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.relation.operation.mem.join.JoinEngine;
+import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 public class UnionImpl implements Union {
-    private final RelationFactory relationFactory;
-    private final RelationHelper relationHelper;
-    private final TupleFactory tupleFactory;
-    private final AttributeValuePairComparator avpComparator;
+    private final JoinEngine joinEngine;
+    private final CommonJoin commonJoin;
 
-    public UnionImpl(RelationFactory relationFactory, RelationHelper relationHelper, TupleFactory tupleFactory,
-            AttributeValuePairComparator avpComparator) {
-        this.relationFactory = relationFactory;
-        this.relationHelper = relationHelper;
-        this.tupleFactory = tupleFactory;
-        this.avpComparator = avpComparator;
+    public UnionImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
+        this.joinEngine = joinEngine;
+        this.commonJoin = commonJoin;
     }
 
     public Relation union(Relation relation1, Relation relation2) {
-        Set<Attribute> headings = relationHelper.getHeadingUnions(relation1, relation2);
-
-        Set<Tuple> tuples1 = relation1.getTuples();
-        Set<Tuple> tuples2 = relation2.getTuples();
-        Relation relation = union(headings, tuples1, tuples2);
-
-        if (relation.getTuples().size() == 0) {
-            if (relation.getHeading().size() == 0) {
-                return RELATION_DUM;
-            } else {
-                return RELATION_DEE;
-            }
+        if (relation1 == RELATION_DUM && relation2 == RELATION_DUM) {
+            return RELATION_DUM;
         }
 
-        return relation;
-    }
+        if (relation1 == RELATION_DUM) {
+            return relation2;
+        }
 
-    private Relation union(Set<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2) {
-//
-//
-//        return relationFactory.getRelation(headings, resultTuples);
-        return null;
+        if (relation2 == RELATION_DUM) {
+            return relation1;
+        }
+
+        if (relation1 == relation2) {
+            return relation1;
+        }
+
+        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+        relations.add(relation1);
+        relations.add(relation2);
+
+        return commonJoin.performJoin(relations, joinEngine);
     }
 }

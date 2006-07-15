@@ -56,43 +56,40 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.join;
+package org.jrdf.query.relation.operation.mem.union;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import org.jrdf.query.relation.operation.DyadicJoin;
-import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.mem.RelationHelper;
+import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
-import java.util.LinkedHashSet;
+import java.util.Set;
 
-/**
- * A simple memory based implementation of DyadicJoin.
- *
- * @author Andrew Newman
- * @version $Revision: 722 $
- */
-public final class DyadicJoinImpl implements DyadicJoin {
-    private final JoinEngine joinEngine;
-    private final CommonJoin commonJoin;
+public class UnionJoinEngine implements JoinEngine {
+    private final TupleFactory tupleFactory;
+    private final AttributeValuePairComparator avpComparator;
+    private final RelationHelper relationHelper;
 
-    public DyadicJoinImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
-        this.joinEngine = joinEngine;
-        this.commonJoin = commonJoin;
+    public UnionJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
+            RelationHelper relationHelper) {
+        this.tupleFactory = tupleFactory;
+        this.avpComparator = avpComparator;
+        this.relationHelper = relationHelper;
     }
 
-    public Relation join(Relation relation1, Relation relation2) {
-        if (relation1 == RELATION_DUM || relation2 == RELATION_DUM) {
-            return RELATION_DUM;
-        }
+    public Set<Attribute> getHeading(Relation relation1, Relation relation2) {
+        return relationHelper.getHeadingUnions(relation1, relation2);
+    }
 
-        if (relation1 == relation2) {
-            return relation1;
-        }
-
-        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
-        relations.add(relation1);
-        relations.add(relation2);
-
-        return commonJoin.performJoin(relations, joinEngine);
+    public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
+            Set<Tuple> result) {
+        Tuple tuple1 = tupleFactory.getTuple(avps1);
+        Tuple tuple2 = tupleFactory.getTuple(avps2);
+        result.add(tuple1);
+        result.add(tuple2);
     }
 }
