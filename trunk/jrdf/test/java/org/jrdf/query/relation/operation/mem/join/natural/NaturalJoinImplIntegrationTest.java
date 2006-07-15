@@ -215,7 +215,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public void testNaturalJoin5() {
+    public void testNaturalJoinNoResults() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
         checkJoin(createRelation(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT), createRelation(tuple1, tuple2));
