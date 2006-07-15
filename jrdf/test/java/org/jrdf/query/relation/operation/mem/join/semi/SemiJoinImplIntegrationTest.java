@@ -63,7 +63,6 @@ import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.constants.RelationDEE;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.DyadicJoin;
@@ -72,13 +71,16 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO5_OBJECT_R6;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
@@ -103,9 +105,10 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DEE);
         checkJoin(RELATION_DUM, RELATION_DEE, RELATION_DUM);
         checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
-        // The natural join of DEE and R1 is DEE.
+        // The semijoin of R1 and DEE is R1.
         checkJoin(relation, relation, RELATION_DEE);
-        checkJoin(relation, RELATION_DEE, relation);
+        // The semijoin of DEE and R1 is DEE.
+        checkJoin(RELATION_DEE, RELATION_DEE, relation);
         // The natural join of DUM and R1 is R1.
         checkJoin(RELATION_DUM, relation, RELATION_DUM);
         checkJoin(RELATION_DUM, RELATION_DUM, relation);
@@ -182,7 +185,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
     public void testSemiJoin5() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-        checkJoin(RelationDEE.RELATION_DEE, createRelation(tuple1), createRelation(tuple2));
+        checkJoin(createRelation(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT), createRelation(tuple1), createRelation(tuple2));
     }
 
     private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {

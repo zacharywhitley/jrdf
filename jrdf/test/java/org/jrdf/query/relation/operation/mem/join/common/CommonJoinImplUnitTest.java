@@ -61,7 +61,6 @@ package org.jrdf.query.relation.operation.mem.join.common;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.mem.RelationHelper;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
@@ -72,8 +71,8 @@ import java.io.Serializable;
 import java.lang.reflect.Modifier;
 
 public class CommonJoinImplUnitTest extends TestCase {
-    private static final Class[] PARAMETERS = { RelationFactory.class, RelationHelper.class, TupleComparator.class };
-    private static final String[] PARAMETER_NAMES = { "relationFactory", "relationHelper", "tupleComparator"};
+    private static final Class[] PARAMETERS = { RelationFactory.class, TupleComparator.class };
+    private static final String[] PARAMETER_NAMES = { "relationFactory", "tupleComparator"};
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(CommonJoin.class, CommonJoinImpl.class);

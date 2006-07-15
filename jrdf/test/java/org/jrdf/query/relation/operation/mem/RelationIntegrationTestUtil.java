@@ -61,6 +61,7 @@ package org.jrdf.query.relation.operation.mem;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
@@ -73,6 +74,7 @@ import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import org.jrdf.query.relation.mem.RelationFactoryImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
@@ -84,6 +86,7 @@ import org.jrdf.util.test.NodeTestUtil;
 import org.jrdf.vocabulary.RDF;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -210,6 +213,17 @@ public class RelationIntegrationTestUtil {
 
     public static Relation createRelation(Set<Tuple> newTuples) {
         return RELATION_FACTORY.getRelation(newTuples);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public static Relation createRelation(Attribute... attributes) {
+        AttributeComparator attributeComparator = FACTORY.getNewAttributeComparator();
+        RelationFactory rf = new RelationFactoryImpl(attributeComparator, FACTORY.getNewTupleComparator());
+        Set<Attribute> newAttributes = new TreeSet<Attribute>(attributeComparator);
+        for (Attribute attribute : attributes) {
+            newAttributes.add(attribute);
+        }
+        return rf.getRelation(newAttributes, Collections.EMPTY_SET);
     }
 
     public static Set<Relation> createRelations(Relation... relations) {
