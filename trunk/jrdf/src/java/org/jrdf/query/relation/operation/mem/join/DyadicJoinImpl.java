@@ -59,7 +59,6 @@
 package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Relation;
-import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
@@ -96,18 +95,7 @@ public final class DyadicJoinImpl implements DyadicJoin {
         LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
         relations.add(relation1);
         relations.add(relation2);
-        Relation relation = commonJoin.performJoin(relations, joinEngine);
 
-        // TODO (AN) Put inside common join.
-        // Convert create relation back into available constants.  If tuples has no heading and no tuples DUM, if it
-        // has tuples then DEE.
-        if (relation.getHeading().size() == 0) {
-            if (relation.getTuples().size() == 0) {
-                return RELATION_DUM;
-            } else {
-                return RELATION_DEE;
-            }
-        }
-        return relation;
+        return commonJoin.performJoin(relations, joinEngine);
     }
 }

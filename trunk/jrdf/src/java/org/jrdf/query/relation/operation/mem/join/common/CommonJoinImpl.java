@@ -64,6 +64,8 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 import org.jrdf.util.param.ParameterUtil;
 
@@ -104,7 +106,7 @@ public final class CommonJoinImpl implements CommonJoin, Serializable {
             resultRelation = relationFactory.getRelation(headings, tuples);
         }
 
-        return resultRelation;
+        return convertToConstants(resultRelation);
     }
 
     private Set<Tuple> joinTuples(Set<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
@@ -124,4 +126,16 @@ public final class CommonJoinImpl implements CommonJoin, Serializable {
         Set<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
         joinEngine.join(headings, avps1, avps2, result);
     }
+
+    private Relation convertToConstants(Relation resultRelation) {
+        if (resultRelation.getHeading().size() == 0) {
+            if (resultRelation.getTuples().size() == 0) {
+                return RELATION_DUM;
+            } else {
+                return RELATION_DEE;
+            }
+        }
+        return resultRelation;
+    }
+
 }
