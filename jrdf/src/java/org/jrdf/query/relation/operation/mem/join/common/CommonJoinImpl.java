@@ -73,6 +73,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.SortedSet;
 
 /**
  * Common join code - gets headings and then join tuples using the tuple engine.
@@ -95,24 +96,25 @@ public final class CommonJoinImpl implements CommonJoin, Serializable {
         Iterator<Relation> iterator = relations.iterator();
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
-        Set<Attribute> headings = joinEngine.getHeading(relation1, relation2);
+        SortedSet<Attribute> headings = joinEngine.getHeading(relation1, relation2);
 
-        Set<Tuple> tuples = joinTuples(headings, relation1.getTuples(), relation2.getTuples(), joinEngine);
+        SortedSet<Tuple> tuples = joinTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
+                joinEngine);
         Relation resultRelation = relationFactory.getRelation(headings, tuples);
 
         while (iterator.hasNext()) {
             Relation nextRelation = iterator.next();
             headings = joinEngine.getHeading(resultRelation, nextRelation);
-            tuples = joinTuples(headings, tuples, nextRelation.getTuples(), joinEngine);
+            tuples = joinTuples(headings, tuples, nextRelation.getSortedTuples(), joinEngine);
             resultRelation = relationFactory.getRelation(headings, tuples);
         }
 
         return convertToConstants(resultRelation);
     }
 
-    private Set<Tuple> joinTuples(Set<Attribute> headings, Set<Tuple> tuples1, Set<Tuple> tuples2,
-            JoinEngine joinEngine) {
-        Set<Tuple> result = new TreeSet<Tuple>(tupleComparator);
+    private SortedSet<Tuple> joinTuples(SortedSet<Attribute> headings, SortedSet<Tuple> tuples1,
+            SortedSet<Tuple> tuples2, JoinEngine joinEngine) {
+        SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple1 : tuples1) {
             for (Tuple tuple2 : tuples2) {
                 joinRhs(headings, tuple1, tuple2, result, joinEngine);
@@ -121,10 +123,10 @@ public final class CommonJoinImpl implements CommonJoin, Serializable {
         return result;
     }
 
-    private void joinRhs(Set<Attribute> headings, Tuple tuple1, Tuple tuple2, Set<Tuple> result,
+    private void joinRhs(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2, SortedSet<Tuple> result,
             JoinEngine joinEngine) {
-        Set<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
-        Set<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
+        SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
+        SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
         joinEngine.join(headings, avps1, avps2, result);
     }
 

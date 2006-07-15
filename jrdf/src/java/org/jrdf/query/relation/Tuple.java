@@ -59,6 +59,7 @@
 package org.jrdf.query.relation;
 
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * A tuple is a named finite set of tuples (attributes to a set of values).
@@ -76,5 +77,5 @@ public interface Tuple {
     Set<AttributeValuePair> getAttributeValues();
 
     // TODO (AN) Test drive me
-    Set<AttributeValuePair> getSortedAttributeValues();
+    SortedSet<AttributeValuePair> getSortedAttributeValues();
 }

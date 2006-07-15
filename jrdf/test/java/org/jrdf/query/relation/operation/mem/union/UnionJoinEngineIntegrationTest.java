@@ -64,6 +64,10 @@ import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.Union;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 
 import java.util.Collections;
 import java.util.Set;
@@ -79,12 +83,22 @@ public class UnionJoinEngineIntegrationTest extends TestCase {
     private static final Union UNION = FACTORY.getNewUnion();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
-    public void testRelationDEEandDUM() {
-        // The union of DEE and DUM together.
+    public void testTruthTableDEEandDUM() {
+        // The union of DEE and DUM together (basically the truth table for OR).
         checkUnion(RELATION_DUM, RELATION_DUM, RELATION_DUM);
         checkUnion(RELATION_DEE, RELATION_DUM, RELATION_DEE);
         checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DUM);
         checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DEE);
+    }
+
+    public void testRelationDEEandDumWithRelation() {
+        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        // The union of DEE and R1 is DEE (everything matches the 0-tuple).
+        checkUnion(RELATION_DEE, relation, RELATION_DEE);
+        checkUnion(RELATION_DEE, RELATION_DEE, relation);
+        // The union of DUM and R1 is R1.
+        checkUnion(relation, relation, RELATION_DUM);
+        checkUnion(relation, RELATION_DUM, relation);
     }
 
 

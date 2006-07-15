@@ -60,17 +60,17 @@ package org.jrdf.query.relation.operation.mem.join;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Implementation of different types of Join algorithms.
  */
 public interface JoinEngine {
-    Set<Attribute> getHeading(Relation relation1, Relation relation2);
+    SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
 
-    void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2, Set<Tuple> result);
-
+    void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2,
+            SortedSet<Tuple> result);
 }
