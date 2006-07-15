@@ -186,6 +186,7 @@ public class RelationIntegrationTestUtil {
             new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECTOBJECT_R4 =
             new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
 
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
@@ -215,15 +216,24 @@ public class RelationIntegrationTestUtil {
         return RELATION_FACTORY.getRelation(newTuples);
     }
 
-    @SuppressWarnings({"unchecked"})
-    public static Relation createRelation(Attribute... attributes) {
-        AttributeComparator attributeComparator = FACTORY.getNewAttributeComparator();
-        RelationFactory rf = new RelationFactoryImpl(attributeComparator, FACTORY.getNewTupleComparator());
-        Set<Attribute> newAttributes = new TreeSet<Attribute>(attributeComparator);
+    public static Set<Attribute> createHeading(Attribute... attributes) {
+        Set<Attribute> newAttributes = new TreeSet<Attribute>(ATTRIBUTE_COMPARATOR);
         for (Attribute attribute : attributes) {
             newAttributes.add(attribute);
         }
+        return newAttributes;
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public static Relation createEmptyRelation(Set<Attribute> newAttributes) {
+        RelationFactory rf = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, FACTORY.getNewTupleComparator());
         return rf.getRelation(newAttributes, Collections.EMPTY_SET);
+    }
+
+    public static Relation createRelation(Set<Attribute> attributes, Set<Tuple> tuples) {
+        AttributeComparator attributeComparator = FACTORY.getNewAttributeComparator();
+        RelationFactory rf = new RelationFactoryImpl(attributeComparator, FACTORY.getNewTupleComparator());
+        return rf.getRelation(attributes, tuples);
     }
 
     public static Set<Relation> createRelations(Relation... relations) {

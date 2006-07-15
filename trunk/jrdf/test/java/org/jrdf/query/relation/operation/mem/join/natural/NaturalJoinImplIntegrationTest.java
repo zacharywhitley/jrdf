@@ -61,6 +61,7 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
@@ -71,9 +72,9 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
@@ -84,10 +85,13 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
 
-import java.util.Collections;
+import static java.util.Collections.EMPTY_SET;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import java.util.List;
 import java.util.Set;
 
@@ -100,15 +104,15 @@ import java.util.Set;
 public class NaturalJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
-    private static final Set<Relation> EMPTY = Collections.emptySet();
+    private static final Set<Relation> EMPTY = emptySet();
 
     public void testRelationDEEandDUM() {
         // The natural join of empty is DEE.
         checkRelation(RELATION_DEE, EMPTY);
         // The natural join of DEE is DEE.
-        checkRelation(RELATION_DEE, Collections.singleton(RELATION_DEE));
+        checkRelation(RELATION_DEE, singleton(RELATION_DEE));
         // The natural join of DUM is DUM.
-        checkRelation(RELATION_DUM, Collections.singleton(RELATION_DUM));
+        checkRelation(RELATION_DUM, singleton(RELATION_DUM));
     }
 
     public void testTruthTableDEEandDUM() {
@@ -218,7 +222,8 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     public void testNaturalJoinNoResults() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-        checkJoin(createRelation(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT), createRelation(tuple1, tuple2));
+        Set<Attribute> heading = createHeading(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT);
+        checkJoin(createRelation(heading, EMPTY_SET), createRelation(tuple1, tuple2));
     }
 
     private void checkJoin(Relation expectedResult, List<Relation> relations) {

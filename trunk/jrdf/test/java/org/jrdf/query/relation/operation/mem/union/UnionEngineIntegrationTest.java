@@ -60,22 +60,30 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.Union;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 
-import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -87,7 +95,6 @@ import java.util.Set;
 public class UnionEngineIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Union UNION = FACTORY.getNewUnion();
-    private static final Set<Relation> EMPTY = Collections.emptySet();
 
     public void testTruthTableDEEandDUM() {
         // The union of DEE and DUM together (basically the truth table for OR).
@@ -126,6 +133,7 @@ public class UnionEngineIntegrationTest extends TestCase {
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
 
     }
+
     public void testUnionCompatibleDifferentTuplesButWithSameRows() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
@@ -137,6 +145,18 @@ public class UnionEngineIntegrationTest extends TestCase {
         resultTuple.addAll(tmpTuple);
 
         checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+    }
+
+    public void testNonUnionCompatible() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4);
+        Set<Tuple> tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
+        resultTuple.addAll(tmpTuple);
+        Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, VAR_BAR2_PREDICATE,
+                POS_FOO3_OBJECT, POS_BAR3_OBJECT);
+        checkUnion(createRelation(heading, resultTuple), createRelation(tuple1), createRelation(tuple2));
+
     }
 
     private void checkUnion(Relation expectedResult, Relation relation1, Relation relation2) {

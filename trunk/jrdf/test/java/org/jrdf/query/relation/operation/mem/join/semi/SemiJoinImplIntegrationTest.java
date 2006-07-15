@@ -61,6 +61,7 @@ package org.jrdf.query.relation.operation.mem.join.semi;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
@@ -84,8 +85,10 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 
+import static java.util.Collections.EMPTY_SET;
 import java.util.Set;
 
 /**
@@ -187,7 +190,8 @@ public class SemiJoinImplIntegrationTest extends TestCase {
     public void testSemiJoinNoResults() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-        checkJoin(createRelation(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT), createRelation(tuple1), createRelation(tuple2));
+        Set<Attribute> heading = createHeading(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT);
+        checkJoin(createRelation(heading, EMPTY_SET), createRelation(tuple1), createRelation(tuple2));
     }
 
     private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
