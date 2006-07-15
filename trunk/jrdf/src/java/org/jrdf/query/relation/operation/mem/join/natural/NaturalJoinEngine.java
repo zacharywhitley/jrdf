@@ -66,7 +66,7 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.mem.RelationHelper;
-import org.jrdf.query.relation.operation.mem.join.JoinEngine;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -93,7 +93,7 @@ import java.util.TreeSet;
  * <2, a, foo>, <1, a, foo>
 
  */
-public class NaturalJoinEngine implements JoinEngine {
+public class NaturalJoinEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
     private final AttributeValuePairComparator avpComparator;
     private final RelationHelper relationHelper;

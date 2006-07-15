@@ -201,7 +201,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="commonJoin" class="org.jrdf.query.relation.operation.mem.join.common.CommonJoinImpl">
+    <bean id="relationProcessor" class="org.jrdf.query.relation.operation.mem.join.common.RelationProcessorImpl">
         <constructor-arg>
             <ref bean="relationFactory"/>
         </constructor-arg>
@@ -231,7 +231,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="unionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.UnionJoinEngine">
+    <bean id="unionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.UnionEngine">
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
@@ -245,7 +245,7 @@
 
     <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
         <constructor-arg>
-            <ref bean="commonJoin"/>
+            <ref bean="relationProcessor"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="naturalJoinEngine"/>
@@ -254,7 +254,7 @@
 
     <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.join.DyadicJoinImpl">
         <constructor-arg>
-            <ref bean="commonJoin"/>
+            <ref bean="relationProcessor"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="semiJoinEngine"/>
@@ -281,7 +281,7 @@
 
     <bean id="union" class="org.jrdf.query.relation.operation.mem.union.UnionImpl">
         <constructor-arg>
-            <ref bean="commonJoin"/>
+            <ref bean="relationProcessor"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="unionJoinEngine"/>

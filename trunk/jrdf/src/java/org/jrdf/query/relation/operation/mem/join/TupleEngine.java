@@ -56,29 +56,21 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.join.common;
+package org.jrdf.query.relation.operation.mem.join;
 
-import junit.framework.TestCase;
-import org.jrdf.query.relation.RelationFactory;
-import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
+import java.util.SortedSet;
 
-public class CommonJoinImplUnitTest extends TestCase {
-    private static final Class[] PARAMETERS = { RelationFactory.class, TupleComparator.class };
-    private static final String[] PARAMETER_NAMES = { "relationFactory", "tupleComparator"};
+/**
+ * Implementation of different types of Join algorithms.
+ */
+public interface TupleEngine {
+    SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
 
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(CommonJoin.class, CommonJoinImpl.class);
-        checkImplementationOfInterface(Serializable.class, CommonJoinImpl.class);
-        checkConstructor(CommonJoinImpl.class, Modifier.PUBLIC, PARAMETERS);
-        checkConstructorSetsFieldsAndFieldsPrivate(CommonJoinImpl.class, PARAMETERS, PARAMETER_NAMES);
-        checkConstructNullAssertion(CommonJoinImpl.class, PARAMETERS);
-    }
+    void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2,
+            SortedSet<Tuple> result);
 }

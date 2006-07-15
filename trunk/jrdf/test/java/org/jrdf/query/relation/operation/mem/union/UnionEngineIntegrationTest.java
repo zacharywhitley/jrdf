@@ -84,7 +84,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 729 $
  */
-public class UnionJoinEngineIntegrationTest extends TestCase {
+public class UnionEngineIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Union UNION = FACTORY.getNewUnion();
     private static final Set<Relation> EMPTY = Collections.emptySet();

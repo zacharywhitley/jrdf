@@ -65,16 +65,16 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationHelper;
-import org.jrdf.query.relation.operation.mem.join.JoinEngine;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.SortedSet;
 
-public class UnionJoinEngine implements JoinEngine {
+public class UnionEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
     private final AttributeValuePairComparator avpComparator;
     private final RelationHelper relationHelper;
 
-    public UnionJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
+    public UnionEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
             RelationHelper relationHelper) {
         this.tupleFactory = tupleFactory;
         this.avpComparator = avpComparator;
