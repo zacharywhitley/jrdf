@@ -61,6 +61,8 @@ package org.jrdf.query.relation.operation.mem.union;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.Union;
 
 import java.util.Collections;
@@ -72,17 +74,17 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 729 $
  */
-public class UnionImplIntegrationTest extends TestCase {
+public class UnionJoinEngineIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Union UNION = FACTORY.getNewUnion();
     private static final Set<Relation> EMPTY = Collections.emptySet();
 
     public void testRelationDEEandDUM() {
         // The union of DEE and DUM together.
-//        checkUnion(RELATION_DUM, RELATION_DUM, RELATION_DUM);
-//        checkUnion(RELATION_DEE, RELATION_DUM, RELATION_DEE);
-//        checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DUM);
-//        checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DEE);
+        checkUnion(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+        checkUnion(RELATION_DEE, RELATION_DUM, RELATION_DEE);
+        checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DUM);
+        checkUnion(RELATION_DEE, RELATION_DEE, RELATION_DEE);
     }
 
 

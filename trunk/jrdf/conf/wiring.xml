@@ -231,6 +231,18 @@
         </constructor-arg>
     </bean>
 
+    <bean id="unionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.UnionJoinEngine">
+        <constructor-arg>
+            <ref bean="tupleFactory"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="avpComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationHelper"/>
+        </constructor-arg>
+    </bean>
+
     <bean id="naturalJoin" class="org.jrdf.query.relation.operation.mem.join.NadicJoinImpl">
         <constructor-arg>
             <ref bean="commonJoin"/>
@@ -269,16 +281,10 @@
 
     <bean id="union" class="org.jrdf.query.relation.operation.mem.union.UnionImpl">
         <constructor-arg>
-            <ref bean="relationFactory"/>
+            <ref bean="commonJoin"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="relationHelper"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="tupleFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="avpComparator"/>
+            <ref bean="unionJoinEngine"/>
         </constructor-arg>
     </bean>
 </beans>
