@@ -60,10 +60,10 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
-
 import java.util.LinkedHashSet;
 
 public class UnionImpl implements Union {
@@ -76,10 +76,6 @@ public class UnionImpl implements Union {
     }
 
     public Relation union(Relation relation1, Relation relation2) {
-        if (relation1 == RELATION_DUM && relation2 == RELATION_DUM) {
-            return RELATION_DUM;
-        }
-
         if (relation1 == RELATION_DUM) {
             return relation2;
         }
@@ -90,6 +86,10 @@ public class UnionImpl implements Union {
 
         if (relation1 == relation2) {
             return relation1;
+        }
+
+        if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
+            return RELATION_DEE;
         }
 
         LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();

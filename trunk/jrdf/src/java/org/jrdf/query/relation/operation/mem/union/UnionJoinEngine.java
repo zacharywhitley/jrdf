@@ -67,7 +67,7 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 public class UnionJoinEngine implements JoinEngine {
     private final TupleFactory tupleFactory;
@@ -81,12 +81,12 @@ public class UnionJoinEngine implements JoinEngine {
         this.relationHelper = relationHelper;
     }
 
-    public Set<Attribute> getHeading(Relation relation1, Relation relation2) {
+    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
-            Set<Tuple> result) {
+    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         Tuple tuple1 = tupleFactory.getTuple(avps1);
         Tuple tuple2 = tupleFactory.getTuple(avps2);
         result.add(tuple1);

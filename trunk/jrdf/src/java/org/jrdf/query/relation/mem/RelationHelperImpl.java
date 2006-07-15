@@ -64,7 +64,7 @@ import org.jrdf.query.relation.Relation;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
-import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 public final class RelationHelperImpl implements RelationHelper, Serializable {
@@ -79,7 +79,7 @@ public final class RelationHelperImpl implements RelationHelper, Serializable {
         this.attributeComparator = attributeComparator;
     }
 
-    public Set<Attribute> getHeadingUnions(Relation... relations) {
+    public SortedSet<Attribute> getHeadingUnions(Relation... relations) {
         TreeSet<Attribute> attributes = new TreeSet<Attribute>(attributeComparator);
         for (Relation relation : relations) {
             attributes.addAll(relation.getHeading());

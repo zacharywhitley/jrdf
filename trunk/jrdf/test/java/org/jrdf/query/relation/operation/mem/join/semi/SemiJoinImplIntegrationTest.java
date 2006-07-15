@@ -98,13 +98,15 @@ public class SemiJoinImplIntegrationTest extends TestCase {
     private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final DyadicJoin JOIN = FACTORY.getNewSemiJoin();
 
-    public void testRelationDEEandDUM() {
-        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
-        // The semijoin of DEE and DUM together.
+    public void testTruthTableDEEandDUM() {
         checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DUM);
         checkJoin(RELATION_DUM, RELATION_DUM, RELATION_DEE);
         checkJoin(RELATION_DUM, RELATION_DEE, RELATION_DUM);
         checkJoin(RELATION_DEE, RELATION_DEE, RELATION_DEE);
+    }
+
+    public void testRelationDEEandDumWithRelation() {
+        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
         // The semijoin of R1 and DEE is R1.
         checkJoin(relation, relation, RELATION_DEE);
         // The semijoin of DEE and R1 is DEE.

@@ -60,16 +60,16 @@ package org.jrdf.query.relation.operation.mem.join.natural;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.mem.RelationHelper;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
+import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Combines two relations attributes if they have common tuple values.  The
@@ -105,13 +105,13 @@ public class NaturalJoinEngine implements JoinEngine {
         this.relationHelper = relationHelper;
     }
 
-    public Set<Attribute> getHeading(Relation relation1, Relation relation2) {
+    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
-            Set<Tuple> result) {
-        Set<AttributeValuePair> resultantAttributeValues = new HashSet<AttributeValuePair>();
+    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        SortedSet<AttributeValuePair> resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = getAttribute(avps1, attribute);
             AttributeValuePair avp2 = getAttribute(avps2, attribute);
@@ -130,7 +130,7 @@ public class NaturalJoinEngine implements JoinEngine {
         }
     }
 
-    private AttributeValuePair getAttribute(Set<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
+    private AttributeValuePair getAttribute(SortedSet<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
         for (AttributeValuePair avp : actualAvps) {
             if (avp.getAttribute().equals(expectedAttribute)) {
                 return avp;
@@ -140,7 +140,7 @@ public class NaturalJoinEngine implements JoinEngine {
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
-            Set<AttributeValuePair> resultantAttributeValues) {
+            SortedSet<AttributeValuePair> resultantAttributeValues) {
         boolean added = false;
 
         // Add if avp1 is not null and avp2 is or they are both equal.
@@ -163,7 +163,7 @@ public class NaturalJoinEngine implements JoinEngine {
     }
 
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
-            Set<AttributeValuePair> resultantAttributeValues) {
+            SortedSet<AttributeValuePair> resultantAttributeValues) {
         if (!(avp1 instanceof NullaryAttributeValuePair)) {
             addResults(avp1, resultantAttributeValues);
         } else {
@@ -171,7 +171,7 @@ public class NaturalJoinEngine implements JoinEngine {
         }
     }
 
-    private void addResults(AttributeValuePair avp, Set<AttributeValuePair> resultantAttributeValues) {
+    private void addResults(AttributeValuePair avp, SortedSet<AttributeValuePair> resultantAttributeValues) {
         resultantAttributeValues.add(avp);
     }
 }

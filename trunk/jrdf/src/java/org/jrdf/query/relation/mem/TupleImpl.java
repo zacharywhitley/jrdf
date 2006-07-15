@@ -89,10 +89,11 @@ public final class TupleImpl extends Primordial implements Tuple {
     }
 
     // TODO (AN) Test drive me
-    public Set<AttributeValuePair> getSortedAttributeValues() {
+    @SuppressWarnings({ "unchecked" })
+    public SortedSet<AttributeValuePair> getSortedAttributeValues() {
         if (attributeValues instanceof SortedSet) {
             if (((SortedSet) attributeValues).comparator() != null) {
-                return attributeValues;
+                return (SortedSet) attributeValues;
             }
         }
 

@@ -60,15 +60,15 @@ package org.jrdf.query.relation.operation.mem.join.semi;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 import org.jrdf.query.relation.operation.mem.join.JoinEngine;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  *  Join two relations if they have common tuple values and projects the results back onto the first relation.
@@ -82,14 +82,14 @@ public class SemiJoinEngine implements JoinEngine {
         this.avpComparator = avpComparator;
     }
 
-    public Set<Attribute> getHeading(Relation relation1, Relation relation2) {
-        return relation1.getHeading();
+    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
+        return relation1.getSortedHeading();
     }
 
-    public void join(Set<Attribute> headings, Set<AttributeValuePair> avps1, Set<AttributeValuePair> avps2,
-            Set<Tuple> result) {
-        Set<AttributeValuePair> allAttributeValuePairs = new HashSet<AttributeValuePair>();
-        Set<AttributeValuePair> lhsAttributeValuePairs = new HashSet<AttributeValuePair>();
+    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        SortedSet<AttributeValuePair> allAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
+        SortedSet<AttributeValuePair> lhsAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = getAttribute(avps1, attribute);
             AttributeValuePair avp2 = getAttribute(avps2, attribute);
@@ -109,7 +109,7 @@ public class SemiJoinEngine implements JoinEngine {
         }
     }
 
-    private AttributeValuePair getAttribute(Set<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
+    private AttributeValuePair getAttribute(SortedSet<AttributeValuePair> actualAvps, Attribute expectedAttribute) {
         for (AttributeValuePair avp : actualAvps) {
             if (avp.getAttribute().equals(expectedAttribute)) {
                 return avp;
@@ -119,7 +119,8 @@ public class SemiJoinEngine implements JoinEngine {
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
-            Set<AttributeValuePair> resultantAttributeValues, Set<AttributeValuePair> lhsAttributeValuePairs) {
+            SortedSet<AttributeValuePair> resultantAttributeValues,
+            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         boolean added = false;
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
@@ -141,7 +142,8 @@ public class SemiJoinEngine implements JoinEngine {
     }
 
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
-            Set<AttributeValuePair> resultantAttributeValues, Set<AttributeValuePair> lhsAttributeValuePairs) {
+            SortedSet<AttributeValuePair> resultantAttributeValues,
+            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         if (!(avp1 instanceof NullaryAttributeValuePair)) {
             addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
         } else {
@@ -149,8 +151,8 @@ public class SemiJoinEngine implements JoinEngine {
         }
     }
 
-    private void addResults(AttributeValuePair avp, Set<AttributeValuePair> resultantAttributeValues,
-            Set<AttributeValuePair> lhsAttributeValuePairs) {
+    private void addResults(AttributeValuePair avp, SortedSet<AttributeValuePair> resultantAttributeValues,
+            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         resultantAttributeValues.add(avp);
         lhsAttributeValuePairs.add(avp);
     }

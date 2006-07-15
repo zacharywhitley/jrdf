@@ -60,12 +60,15 @@ package org.jrdf.query.relation.constants;
 
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.*;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A class which simply contains the True Node constant.
@@ -82,8 +85,13 @@ public final class NullaryTuple implements Tuple, Serializable {
     private static final long serialVersionUID = 1808216129525892255L;
     private static final AttributeValuePair NULLARY_AVP = NULLARY_ATTRIBUTE_VALUE_PAIR;
     private static final Set<AttributeValuePair> NULLARY_AVP_SET = Collections.singleton(NULLARY_AVP);
+    private AttributeValuePairComparator attributeValuePairComparator;
 
     private NullaryTuple() {
+    }
+
+    public NullaryTuple(AttributeValuePairComparator attributeValuePairComparator) {
+        this.attributeValuePairComparator = attributeValuePairComparator;
     }
 
     private Object readResolve() throws ObjectStreamException {
@@ -94,7 +102,9 @@ public final class NullaryTuple implements Tuple, Serializable {
         return NULLARY_AVP_SET;
     }
 
-    public Set<AttributeValuePair> getSortedAttributeValues() {
-        return NULLARY_AVP_SET;
+    public SortedSet<AttributeValuePair> getSortedAttributeValues() {
+        SortedSet<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
+        sortedPairs.addAll(NULLARY_AVP_SET);
+        return sortedPairs;
     }
 }

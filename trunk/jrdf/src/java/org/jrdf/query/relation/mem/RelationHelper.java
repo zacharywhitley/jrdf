@@ -61,11 +61,11 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Methods on a collection of relations.
  */
 public interface RelationHelper {
-    Set<Attribute> getHeadingUnions(Relation... relations);
+    SortedSet<Attribute> getHeadingUnions(Relation... relations);
 }
