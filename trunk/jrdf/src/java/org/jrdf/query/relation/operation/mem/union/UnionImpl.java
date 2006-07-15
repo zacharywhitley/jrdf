@@ -84,7 +84,7 @@ public class UnionImpl implements Union {
             return relation1;
         }
 
-        if (relation1 == relation2 || relation1.equals(relation2)) {
+        if (relation1.equals(relation2)) {
             return relation1;
         }
 
