@@ -66,7 +66,7 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
-import org.jrdf.query.relation.operation.mem.join.JoinEngine;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
@@ -76,36 +76,36 @@ import java.util.TreeSet;
 import java.util.SortedSet;
 
 /**
- * Common join code - gets headings and then join tuples using the tuple engine.
+ * Common tuple processing code - gets headings and then processes tuples using the tuple engine.
  */
-public final class CommonJoinImpl implements CommonJoin, Serializable {
+public final class RelationProcessorImpl implements RelationProcessor, Serializable {
     private RelationFactory relationFactory;
     private TupleComparator tupleComparator;
     private static final long serialVersionUID = 5483640117544955640L;
 
-    private CommonJoinImpl() {
+    private RelationProcessorImpl() {
     }
 
-    public CommonJoinImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
+    public RelationProcessorImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
         ParameterUtil.checkNotNull(relationFactory, tupleComparator);
         this.relationFactory = relationFactory;
         this.tupleComparator = tupleComparator;
     }
 
-    public Relation performJoin(Set<Relation> relations, JoinEngine joinEngine) {
+    public Relation performJoin(Set<Relation> relations, TupleEngine tupleEngine) {
         Iterator<Relation> iterator = relations.iterator();
         Relation relation1 = iterator.next();
         Relation relation2 = iterator.next();
-        SortedSet<Attribute> headings = joinEngine.getHeading(relation1, relation2);
+        SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
 
         SortedSet<Tuple> tuples = joinTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
-                joinEngine);
+                tupleEngine);
         Relation resultRelation = relationFactory.getRelation(headings, tuples);
 
         while (iterator.hasNext()) {
             Relation nextRelation = iterator.next();
-            headings = joinEngine.getHeading(resultRelation, nextRelation);
-            tuples = joinTuples(headings, tuples, nextRelation.getSortedTuples(), joinEngine);
+            headings = tupleEngine.getHeading(resultRelation, nextRelation);
+            tuples = joinTuples(headings, tuples, nextRelation.getSortedTuples(), tupleEngine);
             resultRelation = relationFactory.getRelation(headings, tuples);
         }
 
@@ -113,21 +113,21 @@ public final class CommonJoinImpl implements CommonJoin, Serializable {
     }
 
     private SortedSet<Tuple> joinTuples(SortedSet<Attribute> headings, SortedSet<Tuple> tuples1,
-            SortedSet<Tuple> tuples2, JoinEngine joinEngine) {
+            SortedSet<Tuple> tuples2, TupleEngine tupleEngine) {
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple1 : tuples1) {
             for (Tuple tuple2 : tuples2) {
-                joinRhs(headings, tuple1, tuple2, result, joinEngine);
+                joinRhs(headings, tuple1, tuple2, result, tupleEngine);
             }
         }
         return result;
     }
 
     private void joinRhs(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2, SortedSet<Tuple> result,
-            JoinEngine joinEngine) {
+            TupleEngine tupleEngine) {
         SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
         SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
-        joinEngine.join(headings, avps1, avps2, result);
+        tupleEngine.join(headings, avps1, avps2, result);
     }
 
     private Relation convertToConstants(Relation resultRelation) {

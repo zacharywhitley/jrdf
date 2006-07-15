@@ -56,21 +56,29 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.join;
+package org.jrdf.query.relation.operation.mem.join.common;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
+import junit.framework.TestCase;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.TupleComparator;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import java.util.SortedSet;
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
 
-/**
- * Implementation of different types of Join algorithms.
- */
-public interface JoinEngine {
-    SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
+public class RelationProcessorImplUnitTest extends TestCase {
+    private static final Class[] PARAMETERS = { RelationFactory.class, TupleComparator.class };
+    private static final String[] PARAMETER_NAMES = { "relationFactory", "tupleComparator"};
 
-    void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2,
-            SortedSet<Tuple> result);
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(RelationProcessor.class, RelationProcessorImpl.class);
+        checkImplementationOfInterface(Serializable.class, RelationProcessorImpl.class);
+        checkConstructor(RelationProcessorImpl.class, Modifier.PUBLIC, PARAMETERS);
+        checkConstructorSetsFieldsAndFieldsPrivate(RelationProcessorImpl.class, PARAMETERS, PARAMETER_NAMES);
+        checkConstructNullAssertion(RelationProcessorImpl.class, PARAMETERS);
+    }
 }

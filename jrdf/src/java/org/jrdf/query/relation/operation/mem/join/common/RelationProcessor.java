@@ -59,13 +59,13 @@
 package org.jrdf.query.relation.operation.mem.join.common;
 
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.operation.mem.join.JoinEngine;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.Set;
 
 /**
  * Common join engine - basically gets headings and then calls join on the join engine.
  */
-public interface CommonJoin {
-    Relation performJoin(Set<Relation> relations, JoinEngine joinEngine);
+public interface RelationProcessor {
+    Relation performJoin(Set<Relation> relations, TupleEngine tupleEngine);
 }

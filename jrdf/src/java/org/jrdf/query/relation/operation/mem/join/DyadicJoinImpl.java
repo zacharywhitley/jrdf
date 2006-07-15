@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.join;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.DyadicJoin;
-import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
+import org.jrdf.query.relation.operation.mem.join.common.RelationProcessor;
 
 import java.util.LinkedHashSet;
 
@@ -72,12 +72,12 @@ import java.util.LinkedHashSet;
  * @version $Revision: 722 $
  */
 public final class DyadicJoinImpl implements DyadicJoin {
-    private final JoinEngine joinEngine;
-    private final CommonJoin commonJoin;
+    private final TupleEngine tupleEngine;
+    private final RelationProcessor relationProcessor;
 
-    public DyadicJoinImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
-        this.joinEngine = joinEngine;
-        this.commonJoin = commonJoin;
+    public DyadicJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
+        this.tupleEngine = tupleEngine;
+        this.relationProcessor = relationProcessor;
     }
 
     public Relation join(Relation relation1, Relation relation2) {
@@ -93,6 +93,6 @@ public final class DyadicJoinImpl implements DyadicJoin {
         relations.add(relation1);
         relations.add(relation2);
 
-        return commonJoin.performJoin(relations, joinEngine);
+        return relationProcessor.performJoin(relations, tupleEngine);
     }
 }

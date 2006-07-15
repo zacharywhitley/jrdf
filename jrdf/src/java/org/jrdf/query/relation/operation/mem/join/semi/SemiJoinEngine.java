@@ -65,7 +65,7 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
-import org.jrdf.query.relation.operation.mem.join.JoinEngine;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -73,7 +73,7 @@ import java.util.TreeSet;
 /**
  *  Join two relations if they have common tuple values and projects the results back onto the first relation.
  */
-public class SemiJoinEngine implements JoinEngine {
+public class SemiJoinEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
     private final AttributeValuePairComparator avpComparator;
 

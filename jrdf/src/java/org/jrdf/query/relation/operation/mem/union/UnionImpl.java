@@ -62,17 +62,17 @@ import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.mem.join.JoinEngine;
-import org.jrdf.query.relation.operation.mem.join.common.CommonJoin;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import org.jrdf.query.relation.operation.mem.join.common.RelationProcessor;
 import java.util.LinkedHashSet;
 
 public class UnionImpl implements Union {
-    private final JoinEngine joinEngine;
-    private final CommonJoin commonJoin;
+    private final TupleEngine tupleEngine;
+    private final RelationProcessor relationProcessor;
 
-    public UnionImpl(CommonJoin commonJoin, JoinEngine joinEngine) {
-        this.joinEngine = joinEngine;
-        this.commonJoin = commonJoin;
+    public UnionImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
+        this.tupleEngine = tupleEngine;
+        this.relationProcessor = relationProcessor;
     }
 
     public Relation union(Relation relation1, Relation relation2) {
@@ -96,6 +96,6 @@ public class UnionImpl implements Union {
         relations.add(relation1);
         relations.add(relation2);
 
-        return commonJoin.performJoin(relations, joinEngine);
+        return relationProcessor.performJoin(relations, tupleEngine);
     }
 }
