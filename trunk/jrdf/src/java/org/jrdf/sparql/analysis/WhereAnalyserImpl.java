@@ -72,6 +72,7 @@ import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APatternElementsList;
 import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.AUnionGraphPattern;
 import org.jrdf.sparql.parser.node.Node;
 
 import java.util.LinkedHashSet;
@@ -83,8 +84,6 @@ import java.util.SortedSet;
  * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
  */
 public final class WhereAnalyserImpl extends DepthFirstAdapter {
-
-    // FIXME TJA: Should eventually be using a Expression builder here.
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private VariableCollector collector;
@@ -118,16 +117,14 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         }
     }
 
-    private Expression<ExpressionVisitor> getExpression(Node node) {
-        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
-        node.apply(analyser);
-        return analyser.getExpression();
+    @Override
+    public void caseAUnionGraphPattern(AUnionGraphPattern node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
+        System.err.println("Got: " + lhs);
+        System.err.println("Got: " + rhs);
     }
 
-    // TODO (AN) Add a variable collector to caseATriple and return the determined type from that instead of the
-    // hardcoded SubjectNodeType.  Potentially add a subjectpredicate node type, subjectobject node type and
-    // subjectpredicateobject node type that are equal to any of the given types.  Or modify existing NodeTypes
-    // equal() method to call join compatible.  See what works best.
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
         Set<Attribute> newAttributes = new LinkedHashSet<Attribute>();
         Map<String, NodeType> variables = collector.getVariables();
@@ -141,5 +138,11 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
             }
         }
         return newAttributes;
+    }
+
+    private Expression<ExpressionVisitor> getExpression(Node node) {
+        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
+        node.apply(analyser);
+        return analyser.getExpression();
     }
 }
