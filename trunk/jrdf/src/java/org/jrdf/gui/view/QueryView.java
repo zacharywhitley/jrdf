@@ -74,4 +74,6 @@ public interface QueryView {
     void setTriplesLoaded(long numberOfTriples);
 
     void setResults(Relation answer);
+
+    void setLoadErrorMessage(String errorMessage);
 }
