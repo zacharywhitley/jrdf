@@ -134,7 +134,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testUnionConstraint() {
-        System.err.println("QUERY_BOOK_1_AND_2: " + QUERY_BOOK_1_UNION_2);
         checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
     }
 
