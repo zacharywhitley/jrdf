@@ -60,6 +60,7 @@ package org.jrdf.gui.view;
 
 import org.jrdf.gui.command.QueryRanCommand;
 import org.jrdf.gui.command.RdfLoadedCommand;
+import org.jrdf.gui.command.RdfFailedToLoadCommand;
 import org.jrdf.query.relation.Relation;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
@@ -95,12 +96,18 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
 
     protected void registerLocalCommandExecutors(PageComponentContext context) {
         context.register("rdfLoadedCommand", new RdfLoadedCommand(this));
+        context.register("rdfFailedToLoadCommand", new RdfFailedToLoadCommand(this));
         context.register("queryRanCommand", new QueryRanCommand(this));
     }
 
     public void setTriplesLoaded(long numberOfTriples) {
         String message = getMessage("queryView.modelLoaded");
         getStatusBar().setMessage(message + numberOfTriples);
+    }
+
+    public void setLoadErrorMessage(String errorMessage) {
+        String message = getMessage("queryView.failedToLoad");
+        getStatusBar().setMessage(message + errorMessage);
     }
 
     public void setResults(Relation answer) {
