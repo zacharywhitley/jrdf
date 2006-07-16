@@ -1,17 +1,19 @@
 JRDF TODO List
 
-o Implement SPARQL parser.
 o Continue refactoring code.
-o Make GraphImpl IoCed.  Take in the constructor GraphHandlers, LongIndexes
-and TripleFactory.  Then test drive the lot - once the interfaces have settled
-down - currently it's a bit of a spike.
+o Make GraphImpl IoCed.
+  o Take in the constructor GraphHandlers, LongIndexes and TripleFactory.
+  o Then test drive the lot - once the interfaces have settled.
 o Once indices are refactored do indexed Graph operations.
-o Finish Relational operators.
-  o Currently implemented: Projet, Join, Restrict, Semi-join (join and project) and Union.
-  o Implement the rest as follows:
-    o Difference,
-    o Anti-join (difference and semi-join),
-    o Left, Right, and Full Outerjoin  (join, union and antijoin).
-    o Intersection (maybe - special case of join),
-o Put in SPARQL Union and Optional.
+o Implement SPARQL parser.
+  o Finish Relational operators.
+    o Currently implemented: Projet, Join, Restrict, Semi-join (join and project) and Union.
+    o Implement the rest as follows:
+      o Difference,
+      o Anti-join (difference and semi-join),
+      o Left, Right, and Full Outerjoin  (join, union and antijoin).
+      o Intersection (maybe - special case of join),
+  o Finish SPARQL Grammar.
+    o Currently implements CONJUNCTION (.) and UNION, SELECT (* and Variables).
+    o Put in SPARQL Optional.
 o Write a pull based RDF/XML parser.
