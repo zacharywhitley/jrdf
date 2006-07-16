@@ -63,6 +63,7 @@ import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -121,8 +122,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     public void caseAUnionGraphPattern(AUnionGraphPattern node) {
         Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
-        System.err.println("Got: " + lhs);
-        System.err.println("Got: " + rhs);
+        expression = new Union<ExpressionVisitor>(lhs, rhs);
     }
 
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
