@@ -64,6 +64,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Projection;
+import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
@@ -86,12 +87,15 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private Relation result;
     private Project project;
     private Restrict restrict;
-    private org.jrdf.query.relation.operation.NadicJoin naturalJoin;
+    private NadicJoin naturalJoin;
+    private org.jrdf.query.relation.operation.Union union;
 
-    public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict) {
+    public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
+            org.jrdf.query.relation.operation.Union union) {
         this.project = project;
         this.naturalJoin = naturalJoin;
         this.restrict = restrict;
+        this.union = union;
     }
 
     public Relation getResult() {
@@ -102,17 +106,20 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = newResult;
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
         Relation expression = getExpression(projection.getNextExpression());
         Set<Attribute> attributes = projection.getAttributes();
         result = project.include(expression, attributes);
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
         SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
         result = restrict.restrict(result, singleAvp);
     }
 
+    @Override
     public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
         Relation lhs = getExpression(conjunction.getLhs());
         Relation rhs = getExpression(conjunction.getRhs());
@@ -122,9 +129,16 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = naturalJoin.join(relations);
     }
 
+    @Override
+    public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
+        Relation lhs = getExpression(conjunction.getLhs());
+        Relation rhs = getExpression(conjunction.getRhs());
+        result = union.union(lhs, rhs);
+    }
+
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor>Relation getExpression(Expression<V> expression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union);
         queryEngine.setResult(result);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();
