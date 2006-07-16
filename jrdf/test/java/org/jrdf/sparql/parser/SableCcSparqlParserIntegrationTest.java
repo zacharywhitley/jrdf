@@ -81,7 +81,9 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-import org.jrdf.util.test.TripleTestUtil;
+import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
+import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 
 /**
  * Integration test for {@link SableCcSparqlParser}.
@@ -93,7 +95,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     // FIXME TJA: Triangulate on variables.
     // FIXME TJA: Triangulate on expression expression.
-    // FIXME TJA: Write failing test for non-wildcard projection lists.
     // FIXME TJA: Write tests to force trimming of query string.
     // FIXME TJA: Make sure that empty variable projection lists don't make it past the parser, as the Projection.ALL_VARIABLES is the empty list.
 
@@ -105,9 +106,9 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     public void setUp() throws Exception {
         GraphElementFactory elementFactory = GRAPH.getElementFactory();
-        SubjectNode subject = elementFactory.createResource(TripleTestUtil.URI_BOOK_1);
-        PredicateNode predicate = elementFactory.createResource(TripleTestUtil.URI_DC_TITLE);
-        ObjectNode object = elementFactory.createLiteral(TripleTestUtil.LITERAL_BOOK_TITLE);
+        SubjectNode subject = elementFactory.createResource(URI_BOOK_1);
+        PredicateNode predicate = elementFactory.createResource(URI_DC_TITLE);
+        ObjectNode object = elementFactory.createLiteral(LITERAL_BOOK_TITLE);
         GRAPH.add(subject, predicate, object);
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
@@ -127,6 +128,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testTwoConstraints() {
         checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_EXPRESSION);
     }
+
+//    public void testUnionConstraint() {
+//        checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_EXPRESSION);
+//    }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);

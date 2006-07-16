@@ -85,6 +85,9 @@ public final class SparqlQueryTestUtil {
     public static final String QUERY_BOOK_1_AND_2 =
             createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
                     PREDICATE_URI_1, VARIABLE_TITLE});
+    public static final String QUERY_BOOK_1_UNION_2 = createSelectClause() + "WHERE {{ " +
+            createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) +  "} UNION {" +
+            createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
     public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
@@ -97,18 +100,46 @@ public final class SparqlQueryTestUtil {
     }
 
     private static String createQueryString(String[] constraints) {
-        StringBuffer buffer = new StringBuffer("SELECT * WHERE  { ");
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(createSelectClause());
+        buffer.append(createWhereClause(constraints));
+        return buffer.toString();
+    }
+
+    private static String createSelectClause() {
+        return "SELECT * ";
+    }
+
+    private static String createWhereClause(String[] constraints) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("WHERE  { ");
         for (int i = 0; i < (constraints.length / 3); i++) {
-            createConstraint(buffer, constraints, i);
+            buffer.append(createConstraint(constraints, i));
             appendAnd(i, constraints, buffer);
         }
         buffer.append(" }");
         return buffer.toString();
     }
 
-    private static void createConstraint(StringBuffer buffer, String[] constraints, int i) {
-        buffer.append(delimitUri(constraints[i * 3])).append(" ").append(delimitUri(constraints[i * 3 + 1]))
-                .append(" ").append(constraints[i * 3 + 2]);
+    private static String createConstraint(String[] constraints, int i) {
+        StringBuffer buffer = new StringBuffer();
+        String uriConstant1 = constraints[i * 3];
+        String uriConstant2 = constraints[i * 3 + 1];
+        String variable = constraints[i * 3 + 2];
+        buffer.append(createTriple(uriConstant1, uriConstant2, variable));
+        return buffer.toString();
+    }
+
+    private static String createTriple(String uriConstant1, String uriConstant, String variable) {
+        StringBuffer buffer = new StringBuffer();
+        String str1 = delimitUri(uriConstant1);
+        String str2 = delimitUri(uriConstant);
+        buffer.append(str1).append(" ").append(str2) .append(" ").append(variable);
+        return buffer.toString();
+    }
+
+    private static String delimitUri(String str) {
+        return "<" + str + ">";
     }
 
     private static void appendAnd(int i, String[] constraints, StringBuffer buffer) {
@@ -116,9 +147,4 @@ public final class SparqlQueryTestUtil {
             buffer.append(" . ");
         }
     }
-
-    public static String delimitUri(String str) {
-        return "<" + str + ">";
-    }
-
 }

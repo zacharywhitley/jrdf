@@ -74,8 +74,11 @@ import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.util.test.SparqlQueryTestUtil;
-import org.jrdf.util.test.TripleTestUtil;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
+import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 
 import java.net.URI;
 import java.net.URL;
@@ -90,11 +93,11 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     // FIXME TJA: Add test that ensures that createConnection() returns a new connection each time.
 
     private static final URL NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN_URL;
-    private static final String QUERY_SHOULD_RETURN_ONE_SOLUTION = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final String QUERY_SHOULD_RETURN_NOTHING = SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
-    private static final URI URI_SUBJECT = TripleTestUtil.URI_BOOK_1;
-    private static final URI URI_PREDICATE = TripleTestUtil.URI_DC_TITLE;
-    private static final String LITERAL_TITLE = TripleTestUtil.LITERAL_BOOK_TITLE;
+    private static final String QUERY_SHOULD_RETURN_ONE_SOLUTION = QUERY_BOOK_1_DC_TITLE;
+    private static final String QUERY_SHOULD_RETURN_NOTHING = QUERY_BOOK_2_DC_TITLE;
+    private static final URI URI_SUBJECT = URI_BOOK_1;
+    private static final URI URI_PREDICATE = URI_DC_TITLE;
+    private static final String LITERAL_TITLE = LITERAL_BOOK_TITLE;
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final JrdfQueryExecutorFactory EXECUTOR_FACTORY = FACTORY.getNewJrdfQueryExecutorFactory();
     private static final QueryBuilder QUERY_BUILDER = FACTORY.getNewQueryBuilder();
@@ -102,9 +105,9 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     public void setUp() throws Exception {
         GraphElementFactory elementFactory = GRAPH.getElementFactory();
-        SubjectNode subject = elementFactory.createResource(TripleTestUtil.URI_BOOK_1);
-        PredicateNode predicate = elementFactory.createResource(TripleTestUtil.URI_DC_TITLE);
-        ObjectNode object = elementFactory.createLiteral(TripleTestUtil.LITERAL_BOOK_TITLE);
+        SubjectNode subject = elementFactory.createResource(URI_BOOK_1);
+        PredicateNode predicate = elementFactory.createResource(URI_DC_TITLE);
+        ObjectNode object = elementFactory.createLiteral(LITERAL_BOOK_TITLE);
         GRAPH.add(subject, predicate, object);
     }
 

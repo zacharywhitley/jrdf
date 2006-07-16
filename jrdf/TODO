@@ -7,10 +7,11 @@ and TripleFactory.  Then test drive the lot - once the interfaces have settled
 down - currently it's a bit of a spike.
 o Once indices are refactored do indexed Graph operations.
 o Finish Relational operators.
-  o Currently implemented: Projet, Join and Restrict.
+  o Currently implemented: Projet, Join, Restrict, Semi-join (join and project) and Union.
   o Implement the rest as follows:
-    o Union, Intersection (maybe) and Difference,
-    o Semi-join (join + project), anti-join (difference + semi-join),
-    o Outerjoin (left, right, full).
+    o Difference,
+    o Anti-join (difference and semi-join),
+    o Left, Right, and Full Outerjoin  (join, union and antijoin).
+    o Intersection (maybe - special case of join),
 o Put in SPARQL Union and Optional.
 o Write a pull based RDF/XML parser.
