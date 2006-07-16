@@ -70,6 +70,7 @@ import org.jrdf.query.Query;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
@@ -80,6 +81,7 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
@@ -100,9 +102,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
-    private QueryParser parser;
-    private static final Expression BOOK1_AND_2_EXPRESSION
+    private static final Expression BOOK1_AND_2_CONJUNCTION
             = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_1, BOOK_2_DC_TITLE_2);
+    private static final Expression BOOK1_AND_2_UNION
+            = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_1, BOOK_2_DC_TITLE_2);
+    private QueryParser parser;
 
     public void setUp() throws Exception {
         GraphElementFactory elementFactory = GRAPH.getElementFactory();
@@ -126,12 +130,13 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testTwoConstraints() {
-        checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_EXPRESSION);
+        checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_CONJUNCTION);
     }
 
-//    public void testUnionConstraint() {
-//        checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_EXPRESSION);
-//    }
+    public void testUnionConstraint() {
+        System.err.println("QUERY_BOOK_1_AND_2: " + QUERY_BOOK_1_UNION_2);
+        checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
+    }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);
