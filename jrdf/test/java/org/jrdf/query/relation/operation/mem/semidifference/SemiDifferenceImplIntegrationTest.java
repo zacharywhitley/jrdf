@@ -61,6 +61,8 @@ package org.jrdf.query.relation.operation.mem.semidifference;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.SemiDifference;
 
 /**
@@ -74,10 +76,10 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
     private static final SemiDifference MINUS = FACTORY.getNewSemiDifference();
 
     public void testTruthTableDEEandDUM() {
-//        checkMinus(RELATION_DUM, RELATION_DUM, RELATION_DUM);
-//        checkMinus(RELATION_DUM, RELATION_DUM, RELATION_DEE);
-//        checkMinus(RELATION_DEE, RELATION_DEE, RELATION_DUM);
-//        checkMinus(RELATION_DUM, RELATION_DEE, RELATION_DEE);
+        checkMinus(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+        checkMinus(RELATION_DUM, RELATION_DUM, RELATION_DEE);
+        checkMinus(RELATION_DEE, RELATION_DEE, RELATION_DUM);
+        checkMinus(RELATION_DUM, RELATION_DEE, RELATION_DEE);
     }
 
 //    public void testRelationDEEandDumWithRelation() {

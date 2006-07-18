@@ -63,18 +63,26 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 
 import java.util.SortedSet;
 
-/**
- * Class description goes here.
- */
 public class SemiDifferenceEngine implements TupleEngine {
+    private final TupleFactory tupleFactory;
+    private final AttributeValuePairComparator avpComparator;
+
+    public SemiDifferenceEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator) {
+        this.tupleFactory = tupleFactory;
+        this.avpComparator = avpComparator;
+    }
+
     public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
         return relation1.getSortedHeading();
     }
 
     public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        System.err.println("Headings: " + headings);
     }
 }
