@@ -59,47 +59,60 @@
 package org.jrdf.query.relation.operation.mem.semidifference;
 
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.query.relation.operation.mem.join.common.RelationProcessor;
-
+import oCollections;
 import java.util.LinkedHashSet;
+import java.util.ery.relation.operation.mem.join.common.RelationProcessor;
+
+import java.util.CollectioRelationFactory relationFactory;java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class SemiDifferenceImpl implements SemiDifference {
-
-    private final TupleEngine tupleEngine;
+Factory relationFactory, RelationProcessor relationProcessor,
+            TupleEngine tupleEngine) {
+        this.relationFactory = relationFactory; private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
 
-    public SemiDifferenceImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
+    public SemiDifferenceImpl(RelationFactory relationFactory, RelationProcessor relationProcessordeeOrDumOperations    TupleEngine tupleEngine) {
+        this.relationFactory = relationFactory;
         this.tupleEngine = tupleEngine;
         this.relationProcessor = relationProcessor;
     }
 
     public Relation minus(Relation relation1, Relation relation2) {
-        Relation result = isDeeOrDum(relation1, relation2);
-        if (result != null) {
-            return result;
+        Relation result = deeOrDumOperations(relation1, relation2);
+        if (result !deeOrDumOperations(Relation relation1, Relation relation2) {
+        Relation result = null;
+        // DUM - Anything is DUM.
+        if (relation1 == RELATION_DUM) {
+            result = RELATION_DUM;
+        // DEE - DEE is DUM, otherwise it's DEE
+        } else if (relation1 == RELATION_DEE) {
+            result = relationDeeShortcuts(relation2);
+        // Anything - DUM is DUM
+        } else if (relation2 == RELATION_DUM) {
+            result = relation1;
+        // Anything - DEE is just Anything's heading
+        } else if (relation2 == RELATION_DEE) {
+            Set<Tuple> noTuples = Collections.emptySet();
+            result = relationFactory.getRelation(relation1.getSortedHeading(), noTuples);
         }
-
-        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
-        relations.add(relation1);
-        relations.add(relation2);
-
-        return relationProcessor.performJoin(relations, tupleEngine);
+        return result;
     }
 
-    private Relation isDeeOrDum(Relation relation1, Relation relation2) {
-        Relation result = null;
-        if (relation1 == RELATION_DUM) {
-            if (relation2 == RELATION_DUM || relation2 == RELATION_DEE)
-            result = RELATION_DUM;
-        } else if (relation1 == RELATION_DEE) {
-            if (relation2 == RELATION_DEE) {
-                result = RELATION_DUM;
-            } else if (relation2 == RELATION_DUM) {
-                result = RELATION_DEE;
-            }
+    private Relation relationDeeShortcuts(Relation relation2) {
+        if (relation2 == RELATION_DEE) {
+            return RELATION_DUM;
+        } else {
+            return RELATION_DEE;
         }
-        return result.mem.join.
+    }
+}

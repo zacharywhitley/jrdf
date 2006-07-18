@@ -60,13 +60,24 @@ package org.jrdf.query.relation.operation.mem.semidifference;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.SemiDifference;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+
+import java.util.Set;
+import static java.util.Collections.EMPTY_SET;
 
 /**
- * Tests the integration between semijoin and other classes.
+ * Tests the integration between semidifference and other classes.
  *
  * @author Andrew Newman
  * @version $Revision: 717 $
@@ -82,17 +93,20 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
         checkMinus(RELATION_DUM, RELATION_DEE, RELATION_DEE);
     }
 
-//    public void testRelationDEEandDumWithRelation() {
-//        Relation relation = RelationIntegrationTestUtil.createRelation(RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2));
-//        // The semijoin of R1 and DEE is R1.
-//        checkMinus(relation, relation, RelationDEE.RELATION_DEE);
-//        // The semijoin of DEE and R1 is DEE.
-//        checkMinus(RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE, relation);
-//        // The natural join of DUM and R1 is R1.
-//        checkMinus(RelationDUM.RELATION_DUM, relation, RelationDUM.RELATION_DUM);
-//        checkMinus(RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM, relation);
-//    }
-//
+    @SuppressWarnings({"unchecked"})
+    public void testRelationDEEandDumWithRelation() {
+        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
+        // The minus of R1 and DEE is R1's heading, no tuples.
+        checkMinus(createRelation(heading, EMPTY_SET), relation, RELATION_DEE);
+        // The minus of DEE and R1 is DEE.
+        checkMinus(RELATION_DEE, RELATION_DEE, relation);
+        // The minus of R1 and DUM is R1.
+        checkMinus(relation, relation, RELATION_DUM);
+        // The minus of DUM and R1 is DUM.
+        checkMinus(RELATION_DUM, RELATION_DUM, relation);
+    }
+
 //    @SuppressWarnings({ "unchecked" })
 //    public void testCartesianProductSemiJoin() {
 //        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2);
