@@ -302,6 +302,9 @@
 
     <bean id="semiDifference" class="org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl">
         <constructor-arg>
+             <ref bean="relationFactory"/>
+         </constructor-arg>
+        <constructor-arg>
              <ref bean="relationProcessor"/>
          </constructor-arg>
          <constructor-arg>
