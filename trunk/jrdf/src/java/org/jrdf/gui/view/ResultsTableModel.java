@@ -111,6 +111,7 @@ public class ResultsTableModel extends AbstractTableModel {
 
     private void setColumnValues(SortedSet<Attribute> sortedHeading, SortedSet<Tuple> sortedTuples) {
         data = new String[sortedTuples.size()][sortedHeading.size()];
+        dataIndex = 0;
         Attribute[] attributes = sortedHeading.toArray(new Attribute[]{});
         for (Tuple sortedTuple : sortedTuples) {
             AttributeValuePair[] avps = sortedTuple.getSortedAttributeValues().toArray(new AttributeValuePair[]{});
