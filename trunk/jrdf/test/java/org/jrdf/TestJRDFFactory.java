@@ -71,6 +71,8 @@ import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.relation.operation.SemiDifference;
+import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.analysis.VariableCollector;
@@ -119,12 +121,12 @@ public final class TestJRDFFactory implements JRDFFactory {
         return FACTORY.getNewRelationComparator();
     }
 
-    public org.jrdf.query.relation.operation.NadicJoin getNewNaturalJoin() {
-        return FACTORY.getNewNaturalJoin();
+    public NadicJoin getNewNaturalJoin() {
+        return (NadicJoin) FACTORY.getContext().getBean("naturalJoin");
     }
 
     public DyadicJoin getNewSemiJoin() {
-        return FACTORY.getNewSemiJoin();
+        return (DyadicJoin) FACTORY.getContext().getBean("semiJoin");
     }
 
     public SparqlConnection getNewSparqlConnection() {
@@ -177,5 +179,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public Union getNewUnion() {
         return (Union) FACTORY.getContext().getBean("union");
+    }
+
+    public SemiDifference getNewSemiDifference() {
+        return (SemiDifference) FACTORY.getContext().getBean("semiDifference");
     }
 }

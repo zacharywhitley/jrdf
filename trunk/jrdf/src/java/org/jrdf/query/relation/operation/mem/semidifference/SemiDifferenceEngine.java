@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,24 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.query.relation.operation.mem.semidifference;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.JrdfQueryExecutorFactory;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Tuple;
+
+import java.util.SortedSet;
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
- *
- * @author Andrew Newman
- * @version $Revision:$
+ * Class description goes here.
  */
-public interface JRDFFactory {
-    void refresh();
+public class SemiDifferenceEngine implements TupleEngine {
+    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
+        return relation1.getSortedHeading();
+    }
 
-    Graph getNewGraph();
-
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
-
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewSparqlConnection();
-
-    JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory();
+    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+    }
 }

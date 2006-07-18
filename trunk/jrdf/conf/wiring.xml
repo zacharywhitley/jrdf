@@ -290,4 +290,7 @@
             <ref bean="unionJoinEngine"/>
         </constructor-arg>
     </bean>
+
+    <bean id="semiDifference" class="org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImpl">
+    </bean>
 </beans>
