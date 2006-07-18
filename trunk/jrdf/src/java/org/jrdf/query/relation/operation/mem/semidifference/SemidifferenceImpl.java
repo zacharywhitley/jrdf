@@ -58,14 +58,48 @@
 
 package org.jrdf.query.relation.operation.mem.semidifference;
 
-import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.Relation;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import org.jrdf.query.relation.operation.SemiDifference;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import org.jrdf.query.relation.operation.mem.join.common.RelationProcessor;
 
-/**
- * Class description goes here.
- */
+import java.util.LinkedHashSet;
+
 public class SemiDifferenceImpl implements SemiDifference {
-    public Relation minus(Relation relation1, Relation relation2) {
-        return null;
+
+    private final TupleEngine tupleEngine;
+    private final RelationProcessor relationProcessor;
+
+    public SemiDifferenceImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
+        this.tupleEngine = tupleEngine;
+        this.relationProcessor = relationProcessor;
     }
-}
+
+    public Relation minus(Relation relation1, Relation relation2) {
+        Relation result = isDeeOrDum(relation1, relation2);
+        if (result != null) {
+            return result;
+        }
+
+        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+        relations.add(relation1);
+        relations.add(relation2);
+
+        return relationProcessor.performJoin(relations, tupleEngine);
+    }
+
+    private Relation isDeeOrDum(Relation relation1, Relation relation2) {
+        Relation result = null;
+        if (relation1 == RELATION_DUM) {
+            if (relation2 == RELATION_DUM || relation2 == RELATION_DEE)
+            result = RELATION_DUM;
+        } else if (relation1 == RELATION_DEE) {
+            if (relation2 == RELATION_DEE) {
+                result = RELATION_DUM;
+            } else if (relation2 == RELATION_DUM) {
+                result = RELATION_DEE;
+            }
+        }
+        return result.mem.join.
