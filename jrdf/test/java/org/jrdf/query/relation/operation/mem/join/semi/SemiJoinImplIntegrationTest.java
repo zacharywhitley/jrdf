@@ -59,7 +59,6 @@
 package org.jrdf.query.relation.operation.mem.join.semi;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
@@ -98,7 +97,7 @@ import java.util.Set;
  * @version $Revision: 717 $
  */
 public class SemiJoinImplIntegrationTest extends TestCase {
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final DyadicJoin JOIN = FACTORY.getNewSemiJoin();
 
     public void testTruthTableDEEandDUM() {
