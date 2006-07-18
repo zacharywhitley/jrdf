@@ -83,6 +83,5 @@ public class SemiDifferenceEngine implements TupleEngine {
 
     public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
-        System.err.println("Headings: " + headings);
     }
 }
