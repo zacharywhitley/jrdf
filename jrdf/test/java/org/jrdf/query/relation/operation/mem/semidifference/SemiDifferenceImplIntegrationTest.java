@@ -74,21 +74,21 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
     private static final SemiDifference MINUS = FACTORY.getNewSemiDifference();
 
     public void testTruthTableDEEandDUM() {
-//        checkJoin(RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM);
-//        checkJoin(RelationDEE.RELATION_DEE, RelationDUM.RELATION_DUM, RelationDEE.RELATION_DEE);
-//        checkJoin(RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE, RelationDUM.RELATION_DUM);
-//        checkJoin(RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE);
+//        checkMinus(RELATION_DUM, RELATION_DUM, RELATION_DUM);
+//        checkMinus(RELATION_DUM, RELATION_DUM, RELATION_DEE);
+//        checkMinus(RELATION_DEE, RELATION_DEE, RELATION_DUM);
+//        checkMinus(RELATION_DUM, RELATION_DEE, RELATION_DEE);
     }
 
 //    public void testRelationDEEandDumWithRelation() {
 //        Relation relation = RelationIntegrationTestUtil.createRelation(RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2));
 //        // The semijoin of R1 and DEE is R1.
-//        checkJoin(relation, relation, RelationDEE.RELATION_DEE);
+//        checkMinus(relation, relation, RelationDEE.RELATION_DEE);
 //        // The semijoin of DEE and R1 is DEE.
-//        checkJoin(RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE, relation);
+//        checkMinus(RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE, relation);
 //        // The natural join of DUM and R1 is R1.
-//        checkJoin(RelationDUM.RELATION_DUM, relation, RelationDUM.RELATION_DUM);
-//        checkJoin(RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM, relation);
+//        checkMinus(RelationDUM.RELATION_DUM, relation, RelationDUM.RELATION_DUM);
+//        checkMinus(RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM, relation);
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -96,7 +96,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2);
 //        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
+//        checkMinus(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -111,7 +111,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2);
 //        tmpTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R4);
 //        resultTuple.addAll(tmpTuple);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
+//        checkMinus(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -119,7 +119,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2);
 //        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
+//        checkMinus(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -127,7 +127,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
 //        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3, RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1);
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
+//        checkMinus(RelationIntegrationTestUtil.createRelation(resultTuple), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -140,7 +140,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        Set<Tuple> resultTuple = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3);
 //
 //        Relation relation = RelationIntegrationTestUtil.createRelation(resultTuple);
-//        checkJoin(relation, RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
+//        checkMinus(relation, RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -155,7 +155,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        resultTuple.addAll(tmpTuple);
 //
 //        Relation relation = RelationIntegrationTestUtil.createRelation(resultTuple);
-//        checkJoin(relation, RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
+//        checkMinus(relation, RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
 //    }
 //
 //    @SuppressWarnings({ "unchecked" })
@@ -163,10 +163,10 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 //        Set<Tuple> tuple1 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4);
 //        Set<Tuple> tuple2 = RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3, RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2, RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3);
 //        Set<Attribute> heading = RelationIntegrationTestUtil.createHeading(RelationIntegrationTestUtil.VAR_BAR1_SUBJECT, RelationIntegrationTestUtil.POS_FOO4_PREDICATE, RelationIntegrationTestUtil.POS_FOO3_OBJECT);
-//        checkJoin(RelationIntegrationTestUtil.createRelation(heading, Collections.EMPTY_SET), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
+//        checkMinus(RelationIntegrationTestUtil.createRelation(heading, Collections.EMPTY_SET), RelationIntegrationTestUtil.createRelation(tuple1), RelationIntegrationTestUtil.createRelation(tuple2));
 //    }
 
-    private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
+    private void checkMinus(Relation expectedResult, Relation relation1, Relation relation2) {
         Relation relation = MINUS.minus(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
