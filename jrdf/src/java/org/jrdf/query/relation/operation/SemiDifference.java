@@ -56,25 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.semidifference;
+package org.jrdf.query.relation.operation;
 
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
-
-import java.util.SortedSet;
 
 /**
- * Class description goes here.
+ * A more general form of difference - maybe replace by more basic operations
+ * (Not and Join for instance).
+ *
+ * @author Andrew Newman
+ * @version $Revision$
  */
-public class SemiDifferenceEngine implements TupleEngine {
-    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
-        return relation1.getSortedHeading();
-    }
-
-    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
-    }
+public interface SemiDifference {
+    Relation minus(Relation relation1, Relation relation2);
 }

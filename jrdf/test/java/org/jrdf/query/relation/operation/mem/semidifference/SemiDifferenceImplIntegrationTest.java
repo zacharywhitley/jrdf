@@ -73,16 +73,12 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final SemiDifference MINUS = FACTORY.getNewSemiDifference();
 
-    public void testDoNothin() {
-        assertTrue(true);
-    }
-
-//    public void testTruthTableDEEandDUM() {
+    public void testTruthTableDEEandDUM() {
 //        checkJoin(RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM);
-//        checkJoin(RelationDUM.RELATION_DUM, RelationDUM.RELATION_DUM, RelationDEE.RELATION_DEE);
-//        checkJoin(RelationDUM.RELATION_DUM, RelationDEE.RELATION_DEE, RelationDUM.RELATION_DUM);
+//        checkJoin(RelationDEE.RELATION_DEE, RelationDUM.RELATION_DUM, RelationDEE.RELATION_DEE);
+//        checkJoin(RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE, RelationDUM.RELATION_DUM);
 //        checkJoin(RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE, RelationDEE.RELATION_DEE);
-//    }
+    }
 
 //    public void testRelationDEEandDumWithRelation() {
 //        Relation relation = RelationIntegrationTestUtil.createRelation(RelationIntegrationTestUtil.createASingleTuple(RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1, RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2));

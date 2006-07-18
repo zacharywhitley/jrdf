@@ -65,7 +65,6 @@ import org.jrdf.query.relation.Tuple;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -79,6 +78,7 @@ public class ResultsTableModel extends AbstractTableModel {
     private static final long serialVersionUID = -7636712377178626351L;
     private String[] columnNames = {"Subject", "Predicate", "Object"};
     private String[][] data = {};
+    private int dataIndex;
 
     public void setResults(Relation answer) {
         updateTableData(answer);
@@ -110,28 +110,29 @@ public class ResultsTableModel extends AbstractTableModel {
     }
 
     private void setColumnValues(SortedSet<Attribute> sortedHeading, SortedSet<Tuple> sortedTuples) {
-        int i = 0;
         data = new String[sortedTuples.size()][sortedHeading.size()];
         Attribute[] attributes = sortedHeading.toArray(new Attribute[]{});
-        Iterator tupleIterator = sortedTuples.iterator();
-        while (tupleIterator.hasNext()) {
-            Tuple tuple = (Tuple) tupleIterator.next();
-            AttributeValuePair[] avps = tuple.getSortedAttributeValues().toArray(new AttributeValuePair[]{});
-            List<String> results = new ArrayList<String>();
-            int returnedValues = 0;
-            int headingIndex = 0;
-            while (returnedValues < avps.length) {
-                AttributeValuePair avp = avps[returnedValues];
-                if (avp.getAttribute().equals(attributes[headingIndex])) {
-                    results.add(avp.getValue().toString());
-                    returnedValues++;
-                } else {
-                    results.add("");
-                }
-                headingIndex++;
-            }
-            data[i++] = results.toArray(new String[]{});
+        for (Tuple sortedTuple : sortedTuples) {
+            AttributeValuePair[] avps = sortedTuple.getSortedAttributeValues().toArray(new AttributeValuePair[]{});
+            setDataWithValues(avps, attributes);
         }
+    }
+
+    private void setDataWithValues(AttributeValuePair[] avps, Attribute[] attributes) {
+        List<String> results = new ArrayList<String>();
+        int returnedValues = 0;
+        int headingIndex = 0;
+        while (returnedValues < avps.length) {
+            AttributeValuePair avp = avps[returnedValues];
+            if (avp.getAttribute().equals(attributes[headingIndex])) {
+                results.add(avp.getValue().toString());
+                returnedValues++;
+            } else {
+                results.add("");
+            }
+            headingIndex++;
+        }
+        data[dataIndex++] = results.toArray(new String[]{});
     }
 
     private void setColumnNames(SortedSet<Attribute> sortedHeading) {
