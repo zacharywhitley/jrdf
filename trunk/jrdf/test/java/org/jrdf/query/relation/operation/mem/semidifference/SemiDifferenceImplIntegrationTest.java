@@ -73,8 +73,8 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 
-import java.util.Set;
 import static java.util.Collections.EMPTY_SET;
+import java.util.Set;
 
 /**
  * Tests the integration between semidifference and other classes.
@@ -106,6 +106,16 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
         // The minus of DUM and R1 is DUM.
         checkMinus(RELATION_DUM, RELATION_DUM, relation);
     }
+
+//    public void testUnionCompatibleSameTuple() {
+//        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+//        Set<Tuple> tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R4, POS_FOO2_PREDICATE_R4, POS_FOO3_OBJECT_R4);
+//        tuple1.addAll(tmpTuple);
+//        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R4, POS_FOO2_PREDICATE_R4, POS_FOO3_OBJECT_R4);
+//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+//
+//        checkMinus(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+//    }
 
 //    @SuppressWarnings({ "unchecked" })
 //    public void testCartesianProductSemiJoin() {
