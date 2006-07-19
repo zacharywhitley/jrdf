@@ -58,14 +58,79 @@
 
 package org.jrdf.query.relation.operation.mem.semidifference;
 
-import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleComparator;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import org.jrdf.query.relation.operation.SemiDifference;
 
-/**
- * Class description goes here.
- */
+import java.util.Collections;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Iterator;
+
 public class SemiDifferenceImpl implements SemiDifference {
+
+    private final RelationFactory relationFactory;
+    private TupleComparator tupleComparator;
+
+    public SemiDifferenceImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
+        this.relationFactory = relationFactory;
+        this.tupleComparator = tupleComparator;
+    }
+
     public Relation minus(Relation relation1, Relation relation2) {
-        return null;
+        Relation result = deeOrDumOperations(relation1, relation2);
+        if (result != null) {
+            return result;
+        }
+
+        SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
+        performMinus(relation1, relation2, resultTuples);
+
+        return relationFactory.getRelation(resultTuples);
+    }
+
+    private Relation deeOrDumOperations(Relation relation1, Relation relation2) {
+        Relation result = null;
+        // DUM - Anything is DUM.
+        if (relation1 == RELATION_DUM) {
+            result = RELATION_DUM;
+            // DEE - DEE is DUM, otherwise it's DEE
+        } else if (relation1 == RELATION_DEE) {
+            result = relationDeeShortcuts(relation2);
+            // Anything - DUM is DUM
+        } else if (relation2 == RELATION_DUM) {
+            result = relation1;
+            // Anything - DEE is just Anything's heading
+        } else if (relation2 == RELATION_DEE) {
+            Set<Tuple> noTuples = Collections.emptySet();
+            result = relationFactory.getRelation(relation1.getSortedHeading(), noTuples);
+        }
+        return result;
+    }
+
+    private Relation relationDeeShortcuts(Relation relation2) {
+        if (relation2 == RELATION_DEE) {
+            return RELATION_DUM;
+        } else {
+            return RELATION_DEE;
+        }
+    }
+
+    private void performMinus(Relation relation1, Relation relation2, SortedSet<Tuple> resultTuples) {
+        for (Tuple tuple1 : relation1.getSortedTuples()) {
+            boolean found = false;
+            Iterator<Tuple> it = relation2.getSortedTuples().iterator();
+            while (it.hasNext() && !found) {
+                found = tuple1.equals(it.next());
+            }
+            if (!found) {
+                resultTuples.add(tuple1);
+            }
+        }
     }
 }
