@@ -299,4 +299,25 @@
              <ref bean="tupleComparator"/>
          </constructor-arg>
      </bean>
+
+    <bean id="antiJoin" class="org.jrdf.query.relation.operation.mem.antijoin.AntiJoinImpl">
+        <constructor-arg>
+            <ref bean="semiJoin"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="semiDifference"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="optional" class="org.jrdf.query.relation.operation.mem.optional.OptionalImpl">
+        <constructor-arg>
+            <ref bean="antiJoin"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="naturalJoin"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="union"/>
+        </constructor-arg>
+    </bean>
 </beans>

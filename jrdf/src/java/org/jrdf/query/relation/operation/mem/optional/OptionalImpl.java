@@ -56,32 +56,34 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.semidifference;
+package org.jrdf.query.relation.operation.mem.optional;
 
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.operation.Optional;
+import org.jrdf.query.relation.operation.AntiJoin;
+import org.jrdf.query.relation.operation.NadicJoin;
+import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 
-import java.util.SortedSet;
+import java.util.Set;
+import java.util.HashSet;
 
-public class SemiDifferenceEngine implements TupleEngine {
-    private final TupleFactory tupleFactory;
-    private final AttributeValuePairComparator avpComparator;
+public class OptionalImpl implements Optional {
+    private final AntiJoin antiJoin;
+    private final NadicJoin naturalJoin;
+    private final Union union;
 
-    public SemiDifferenceEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator) {
-        this.tupleFactory = tupleFactory;
-        this.avpComparator = avpComparator;
+    public OptionalImpl(AntiJoin antiJoin, NadicJoin naturalJoin, Union union) {
+        this.antiJoin = antiJoin;
+        this.naturalJoin = naturalJoin;
+        this.union = union;
     }
 
-    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
-        return relation1.getSortedHeading();
-    }
-
-    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+    public Relation optional(Relation relation1, Relation relation2) {
+        Relation antiJoinResult = antiJoin.antiJoin(relation1, relation2);
+        Set<Relation> relations = new HashSet<Relation>();
+        relations.add(relation1);
+        relations.add(relation2);
+        Relation joinResult = naturalJoin.join(relations);
+        return union.union(joinResult, antiJoinResult);
     }
 }

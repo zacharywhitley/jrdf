@@ -121,6 +121,7 @@ public class SemiDifferenceImpl implements SemiDifference {
         }
     }
 
+    // TODO (AN) Instead of getting a new iterator - using the ordering to only scan through the second relation once.
     private void performMinus(Relation relation1, Relation relation2, SortedSet<Tuple> resultTuples) {
         for (Tuple tuple1 : relation1.getSortedTuples()) {
             boolean found = false;

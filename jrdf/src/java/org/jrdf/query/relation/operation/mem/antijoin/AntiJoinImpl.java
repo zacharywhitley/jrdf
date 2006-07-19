@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,17 +56,24 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation;
+package org.jrdf.query.relation.operation.mem.antijoin;
 
+import org.jrdf.query.relation.operation.AntiJoin;
+import org.jrdf.query.relation.operation.SemiDifference;
+import org.jrdf.query.relation.operation.mem.join.DyadicJoinImpl;
 import org.jrdf.query.relation.Relation;
 
+public class AntiJoinImpl implements AntiJoin {
+    private final DyadicJoinImpl semiJoin;
+    private final SemiDifference semiDifference;
 
-/**
- * The same as SPARQL's optional.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public interface Optional extends Operation {
-    Relation optional(Relation relation1, Relation relation2);
+    public AntiJoinImpl(DyadicJoinImpl semiJoin, SemiDifference semiDifference) {
+        this.semiJoin = semiJoin;
+        this.semiDifference = semiDifference;
+    }
+
+    public Relation antiJoin(Relation relation1, Relation relation2) {
+        Relation semiJoinResult = semiJoin.join(relation1, relation2);
+        return semiDifference.minus(relation1, semiJoinResult);
+    }
 }
