@@ -71,6 +71,6 @@ import java.util.SortedSet;
 public interface TupleEngine {
     SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
 
-    void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2,
-            SortedSet<Tuple> result);
+    void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result);
 }

@@ -78,7 +78,7 @@ public interface NodeType extends Serializable {
     boolean isAssignableFrom(NodeType type);
 
     /**
-     * Returns true if this NodeType is join compatible with the given type.  NadicJoinImpl compatible means that the
+     * Returns true if this NodeType is process compatible with the given type.  NadicJoinImpl compatible means that the
      * given type can be joined and considered to be this type i.e. blank nodes and uri references to subject nodes,
      * uri references to any positional node type, predicate nodes to uri references, etc.
      */

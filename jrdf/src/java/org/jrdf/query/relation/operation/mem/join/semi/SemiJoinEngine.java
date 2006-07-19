@@ -86,7 +86,7 @@ public class SemiJoinEngine implements TupleEngine {
         return relation1.getSortedHeading();
     }
 
-    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         SortedSet<AttributeValuePair> allAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
         SortedSet<AttributeValuePair> lhsAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);

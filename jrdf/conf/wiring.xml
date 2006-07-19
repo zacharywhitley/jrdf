@@ -204,7 +204,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="relationProcessor" class="org.jrdf.query.relation.operation.mem.join.common.RelationProcessorImpl">
+    <bean id="relationProcessor" class="org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl">
         <constructor-arg>
             <ref bean="relationFactory"/>
         </constructor-arg>
@@ -243,15 +243,6 @@
         </constructor-arg>
         <constructor-arg>
             <ref bean="relationHelper"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="semiDifferenceEngine" class="org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceEngine">
-        <constructor-arg>
-            <ref bean="tupleFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="avpComparator"/>
         </constructor-arg>
     </bean>
 
@@ -305,10 +296,7 @@
              <ref bean="relationFactory"/>
          </constructor-arg>
         <constructor-arg>
-             <ref bean="relationProcessor"/>
-         </constructor-arg>
-         <constructor-arg>
-             <ref bean="semiDifferenceEngine"/>
+             <ref bean="tupleComparator"/>
          </constructor-arg>
      </bean>
 </beans>

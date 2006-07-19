@@ -85,7 +85,7 @@ public class UnionEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         Tuple tuple1 = tupleFactory.getTuple(avps1);
         Tuple tuple2 = tupleFactory.getTuple(avps2);

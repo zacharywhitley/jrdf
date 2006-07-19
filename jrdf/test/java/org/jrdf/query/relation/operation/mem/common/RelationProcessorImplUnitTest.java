@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.join.common;
+package org.jrdf.query.relation.operation.mem.common;
 
 import junit.framework.TestCase;
 import org.jrdf.query.relation.RelationFactory;

@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.join.common;
+package org.jrdf.query.relation.operation.mem.common;
 
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
@@ -64,8 +64,8 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import java.util.Set;
 
 /**
- * Common join engine - basically gets headings and then calls join on the join engine.
+ * Common process engine - basically gets headings and then calls process on the process engine.
  */
 public interface RelationProcessor {
-    Relation performJoin(Set<Relation> relations, TupleEngine tupleEngine);
+    Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine);
 }
