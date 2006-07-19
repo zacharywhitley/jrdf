@@ -86,7 +86,7 @@ import java.util.TreeSet;
  * Relation 2 has the following statements: <2, b, foo>, <2, c, bar>,
  * <2, f, bar>, <2, g, bar>, <2, c, baz>, <2, f, baz>
  * <p/>
- * After join:
+ * After process:
  * <2, b, bar>, <2, c, bar>, <1, c, bar>, <1, f, bar>, <1, f, bar>, <2, c, baz>,
  * <1, c, baz>, <1, f, baz>
  * Removed:
@@ -109,7 +109,7 @@ public class NaturalJoinEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
-    public void join(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         SortedSet<AttributeValuePair> resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
         for (Attribute attribute : headings) {

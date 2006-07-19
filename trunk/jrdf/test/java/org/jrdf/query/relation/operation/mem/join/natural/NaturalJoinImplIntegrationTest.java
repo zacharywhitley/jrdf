@@ -96,7 +96,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Tests the integration between join and other classes such as RelationDEE, RelationDUM and other relations.
+ * Tests the integration between process and other classes such as RelationDEE, RelationDUM and other relations.
  *
  * @author Andrew Newman
  * @version $Revision$
@@ -107,11 +107,11 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     private static final Set<Relation> EMPTY = emptySet();
 
     public void testRelationDEEandDUM() {
-        // The natural join of empty is DEE.
+        // The natural process of empty is DEE.
         checkRelation(RELATION_DEE, EMPTY);
-        // The natural join of DEE is DEE.
+        // The natural process of DEE is DEE.
         checkRelation(RELATION_DEE, singleton(RELATION_DEE));
-        // The natural join of DUM is DUM.
+        // The natural process of DUM is DUM.
         checkRelation(RELATION_DUM, singleton(RELATION_DUM));
     }
 
@@ -125,10 +125,10 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
 
     public void testRelationDEEandDumWithRelation() {
         Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
-        // The natural join of DEE and R1 is R1.
+        // The natural process of DEE and R1 is R1.
         checkRelation(relation, createRelations(relation, RELATION_DEE));
         checkRelation(relation, createRelations(RELATION_DEE, relation));
-        // The natural join of DUM and R1 is DUM.
+        // The natural process of DUM and R1 is DUM.
         checkRelation(RELATION_DUM, createRelations(relation, RELATION_DUM));
         checkRelation(RELATION_DUM, createRelations(RELATION_DUM, relation));
     }

@@ -78,7 +78,7 @@ import java.util.SortedSet;
 
 /**
  * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
- * query tree by performing restrinctions, other operations (natural join, etc) and then project.
+ * query tree by performing restrinctions, other operations (natural process, etc) and then project.
  *
  * @author Andrew Newman
  * @version $Revision:$

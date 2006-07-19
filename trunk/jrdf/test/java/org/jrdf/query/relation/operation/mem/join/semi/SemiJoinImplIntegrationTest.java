@@ -113,7 +113,7 @@ public class SemiJoinImplIntegrationTest extends TestCase {
         checkJoin(relation, relation, RELATION_DEE);
         // The semijoin of DEE and R1 is DEE.
         checkJoin(RELATION_DEE, RELATION_DEE, relation);
-        // The natural join of DUM and R1 is R1.
+        // The natural process of DUM and R1 is R1.
         checkJoin(RELATION_DUM, relation, RELATION_DUM);
         checkJoin(RELATION_DUM, RELATION_DUM, relation);
     }

@@ -62,7 +62,7 @@ import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.NadicJoin;
-import org.jrdf.query.relation.operation.mem.join.common.RelationProcessor;
+import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 
 import java.util.Collections;
 import java.util.Set;
@@ -78,7 +78,7 @@ public final class NadicJoinImpl implements NadicJoin {
     private final RelationProcessor relationProcessor;
 
     /**
-     * Cannot create join.
+     * Cannot create process.
      */
     public NadicJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
         this.tupleEngine = tupleEngine;
@@ -101,6 +101,6 @@ public final class NadicJoinImpl implements NadicJoin {
             return RELATION_DUM;
         }
 
-        return relationProcessor.performJoin(relations, tupleEngine);
+        return relationProcessor.processRelations(relations, tupleEngine);
     }
 }
