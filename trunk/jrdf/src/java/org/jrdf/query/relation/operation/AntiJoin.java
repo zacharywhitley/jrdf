@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -60,13 +60,9 @@ package org.jrdf.query.relation.operation;
 
 import org.jrdf.query.relation.Relation;
 
-
 /**
- * The same as SPARQL's optional.
- *
- * @author Andrew Newman
- * @version $Revision$
+ * The complement of semijoin.  The result of semijoin between R1 and R2, R3.  Then R1 minus R3.
  */
-public interface Optional extends Operation {
-    Relation optional(Relation relation1, Relation relation2);
+public interface AntiJoin {
+    Relation antiJoin(Relation relation1, Relation relation2);
 }
