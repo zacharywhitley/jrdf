@@ -157,7 +157,9 @@ public class RelationIntegrationTestUtil {
     public static final AttributeValuePair POS_FOO3_OBJECT_R4 =
             new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
     public static final AttributeValuePair POS_FOO3_OBJECT_R5 =
-            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
+            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_5);
+    public static final AttributeValuePair POS_FOO3_OBJECT_R6 =
+            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_6);
     public static final AttributeValuePair POS_FOO5_OBJECT_R4 =
             new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
 
@@ -165,6 +167,10 @@ public class RelationIntegrationTestUtil {
             new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R4 =
             new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
+    public static final AttributeValuePair VAR_BAR1_PREDICATE_R1 =
+            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_1);
+    public static final AttributeValuePair VAR_BAR1_PREDICATE_R2 =
+            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_2);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R3 =
             new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R4 =
