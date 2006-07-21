@@ -7,13 +7,19 @@ o Make GraphImpl IoCed.
 o Once indices are refactored do indexed Graph operations.
 o Implement SPARQL parser.
   o Finish Relational operators.
-    o Currently implemented: Projet, Join, Restrict, Semi-join (join and project) and Union.
-    o Implement the rest as follows:
-      o Difference,
-      o Anti-join (difference and semi-join),
-      o Left, Right, and Full Outerjoin  (join, union and antijoin).
+    o Currently implemented: Projet, Join, Restrict, Semi-join (join and project), Union, Difference,
+      Anti-join (difference and semi-join) and Optional (Left Outerjoin).
+    o Implement the rest:
+      o Full Outerjoin and Right Outerjoin.
       o Intersection (maybe - special case of join),
   o Finish SPARQL Grammar.
     o Currently implements CONJUNCTION (.) and UNION, SELECT (* and Variables).
-    o Put in SPARQL Optional.
+      o Put in SPARQL:
+        o Optional.
+        o Filter?
+      o Other extensions:
+        o Difference (-),
+        o AsGraph,
+        o Aggregates (Summarize),
+        o ???
 o Write a pull based RDF/XML parser.
