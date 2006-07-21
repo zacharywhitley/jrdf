@@ -75,6 +75,9 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R6;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
@@ -144,6 +147,30 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
         tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO2_PREDICATE_R6, POS_FOO3_OBJECT_R4));
 
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+
+        checkMinus(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+    }
+
+    public void testSemiDifference4() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4);
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R4, POS_FOO3_OBJECT_R4));
+
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R4, POS_FOO3_OBJECT_R3);
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R4, POS_FOO3_OBJECT_R4));
+
+        checkMinus(RELATION_DUM, createRelation(tuple1), createRelation(tuple2));
+    }
+
+    public void testSemiDifference5() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R4, POS_FOO3_OBJECT_R3);
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R4, POS_FOO3_OBJECT_R4));
+
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4);
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R4, POS_FOO3_OBJECT_R4));
+
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R4, POS_FOO3_OBJECT_R3);
 
         checkMinus(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }

@@ -73,6 +73,7 @@ import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.NadicJoin;
+import org.jrdf.query.relation.operation.Optional;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.analysis.VariableCollector;
@@ -183,5 +184,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public SemiDifference getNewSemiDifference() {
         return (SemiDifference) FACTORY.getContext().getBean("semiDifference");
+    }
+
+    public Optional getNewOptional() {
+        return (Optional) FACTORY.getContext().getBean("optional");
     }
 }

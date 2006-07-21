@@ -90,8 +90,8 @@ public class SemiDifferenceImpl implements SemiDifference {
 
         SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
         performMinus(relation1, relation2, resultTuples);
-
-        return relationFactory.getRelation(resultTuples);
+        result = relationFactory.getRelation(resultTuples);
+        return convertToConstants(result);
     }
 
     private Relation deeOrDumOperations(Relation relation1, Relation relation2) {
@@ -133,5 +133,17 @@ public class SemiDifferenceImpl implements SemiDifference {
                 resultTuples.add(tuple1);
             }
         }
+    }
+
+    // TODO (AN) Duplicate of RelationProcessorImpl
+    private Relation convertToConstants(Relation resultRelation) {
+        if (resultRelation.getHeading().size() == 0) {
+            if (resultRelation.getTuples().size() == 0) {
+                return RELATION_DUM;
+            } else {
+                return RELATION_DEE;
+            }
+        }
+        return resultRelation;
     }
 }
