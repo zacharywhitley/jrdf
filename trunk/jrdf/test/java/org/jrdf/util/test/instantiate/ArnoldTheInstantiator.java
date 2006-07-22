@@ -72,7 +72,7 @@ import org.jrdf.query.DefaultVariable;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.parser.ntriples.node.ATriple;
+import org.jrdf.sparql.parser.node.ATriple;
 
 import java.net.MalformedURLException;
 import java.net.URL;
