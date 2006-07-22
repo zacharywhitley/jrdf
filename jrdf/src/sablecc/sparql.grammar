@@ -68,13 +68,10 @@ Productions
     {wildcard} select asterisk ;
 
   where_clause =
-    where? group_graph_pattern;
-
-  group_graph_pattern =
-    lpar { graph_pattern } ;
+    where? graph_pattern;
 
   graph_pattern =
-    {a_graph_pattern} basic_graph_pattern |
+    {a_basic_graph_pattern} basic_graph_pattern |
     {a_union_graph_pattern} union_graph_pattern |
     {a_optional_graph_pattern} optional_graph_pattern ;
 
