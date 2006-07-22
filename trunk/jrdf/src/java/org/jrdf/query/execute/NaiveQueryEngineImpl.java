@@ -65,12 +65,14 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.Optional;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.operation.NadicJoin;
+import org.jrdf.query.relation.operation.DyadicJoin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -89,13 +91,15 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private Restrict restrict;
     private NadicJoin naturalJoin;
     private org.jrdf.query.relation.operation.Union union;
+    private DyadicJoin fullOuterJoin;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-            org.jrdf.query.relation.operation.Union union) {
+            org.jrdf.query.relation.operation.Union union, DyadicJoin fullOuterJoin) {
         this.project = project;
         this.naturalJoin = naturalJoin;
         this.restrict = restrict;
         this.union = union;
+        this.fullOuterJoin = fullOuterJoin;
     }
 
     public Relation getResult() {
@@ -136,9 +140,16 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = union.union(lhs, rhs);
     }
 
+    @Override
+    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
+        Relation lhs = getExpression(optional.getLhs());
+        Relation rhs = getExpression(optional.getRhs());
+        result = fullOuterJoin.join(lhs, rhs);
+    }
+
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor>Relation getExpression(Expression<V> expression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, fullOuterJoin);
         queryEngine.setResult(result);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();
