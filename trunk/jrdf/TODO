@@ -8,10 +8,10 @@ o Once indices are refactored do indexed Graph operations.
 o Implement SPARQL parser.
   o Finish Relational operators.
     o Currently implemented: Projet, Join, Restrict, Semi-join (join and project), Union, Difference,
-      Anti-join (difference and semi-join) and Optional (Left Outerjoin).
-    o Implement the rest:
-      o Full Outerjoin and Right Outerjoin.
-      o Intersection (maybe - special case of join),
+      Anti-join (difference and semi-join) and Left and Full Outerjoin.
+    o Possibly implement:
+      o Right Outerjoin?
+      o Intersection (maybe - special case of join)?
   o Finish SPARQL Grammar.
     o Currently implements CONJUNCTION (.) and UNION, SELECT (* and Variables).
       o Put in SPARQL:
