@@ -320,4 +320,16 @@
             <ref bean="union"/>
         </constructor-arg>
     </bean>
+
+    <bean id="fullOuterJoin" class="org.jrdf.query.relation.operation.mem.join.outer.FullOuterJoinImpl">
+        <constructor-arg>
+            <ref bean="leftOuterJoin"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="union"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="antiJoin"/>
+        </constructor-arg>
+    </bean>
 </beans>

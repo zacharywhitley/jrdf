@@ -188,4 +188,8 @@ public final class TestJRDFFactory implements JRDFFactory {
     public DyadicJoin getNewLeftOuterJoin() {
         return (DyadicJoin) FACTORY.getContext().getBean("leftOuterJoin");
     }
+
+    public DyadicJoin getNewFullOuterJoin() {
+        return (DyadicJoin) FACTORY.getContext().getBean("fullOuterJoin");
+    }
 }
