@@ -135,10 +135,28 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SemiDifferenceImpl.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/semidifference/SemiDifferenceImpl.java">
+      <file leaf-file-name="DyadicJoin.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/DyadicJoin.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="30" selection-start="4347" selection-end="4347" vertical-scroll-proportion="0.6051402">
+            <state line="68" column="17" selection-start="2846" selection-end="2846" vertical-scroll-proportion="0.2753346">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LeftOuterJoinImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/join/outer/LeftOuterJoinImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="69" column="13" selection-start="3018" selection-end="3018" vertical-scroll-proportion="0.1376673">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LeftOuterJoinImplIntegrationTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/join/outer/LeftOuterJoinImplIntegrationTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="81" column="0" selection-start="4348" selection-end="4348" vertical-scroll-proportion="0.5905512">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -146,13 +164,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SemiDifferenceImplIntegrationTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/semidifference/SemiDifferenceImplIntegrationTest.java">
+      <file leaf-file-name="wiring.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/conf/wiring.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="90" column="13" selection-start="4522" selection-end="4522" vertical-scroll-proportion="-0.27118644">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state line="275" column="26" selection-start="9484" selection-end="9484" vertical-scroll-proportion="0.46080306">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestJRDFFactory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/TestJRDFFactory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="187" column="27" selection-start="7160" selection-end="7160" vertical-scroll-proportion="1.4474187">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -343,175 +368,7 @@
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
       <PATH_ELEMENT>
-        <option name="myItemId" value="union" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="query" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="relation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="operation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="mem" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="semidifference" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="query" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="relation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="operation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="mem" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
         <option name="myItemId" value="join" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="query" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="relation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="operation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="mem" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="common" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="query" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="relation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="mem" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="gui" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="gui" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="view" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
     </PATH>
@@ -872,32 +729,32 @@
       <recent name="org.jrdf.query.relation.operation.mem.RelationIntegrationTestHelper" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="org.jrdf.query.relation.operation.mem.optional" />
       <recent name="org.jrdf.query.relation.operation.mem.semidifference" />
       <recent name="org.jrdf.gui.command" />
       <recent name="org.jrdf.query.expression" />
       <recent name="org.jrdf.query.relation.operation.mem.union" />
-      <recent name="org.jrdf.query.relation.operation.mem" />
     </key>
     <key name="IntroduceConstantDialog.RECENTS_KEY">
       <recent name="" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="org.jrdf.query.relation.operation.mem.join.outer" />
+      <recent name="org.jrdf.query.relation.operation.mem.optional" />
       <recent name="org.jrdf.query.relation.operation.mem" />
       <recent name="org.jrdf.query.relation.operation.mem.join.semi" />
       <recent name="org.jrdf.query.relation.operation.mem.semidifference" />
-      <recent name="org.jrdf.query.relation.operation.mem.union" />
-      <recent name="org.jrdf.query.relation.operation.mem.join.common" />
     </key>
   </component>
   <component name="RestoreUpdateTree" />
   <component name="RunManager">
     <activeType name="JUnit" />
-    <tempConfiguration selected="true" default="false" name="SemiDifferenceImplIntegrationTest" type="JUnit" factoryName="JUnit">
+    <tempConfiguration selected="true" default="false" name="LeftOuterJoinImplIntegrationTest" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="org.jrdf.query.relation.operation.mem.semidifference" />
-      <option name="MAIN_CLASS_NAME" value="org.jrdf.query.relation.operation.mem.semidifference.SemiDifferenceImplIntegrationTest" />
+      <option name="PACKAGE_NAME" value="org.jrdf.query.relation.operation.mem.join.outer" />
+      <option name="MAIN_CLASS_NAME" value="org.jrdf.query.relation.operation.mem.join.outer.LeftOuterJoinImplIntegrationTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -916,6 +773,18 @@
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
+    </configuration>
+    <configuration selected="false" default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$PROJECT_DIR$/../../../Desktop/IntelliJ IDEA.app/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration selected="false" default="true" type="JUnit" factoryName="JUnit">
       <module name="" />
@@ -941,40 +810,6 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <module name="" />
-    </configuration>
-    <configuration selected="false" default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$PROJECT_DIR$/../../../Desktop/IntelliJ IDEA.app/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-    </configuration>
-    <configuration selected="true" default="false" name="SparqlGui" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="org.jrdf.gui.SparqlGui" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <module name="jrdf" />
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Run" />
-    </configuration>
-    <configuration selected="false" default="false" name="RdfXmlParserExample" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="org.jrdf.example.RdfXmlParserExample" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="file:$PROJECT_DIR$/../../../jrdf-tmp/jrdf0-3-4-2/jrdf/test.xml " />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" value="" />
-      <module name="jrdf" />
-      <RunnerSettings RunnerId="Run" />
-      <ConfigurationWrapper RunnerId="Run" />
     </configuration>
     <configuration selected="false" default="false" name="All Tests" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
@@ -1033,14 +868,14 @@
     <configuration selected="false" default="false" name="ProjectionUnitTest" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="PACKAGE_NAME" value="org.jrdf.query.expression" />
       <option name="MAIN_CLASS_NAME" value="org.jrdf.query.expression.ProjectionUnitTest" />
-      <option name="METHOD_NAME" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ADDITIONAL_CLASS_PATH" />
       <option name="TEST_SEARCH_SCOPE">
         <value defaultName="wholeProject" />
@@ -1051,18 +886,40 @@
     <configuration selected="false" default="false" name="NaturalJoinImplIntegrationTest.testNaturalJoin5" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
       <option name="PACKAGE_NAME" value="org.jrdf.query.relation.operation.mem.join.natural" />
       <option name="MAIN_CLASS_NAME" value="org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinImplIntegrationTest" />
       <option name="METHOD_NAME" value="testNaturalJoin5" />
       <option name="TEST_OBJECT" value="method" />
-      <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ADDITIONAL_CLASS_PATH" />
       <option name="TEST_SEARCH_SCOPE">
         <value defaultName="wholeProject" />
       </option>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+    </configuration>
+    <configuration selected="false" default="false" name="SparqlGui" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="org.jrdf.gui.SparqlGui" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <module name="jrdf" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+    </configuration>
+    <configuration selected="true" default="false" name="RdfXmlParserExample" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="org.jrdf.example.RdfXmlParserExample" />
+      <option name="VM_PARAMETERS" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <module name="jrdf" />
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
     </configuration>
@@ -1111,21 +968,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1440" height="874" extended-state="6" />
+    <frame x="0" y="22" width="1680" height="1024" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="8" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32818532" order="7" x="355" y="118" width="922" height="618" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.29310346" order="0" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3217503" order="1" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.21691176" order="0" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3214671" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="1" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.37580436" order="11" x="-43" y="425" width="1278" height="404" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.37432578" order="11" x="-43" y="425" width="1278" height="404" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="6" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="3" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="9" />
       <window_info id="Favorites" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3297414" order="5" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.12715517" order="1" x="321" y="22" width="356" height="617" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.45688546" order="2" x="45" y="371" width="1279" height="404" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.107230395" order="1" x="321" y="22" width="356" height="617" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.38187703" order="2" x="45" y="371" width="1279" height="404" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
       <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="4" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3989704" order="4" />
@@ -1148,7 +1005,7 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="PUT_FOCUS_INTO_COMMENT" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Began semidifference." />
+    <option name="LAST_COMMIT_MESSAGE" value="Optional finished." />
     <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
     <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -1162,7 +1019,6 @@
     <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="Made sure always dealing with sortedset." />
     <MESSAGE value="Added union tests -started renaming integration tests." />
     <MESSAGE value="Renamed common processing code." />
     <MESSAGE value="First attempt at adding union to the grammar." />
@@ -1172,6 +1028,7 @@
     <MESSAGE value="Finished displaying results of union." />
     <MESSAGE value="Added check for failure to load new triples." />
     <MESSAGE value="Began semidifference." />
+    <MESSAGE value="Optional finished." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1241,105 +1098,110 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/mem/RelationHelperImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/graph/AbstractURIReference.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="19" selection-start="2990" selection-end="2990" vertical-scroll-proportion="0.1409002">
+        <state line="110" column="0" selection-start="4080" selection-end="4080" vertical-scroll-proportion="0.12403101">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/TupleFactory.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/parser/ConfigurableParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="17" selection-start="2953" selection-end="2953" vertical-scroll-proportion="0.30528376">
+        <state line="66" column="17" selection-start="2823" selection-end="2823" vertical-scroll-proportion="0.23255815">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/mem/RelationFactoryImpl.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/parser/ParserConfiguration.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="19" selection-start="3043" selection-end="3043" vertical-scroll-proportion="0.1409002">
+        <state line="66" column="17" selection-start="2803" selection-end="2803" vertical-scroll-proportion="0.23255815">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/join/natural/NaturalJoinEngine.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/parser/Parser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="0" selection-start="4325" selection-end="4367" vertical-scroll-proportion="0.023483366">
+        <state line="31" column="17" selection-start="1149" selection-end="1149" vertical-scroll-proportion="0.11627907">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/UnionEngineIntegrationTest.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/parser/rdfxml/GraphRdfXmlParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="126" column="0" selection-start="6374" selection-end="6868" vertical-scroll-proportion="0.4755245">
+        <state line="86" column="25" selection-start="3578" selection-end="3578" vertical-scroll-proportion="0.2599772">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/join/TupleEngine.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/parser/rdfxml/RdfXmlParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="48" selection-start="3214" selection-end="3214" vertical-scroll-proportion="0.17869416">
+        <state line="332" column="11" selection-start="11325" selection-end="11329" vertical-scroll-proportion="0.19612315">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/mem/SortedAttributeValuePairHelper.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/example/RdfXmlParserExample.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="17" selection-start="2974" selection-end="2974" vertical-scroll-proportion="0.16494845">
+        <state line="29" column="38" selection-start="981" selection-end="981" vertical-scroll-proportion="0.24629419">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/mem/SortedAttributeValuePairHelperImpl.java">
+    <entry file="file://$PROJECT_DIR$/TODO">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="82" column="13" selection-start="3301" selection-end="3301" vertical-scroll-proportion="0.16494845">
+        <state line="15" column="16" selection-start="668" selection-end="668" vertical-scroll-proportion="0.20524515">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/RelationIntegrationTestUtil.java">
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/graph/mem/GraphElementFactoryImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="137" column="67" selection-start="7453" selection-end="7453" vertical-scroll-proportion="0.33870968">
+        <state line="137" column="0" selection-start="5147" selection-end="5147" vertical-scroll-proportion="0.37400228">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/graph/mem/URIReferenceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="102" column="20" selection-start="4003" selection-end="4003" vertical-scroll-proportion="0.5621437">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/DyadicJoin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="17" selection-start="2846" selection-end="2846" vertical-scroll-proportion="0.2753346">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/TestJRDFFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="187" column="27" selection-start="7160" selection-end="7160" vertical-scroll-proportion="1.4474187">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/join/outer/LeftOuterJoinImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="69" column="13" selection-start="3018" selection-end="3018" vertical-scroll-proportion="0.1376673">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/join/outer/LeftOuterJoinImplIntegrationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="81" column="0" selection-start="4348" selection-end="4348" vertical-scroll-proportion="0.5905512">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/conf/wiring.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="300" column="12" selection-start="10305" selection-end="10305" vertical-scroll-proportion="0.8844567">
+        <state line="275" column="26" selection-start="9484" selection-end="9484" vertical-scroll-proportion="0.46080306">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/prod-classes/wiring.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="248" column="0" selection-start="8520" selection-end="8520" vertical-scroll-proportion="0.21458046">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/common/RelationProcessorImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="0" selection-start="5166" selection-end="5237" vertical-scroll-proportion="0.9589041">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/semidifference/SemiDifferenceImplIntegrationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="13" selection-start="4522" selection-end="4522" vertical-scroll-proportion="-0.27118644">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/semidifference/SemiDifferenceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="30" selection-start="4347" selection-end="4347" vertical-scroll-proportion="0.6051402">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>

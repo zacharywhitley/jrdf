@@ -56,13 +56,13 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.optional;
+package org.jrdf.query.relation.operation.mem.join.outer;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.operation.Optional;
+import org.jrdf.query.relation.operation.DyadicJoin;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
@@ -86,9 +86,9 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 717 $
  */
-public class OptionalImplIntegrationTest extends TestCase {
+public class LeftOuterJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Optional OPTIONAL = FACTORY.getNewOptional();
+    private static final DyadicJoin LEFT_OUTER_JOIN = FACTORY.getNewLeftOuterJoin();
 
     public void testSemiDifference1() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
@@ -106,7 +106,7 @@ public class OptionalImplIntegrationTest extends TestCase {
     }
 
     private void checkMinus(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = OPTIONAL.optional(relation1, relation2);
+        Relation relation = LEFT_OUTER_JOIN.join(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

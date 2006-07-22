@@ -56,29 +56,29 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.optional;
+package org.jrdf.query.relation.operation.mem.join.outer;
 
-import org.jrdf.query.relation.operation.Optional;
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.AntiJoin;
+import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.Relation;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
-public class OptionalImpl implements Optional {
+public class LeftOuterJoinImpl implements DyadicJoin {
     private final AntiJoin antiJoin;
     private final NadicJoin naturalJoin;
     private final Union union;
 
-    public OptionalImpl(AntiJoin antiJoin, NadicJoin naturalJoin, Union union) {
+    public LeftOuterJoinImpl(AntiJoin antiJoin, NadicJoin naturalJoin, Union union) {
         this.antiJoin = antiJoin;
         this.naturalJoin = naturalJoin;
         this.union = union;
     }
 
-    public Relation optional(Relation relation1, Relation relation2) {
+    public Relation join(Relation relation1, Relation relation2) {
         Relation antiJoinResult = antiJoin.antiJoin(relation1, relation2);
         Set<Relation> relations = new HashSet<Relation>();
         relations.add(relation1);
