@@ -58,26 +58,18 @@
 
 package org.jrdf.query.expression;
 
-/**
- * An adapter for ExpressionVisitor - allows an implementation to avoid having to implement all the methods.
- * Currently, these methods do nothing.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public class ExpressionVisitorAdapter implements ExpressionVisitor {
-    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+
+public class OptionalUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Expression.class, Optional.class);
+        ClassPropertiesTestUtil.checkInstanceImplementsInterface(Serializable.class, Optional.class);
+        ClassPropertiesTestUtil.checkConstructor(Optional.class, Modifier.PUBLIC, Expression.class, Expression.class);
     }
 
-    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
-    }
-
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
-    }
-
-    public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
-    }
-
-    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
-    }
+    // TODO (AN) Use Gsbase EqualsTester to test drive equality and hashcode.
 }

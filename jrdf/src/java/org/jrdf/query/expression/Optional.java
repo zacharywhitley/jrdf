@@ -58,26 +58,68 @@
 
 package org.jrdf.query.expression;
 
-/**
- * An adapter for ExpressionVisitor - allows an implementation to avoid having to implement all the methods.
- * Currently, these methods do nothing.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public class ExpressionVisitorAdapter implements ExpressionVisitor {
-    public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
+import org.jrdf.util.EqualsUtil;
+
+import java.io.Serializable;
+
+public final class Optional<V extends ExpressionVisitor> implements Expression<V>, Serializable {
+    private static final long serialVersionUID = 2784920251078701049L;
+    private static final int DUMMY_HASHCODE = 47;
+    private Expression<V> lhs;
+    private Expression<V> rhs;
+
+    private Optional() {
     }
 
-    public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
+    public Optional(Expression<V> lhs, Expression<V> rhs) {
+        this.lhs = lhs;
+        this.rhs = rhs;
     }
 
-    public <V extends ExpressionVisitor> void visitConjunction(Conjunction<V> conjunction) {
+    public Expression<V> getLhs() {
+        return lhs;
     }
 
-    public <V extends ExpressionVisitor> void visitUnion(Union<V> conjunction) {
+    public Expression<V> getRhs() {
+        return rhs;
     }
 
-    public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
+
+    public void accept(V v) {
+        v.visitOptional(this);
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (EqualsUtil.differentClasses(this, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields(this, (Optional) obj);
+    }
+
+    public int hashCode() {
+        // FIXME TJA: Test drive out values of triple.hashCode()
+        return DUMMY_HASHCODE;
+    }
+
+    public String toString() {
+        return lhs.toString() + " OPTIONAL " + rhs.toString();
+    }
+
+    private boolean determineEqualityFromFields(Optional o1, Optional o2) {
+        return lhsEqual(o1, o2) && rhsEqual(o1, o2);
+    }
+
+    private boolean rhsEqual(Optional o1, Optional o2) {
+        return o1.getRhs().equals(o2.getRhs());
+    }
+
+    private boolean lhsEqual(Optional o1, Optional o2) {
+        return o1.getLhs().equals(o2.getLhs());
     }
 }
