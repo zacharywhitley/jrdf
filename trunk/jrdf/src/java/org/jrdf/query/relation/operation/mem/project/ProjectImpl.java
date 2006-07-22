@@ -93,8 +93,10 @@ public class ProjectImpl implements Project {
         }
 
         relation = mergeHeadings.merge(relation, attributes);
+
         Set<Attribute> newHeading = relation.getHeading();
         newHeading.retainAll(attributes);
+
         return project(relation, newHeading);
     }
 
@@ -117,7 +119,8 @@ public class ProjectImpl implements Project {
             Tuple newTuple = createNewTuples(tuple, newHeading);
             newTuples.add(newTuple);
         }
-        return relationFactory.getRelation(newTuples);
+        // TODO (AN) Used to just be getRelation(newHeading) - this failed. 
+        return relationFactory.getRelation(newHeading, newTuples);
     }
 
     private Tuple createNewTuples(Tuple tuple, Set<Attribute> newHeading) {
