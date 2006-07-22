@@ -89,8 +89,9 @@ Productions
     lpar pattern_elements_list rpar ;
 
   pattern_elements_list =
-    {a_pattern_list} pattern_element period? pattern_elements_list? |
-    {a_pattern_with_operation} pattern_element period? operation ;
+    {a_pattern_element} pattern_element |
+    {a_pattern_list} pattern_element period pattern_elements_list? |
+    {a_pattern_with_operation} pattern_element period operation ;
 
   pattern_element =
     triple ;
