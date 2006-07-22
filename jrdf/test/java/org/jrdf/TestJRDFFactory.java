@@ -69,11 +69,10 @@ import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.DyadicJoin;
-import org.jrdf.query.relation.operation.Project;
-import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.NadicJoin;
-import org.jrdf.query.relation.operation.Optional;
+import org.jrdf.query.relation.operation.Project;
+import org.jrdf.query.relation.operation.SemiDifference;
+import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.analysis.VariableCollector;
@@ -186,7 +185,7 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (SemiDifference) FACTORY.getContext().getBean("semiDifference");
     }
 
-    public Optional getNewOptional() {
-        return (Optional) FACTORY.getContext().getBean("optional");
+    public DyadicJoin getNewLeftOuterJoin() {
+        return (DyadicJoin) FACTORY.getContext().getBean("leftOuterJoin");
     }
 }

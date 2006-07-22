@@ -309,7 +309,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="optional" class="org.jrdf.query.relation.operation.mem.optional.OptionalImpl">
+    <bean id="leftOuterJoin" class="org.jrdf.query.relation.operation.mem.join.outer.LeftOuterJoinImpl">
         <constructor-arg>
             <ref bean="antiJoin"/>
         </constructor-arg>
