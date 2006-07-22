@@ -113,8 +113,6 @@ public class ProjectImpl implements Project {
     }
 
     private Relation project(Relation relation, Set<Attribute> newHeading) {
-        System.err.println("Previous relation: " + relation);
-
         Set<Tuple> newTuples = new HashSet<Tuple>();
         Set<Tuple> tuples = relation.getTuples();
         for (Tuple tuple : tuples) {
@@ -124,8 +122,6 @@ public class ProjectImpl implements Project {
                 newTuples.add(newTuple);
             }
         }
-
-        System.err.println("New Tuples: " + newTuples);
 
         // TODO (AN) Used to just be getRelation(newHeading) - this failed.
         return relationFactory.getRelation(newHeading, newTuples);
