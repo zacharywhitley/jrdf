@@ -72,6 +72,9 @@ Productions
 
   graph_pattern =
     {a_basic_graph_pattern} basic_graph_pattern |
+    {operation} operation ;
+
+  operation =
     {a_union_graph_pattern} union_graph_pattern |
     {a_optional_graph_pattern} optional_graph_pattern ;
 
@@ -79,17 +82,15 @@ Productions
     lpar [lhs_graph_pattern]:graph_pattern union [rhs_graph_pattern]:graph_pattern rpar ;
 
   optional_graph_pattern =
-    lpar [lhs_graph_pattern]:graph_pattern optional [rhs_graph_pattern]:graph_pattern rpar ;
+    [lp1]:lpar [lhs_graph_pattern]:graph_pattern optional [lp2]:lpar [rhs_graph_pattern]:graph_pattern [rp2]:rpar [rp1]:rpar ;
 
   /* TODO: Don't allow mixes of { and ( parans, e.g. "{ ... )" */
   basic_graph_pattern =
     lpar pattern_elements_list rpar ;
 
   pattern_elements_list =
-    pattern_element pattern_elements_list_tail? ;
-
-  pattern_elements_list_tail =
-    period pattern_elements_list? ;
+    {a_pattern_list} pattern_element period? pattern_elements_list? |
+    {a_pattern_with_operation} pattern_element period? operation ;
 
   pattern_element =
     triple ;
