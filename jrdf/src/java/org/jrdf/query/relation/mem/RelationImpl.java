@@ -85,6 +85,8 @@ public final class RelationImpl extends Primordial implements Relation {
     private AttributeComparator attributeComparator;
     private TupleComparator tupleComparator;
 
+    // TODO (AN) This only gets the heading from the first tuple - must iterate through all tuples to ensure that we
+    // get the maximum heading values.
     RelationImpl(Set<Tuple> tuples, AttributeComparator attributeComparator, TupleComparator tupleComparator) {
         checkNotNull(tuples, attributeComparator, tupleComparator);
         create(createHeadingFromTuples(tuples), tuples, attributeComparator, tupleComparator);
