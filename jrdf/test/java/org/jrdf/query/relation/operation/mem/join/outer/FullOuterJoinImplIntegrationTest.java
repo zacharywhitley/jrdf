@@ -86,9 +86,9 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 717 $
  */
-public class LeftOuterJoinImplIntegrationTest extends TestCase {
+public class FullOuterJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final DyadicJoin LEFT_OUTER_JOIN = FACTORY.getNewLeftOuterJoin();
+    private static final DyadicJoin FULL_OUTER_JOIN = FACTORY.getNewFullOuterJoin();
 
     public void testSemiDifference1() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
@@ -101,12 +101,13 @@ public class LeftOuterJoinImplIntegrationTest extends TestCase {
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
         resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2));
         resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
+        resultTuple.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
 
         checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
     private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = LEFT_OUTER_JOIN.join(relation1, relation2);
+        Relation relation = FullOuterJoinImplIntegrationTest.FULL_OUTER_JOIN.join(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();
