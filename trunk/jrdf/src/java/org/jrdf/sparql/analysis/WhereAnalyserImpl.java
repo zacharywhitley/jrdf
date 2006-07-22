@@ -79,6 +79,7 @@ import org.jrdf.sparql.parser.node.AUnionGraphPattern;
 import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.AOptionalWithTwoPatternsOptionalGraphPattern;
 import org.jrdf.sparql.parser.node.AOptionalWithOperationOptionalGraphPattern;
+import org.jrdf.sparql.parser.node.AAPatternConjunctionPatternElementsList;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -127,6 +128,13 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         } else {
             super.caseAAPatternListPatternElementsList(node);
         }
+    }
+
+    @Override
+    public void caseAAPatternConjunctionPatternElementsList(AAPatternConjunctionPatternElementsList node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhs().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhs().clone());
+        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
     }
 
     @Override
