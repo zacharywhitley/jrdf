@@ -15,6 +15,7 @@ o Implement SPARQL parser.
   o Finish SPARQL Grammar.
     o Currently implements CONJUNCTION (.) and UNION, SELECT (* and Variables).
       o Put in SPARQL:
+        o SELECT that maintains variable order.
         o Optional.
         o Filter?
       o Other extensions:
