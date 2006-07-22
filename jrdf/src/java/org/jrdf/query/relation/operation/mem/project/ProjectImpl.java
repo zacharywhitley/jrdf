@@ -113,13 +113,21 @@ public class ProjectImpl implements Project {
     }
 
     private Relation project(Relation relation, Set<Attribute> newHeading) {
+        System.err.println("Previous relation: " + relation);
+
         Set<Tuple> newTuples = new HashSet<Tuple>();
         Set<Tuple> tuples = relation.getTuples();
         for (Tuple tuple : tuples) {
             Tuple newTuple = createNewTuples(tuple, newHeading);
-            newTuples.add(newTuple);
+            // TODO (AN) Only add non empty attributes - this failed.
+            if (newTuple.getSortedAttributeValues().size() > 0) {
+                newTuples.add(newTuple);
+            }
         }
-        // TODO (AN) Used to just be getRelation(newHeading) - this failed. 
+
+        System.err.println("New Tuples: " + newTuples);
+
+        // TODO (AN) Used to just be getRelation(newHeading) - this failed.
         return relationFactory.getRelation(newHeading, newTuples);
     }
 
@@ -131,6 +139,7 @@ public class ProjectImpl implements Project {
                 newAvps.add(avp);
             }
         }
+
         return tupleFactory.getTuple(newAvps);
     }
 }
