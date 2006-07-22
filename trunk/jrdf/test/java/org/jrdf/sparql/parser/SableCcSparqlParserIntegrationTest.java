@@ -145,7 +145,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private Query parseQuery(String queryString) {
         try {
-            System.err.println("Query String: " + queryString);
             return parser.parseQuery(GRAPH, queryString);
         } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
