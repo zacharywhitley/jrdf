@@ -31,6 +31,7 @@ Tokens
   {def}                select      = ('SELECT' | 'select');
   {def}                where       = ('WHERE' | 'where');
   {def}                union       = ('UNION' | 'union');
+  {def}                optional       = ('OPTIONAL' | 'optional');
 
   {def, var->def}      identifier = letter (letter | digit | '_' | '$' | '?' )*;
   {def}                blank          = whitespace+;
@@ -75,6 +76,9 @@ Productions
 
   union_graph_pattern =
     lpar [lhs_graph_pattern]:graph_pattern union [rhs_graph_pattern]:graph_pattern rpar ;
+
+  option_graph_pattern =
+    optional group_graph_pattern;
 
   /* TODO: Don't allow mixes of { and ( parans, e.g. "{ ... )" */
   graph_pattern =
