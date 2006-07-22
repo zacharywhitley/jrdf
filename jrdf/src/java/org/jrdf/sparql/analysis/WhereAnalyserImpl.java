@@ -59,12 +59,12 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.expression.Conjunction;
+import org.jrdf.query.expression.Optional;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -72,12 +72,13 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.AOptionalGraphPattern;
+import org.jrdf.sparql.parser.node.AAPatternListPatternElementsList;
+import org.jrdf.sparql.parser.node.AAPatternWithOperationPatternElementsList;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.AUnionGraphPattern;
 import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.AAPatternListPatternElementsList;
-import org.jrdf.sparql.parser.node.AAPatternWithOperationPatternElementsList;
+import org.jrdf.sparql.parser.node.AOptionalWithTwoPatternsOptionalGraphPattern;
+import org.jrdf.sparql.parser.node.AOptionalWithOperationOptionalGraphPattern;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -136,9 +137,16 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
-    public void caseAOptionalGraphPattern(AOptionalGraphPattern node) {
+    public void caseAOptionalWithTwoPatternsOptionalGraphPattern(AOptionalWithTwoPatternsOptionalGraphPattern node) {
         Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
+        expression = new Optional<ExpressionVisitor>(lhs, rhs);
+    }
+
+    @Override
+    public void caseAOptionalWithOperationOptionalGraphPattern(AOptionalWithOperationOptionalGraphPattern node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getOperation().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getPatternElementsList().clone());
         expression = new Optional<ExpressionVisitor>(lhs, rhs);
     }
 
