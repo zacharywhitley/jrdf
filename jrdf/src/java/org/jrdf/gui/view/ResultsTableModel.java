@@ -133,7 +133,7 @@ public class ResultsTableModel extends AbstractTableModel {
             }
             headingIndex++;
         }
-        data[dataIndex++] = results.toArray(new String[]{});
+        data[dataIndex++] = results.toArray(new String[attributes.length]);
     }
 
     private void setColumnNames(SortedSet<Attribute> sortedHeading) {
