@@ -59,10 +59,10 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -71,20 +71,19 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.ABlockOfTriples;
 import org.jrdf.sparql.parser.node.AGroupOrUnionGraphPattern;
-import org.jrdf.sparql.parser.node.AManyTriplesBlockOfTriples;
-import org.jrdf.sparql.parser.node.ASingleTripleBlockOfTriples;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PGroupGraphPattern;
+import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PUnionGraphPattern;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.LinkedList;
 
 /**
  * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
@@ -112,17 +111,10 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 
-    @Override
-    public void caseASingleTripleBlockOfTriples(ASingleTripleBlockOfTriples node) {
-        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build((ATriple) node.getTriple(), graph);
-        collector.addVariables(attributeValuePairs);
-        expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
-    }
-
     // TODO (AN) This is wrong
 
     @Override
-    public void caseAManyTriplesBlockOfTriples(AManyTriplesBlockOfTriples node) {
+    public void caseABlockOfTriples(ABlockOfTriples node) {
         if (node.getMoreTriples().size() != 0) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getTriple().clone());
             LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
@@ -131,7 +123,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
                 expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
             }
         } else {
-            super.caseAManyTriplesBlockOfTriples(node);
+            super.caseABlockOfTriples(node);
         }
     }
 
