@@ -74,8 +74,11 @@ Productions
     lpar graph_pattern rpar ;
 
   graph_pattern =
-    {block_of_triples} block_of_triples |
-    {block_of_triples_with_operation} block_of_triples operation_pattern? ;
+    {filtered_basic_graph_pattern} filtered_basic_graph_pattern |
+    {filtered_basic_graph_pattern_with_extra} filtered_basic_graph_pattern operation_pattern? ;
+
+  filtered_basic_graph_pattern =
+    {block_of_triples} block_of_triples? ;
 
   block_of_triples =
     {single_triple} triple |
