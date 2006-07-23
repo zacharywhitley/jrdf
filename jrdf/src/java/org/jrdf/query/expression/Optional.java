@@ -76,6 +76,14 @@ public final class Optional<V extends ExpressionVisitor> implements Expression<V
         this.rhs = rhs;
     }
 
+    public Optional(Expression<V> rhs) {
+        this.rhs = rhs;
+    }
+
+    public void setLhs(Expression<V> lhs) {
+        this.lhs = lhs;
+    }
+
     public Expression<V> getLhs() {
         return lhs;
     }
@@ -83,7 +91,6 @@ public final class Optional<V extends ExpressionVisitor> implements Expression<V
     public Expression<V> getRhs() {
         return rhs;
     }
-
 
     public void accept(V v) {
         v.visitOptional(this);
@@ -108,7 +115,7 @@ public final class Optional<V extends ExpressionVisitor> implements Expression<V
     }
 
     public String toString() {
-        return lhs.toString() + " OPTIONAL " + rhs.toString();
+        return lhs + " OPTIONAL " + rhs;
     }
 
     private boolean determineEqualityFromFields(Optional o1, Optional o2) {

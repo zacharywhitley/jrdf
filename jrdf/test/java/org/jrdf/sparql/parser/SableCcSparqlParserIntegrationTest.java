@@ -77,12 +77,7 @@ import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.builder.TripleBuilderImpl;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_1;
-import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_2;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
@@ -121,28 +116,40 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder);
     }
 
-    public void testSingleConstraint() {
-        checkConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE_1);
+    public void testGoBackHere() {
+        
     }
 
-    public void testSingleConstraint2() {
-        checkConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE_1);
-    }
-
-    public void testTwoConstraints() {
-        checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_CONJUNCTION);
-    }
-
-    public void testUnionConstraint() {
-        checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
-    }
-
-//    public void testOptionalConstraint() {
+//    public void testSingleConstraint() {
+//        checkConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE_1);
+//    }
+//
+//    public void testSingleConstraint2() {
+//        checkConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE_1);
+//    }
+//
+//    public void testTwoConstraints() {
+//        checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_CONJUNCTION);
+//    }
+//
+//    public void testUnionConstraint() {
+//        checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
+//    }
+//
+//    public void testOptionalConstraint() throws Exception {
 //        String query = "SELECT ?name ?mbox ?nick\n" +
 //                "WHERE  { ?x <http://xmlns.com/foaf/0.1/name> ?name .\n" +
 //                "         OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick OPTIONAL { ?x <http://xmlns.com/foaf/0.1/mbox> ?mbox } }\n" +
 //                "       }";
-//        checkConstraintExpression(query, BOOK1_AND_2_UNION);
+//        Expression<ExpressionVisitor> foafName = TripleTestUtil.createConstraintExpression("?x",
+//                new URI("http://xmlns.com/foaf/0.1/name"), "?name", 1);
+//        Expression<ExpressionVisitor> foafNick = TripleTestUtil.createConstraintExpression("?x",
+//                new URI("http://xmlns.com/foaf/0.1/nick"), "?nick", 2);
+//        Expression<ExpressionVisitor> foafMbox = TripleTestUtil.createConstraintExpression("?x",
+//                new URI("http://xmlns.com/foaf/0.1/mbox"), "?mbox", 3);
+//        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafName, foafNick);
+//        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(optional1, foafMbox);
+//        checkConstraintExpression(query, optional2);
 //    }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
