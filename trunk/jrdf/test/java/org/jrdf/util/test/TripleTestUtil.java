@@ -64,6 +64,8 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -71,12 +73,14 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.test.NodeTestUtil.*;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -115,10 +119,18 @@ public class TripleTestUtil {
         return new Constraint<ExpressionVisitor>(avp);
     }
 
+    public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, URI predicate,
+            String varObject, long suffix) {
+        Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
+        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(triple,
+                createAttributes(varSubject, varObject, suffix));
+        return new Constraint<ExpressionVisitor>(avp);
+    }
+
     public static Triple createTripleAllSame(URI uri) {
-        SubjectNode subject = NodeTestUtil.createResource(uri);
-        PredicateNode predicate = NodeTestUtil.createResource(uri);
-        ObjectNode object = NodeTestUtil.createResource(uri);
+        SubjectNode subject = createResource(uri);
+        PredicateNode predicate = createResource(uri);
+        ObjectNode object = createResource(uri);
         return createTriple(subject, predicate, object);
     }
 
@@ -163,13 +175,24 @@ public class TripleTestUtil {
         return AVP_HELPER.createAvp(tripleBook1DcSubjectLiteral);
     }
 
-    private static final Attribute[] createAttributes(long suffix) {
-        PositionName SUBJECT_POS_NAME = new PositionName("SUBJECT" + suffix);
-        PositionName PREDICATE_POS_NAME = new PositionName("PREDICATE" + suffix);
-        VariableName OBJECT_POS_NAME = new VariableName("?title");
-        Attribute ATT_1 = new AttributeImpl(SUBJECT_POS_NAME, new SubjectNodeType());
-        Attribute ATT_2 = new AttributeImpl(PREDICATE_POS_NAME, new PredicateNodeType());
-        Attribute ATT_3 = new AttributeImpl(OBJECT_POS_NAME, new ObjectNodeType());
+    private static Attribute[] createAttributes(long suffix) {
+        AttributeName subjectName = new PositionName("SUBJECT" + suffix);
+        AttributeName predicateName = new PositionName("PREDICATE" + suffix);
+        AttributeName objectName = new VariableName("?title");
+        return createAttributes(subjectName, predicateName, objectName);
+    }
+
+    private static Attribute[] createAttributes(String subject, String object, long suffix) {
+        AttributeName subjectName = new VariableName(subject);
+        AttributeName predicateName = new PositionName("PREDICATE" + suffix);
+        AttributeName objectName = new VariableName(object);
+        return createAttributes(subjectName, predicateName, objectName);
+    }
+
+    private static Attribute[] createAttributes(AttributeName subject, AttributeName predicate, AttributeName object) {
+        Attribute ATT_1 = new AttributeImpl(subject, new SubjectNodeType());
+        Attribute ATT_2 = new AttributeImpl(predicate, new PredicateNodeType());
+        Attribute ATT_3 = new AttributeImpl(object, new ObjectNodeType());
         return new Attribute[]{ATT_1, ATT_2, ATT_3};
     }
 
