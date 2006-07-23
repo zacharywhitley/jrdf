@@ -59,11 +59,10 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Optional;
+import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
@@ -72,19 +71,20 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.AAPatternConjunctionPatternElementsList;
-import org.jrdf.sparql.parser.node.AAPatternListPatternElementsList;
-import org.jrdf.sparql.parser.node.AAPatternWithOperationPatternElementsList;
-import org.jrdf.sparql.parser.node.AOptionalWithTwoPatternsOptionalGraphPattern;
+import org.jrdf.sparql.parser.node.AGroupOrUnionGraphPattern;
+import org.jrdf.sparql.parser.node.AManyTriplesBlockOfTriples;
+import org.jrdf.sparql.parser.node.ASingleTripleBlockOfTriples;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.AUnionGraphPattern;
 import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.AAOperationWithPatternPatternElementsList;
+import org.jrdf.sparql.parser.node.PMoreTriples;
+import org.jrdf.sparql.parser.node.PGroupGraphPattern;
+import org.jrdf.sparql.parser.node.PUnionGraphPattern;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.LinkedList;
 
 /**
  * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
@@ -106,77 +106,49 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
-    /**
-     * Triple/pattern element/basic graph pattern - <triple
-     */
-    public void caseATriple(ATriple tripleNode) {
-        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
+    public void caseATriple(ATriple node) {
+        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(node, graph);
         collector.addVariables(attributeValuePairs);
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 
     @Override
-    /**
-     * A Pattern list - <triple> . <triple> ...
-     */
-    public void caseAAPatternListPatternElementsList(AAPatternListPatternElementsList node) {
-        if (node.getPatternElementsList() != null) {
-            Expression<ExpressionVisitor> lhs = getExpression((Node) node.getPatternElement().clone());
-            Expression<ExpressionVisitor> rhs = getExpression((Node) node.getPatternElementsList().clone());
-            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+    public void caseASingleTripleBlockOfTriples(ASingleTripleBlockOfTriples node) {
+        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build((ATriple) node.getTriple(), graph);
+        collector.addVariables(attributeValuePairs);
+        expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
+    }
+
+    // TODO (AN) This is wrong
+
+    @Override
+    public void caseAManyTriplesBlockOfTriples(AManyTriplesBlockOfTriples node) {
+        if (node.getMoreTriples().size() != 0) {
+            Expression<ExpressionVisitor> lhs = getExpression((Node) node.getTriple().clone());
+            LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
+            for (PMoreTriples pMoreTriples : moreTriples) {
+                Expression<ExpressionVisitor> rhs = getExpression((PMoreTriples) pMoreTriples.clone());
+                expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+            }
         } else {
-            super.caseAAPatternListPatternElementsList(node);
+            super.caseAManyTriplesBlockOfTriples(node);
         }
     }
 
-    @Override
-    /**
-     * A Pattern with operation - <triple> . operation
-     */
-    public void caseAAPatternWithOperationPatternElementsList(AAPatternWithOperationPatternElementsList node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getPatternElement().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperation().clone());
-        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-    }
+    // TODO (AN) This is wrong
 
     @Override
-    /**
-     * A Pattern with operation - operation . <triple>
-     */
-    public void caseAAOperationWithPatternPatternElementsList(AAOperationWithPatternPatternElementsList node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getOperation().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getPatternElement().clone());
-        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-    }
-
-    @Override
-    /**
-     * A Pattern with two operations - operation . operation
-     */
-    public void caseAAPatternConjunctionPatternElementsList(AAPatternConjunctionPatternElementsList node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhs().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhs().clone());
-        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-    }
-
-    @Override
-    /**
-     * Optional
-     */
-    public void caseAOptionalWithTwoPatternsOptionalGraphPattern(AOptionalWithTwoPatternsOptionalGraphPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
-        expression = new Optional<ExpressionVisitor>(lhs, rhs);
-    }
-
-    @Override
-    /**
-     * Union
-     */
-    public void caseAUnionGraphPattern(AUnionGraphPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
-        expression = new Union<ExpressionVisitor>(lhs, rhs);
+    public void caseAGroupOrUnionGraphPattern(AGroupOrUnionGraphPattern node) {
+        if (node.getUnionGraphPattern() != null) {
+            Expression<ExpressionVisitor> lhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
+            LinkedList<PUnionGraphPattern> unionGraphPattern = node.getUnionGraphPattern();
+            for (PUnionGraphPattern pUnionGraphPattern : unionGraphPattern) {
+                Expression<ExpressionVisitor> rhs = getExpression((PUnionGraphPattern) pUnionGraphPattern.clone());
+                expression = new Union<ExpressionVisitor>(lhs, rhs);
+            }
+        } else {
+            super.caseAGroupOrUnionGraphPattern(node);
+        }
     }
 
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
@@ -197,6 +169,12 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     private Expression<ExpressionVisitor> getExpression(Node node) {
         WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
         node.apply(analyser);
+        return analyser.getExpression();
+    }
+
+    private Expression<ExpressionVisitor> getExpression(PMoreTriples triples) {
+        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
+        triples.apply(analyser);
         return analyser.getExpression();
     }
 }

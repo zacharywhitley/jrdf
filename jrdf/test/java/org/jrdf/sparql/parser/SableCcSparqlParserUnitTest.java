@@ -134,15 +134,15 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     public void testParseThrowsParserException() throws Exception {
-        checkThrowsException(PARSER_EXECPTION);
+        checkThrowsException(PARSER_EXECPTION, ERROR_MSG + " token: foo ");
     }
 
     public void testParseThrowsLexerException() throws Exception {
-        checkThrowsException(LEXER_EXECPTION);
+        checkThrowsException(LEXER_EXECPTION, ERROR_MSG);
     }
 
     public void testParseThrowsIOException() throws Exception {
-        checkThrowsException(IO_EXCEPTION);
+        checkThrowsException(IO_EXCEPTION, ERROR_MSG);
     }
 
     private Start createStart() {
@@ -197,14 +197,14 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     }
 
-    private void checkThrowsException(Exception exception)
+    private void checkThrowsException(Exception exception, String errorMsg)
             throws Exception {
         Parser parser = createParser(exception);
         ParserFactory parserFactory = createParserFactory(parser);
         final SableCcSparqlParser sableCcSparqlParser =
                 createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER, VARIABLE_COLLECTOR);
         mockFactory.replay();
-        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, ERROR_MSG, new AssertThrows.Block() {
+        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, errorMsg, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 sableCcSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
             }
