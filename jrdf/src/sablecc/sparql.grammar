@@ -94,7 +94,7 @@ Productions
     {a_pattern_list} pattern_element period pattern_elements_list? |
     {a_pattern_with_operation} pattern_element period operation |
     {a_operation_with_pattern} operation period pattern_element |
-    {a_pattern_conjunction} [lhs]:operation period [rhs]:operation ;
+    {a_pattern_conjunction} [lhs]:operation [rhs]:operation ;
 
   pattern_element =
     triple ;
