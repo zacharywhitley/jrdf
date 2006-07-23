@@ -80,10 +80,10 @@ Productions
     {block_of_triples} block_of_triples? ;
 
   block_of_triples =
-    triple more_triples* ;
+    triple period? more_triples* ;
 
   more_triples =
-    period triple ;
+    triple ;
 
   operation_pattern =
     graph_pattern_not_triples period? graph_pattern ;

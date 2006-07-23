@@ -139,8 +139,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
 //    public void testOptionalConstraint() {
 //        String query = "SELECT ?name ?mbox ?nick\n" +
-//                "WHERE  { ?x <name>  ?name .\n" +
-//                "         OPTIONAL { ?x <nick> ?nick OPTIONAL { ?x  <mbox> ?mbox } }\n" +
+//                "WHERE  { ?x <http://xmlns.com/foaf/0.1/name> ?name .\n" +
+//                "         OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick OPTIONAL { ?x <http://xmlns.com/foaf/0.1/mbox> ?mbox } }\n" +
 //                "       }";
 //        checkConstraintExpression(query, BOOK1_AND_2_UNION);
 //    }
