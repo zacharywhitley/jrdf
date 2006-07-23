@@ -82,6 +82,7 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
@@ -133,7 +134,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testUnionConstraint() {
-        //checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
+        checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
