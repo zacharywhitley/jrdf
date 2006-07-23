@@ -109,7 +109,7 @@ public final class SableCcSparqlParser implements SparqlParser {
         try {
             return parser.parse();
         } catch (ParserException e) {
-            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
+            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE + " token: " + e.getToken(), e);
         } catch (LexerException e) {
             throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE, e);
         } catch (IOException e) {
