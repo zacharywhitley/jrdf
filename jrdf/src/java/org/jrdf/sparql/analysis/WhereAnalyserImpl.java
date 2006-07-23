@@ -63,8 +63,8 @@ import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Union;
 import org.jrdf.query.expression.Optional;
+import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -72,14 +72,14 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.AAPatternConjunctionPatternElementsList;
 import org.jrdf.sparql.parser.node.AAPatternListPatternElementsList;
 import org.jrdf.sparql.parser.node.AAPatternWithOperationPatternElementsList;
+import org.jrdf.sparql.parser.node.AOptionalWithTwoPatternsOptionalGraphPattern;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.AUnionGraphPattern;
 import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.AOptionalWithTwoPatternsOptionalGraphPattern;
-import org.jrdf.sparql.parser.node.AOptionalWithOperationOptionalGraphPattern;
-import org.jrdf.sparql.parser.node.AAPatternConjunctionPatternElementsList;
+import org.jrdf.sparql.parser.node.AAOperationWithPatternPatternElementsList;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -106,6 +106,9 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
+    /**
+     * Triple/pattern element/basic graph pattern - <triple
+     */
     public void caseATriple(ATriple tripleNode) {
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(tripleNode, graph);
         collector.addVariables(attributeValuePairs);
@@ -113,13 +116,9 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
-    public void caseAAPatternWithOperationPatternElementsList(AAPatternWithOperationPatternElementsList node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getPatternElement().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperation().clone());
-        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-    }
-
-    @Override
+    /**
+     * A Pattern list - <triple> . <triple> ...
+     */
     public void caseAAPatternListPatternElementsList(AAPatternListPatternElementsList node) {
         if (node.getPatternElementsList() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getPatternElement().clone());
@@ -131,6 +130,29 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
+    /**
+     * A Pattern with operation - <triple> . operation
+     */
+    public void caseAAPatternWithOperationPatternElementsList(AAPatternWithOperationPatternElementsList node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getPatternElement().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperation().clone());
+        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+    }
+
+    @Override
+    /**
+     * A Pattern with operation - operation . <triple>
+     */
+    public void caseAAOperationWithPatternPatternElementsList(AAOperationWithPatternPatternElementsList node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getOperation().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getPatternElement().clone());
+        expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+    }
+
+    @Override
+    /**
+     * A Pattern with two operations - operation . operation
+     */
     public void caseAAPatternConjunctionPatternElementsList(AAPatternConjunctionPatternElementsList node) {
         Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhs().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhs().clone());
@@ -138,13 +160,9 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
-    public void caseAUnionGraphPattern(AUnionGraphPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
-        expression = new Union<ExpressionVisitor>(lhs, rhs);
-    }
-
-    @Override
+    /**
+     * Optional
+     */
     public void caseAOptionalWithTwoPatternsOptionalGraphPattern(AOptionalWithTwoPatternsOptionalGraphPattern node) {
         Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
@@ -152,10 +170,13 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
-    public void caseAOptionalWithOperationOptionalGraphPattern(AOptionalWithOperationOptionalGraphPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getOperation().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getPatternElementsList().clone());
-        expression = new Optional<ExpressionVisitor>(lhs, rhs);
+    /**
+     * Union
+     */
+    public void caseAUnionGraphPattern(AUnionGraphPattern node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getLhsGraphPattern().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getRhsGraphPattern().clone());
+        expression = new Union<ExpressionVisitor>(lhs, rhs);
     }
 
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {

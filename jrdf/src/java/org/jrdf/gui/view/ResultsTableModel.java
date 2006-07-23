@@ -103,6 +103,7 @@ public class ResultsTableModel extends AbstractTableModel {
     }
 
     private void updateTableData(Relation answer) {
+        System.err.println("Answer: " + answer);
         SortedSet<Tuple> sortedTuples = answer.getSortedTuples();
         SortedSet<Attribute> sortedHeading = answer.getSortedHeading();
         setColumnNames(sortedHeading);
