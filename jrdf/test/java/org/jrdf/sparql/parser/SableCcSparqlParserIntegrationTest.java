@@ -81,6 +81,7 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2_AND_3;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_3;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
@@ -105,10 +106,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
             = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
-    private static final Expression BOOK1_AND_2_AND_3_CONJUNCTION
+    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_CONJUNCTION
             = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression BOOK1_AND_2_UNION
+    private static final Expression<ExpressionVisitor> BOOK1_AND_2_UNION
             = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+    private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
+            = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
     private QueryParser parser;
 
     public void setUp() throws Exception {
@@ -139,6 +142,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
     }
 
+    public void testUnionConstraint2() {
+        checkConstraintExpression(QUERY_BOOK_1_UNION_2_UNION_3, BOOK1_AND_2_AND_3_UNION);
+    }
+
     public void testOptionalConstraint() throws Exception {
         Expression<ExpressionVisitor> foafName = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
         Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
@@ -149,7 +156,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
-        System.err.println("Got: " + queryString);
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = query.getConstraintExpression();
         assertEquals(expectedExpression, actualExpression);
