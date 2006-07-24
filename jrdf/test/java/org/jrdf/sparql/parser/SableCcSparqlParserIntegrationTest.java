@@ -84,6 +84,7 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -147,16 +148,12 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testOptionalConstraint() throws Exception {
-        String query = "SELECT *\n" +
-                "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
-                "       }";
         Expression<ExpressionVisitor> foafName = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
         Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
         Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 3);
         Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafNick, foafMbox);
         Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName, optional1);
-        checkConstraintExpression(query, optional2);
+        checkConstraintExpression(QUERY_OPTIONAL_1, optional2);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {

@@ -88,6 +88,10 @@ public final class SparqlQueryTestUtil {
     public static final String QUERY_BOOK_1_UNION_2 = createSelectClause() + "\nWHERE {{ " +
             createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) +  "} \nUNION {" +
             createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
+    public static final String QUERY_OPTIONAL_1 =  createSelectClause() +
+                "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
+                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
+                "       }";
     public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
