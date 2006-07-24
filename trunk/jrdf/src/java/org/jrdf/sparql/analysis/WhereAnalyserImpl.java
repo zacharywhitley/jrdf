@@ -59,12 +59,12 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
+import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -82,8 +82,10 @@ import org.jrdf.sparql.parser.node.PGroupGraphPattern;
 import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PUnionGraphPattern;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -138,10 +140,16 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         if (node.getMoreTriples().size() != 0) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getTriple().clone());
             LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
+            List<Expression<ExpressionVisitor>> expressions = new ArrayList <Expression<ExpressionVisitor>>();
             for (PMoreTriples pMoreTriples : moreTriples) {
                 Expression<ExpressionVisitor> rhs = getExpression((Node) pMoreTriples.clone());
-                expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+                expressions.add(rhs);
             }
+            Expression<ExpressionVisitor> lhsSide = lhs;
+            for (Expression<ExpressionVisitor> currentExpression : expressions) {
+                lhsSide = new Conjunction<ExpressionVisitor>(lhsSide, currentExpression);
+            }
+            expression = lhsSide;
         } else {
             super.caseABlockOfTriples(node);
         }

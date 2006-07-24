@@ -77,6 +77,7 @@ public final class SparqlQueryTestUtil {
     public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
     private static final String SUBJECT_URI_1 = URI_BOOK_1.toString();
     private static final String SUBJECT_URI_2 = URI_BOOK_2.toString();
+    private static final String SUBJECT_URI_3 = URI_BOOK_3.toString();
     private static final String PREDICATE_URI_1 = URI_DC_TITLE.toString();
     public static final String QUERY_BOOK_1_DC_TITLE =
             createQueryString(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE);
@@ -85,6 +86,9 @@ public final class SparqlQueryTestUtil {
     public static final String QUERY_BOOK_1_AND_2 =
             createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
                     PREDICATE_URI_1, VARIABLE_TITLE});
+    public static final String QUERY_BOOK_1_AND_2_AND_3 =
+            createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
+                    PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE});
     public static final String QUERY_BOOK_1_UNION_2 = createSelectClause() + "\nWHERE {{ " +
             createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) +  "} \nUNION {" +
             createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
@@ -92,9 +96,10 @@ public final class SparqlQueryTestUtil {
                 "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
                 "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
                 "       }";
-    public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
-    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
-    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
+    public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
+    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
+    public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
+    public static final Expression<ExpressionVisitor> BOOK_3_DC_TITLE_ID_3 = createBookDcTitleExpression(URI_BOOK_3, 3);
 
     private SparqlQueryTestUtil() {
     }
