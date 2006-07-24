@@ -117,11 +117,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
             if (rhs instanceof Optional) {
                 ((Optional<ExpressionVisitor>) rhs).setLhs(lhs);
-                expression = rhs;
             }
-            if (rhs instanceof Union) {
-                expression = rhs;
-            }
+            expression = rhs;
         } else {
             super.caseAFilteredBasicGraphPatternGraphPattern(node);
         }
