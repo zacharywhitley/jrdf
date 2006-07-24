@@ -115,7 +115,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         if (node.getOperationPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
-            if (rhs instanceof Optional) {
+            if (rhs instanceof Optional && lhs != null) {
                 ((Optional<ExpressionVisitor>) rhs).setLhs(lhs);
             }
             expression = rhs;
