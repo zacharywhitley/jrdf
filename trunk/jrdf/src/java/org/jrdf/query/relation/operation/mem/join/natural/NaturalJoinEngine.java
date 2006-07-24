@@ -123,8 +123,8 @@ public class NaturalJoinEngine implements TupleEngine {
             }
         }
 
-        // Only add results if they are the same size
-        if (headings.size() == resultantAttributeValues.size()) {
+        // Only add results if we have found more items to add.
+        if (resultantAttributeValues.size() > avps1.size()) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
@@ -156,6 +156,9 @@ public class NaturalJoinEngine implements TupleEngine {
             // Add if avp1 is null and avp2 is not.
             if (avp2 != null) {
                 addResults(avp2, resultantAttributeValues);
+                added = true;
+            } else {
+                // TODO (AN) Test when both are null - added.
                 added = true;
             }
         }
