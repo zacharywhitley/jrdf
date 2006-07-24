@@ -71,17 +71,9 @@ public final class Union<V extends ExpressionVisitor> implements Expression<V>, 
     private Union() {
     }
 
-    public Union(Expression<V> rhs) {
-        this.rhs = rhs;
-    }
-
     public Union(Expression<V> lhs, Expression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
-    }
-
-    public void setLhs(Expression<V> lhs) {
-        this.lhs = lhs;
     }
 
     public Expression<V> getLhs() {

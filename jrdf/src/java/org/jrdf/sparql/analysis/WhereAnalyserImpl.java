@@ -81,7 +81,6 @@ import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PGroupGraphPattern;
 import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PUnionGraphPattern;
-import org.jrdf.sparql.parser.node.AGroupGraphPattern;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -109,20 +108,10 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
-    public void caseAGroupGraphPattern(AGroupGraphPattern node) {
-        expression = getExpression((Node) node.getGraphPattern().clone());
-    }
-
-    @Override
     public void caseAFilteredBasicGraphPatternGraphPattern(AFilteredBasicGraphPatternGraphPattern node) {
-        System.err.println("Got : " + node.getFilteredBasicGraphPattern());
         if (node.getOperationPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
-            System.err.println("Got LHS filtered : " + node.getFilteredBasicGraphPattern());
-            System.err.println("Got LHS filtered : " + lhs);
-            System.err.println("Looking for RHS");
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
-            System.err.println("Got RHS filtered : " + rhs);
             if (rhs instanceof Optional) {
                 ((Optional<ExpressionVisitor>) rhs).setLhs(lhs);
                 expression = rhs;
@@ -130,7 +119,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
             if (rhs instanceof Union) {
                 expression = rhs;
             }
-            System.err.println("Final expression : " + expression);
         } else {
             super.caseAFilteredBasicGraphPatternGraphPattern(node);
         }
@@ -138,7 +126,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
 
     @Override
     public void caseATriple(ATriple node) {
-        System.err.println("Triples!! " + node);
         SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(node, graph);
         collector.addVariables(attributeValuePairs);
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
@@ -148,7 +135,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
 
     @Override
     public void caseABlockOfTriples(ABlockOfTriples node) {
-        System.err.println("Case a block of triples: " + node.getMoreTriples().size());
         if (node.getMoreTriples().size() != 0) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getTriple().clone());
             LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
@@ -165,7 +151,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
 
     @Override
     public void caseAGroupOrUnionGraphPattern(AGroupOrUnionGraphPattern node) {
-        System.err.println("Case a Group or union graph pattern");
         if (node.getUnionGraphPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
             LinkedList<PUnionGraphPattern> unionGraphPattern = node.getUnionGraphPattern();
@@ -182,7 +167,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     public void caseAOptionalGraphPattern(AOptionalGraphPattern node) {
         Expression<ExpressionVisitor> rhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
         expression = new Optional<ExpressionVisitor>(rhs);
-        System.err.println("Optional : " + expression);
     }
 
     public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
