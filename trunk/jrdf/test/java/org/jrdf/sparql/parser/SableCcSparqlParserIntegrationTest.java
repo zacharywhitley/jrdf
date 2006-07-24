@@ -159,7 +159,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         String query = "SELECT *\n" +
                 "WHERE  { \n" +
                 "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} .\n" +
-                "  { ?x<http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
+                "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
                 "}";
         Expression<ExpressionVisitor> foafName1 = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
         Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
