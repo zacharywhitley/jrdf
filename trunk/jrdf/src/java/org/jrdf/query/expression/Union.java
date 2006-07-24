@@ -71,9 +71,17 @@ public final class Union<V extends ExpressionVisitor> implements Expression<V>, 
     private Union() {
     }
 
+    public Union(Expression<V> rhs) {
+        this.rhs = rhs;
+    }
+
     public Union(Expression<V> lhs, Expression<V> rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
+    }
+
+    public void setLhs(Expression<V> lhs) {
+        this.lhs = lhs;
     }
 
     public Expression<V> getLhs() {
@@ -108,7 +116,7 @@ public final class Union<V extends ExpressionVisitor> implements Expression<V>, 
     }
 
     public String toString() {
-        return lhs.toString() + " U " + rhs.toString();
+        return lhs + " U " + rhs;
     }
 
     private boolean determineEqualityFromFields(Union o1, Union o2) {
