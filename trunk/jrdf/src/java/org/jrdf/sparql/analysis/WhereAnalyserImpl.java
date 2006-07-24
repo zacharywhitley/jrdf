@@ -133,8 +133,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
 
-// TODO (AN) This is wrong
-
     @Override
     public void caseABlockOfTriples(ABlockOfTriples node) {
         if (node.getMoreTriples().size() != 0) {
@@ -155,17 +153,21 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         }
     }
 
-// TODO (AN) This is wrong
-
     @Override
     public void caseAGroupOrUnionGraphPattern(AGroupOrUnionGraphPattern node) {
         if (node.getUnionGraphPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
             LinkedList<PUnionGraphPattern> unionGraphPattern = node.getUnionGraphPattern();
+            List<Expression<ExpressionVisitor>> expressions = new ArrayList <Expression<ExpressionVisitor>>();
             for (PUnionGraphPattern pUnionGraphPattern : unionGraphPattern) {
                 Expression<ExpressionVisitor> rhs = getExpression((PUnionGraphPattern) pUnionGraphPattern.clone());
-                expression = new Union<ExpressionVisitor>(lhs, rhs);
+                expressions.add(rhs);
             }
+            Expression<ExpressionVisitor> lhsSide = lhs;
+            for (Expression<ExpressionVisitor> currentExpression : expressions) {
+                lhsSide = new Union<ExpressionVisitor>(lhsSide, currentExpression);
+            }
+            expression = lhsSide;
         } else {
             super.caseAGroupOrUnionGraphPattern(node);
         }
