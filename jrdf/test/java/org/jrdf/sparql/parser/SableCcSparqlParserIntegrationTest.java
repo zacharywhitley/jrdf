@@ -155,14 +155,20 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_OPTIONAL_1, optional2);
     }
 
-//    public void testComplicatedOptional() {
-//        String query = "SELECT ?name ?mbox ?nick\n" +
-//                "WHERE  { \n" +
-//                "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} .\n" +
-//                "  { ?x<http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
-//                "}";
-//        checkConstraintExpression(query,BOOK1_AND_2_UNION);
-//    }
+    public void testComplicatedOptional() {
+        String query = "SELECT *\n" +
+                "WHERE  { \n" +
+                "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} .\n" +
+                "  { ?x<http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
+                "}";
+        Expression<ExpressionVisitor> foafName1 = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
+        Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
+        Expression<ExpressionVisitor> foafName2 = createConstraintExpression("?x", FOAF_NAME, "?name", 3);
+        Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 4);
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafName1, foafNick);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName2, foafMbox);
+        checkConstraintExpression(query, new Conjunction<ExpressionVisitor>(optional1, optional2));
+    }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);

@@ -141,7 +141,7 @@
             <ref bean="union"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="fullOuterJoin"/>
+            <ref bean="leftOuterJoin"/>
         </constructor-arg>
     </bean>
 
