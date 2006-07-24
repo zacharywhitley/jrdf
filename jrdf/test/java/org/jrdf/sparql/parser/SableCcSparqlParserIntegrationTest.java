@@ -103,7 +103,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
-    private static final Expression BOOK1_AND_2_CONJUNCTION
+    private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
             = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression BOOK1_AND_2_AND_3_CONJUNCTION
             = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
