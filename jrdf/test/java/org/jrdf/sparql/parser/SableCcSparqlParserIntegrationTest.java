@@ -61,10 +61,6 @@ package org.jrdf.sparql.parser;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.expression.Conjunction;
@@ -77,10 +73,12 @@ import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.builder.TripleBuilderImpl;
-import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_1;
-import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_1;
-import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_2;
+import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
+import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
+import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
+import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_3_DC_TITLE_ID_3;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2_AND_3;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
@@ -88,9 +86,6 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
-import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
-import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
-import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 
 /**
@@ -109,21 +104,14 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final Expression BOOK1_AND_2_CONJUNCTION
-            = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_1, BOOK_2_DC_TITLE_2);
+            = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+    private static final Expression BOOK1_AND_2_AND_3_CONJUNCTION
+            = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
     private static final Expression BOOK1_AND_2_UNION
-            = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_1, BOOK_2_DC_TITLE_2);
+            = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private QueryParser parser;
 
     public void setUp() throws Exception {
-        GraphElementFactory elementFactory = GRAPH.getElementFactory();
-        SubjectNode subject = elementFactory.createResource(URI_BOOK_1);
-        PredicateNode predicate = elementFactory.createResource(URI_DC_TITLE);
-        ObjectNode object = elementFactory.createLiteral(LITERAL_BOOK_TITLE);
-        GRAPH.add(subject, predicate, object);
-        subject = elementFactory.createResource(FOAF_NAME);
-        predicate = elementFactory.createResource(FOAF_NICK);
-        object = elementFactory.createResource(FOAF_MBOX);
-        GRAPH.add(subject, predicate, object);
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         TripleBuilder builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(),
@@ -132,15 +120,19 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testSingleConstraint() {
-        checkConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE_1);
+        checkConstraintExpression(QUERY_BOOK_1_DC_TITLE, BOOK_1_DC_TITLE_ID_1);
     }
 
     public void testSingleConstraint2() {
-        checkConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE_1);
+        checkConstraintExpression(QUERY_BOOK_2_DC_TITLE, BOOK_2_DC_TITLE_ID_1);
     }
 
     public void testTwoConstraints() {
         checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_CONJUNCTION);
+    }
+
+    public void testThreeConstraints() {
+        checkConstraintExpression(QUERY_BOOK_1_AND_2_AND_3, BOOK1_AND_2_AND_3_CONJUNCTION);
     }
 
     public void testUnionConstraint() {
@@ -157,6 +149,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
+        System.err.println("Got: " + queryString);
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = query.getConstraintExpression();
         assertEquals(expectedExpression, actualExpression);

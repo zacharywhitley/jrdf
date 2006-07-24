@@ -83,7 +83,7 @@ Productions
     triple period? more_triples* ;
 
   more_triples =
-    triple ;
+    triple period? ;
 
   operation_pattern =
     graph_pattern_not_triples period? graph_pattern ;
