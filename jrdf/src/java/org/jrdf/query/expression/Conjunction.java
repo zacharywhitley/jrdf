@@ -115,7 +115,7 @@ public final class Conjunction<V extends ExpressionVisitor> implements Expressio
     }
 
     public String toString() {
-        return lhs.toString() + " . " + rhs.toString();
+        return lhs + " . " + rhs;
     }
 
     private boolean determineEqualityFromFields(Conjunction o1, Conjunction o2) {

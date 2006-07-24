@@ -59,12 +59,12 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -73,14 +73,15 @@ import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ABlockOfTriples;
-import org.jrdf.sparql.parser.node.AFilteredBasicGraphPatternGraphPattern;
 import org.jrdf.sparql.parser.node.AGroupOrUnionGraphPattern;
+import org.jrdf.sparql.parser.node.AOperationPattern;
 import org.jrdf.sparql.parser.node.AOptionalGraphPattern;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PGroupGraphPattern;
 import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PUnionGraphPattern;
+import org.jrdf.sparql.parser.node.AFilteredBasicGraphPatternGraphPattern;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -170,6 +171,19 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
             expression = lhsSide;
         } else {
             super.caseAGroupOrUnionGraphPattern(node);
+        }
+    }
+
+    @Override
+    public void caseAOperationPattern(AOperationPattern node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternNotTriples().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getGraphPattern().clone());
+        if (lhs != null && rhs != null) {
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        } else if (lhs != null) {
+            expression = lhs;
+        } else if (rhs != null) {
+            expression = rhs;
         }
     }
 

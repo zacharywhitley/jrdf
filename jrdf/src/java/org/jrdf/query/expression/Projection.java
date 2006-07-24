@@ -114,7 +114,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
      * Delegates to <code>getAvp().toString()</code>.
      */
     public String toString() {
-        return attributes.toString();
+        return "SELECT " + attributes + "\n" + nextExpression;
     }
 
     private boolean determineEqualityFromFields(Projection o1, Projection o2) {

@@ -155,6 +155,15 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_OPTIONAL_1, optional2);
     }
 
+//    public void testComplicatedOptional() {
+//        String query = "SELECT ?name ?mbox ?nick\n" +
+//                "WHERE  { \n" +
+//                "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} .\n" +
+//                "  { ?x<http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
+//                "}";
+//        checkConstraintExpression(query,BOOK1_AND_2_UNION);
+//    }
+
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = query.getConstraintExpression();
