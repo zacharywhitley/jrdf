@@ -102,6 +102,9 @@ public class TripleTestUtil {
     public static final URI URI_BOOK_3 = URI.create("http://example.org/book/book3");
     public static final URI URI_DC_TITLE = URI.create("http://purl.org/dc/elements/1.1/title");
     public static final URI URI_DC_SUBJECT = URI.create("http://purl.org/dc/elements/1.1/subject");
+    public static final URI FOAF_NAME = URI.create("http://xmlns.com/foaf/0.1/name");
+    public static final URI FOAF_NICK = URI.create("http://xmlns.com/foaf/0.1/nick");
+    public static final URI FOAF_MBOX = URI.create("http://xmlns.com/foaf/0.1/mbox");
     public static final String LITERAL_BOOK_TITLE = "The Pragmatic Programmer";
     public static final Triple TRIPLE_BOOK_1_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_2_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_2);

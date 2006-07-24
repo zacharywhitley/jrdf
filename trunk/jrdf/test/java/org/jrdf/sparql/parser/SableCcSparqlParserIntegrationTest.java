@@ -70,6 +70,7 @@ import org.jrdf.query.Query;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
@@ -83,9 +84,13 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
+import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
+import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 
 /**
  * Integration test for {@link SableCcSparqlParser}.
@@ -114,6 +119,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         PredicateNode predicate = elementFactory.createResource(URI_DC_TITLE);
         ObjectNode object = elementFactory.createLiteral(LITERAL_BOOK_TITLE);
         GRAPH.add(subject, predicate, object);
+        subject = elementFactory.createResource(FOAF_NAME);
+        predicate = elementFactory.createResource(FOAF_NICK);
+        object = elementFactory.createResource(FOAF_MBOX);
+        GRAPH.add(subject, predicate, object);
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         TripleBuilder builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(),
@@ -137,26 +146,22 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_BOOK_1_UNION_2, BOOK1_AND_2_UNION);
     }
 
-//    public void testOptionalConstraint() throws Exception {
-//        String query = "SELECT ?name ?mbox ?nick\n" +
-//                "WHERE  { ?x <http://xmlns.com/foaf/0.1/name> ?name .\n" +
-//                "         OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick OPTIONAL { ?x <http://xmlns.com/foaf/0.1/mbox> ?mbox } }\n" +
-//                "       }";
-//        Expression<ExpressionVisitor> foafName = TripleTestUtil.createConstraintExpression("?x",
-//                new URI("http://xmlns.com/foaf/0.1/name"), "?name", 1);
-//        Expression<ExpressionVisitor> foafNick = TripleTestUtil.createConstraintExpression("?x",
-//                new URI("http://xmlns.com/foaf/0.1/nick"), "?nick", 2);
-//        Expression<ExpressionVisitor> foafMbox = TripleTestUtil.createConstraintExpression("?x",
-//                new URI("http://xmlns.com/foaf/0.1/mbox"), "?mbox", 3);
-//        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafName, foafNick);
-//        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(optional1, foafMbox);
-//        checkConstraintExpression(query, optional2);
-//    }
+    public void testOptionalConstraint() throws Exception {
+        String query = "SELECT *\n" +
+                "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
+                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
+                "       }";
+        Expression<ExpressionVisitor> foafName = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
+        Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
+        Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 3);
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafNick, foafMbox);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName, optional1);
+        checkConstraintExpression(query, optional2);
+    }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
-        System.err.println("Query: " + queryString);
         Query query = parseQuery(queryString);
-        Expression actualExpression = query.getConstraintExpression();
+        Expression<ExpressionVisitor> actualExpression = query.getConstraintExpression();
         assertEquals(expectedExpression, actualExpression);
     }
 
