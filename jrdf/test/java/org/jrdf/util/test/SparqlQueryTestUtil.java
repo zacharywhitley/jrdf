@@ -98,7 +98,13 @@ public final class SparqlQueryTestUtil {
             createTriple(SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
     public static final String QUERY_OPTIONAL_1 =  createSelectClause() +
                 "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
+                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick\n" +
+                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
+                "       }";
+    public static final String QUERY_OPTIONAL_2 =  createSelectClause() +
+                "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
+                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?alias }\n" +
+                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?alias }\n" +
                 "       }";
     public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);

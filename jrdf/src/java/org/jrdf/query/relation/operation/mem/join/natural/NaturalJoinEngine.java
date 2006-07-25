@@ -145,22 +145,34 @@ public class NaturalJoinEngine implements TupleEngine {
 
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            if (avp2 == null) {
-                addResults(avp1, resultantAttributeValues);
-                added = true;
-            } else if (avpComparator.compare(avp1, avp2) == 0) {
-                addNonNullaryAvp(avp1, avp2, resultantAttributeValues);
-                added = true;
-            }
+            added = avp1NotNull2(avp2, avp1, resultantAttributeValues, added);
         } else {
             // Add if avp1 is null and avp2 is not.
-            if (avp2 != null) {
-                addResults(avp2, resultantAttributeValues);
-                added = true;
-            } else {
-                // TODO (AN) Test when both are null - added.
-                added = true;
-            }
+            added = avp1Null(avp2, resultantAttributeValues);
+        }
+        return added;
+    }
+
+    private boolean avp1NotNull2(AttributeValuePair avp2, AttributeValuePair avp1,
+            SortedSet<AttributeValuePair> resultantAttributeValues, boolean added) {
+        if (avp2 == null) {
+            addResults(avp1, resultantAttributeValues);
+            added = true;
+        } else if (avpComparator.compare(avp1, avp2) == 0) {
+            addNonNullaryAvp(avp1, avp2, resultantAttributeValues);
+            added = true;
+        }
+        return added;
+    }
+
+    private boolean avp1Null(AttributeValuePair avp2, SortedSet<AttributeValuePair> resultantAttributeValues) {
+        boolean added;
+        if (avp2 != null) {
+            addResults(avp2, resultantAttributeValues);
+            added = true;
+        } else {
+            // TODO (AN) Test when both are null - added.
+            added = true;
         }
         return added;
     }
