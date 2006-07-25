@@ -79,6 +79,7 @@ import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.ParserFactory;
 import org.jrdf.sparql.parser.SparqlParser;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Uses the default wiring xml file or one given to it to construct various JRDF components using Spring.
@@ -87,10 +88,14 @@ import org.jrdf.sparql.parser.SparqlParser;
  * @version $Id$
  */
 public final class TestJRDFFactory implements JRDFFactory {
-    private static final JRDFFactoryImpl FACTORY = new JRDFFactoryImpl();
+    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
+    private static final TestJRDFFactory SELF = new TestJRDFFactory();
+
+    private TestJRDFFactory() {
+    }
 
     public static TestJRDFFactory getFactory() {
-        return new TestJRDFFactory();
+        return SELF;
     }
 
     public void refresh() {
@@ -135,6 +140,10 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
         return FACTORY.getNewJrdfQueryExecutorFactory();
+    }
+
+    public ClassPathXmlApplicationContext getContext() {
+        return FACTORY.getContext();
     }
 
     public QueryBuilder getNewQueryBuilder() {

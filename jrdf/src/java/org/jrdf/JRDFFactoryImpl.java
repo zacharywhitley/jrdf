@@ -77,48 +77,55 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public final class JRDFFactoryImpl implements JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
-    private static ClassPathXmlApplicationContext beanFactory =
+    private static final ClassPathXmlApplicationContext BEAN_FACTORY =
             new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
-    public void refresh() {
-        beanFactory.refresh();
+    private JRDFFactoryImpl() {
     }
 
-    ClassPathXmlApplicationContext getContext() {
-        return beanFactory;
+    public void refresh() {
+        BEAN_FACTORY.refresh();
+    }
+
+    public static JRDFFactory getFactory() {
+        return new JRDFFactoryImpl();
+    }
+
+    public ClassPathXmlApplicationContext getContext() {
+        return BEAN_FACTORY;
     }
 
     public Graph getNewGraph() {
-        GraphFactory graphFactory = (GraphFactory) beanFactory.getBean("graphFactory");
+        GraphFactory graphFactory = (GraphFactory) BEAN_FACTORY.getBean("graphFactory");
         return graphFactory.getGraph();
     }
 
     public AttributeValuePairComparator getNewAttributeValuePairComparator() {
-        return (AttributeValuePairComparator) beanFactory.getBean("avpComparator");
+        return (AttributeValuePairComparator) BEAN_FACTORY.getBean("avpComparator");
     }
 
     public NodeComparator getNewNodeComparator() {
-        return (NodeComparator) beanFactory.getBean("nodeComparator");
+        return (NodeComparator) BEAN_FACTORY.getBean("nodeComparator");
     }
 
     public AttributeComparator getNewAttributeComparator() {
-        return (AttributeComparator) beanFactory.getBean("attributeComparator");
+        return (AttributeComparator) BEAN_FACTORY.getBean("attributeComparator");
     }
 
     public TupleComparator getNewTupleComparator() {
-        return (TupleComparator) beanFactory.getBean("tupleComparator");
+        return (TupleComparator) BEAN_FACTORY.getBean("tupleComparator");
     }
 
     public RelationComparator getNewRelationComparator() {
-        return (RelationComparator) beanFactory.getBean("relationComparator");
+        return (RelationComparator) BEAN_FACTORY.getBean("relationComparator");
     }
 
     public SparqlConnection getNewSparqlConnection() {
-        return (SparqlConnection) beanFactory.getBean("sparqlConnection");
+        return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
 
     public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
-        return (JrdfQueryExecutorFactory) beanFactory.getBean("jrdfQueryExecutorFactory");
+        return (JrdfQueryExecutorFactory) BEAN_FACTORY.getBean("jrdfQueryExecutorFactory");
     }
 
 }

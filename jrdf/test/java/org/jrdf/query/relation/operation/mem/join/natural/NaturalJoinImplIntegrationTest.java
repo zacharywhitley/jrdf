@@ -64,6 +64,7 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.attributename.AttributeName;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.NadicJoin;
@@ -88,6 +89,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
+import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
 
 import static java.util.Collections.EMPTY_SET;
 import static java.util.Collections.emptySet;
@@ -102,6 +104,7 @@ import java.util.Set;
  * @version $Revision$
  */
 public class NaturalJoinImplIntegrationTest extends TestCase {
+    private static final AttributeName LOAD_SPRING = RelationIntegrationTestUtil.POS_FOO1;
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
     private static final Set<Relation> EMPTY = emptySet();
@@ -124,7 +127,8 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     }
 
     public void testRelationDEEandDumWithRelation() {
-        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        Set<Tuple> tuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
+        Relation relation = createRelation(tuple);
         // The natural process of DEE and R1 is R1.
         checkRelation(relation, createRelations(relation, RELATION_DEE));
         checkRelation(relation, createRelations(RELATION_DEE, relation));

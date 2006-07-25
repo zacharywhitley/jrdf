@@ -239,7 +239,7 @@ public class JrdfExample {
      * @return Graph
      */
     private Graph getGraph() {
-        return new JRDFFactoryImpl().getNewGraph();
+        return JRDFFactoryImpl.getFactory().getNewGraph();
     }
 
     /**
