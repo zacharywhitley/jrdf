@@ -68,7 +68,7 @@ import org.jrdf.sparql.SparqlConnection;
 import java.net.URL;
 
 public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = new JRDFFactoryImpl();
+    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
     private Graph graph = FACTORY.getNewGraph();
     private SparqlConnection connection = FACTORY.getNewSparqlConnection();
 

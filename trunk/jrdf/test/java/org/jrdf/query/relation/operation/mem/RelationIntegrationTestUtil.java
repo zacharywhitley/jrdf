@@ -101,6 +101,7 @@ import java.util.TreeSet;
 public class RelationIntegrationTestUtil {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final RelationFactory RELATION_FACTORY = FACTORY.getNewRelationFactory();
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
 
     public static final AttributeName POS_FOO1 = new PositionName("foo1");
     public static final AttributeName POS_FOO2 = new PositionName("foo2");
@@ -196,7 +197,6 @@ public class RelationIntegrationTestUtil {
             new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECTOBJECT_R4 =
             new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
 
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
