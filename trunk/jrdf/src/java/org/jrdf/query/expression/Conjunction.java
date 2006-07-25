@@ -92,6 +92,10 @@ public final class Conjunction<V extends ExpressionVisitor> implements Expressio
         return rhs;
     }
 
+    public void setLhs(Expression<V> lhs) {
+        this.lhs = lhs;
+    }
+
     public void accept(V v) {
         v.visitConjunction(this);
     }
@@ -129,4 +133,5 @@ public final class Conjunction<V extends ExpressionVisitor> implements Expressio
     private boolean lhsEqual(Conjunction o1, Conjunction o2) {
         return o1.getLhs().equals(o2.getLhs());
     }
+
 }

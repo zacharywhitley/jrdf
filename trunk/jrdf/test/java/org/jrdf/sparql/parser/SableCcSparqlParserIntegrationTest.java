@@ -84,6 +84,7 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_3;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_2;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -146,13 +147,22 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_BOOK_1_UNION_2_UNION_3, BOOK1_AND_2_AND_3_UNION);
     }
 
-    public void testOptionalConstraint() throws Exception {
+    public void testOptionalConstraint1() throws Exception {
         Expression<ExpressionVisitor> foafName = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
         Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
         Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 3);
         Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafNick, foafMbox);
         Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName, optional1);
         checkConstraintExpression(QUERY_OPTIONAL_1, optional2);
+    }
+
+    public void testOptionalConstraint2() throws Exception {
+        Expression<ExpressionVisitor> foafName = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
+        Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?alias", 2);
+        Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?alias", 3);
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafNick, foafMbox);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName, optional1);
+        checkConstraintExpression(QUERY_OPTIONAL_2, optional2);
     }
 
     public void testComplicatedOptional() {

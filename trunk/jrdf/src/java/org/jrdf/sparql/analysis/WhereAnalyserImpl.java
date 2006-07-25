@@ -73,6 +73,7 @@ import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ABlockOfTriples;
+import org.jrdf.sparql.parser.node.AFilteredBasicGraphPatternGraphPattern;
 import org.jrdf.sparql.parser.node.AGroupOrUnionGraphPattern;
 import org.jrdf.sparql.parser.node.AOperationPattern;
 import org.jrdf.sparql.parser.node.AOptionalGraphPattern;
@@ -81,7 +82,6 @@ import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PGroupGraphPattern;
 import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PUnionGraphPattern;
-import org.jrdf.sparql.parser.node.AFilteredBasicGraphPatternGraphPattern;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -115,10 +115,14 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         if (node.getOperationPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
-            if (rhs instanceof Optional && lhs != null) {
-                ((Optional<ExpressionVisitor>) rhs).setLhs(lhs);
+            if (rhs.getClass().isAssignableFrom(Optional.class) && lhs != null) {
+                handleOptional(rhs, lhs);
+            } else if (rhs.getClass().isAssignableFrom(Conjunction.class) && lhs != null) {
+                ((Conjunction<ExpressionVisitor>) rhs).setLhs(lhs);
+                expression = rhs;
+            } else {
+                expression = rhs;
             }
-            expression = rhs;
         } else {
             super.caseAFilteredBasicGraphPatternGraphPattern(node);
         }
@@ -136,7 +140,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         if (node.getMoreTriples().size() != 0) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getTriple().clone());
             LinkedList<PMoreTriples> moreTriples = node.getMoreTriples();
-            List<Expression<ExpressionVisitor>> expressions = new ArrayList <Expression<ExpressionVisitor>>();
+            List<Expression<ExpressionVisitor>> expressions = new ArrayList<Expression<ExpressionVisitor>>();
             for (PMoreTriples pMoreTriples : moreTriples) {
                 Expression<ExpressionVisitor> rhs = getExpression((Node) pMoreTriples.clone());
                 expressions.add(rhs);
@@ -152,11 +156,24 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     @Override
+    public void caseAOperationPattern(AOperationPattern node) {
+        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternNotTriples().clone());
+        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getGraphPattern().clone());
+        if (lhs != null && rhs != null) {
+            handleExistingLhsRhs(lhs, rhs);
+        } else if (lhs != null) {
+            expression = lhs;
+        } else if (rhs != null) {
+            expression = rhs;
+        }
+    }
+
+    @Override
     public void caseAGroupOrUnionGraphPattern(AGroupOrUnionGraphPattern node) {
         if (node.getUnionGraphPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
             LinkedList<PUnionGraphPattern> unionGraphPattern = node.getUnionGraphPattern();
-            List<Expression<ExpressionVisitor>> expressions = new ArrayList <Expression<ExpressionVisitor>>();
+            List<Expression<ExpressionVisitor>> expressions = new ArrayList<Expression<ExpressionVisitor>>();
             for (PUnionGraphPattern pUnionGraphPattern : unionGraphPattern) {
                 Expression<ExpressionVisitor> rhs = getExpression((PUnionGraphPattern) pUnionGraphPattern.clone());
                 expressions.add(rhs);
@@ -168,19 +185,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
             expression = lhsSide;
         } else {
             super.caseAGroupOrUnionGraphPattern(node);
-        }
-    }
-
-    @Override
-    public void caseAOperationPattern(AOperationPattern node) {
-        Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternNotTriples().clone());
-        Expression<ExpressionVisitor> rhs = getExpression((Node) node.getGraphPattern().clone());
-        if (lhs != null && rhs != null) {
-            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-        } else if (lhs != null) {
-            expression = lhs;
-        } else if (rhs != null) {
-            expression = rhs;
         }
     }
 
@@ -205,9 +209,38 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         return newAttributes;
     }
 
+    private void handleOptional(Expression<ExpressionVisitor> rhs, Expression<ExpressionVisitor> lhs) {
+        Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
+        if (rhsOptional.getLhs() != null) {
+            expression = new Optional<ExpressionVisitor>(lhs, rhsOptional);
+        } else {
+            rhsOptional.setLhs(lhs);
+            expression = rhsOptional;
+        }
+    }
+
+    private void handleExistingLhsRhs(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
+        if (lhs instanceof Optional && rhs instanceof Optional) {
+            operationHandleOperation(lhs, rhs);
+        } else {
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        }
+    }
+
+    private void operationHandleOperation(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
+        Optional<ExpressionVisitor> lhsOptional = (Optional<ExpressionVisitor>) lhs;
+        Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
+        if (lhsOptional.getLhs() == null && rhsOptional.getLhs() == null) {
+            expression = new Optional<ExpressionVisitor>(lhsOptional.getRhs(), rhsOptional.getRhs());
+        } else {
+            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+        }
+    }
+
     private Expression<ExpressionVisitor> getExpression(Node node) {
         WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
         node.apply(analyser);
         return analyser.getExpression();
     }
+
 }
