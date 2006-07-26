@@ -123,6 +123,10 @@ public class NaturalJoinEngine implements TupleEngine {
             }
         }
 
+        // TODO (AN) Change this back to matching the headings and failing on both values being null when it goes
+        // to outerunion and subsumption.
+
+
         // Only add results if we have found more items to add.
         if (resultantAttributeValues.size() > 0) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
