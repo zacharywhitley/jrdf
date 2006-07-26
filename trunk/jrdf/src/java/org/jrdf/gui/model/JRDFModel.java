@@ -59,12 +59,14 @@
 package org.jrdf.gui.model;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.InvalidQuerySyntaxException;
 
 import java.net.URL;
 
 public interface JRDFModel {
     Graph loadModel(URL urlName);
 
-    Relation performQuery(String query);
+    Relation performQuery(String query) throws GraphException, InvalidQuerySyntaxException;
 }

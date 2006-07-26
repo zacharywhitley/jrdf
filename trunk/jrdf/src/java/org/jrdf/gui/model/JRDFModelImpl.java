@@ -61,8 +61,11 @@ package org.jrdf.gui.model;
 import org.jrdf.JRDFFactory;
 import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.constants.RelationDUM;
+import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.sparql.SparqlConnection;
 
 import java.net.URL;
@@ -82,11 +85,10 @@ public class JRDFModelImpl implements JRDFModel {
         }
     }
 
-    public Relation performQuery(String query) {
-        try {
-            return connection.executeQuery(graph, query);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    public Relation performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
+        if (graph.isEmpty()) {
+            return RelationDUM.RELATION_DUM;
         }
+        return connection.executeQuery(graph, query);
     }
 }
