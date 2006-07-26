@@ -154,7 +154,8 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1,
-            SortedSet<AttributeValuePair> resultantAttributeValues, boolean added) {
+            SortedSet<AttributeValuePair> resultantAttributeValues) {
+        boolean added;
         if (avp2 == null) {
             addResults(avp1, resultantAttributeValues);
             added = true;
