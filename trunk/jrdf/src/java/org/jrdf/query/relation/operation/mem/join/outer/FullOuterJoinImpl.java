@@ -75,7 +75,7 @@ public class FullOuterJoinImpl implements DyadicJoin {
     }
 
     // TODO (AN) Add tuple subsumption i.e. go through the results and remove the results for a given attribute binding
-    // that have null values.  Or add it to join.
+    // that have null values.  Or add it to a new time of join.
 
     public Relation join(Relation relation1, Relation relation2) {
         Relation leftOuterJoinResult = leftOuterJoin.join(relation1, relation2);
