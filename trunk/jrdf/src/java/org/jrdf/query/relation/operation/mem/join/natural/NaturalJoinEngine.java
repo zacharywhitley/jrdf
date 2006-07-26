@@ -141,41 +141,36 @@ public class NaturalJoinEngine implements TupleEngine {
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
             SortedSet<AttributeValuePair> resultantAttributeValues) {
-        boolean added = false;
-
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            added = avp1NotNull(avp2, avp1, resultantAttributeValues);
+            return avp1NotNull(avp2, avp1, resultantAttributeValues);
         } else {
             // Add if avp1 is null and avp2 is not.
-            added = avp1Null(avp2, resultantAttributeValues);
+            return avp1Null(avp2, resultantAttributeValues);
         }
-        return added;
     }
 
     private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1,
             SortedSet<AttributeValuePair> resultantAttributeValues) {
-        boolean added = false;
         if (avp2 == null) {
             addResults(avp1, resultantAttributeValues);
-            added = true;
+            return true;
         } else if (avpComparator.compare(avp1, avp2) == 0) {
             addNonNullaryAvp(avp1, avp2, resultantAttributeValues);
-            added = true;
+            return true;
+        } else {
+            return false;
         }
-        return added;
     }
 
     private boolean avp1Null(AttributeValuePair avp2, SortedSet<AttributeValuePair> resultantAttributeValues) {
-        boolean added;
         if (avp2 != null) {
             addResults(avp2, resultantAttributeValues);
-            added = true;
+            return true;
         } else {
             // TODO (AN) Test when both are null - added.
-            added = true;
+            return true;
         }
-        return added;
     }
 
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
