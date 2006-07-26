@@ -68,6 +68,7 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.NadicJoin;
+import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
@@ -89,9 +90,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
-import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
 
-import static java.util.Collections.EMPTY_SET;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import java.util.List;
@@ -223,11 +222,11 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public void testNaturalJoinNoResults() {
+    public void testNaturalJoinOneResult() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
         Set<Attribute> heading = createHeading(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT);
-        checkJoin(createRelation(heading, EMPTY_SET), createRelation(tuple1, tuple2));
+        checkJoin(createRelation(heading, createASingleTuple(VAR_BAR1_SUBJECT_R3)), createRelation(tuple1, tuple2));
     }
 
     private void checkJoin(Relation expectedResult, List<Relation> relations) {

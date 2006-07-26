@@ -90,7 +90,7 @@ public class FullOuterJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final DyadicJoin FULL_OUTER_JOIN = FACTORY.getNewFullOuterJoin();
 
-    public void testSemiDifference1() {
+    public void testOuterJoin1() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
         tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
         tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4));
