@@ -124,7 +124,7 @@ public class NaturalJoinEngine implements TupleEngine {
         }
 
         // Only add results if we have found more items to add.
-        if (resultantAttributeValues.size() > avps1.size()) {
+        if (resultantAttributeValues.size() > 0) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
@@ -145,7 +145,7 @@ public class NaturalJoinEngine implements TupleEngine {
 
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            added = avp1NotNull2(avp2, avp1, resultantAttributeValues, added);
+            added = avp1NotNull(avp2, avp1, resultantAttributeValues, added);
         } else {
             // Add if avp1 is null and avp2 is not.
             added = avp1Null(avp2, resultantAttributeValues);
@@ -153,7 +153,7 @@ public class NaturalJoinEngine implements TupleEngine {
         return added;
     }
 
-    private boolean avp1NotNull2(AttributeValuePair avp2, AttributeValuePair avp1,
+    private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1,
             SortedSet<AttributeValuePair> resultantAttributeValues, boolean added) {
         if (avp2 == null) {
             addResults(avp1, resultantAttributeValues);
