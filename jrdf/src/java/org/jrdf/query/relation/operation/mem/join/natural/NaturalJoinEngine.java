@@ -145,7 +145,7 @@ public class NaturalJoinEngine implements TupleEngine {
 
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            added = avp1NotNull(avp2, avp1, resultantAttributeValues, added);
+            added = avp1NotNull(avp2, avp1, resultantAttributeValues);
         } else {
             // Add if avp1 is null and avp2 is not.
             added = avp1Null(avp2, resultantAttributeValues);
