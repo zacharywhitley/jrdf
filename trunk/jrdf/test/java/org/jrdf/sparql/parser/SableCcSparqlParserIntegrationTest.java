@@ -85,6 +85,8 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_2;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_4;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTION_3;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -121,16 +123,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("?x", FOAF_NAME, "?name", 3);
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 4);
     private QueryParser parser;
-    private static final String QUERY_OPTION_3 = "SELECT *\n" +
-            "WHERE  { \n" +
-            "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} .\n" +
-            "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
-            "}";
-    private static final String QUERY_OPTIONAL_4 = "SELECT *\n" +
-            "WHERE  { \n" +
-            "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} OPTIONAL\n" +
-            "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
-            "}";
 
     public void setUp() throws Exception {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
