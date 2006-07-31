@@ -128,6 +128,7 @@ public class NaturalJoinEngine implements TupleEngine {
 
 
         // Only add results if we have found more items to add.
+//        if (resultantAttributeValues.size() == headings.size()) {
         if (resultantAttributeValues.size() > 0) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
@@ -173,6 +174,7 @@ public class NaturalJoinEngine implements TupleEngine {
             return true;
         } else {
             // TODO (AN) Test when both are null - added.
+            // return false
             return true;
         }
     }
