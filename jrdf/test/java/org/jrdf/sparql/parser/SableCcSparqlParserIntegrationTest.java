@@ -113,6 +113,13 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
             = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
             = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
+    private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
+    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_2 = createConstraintExpression("?x", FOAF_NICK, "?alias", 2);
+    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_3 = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 3);
+    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("?x", FOAF_MBOX, "?alias", 3);
+    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("?x", FOAF_NAME, "?name", 3);
+    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 4);
     private QueryParser parser;
 
     public void setUp() throws Exception {
@@ -148,36 +155,37 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testOptionalConstraint1() throws Exception {
-        Expression<ExpressionVisitor> foafName = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
-        Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
-        Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 3);
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafNick, foafMbox);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName, optional1);
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NICK_EXP_2, FOAF_MBOX_EXP_3);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, optional1);
         checkConstraintExpression(QUERY_OPTIONAL_1, optional2);
     }
 
     public void testOptionalConstraint2() throws Exception {
-        Expression<ExpressionVisitor> foafName = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
-        Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?alias", 2);
-        Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?alias", 3);
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafNick, foafMbox);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName, optional1);
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_ALIAS_EXP_2, FOAF_ALIAS_EXP_3);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, optional1);
         checkConstraintExpression(QUERY_OPTIONAL_2, optional2);
     }
 
-    public void testComplicatedOptional() {
+    public void testComplicatedOptional1() {
         String query = "SELECT *\n" +
                 "WHERE  { \n" +
                 "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} .\n" +
                 "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
                 "}";
-        Expression<ExpressionVisitor> foafName1 = createConstraintExpression("?x", FOAF_NAME, "?name", 1);
-        Expression<ExpressionVisitor> foafNick = createConstraintExpression("?x", FOAF_NICK, "?nick", 2);
-        Expression<ExpressionVisitor> foafName2 = createConstraintExpression("?x", FOAF_NAME, "?name", 3);
-        Expression<ExpressionVisitor> foafMbox = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 4);
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(foafName1, foafNick);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(foafName2, foafMbox);
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
         checkConstraintExpression(query, new Conjunction<ExpressionVisitor>(optional1, optional2));
+    }
+
+    public void testComplicatedOptional2() {
+        String query = "SELECT *\n" +
+                "WHERE  { \n" +
+                "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x <http://xmlns.com/foaf/0.1/nick> ?nick }} OPTIONAL\n" +
+                "  { ?x <http://xmlns.com/foaf/0.1/name> ?name OPTIONAL { ?x  <http://xmlns.com/foaf/0.1/mbox> ?mbox }}\n" +
+                "}";
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
+        checkConstraintExpression(query, new Optional<ExpressionVisitor>(optional1, optional2));
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {

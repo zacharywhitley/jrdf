@@ -115,6 +115,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         if (node.getOperationPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
+
             if (rhs.getClass().isAssignableFrom(Optional.class) && lhs != null) {
                 handleOptional(rhs, lhs);
             } else if (rhs.getClass().isAssignableFrom(Conjunction.class) && lhs != null) {
@@ -160,7 +161,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         Expression<ExpressionVisitor> lhs = getExpression((Node) node.getGraphPatternNotTriples().clone());
         Expression<ExpressionVisitor> rhs = getExpression((Node) node.getGraphPattern().clone());
         if (lhs != null && rhs != null) {
-            handleExistingLhsRhs(lhs, rhs);
+            expression = handleExistingLhsRhs(lhs, rhs);
         } else if (lhs != null) {
             expression = lhs;
         } else if (rhs != null) {
@@ -219,21 +220,29 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         }
     }
 
-    private void handleExistingLhsRhs(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
+    private Expression<ExpressionVisitor> handleExistingLhsRhs(Expression<ExpressionVisitor> lhs,
+            Expression<ExpressionVisitor> rhs) {
         if (lhs instanceof Optional && rhs instanceof Optional) {
-            operationHandleOperation(lhs, rhs);
+            return operationHandleOperation(lhs, rhs);
         } else {
-            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+            return new Conjunction<ExpressionVisitor>(lhs, rhs);
         }
     }
 
-    private void operationHandleOperation(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
+    private Expression<ExpressionVisitor> operationHandleOperation(Expression<ExpressionVisitor> lhs,
+            Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> lhsOptional = (Optional<ExpressionVisitor>) lhs;
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
         if (lhsOptional.getLhs() == null && rhsOptional.getLhs() == null) {
-            expression = new Optional<ExpressionVisitor>(lhsOptional.getRhs(), rhsOptional.getRhs());
+            return new Optional<ExpressionVisitor>(lhsOptional.getRhs(), rhsOptional.getRhs());
+        } else if (rhsOptional.getLhs() == null) {
+            rhsOptional.setLhs(lhs);
+            return rhsOptional;
+        } else if (lhsOptional.getLhs() == null) {
+            lhsOptional.setLhs(rhs);
+            return lhsOptional;
         } else {
-            expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+            return new Conjunction<ExpressionVisitor>(lhs, rhs);
         }
     }
 
