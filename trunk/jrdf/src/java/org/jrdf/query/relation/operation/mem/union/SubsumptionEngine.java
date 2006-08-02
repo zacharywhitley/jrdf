@@ -81,6 +81,14 @@ public class SubsumptionEngine implements TupleEngine {
         return relationHelper.getHeadingUnions(relation1, relation2);
     }
 
+    /**
+     * Returns the tuples to be subsumed in the result set.
+     *
+     * @param headings the headings of the resultant tuple.
+     * @param avps1 the first set of avps to consider.
+     * @param avps2 the second set of avps to consider.
+     * @param result the tuples to be subsumed.
+     */
     public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         int subsumes = subsumes(headings, avps1, avps2);
