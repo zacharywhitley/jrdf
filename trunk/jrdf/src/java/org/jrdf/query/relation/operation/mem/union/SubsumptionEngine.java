@@ -135,16 +135,26 @@ public class SubsumptionEngine implements TupleEngine {
      */
     private int areSubsumedBy(SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2) {
         if (avps1.size() > avps2.size()) {
-            // TODO (AN) Only subsume if avps2 has values only in avps1
-            // avps1.contains(avp2) -> if fails don't subsume.
-            return 1;
+            if (onlyContainsAttributesValues(avps1, avps2)) {
+                return 1;
+            }
         } else if (avps1.size() < avps2.size()) {
-            // TODO (AN) Only subsume if avps1 has values only in avps2
-            // avps2.contains(avp1) -> if fails don't subsume.
-            return -1;
-        } else {
-            return 0;
+            if (onlyContainsAttributesValues(avps2, avps1)) {
+                return -1;
+            }
         }
+        return 0;
+    }
+    
+    private boolean onlyContainsAttributesValues(SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2) {
+        boolean onlyContainsValues = false;
+        for (AttributeValuePair avp : avps2) {
+            onlyContainsValues = avps1.contains(avp);
+            if (!onlyContainsValues) {
+                break;
+            }
+        }
+        return onlyContainsValues;
     }
 
     private boolean tuple1SubsumesTuple2(int subsumes) {
