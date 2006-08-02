@@ -95,8 +95,8 @@ public class SubsumptionEngine implements TupleEngine {
      * -1 indicates 2 subsumes 1, 1 indicates 1 subsumes 2, 0 means that they are not subsumed.
      *
      * @param headings the headings to use.
-     * @param avps1 The set of avps to compare.
-     * @param avps2 The set of avps to compare.
+     * @param avps1    The set of avps to compare.
+     * @param avps2    The set of avps to compare.
      * @return -1 indicates avps2 subsumes avps1, 1 indicates avps1 subsumes avps2 and 0 means they do not share any
      *         common values or are equal.
      */
@@ -134,14 +134,10 @@ public class SubsumptionEngine implements TupleEngine {
      *         common values or are equal.
      */
     private int areSubsumedBy(SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2) {
-        if (avps1.size() > avps2.size()) {
-            if (onlyContainsAttributesValues(avps1, avps2)) {
-                return 1;
-            }
-        } else if (avps2.size() > avps1.size()) {
-            if (onlyContainsAttributesValues(avps2, avps1)) {
-                return -1;
-            }
+        if (avps1.size() > avps2.size() && onlyContainsAttributesValues(avps1, avps2)) {
+            return 1;
+        } else if (avps2.size() > avps1.size() && onlyContainsAttributesValues(avps2, avps1)) {
+            return -1;
         }
         return 0;
     }
