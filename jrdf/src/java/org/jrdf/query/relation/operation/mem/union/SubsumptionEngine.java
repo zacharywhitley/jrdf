@@ -138,14 +138,14 @@ public class SubsumptionEngine implements TupleEngine {
             if (onlyContainsAttributesValues(avps1, avps2)) {
                 return 1;
             }
-        } else if (avps1.size() < avps2.size()) {
+        } else if (avps2.size() > avps1.size()) {
             if (onlyContainsAttributesValues(avps2, avps1)) {
                 return -1;
             }
         }
         return 0;
     }
-    
+
     private boolean onlyContainsAttributesValues(SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2) {
         boolean onlyContainsValues = false;
         for (AttributeValuePair avp : avps2) {
