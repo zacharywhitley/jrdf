@@ -58,7 +58,10 @@
 
 package org.jrdf.sparql;
 
-import org.jrdf.connection.JrdfConnection;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.query.Answer;
+import org.jrdf.query.InvalidQuerySyntaxException;
 
 /**
  * A connection through which to send <a href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL</a> queries.
@@ -66,5 +69,7 @@ import org.jrdf.connection.JrdfConnection;
  * @author Tom Adams
  * @version $Revision$
  */
-public interface SparqlConnection extends JrdfConnection {
+public interface SparqlConnection {
+
+    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
 }

@@ -58,18 +58,21 @@
 
 package org.jrdf.query;
 
+import org.jrdf.graph.Graph;
+import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
 import static java.util.Collections.emptyList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * Default implementation of a {@link Query}.
@@ -84,12 +87,13 @@ public final class QueryImpl implements Query, Serializable {
 
     private static final long serialVersionUID = 409607492370028929L;
     private Expression<ExpressionVisitor> expression;
+    private final GraphRelationFactory graphRelationFactory;
 
-    public QueryImpl(Expression<ExpressionVisitor> expression) {
-        ParameterUtil.checkNotNull("expression", expression);
+    public QueryImpl(Expression<ExpressionVisitor> expression, GraphRelationFactory graphRelationFactory) {
+        checkNotNull(expression, graphRelationFactory);
         this.expression = expression;
+        this.graphRelationFactory = graphRelationFactory;
     }
-
 
     public List<Attribute> getVariables() {
         if (expression instanceof Projection) {
@@ -100,13 +104,11 @@ public final class QueryImpl implements Query, Serializable {
         }
     }
 
-    public Expression<ExpressionVisitor> getConstraintExpression() {
-        return expression;
+    public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
+        ParameterUtil.checkNotNull(graph, queryEngine);
+        queryEngine.setResult(graphRelationFactory.createRelation(graph));
+        expression.accept(queryEngine);
+        Relation results = queryEngine.getResult();
+        return new AnswerImpl(this, results);
     }
-
-    public SortedSet<AttributeValuePair> getSingleAvp() {
-//        return attributeValuePairs;
-        throw new UnsupportedOperationException();
-    }
-
 }

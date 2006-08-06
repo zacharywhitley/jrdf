@@ -63,6 +63,7 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.QueryImpl;
 import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -73,6 +74,7 @@ import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.builder.TripleBuilderImpl;
+import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
@@ -91,6 +93,8 @@ import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
 import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
+
+import java.lang.reflect.Field;
 
 /**
  * Integration test for {@link SableCcSparqlParser}.
@@ -129,7 +133,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         TripleBuilder builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(),
                 newSortedAttributeFactory);
-        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder);
+        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder, FACTORY.getNewGraphRelationFactory());
     }
 
     public void testSingleConstraint() {
@@ -184,8 +188,18 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);
-        Expression<ExpressionVisitor> actualExpression = query.getConstraintExpression();
+        Expression<ExpressionVisitor> actualExpression = getExpression(query);
         assertEquals(expectedExpression, actualExpression);
+    }
+
+    private Expression<ExpressionVisitor> getExpression(Query query) {
+        try {
+            Field field = ReflectTestUtil.getField(QueryImpl.class, "expression");
+            field.setAccessible(true);
+            return (Expression<ExpressionVisitor>) field.get(query);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Query parseQuery(String queryString) {

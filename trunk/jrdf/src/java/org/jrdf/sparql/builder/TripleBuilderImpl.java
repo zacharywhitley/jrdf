@@ -86,6 +86,7 @@ import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.sparql.parser.node.PResourceTripleElement;
+import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
@@ -127,8 +128,7 @@ public final class TripleBuilderImpl implements TripleBuilder {
      * @return The local version of the given <var>tripleNode</var>
      */
     public SortedSet<AttributeValuePair> build(ATriple tripleNode, Graph graph) {
-        ParameterUtil.checkNotNull("tripleNode", tripleNode);
-        ParameterUtil.checkNotNull("graph", graph);
+        ParameterUtil.checkNotNull(tripleNode, graph);
 
         currentGraph = graph;
         heading = sortedAttributeFactory.createHeading(Arrays.asList(TYPES));
@@ -172,7 +172,12 @@ public final class TripleBuilderImpl implements TripleBuilder {
         if (object instanceof AVariableObjectTripleElement) {
             String variableName = getVariableName((AVariableObjectTripleElement) object);
             return createAttributeValuePair(OBJECT_NODE_TYPE, ANY_OBJECT_NODE, variableName);
-        } else {
+        } else if (object instanceof AResourceObjectTripleElement) {
+            AResourceObjectTripleElement resource = (AResourceObjectTripleElement) object;
+            URIReference uriReference = createResource(getStringForm(resource));
+            return new AttributeValuePairImpl(heading.get(2), uriReference);
+        }
+        else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
             Literal literalNode = createLiteral(text);
@@ -213,6 +218,10 @@ public final class TripleBuilderImpl implements TripleBuilder {
     }
 
     private String getStringForm(AResourceResourceTripleElement resourceNode) {
+        return resourceNode.getResource().getText();
+    }
+
+    private String getStringForm(AResourceObjectTripleElement resourceNode) {
         return resourceNode.getResource().getText();
     }
 

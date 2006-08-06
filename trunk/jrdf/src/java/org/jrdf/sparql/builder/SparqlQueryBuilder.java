@@ -74,7 +74,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  */
 public final class SparqlQueryBuilder implements QueryBuilder {
 
-    private SparqlParser parser;
+    private final SparqlParser parser;
 
     public SparqlQueryBuilder(SparqlParser parser) {
         checkNotNull(parser);
@@ -85,6 +85,7 @@ public final class SparqlQueryBuilder implements QueryBuilder {
      * {@inheritDoc}
      */
     public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
+        checkNotNull(graph);
         checkNotEmptyString("queryText", queryText);
         return parser.parseQuery(graph, queryText);
     }

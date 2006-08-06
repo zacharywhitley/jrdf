@@ -61,6 +61,7 @@ package org.jrdf.sparql.parser;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.sparql.analysis.SparqlAnalyser;
 import org.jrdf.sparql.analysis.SparqlAnalyserImpl;
 import org.jrdf.sparql.builder.TripleBuilder;
@@ -68,7 +69,8 @@ import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.IOException;
 
@@ -84,10 +86,13 @@ public final class SableCcSparqlParser implements SparqlParser {
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
     private ParserFactory parserFactory;
     private TripleBuilder builder;
+    private GraphRelationFactory graphRelationFactory;
 
-    public SableCcSparqlParser(ParserFactory parserFactory, TripleBuilder builder) {
+    public SableCcSparqlParser(ParserFactory parserFactory, TripleBuilder builder,
+            GraphRelationFactory graphRelationFactory) {
         this.parserFactory = parserFactory;
         this.builder = builder;
+        this.graphRelationFactory = graphRelationFactory;
     }
 
     /**
@@ -98,8 +103,8 @@ public final class SableCcSparqlParser implements SparqlParser {
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
      */
     public Query parseQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
-        ParameterUtil.checkNotNull("graph", graph);
-        ParameterUtil.checkNotEmptyString("queryText", queryText);
+        checkNotNull(graph);
+        checkNotEmptyString("queryText", queryText);
         Parser parser = parserFactory.getParser(queryText);
         Start start = tryParse(parser);
         return analyseQuery(graph, start);
@@ -118,7 +123,7 @@ public final class SableCcSparqlParser implements SparqlParser {
     }
 
     private Query analyseQuery(Graph graph, Start start) {
-        SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph);
+        SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph, graphRelationFactory);
         start.apply(analyser);
         return analyser.getQuery();
     }

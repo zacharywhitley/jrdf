@@ -98,7 +98,7 @@
             <ref bean="queryBuilder"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="jrdfQueryExecutorFactory"/>
+            <ref bean="queryEngine"/>
         </constructor-arg>
     </bean>
 
@@ -114,6 +114,9 @@
         </constructor-arg>
         <constructor-arg>
             <ref bean="tripleBuilder"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="graphRelationFactory"/>
         </constructor-arg>
     </bean>
 
@@ -142,18 +145,6 @@
         </constructor-arg>
         <constructor-arg>
             <ref bean="minLeftOuterJoin"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="jrdfQueryExecutorFactory" class="org.jrdf.query.execute.NaiveQueryExecutorFactory">
-        <constructor-arg type="java.net.URL">
-            <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="queryEngine"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="graphRelationFactory"/>
         </constructor-arg>
     </bean>
 

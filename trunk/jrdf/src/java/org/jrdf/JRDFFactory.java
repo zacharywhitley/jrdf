@@ -60,7 +60,6 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
@@ -90,8 +89,6 @@ public interface JRDFFactory {
     RelationComparator getNewRelationComparator();
 
     SparqlConnection getNewSparqlConnection();
-
-    JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory();
 
     ClassPathXmlApplicationContext getContext();
 }

@@ -100,7 +100,7 @@ public final class ReflectTestUtil {
     }
 
     public static Field getField(Class<?> cls, String fieldName) {
-        try {
+        try {            
             return cls.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);

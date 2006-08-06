@@ -59,15 +59,19 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.Query;
-import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.Answer;
+import org.jrdf.query.AnswerImpl;
+import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
+import org.jrdf.graph.Graph;
 
-import java.util.List;
-import java.util.SortedSet;
-import java.util.Collections;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Class description goes here.
@@ -83,7 +87,7 @@ public class NoQuery implements Query, Serializable {
         throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
     }
 
-    public SortedSet<AttributeValuePair> getSingleAvp() {
-        throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
+    public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
+        return new AnswerImpl(NO_QUERY, RELATION_DUM);
     }
 }

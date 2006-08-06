@@ -62,6 +62,7 @@ import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.AQueryStart;
@@ -71,8 +72,10 @@ import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.node.TBlank;
 import org.jrdf.sparql.parser.parser.Parser;
 import org.jrdf.sparql.parser.parser.ParserException;
-import org.jrdf.sparql.analysis.VariableCollector;
-import org.jrdf.util.param.ParameterTestUtil;
+import static org.jrdf.util.param.ParameterTestUtil.EMPTY_STRING;
+import static org.jrdf.util.param.ParameterTestUtil.NON_EMPTY_STRING;
+import static org.jrdf.util.param.ParameterTestUtil.NULL_STRING;
+import static org.jrdf.util.param.ParameterTestUtil.SINGLE_SPACE;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
@@ -93,12 +96,12 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
-    private static final VariableCollector VARIABLE_COLLECTOR = MockTestUtil.createMock(VariableCollector.class);
     private static final ParserFactory PARSER_FACTORY = MockTestUtil.createMock(ParserFactory.class);
     private static final TripleBuilder TRIPLE_BUILDER = MockTestUtil.createMock(TripleBuilder.class);
+    private static final GraphRelationFactory GRAPH_RELATION_FACTORY = MockTestUtil.createMock(GraphRelationFactory.class);
     private static final String QUERY_TEXT_MESSAGE = "queryText cannot be null";
     private static final String QUERY_TEXT_EMPTY = "queryText cannot be the empty string";
-    private static final String GRAPH_MESSAGE = "graph cannot be null";
+    private static final String GRAPH_MESSAGE = "Parameter 1 cannot be null";
     private static final String ERROR_MSG = "Unable to parse query syntax";
     private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1,1), "bar");
     private static final LexerException LEXER_EXECPTION = new LexerException("foo");
@@ -112,22 +115,23 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
-        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class);
+        checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, TripleBuilder.class,
+                GraphRelationFactory.class);
     }
 
     public void testParseQueryFailsWithBadInput() {
-        checkBadInput(GRAPH, ParameterTestUtil.NULL_STRING, QUERY_TEXT_MESSAGE);
-        checkBadInput(GRAPH, ParameterTestUtil.EMPTY_STRING, QUERY_TEXT_EMPTY);
-        checkBadInput(GRAPH, ParameterTestUtil.SINGLE_SPACE, QUERY_TEXT_EMPTY);
-        checkBadInput(null, ParameterTestUtil.NON_EMPTY_STRING, GRAPH_MESSAGE);
+        checkBadInput(GRAPH, NULL_STRING, QUERY_TEXT_MESSAGE);
+        checkBadInput(GRAPH, EMPTY_STRING, QUERY_TEXT_EMPTY);
+        checkBadInput(GRAPH, SINGLE_SPACE, QUERY_TEXT_EMPTY);
+        checkBadInput(null, NON_EMPTY_STRING, GRAPH_MESSAGE);
     }
 
     public void testParseQuery() throws Exception {
         Start start = createStart();
         Parser parser = createParser(start);
         ParserFactory parserFactory = createParserFactory(parser);
-        SableCcSparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER,
-                VARIABLE_COLLECTOR);
+        SableCcSparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER
+        );
         mockFactory.replay();
         sableCcSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
         mockFactory.verify();
@@ -182,8 +186,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private void checkBadInput(final Graph graph, final String query, String errorMessage) {
-        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY, TRIPLE_BUILDER,
-                VARIABLE_COLLECTOR);
+        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY, TRIPLE_BUILDER);
         AssertThrows.assertThrows(IllegalArgumentException.class, errorMessage, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 sableCcSparqlParser.parseQuery(graph, query);
@@ -191,9 +194,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         });
     }
 
-    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder,
-            VariableCollector variableCollector) {
-        return new SableCcSparqlParser(parserFactory, tripleBuilder);
+    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory, TripleBuilder tripleBuilder) {
+        return new SableCcSparqlParser(parserFactory, tripleBuilder, GRAPH_RELATION_FACTORY);
 
     }
 
@@ -202,7 +204,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         Parser parser = createParser(exception);
         ParserFactory parserFactory = createParserFactory(parser);
         final SableCcSparqlParser sableCcSparqlParser =
-                createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER, VARIABLE_COLLECTOR);
+                createSableCcSparqlParser(parserFactory, TRIPLE_BUILDER);
         mockFactory.replay();
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, errorMsg, new AssertThrows.Block() {
             public void execute() throws Throwable {

@@ -93,7 +93,7 @@ import java.util.SortedSet;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class TripleBuilderUnitTest extends TestCase {
+public final class TripleBuilderImplUnitTest extends TestCase {
 
     // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined way.
 

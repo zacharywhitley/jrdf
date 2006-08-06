@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,19 +58,29 @@
 
 package org.jrdf.sparql;
 
-import junit.framework.TestCase;
-import org.jrdf.connection.JrdfConnection;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 
-/**
- * Unit test for {@link SparqlConnection}.
- *
- * @author Tom Adams
- * @version $Revision$
- */
-public final class SparqlConnectionUnitTest extends TestCase {
+public abstract class SparqlConnectionUrl {
+    private static final String JRDF_NAMESPACE = "http://jrdf.sf.net/";
+    private static final String JRDF_CONNECTION_NAMESPACE = JRDF_NAMESPACE + "connection";
 
-    public void testClassProperties() {
-        ClassPropertiesTestUtil.checkExtensionOf(JrdfConnection.class, SparqlConnection.class);
+    /**
+     * Indicates that no security is enabled on the graph being queried.
+     */
+    public static final URI NO_SECURITY_DOMAIN = URI.create(JRDF_CONNECTION_NAMESPACE + "#NO_SECURITY");
+
+    /**
+     * URL version of NO_SECURITY_DOMAIN - for Spring wiring (it doesn't have a URI PropertyEditor).
+     */
+    public static final URL NO_SECURITY_DOMAIN_URL = tryConvertUri();
+
+    private static URL tryConvertUri() {
+        try {
+            return NO_SECURITY_DOMAIN.toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

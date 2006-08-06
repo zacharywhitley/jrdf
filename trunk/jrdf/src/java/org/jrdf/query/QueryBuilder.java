@@ -59,6 +59,7 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 
 /**
  * Builds queries in {@link String} form into {@link Query} objects.
@@ -75,5 +76,5 @@ public interface QueryBuilder {
      * @return The <code>queryText</code> in {@link Query} form.
      * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
      */
-    Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException;
+    Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
 }
