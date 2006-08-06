@@ -86,7 +86,7 @@ public final class UuidGeneratorIntegrationTest extends TestCase {
     private static final int NUM_UUIDS_TO_GENERATE = NUM_UIDS / NUM_THREADS;
 
     public void testMultipleClassLoadersGenerateUniqueUuids() throws Exception {
-        URL[] uidClassUrls = new URL[]{getResource(UUID_GENERATOR_CLASS_NAME_SIMPLE)};
+        URL[] uidClassUrls = {getResource(UUID_GENERATOR_CLASS_NAME_SIMPLE)};
         for (int i = 0; i < NUM_CLASSLOADERS; i++) {
             Class<?> uuidGeneratorClass = loadClass(uidClassUrls, UUID_GENERATOR_CLASS_NAME_FULL);
             checkUuidGenerator(uuidGeneratorClass);

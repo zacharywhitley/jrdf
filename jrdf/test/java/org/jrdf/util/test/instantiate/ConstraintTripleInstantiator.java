@@ -82,7 +82,7 @@ final class ConstraintTripleInstantiator implements Instantiator {
 
     private ParamSpec createParams() {
         SortedSet<AttributeValuePair> avp = TripleTestUtil.AVP_BOOK_1_DC_SUBJECT_LITERAL;
-        Object[] params = new Object[]{avp};
+        Object[] params = {avp};
         Class<?>[] types = new Class[]{SortedSet.class};
         return new ParamSpec(types, params);
     }

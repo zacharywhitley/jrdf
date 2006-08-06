@@ -89,8 +89,7 @@ public final class ConstraintUnitTest extends TestCase {
     private static final Constraint CONSTRAINT_TRIPLE_2 = new Constraint<ExpressionVisitor>(AVP_2);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairComparator AVP_COMPARATOR = FACTORY.getNewAttributeValuePairComparator();
-    private static final Class[] PARAM_TYPES = new Class[] {SortedSet.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"avp"};
+    private static final Class[] PARAM_TYPES = {SortedSet.class};
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Expression.class, Constraint.class);
