@@ -58,89 +58,29 @@
 
 package org.jrdf.query;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.util.EqualsUtil;
-import org.jrdf.util.param.ParameterUtil;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
+import org.jrdf.query.relation.Relation;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.List;
-
-// TODO (AN) Can this be replaced by relation.
+import java.lang.reflect.Modifier;
 
 /**
- * Default implementation of {@link Answer}.
+ * Unit test for {@link AnswerImpl}.
  *
  * @author Tom Adams
  * @version $Revision$
  */
-public final class DefaultAnswer implements Answer, Serializable {
+public final class AnswerImplUnitTest extends TestCase {
 
-    private static final long serialVersionUID = -4724846731215773529L;
-    private static final int DEFAULT_HASH_CODE = 7;
-    private static final String DELIMITER_OPEN = "{";
-    private static final String DELIMITER_CLOSE = "}";
-    private static final String INDENT = "  ";
-    private static final String NEW_LINE = "\n";
-    private List<Triple> solutions;
-
-    public DefaultAnswer(List<Triple> solutions) {
-        ParameterUtil.checkNotNull("solutions", solutions);
-        this.solutions = solutions;
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
+        ClassPropertiesTestUtil.checkConstructor(AnswerImpl.class, Modifier.PUBLIC, Query.class, Relation.class);
     }
 
-    public List<Triple> getSolutions() {
-        return solutions;
-    }
-
-    /**
-     * Two answers are equal if their {@linkplain #getSolutions() solutions} are equal.
-     * <p>Two {@link Answer}s of differing implementation will not neccessarily be equal.</p>
-     */
-    public boolean equals(Object obj) {
-        // FIXME TJA: Should different implementations of Answer be equal?
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (EqualsUtil.differentClasses(this, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields((Answer) obj);
-    }
-
-    public int hashCode() {
-        return DEFAULT_HASH_CODE;
-    }
-
-    private boolean determineEqualityFromFields(Answer obj) {
-        return obj.getSolutions().equals(solutions);
-    }
-
-    public String toString() {
-        StringBuffer stringForm = new StringBuffer();
-        stringForm.append(DELIMITER_OPEN);
-        stringForm.append(getTriplesAsString(solutions));
-        stringForm.append(DELIMITER_CLOSE);
-        return stringForm.toString();
-    }
-
-    private String getTriplesAsString(List<Triple> triples) {
-        StringBuffer stringForm = new StringBuffer();
-        for (Iterator<Triple> iterator = triples.iterator(); iterator.hasNext();) {
-            String tripleString = getTripleAsString(iterator.next(), !iterator.hasNext());
-            stringForm.append(tripleString);
-        }
-        return stringForm.toString();
-    }
-
-    private String getTripleAsString(Triple triple, boolean lastTriple) {
-        String stringForm = NEW_LINE + INDENT + triple.toString();
-        if (lastTriple) {
-            stringForm += NEW_LINE;
-        }
-        return stringForm;
+    public void testSerialVersionUid() {
+        SerializationTestUtil.checkSerialialVersionUid(AnswerImpl.class, 3778815984074679718L);
     }
 }

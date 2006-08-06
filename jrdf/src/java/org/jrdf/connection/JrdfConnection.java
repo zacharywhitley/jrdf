@@ -2,8 +2,8 @@ package org.jrdf.connection;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.relation.Relation;
 
 /**
  * A connection through which to send textual commands.
@@ -23,5 +23,5 @@ public interface JrdfConnection {
      *                        If the syntax of the <code>queryText</code> is incorrect.
      * @throws GraphException If an error occurs while executing the query.
      */
-    Relation executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
 }

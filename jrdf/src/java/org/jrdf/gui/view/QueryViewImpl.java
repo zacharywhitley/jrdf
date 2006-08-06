@@ -62,6 +62,7 @@ import org.jrdf.gui.command.QueryRanCommand;
 import org.jrdf.gui.command.RdfLoadedCommand;
 import org.jrdf.gui.command.RdfFailedToLoadCommand;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.Answer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.richclient.application.PageComponentContext;
@@ -110,10 +111,11 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
         getStatusBar().setMessage(message + errorMessage);
     }
 
-    public void setResults(Relation answer) {
-        resultsPanelView.setResults(answer);
+    public void setResults(Answer answer) {
+        Relation results = answer.getResults();
+        resultsPanelView.setResults(results);
         String message = getMessage("resultsView.numResultsFound");
-        getStatusBar().setMessage(message + answer.getTuples().size());
+        getStatusBar().setMessage(message + results.getTuples().size());
     }
 
     protected JComponent createControl() {

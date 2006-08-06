@@ -65,7 +65,7 @@ import org.jrdf.query.JrdfQueryExecutor;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.Answer;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -95,7 +95,7 @@ public final class SparqlConnectionImpl implements SparqlConnection {
         this.executorFactory = executorFactory;
     }
 
-    public Relation executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException {
+    public Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException {
         checkNotNull("graph", graph);
         checkNotEmptyString("queryText", queryText);
         Query builtQuery = builder.buildQuery(graph, queryText);
