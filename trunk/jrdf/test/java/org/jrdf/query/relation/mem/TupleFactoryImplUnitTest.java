@@ -76,12 +76,12 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision:$
  */
+@SuppressWarnings({"unchecked"})
 public class TupleFactoryImplUnitTest extends TestCase {
     private static final Class[] CONSTRUCTOR_TYPES = { AttributeValuePairComparator.class };
-    private static final String[] CONSTRUCTOR_NAMES = new String[] {"attributeValuePairComparator"};
+    private static final String[] CONSTRUCTOR_NAMES = {"attributeValuePairComparator"};
     private static final AttributeValuePairComparator AVP_COMPARATOR =
             MockTestUtil.createMock(AttributeValuePairComparator.class);
-    @SuppressWarnings({ "unchecked" })
     private static final Set<AttributeValuePair> AVP = MockTestUtil.createMock(Set.class);
 
     public void testClassProperties() {

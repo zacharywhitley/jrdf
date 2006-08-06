@@ -78,6 +78,7 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.AVariable;
@@ -86,7 +87,6 @@ import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.net.URI;
@@ -176,8 +176,7 @@ public final class TripleBuilderImpl implements TripleBuilder {
             AResourceObjectTripleElement resource = (AResourceObjectTripleElement) object;
             URIReference uriReference = createResource(getStringForm(resource));
             return new AttributeValuePairImpl(heading.get(2), uriReference);
-        }
-        else {
+        } else {
             PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
             String text = extractTextFromLiteralNode(literal);
             Literal literalNode = createLiteral(text);

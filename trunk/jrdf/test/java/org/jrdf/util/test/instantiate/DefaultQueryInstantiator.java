@@ -88,7 +88,7 @@ final class DefaultQueryInstantiator implements Instantiator {
     private ParamSpec createParams() {
         SortedSet<AttributeValuePair> avp = new TreeSet<AttributeValuePair>();
         Constraint<ExpressionVisitor> constraint = new Constraint<ExpressionVisitor>(avp);
-        Object[] params = new Object[]{Variable.ALL_VARIABLES, constraint};
+        Object[] params = {Variable.ALL_VARIABLES, constraint};
         Class<?>[] types = new Class[]{List.class, Expression.class};
         return new ParamSpec(types, params);
     }

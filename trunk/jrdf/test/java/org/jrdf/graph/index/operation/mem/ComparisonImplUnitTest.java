@@ -97,8 +97,8 @@ public class ComparisonImplUnitTest extends TestCase {
     private static final Triple TRIPLE_1 = createTripleAllSame(URI_BOOK_1);
     private static final Triple TRIPLE_2 = createTripleAllSame(URI_BOOK_2);
     private static final Triple TRIPLE_3 = TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
-    private static final Triple[] TRIPLES_1 = new Triple[]{TRIPLE_1, TRIPLE_2};
-    private static final Triple[] TRIPLES_2 = new Triple[]{TRIPLE_1, TRIPLE_3};
+    private static final Triple[] TRIPLES_1 = {TRIPLE_1, TRIPLE_2};
+    private static final Triple[] TRIPLES_2 = {TRIPLE_1, TRIPLE_3};
     private Comparison comparison;
     private Graph mockGraph1;
     private Graph mockGraph2;
