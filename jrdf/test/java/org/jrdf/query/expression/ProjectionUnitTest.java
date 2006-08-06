@@ -59,14 +59,14 @@
 package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.ArgumentTestUtil;
-import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.MockTestUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * Projection test case.
@@ -75,8 +75,7 @@ import java.util.Set;
  * @version $Revision:$
  */
 public class ProjectionUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = {Set.class, Expression.class};
-    private static final String[] PARAMETER_NAMES = { "attributes", "nextExpression" };
+    private static final Class[] PARAM_TYPES = {LinkedHashSet.class, Expression.class};
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Expression.class, Projection.class);
@@ -90,7 +89,7 @@ public class ProjectionUnitTest extends TestCase {
 
     @SuppressWarnings( {"unchecked"} )
     public void testGetAttributes() {
-        Set<Attribute> expectedSet = MockTestUtil.createMock(Set.class);
+        LinkedHashSet<Attribute> expectedSet = MockTestUtil.createMock(LinkedHashSet.class);
         Expression expectedExpression = MockTestUtil.createMock(Expression.class);
         Projection projection = new Projection(expectedSet, expectedExpression);
         assertSame(expectedSet, projection.getAttributes());

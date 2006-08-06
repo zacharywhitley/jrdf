@@ -89,6 +89,7 @@ public final class QueryImpl implements Query, Serializable {
 
 
     public List<Attribute> getVariables() {
+
 //        List<Attribute> atts = new ArrayList<Attribute>();
 //        for (AttributeValuePair avp : attributeValuePairs) {
 //            atts.add(avp.getAttribute());

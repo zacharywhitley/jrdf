@@ -64,11 +64,9 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.attributename.AttributeName;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.NadicJoin;
-import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_BAR3_OBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
@@ -103,10 +101,10 @@ import java.util.Set;
  * @version $Revision$
  */
 public class NaturalJoinImplIntegrationTest extends TestCase {
-    private static final AttributeName LOAD_SPRING = RelationIntegrationTestUtil.POS_FOO1;
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
     private static final Set<Relation> EMPTY = emptySet();
+    private static final Set<Tuple> NO_TUPLES = emptySet();
 
     public void testRelationDEEandDUM() {
         // The natural process of empty is DEE.
@@ -222,11 +220,11 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public void testNaturalJoinOneResult() {
+    public void testNaturalJoinNoResults() {
         Set<Tuple> tuple1 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3);
         Set<Attribute> heading = createHeading(VAR_BAR1_SUBJECT, POS_FOO4_PREDICATE, POS_FOO3_OBJECT);
-        checkJoin(createRelation(heading, createASingleTuple(VAR_BAR1_SUBJECT_R3)), createRelation(tuple1, tuple2));
+        checkJoin(createRelation(heading, NO_TUPLES), createRelation(tuple1, tuple2));
     }
 
     private void checkJoin(Relation expectedResult, List<Relation> relations) {

@@ -68,9 +68,6 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.LinkedHashSet;
 
-/**
- * Class description goes here.
- */
 public class MinimumUnionImpl implements Union {
     private RelationProcessor relationProcessor;
     private TupleEngine unionTupleEngine;
@@ -99,7 +96,10 @@ public class MinimumUnionImpl implements Union {
         if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
             return RELATION_DEE;
         }
+        return performMinimumUnion(relation1, relation2);
+    }
 
+    private Relation performMinimumUnion(Relation relation1, Relation relation2) {
         LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
         relations.add(relation1);
         relations.add(relation2);

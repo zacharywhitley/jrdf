@@ -61,6 +61,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
@@ -187,7 +188,7 @@ public final class TestJRDFFactory implements JRDFFactory {
     }
 
     public Union getNewUnion() {
-        return (Union) FACTORY.getContext().getBean("union");
+        return (Union) FACTORY.getContext().getBean("minimumUnion");
     }
 
     public SemiDifference getNewSemiDifference() {
@@ -200,5 +201,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public DyadicJoin getNewFullOuterJoin() {
         return (DyadicJoin) FACTORY.getContext().getBean("fullOuterJoin");
+    }
+
+    public QueryEngine getNewQueryEngine() {
+        return (QueryEngine) FACTORY.getContext().getBean("queryEngine");
     }
 }
