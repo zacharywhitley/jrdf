@@ -206,4 +206,12 @@ public final class TestJRDFFactory implements JRDFFactory {
     public QueryEngine getNewQueryEngine() {
         return (QueryEngine) FACTORY.getContext().getBean("queryEngine");
     }
+
+    public DyadicJoin getNewMinimumFullOuterJoin() {
+        return (DyadicJoin) FACTORY.getContext().getBean("minFullOuterJoin");
+    }
+
+    public DyadicJoin getNewMinimumLeftOuterJoin() {
+        return (DyadicJoin) FACTORY.getContext().getBean("minLeftOuterJoin");
+    }
 }
