@@ -8,7 +8,6 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 /**
  * A connection through which to send textual commands.
  *
- * @author Tom Adams
  * @version $Revision$
  */
 public interface JrdfConnection {
