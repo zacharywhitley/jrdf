@@ -56,32 +56,36 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test.instantiate;
+package org.jrdf.query;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.query.DefaultAnswer;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.ParamSpec;
+import au.net.netstorm.boost.primordial.Primordial;
+import org.jrdf.query.relation.Relation;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.query.DefaultAnswer}.
+ * Default implementation of {@link Answer}.
  *
- * @author Tom Adams
- * @version $Id$
+ * @version $Revision$
  */
-final class DefaultAnswerInstantiator implements Instantiator {
+public final class AnswerImpl extends Primordial implements Answer, Serializable {
+    private static final long serialVersionUID = 3778815984074679718L;
+    private final Query query;
+    private final Relation results;
 
-    private static final Class<DefaultAnswer> CLASS_DEFAULT_ANSWER = DefaultAnswer.class;
-
-    public Object instantiate() {
-        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_ANSWER, createParams());
+    public AnswerImpl(Query query, Relation results) {
+        checkNotNull();
+        this.query = query;
+        this.results = results;
     }
 
-    private ParamSpec createParams() {
-        List<Triple> triples = new ArrayList<Triple>();
-        return new ParamSpec(new Class[]{List.class}, new Object[]{triples});
+    public Query getQuery() {
+        return query;
     }
+
+    public Relation getResults() {
+        return results;
+    }
+
 }

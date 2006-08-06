@@ -67,6 +67,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.io.Serializable;
 
 /**
  * Dee is a relation with one tuple and is the base relation for NULLARY_TUPLE.
@@ -77,7 +78,8 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class RelationDEE implements Relation {
+public final class RelationDEE implements Relation, Serializable {
+    private static final long serialVersionUID = -8473232661811978990L;
 
     /**
      * The singleton version of RelationDEE.

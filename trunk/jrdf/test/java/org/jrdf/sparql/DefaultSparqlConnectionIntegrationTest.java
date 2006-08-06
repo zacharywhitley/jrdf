@@ -71,6 +71,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.Answer;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
@@ -139,7 +140,8 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     private Relation executeQuery(SparqlConnection connection, String query) {
         try {
-            return connection.executeQuery(GRAPH, query);
+            Answer answer = connection.executeQuery(GRAPH, query);
+            return answer.getResults();
         } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
         } catch (GraphException e) {

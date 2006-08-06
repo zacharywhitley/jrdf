@@ -59,14 +59,7 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.Query;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.parser.analysis.Analysis;
-
-import java.util.List;
-import java.util.SortedSet;
 
 /**
  * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
@@ -88,18 +81,4 @@ public interface SparqlAnalyser extends Analysis {
      */
     Query getQuery();
 
-    class NoQuery implements Query {
-
-        public List<Attribute> getVariables() {
-            throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
-        }
-
-        public Expression<ExpressionVisitor> getConstraintExpression() {
-            throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
-        }
-
-        public SortedSet<AttributeValuePair> getSingleAvp() {
-            throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
-        }
-    }
 }

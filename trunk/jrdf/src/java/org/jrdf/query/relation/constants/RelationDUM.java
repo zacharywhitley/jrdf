@@ -66,6 +66,7 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.io.Serializable;
 
 /**
  * Dum is a relation with no tuples and is the base relation for FALSE.
@@ -73,7 +74,8 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class RelationDUM implements Relation {
+public final class RelationDUM implements Relation, Serializable {
+    private static final long serialVersionUID = -6414359849752251621L;
 
     /**
      * The singleton version of RelationDUM.

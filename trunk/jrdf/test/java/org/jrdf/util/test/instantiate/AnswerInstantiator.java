@@ -56,55 +56,30 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.util.test.instantiate;
 
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Projection;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.util.param.ParameterUtil;
-
-import java.io.Serializable;
-import static java.util.Collections.emptyList;
-import java.util.List;
-import java.util.SortedSet;
+import org.jrdf.query.AnswerImpl;
+import org.jrdf.query.Query;
+import org.jrdf.query.relation.Relation;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import org.jrdf.util.test.ParamSpec;
+import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
 
 /**
- * Default implementation of a {@link Query}.
+ * {@link Instantiator} for {@link org.jrdf.query.AnswerImpl}.
  *
- * @author Tom Adams
- * @version $Revision$
+ * @version $Id$
  */
-public final class QueryImpl implements Query, Serializable {
+final class AnswerInstantiator implements Instantiator {
 
-    // FIXME: Check for immutability of parameters.
-    // FIXME TJA: Implement equals() and hashCode()
+    private static final Class<AnswerImpl> CLASS_DEFAULT_ANSWER = AnswerImpl.class;
 
-    private static final long serialVersionUID = 409607492370028929L;
-    private Expression<ExpressionVisitor> expression;
-
-    public QueryImpl(Expression<ExpressionVisitor> expression) {
-        ParameterUtil.checkNotNull("expression", expression);
-        this.expression = expression;
+    public Object instantiate() {
+        return ReflectTestUtil.createInstanceUsingConstructor(CLASS_DEFAULT_ANSWER, createParams());
     }
 
-
-    public List<Attribute> getVariables() {
-        if (expression instanceof Projection) {
-            Projection projection = (Projection<ExpressionVisitor>) expression;
-            projection.getAttributes();
-        }
-        return emptyList();
+    private ParamSpec createParams() {
+        return new ParamSpec(new Class[]{Query.class, Relation.class}, new Object[]{NO_QUERY, RELATION_DUM});
     }
-
-    public Expression<ExpressionVisitor> getConstraintExpression() {
-        return expression;
-    }
-
-    public SortedSet<AttributeValuePair> getSingleAvp() {
-//        return attributeValuePairs;
-        throw new UnsupportedOperationException();
-    }
-
 }

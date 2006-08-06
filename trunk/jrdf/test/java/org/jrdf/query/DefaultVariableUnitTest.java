@@ -129,24 +129,24 @@ public final class DefaultVariableUnitTest extends TestCase {
 //    }
 
 //    private void checkSymmetric() {
-//        Answer x = new DefaultAnswer(createEmptyTripleList());
-//        Answer y = new DefaultAnswer(createEmptyTripleList());
+//        Answer x = new AnswerImpl(createEmptyTripleList());
+//        Answer y = new AnswerImpl(createEmptyTripleList());
 //        checkEqual(x, y);
 //        checkEqual(y, y);
 //    }
 
 //    private void checkTransitive() {
-//        Answer x = new DefaultAnswer(createEmptyTripleList());
-//        Answer y = new DefaultAnswer(createEmptyTripleList());
-//        Answer z = new DefaultAnswer(createEmptyTripleList());
+//        Answer x = new AnswerImpl(createEmptyTripleList());
+//        Answer y = new AnswerImpl(createEmptyTripleList());
+//        Answer z = new AnswerImpl(createEmptyTripleList());
 //        checkEqual(x, y);
 //        checkEqual(y, z);
 //        checkEqual(x, z);
 //    }
 
 //    private void checkConsistentEquals() {
-//        Answer x = new DefaultAnswer(createEmptyTripleList());
-//        Answer y = new DefaultAnswer(createEmptyTripleList());
+//        Answer x = new AnswerImpl(createEmptyTripleList());
+//        Answer y = new AnswerImpl(createEmptyTripleList());
 //        checkEqual(x, y);
 //        checkEqual(x, y);
 //    }
@@ -158,8 +158,8 @@ public final class DefaultVariableUnitTest extends TestCase {
 //    }
 
 //    private void checkSameValueDifferentReference() {
-//        Answer x = new DefaultAnswer(createEmptyTripleList());
-//        Answer y = new DefaultAnswer(createEmptyTripleList());
+//        Answer x = new AnswerImpl(createEmptyTripleList());
+//        Answer y = new AnswerImpl(createEmptyTripleList());
 //        checkEqual(x, y);
 //    }
 

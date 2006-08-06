@@ -76,7 +76,7 @@ import org.jrdf.sparql.parser.node.Start;
 public final class SparqlAnalyserImpl extends DepthFirstAdapter implements SparqlAnalyser {
 
     // FIXME TJA: Should eventually be using a Expression builder here.
-    private Query query = SparqlAnalyser.NO_QUERY;
+    private Query query = NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private Expression<ExpressionVisitor> expression;
@@ -90,7 +90,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
      * {@inheritDoc}
      */
     public Query getQuery() {
-        if (expression != null && query == SparqlAnalyser.NO_QUERY) {
+        if (expression != null && query == NO_QUERY) {
             query = new QueryImpl(expression);
         }
         return query;

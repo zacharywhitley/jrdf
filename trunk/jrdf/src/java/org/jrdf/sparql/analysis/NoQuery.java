@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,55 +56,33 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.expression.Expression;
+import org.jrdf.query.Query;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Projection;
+import org.jrdf.query.expression.Expression;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.util.param.ParameterUtil;
 
-import java.io.Serializable;
-import static java.util.Collections.emptyList;
 import java.util.List;
 import java.util.SortedSet;
+import java.io.Serializable;
 
 /**
- * Default implementation of a {@link Query}.
- *
- * @author Tom Adams
- * @version $Revision$
+ * Class description goes here.
  */
-public final class QueryImpl implements Query, Serializable {
-
-    // FIXME: Check for immutability of parameters.
-    // FIXME TJA: Implement equals() and hashCode()
-
-    private static final long serialVersionUID = 409607492370028929L;
-    private Expression<ExpressionVisitor> expression;
-
-    public QueryImpl(Expression<ExpressionVisitor> expression) {
-        ParameterUtil.checkNotNull("expression", expression);
-        this.expression = expression;
-    }
-
+public class NoQuery implements Query, Serializable {
+    private static final long serialVersionUID = -1815852679585213051L;
 
     public List<Attribute> getVariables() {
-        if (expression instanceof Projection) {
-            Projection projection = (Projection<ExpressionVisitor>) expression;
-            projection.getAttributes();
-        }
-        return emptyList();
+        throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
     }
 
     public Expression<ExpressionVisitor> getConstraintExpression() {
-        return expression;
+        throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
     }
 
     public SortedSet<AttributeValuePair> getSingleAvp() {
-//        return attributeValuePairs;
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
     }
-
 }

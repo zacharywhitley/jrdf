@@ -58,20 +58,14 @@
 
 package org.jrdf.query;
 
-import org.jrdf.graph.Triple;
-
-import java.util.List;
+import org.jrdf.query.relation.Relation;
 
 /**
  * An answer to a query.
  *
- * @author Tom Adams
  * @version $Id$
  */
 public interface Answer {
-
-    // TODO (AN) Can this be replaced by relation.
-    // TODO (PB) Add column names
-
-    List<Triple> getSolutions();
+    Query getQuery();
+    Relation getResults();
 }
