@@ -66,7 +66,11 @@ import org.jrdf.query.relation.Relation;
  * @version $Id$
  */
 public interface Answer {
-    Query getQuery();
-    Relation getResults();
+    String[] getColumnNames();
+
+    String[][] getColumnValues();
+
     long numberOfTuples();
+
+    Relation getResults();
 }

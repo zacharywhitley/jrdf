@@ -59,10 +59,16 @@
 package org.jrdf.query;
 
 import au.net.netstorm.boost.primordial.Primordial;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.SortedSet;
 
 /**
  * Default implementation of {@link Answer}.
@@ -71,6 +77,7 @@ import java.io.Serializable;
  */
 public final class AnswerImpl extends Primordial implements Answer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
+    private final LinkedHashSet<Attribute> headings;
     private final Query query;
     private final Relation results;
 
@@ -78,18 +85,69 @@ public final class AnswerImpl extends Primordial implements Answer, Serializable
         checkNotNull();
         this.query = query;
         this.results = results;
+        this.headings = getHeading();
     }
 
-    public Query getQuery() {
-        return query;
+    private LinkedHashSet<Attribute> getHeading() {
+        LinkedHashSet<Attribute> heading;
+        List<Attribute> variables = query.getVariables();
+        if (variables.size() == 0) {
+            SortedSet<Attribute> sortedHeading = results.getSortedHeading();
+            heading = new LinkedHashSet<Attribute>(sortedHeading);
+        } else {
+            heading = new LinkedHashSet<Attribute>(variables);
+        }
+        return heading;
     }
 
     public Relation getResults() {
         return results;
     }
 
+    public String[] getColumnNames() {
+        String[] resultColumnNames = new String[headings.size()];
+        int index = 0;
+        for (Attribute attribute : headings) {
+            resultColumnNames[index] = attribute.getAttributeName().getLiteral() + " | " +
+                    attribute.getType().getName();
+            index++;
+        }
+        return resultColumnNames;
+    }
+
+    public String[][] getColumnValues() {
+        SortedSet<Tuple> sortedTuples = results.getSortedTuples();
+        String table[][] = new String[sortedTuples.size()][headings.size()];
+        int index = 0;
+        for (Tuple sortedTuple : sortedTuples) {
+            SortedSet<AttributeValuePair> avps = sortedTuple.getSortedAttributeValues();
+            table[index] = getDataWithValues(avps);
+            index++;
+        }
+        return table;
+    }
+
     public long numberOfTuples() {
         return results.getTuples().size();
+    }
+
+    private String[] getDataWithValues(SortedSet<AttributeValuePair> avps) {
+        String[] results = new String[headings.size()];
+        int index = 0;
+        for (Attribute headingAttribute : headings) {
+            boolean foundValue = false;
+            for (AttributeValuePair avp : avps) {
+                if (avp.getAttribute().equals(headingAttribute)) {
+                    results[index] = avp.getValue().toString();
+                    foundValue = true;
+                }
+            }
+            if (!foundValue) {
+                results[index] = "";
+            }
+            index++;
+        }
+        return results;
     }
 
 }

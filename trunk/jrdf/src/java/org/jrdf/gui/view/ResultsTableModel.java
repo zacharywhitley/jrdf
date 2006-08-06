@@ -59,14 +59,8 @@
 package org.jrdf.gui.view;
 
 import org.jrdf.query.Answer;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.Tuple;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.SortedSet;
 
 /**
  * Display and Update results to a table.
@@ -78,7 +72,6 @@ public class ResultsTableModel extends AbstractTableModel {
     private static final long serialVersionUID = -7636712377178626351L;
     private String[] columnNames = {"Subject", "Predicate", "Object"};
     private String[][] data = {};
-    private int dataIndex;
 
     public void setResults(Answer answer) {
         updateTableData(answer);
@@ -103,60 +96,7 @@ public class ResultsTableModel extends AbstractTableModel {
     }
 
     private void updateTableData(Answer answer) {
-        SortedSet<Tuple> sortedTuples = answer.getResults().getSortedTuples();
-        LinkedHashSet<Attribute> sortedHeading = getHeading(answer);
-        setColumnNames(sortedHeading);
-        setColumnValues(sortedHeading, sortedTuples);
-    }
-
-    private LinkedHashSet<Attribute> getHeading(Answer answer) {
-        LinkedHashSet<Attribute> heading;
-        List<Attribute> variables = answer.getQuery().getVariables();
-        if (variables.size() == 0) {
-            SortedSet<Attribute> sortedHeading = answer.getResults().getSortedHeading();
-            heading = new LinkedHashSet<Attribute>(sortedHeading);
-        } else {
-            heading = new LinkedHashSet<Attribute>(variables);
-        }
-        return heading;
-    }
-
-    private void setColumnValues(LinkedHashSet<Attribute> headings, SortedSet<Tuple> sortedTuples) {
-        data = new String[sortedTuples.size()][headings.size()];
-        dataIndex = 0;
-        for (Tuple sortedTuple : sortedTuples) {
-            SortedSet<AttributeValuePair> avps = sortedTuple.getSortedAttributeValues();
-            setDataWithValues(headings, avps);
-        }
-    }
-
-    private void setDataWithValues(LinkedHashSet<Attribute> headingAttributes, SortedSet<AttributeValuePair> avps) {
-        String[] results = new String[headingAttributes.size()];
-        int index = 0;
-        for (Attribute headingAttribute : headingAttributes) {
-            boolean foundValue = false;
-            for (AttributeValuePair avp : avps) {
-                if (avp.getAttribute().equals(headingAttribute)) {
-                    results[index] = avp.getValue().toString();
-                    foundValue = true;
-                }
-            }
-            if (!foundValue) {
-                results[index] = "";
-            }
-            index++;
-        }
-        data[dataIndex++] = results;
-    }
-
-    private void setColumnNames(LinkedHashSet<Attribute> sortedHeading) {
-        String[] resultColumnNames = new String[sortedHeading.size()];
-        int index = 0;
-        for (Attribute attribute : sortedHeading) {
-            resultColumnNames[index] = attribute.getAttributeName().getLiteral() + " | " +
-                    attribute.getType().getName();
-            index++;
-        }
-        columnNames = resultColumnNames;
+        columnNames = answer.getColumnNames();
+        data = answer.getColumnValues();
     }
 }
