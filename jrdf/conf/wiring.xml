@@ -138,10 +138,10 @@
             <ref bean="restrict"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="minimumUnion"/>
+            <ref bean="outerUnion"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="minLeftOuterJoin"/>
+            <ref bean="fullOuterJoin"/>
         </constructor-arg>
     </bean>
 
@@ -341,7 +341,7 @@
             <ref bean="naturalJoin"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="minimumUnion"/>
+            <ref bean="outerUnion"/>
         </constructor-arg>
     </bean>
 
@@ -350,7 +350,7 @@
             <ref bean="leftOuterJoin"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="minimumUnion"/>
+            <ref bean="outerUnion"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="antiJoin"/>

@@ -63,7 +63,6 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -86,9 +85,9 @@ public class SubsumptionEngine implements TupleEngine {
      * Returns the tuples to be subsumed in the result set.
      *
      * @param headings the headings of the resultant tuple.
-     * @param avps1 the first set of avps to consider.
-     * @param avps2 the second set of avps to consider.
-     * @param result the tuples to be subsumed.
+     * @param avps1    the first set of avps to consider.
+     * @param avps2    the second set of avps to consider.
+     * @param result   the tuples to be subsumed.
      */
     public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
@@ -155,11 +154,9 @@ public class SubsumptionEngine implements TupleEngine {
             SortedSet<AttributeValuePair> avps2) {
         boolean onlyContainsValues = false;
         for (AttributeValuePair avp : avps2) {
-            if (!(avp.getAttribute().getAttributeName() instanceof PositionName)) {
-                onlyContainsValues = avps1.contains(avp);
-                if (!onlyContainsValues) {
-                    break;
-                }
+            onlyContainsValues = avps1.contains(avp);
+            if (!onlyContainsValues) {
+                break;
             }
         }
         return onlyContainsValues;

@@ -70,9 +70,9 @@ public class MinimumUnionFullOuterJoinImpl implements DyadicJoin {
     private final NadicJoin naturalJoin;
     private final Union union;
 
-    public MinimumUnionFullOuterJoinImpl(NadicJoin naturalJoin, Union union) {
+    public MinimumUnionFullOuterJoinImpl(NadicJoin naturalJoin, Union minimumUnion) {
         this.naturalJoin = naturalJoin;
-        this.union = union;
+        this.union = minimumUnion;
     }
 
     // TODO (AN) Add tuple subsumption i.e. go through the results and remove the results for a given attribute binding
