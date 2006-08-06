@@ -106,9 +106,8 @@ public class ArgumentTestUtil {
     public static void checkMethodNullAssertions(final Object obj, final String methodName,
             final ParameterDefinition paramDefinition) {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
-        String[] parameterNames = paramDefinition.getParameterNames();
         for (int index = 0; index < parameterTypes.length; index++) {
-            checkMethod(parameterTypes, index, parameterNames, methodName, obj);
+            checkMethod(parameterTypes, index, methodName, obj);
         }
     }
 
@@ -116,18 +115,17 @@ public class ArgumentTestUtil {
     public static void checkMethodNullAssertions(final ParameterDefinition paramDefinition, final Object obj,
             final String methodName, final boolean[] checkParameter) {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
-        String[] parameterNames = paramDefinition.getParameterNames();
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index]) {
-                checkMethod(parameterTypes, index, parameterNames, methodName, obj);
+                checkMethod(parameterTypes, index, methodName, obj);
             }
         }
     }
 
-    private static void checkMethod(final Class[] parameterTypes, int index, String[] parameterNames,
+    private static void checkMethod(final Class[] parameterTypes, int index,
             final String methodName, final Object obj) {
         final Object[] args = createArgs(parameterTypes, index);
-        String message = parameterNames[index] + PARAMETER_CANNOT_BE_NULL;
+        String message = "Parameter " + (index+1) + " cannot be null";
         AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 callMethod(obj, methodName, parameterTypes, args);

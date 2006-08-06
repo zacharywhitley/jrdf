@@ -60,12 +60,11 @@ package org.jrdf.sparql;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.JrdfQueryExecutor;
-import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryBuilder;
-import org.jrdf.query.Answer;
+import org.jrdf.query.execute.QueryEngine;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -82,24 +81,23 @@ public final class SparqlConnectionImpl implements SparqlConnection {
 
     // FIXME TJA: Ensure connections are threadsafe.
     private QueryBuilder builder;
-    private JrdfQueryExecutorFactory executorFactory;
+    private final QueryEngine queryEngine;
 
     /**
      * Creates a new SPARQL connection.
      *
      * @param securityDomain The security domain of the graph.
      */
-    public SparqlConnectionImpl(URL securityDomain, QueryBuilder builder, JrdfQueryExecutorFactory executorFactory) {
-        checkNotNull(securityDomain, builder, executorFactory);
+    public SparqlConnectionImpl(URL securityDomain, QueryBuilder builder, QueryEngine queryEngine) {
+        checkNotNull(securityDomain, builder, queryEngine);
+        this.queryEngine = queryEngine;
         this.builder = builder;
-        this.executorFactory = executorFactory;
     }
 
     public Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException {
-        checkNotNull("graph", graph);
+        checkNotNull(graph, queryText);
         checkNotEmptyString("queryText", queryText);
-        Query builtQuery = builder.buildQuery(graph, queryText);
-        JrdfQueryExecutor executor = executorFactory.getExecutor(graph);
-        return executor.executeQuery(builtQuery);
+        Query query = builder.buildQuery(graph, queryText);
+        return query.executeQuery(graph, queryEngine);
     }
 }

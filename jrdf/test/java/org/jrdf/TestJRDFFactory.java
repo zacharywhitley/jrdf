@@ -59,7 +59,6 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
@@ -68,6 +67,7 @@ import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
@@ -137,10 +137,6 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public SparqlConnection getNewSparqlConnection() {
         return FACTORY.getNewSparqlConnection();
-    }
-
-    public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
-        return FACTORY.getNewJrdfQueryExecutorFactory();
     }
 
     public ClassPathXmlApplicationContext getContext() {
@@ -213,5 +209,9 @@ public final class TestJRDFFactory implements JRDFFactory {
 
     public DyadicJoin getNewMinimumLeftOuterJoin() {
         return (DyadicJoin) FACTORY.getContext().getBean("minLeftOuterJoin");
+    }
+
+    public GraphRelationFactory getNewGraphRelationFactory() {
+        return (GraphRelationFactory) FACTORY.getContext().getBean("graphRelationFactory");
     }
 }

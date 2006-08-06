@@ -61,11 +61,13 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
  * Default implementation of {@link SparqlAnalyser}.
@@ -79,11 +81,14 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private Query query = NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;
+    private final GraphRelationFactory graphRelationFactory;
     private Expression<ExpressionVisitor> expression;
 
-    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
+    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, GraphRelationFactory graphRelationFactory) {
+        ParameterUtil.checkNotNull(tripleBuilder, graph, graphRelationFactory);
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
+        this.graphRelationFactory = graphRelationFactory;
     }
 
     /**
@@ -91,7 +96,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
      */
     public Query getQuery() {
         if (expression != null && query == NO_QUERY) {
-            query = new QueryImpl(expression);
+            query = new QueryImpl(expression, graphRelationFactory);
         }
         return query;
     }

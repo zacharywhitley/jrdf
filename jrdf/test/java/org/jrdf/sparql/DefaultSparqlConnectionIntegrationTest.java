@@ -60,7 +60,6 @@ package org.jrdf.sparql;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.connection.JrdfConnectionFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -68,10 +67,10 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.JrdfQueryExecutorFactory;
-import org.jrdf.query.QueryBuilder;
 import org.jrdf.query.Answer;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.QueryBuilder;
+import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
@@ -93,16 +92,16 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     // FIXME TJA: Add test that ensures that createConnection() returns a new connection each time.
 
-    private static final URL NO_SECURITY_DOMAIN = JrdfConnectionFactory.NO_SECURITY_DOMAIN_URL;
+    private static final URL NO_SECURITY_DOMAIN = SparqlConnectionUrl.NO_SECURITY_DOMAIN_URL;
     private static final String QUERY_SHOULD_RETURN_ONE_SOLUTION = QUERY_BOOK_1_DC_TITLE;
     private static final String QUERY_SHOULD_RETURN_NOTHING = QUERY_BOOK_2_DC_TITLE;
     private static final URI URI_SUBJECT = URI_BOOK_1;
     private static final URI URI_PREDICATE = URI_DC_TITLE;
     private static final String LITERAL_TITLE = LITERAL_BOOK_TITLE;
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final JrdfQueryExecutorFactory EXECUTOR_FACTORY = FACTORY.getNewJrdfQueryExecutorFactory();
     private static final QueryBuilder QUERY_BUILDER = FACTORY.getNewQueryBuilder();
     private static final Graph GRAPH = FACTORY.getNewGraph();
+    private static final QueryEngine QUERY_ENGINE = FACTORY.getNewQueryEngine();
 
     public void setUp() throws Exception {
         GraphElementFactory elementFactory = GRAPH.getElementFactory();
@@ -114,16 +113,11 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
 
     public void testCreateSparqlConnection() {
         checkConnectionReturnsOneSolution(createRawConnection());
-        checkConnectionReturnsOneSolution(createConnectionFromFactory());
         checkConnectionReturnsNoSolutions(createRawConnection());
     }
 
     private SparqlConnection createRawConnection() {
-        return new SparqlConnectionImpl(NO_SECURITY_DOMAIN, QUERY_BUILDER, EXECUTOR_FACTORY);
-    }
-
-    private SparqlConnection createConnectionFromFactory() {
-        return new JrdfConnectionFactory().createSparqlConnection(NO_SECURITY_DOMAIN, QUERY_BUILDER, EXECUTOR_FACTORY);
+        return new SparqlConnectionImpl(NO_SECURITY_DOMAIN, QUERY_BUILDER, QUERY_ENGINE);
     }
 
     private void checkConnectionReturnsOneSolution(SparqlConnection connection) {
