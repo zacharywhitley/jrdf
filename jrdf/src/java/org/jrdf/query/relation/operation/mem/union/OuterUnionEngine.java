@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,16 +56,40 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation;
+package org.jrdf.query.relation.operation.mem.union;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.mem.RelationHelper;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
-/**
- * Similar to Union in SPARQL or OR in Algebra A.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public interface Union extends Operation {
-    Relation union(Relation relation1, Relation relation2);
+import java.util.SortedSet;
+
+public class OuterUnionEngine implements TupleEngine {
+    private final TupleFactory tupleFactory;
+    private final AttributeValuePairComparator avpComparator;
+    private final RelationHelper relationHelper;
+
+    public OuterUnionEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
+            RelationHelper relationHelper) {
+        this.tupleFactory = tupleFactory;
+        this.avpComparator = avpComparator;
+        this.relationHelper = relationHelper;
+    }
+
+    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
+        return relationHelper.getHeadingUnions(relation1, relation2);
+    }
+
+    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
+            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        Tuple tuple1 = tupleFactory.getTuple(avps1);
+        Tuple tuple2 = tupleFactory.getTuple(avps2);
+        result.add(tuple1);
+        result.add(tuple2);
+    }
 }

@@ -58,38 +58,59 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.query.relation.mem.RelationHelper;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import org.jrdf.query.relation.operation.Union;
+import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
-import java.util.SortedSet;
+import java.util.LinkedHashSet;
 
-public class UnionEngine implements TupleEngine {
-    private final TupleFactory tupleFactory;
-    private final AttributeValuePairComparator avpComparator;
-    private final RelationHelper relationHelper;
+/**
+ * Class description goes here.
+ */
+public class MinimumUnionImpl implements Union {
+    private RelationProcessor relationProcessor;
+    private TupleEngine unionTupleEngine;
+    private TupleEngine subsumptionTupleEngine;
 
-    public UnionEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
-            RelationHelper relationHelper) {
-        this.tupleFactory = tupleFactory;
-        this.avpComparator = avpComparator;
-        this.relationHelper = relationHelper;
+    public MinimumUnionImpl(RelationProcessor relationProcessor, TupleEngine unionTupleEngine,
+            TupleEngine subsumptionTupleEngine) {
+        this.relationProcessor = relationProcessor;
+        this.unionTupleEngine = unionTupleEngine;
+        this.subsumptionTupleEngine = subsumptionTupleEngine;
     }
 
-    public SortedSet<Attribute> getHeading(Relation relation1, Relation relation2) {
-        return relationHelper.getHeadingUnions(relation1, relation2);
-    }
+    public Relation union(Relation relation1, Relation relation2) {
+        if (relation1 == RELATION_DUM) {
+            return relation2;
+        }
 
-    public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
-        Tuple tuple1 = tupleFactory.getTuple(avps1);
-        Tuple tuple2 = tupleFactory.getTuple(avps2);
-        result.add(tuple1);
-        result.add(tuple2);
+        if (relation2 == RELATION_DUM) {
+            return relation1;
+        }
+
+        if (relation1.equals(relation2)) {
+            return relation1;
+        }
+
+        if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
+            return RELATION_DEE;
+        }
+
+        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+        relations.add(relation1);
+        relations.add(relation2);
+
+        Relation relation = relationProcessor.processRelations(relations, unionTupleEngine);
+        Relation subsumptionRelation = relationProcessor.processRelations(relations, subsumptionTupleEngine);
+
+        for (Tuple tuple : subsumptionRelation.getSortedTuples()) {
+            relation.getSortedTuples().remove(tuple);
+        }
+
+        return relation;
     }
 }

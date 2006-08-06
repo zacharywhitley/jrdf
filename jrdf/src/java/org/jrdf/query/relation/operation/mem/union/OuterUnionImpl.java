@@ -66,11 +66,11 @@ import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import java.util.LinkedHashSet;
 
-public class UnionImpl implements Union {
+public class OuterUnionImpl implements Union {
     private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
 
-    public UnionImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
+    public OuterUnionImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
         this.tupleEngine = tupleEngine;
         this.relationProcessor = relationProcessor;
     }
