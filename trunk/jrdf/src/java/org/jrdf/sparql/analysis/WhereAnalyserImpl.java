@@ -195,8 +195,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
         expression = new Optional<ExpressionVisitor>(rhs);
     }
 
-    public Set<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
-        Set<Attribute> newAttributes = new LinkedHashSet<Attribute>();
+    public LinkedHashSet<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
+        LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
         Map<String, NodeType> variables = collector.getVariables();
         for (AttributeName variable : declaredVariables) {
             NodeType type = variables.get(variable.getLiteral());

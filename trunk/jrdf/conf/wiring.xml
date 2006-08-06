@@ -138,10 +138,10 @@
             <ref bean="restrict"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="outerUnion"/>
+            <ref bean="minimumUnion"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="leftOuterJoin"/>
+            <ref bean="minLeftOuterJoin"/>
         </constructor-arg>
     </bean>
 
@@ -341,7 +341,7 @@
             <ref bean="naturalJoin"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="outerUnion"/>
+            <ref bean="minimumUnion"/>
         </constructor-arg>
     </bean>
 
@@ -350,10 +350,28 @@
             <ref bean="leftOuterJoin"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="outerUnion"/>
+            <ref bean="minimumUnion"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="antiJoin"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="minFullOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionFullOuterJoinImpl">
+        <constructor-arg>
+            <ref bean="naturalJoin"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="minimumUnion"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="minLeftOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl">
+        <constructor-arg>
+            <ref bean="naturalJoin"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="minimumUnion"/>
         </constructor-arg>
     </bean>
 </beans>

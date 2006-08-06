@@ -75,5 +75,9 @@ public class JrdfFactoryImplIntegrationTest extends TestCase {
         jrdfFactory.getNewJrdfQueryExecutorFactory();
         jrdfFactory.getNewNaturalJoin();
         jrdfFactory.getNewSemiJoin();
+        jrdfFactory.getNewFullOuterJoin();
+        jrdfFactory.getNewSparqlParser();
+        jrdfFactory.getNewQueryEngine();
+        jrdfFactory.getNewUnion();
     }
 }

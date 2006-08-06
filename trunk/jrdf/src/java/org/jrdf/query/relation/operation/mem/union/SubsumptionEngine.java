@@ -150,7 +150,8 @@ public class SubsumptionEngine implements TupleEngine {
         return 0;
     }
 
-    private boolean onlyContainsAttributesValues(SortedSet<AttributeValuePair> avps1, SortedSet<AttributeValuePair> avps2) {
+    private boolean onlyContainsAttributesValues(SortedSet<AttributeValuePair> avps1,
+            SortedSet<AttributeValuePair> avps2) {
         boolean onlyContainsValues = false;
         for (AttributeValuePair avp : avps2) {
             onlyContainsValues = avps1.contains(avp);

@@ -62,7 +62,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.Set;
+import java.util.LinkedHashSet;
 
 /**
  * Variables in a SELECT cause.
@@ -72,10 +72,10 @@ import java.util.Set;
  */
 public final class Projection<V extends ExpressionVisitor> implements Expression<V> {
     private static final int DUMMY_HASHCODE = 47;
-    private final Set<Attribute> attributes;
+    private final LinkedHashSet<Attribute> attributes;
     private final Expression<ExpressionVisitor> nextExpression;
 
-    public Projection(Set<Attribute> attributes, Expression<ExpressionVisitor> nextExpression) {
+    public Projection(LinkedHashSet<Attribute> attributes, Expression<ExpressionVisitor> nextExpression) {
         checkNotNull(attributes, nextExpression);
         this.attributes = attributes;
         this.nextExpression = nextExpression;
@@ -85,7 +85,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         v.visitProjection(this);
     }
 
-    public Set<Attribute> getAttributes() {
+    public LinkedHashSet<Attribute> getAttributes() {
         return attributes;
     }
 

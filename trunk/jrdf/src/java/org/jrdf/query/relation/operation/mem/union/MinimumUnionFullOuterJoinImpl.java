@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,50 +56,35 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.query.relation.operation.mem.union;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.query.Query;
-import org.jrdf.query.QueryImpl;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.operation.DyadicJoin;
+import org.jrdf.query.relation.operation.NadicJoin;
+import org.jrdf.query.relation.operation.Union;
 
-/**
- * Default implementation of {@link SparqlAnalyser}.
- *
- * @author Tom Adams
- * @version $Revision$
- */
-public final class SparqlAnalyserImpl extends DepthFirstAdapter implements SparqlAnalyser {
+import java.util.HashSet;
+import java.util.Set;
 
-    // FIXME TJA: Should eventually be using a Expression builder here.
-    private Query query = SparqlAnalyser.NO_QUERY;
-    private TripleBuilder tripleBuilder;
-    private Graph graph;
-    private Expression<ExpressionVisitor> expression;
+public class MinimumUnionFullOuterJoinImpl implements DyadicJoin {
+    private final NadicJoin naturalJoin;
+    private final Union union;
 
-    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
-        this.tripleBuilder = tripleBuilder;
-        this.graph = graph;
+    public MinimumUnionFullOuterJoinImpl(NadicJoin naturalJoin, Union union) {
+        this.naturalJoin = naturalJoin;
+        this.union = union;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public Query getQuery() {
-        if (expression != null && query == SparqlAnalyser.NO_QUERY) {
-            query = new QueryImpl(expression);
-        }
-        return query;
-    }
+    // TODO (AN) Add tuple subsumption i.e. go through the results and remove the results for a given attribute binding
+    // that have null values.  Or add it to a new time of join.  Or replace this with minimum union and tuple
+    // subsumption.
 
-    @Override
-    public void inStart(Start node) {
-        SelectAnalyserImpl analyser = new SelectAnalyserImpl(tripleBuilder, graph);
-        node.apply(analyser);
-        expression = analyser.getExpression();
+    public Relation join(Relation relation1, Relation relation2) {
+        Set<Relation> relations = new HashSet<Relation>();
+        relations.add(relation1);
+        relations.add(relation2);
+        Relation joinResult = naturalJoin.join(relations);
+        Relation minUnionResult = union.union(joinResult, relation1);
+        return union.union(minUnionResult, relation2);
     }
 }

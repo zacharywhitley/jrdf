@@ -93,5 +93,9 @@ public final class QueryImplUnitTest extends TestCase {
         });
     }
 
+    public void testGetVariables() {
+        
+    }
+
     // TODO: Test drive other methods - when stable.
 }

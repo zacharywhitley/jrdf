@@ -61,7 +61,24 @@ package org.jrdf.query.relation.operation.mem.join.outer;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.operation.DyadicJoin;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R6;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+
+import java.util.Set;
 
 /**
  * Tests the integration between optional and other classes.
@@ -74,20 +91,19 @@ public class FullOuterJoinImplIntegrationTest extends TestCase {
     private static final DyadicJoin FULL_OUTER_JOIN = FACTORY.getNewFullOuterJoin();
 
     public void testOuterJoin1() {
-// TODO (AN) This is the "classic" outer join and doesn't work due to changes in join code.        
-//        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-//        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
-//        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4));
-//
-//        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_PREDICATE_R2, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
-//        tuple2.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
-//
-//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
-//        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2));
-//        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
-//        resultTuple.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
-//
-//        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4));
+
+        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_PREDICATE_R2, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
+        tuple2.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
+
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2));
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
+        resultTuple.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
+
+        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 
     private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {

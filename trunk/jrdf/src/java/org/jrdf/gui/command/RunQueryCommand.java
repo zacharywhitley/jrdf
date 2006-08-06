@@ -98,7 +98,8 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
 
     private Relation performQuery() {
         try {
-            return jrdfModel.performQuery(queryPanelView.getQuery());
+            String query = queryPanelView.getQuery();
+            return jrdfModel.performQuery(query);
         } catch (GraphException e) {
             throw new RuntimeException(e);
         } catch (InvalidQuerySyntaxException e) {
