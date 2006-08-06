@@ -66,6 +66,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.List;
 import java.util.SortedSet;
+import java.util.Collections;
 import java.io.Serializable;
 
 /**
@@ -75,7 +76,7 @@ public class NoQuery implements Query, Serializable {
     private static final long serialVersionUID = -1815852679585213051L;
 
     public List<Attribute> getVariables() {
-        throw new UnsupportedOperationException("Retrieving the projected variables is not supported");
+        return Collections.emptyList();
     }
 
     public Expression<ExpressionVisitor> getConstraintExpression() {
