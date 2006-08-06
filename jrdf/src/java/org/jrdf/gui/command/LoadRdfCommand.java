@@ -91,13 +91,16 @@ public class LoadRdfCommand extends ApplicationWindowAwareCommand {
     protected void doExecuteCommand() {
         JFrame control = getContext().getWindow().getControl();
         File file = FileChooserUtils.showFileChooser(control, "rdf", "Ok", null);
-        ApplicationWindowAwareCommand applicationWindowAwareCommand = tryLoadModel(file);
-        applicationWindowAwareCommand.execute();
+        if (file != null) {
+            ApplicationWindowAwareCommand applicationWindowAwareCommand = tryLoadModel(file);
+            applicationWindowAwareCommand.execute();
+        }
     }
 
     private ApplicationWindowAwareCommand tryLoadModel(File file) {
         try {
-            Graph graph = jrdfModel.loadModel(tryGetURL(file));
+            URL urlName = tryGetURL(file);
+            Graph graph = jrdfModel.loadModel(urlName);
             long numberOfTriples = tryGetNumberOfTriples(graph);
             RdfLoadedCommand actionCommand = getRdfLoadedCommand();
             actionCommand.setTriplesLoaded(numberOfTriples);
