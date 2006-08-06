@@ -138,7 +138,7 @@
             <ref bean="restrict"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="union"/>
+            <ref bean="outerUnion"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="leftOuterJoin"/>
@@ -237,12 +237,21 @@
         </constructor-arg>
     </bean>
 
-    <bean id="unionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.UnionEngine">
+    <bean id="outerUnionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.OuterUnionEngine">
         <constructor-arg>
             <ref bean="tupleFactory"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="avpComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationHelper"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="subsumptionJoinEngine" class="org.jrdf.query.relation.operation.mem.union.SubsumptionEngine">
+        <constructor-arg>
+            <ref bean="tupleFactory"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="relationHelper"/>
@@ -285,12 +294,24 @@
         </constructor-arg>
     </bean>
 
-    <bean id="union" class="org.jrdf.query.relation.operation.mem.union.UnionImpl">
+    <bean id="outerUnion" class="org.jrdf.query.relation.operation.mem.union.OuterUnionImpl">
         <constructor-arg>
             <ref bean="relationProcessor"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="unionJoinEngine"/>
+            <ref bean="outerUnionJoinEngine"/>
+        </constructor-arg>
+    </bean>
+
+    <bean id="minimumUnion" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionImpl">
+        <constructor-arg>
+            <ref bean="relationProcessor"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="outerUnionJoinEngine"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="subsumptionJoinEngine"/>
         </constructor-arg>
     </bean>
 
@@ -320,7 +341,7 @@
             <ref bean="naturalJoin"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="union"/>
+            <ref bean="outerUnion"/>
         </constructor-arg>
     </bean>
 
@@ -329,7 +350,7 @@
             <ref bean="leftOuterJoin"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="union"/>
+            <ref bean="outerUnion"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="antiJoin"/>
