@@ -58,13 +58,11 @@
 
 package org.jrdf.query;
 
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.graph.Graph;
+import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * A query to a graph.
@@ -76,7 +74,5 @@ public interface Query {
 
     List<Attribute> getVariables();
 
-    Expression<ExpressionVisitor> getConstraintExpression();
-
-    SortedSet<AttributeValuePair> getSingleAvp();
+    Answer executeQuery(Graph graph, QueryEngine queryEngine);
 }
