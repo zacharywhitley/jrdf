@@ -63,6 +63,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
+import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.mem.RelationHelper;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
@@ -154,9 +155,11 @@ public class SubsumptionEngine implements TupleEngine {
             SortedSet<AttributeValuePair> avps2) {
         boolean onlyContainsValues = false;
         for (AttributeValuePair avp : avps2) {
-            onlyContainsValues = avps1.contains(avp);
-            if (!onlyContainsValues) {
-                break;
+            if (!(avp.getAttribute().getAttributeName() instanceof PositionName)) {
+                onlyContainsValues = avps1.contains(avp);
+                if (!onlyContainsValues) {
+                    break;
+                }
             }
         }
         return onlyContainsValues;
