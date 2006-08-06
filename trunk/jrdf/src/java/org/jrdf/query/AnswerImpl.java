@@ -88,4 +88,8 @@ public final class AnswerImpl extends Primordial implements Answer, Serializable
         return results;
     }
 
+    public long numberOfTuples() {
+        return results.getTuples().size();
+    }
+
 }

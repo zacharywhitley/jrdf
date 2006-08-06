@@ -68,4 +68,5 @@ import org.jrdf.query.relation.Relation;
 public interface Answer {
     Query getQuery();
     Relation getResults();
+    long numberOfTuples();
 }

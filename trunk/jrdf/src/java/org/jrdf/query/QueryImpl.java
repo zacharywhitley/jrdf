@@ -67,6 +67,7 @@ import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
 import static java.util.Collections.emptyList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedSet;
 
@@ -92,10 +93,11 @@ public final class QueryImpl implements Query, Serializable {
 
     public List<Attribute> getVariables() {
         if (expression instanceof Projection) {
-            Projection projection = (Projection<ExpressionVisitor>) expression;
-            projection.getAttributes();
+            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
+            return new LinkedList<Attribute>(projection.getAttributes());
+        } else {
+            return emptyList();
         }
-        return emptyList();
     }
 
     public Expression<ExpressionVisitor> getConstraintExpression() {

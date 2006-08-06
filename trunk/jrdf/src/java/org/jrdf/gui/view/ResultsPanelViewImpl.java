@@ -59,7 +59,7 @@
 package org.jrdf.gui.view;
 
 import org.jdesktop.swingx.JXTable;
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.Answer;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -83,7 +83,7 @@ public class ResultsPanelViewImpl implements PanelView, ResultsPanelView {
         return panel;
     }
 
-    public void setResults(Relation answer) {
+    public void setResults(Answer answer) {
         resultsTableModel.setResults(answer);
     }
 
