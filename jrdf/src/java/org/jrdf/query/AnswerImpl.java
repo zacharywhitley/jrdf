@@ -78,17 +78,15 @@ import java.util.SortedSet;
 public final class AnswerImpl extends Primordial implements Answer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
     private final LinkedHashSet<Attribute> headings;
-    private final Query query;
     private final Relation results;
 
     public AnswerImpl(Query query, Relation results) {
         checkNotNull();
-        this.query = query;
         this.results = results;
-        this.headings = getHeading();
+        this.headings = getHeading(query);
     }
 
-    private LinkedHashSet<Attribute> getHeading() {
+    private LinkedHashSet<Attribute> getHeading(Query query) {
         LinkedHashSet<Attribute> heading;
         List<Attribute> variables = query.getVariables();
         if (variables.size() == 0) {
