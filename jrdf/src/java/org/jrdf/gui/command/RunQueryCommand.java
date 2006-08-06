@@ -68,7 +68,7 @@ import org.springframework.richclient.application.PageComponentContext;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * Run an SPARQL query.
+ * Run a SPARQL query.
  *
  * @author Andrew Newman
  * @version $Revision:$
@@ -100,9 +100,9 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
         try {
             return jrdfModel.performQuery(queryPanelView.getQuery());
         } catch (GraphException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         } catch (InvalidQuerySyntaxException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
