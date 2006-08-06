@@ -58,7 +58,7 @@
 
 package org.jrdf.gui.view;
 
-import org.jrdf.query.relation.Relation;
+import org.jrdf.query.Answer;
 
 /**
  * A builder that always throws exceptions.
@@ -67,5 +67,5 @@ import org.jrdf.query.relation.Relation;
  * @version $Revision:$
  */
 public interface ResultsPanelView extends PanelView {
-    void setResults(Relation answer);
+    void setResults(Answer answer);
 }
