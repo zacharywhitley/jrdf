@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,80 +56,67 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.sparql.builder;
 
-import org.jrdf.sparql.builder.LiteralTripleSpec;
-import org.jrdf.sparql.builder.VariableTripleSpec;
-import org.jrdf.sparql.parser.node.ALiteral;
-import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.AUnescapedStrand;
 import org.jrdf.sparql.parser.node.AVariable;
-import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
+import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.sparql.parser.node.PStrand;
 import org.jrdf.sparql.parser.node.TIdentifier;
-import org.jrdf.sparql.parser.node.TQuote;
 import org.jrdf.sparql.parser.node.TResource;
-import org.jrdf.sparql.parser.node.TText;
 import org.jrdf.sparql.parser.node.TVariableprefix;
-import org.jrdf.util.test.SparqlQueryTestUtil;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Utilities for creating SableCC nodes.
- *
- * @author Tom Adams
- * @version $Revision$
- */
-public final class SableCcNodeTestUtil {
+public final class VariableResourceTripleSpec implements TripleSpec {
 
-    private static final String VARIABLE_PREFIX = SparqlQueryTestUtil.VARIABLE_PREFIX;
-    private static final String SPARQL_QUOTE = "'";
+    private String subjectVariable;
+    private String predicateVariable;
+    private URI objectUri;
 
-    private SableCcNodeTestUtil() {
+    public VariableResourceTripleSpec(String subjectVariable, String predicateVariable, URI objectUri) {
+        this.subjectVariable = subjectVariable;
+        this.predicateVariable = predicateVariable;
+        this.objectUri = objectUri;
     }
 
-    public static ATriple  createTripleNodeWithVariable(VariableTripleSpec tripleSpec) {
-        PResourceTripleElement subject = createResourceElement(tripleSpec.getSubjectUri());
-        PResourceTripleElement predicate = createResourceElement(tripleSpec.getPredicateUri());
-        PObjectTripleElement object = createVariableElement(tripleSpec.getVariableName());
-        return new ATriple(subject, predicate, object);
+    public Attribute[] asAttributes() {
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        Attribute subjectAtt = new AttributeImpl(new VariableName("?" + subjectVariable), new SubjectNodeType());
+        attributes.add(subjectAtt);
+        Attribute predciateAtt = new AttributeImpl(new VariableName("?" + predicateVariable), new PredicateNodeType());
+        attributes.add(predciateAtt);
+        Attribute objectAtt = new AttributeImpl(new PositionName("OBJECT1"), new ObjectNodeType());
+        attributes.add(objectAtt);
+        return attributes.toArray(new Attribute[] {});
     }
 
-    public static ATriple createTripleNodeWithLiteral(LiteralTripleSpec tripleSpec) {
-        PResourceTripleElement subject = createResourceElement(tripleSpec.getSubjectUri());
-        PResourceTripleElement predicate = createResourceElement(tripleSpec.getPredicateUri());
-        PObjectTripleElement object = createLiteralElement(tripleSpec.getLiteral());
-        return new ATriple(subject, predicate, object);
+    public ATriple getTriple() {
+        PResourceTripleElement subjectElement = createVariableResourceTripleElement(subjectVariable);
+        PResourceTripleElement predicateElement = createVariableResourceTripleElement(predicateVariable);
+        PObjectTripleElement objectElement = createResourceObjectTripleElement(objectUri);
+        ATriple triple = new ATriple(subjectElement, predicateElement, objectElement);
+        return triple;
     }
 
-    public static PResourceTripleElement createResourceElement(URI subjectUri) {
-        return new AResourceResourceTripleElement(new TResource(subjectUri.toString()));
+    private AVariableResourceTripleElement createVariableResourceTripleElement(String variableNameTitle) {
+        TVariableprefix variableprefix = new TVariableprefix("?");
+        TIdentifier identifier = new TIdentifier(variableNameTitle);
+        return new AVariableResourceTripleElement(new AVariable(variableprefix, identifier));
     }
 
-    public static AVariableObjectTripleElement createVariableElement(String variableName) {
-        AVariable variable = new AVariable(new TVariableprefix(VARIABLE_PREFIX), new TIdentifier(variableName));
-        return new AVariableObjectTripleElement(variable);
-    }
-
-    public static ALiteralObjectTripleElement createLiteralElement(String literalText) {
-        return new ALiteralObjectTripleElement(createLiteralNode(literalText));
-    }
-
-    public static ALiteral createLiteralNode(String literalText) {
-        PStrand text = new AUnescapedStrand(new TText(literalText));
-        List<PStrand> strandList = new ArrayList<PStrand>();
-        strandList.add(text);
-        return new ALiteral(createQuoteNode(), strandList, createQuoteNode());
-    }
-
-    public static TQuote createQuoteNode() {
-        return new TQuote(SPARQL_QUOTE);
+    private AResourceObjectTripleElement createResourceObjectTripleElement(URI uri) {
+        return new AResourceObjectTripleElement(new TResource(uri.toString()));
     }
 }

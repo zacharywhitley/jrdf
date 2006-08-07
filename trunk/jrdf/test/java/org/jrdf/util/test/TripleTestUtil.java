@@ -59,28 +59,28 @@
 package org.jrdf.util.test;
 
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.graph.AnyObjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.test.NodeTestUtil.*;
+import static org.jrdf.util.test.NodeTestUtil.createResource;
 
 import java.net.URI;
 import java.util.Arrays;
@@ -111,8 +111,12 @@ public class TripleTestUtil {
     public static final Triple TRIPLE_BOOK_3_DC_TITLE_VARIABLE = createDcTitleTriple(URI_BOOK_3);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE = createDcSubjectTriple(URI_BOOK_1);
     public static final Triple TRIPLE_BOOK_1_DC_SUBJECT_LITERAL = createDcSubjectTriple(URI_BOOK_1, LITERAL_BOOK_TITLE);
+    public static final Triple TRIPLE_VARIABLE_VARIABLE_SUBJECT = createVariableSubjectTriple(URI_DC_SUBJECT);
+
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
+
     private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
+
     public static final SortedSet<AttributeValuePair> AVP_BOOK_1_DC_SUBJECT_LITERAL
             = createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
 
@@ -156,12 +160,17 @@ public class TripleTestUtil {
     }
 
     private static Triple createTripleWithVariableObject(URI subjectUri, URI predicateUri) {
-        return createTriple(subjectUri, predicateUri, AnyObjectNode.ANY_OBJECT_NODE);
+        return createTriple(subjectUri, predicateUri, ANY_OBJECT_NODE);
     }
 
     private static Triple createTripleWithLiteralObject(URI subjectUri, URI predicateUri, String literal) {
         ObjectNode object = NodeTestUtil.createLiteral(literal);
         return createTriple(subjectUri, predicateUri, object);
+    }
+
+    private static Triple createVariableSubjectTriple(URI uriDcSubject) {
+        ObjectNode object = NodeTestUtil.createResource(uriDcSubject);
+        return createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, object);
     }
 
     private static Triple createTriple(URI subjectUri, URI predicateUri, ObjectNode object) {

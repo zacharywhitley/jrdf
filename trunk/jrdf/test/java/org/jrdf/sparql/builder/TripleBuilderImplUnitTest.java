@@ -76,6 +76,7 @@ import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_TITLE_VARIABLE;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_2_DC_TITLE_VARIABLE;
+import static org.jrdf.util.test.TripleTestUtil.TRIPLE_VARIABLE_VARIABLE_SUBJECT;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_SUBJECT;
@@ -88,18 +89,21 @@ public final class TripleBuilderImplUnitTest extends TestCase {
 
     // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined way.
 
-    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE =
+    private static final TripleSpec BOOK_1_DC_TITLE_VARIABLE =
             new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE =
+    private static final TripleSpec BOOK_2_DC_TITLE_VARIABLE =
             new VariableTripleSpec(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-    private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE =
+    private static final TripleSpec BOOK_1_DC_SUBJECT_VARIABLE =
             new VariableTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
-    private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL =
+    private static final TripleSpec BOOK_1_DC_SUBJECT_BOOK_TITLE =
             new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
+    private static final TripleSpec VARIABLE_VARIABLE_BOOK_TITLE =
+            new VariableResourceTripleSpec(VARIABLE_NAME_SUBJECT, VARIABLE_NAME_TITLE, URI_DC_SUBJECT);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
     private TripleBuilder tripleBuilder;
 
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
@@ -115,28 +119,32 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     }
 
     public void testBuildTripleFromParserNode() {
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, BOOK_1_DC_TITLE_VARIABLE);
     }
 
 
     public void testBuildTripleForParserNode2() {
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, BOOK_2_DC_TITLE_VARIABLE);
     }
 
     public void testBuildTripleForParserNode3() {
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, BOOK_1_DC_SUBJECT_VARIABLE);
     }
 
     public void testBuildTripleForParserNode4() {
-        checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL);
+        checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, BOOK_1_DC_SUBJECT_BOOK_TITLE);
     }
 
-    private void checkBuiltTripleWithVariable(Triple expectedTriple, VariableTripleSpec actualTriple) {
+    public void testBuildTripleForParserNode5() {
+        checkBuiltTripleWithLiteral(TRIPLE_VARIABLE_VARIABLE_SUBJECT, VARIABLE_VARIABLE_BOOK_TITLE);
+    }
+
+    private void checkBuiltTripleWithVariable(Triple expectedTriple, TripleSpec actualTriple) {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
-    private void checkBuiltTripleWithLiteral(Triple expectedTriple, LiteralTripleSpec actualTriple) {
+    private void checkBuiltTripleWithLiteral(Triple expectedTriple, TripleSpec actualTriple) {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }

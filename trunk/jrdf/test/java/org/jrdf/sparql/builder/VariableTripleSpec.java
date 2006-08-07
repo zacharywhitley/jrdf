@@ -79,11 +79,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * @author Tom Adams
- * @version $Revision$
- */
-public final class VariableTripleSpec {
+public final class VariableTripleSpec implements TripleSpec {
 
     private URI subjectUri;
     private URI predicateUri;
@@ -93,18 +89,6 @@ public final class VariableTripleSpec {
         this.subjectUri = subjectUri;
         this.predicateUri = predicateUri;
         this.variableName = variableName;
-    }
-
-    public URI getSubjectUri() {
-        return subjectUri;
-    }
-
-    public URI getPredicateUri() {
-        return predicateUri;
-    }
-
-    public String getVariableName() {
-        return variableName;
     }
 
     public Attribute[] asAttributes() {
