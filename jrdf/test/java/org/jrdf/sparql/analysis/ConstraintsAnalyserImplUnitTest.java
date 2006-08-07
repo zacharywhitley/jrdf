@@ -65,6 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
 import org.jrdf.sparql.builder.VariableTripleSpec;
+import org.jrdf.sparql.builder.TripleSpec;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
@@ -81,7 +82,7 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
     private static final String EXPECTED_PARSED_LITERAL = LITERAL_BOOK_TITLE;
     private static final VariableTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE =
             new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-    private static final LiteralTripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE_LITERAL =
+    private static final TripleSpec TRIPLE_SPEC_BOOK_1_DC_TITLE =
             new LiteralTripleSpec(URI_BOOK_1, URI_DC_TITLE, LITERAL_BOOK_TITLE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();

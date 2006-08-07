@@ -80,11 +80,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Tom Adams
- * @version $Revision$
- */
-public final class LiteralTripleSpec {
+public final class LiteralTripleSpec implements TripleSpec {
 
     private URI subjectUri;
     private URI predicateUri;
@@ -94,18 +90,6 @@ public final class LiteralTripleSpec {
         this.subjectUri = subjectUri;
         this.predicateUri = predicateUri;
         this.literal = literal;
-    }
-
-    public URI getSubjectUri() {
-        return subjectUri;
-    }
-
-    public URI getPredicateUri() {
-        return predicateUri;
-    }
-
-    public String getLiteral() {
-        return literal;
     }
 
     public Attribute[] asAttributes() {
