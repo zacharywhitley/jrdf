@@ -65,6 +65,15 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.PResourceTripleElement;
+import org.jrdf.sparql.parser.node.PObjectTripleElement;
+import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.sparql.parser.node.TResource;
+import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
+import org.jrdf.sparql.parser.node.TVariableprefix;
+import org.jrdf.sparql.parser.node.TIdentifier;
+import org.jrdf.sparql.parser.node.AVariable;
 
 import java.net.URI;
 import java.util.List;
@@ -108,4 +117,23 @@ public final class VariableTripleSpec {
         attributes.add(objectAtt);
         return attributes.toArray(new Attribute[] {});
     }
+
+    public ATriple getTriple() {
+        PResourceTripleElement subjectElement = createResourceTripleElement(subjectUri);
+        PResourceTripleElement predicateElement = createResourceTripleElement(predicateUri);
+        PObjectTripleElement objectElement = createVariableTripleElement(variableName);
+        ATriple triple = new ATriple(subjectElement, predicateElement, objectElement);
+        return triple;
+    }
+
+    private AResourceResourceTripleElement createResourceTripleElement(URI uri) {
+        return new AResourceResourceTripleElement(new TResource(uri.toString()));
+    }
+
+    private AVariableObjectTripleElement createVariableTripleElement(String variableNameTitle) {
+        TVariableprefix variableprefix = new TVariableprefix("?");
+        TIdentifier identifier = new TIdentifier(variableNameTitle);
+        return new AVariableObjectTripleElement(new AVariable(variableprefix, identifier));
+    }
 }
+
