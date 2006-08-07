@@ -94,7 +94,7 @@ import java.util.SortedSet;
 /**
  * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
  */
-public final class WhereAnalyserImpl extends DepthFirstAdapter {
+public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereAnalyser {
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private VariableCollector collector;
@@ -131,7 +131,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
 
     @Override
     public void caseATriple(ATriple node) {
-        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.build(node, graph);
+        node.apply(tripleBuilder);
+        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
         collector.addVariables(attributeValuePairs);
         expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
     }
@@ -247,7 +248,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter {
     }
 
     private Expression<ExpressionVisitor> getExpression(Node node) {
-        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
+        WhereAnalyser analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
         node.apply(analyser);
         return analyser.getExpression();
     }

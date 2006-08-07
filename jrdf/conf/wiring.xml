@@ -113,15 +113,8 @@
             <ref bean="parserFactory"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="tripleBuilder"/>
-        </constructor-arg>
-        <constructor-arg>
             <ref bean="graphRelationFactory"/>
         </constructor-arg>
-    </bean>
-
-    <bean id="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
-    <bean id="tripleBuilder" class="org.jrdf.sparql.builder.TripleBuilderImpl">
         <constructor-arg>
             <ref bean="sortedAttributeValuePairHelper"/>
         </constructor-arg>
@@ -129,6 +122,8 @@
             <ref bean="sortedAttributeFactory"/>
         </constructor-arg>
     </bean>
+
+    <bean id="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
 
     <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
         <constructor-arg>

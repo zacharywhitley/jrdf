@@ -62,189 +62,66 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.URIReference;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
-import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.AVariable;
-import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
-import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
-import org.jrdf.sparql.parser.node.PLiteral;
-import org.jrdf.sparql.parser.node.PObjectTripleElement;
-import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.util.param.ParameterUtil;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
 
-/**
- * Constructs {@link org.jrdf.graph.Triple}s from {@link org.jrdf.sparql.parser.node.ATriple}s.
- *
- * @author Tom Adams
- * @version $Revision$
- */
-
-// TODO (AN) Too much coupling here!
-
-public final class TripleBuilderImpl implements TripleBuilder {
+public final class TripleBuilderImpl extends DepthFirstAdapter implements TripleBuilder {
     // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
 
-    private static final String SINGLE_QUOTE = "'";
     private static final NodeType SUBJECT_NODE_TYPE = new SubjectNodeType();
     private static final NodeType PREDICATE_NODE_TYPE = new PredicateNodeType();
     private static final NodeType OBJECT_NODE_TYPE = new ObjectNodeType();
     private static final NodeType[] TYPES = {SUBJECT_NODE_TYPE, PREDICATE_NODE_TYPE, OBJECT_NODE_TYPE};
     private final SortedAttributeValuePairHelper avpHelper;
+    private final Graph graph;
     private final SortedAttributeFactory sortedAttributeFactory;
-    private Graph currentGraph;
-    private List<Attribute> heading;
+    private SortedSet<AttributeValuePair> avp;
 
-    public TripleBuilderImpl(SortedAttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
+    public TripleBuilderImpl(Graph graph, SortedAttributeValuePairHelper avpHelper,
+            SortedAttributeFactory sortedAttributeFactory) {
         this.avpHelper = avpHelper;
+        this.graph = graph;
         this.sortedAttributeFactory = sortedAttributeFactory;
     }
 
     /**
      * Builds the given <var>tripleNode</var> into a local Triple.
      *
-     * @param tripleNode The tripleNode to build into a JRDF class instance.
      * @return The local version of the given <var>tripleNode</var>
      */
-    public SortedSet<AttributeValuePair> build(ATriple tripleNode, Graph graph) {
-        ParameterUtil.checkNotNull(tripleNode, graph);
-
-        currentGraph = graph;
-        heading = sortedAttributeFactory.createHeading(Arrays.asList(TYPES));
-
-        // FIXME TJA: Check format () of triple here (is this done by the grammar now?).
-        AttributeValuePair subject = buildSubject(tripleNode);
-        AttributeValuePair predicate = buildPredicate(tripleNode);
-        AttributeValuePair object = buildObject(tripleNode);
-        return avpHelper.createAvp(new AttributeValuePair[]{subject, predicate, object});
+    public SortedSet<AttributeValuePair> getTriples() {
+        return avp;
     }
 
-    // FIXME TJA: We should not get to here, having to check that the field is a resource. Should be handled earlier.
-    private AttributeValuePair buildSubject(ATriple tripleNode) {
-        PResourceTripleElement subject = tripleNode.getSubject();
-        if (subject instanceof AVariableResourceTripleElement) {
-            String variableName = getVariableName((AVariableResourceTripleElement) subject);
-            return createAttributeValuePair(SUBJECT_NODE_TYPE, ANY_SUBJECT_NODE, variableName);
-        } else {
-            AResourceResourceTripleElement resource = (AResourceResourceTripleElement) tripleNode.getSubject();
-            URIReference uriReference = createResource(getStringForm(resource));
-            return new AttributeValuePairImpl(heading.get(0), uriReference);
-        }
+    @Override
+    public void caseATriple(ATriple node) {
+        List<Attribute> heading = sortedAttributeFactory.createHeading(Arrays.asList(TYPES));
+        AttributeValuePair subject = getElement(node.getSubject(), ANY_SUBJECT_NODE, SUBJECT_NODE_TYPE,
+                heading.get(0), graph);
+        AttributeValuePair predicate = getElement(node.getPredicate(), ANY_PREDICATE_NODE, PREDICATE_NODE_TYPE,
+                heading.get(1), graph);
+        AttributeValuePair object = getElement(node.getObject(), ANY_OBJECT_NODE, OBJECT_NODE_TYPE,
+                heading.get(2), graph);
+        avp = avpHelper.createAvp(new AttributeValuePair[]{subject, predicate, object});
     }
 
-    private AttributeValuePair buildPredicate(ATriple tripleNode) {
-        PResourceTripleElement predicate = tripleNode.getPredicate();
-        if (predicate instanceof AVariableResourceTripleElement) {
-            String variableName = getVariableName((AVariableResourceTripleElement) predicate);
-            return createAttributeValuePair(PREDICATE_NODE_TYPE, ANY_PREDICATE_NODE, variableName);
-        } else {
-            AResourceResourceTripleElement resource = (AResourceResourceTripleElement) tripleNode.getPredicate();
-            URIReference uriReference = createResource(getStringForm(resource));
-            return new AttributeValuePairImpl(heading.get(1), uriReference);
-        }
-
-    }
-
-    private AttributeValuePair buildObject(ATriple tripleNode) {
-        // FIXME TJA: Use the visitor pattern to do this.
-        PObjectTripleElement object = tripleNode.getObject();
-        if (object instanceof AVariableObjectTripleElement) {
-            String variableName = getVariableName((AVariableObjectTripleElement) object);
-            return createAttributeValuePair(OBJECT_NODE_TYPE, ANY_OBJECT_NODE, variableName);
-        } else if (object instanceof AResourceObjectTripleElement) {
-            AResourceObjectTripleElement resource = (AResourceObjectTripleElement) object;
-            URIReference uriReference = createResource(getStringForm(resource));
-            return new AttributeValuePairImpl(heading.get(2), uriReference);
-        } else {
-            PLiteral literal = ((ALiteralObjectTripleElement) object).getLiteral();
-            String text = extractTextFromLiteralNode(literal);
-            Literal literalNode = createLiteral(text);
-            return new AttributeValuePairImpl(heading.get(2), literalNode);
-        }
-    }
-
-    private AttributeValuePair createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
-        VariableName newAttributeName = new VariableName(variableName);
-        Attribute att = new AttributeImpl(newAttributeName, type);
-        return new AttributeValuePairImpl(att, anyNode);
-    }
-
-    private String getVariableName(AVariableResourceTripleElement element) {
-        AVariable variable = (AVariable) element.getVariable();
-        return variable.getVariableprefix().toString().trim() + variable.getIdentifier().toString().trim();
-    }
-
-    private String getVariableName(AVariableObjectTripleElement element) {
-        AVariable variable = (AVariable) element.getVariable();
-        return variable.getVariableprefix().toString().trim() + variable.getIdentifier().toString().trim();
-    }
-
-
-    // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &
-    // Kowari::ItqlIntepreter::getLiteralText()
-    // FIXME TJA: Handle datatypes.
-    // FIXME TJA: Handle language code.
-    private String extractTextFromLiteralNode(PLiteral literal) {
-        return trim(stripQuotes(literal));
-    }
-
-    private String stripQuotes(PLiteral literal) {
-        String lexicalValue = literal.toString();
-        int start = lexicalValue.indexOf(SINGLE_QUOTE) + 1;
-        int end = lexicalValue.lastIndexOf(SINGLE_QUOTE);
-        return lexicalValue.substring(start, end);
-    }
-
-    private String getStringForm(AResourceResourceTripleElement resourceNode) {
-        return resourceNode.getResource().getText();
-    }
-
-    private String getStringForm(AResourceObjectTripleElement resourceNode) {
-        return resourceNode.getResource().getText();
-    }
-
-    private String trim(String s) {
-        return s.trim();
-    }
-
-    private URIReference createResource(String uri) {
-        try {
-            return getElementFactory().createResource(new URI(uri));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private Literal createLiteral(String lexicalValue) {
-        try {
-            return getElementFactory().createLiteral(lexicalValue);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private GraphElementFactory getElementFactory() {
-        return currentGraph.getElementFactory();
+    private AttributeValuePair getElement(org.jrdf.sparql.parser.node.Node node, Node graphNode, NodeType nodeType,
+            Attribute attribute, Graph graph) {
+        ElementBuilder analyser = new ElementBuilderImpl(nodeType, graphNode, attribute, graph);
+        node.apply(analyser);
+        return analyser.getElement();
     }
 }
