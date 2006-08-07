@@ -58,18 +58,11 @@
 
 package org.jrdf.sparql.builder;
 
-import org.jrdf.graph.Graph;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.Switch;
 
 import java.util.SortedSet;
 
-/**
- * A builder that always throws exceptions.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public interface TripleBuilder {
-    SortedSet<AttributeValuePair> build(ATriple tripleNode, Graph graph);
+public interface TripleBuilder extends Switch {
+    SortedSet<AttributeValuePair> getTriples();
 }

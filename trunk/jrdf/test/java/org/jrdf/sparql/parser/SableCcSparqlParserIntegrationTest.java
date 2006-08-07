@@ -72,8 +72,6 @@ import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.builder.TripleBuilderImpl;
 import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
@@ -96,12 +94,6 @@ import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 
 import java.lang.reflect.Field;
 
-/**
- * Integration test for {@link SableCcSparqlParser}.
- *
- * @author Tom Adams
- * @version $Revision$
- */
 public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     // FIXME TJA: Triangulate on variables.
@@ -131,9 +123,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void setUp() throws Exception {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
-        TripleBuilder builder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(),
-                newSortedAttributeFactory);
-        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), builder, FACTORY.getNewGraphRelationFactory());
+        parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), FACTORY.getNewGraphRelationFactory(),
+                FACTORY.getNewSortedAttributeValuePairHelper(), newSortedAttributeFactory);
     }
 
     public void testSingleConstraint() {

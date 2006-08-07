@@ -100,7 +100,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter {
 
     @Override
     public void caseAWildcardSelectClause(AWildcardSelectClause node) {
-        WhereAnalyserImpl analyser = analyseWhereClause(node.parent());
+        WhereAnalyser analyser = analyseWhereClause(node.parent());
         expression = analyser.getExpression();
     }
 

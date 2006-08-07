@@ -62,16 +62,27 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.sparql.parser.SableCcNodeTestUtil;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.sparql.parser.node.AEscapedStrand;
+import org.jrdf.sparql.parser.node.ALiteral;
+import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.sparql.parser.node.AVariable;
+import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
+import org.jrdf.sparql.parser.node.PObjectTripleElement;
+import org.jrdf.sparql.parser.node.PResourceTripleElement;
+import org.jrdf.sparql.parser.node.PStrand;
+import org.jrdf.sparql.parser.node.TEscapedtext;
+import org.jrdf.sparql.parser.node.TIdentifier;
+import org.jrdf.sparql.parser.node.TQuote;
+import org.jrdf.sparql.parser.node.TResource;
+import org.jrdf.sparql.parser.node.TVariableprefix;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
@@ -85,14 +96,11 @@ import static org.jrdf.util.test.TripleTestUtil.URI_DC_SUBJECT;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 
 import java.lang.reflect.Modifier;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 
-/**
- * Unit test for {@link TripleBuilderImpl}.
- *
- * @author Tom Adams
- * @version $Revision$
- */
 public final class TripleBuilderImplUnitTest extends TestCase {
 
     // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined way.
@@ -108,58 +116,88 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
     private TripleBuilder tripleBuilder;
-    private static final String[] METHOD_PARAM_NAMES = {"tripleNode", "graph"};
-    private static final Class[] METHOD_PARAM_TYPES = {ATriple.class, Graph.class};
-    private static final ParameterDefinition PARAMS = new ParameterDefinition(METHOD_PARAM_NAMES, METHOD_PARAM_TYPES);
 
     public void setUp() throws Exception {
         super.setUp();
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
-        tripleBuilder = new TripleBuilderImpl(FACTORY.getNewSortedAttributeValuePairHelper(),
+        tripleBuilder = new TripleBuilderImpl(FACTORY.getNewGraph(), FACTORY.getNewSortedAttributeValuePairHelper(),
                 newSortedAttributeFactory);
     }
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilderImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC,
+        ClassPropertiesTestUtil.checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC, Graph.class,
                 SortedAttributeValuePairHelper.class, SortedAttributeFactory.class);
     }
 
-    public void testBuildNullParameters() {
-        ArgumentTestUtil.checkMethodNullAssertions(tripleBuilder, "build", PARAMS);
+    public void testBuildTripleFromParserNode() {
+        ATriple triple = createTripleWithVariable(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE, triple);
     }
 
-    public void testBuildTripleFromParserNode() {
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE);
-    }
 
     public void testBuildTripleForParserNode2() {
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE);
+        ATriple triple = createTripleWithVariable(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE, triple);
     }
 
     public void testBuildTripleForParserNode3() {
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE);
+        ATriple triple = createTripleWithVariable(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE, triple);
     }
 
     public void testBuildTripleForParserNode4() {
-        checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL);
+        ATriple triple = createTripleWithLiteral(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
+        checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL, triple);
     }
 
-    private void checkBuiltTripleWithVariable(Triple expectedTriple, VariableTripleSpec actualTriple) {
-        ATriple actualTripleNode = SableCcNodeTestUtil.createTripleNodeWithVariable(actualTriple);
+    private void checkBuiltTripleWithVariable(Triple expectedTriple, VariableTripleSpec actualTriple, ATriple triple) {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
-        checkBuiltTriple(actualTripleNode, avp);
+        checkBuildTriple(avp, triple);
     }
 
-    private void checkBuiltTripleWithLiteral(Triple expectedTriple, LiteralTripleSpec actualTriple) {
-        ATriple actualTripleNode = SableCcNodeTestUtil.createTripleNodeWithLiteral(actualTriple);
+    private void checkBuiltTripleWithLiteral(Triple expectedTriple, LiteralTripleSpec actualTriple, ATriple triple) {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
-        checkBuiltTriple(actualTripleNode, avp);
+        checkBuildTriple(avp, triple);
     }
 
-    private void checkBuiltTriple(ATriple actualTripleNode, SortedSet<AttributeValuePair> expectedAvp) {
-        SortedSet<AttributeValuePair> actualAvp = tripleBuilder.build(actualTripleNode, FACTORY.getNewGraph());
+    private void checkBuildTriple(SortedSet<AttributeValuePair> expectedAvp, ATriple triple) {
+        triple.apply(tripleBuilder);
+        SortedSet<AttributeValuePair> actualAvp = tripleBuilder.getTriples();
         assertEquals(expectedAvp, actualAvp);
+    }
+
+    private ATriple createTripleWithVariable(URI subject, URI predicate, String object) {
+        PResourceTripleElement subjectElement = createResourceTripleElement(subject);
+        PResourceTripleElement predicateElement = createResourceTripleElement(predicate);
+        PObjectTripleElement objectElement = createVariableTripleElement(object);
+        ATriple triple = new ATriple(subjectElement, predicateElement, objectElement);
+        return triple;
+    }
+
+    private ATriple createTripleWithLiteral(URI subject, URI predicate, String object) {
+        PResourceTripleElement subjectElement = createResourceTripleElement(subject);
+        PResourceTripleElement predicateElement = createResourceTripleElement(predicate);
+        PObjectTripleElement objectElement = createLiteralTripleElement(object);
+        ATriple triple = new ATriple(subjectElement, predicateElement, objectElement);
+        return triple;
+    }
+
+    private PObjectTripleElement createLiteralTripleElement(String object) {
+        List<PStrand> strand = new ArrayList<PStrand>();
+        strand.add(new AEscapedStrand(new TEscapedtext(object)));
+        ALiteral literal = new ALiteral(new TQuote("'"), strand, new TQuote("'"));
+        return new ALiteralObjectTripleElement(literal);
+    }
+
+    private AResourceResourceTripleElement createResourceTripleElement(URI uri) {
+        return new AResourceResourceTripleElement(new TResource(uri.toString()));
+    }
+
+    private AVariableObjectTripleElement createVariableTripleElement(String variableNameTitle) {
+        TVariableprefix variableprefix = new TVariableprefix("?");
+        TIdentifier identifier = new TIdentifier(variableNameTitle);
+        return new AVariableObjectTripleElement(new AVariable(variableprefix, identifier));
     }
 }

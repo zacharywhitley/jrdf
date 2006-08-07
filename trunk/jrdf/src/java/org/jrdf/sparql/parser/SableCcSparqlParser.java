@@ -62,9 +62,12 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.relation.mem.SortedAttributeFactory;
+import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.analysis.SparqlAnalyser;
 import org.jrdf.sparql.analysis.SparqlAnalyserImpl;
 import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.builder.TripleBuilderImpl;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.Parser;
@@ -74,25 +77,21 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.IOException;
 
-/**
- * SableCC implementation of a {@link SparqlParser}.
- *
- * @author Tom Adams
- * @version $Id$
- */
 public final class SableCcSparqlParser implements SparqlParser {
 
     // FIXME TJA: Test drive out throwing of InvalidQuerySyntaxException.
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
     private ParserFactory parserFactory;
-    private TripleBuilder builder;
     private GraphRelationFactory graphRelationFactory;
+    private final SortedAttributeValuePairHelper avpHelper;
+    private final SortedAttributeFactory sortedAttributeFactory;
 
-    public SableCcSparqlParser(ParserFactory parserFactory, TripleBuilder builder,
-            GraphRelationFactory graphRelationFactory) {
+    public SableCcSparqlParser(ParserFactory parserFactory, GraphRelationFactory graphRelationFactory,
+            SortedAttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
         this.parserFactory = parserFactory;
-        this.builder = builder;
         this.graphRelationFactory = graphRelationFactory;
+        this.avpHelper = avpHelper;
+        this.sortedAttributeFactory = sortedAttributeFactory;
     }
 
     /**
@@ -123,6 +122,7 @@ public final class SableCcSparqlParser implements SparqlParser {
     }
 
     private Query analyseQuery(Graph graph, Start start) {
+        TripleBuilder builder = new TripleBuilderImpl(graph, avpHelper, sortedAttributeFactory);
         SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph, graphRelationFactory);
         start.apply(analyser);
         return analyser.getQuery();
