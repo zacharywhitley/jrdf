@@ -67,21 +67,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
-import org.jrdf.sparql.parser.node.AEscapedStrand;
-import org.jrdf.sparql.parser.node.ALiteral;
-import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.AVariable;
-import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
-import org.jrdf.sparql.parser.node.PObjectTripleElement;
-import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.sparql.parser.node.PStrand;
-import org.jrdf.sparql.parser.node.TEscapedtext;
-import org.jrdf.sparql.parser.node.TIdentifier;
-import org.jrdf.sparql.parser.node.TQuote;
-import org.jrdf.sparql.parser.node.TResource;
-import org.jrdf.sparql.parser.node.TVariableprefix;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
@@ -96,9 +82,6 @@ import static org.jrdf.util.test.TripleTestUtil.URI_DC_SUBJECT;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 
 import java.lang.reflect.Modifier;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.SortedSet;
 
 public final class TripleBuilderImplUnitTest extends TestCase {
@@ -132,72 +115,35 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     }
 
     public void testBuildTripleFromParserNode() {
-        ATriple triple = createTripleWithVariable(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE, triple);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_TITLE_VARIABLE);
     }
 
 
     public void testBuildTripleForParserNode2() {
-        ATriple triple = createTripleWithVariable(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE, triple);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, TRIPLE_SPEC_BOOK_2_DC_TITLE_VARIABLE);
     }
 
     public void testBuildTripleForParserNode3() {
-        ATriple triple = createTripleWithVariable(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
-        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE, triple);
+        checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_VARIABLE);
     }
 
     public void testBuildTripleForParserNode4() {
-        ATriple triple = createTripleWithLiteral(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
-        checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL, triple);
+        checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, TRIPLE_SPEC_BOOK_1_DC_SUBJECT_LITERAL);
     }
 
-    private void checkBuiltTripleWithVariable(Triple expectedTriple, VariableTripleSpec actualTriple, ATriple triple) {
+    private void checkBuiltTripleWithVariable(Triple expectedTriple, VariableTripleSpec actualTriple) {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
-        checkBuildTriple(avp, triple);
+        checkBuildTriple(avp, actualTriple.getTriple());
     }
 
-    private void checkBuiltTripleWithLiteral(Triple expectedTriple, LiteralTripleSpec actualTriple, ATriple triple) {
+    private void checkBuiltTripleWithLiteral(Triple expectedTriple, LiteralTripleSpec actualTriple) {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
-        checkBuildTriple(avp, triple);
+        checkBuildTriple(avp, actualTriple.getTriple());
     }
 
     private void checkBuildTriple(SortedSet<AttributeValuePair> expectedAvp, ATriple triple) {
         triple.apply(tripleBuilder);
         SortedSet<AttributeValuePair> actualAvp = tripleBuilder.getTriples();
         assertEquals(expectedAvp, actualAvp);
-    }
-
-    private ATriple createTripleWithVariable(URI subject, URI predicate, String object) {
-        PResourceTripleElement subjectElement = createResourceTripleElement(subject);
-        PResourceTripleElement predicateElement = createResourceTripleElement(predicate);
-        PObjectTripleElement objectElement = createVariableTripleElement(object);
-        ATriple triple = new ATriple(subjectElement, predicateElement, objectElement);
-        return triple;
-    }
-
-    private ATriple createTripleWithLiteral(URI subject, URI predicate, String object) {
-        PResourceTripleElement subjectElement = createResourceTripleElement(subject);
-        PResourceTripleElement predicateElement = createResourceTripleElement(predicate);
-        PObjectTripleElement objectElement = createLiteralTripleElement(object);
-        ATriple triple = new ATriple(subjectElement, predicateElement, objectElement);
-        return triple;
-    }
-
-    private PObjectTripleElement createLiteralTripleElement(String object) {
-        List<PStrand> strand = new ArrayList<PStrand>();
-        strand.add(new AEscapedStrand(new TEscapedtext(object)));
-        ALiteral literal = new ALiteral(new TQuote("'"), strand, new TQuote("'"));
-        return new ALiteralObjectTripleElement(literal);
-    }
-
-    private AResourceResourceTripleElement createResourceTripleElement(URI uri) {
-        return new AResourceResourceTripleElement(new TResource(uri.toString()));
-    }
-
-    private AVariableObjectTripleElement createVariableTripleElement(String variableNameTitle) {
-        TVariableprefix variableprefix = new TVariableprefix("?");
-        TIdentifier identifier = new TIdentifier(variableNameTitle);
-        return new AVariableObjectTripleElement(new AVariable(variableprefix, identifier));
     }
 }
