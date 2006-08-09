@@ -88,7 +88,7 @@ import java.util.Set;
 /**
  * Integration test for {@link SparqlConnectionImpl}.
  */
-public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
+public final class SparqlConnectionImplIntegrationTest extends TestCase {
 
     // FIXME TJA: Add test that ensures that createConnection() returns a new connection each time.
 
@@ -103,6 +103,7 @@ public final class DefaultSparqlConnectionIntegrationTest extends TestCase {
     private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final QueryEngine QUERY_ENGINE = FACTORY.getNewQueryEngine();
 
+    @Override
     public void setUp() throws Exception {
         GraphElementFactory elementFactory = GRAPH.getElementFactory();
         SubjectNode subject = elementFactory.createResource(URI_BOOK_1);
