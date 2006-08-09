@@ -65,7 +65,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.mem.BlankNodeImpl;
-import org.jrdf.graph.mem.LiteralImpl;
+import org.jrdf.graph.mem.LiteralMutableId;
 import org.jrdf.graph.mem.MemNode;
 
 import java.util.HashMap;
@@ -173,7 +173,7 @@ public final class NodePoolMemImpl implements NodePoolMem {
         Long subjectValue = null;
         if (ANY_SUBJECT_NODE != first) {
             if (first instanceof BlankNodeImpl) {
-                subjectValue = ((BlankNodeImpl) first).getId();
+                subjectValue = ((MemNode) first).getId();
             } else {
                 subjectValue = getNodeIdByString(String.valueOf(first));
             }
@@ -204,9 +204,9 @@ public final class NodePoolMemImpl implements NodePoolMem {
         Long objectValue = null;
         if (ANY_OBJECT_NODE != third) {
             if (third instanceof BlankNodeImpl) {
-                objectValue = ((BlankNodeImpl) third).getId();
-            } else if (third instanceof LiteralImpl) {
-                objectValue = getNodeIdByString(((LiteralImpl) third).getEscapedForm());
+                objectValue = ((MemNode) third).getId();
+            } else if (third instanceof LiteralMutableId) {
+                objectValue = getNodeIdByString(((Literal) third).getEscapedForm());
             } else {
                 objectValue = getNodeIdByString(String.valueOf(third));
             }

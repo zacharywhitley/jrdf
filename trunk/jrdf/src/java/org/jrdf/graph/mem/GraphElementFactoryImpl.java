@@ -128,7 +128,6 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
 
         // check if the node already exists in the string pool
         Long nodeId = nodePool.getNodeIdByString(uri.toString());
-
         if (null != nodeId) {
             return (URIReference) nodePool.getNodeById(nodeId);
         }
@@ -150,7 +149,6 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      * @throws GraphElementFactoryException
      */
     public URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException {
-
         if (null == uri) {
             throw new GraphElementFactoryException("URI may not be null for a URIReference");
         }
@@ -177,7 +175,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      * @return the newly created literal value.
      */
     public Literal createLiteral(String lexicalValue) {
-        LiteralImpl literal = new LiteralImpl(lexicalValue);
+        LiteralMutableId literal = new LiteralImpl(lexicalValue);
         addNodeId(literal);
         return literal;
     }
@@ -192,7 +190,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      * @return the newly created literal value.
      */
     public Literal createLiteral(String lexicalValue, String languageType) {
-        LiteralImpl newLiteral = new LiteralImpl(lexicalValue, languageType);
+        LiteralMutableId newLiteral = new LiteralImpl(lexicalValue, languageType);
         addNodeId(newLiteral);
         return newLiteral;
     }
@@ -208,7 +206,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      */
     public Literal createLiteral(String lexicalValue, URI datatypeURI) {
         // create the node identifier
-        LiteralImpl newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
+        LiteralMutableId newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
         addNodeId(newLiteral);
         return newLiteral;
     }
@@ -220,7 +218,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      *
      * @param newLiteral A newly created newLiteral.
      */
-    private void addNodeId(LiteralImpl newLiteral) {
+    private void addNodeId(LiteralMutableId newLiteral) {
 
         // find the string identifier for this node
         String strId = newLiteral.getEscapedForm();
@@ -239,9 +237,5 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
             newLiteral.setId(nextNode);
             nodePool.registerNode(newLiteral);
         }
-    }
-
-    public NodePoolMem getNodePool() {
-        return nodePool;
     }
 }
