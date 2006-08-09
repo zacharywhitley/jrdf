@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,25 +56,37 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query;
+package org.jrdf.gui.command;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
+import org.jrdf.gui.view.QueryView;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * Builds queries in {@link String} form into {@link Query} objects.
+ * SPARQL query with an query error.
  *
- * @author Tom Adams
- * @version $Id$
+ * @author Andrew Newman
+ * @version $Revision:$
  */
-public interface QueryBuilder {
+public class InvalidQueryCommand extends ApplicationWindowAwareCommand {
+    private final QueryView queryView;
+    private InvalidQuerySyntaxException exception;
 
-    /**
-     * Builds a query in {@link String} form into a {@link Query}.
-     *
-     * @param queryText The query in {@link String} form of the query.
-     * @return The <code>queryText</code> in {@link Query} form.
-     * @throws InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
-     */
-    Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    public InvalidQueryCommand(QueryView queryView) {
+        super("invalidQueryCommand");
+        this.queryView = queryView;
+    }
+
+    public void setException(InvalidQuerySyntaxException exception) {
+        this.exception = exception;
+    }
+
+    protected void doExecuteCommand() {
+        Throwable cause = exception.getCause();
+        if (cause != null) {
+            queryView.setInvalidQueryMessage(cause.getMessage());
+        } else {
+            queryView.setInvalidQueryMessage(exception.getMessage());
+        }
+    }
 }
