@@ -90,19 +90,23 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
     }
 
     protected void doExecuteCommand() {
-        Answer answer = performQuery();
-        QueryRanCommand queryRanCommand = getQueryRanCommand();
-        queryRanCommand.setAnswer(answer);
-        queryRanCommand.execute();
+        try {
+            Answer answer = performQuery();
+            QueryRanCommand queryRanCommand = getQueryRanCommand();
+            queryRanCommand.setAnswer(answer);
+            queryRanCommand.execute();
+        } catch (InvalidQuerySyntaxException e) {
+            InvalidQueryCommand invalidQueryCommand = getInvalidQueryCommand();
+            invalidQueryCommand.setException(e);
+            invalidQueryCommand.execute();
+        }
     }
 
-    private Answer performQuery() {
+    private Answer performQuery() throws InvalidQuerySyntaxException {
         try {
             String query = queryPanelView.getQuery();
             return jrdfModel.performQuery(query);
         } catch (GraphException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
         }
     }
@@ -111,5 +115,11 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
         PageComponent activeComponent = getApplicationWindow().getPage().getActiveComponent();
         PageComponentContext context = activeComponent.getContext();
         return (QueryRanCommand) context.getLocalCommandExecutor("queryRanCommand");
+    }
+
+    private InvalidQueryCommand getInvalidQueryCommand() {
+        PageComponent activeComponent = getApplicationWindow().getPage().getActiveComponent();
+        PageComponentContext context = activeComponent.getContext();
+        return (InvalidQueryCommand) context.getLocalCommandExecutor("invalidQueryCommand");
     }
 }

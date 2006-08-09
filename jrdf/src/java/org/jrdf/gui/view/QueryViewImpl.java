@@ -61,6 +61,7 @@ package org.jrdf.gui.view;
 import org.jrdf.gui.command.QueryRanCommand;
 import org.jrdf.gui.command.RdfFailedToLoadCommand;
 import org.jrdf.gui.command.RdfLoadedCommand;
+import org.jrdf.gui.command.InvalidQueryCommand;
 import org.jrdf.query.Answer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
@@ -80,7 +81,6 @@ import javax.swing.JSplitPane;
  */
 public class QueryViewImpl extends AbstractView implements ApplicationListener, QueryView {
     private static final double HALF_PANE = 0.5;
-
     private QueryPanelView queryPanelView;
     private ResultsPanelView resultsPanelView;
 
@@ -98,6 +98,7 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
         context.register("rdfLoadedCommand", new RdfLoadedCommand(this));
         context.register("rdfFailedToLoadCommand", new RdfFailedToLoadCommand(this));
         context.register("queryRanCommand", new QueryRanCommand(this));
+        context.register("invalidQueryCommand", new InvalidQueryCommand(this));
     }
 
     public void setTriplesLoaded(long numberOfTriples) {
@@ -107,6 +108,11 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
 
     public void setLoadErrorMessage(String errorMessage) {
         String message = getMessage("queryView.failedToLoad");
+        getStatusBar().setMessage(message + errorMessage);
+    }
+
+    public void setInvalidQueryMessage(String errorMessage) {
+        String message = getMessage("queryView.invalidQuery");
         getStatusBar().setMessage(message + errorMessage);
     }
 
@@ -135,18 +141,14 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
     }
 
     public void componentClosed() {
-        System.out.println("closed");
     }
 
     public void componentFocusGained() {
-        System.out.println("gained");
     }
 
     public void componentFocusLost() {
-        System.out.println("lost");
     }
 
     public void componentOpened() {
-        System.out.println("opened");
     }
 }

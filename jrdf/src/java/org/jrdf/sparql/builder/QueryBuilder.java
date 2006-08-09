@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,26 +56,27 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.view;
+package org.jrdf.sparql.builder;
 
-import org.jrdf.query.Answer;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.query.Query;
+import org.jrdf.query.InvalidQuerySyntaxException;
 
 /**
- * A builder that always throws exceptions.
+ * Builds queries in {@link String} form into {@link org.jrdf.query.Query} objects.
  *
- * @author Andrew Newman
- * @version $Revision:$
+ * @author Tom Adams
+ * @version $Id$
  */
-public interface QueryView {
-    void setQueryPanel(QueryPanelView newQueryPanelView);
+public interface QueryBuilder {
 
-    void setResultsPanel(ResultsPanelView newResultsPanelView);
-
-    void setTriplesLoaded(long numberOfTriples);
-
-    void setResults(Answer answer);
-
-    void setLoadErrorMessage(String errorMessage);
-
-    void setInvalidQueryMessage(String errorMessage);
+    /**
+     * Builds a query in {@link String} form into a {@link org.jrdf.query.Query}.
+     *
+     * @param queryText The query in {@link String} form of the query.
+     * @return The <code>queryText</code> in {@link org.jrdf.query.Query} form.
+     * @throws org.jrdf.query.InvalidQuerySyntaxException If the syntax of the <code>query</code> is incorrect.
+     */
+    Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
 }

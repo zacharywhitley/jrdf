@@ -63,7 +63,6 @@ import org.easymock.classextension.IMocksControl;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.query.QueryBuilder;
 import org.jrdf.sparql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterTestUtil;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
