@@ -1,1 +1,11 @@
-JRDF SPARQL Engine v1.0
+<table>
+<tr>
+<td valign="top">
+<b>JRDF SPARQL GUI</b><br>
+<p>
+Version: 0.1<br>
+<p>
+&copy; Copyright 2004-2006</a> the original author or authors.
+</td>
+</tr>
+</table>
