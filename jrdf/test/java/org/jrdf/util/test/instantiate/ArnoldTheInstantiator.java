@@ -66,22 +66,21 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralImpl;
 import org.jrdf.graph.mem.URIReferenceImpl;
-import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.AnswerImpl;
-import org.jrdf.query.DefaultVariable;
 import org.jrdf.query.QueryImpl;
+import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.relation.constants.NullaryTuple;
-import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.util.test.ReflectTestUtil;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Instantiates classes for use in testing.
@@ -121,7 +120,6 @@ public final class ArnoldTheInstantiator {
         instantiators.put(AnswerImpl.class, new AnswerInstantiator());
         instantiators.put(QueryImpl.class, new DefaultQueryInstantiator());
         instantiators.put(Constraint.class, new ConstraintTripleInstantiator());
-        instantiators.put(DefaultVariable.class, new DefaultVariableInstantiator());
         instantiators.put(URL.class, new URLInstantiator());
         instantiators.put(URI.class, new URIInstantiator());
         instantiators.put(String.class, new StringInstantiator());

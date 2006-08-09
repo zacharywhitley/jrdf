@@ -63,6 +63,7 @@ import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.parser.Parser;
 import org.jrdf.query.Answer;
 import org.jrdf.query.AnswerImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
@@ -79,7 +80,7 @@ public class JRDFModelImpl implements JRDFModel {
 
     public Graph loadModel(URL url) {
         try {
-            GraphRdfXmlParser graphRdfXmlParser = new GraphRdfXmlParser(graph);
+            Parser graphRdfXmlParser = new GraphRdfXmlParser(graph);
             graphRdfXmlParser.parse(url.openStream(), url.toURI().toString());
             return graph;
         } catch (Exception e) {
