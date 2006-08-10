@@ -66,10 +66,16 @@
     </macrodef>
 
     <target name="dist" depends="compile,-copy-sparql-sablecc-resources,-copy-ntriples-sablecc-resources">
+        <!-- Setup main jar ./main/jrdf-0.x.x.jar -->
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${project.jar}">
-            <fileset dir="${prod.classes.dir}"/>
+            <manifest>
+                <attribute name="Main-Class" value="org.jrdf.gui.SparqlGui"/>
+            </manifest>
         </jar>
+        <!-- Copy required lib jars to ./lib/* -->
+        <!-- Jar up all jars into jrdf-gui-0.1.jar -->
+        <!-- Update uber jar with one-jar classes and manifest. -->
     </target>
 
     <target name="javadoc" depends="-compile">
