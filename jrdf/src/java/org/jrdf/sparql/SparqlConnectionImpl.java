@@ -63,7 +63,10 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.AnswerImpl;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.sparql.builder.QueryBuilder;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
 import org.jrdf.query.execute.QueryEngine;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -98,6 +101,9 @@ public final class SparqlConnectionImpl implements SparqlConnection {
         checkNotNull(graph, queryText);
         checkNotEmptyString("queryText", queryText);
         Query query = builder.buildQuery(graph, queryText);
+        if (graph.isEmpty()) {
+            return new AnswerImpl(NO_QUERY, RELATION_DUM);
+        }
         return query.executeQuery(graph, queryEngine);
     }
 }
