@@ -65,7 +65,10 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.AnswerImpl;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.sparql.builder.QueryBuilder;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ArgumentTestUtil;
@@ -87,7 +90,6 @@ import java.net.URL;
  */
 @SuppressWarnings({"unchecked"})
 public class SparqlConnectionImplUnitTest extends TestCase {
-
     private static final URL NO_SECURITY_DOMAIN = SparqlConnectionUrl.NO_SECURITY_DOMAIN_URL;
     private static final String NULL = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
@@ -104,7 +106,9 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final Class[] METHOD_PARAM_TYPES = {Graph.class, String.class};
     private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(METHOD_PARAM_NAMES,
             METHOD_PARAM_TYPES);
+    private static final InvalidQuerySyntaxException INVALID_QUERY_EXCEPTION = new InvalidQuerySyntaxException("");
     private MockFactory factory;
+    private static final AnswerImpl NO_ANSWER = new AnswerImpl(NO_QUERY, RELATION_DUM);
 
     public void setUp() {
         factory = new MockFactory();
@@ -134,13 +138,25 @@ public class SparqlConnectionImplUnitTest extends TestCase {
 
     public void testExecuteQuery() throws Exception {
         QueryEngine queryEngine = createQueryEngine();
-        Query query = createQuery(queryEngine);
-        QueryBuilder builder = createBuilder(QUERY_ITQL, query);
+        Query query = createQuery(GRAPH, queryEngine);
+        QueryBuilder builder = createBuilder(GRAPH, QUERY_ITQL, query);
         SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, queryEngine);
         factory.replay();
         Answer answer = connection.executeQuery(GRAPH, QUERY_ITQL);
         factory.verify();
         assertEquals(ANSWER, answer);
+    }
+
+    public void testEmptyGraph() throws Exception {
+        QueryEngine queryEngine = createQueryEngine();
+        Graph graph = createEmptyGraph();
+        Query query = MockTestUtil.createMock(Query.class);
+        QueryBuilder builder = createBuilder(graph, QUERY_ITQL, query);
+        SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, queryEngine);
+        factory.replay();
+        Answer answer = connection.executeQuery(graph, QUERY_ITQL);
+        factory.verify();
+        assertEquals(NO_ANSWER, answer);
     }
 
     public void testGraphExceptionPassthrough() throws Exception {
@@ -158,7 +174,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     public void testInvalidQueryExceptionPassthrough() {
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                QueryBuilder builder = createBuilderThrowsException(GRAPH, QUERY_ITQL, new InvalidQuerySyntaxException(""));
+                QueryBuilder builder = createBuilderThrowsException(GRAPH, QUERY_ITQL, INVALID_QUERY_EXCEPTION);
                 SparqlConnection connection = createConnection(builder);
                 factory.replay();
                 connection.executeQuery(GRAPH, QUERY_ITQL);
@@ -167,10 +183,18 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         });
     }
 
-    private Query createQuery(QueryEngine queryEngine) {
+    private Graph createEmptyGraph() throws GraphException {
+        IMocksControl control = factory.createControl();
+        Graph graph = control.createMock(Graph.class);
+        graph.isEmpty();
+        control.andReturn(true);
+        return graph;
+    }
+
+    private Query createQuery(Graph graph, QueryEngine queryEngine) {
         IMocksControl control = factory.createControl();
         Query query = control.createMock(Query.class);
-        query.executeQuery(GRAPH, queryEngine);
+        query.executeQuery(graph, queryEngine);
         control.andReturn(ANSWER);
         return query;
     }
@@ -194,14 +218,13 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         });
     }
 
-    private QueryBuilder createBuilder(String queryString, Query query) throws Exception {
+    private QueryBuilder createBuilder(Graph graph, String queryString, Query query) throws Exception {
         IMocksControl control = factory.createControl();
         QueryBuilder builder = control.createMock(QueryBuilder.class);
-        builder.buildQuery(GRAPH, queryString);
+        builder.buildQuery(graph, queryString);
         control.andReturn(query);
         return builder;
     }
-
 
     private QueryBuilder createBuilderThrowsException(Graph graph, String queryText, Exception e) throws Exception {
         IMocksControl control = factory.createControl();
