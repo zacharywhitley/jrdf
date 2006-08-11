@@ -34,8 +34,15 @@
                    metadatafile="${coverage.dir}/metadata.emma" merge="true"/>
         </emma>
 
-        <!-- Configuration for Wiring up the various components using Spring -->
-        <copy file="conf/wiring.xml" todir="${prod.classes.dir}"/>
+        <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
+        <copy todir="${prod.classes.dir}">
+            <fileset dir="${prod.src.dir}" includes="**/commands-context.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/richclient-application-context.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/richclient-application-context.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/images.properties"/>
+            <fileset dir="${prod.src.dir}" includes="**/messages.properties"/>
+            <fileset dir="conf" includes="**/wiring.xml"/>
+        </copy>
 
         <!-- Test data used by the RDF/XML Writer -->
         <copy todir="${prod.classes.dir}">
@@ -68,12 +75,23 @@
     <target name="dist" depends="compile,-copy-sparql-sablecc-resources,-copy-ntriples-sablecc-resources">
         <!-- Setup main jar ./main/jrdf-0.x.x.jar -->
         <mkdir dir="${dist.dir}"/>
+        <pathconvert dirsep="/" pathsep=" " property="jar.classpath">
+           <map from="${basedir}/lib" to="lib"/>
+           <path refid="production.class.path"/>
+        </pathconvert>
         <jar destfile="${dist.dir}/${project.jar}">
             <manifest>
                 <attribute name="Main-Class" value="org.jrdf.gui.SparqlGui"/>
+                <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
+            <fileset dir="${prod.classes.dir}"/>
         </jar>
         <!-- Copy required lib jars to ./lib/* -->
+        <copy todir="${dist.dir}">
+            <fileset dir="${basedir}">
+                <patternset refid="production.classpath.pattern"/>
+            </fileset>
+        </copy>
         <!-- Jar up all jars into jrdf-gui-0.1.jar -->
         <!-- Update uber jar with one-jar classes and manifest. -->
     </target>
