@@ -11,7 +11,6 @@ o Implement SPARQL parser.
       Anti-join (difference and semi-join) and Left and Full Outerjoin.
     o Possibly implement:
       o Right Outerjoin?
-      o Intersection (maybe - special case of join)?
   o Finish SPARQL Grammar.
     o Currently implements CONJUNCTION (.) and UNION, SELECT (* and Variables).
       o Put in SPARQL:

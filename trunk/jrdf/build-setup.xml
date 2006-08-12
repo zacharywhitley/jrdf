@@ -9,6 +9,7 @@
     <property name="project.version.full" value="${project.version.major}.${project.version.minor}${version-status}"/>
     <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
     <property name="build.dir" value="build"/>
+    <property name="conf.dir" value="conf"/>
     <property name="doc.dir" value="doc"/>
     <property name="lib.dir" value="lib"/>
     <property name="src.dir" value="src"/>
@@ -124,10 +125,7 @@
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
         <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
-        <include name="${out.instr.dir}/classes"/>
-        <include name="${prod.classes.dir}"/>
-        <include name="${test.classes.dir}"/>
-    </patternset>
+   </patternset>
 
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
         <patternset refid="production.code.pattern"/>
@@ -177,9 +175,12 @@
         </fileset>
     </path>
     <path id="test.class.path">
-        <fileset dir=".">
+        <fileset dir="${basedir}">
             <patternset refid="test.classpath.pattern"/>
         </fileset>
+        <pathelement location="${out.instr.dir}/classes"/>
+        <pathelement location="${prod.classes.dir}"/>
+        <pathelement location="${test.classes.dir}"/>
     </path>
 
     <path id="unit.test.class.path">
