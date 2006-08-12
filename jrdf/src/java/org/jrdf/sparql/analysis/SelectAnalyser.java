@@ -60,14 +60,8 @@ package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.sparql.parser.node.Switch;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-public interface WhereAnalyser extends Switch {
-    Expression<ExpressionVisitor>getExpression();
-    LinkedHashSet<Attribute> getAttributes(Set<AttributeName> declaredVariables);
+public interface SelectAnalyser extends Switch {
+    Expression<ExpressionVisitor> getExpression();
 }

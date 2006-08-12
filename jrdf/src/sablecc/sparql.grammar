@@ -20,48 +20,56 @@ Helpers
   urlchar    = [character - '>'];
 
 States
-  def,  /* default state */
-  com,  /* comment */
-  esc,  /* escaping character in quoted literal with '\' */
-  lit,  /* quoted literal */
-  res,  /* tagged resource */
-  var;  /* escaping variable name with '?' or '$' */
+  def,      /* default state */
+  com,      /* comment */
+  esc,      /* escaping character in quoted literal with '\' */
+  lit,      /* quoted literal */
+  res,      /* tagged resource */
+  var;      /* escaping variable name with '?' or '$' */
 
 Tokens
+  {def}                prefix      = ('PREFIX' | 'prefix');
   {def}                select      = ('SELECT' | 'select');
   {def}                where       = ('WHERE' | 'where');
   {def}                union       = ('UNION' | 'union');
-  {def}                optional       = ('OPTIONAL' | 'optional');
+  {def}                optional    = ('OPTIONAL' | 'optional');
 
-  {def, var->def}      identifier = letter (letter | digit | '_' | '$' | '?' )*;
-  {def}                blank          = whitespace+;
-  {def->com}           hash           = '#';
-  {com}                comment        = [character - [lf + cr]];
-  {com->def}           endcomment     = (lf | cr)+;
-  {def}                terminator     = ';';
-  {def}                lpar           = '{';
-  {def}                rpar           = '}';
-  {def->res}           url            = '<';
-  {res->def}           endurl         = '>';
-  {def}                datatypeprefix = '^^';
-  {def->var}           variableprefix = ('?' | '$');
-  {def}                period         = '.';
-  {def}                number         = digit+;
-  {def}                float          = digit+ ('.' digit*) | ('.' digit+);
-  {def}                asterisk       = '*';
+  {def, var->def}             identifier     = letter (letter | digit | '_' | '$' | '?' )*;
+  {def}                       blank          = whitespace+;
+  {def->com}                  hash           = '#';
+  {com}                       comment        = [character - [lf + cr]];
+  {com->def}                  endcomment     = (lf | cr)+;
+  {def}                       terminator     = ';';
+  {def}                       colon          = ':';
+  {def}                       lpar           = '{';
+  {def}                       rpar           = '}';
+  {def->res}                  url            = '<';
+  {res->def}                  endurl         = '>';
+  {def}                       datatypeprefix = '^^';
+  {def->var}                  variableprefix = ('?' | '$');
+  {def}                       period         = '.';
+  {def}                       number         = digit+;
+  {def}                       float          = digit+ ('.' digit*) | ('.' digit+);
+  {def}                       asterisk       = '*';
 
-  {res}                resource    = urlchar*;
-  {def->lit, lit->def} quote       = 39;  /* ' */
-  {lit->esc}           escape      = '\';
-  {esc->lit}           escapedtext = character;
-  {lit}                text        = nonquote+;
+  {res}                       resource    = urlchar*;
+  {def->lit, lit->def}        quote       = 39;  /* ' */
+  {lit->esc}                  escape      = '\';
+  {esc->lit}                  escapedtext = character;
+  {lit}                       text        = nonquote+;
 
 Ignored Tokens
   blank, comment, escape, endcomment, endurl, hash, url;
 
 Productions
   start =
-    {query} select_clause where_clause?;
+    {query} prolog select_clause where_clause?;
+
+  prolog =
+    {prefixdecl} prefixdecl* ;
+
+  prefixdecl =
+    {prefix} prefix identifier? colon resource ;
 
   select_clause =
     {variable_list} select variable+ |
@@ -106,10 +114,12 @@ Productions
 
   resource_triple_element =
     {resource} resource |
+    {qname} [ncname_prefix]:identifier colon [nc_name]:identifier |
     {variable} variable ;
 
   object_triple_element =
     {resource} resource |
+    {qname} [ncname_prefix]:identifier colon [nc_name]:identifier |
     {literal}  literal  |
     {variable} variable ;
 
