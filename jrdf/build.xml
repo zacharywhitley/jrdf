@@ -12,8 +12,8 @@
     <target name="gen-src" depends="gen-sparql-parser, gen-ntriples-parser"/>
 
     <target name="checkstyle">
-        <checkstyle config="conf/checkstyle.xml">
-            <fileset dir="${prod.src.dir}"/>
+        <checkstyle config="${conf.dir}/checkstyle.xml">
+            <fileset dir="${prod.src.dir}" excludes="com/**/*"/>
         </checkstyle>
     </target>
 
@@ -41,7 +41,8 @@
             <fileset dir="${prod.src.dir}" includes="**/richclient-application-context.xml"/>
             <fileset dir="${prod.src.dir}" includes="**/images.properties"/>
             <fileset dir="${prod.src.dir}" includes="**/messages.properties"/>
-            <fileset dir="conf" includes="**/wiring.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/about.txt"/>
+            <fileset dir="${conf.dir}" includes="**/wiring.xml"/>
         </copy>
 
         <!-- Test data used by the RDF/XML Writer -->
@@ -84,7 +85,7 @@
                 <attribute name="Main-Class" value="org.jrdf.gui.SparqlGui"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
-            <fileset dir="${prod.classes.dir}"/>
+            <fileset dir="${prod.classes.dir}" excludes="com/**/*"/>
         </jar>
         <!-- Copy required lib jars to ./lib/* -->
         <copy todir="${dist.dir}">
@@ -92,8 +93,14 @@
                 <patternset refid="production.classpath.pattern"/>
             </fileset>
         </copy>
-        <!-- Jar up all jars into jrdf-gui-0.1.jar -->
+        <!-- Create structure for single jar file -->
+        <mkdir dir="${dist.dir}/main"/>
+        <move file="${dist.dir}/${project.jar}" todir="${dist.dir}/main"/>
         <!-- Update uber jar with one-jar classes and manifest. -->
+        <jar destfile="${dist.dir}/jrdf-gui-0.1.jar" manifest="${conf.dir}/boot-manifest.mf">
+            <fileset dir="${dist.dir}" includes="**/*" excludes="jrdf-gui-0.1.jar"/>
+            <fileset dir="${prod.classes.dir}" includes="com/**/*"/>
+        </jar>
     </target>
 
     <target name="javadoc" depends="-compile">
