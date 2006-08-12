@@ -77,6 +77,8 @@ import org.jrdf.sparql.parser.node.ATriple;
 import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
+import java.util.Map;
+import java.util.HashMap;
 
 public final class TripleBuilderImpl extends DepthFirstAdapter implements TripleBuilder {
     // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
@@ -89,6 +91,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     private final Graph graph;
     private final SortedAttributeFactory sortedAttributeFactory;
     private SortedSet<AttributeValuePair> avp;
+    private Map<String, String> prefixMap = new HashMap<String, String>();
 
     public TripleBuilderImpl(Graph graph, SortedAttributeValuePairHelper avpHelper,
             SortedAttributeFactory sortedAttributeFactory) {
@@ -106,6 +109,10 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
         return avp;
     }
 
+    public void addPrefix(String identifier, String resource) {
+        prefixMap.put(identifier, resource);
+    }
+
     @Override
     public void caseATriple(ATriple node) {
         List<Attribute> heading = sortedAttributeFactory.createHeading(Arrays.asList(TYPES));
@@ -120,7 +127,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
 
     private AttributeValuePair getElement(org.jrdf.sparql.parser.node.Node node, Node graphNode, NodeType nodeType,
             Attribute attribute, Graph graph) {
-        ElementBuilder analyser = new ElementBuilderImpl(nodeType, graphNode, attribute, graph);
+        ElementBuilder analyser = new ElementBuilderImpl(nodeType, graphNode, attribute, graph, prefixMap);
         node.apply(analyser);
         return analyser.getElement();
     }

@@ -63,12 +63,6 @@ import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.AVariable;
 
-/**
- * Class description goes here.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
 public class VariableAnalyser extends DepthFirstAdapter {
     private AttributeName variableName;
 

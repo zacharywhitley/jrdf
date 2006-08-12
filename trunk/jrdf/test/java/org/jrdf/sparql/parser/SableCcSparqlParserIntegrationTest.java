@@ -136,11 +136,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testPrefix() {
-//        String query = "PREFIX examplebook: <http://example.org/book/> \n" +
-//                "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
-//                "SELECT * \n" +
-//                "WHERE { book:book1 dc:title ?title . book:book2 dc:title ?title }";
-//        checkConstraintExpression(query, BOOK1_AND_2_CONJUNCTION);
+        String query = "PREFIX examplebook: <http://example.org/book/> \n" +
+                "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
+                "SELECT * \n" +
+                "WHERE { examplebook:book1 dc:title ?title . examplebook:book2 dc:title ?title }";
+        checkConstraintExpression(query, BOOK1_AND_2_CONJUNCTION);
     }
 
     public void testTwoConstraints() {

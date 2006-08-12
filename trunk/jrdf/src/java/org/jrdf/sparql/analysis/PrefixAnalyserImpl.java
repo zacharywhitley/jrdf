@@ -58,14 +58,18 @@
 
 package org.jrdf.sparql.analysis;
 
+import org.jrdf.graph.Graph;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.APrefixdeclProlog;
 import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.graph.Graph;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Expression;
+import org.jrdf.sparql.parser.node.PPrefixdecl;
+
+import java.util.LinkedList;
 
 public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnalyser {
     private TripleBuilder tripleBuilder;
@@ -89,6 +93,15 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
     @Override
     public void caseAVariableListSelectClause(AVariableListSelectClause node) {
         expression = analyseSelectClause(node);
+    }
+
+    @Override
+    public void caseAPrefixdeclProlog(APrefixdeclProlog node) {
+        LinkedList<PPrefixdecl> prefixdecl = node.getPrefixdecl();
+        SinglePrefixAnalyser prefixAnalyser = new SinglePrefixAnalyser(tripleBuilder);
+        for (PPrefixdecl pPrefixdecl : prefixdecl) {
+            pPrefixdecl.apply(prefixAnalyser);
+        }
     }
 
     private Expression<ExpressionVisitor> analyseSelectClause(Node node) {
