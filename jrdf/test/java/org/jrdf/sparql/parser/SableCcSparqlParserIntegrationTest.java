@@ -118,6 +118,10 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("?x", FOAF_MBOX, "?alias", 3);
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("?x", FOAF_NAME, "?name", 3);
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("?x", FOAF_MBOX, "?mbox", 4);
+    private static final String QUERY_BOOK_1_AND_2_WITH_PREFIX = "PREFIX examplebook: <http://example.org/book/> \n" +
+            "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
+            "SELECT * \n" +
+            "WHERE { examplebook:book1 dc:title ?title . examplebook:book2 dc:title ?title }";
     private QueryParser parser;
 
     public void setUp() throws Exception {
@@ -136,11 +140,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testPrefix() {
-        String query = "PREFIX examplebook: <http://example.org/book/> \n" +
-                "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
-                "SELECT * \n" +
-                "WHERE { examplebook:book1 dc:title ?title . examplebook:book2 dc:title ?title }";
-        checkConstraintExpression(query, BOOK1_AND_2_CONJUNCTION);
+        checkConstraintExpression(QUERY_BOOK_1_AND_2_WITH_PREFIX, BOOK1_AND_2_CONJUNCTION);
     }
 
     public void testTwoConstraints() {
