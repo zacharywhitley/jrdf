@@ -58,16 +58,17 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.sparql.parser.node.Switch;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public interface WhereAnalyser extends Switch {
-    Expression<ExpressionVisitor>getExpression();
-    LinkedHashSet<Attribute> getAttributes(Set<AttributeName> declaredVariables);
+    Expression<ExpressionVisitor>getExpression() throws ParserException;
+    LinkedHashSet<Attribute> getAttributes(Set<AttributeName> declaredVariables) throws ParserException;
 }
