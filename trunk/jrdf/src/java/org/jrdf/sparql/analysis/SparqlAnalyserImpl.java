@@ -76,8 +76,6 @@ import org.jrdf.util.param.ParameterUtil;
  * @version $Revision$
  */
 public final class SparqlAnalyserImpl extends DepthFirstAdapter implements SparqlAnalyser {
-
-    // FIXME TJA: Should eventually be using a Expression builder here.
     private Query query = NO_QUERY;
     private TripleBuilder tripleBuilder;
     private Graph graph;
@@ -103,7 +101,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
 
     @Override
     public void inStart(Start node) {
-        SelectAnalyserImpl analyser = new SelectAnalyserImpl(tripleBuilder, graph);
+        PrefixAnalyser analyser = new PrefixAnalyserImpl(tripleBuilder, graph);
         node.apply(analyser);
         expression = analyser.getExpression();
     }

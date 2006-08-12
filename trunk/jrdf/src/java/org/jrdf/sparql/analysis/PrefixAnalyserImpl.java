@@ -58,40 +58,23 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.expression.Projection;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.PVariable;
+import org.jrdf.graph.Graph;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.expression.Expression;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-
-/**
- * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
- *
- * @author Tom Adams
- * @version $Revision: 683 $
- */
-public final class SelectAnalyserImpl extends DepthFirstAdapter implements SelectAnalyser {
-
-    // FIXME TJA: Should eventually be using a Expression builder here.
+public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnalyser {
     private TripleBuilder tripleBuilder;
     private Graph graph;
-    private final VariableCollector variableCollector;
     private Expression<ExpressionVisitor> expression;
 
-    public SelectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
+    public PrefixAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
-        this.variableCollector = new VariableCollectorImpl();
     }
 
     public Expression<ExpressionVisitor> getExpression() {
@@ -100,33 +83,18 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
 
     @Override
     public void caseAWildcardSelectClause(AWildcardSelectClause node) {
-        WhereAnalyser analyser = analyseWhereClause(node.parent());
-        expression = analyser.getExpression();
+        expression = analyseSelectClause(node);
     }
 
     @Override
     public void caseAVariableListSelectClause(AVariableListSelectClause node) {
-        WhereAnalyser analyser = analyseWhereClause(node.parent());
-        Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
-        LinkedHashSet<AttributeName> declaredVariables = getDeclaredVariables(node);
-        LinkedHashSet<Attribute> attributes = analyser.getAttributes(declaredVariables);
-        expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
+        expression = analyseSelectClause(node);
     }
 
-    private WhereAnalyser analyseWhereClause(Node node) {
-        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, variableCollector);
+    private Expression<ExpressionVisitor> analyseSelectClause(Node node) {
+        SelectAnalyser analyser = new SelectAnalyserImpl(tripleBuilder, graph);
         node.apply(analyser);
-        return analyser;
+        return analyser.getExpression();
     }
 
-    private LinkedHashSet<AttributeName> getDeclaredVariables(AVariableListSelectClause node) {
-        List<PVariable> variables = node.getVariable();
-        LinkedHashSet<AttributeName> variableNames = new LinkedHashSet<AttributeName>();
-        for (PVariable variable : variables) {
-            VariableAnalyser variableAnalyser = new VariableAnalyser();
-            variable.apply(variableAnalyser);
-            variableNames.add(variableAnalyser.getVariableName());
-        }
-        return variableNames;
-    }
 }
