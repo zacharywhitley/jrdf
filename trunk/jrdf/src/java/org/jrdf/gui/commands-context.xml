@@ -33,8 +33,6 @@
         <property name="members">
             <list>
                 <ref bean="fileMenu"/>
-                <ref bean="editMenu"/>
-                <ref bean="windowMenu"/>
                 <ref bean="helpMenu"/>
             </list>
         </property>
@@ -85,30 +83,6 @@
         </property>
         <property name="queryPanelView">
             <ref bean="queryPanelView"/>
-        </property>
-    </bean>
-
-    <bean id="editMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
-        <property name="members">
-            <list>
-                <value>undoCommand</value>
-                <value>redoCommand</value>
-                <value>separator</value>
-                <value>cutCommand</value>
-                <value>copyCommand</value>
-                <value>pasteCommand</value>
-                <value>separator</value>
-                <value>selectAllCommand</value>
-                <value>deleteCommand</value>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="windowMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
-        <property name="members">
-            <list>
-                <bean class="org.springframework.richclient.command.support.NewWindowCommand"/>
-            </list>
         </property>
     </bean>
 

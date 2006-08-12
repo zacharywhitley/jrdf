@@ -100,6 +100,8 @@
         <jar destfile="${dist.dir}/jrdf-gui-0.1.jar" manifest="${conf.dir}/boot-manifest.mf">
             <fileset dir="${dist.dir}" includes="**/*" excludes="jrdf-gui-0.1.jar"/>
             <fileset dir="${prod.classes.dir}" includes="com/**/*"/>
+            <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
+            <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
         </jar>
     </target>
 
