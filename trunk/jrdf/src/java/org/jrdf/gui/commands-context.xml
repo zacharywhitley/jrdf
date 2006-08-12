@@ -61,9 +61,7 @@
         <property name="members">
             <list>
                 <ref bean="newQueryCommand"/>
-                <bean class="org.jrdf.gui.command.OpenQueryCommand"/>
                 <ref bean="runQueryCommand"/>
-                <bean class="org.jrdf.gui.command.SaveQueryCommand"/>
             </list>
         </property>
     </bean>
