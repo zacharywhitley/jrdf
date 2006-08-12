@@ -72,14 +72,16 @@ import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AQnameObjectTripleElement;
+import org.jrdf.sparql.parser.node.AQnameResourceTripleElement;
 import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.AVariable;
 import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
-import org.jrdf.sparql.parser.node.AQnameResourceTripleElement;
-import org.jrdf.sparql.parser.node.AQnameObjectTripleElement;
+import org.jrdf.sparql.parser.node.TIdentifier;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.net.URI;
 import java.util.Map;
@@ -95,6 +97,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     private final Attribute attribute;
     private final Graph currentGraph;
     private final Map<String, String> prefixMap;
+    private ParserException exception;
 
     public ElementBuilderImpl(NodeType nodeType, Node graphNode, Attribute attribute, Graph currentGraph,
             Map<String, String> prefixMap) {
@@ -105,8 +108,12 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         this.prefixMap = prefixMap;
     }
 
-    public AttributeValuePair getElement() {
-        return avp;
+    public AttributeValuePair getElement() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        } else {
+            return avp;
+        }
     }
 
     @Override
@@ -117,12 +124,12 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAQnameResourceTripleElement(AQnameResourceTripleElement node) {
-        createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
+        avp = createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
     }
 
     @Override
     public void caseAVariableResourceTripleElement(AVariableResourceTripleElement node) {
-        createAttributeValuePair(nodeType, graphNode, getVariableName(node));
+        avp = createAttributeValuePair(nodeType, graphNode, getVariableName(node));
     }
 
     @Override
@@ -133,12 +140,12 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseAQnameObjectTripleElement(AQnameObjectTripleElement node) {
-        createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
+        avp = createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
     }
 
     @Override
     public void caseAVariableObjectTripleElement(AVariableObjectTripleElement node) {
-        createAttributeValuePair(nodeType, graphNode, getVariableName(node));
+        avp = createAttributeValuePair(nodeType, graphNode, getVariableName(node));
     }
 
     @Override
@@ -147,10 +154,10 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         avp = new AttributeValuePairImpl(attribute, createLiteral(text));
     }
 
-    private void createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
+    private AttributeValuePair createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
         AttributeName newAttributeName = new VariableName(variableName);
         Attribute att = new AttributeImpl(newAttributeName, type);
-        avp = new AttributeValuePairImpl(att, anyNode);
+        return new AttributeValuePairImpl(att, anyNode);
     }
 
     private String getVariableName(AVariableResourceTripleElement element) {
@@ -163,10 +170,15 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         return variable.getVariableprefix().toString().trim() + variable.getIdentifier().toString().trim();
     }
 
-    private void createQNameResource(String identifier, String ncName) {
-        String stringForm = prefixMap.get(identifier) + ncName;
-        URIReference uriReference = createResource(stringForm);
-        avp = new AttributeValuePairImpl(attribute, uriReference);
+    private AttributeValuePair createQNameResource(String identifier, String ncName) {
+        if (!prefixMap.keySet().contains(identifier)) {
+            exception = new ParserException(new TIdentifier("identifier"), "Couldn't find prefix: " + identifier);
+            return null;
+        } else {
+            String stringForm = prefixMap.get(identifier) + ncName;
+            URIReference uriReference = createResource(stringForm);
+            return new AttributeValuePairImpl(attribute, uriReference);
+        }
     }
 
 // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &

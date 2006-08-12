@@ -60,7 +60,8 @@ package org.jrdf.sparql.builder;
 
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.parser.node.Switch;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 public interface ElementBuilder extends Switch {
-    AttributeValuePair getElement();
+    AttributeValuePair getElement() throws ParserException;
 }

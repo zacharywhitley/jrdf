@@ -60,10 +60,11 @@ package org.jrdf.sparql.builder;
 
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.sparql.parser.node.Switch;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.SortedSet;
 
 public interface TripleBuilder extends Switch {
-    SortedSet<AttributeValuePair> getTriples();
+    SortedSet<AttributeValuePair> getTriples() throws ParserException;
     void addPrefix(String identifier, String resource);
 }

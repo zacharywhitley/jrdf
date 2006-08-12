@@ -73,12 +73,13 @@ import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
 
 public final class TripleBuilderImpl extends DepthFirstAdapter implements TripleBuilder {
     // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
@@ -92,6 +93,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     private final SortedAttributeFactory sortedAttributeFactory;
     private SortedSet<AttributeValuePair> avp;
     private Map<String, String> prefixMap = new HashMap<String, String>();
+    private ParserException exception;
 
     public TripleBuilderImpl(Graph graph, SortedAttributeValuePairHelper avpHelper,
             SortedAttributeFactory sortedAttributeFactory) {
@@ -105,8 +107,12 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
      *
      * @return The local version of the given <var>tripleNode</var>
      */
-    public SortedSet<AttributeValuePair> getTriples() {
-        return avp;
+    public SortedSet<AttributeValuePair> getTriples() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        } else {
+            return avp;
+        }
     }
 
     public void addPrefix(String identifier, String resource) {
@@ -116,17 +122,21 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     @Override
     public void caseATriple(ATriple node) {
         List<Attribute> heading = sortedAttributeFactory.createHeading(Arrays.asList(TYPES));
-        AttributeValuePair subject = getElement(node.getSubject(), ANY_SUBJECT_NODE, SUBJECT_NODE_TYPE,
-                heading.get(0), graph);
-        AttributeValuePair predicate = getElement(node.getPredicate(), ANY_PREDICATE_NODE, PREDICATE_NODE_TYPE,
-                heading.get(1), graph);
-        AttributeValuePair object = getElement(node.getObject(), ANY_OBJECT_NODE, OBJECT_NODE_TYPE,
-                heading.get(2), graph);
-        avp = avpHelper.createAvp(new AttributeValuePair[]{subject, predicate, object});
+        try {
+            AttributeValuePair subject = getElement(node.getSubject(), ANY_SUBJECT_NODE, SUBJECT_NODE_TYPE,
+                    heading.get(0), graph);
+            AttributeValuePair predicate = getElement(node.getPredicate(), ANY_PREDICATE_NODE, PREDICATE_NODE_TYPE,
+                    heading.get(1), graph);
+            AttributeValuePair object = getElement(node.getObject(), ANY_OBJECT_NODE, OBJECT_NODE_TYPE,
+                    heading.get(2), graph);
+            avp = avpHelper.createAvp(new AttributeValuePair[]{subject, predicate, object});
+        } catch (ParserException e) {
+            exception = e;
+        }
     }
 
     private AttributeValuePair getElement(org.jrdf.sparql.parser.node.Node node, Node graphNode, NodeType nodeType,
-            Attribute attribute, Graph graph) {
+            Attribute attribute, Graph graph) throws ParserException {
         ElementBuilder analyser = new ElementBuilderImpl(nodeType, graphNode, attribute, graph, prefixMap);
         node.apply(analyser);
         return analyser.getElement();

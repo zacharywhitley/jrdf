@@ -67,6 +67,7 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.param.ParameterUtil;
 
 /**
@@ -81,6 +82,7 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     private Graph graph;
     private final GraphRelationFactory graphRelationFactory;
     private Expression<ExpressionVisitor> expression;
+    private ParserException exception;
 
     public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, GraphRelationFactory graphRelationFactory) {
         ParameterUtil.checkNotNull(tripleBuilder, graph, graphRelationFactory);
@@ -92,7 +94,10 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
     /**
      * {@inheritDoc}
      */
-    public Query getQuery() {
+    public Query getQuery() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
         if (expression != null && query == NO_QUERY) {
             query = new QueryImpl(expression, graphRelationFactory);
         }
@@ -101,8 +106,12 @@ public final class SparqlAnalyserImpl extends DepthFirstAdapter implements Sparq
 
     @Override
     public void inStart(Start node) {
-        PrefixAnalyser analyser = new PrefixAnalyserImpl(tripleBuilder, graph);
-        node.apply(analyser);
-        expression = analyser.getExpression();
+        try {
+            PrefixAnalyser analyser = new PrefixAnalyserImpl(tripleBuilder, graph);
+            node.apply(analyser);
+            expression = analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+        }
     }
 }

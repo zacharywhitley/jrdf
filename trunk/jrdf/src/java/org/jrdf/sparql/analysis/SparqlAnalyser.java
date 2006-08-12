@@ -60,6 +60,7 @@ package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.Query;
 import org.jrdf.sparql.parser.analysis.Analysis;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 /**
  * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
@@ -79,6 +80,6 @@ public interface SparqlAnalyser extends Analysis {
      *
      * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
      */
-    Query getQuery();
+    Query getQuery() throws ParserException;
 
 }

@@ -61,7 +61,8 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.sparql.parser.node.Switch;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 public interface SelectAnalyser extends Switch {
-    Expression<ExpressionVisitor> getExpression();
+    Expression<ExpressionVisitor> getExpression() throws ParserException;
 }

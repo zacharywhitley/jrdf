@@ -68,6 +68,7 @@ import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PPrefixdecl;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.LinkedList;
 
@@ -75,13 +76,17 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private Expression<ExpressionVisitor> expression;
+    private ParserException exception;
 
     public PrefixAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
     }
 
-    public Expression<ExpressionVisitor> getExpression() {
+    public Expression<ExpressionVisitor> getExpression() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
         return expression;
     }
 
@@ -105,9 +110,14 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
     }
 
     private Expression<ExpressionVisitor> analyseSelectClause(Node node) {
-        SelectAnalyser analyser = new SelectAnalyserImpl(tripleBuilder, graph);
-        node.apply(analyser);
-        return analyser.getExpression();
+        try {
+            SelectAnalyser analyser = new SelectAnalyserImpl(tripleBuilder, graph);
+            node.apply(analyser);
+            return analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+            return null;
+        }
     }
 
 }

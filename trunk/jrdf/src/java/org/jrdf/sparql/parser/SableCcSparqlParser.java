@@ -121,10 +121,14 @@ public final class SableCcSparqlParser implements SparqlParser {
         }
     }
 
-    private Query analyseQuery(Graph graph, Start start) {
+    private Query analyseQuery(Graph graph, Start start) throws InvalidQuerySyntaxException {
         TripleBuilder builder = new TripleBuilderImpl(graph, avpHelper, sortedAttributeFactory);
         SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph, graphRelationFactory);
         start.apply(analyser);
-        return analyser.getQuery();
+        try {
+            return analyser.getQuery();
+        } catch (ParserException e) {
+            throw new InvalidQuerySyntaxException(INVALID_QUERY_MESSAGE + " token: " + e.getToken(), e);
+        }
     }
 }

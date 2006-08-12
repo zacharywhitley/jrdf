@@ -118,38 +118,37 @@ public final class TripleBuilderImplUnitTest extends TestCase {
                 SortedAttributeValuePairHelper.class, SortedAttributeFactory.class);
     }
 
-    public void testBuildTripleFromParserNode() {
+    public void testBuildTripleFromParserNode() throws Exception {
         checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_TITLE_VARIABLE, BOOK_1_DC_TITLE_VARIABLE);
     }
 
-
-    public void testBuildTripleForParserNode2() {
+    public void testBuildTripleForParserNode2() throws Exception {
         checkBuiltTripleWithVariable(TRIPLE_BOOK_2_DC_TITLE_VARIABLE, BOOK_2_DC_TITLE_VARIABLE);
     }
 
-    public void testBuildTripleForParserNode3() {
+    public void testBuildTripleForParserNode3() throws Exception {
         checkBuiltTripleWithVariable(TRIPLE_BOOK_1_DC_SUBJECT_VARIABLE, BOOK_1_DC_SUBJECT_VARIABLE);
     }
 
-    public void testBuildTripleForParserNode4() {
+    public void testBuildTripleForParserNode4() throws Exception {
         checkBuiltTripleWithLiteral(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL, BOOK_1_DC_SUBJECT_BOOK_TITLE);
     }
 
-    public void testBuildTripleForParserNode5() {
+    public void testBuildTripleForParserNode5() throws Exception {
         checkBuiltTripleWithLiteral(TRIPLE_VARIABLE_VARIABLE_SUBJECT, VARIABLE_VARIABLE_BOOK_TITLE);
     }
 
-    private void checkBuiltTripleWithVariable(Triple expectedTriple, TripleSpec actualTriple) {
+    private void checkBuiltTripleWithVariable(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
-    private void checkBuiltTripleWithLiteral(Triple expectedTriple, TripleSpec actualTriple) {
+    private void checkBuiltTripleWithLiteral(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
         SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
-    private void checkBuildTriple(SortedSet<AttributeValuePair> expectedAvp, ATriple triple) {
+    private void checkBuildTriple(SortedSet<AttributeValuePair> expectedAvp, ATriple triple) throws Exception {
         triple.apply(tripleBuilder);
         SortedSet<AttributeValuePair> actualAvp = tripleBuilder.getTriples();
         assertEquals(expectedAvp, actualAvp);

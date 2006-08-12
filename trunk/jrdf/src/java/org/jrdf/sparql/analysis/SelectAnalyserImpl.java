@@ -70,6 +70,7 @@ import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PVariable;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -87,6 +88,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
     private Graph graph;
     private final VariableCollector variableCollector;
     private Expression<ExpressionVisitor> expression;
+    private ParserException exception;
 
     public SelectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
@@ -94,23 +96,35 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
         this.variableCollector = new VariableCollectorImpl();
     }
 
-    public Expression<ExpressionVisitor> getExpression() {
+    public Expression<ExpressionVisitor> getExpression() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
         return expression;
     }
 
     @Override
     public void caseAWildcardSelectClause(AWildcardSelectClause node) {
-        WhereAnalyser analyser = analyseWhereClause(node.parent());
-        expression = analyser.getExpression();
+        try {
+            WhereAnalyser analyser = analyseWhereClause(node.parent());
+            expression = analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+        }
     }
 
     @Override
     public void caseAVariableListSelectClause(AVariableListSelectClause node) {
-        WhereAnalyser analyser = analyseWhereClause(node.parent());
-        Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
-        LinkedHashSet<AttributeName> declaredVariables = getDeclaredVariables(node);
-        LinkedHashSet<Attribute> attributes = analyser.getAttributes(declaredVariables);
-        expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
+        try {
+            WhereAnalyser analyser = analyseWhereClause(node.parent());
+            Expression<ExpressionVisitor> nextExpression = null;
+            nextExpression = analyser.getExpression();
+            LinkedHashSet<AttributeName> declaredVariables = getDeclaredVariables(node);
+            LinkedHashSet<Attribute> attributes = analyser.getAttributes(declaredVariables);
+            expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
+        } catch (ParserException e) {
+            exception = e;
+        }
     }
 
     private WhereAnalyser analyseWhereClause(Node node) {

@@ -82,6 +82,8 @@ import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PGroupGraphPattern;
 import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PUnionGraphPattern;
+import org.jrdf.sparql.parser.node.TIdentifier;
+import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -99,6 +101,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     private Graph graph;
     private VariableCollector collector;
     private Expression<ExpressionVisitor> expression;
+    private ParserException exception;
 
     public WhereAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, VariableCollector collector) {
         this.tripleBuilder = tripleBuilder;
@@ -106,7 +109,10 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         this.collector = collector;
     }
 
-    public Expression<ExpressionVisitor>getExpression() {
+    public Expression<ExpressionVisitor>getExpression() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
         return expression;
     }
 
@@ -131,10 +137,15 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
 
     @Override
     public void caseATriple(ATriple node) {
-        node.apply(tripleBuilder);
-        SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
-        collector.addVariables(attributeValuePairs);
-        expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
+        try {
+            node.apply(tripleBuilder);
+            SortedSet<AttributeValuePair> attributeValuePairs = null;
+            attributeValuePairs = tripleBuilder.getTriples();
+            collector.addVariables(attributeValuePairs);
+            expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
+        } catch (ParserException e) {
+            exception = e;
+        }
     }
 
     @Override
@@ -196,13 +207,14 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         expression = new Optional<ExpressionVisitor>(rhs);
     }
 
-    public LinkedHashSet<Attribute> getAttributes(Set<AttributeName> declaredVariables) {
+    public LinkedHashSet<Attribute> getAttributes(Set<AttributeName> declaredVariables) throws ParserException {
         LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
         Map<String, NodeType> variables = collector.getVariables();
         for (AttributeName variable : declaredVariables) {
             NodeType type = variables.get(variable.getLiteral());
             if (type == null) {
-                throw new RuntimeException("Failed to find: " + variable);
+                throw new ParserException(new TIdentifier(variable.getLiteral()), "Failed to find variable " +
+                        variable.getLiteral() + " in select clause");
             } else {
                 Attribute attribute = new AttributeImpl(variable, type);
                 newAttributes.add(attribute);
@@ -248,9 +260,14 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     }
 
     private Expression<ExpressionVisitor> getExpression(Node node) {
-        WhereAnalyser analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
-        node.apply(analyser);
-        return analyser.getExpression();
+        try {
+            WhereAnalyser analyser = new WhereAnalyserImpl(tripleBuilder, graph, collector);
+            node.apply(analyser);
+            return analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+            return null;
+        }
     }
 
 }
