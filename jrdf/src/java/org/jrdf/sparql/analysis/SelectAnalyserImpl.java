@@ -114,7 +114,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
     }
 
     private WhereAnalyser analyseWhereClause(Node node) {
-        WhereAnalyserImpl analyser = new WhereAnalyserImpl(tripleBuilder, graph, variableCollector);
+        WhereAnalyser analyser = new WhereAnalyserImpl(tripleBuilder, graph, variableCollector);
         node.apply(analyser);
         return analyser;
     }

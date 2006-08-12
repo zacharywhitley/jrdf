@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,14 +56,26 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.sparql.parser.node.Switch;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.APrefixPrefixdecl;
+import org.jrdf.sparql.builder.TripleBuilder;
 
-import java.util.SortedSet;
+public class SinglePrefixAnalyser extends DepthFirstAdapter {
+    private final TripleBuilder tripleBuilder;
 
-public interface TripleBuilder extends Switch {
-    SortedSet<AttributeValuePair> getTriples();
-    void addPrefix(String identifier, String resource);
+    public SinglePrefixAnalyser(TripleBuilder prefixMap) {
+        this.tripleBuilder = prefixMap;
+    }
+
+    @Override
+    public void caseAPrefixPrefixdecl(APrefixPrefixdecl node) {
+        String resource = node.getResource().getText();
+        String identifier = "";
+        if (node.getIdentifier() != null) {
+            identifier = node.getIdentifier().getText();
+        }
+        tripleBuilder.addPrefix(identifier, resource);
+    }
 }

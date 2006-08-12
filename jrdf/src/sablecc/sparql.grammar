@@ -120,8 +120,9 @@ Productions
   object_triple_element =
     {resource} resource |
     {qname} [ncname_prefix]:identifier colon [nc_name]:identifier |
-    {literal}  literal  |
-    {variable} variable ;
+    {variable} variable |
+    {literal}  literal  ;
+
 
   literal =
     [opening]:quote strand* [closing]:quote;  /*datatype?;*/

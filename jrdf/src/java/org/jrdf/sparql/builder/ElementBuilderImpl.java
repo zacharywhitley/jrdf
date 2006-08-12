@@ -78,8 +78,11 @@ import org.jrdf.sparql.parser.node.AVariable;
 import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
+import org.jrdf.sparql.parser.node.AQnameResourceTripleElement;
+import org.jrdf.sparql.parser.node.AQnameObjectTripleElement;
 
 import java.net.URI;
+import java.util.Map;
 
 // TODO (AN) Too much coupling still!!
 
@@ -91,12 +94,15 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     private final Node graphNode;
     private final Attribute attribute;
     private final Graph currentGraph;
+    private final Map<String, String> prefixMap;
 
-    public ElementBuilderImpl(NodeType nodeType, Node graphNode, Attribute attribute, Graph currentGraph) {
+    public ElementBuilderImpl(NodeType nodeType, Node graphNode, Attribute attribute, Graph currentGraph,
+            Map<String, String> prefixMap) {
         this.nodeType = nodeType;
         this.graphNode = graphNode;
         this.attribute = attribute;
         this.currentGraph = currentGraph;
+        this.prefixMap = prefixMap;
     }
 
     public AttributeValuePair getElement() {
@@ -104,42 +110,47 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     }
 
     @Override
-    public void caseAVariableResourceTripleElement(AVariableResourceTripleElement node) {
-        String variableName = getVariableName(node);
-        avp = createAttributeValuePair(nodeType, graphNode, variableName);
-    }
-
-    @Override
     public void caseAResourceResourceTripleElement(AResourceResourceTripleElement node) {
-        String stringForm = getStringForm(node);
-        URIReference uriReference = createResource(stringForm);
-        avp = new AttributeValuePairImpl(attribute, uriReference);
+        String text = getStringForm(node);
+        avp = new AttributeValuePairImpl(attribute, createResource(text));
     }
 
     @Override
-    public void caseAVariableObjectTripleElement(AVariableObjectTripleElement node) {
-        String variableName = getVariableName(node);
-        avp = createAttributeValuePair(nodeType, graphNode, variableName);
+    public void caseAQnameResourceTripleElement(AQnameResourceTripleElement node) {
+        createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
+    }
+
+    @Override
+    public void caseAVariableResourceTripleElement(AVariableResourceTripleElement node) {
+        createAttributeValuePair(nodeType, graphNode, getVariableName(node));
     }
 
     @Override
     public void caseAResourceObjectTripleElement(AResourceObjectTripleElement node) {
-        String stringForm = getStringForm(node);
-        URIReference uriReference = createResource(stringForm);
-        avp = new AttributeValuePairImpl(attribute, uriReference);
+        String text = getStringForm(node);
+        avp = new AttributeValuePairImpl(attribute, createResource(text));
+    }
+
+    @Override
+    public void caseAQnameObjectTripleElement(AQnameObjectTripleElement node) {
+        createQNameResource(node.getNcnamePrefix().getText(), node.getNcName().getText());
+    }
+
+    @Override
+    public void caseAVariableObjectTripleElement(AVariableObjectTripleElement node) {
+        createAttributeValuePair(nodeType, graphNode, getVariableName(node));
     }
 
     @Override
     public void caseALiteralObjectTripleElement(ALiteralObjectTripleElement node) {
         String text = extractTextFromLiteralNode(node.getLiteral());
-        Literal literalNode = createLiteral(text);
-        avp = new AttributeValuePairImpl(attribute, literalNode);
+        avp = new AttributeValuePairImpl(attribute, createLiteral(text));
     }
 
-    private AttributeValuePair createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
+    private void createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
         AttributeName newAttributeName = new VariableName(variableName);
         Attribute att = new AttributeImpl(newAttributeName, type);
-        return new AttributeValuePairImpl(att, anyNode);
+        avp = new AttributeValuePairImpl(att, anyNode);
     }
 
     private String getVariableName(AVariableResourceTripleElement element) {
@@ -152,7 +163,13 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         return variable.getVariableprefix().toString().trim() + variable.getIdentifier().toString().trim();
     }
 
-    // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &
+    private void createQNameResource(String identifier, String ncName) {
+        String stringForm = prefixMap.get(identifier) + ncName;
+        URIReference uriReference = createResource(stringForm);
+        avp = new AttributeValuePairImpl(attribute, uriReference);
+    }
+
+// FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &
     // Kowari::ItqlIntepreter::getLiteralText()
     // FIXME TJA: Handle datatypes.
     // FIXME TJA: Handle language code.
