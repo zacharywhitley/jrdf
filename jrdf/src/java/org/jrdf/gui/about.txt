@@ -5,7 +5,7 @@
 <p>
 Version: 0.1<br>
 <p>
-&copy; Copyright 2003-2006</a> Andrew Newman.
+&copy; Copyright 2003-2006</a> the original author or authors.
 </td>
 </tr>
 </table>
