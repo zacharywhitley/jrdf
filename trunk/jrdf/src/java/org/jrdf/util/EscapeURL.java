@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,27 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.model;
+package org.jrdf.util;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.JRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.sparql.SparqlConnection;
-import org.jrdf.util.EscapeURL;
-
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
-public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
-    private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = FACTORY.getNewSparqlConnection();
+public class EscapeURL {
+    private EscapeURL() {
 
-    public Graph loadModel(URL url) {
-        try {
-            graph = FACTORY.getNewGraph();
-            Parser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            graphRdfXmlParser.parse(url.openStream(), EscapeURL.toEscapedString(url));
-            return graph;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
     }
 
-    public Answer performQuery(String query) throws GraphException, InvalidQuerySyntaxException {
-        return connection.executeQuery(graph, query);
+    public static String toEscapedString(URL url) {
+        return tryEncode(url).toASCIIString();
+    }
+
+    private static URI tryEncode(URL url) {
+        try {
+            return new URI(url.getProtocol(), url.getUserInfo(), url.getHost(),
+            url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,88 +56,24 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.gui.command;
+package org.jrdf.util;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.gui.model.JRDFModel;
-import org.springframework.richclient.application.PageComponent;
-import org.springframework.richclient.application.PageComponentContext;
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
-import org.springframework.richclient.filechooser.FileChooserUtils;
+import junit.framework.TestCase;
 
-import javax.swing.JFrame;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Loads an RDF file from the file system.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public class LoadRdfCommand extends ApplicationWindowAwareCommand {
-    private JRDFModel jrdfModel;
-
-    public LoadRdfCommand() {
-        super("rdfCommand");
+public class EscapeURLUnitTest extends TestCase {
+    public void testEscaping() {
+        assertEquals("file:///foo%20bar", EscapeURL.toEscapedString(getURL("file:/foo bar")));
+        assertEquals("file:///foo%20bar", EscapeURL.toEscapedString(getURL("file:///foo bar")));
     }
 
-    public void setJRDFModel(JRDFModel jrdfModel) {
-        this.jrdfModel = jrdfModel;
-    }
-
-    protected void doExecuteCommand() {
-        JFrame control = getContext().getWindow().getControl();
-        File file = FileChooserUtils.showFileChooser(control, "rdf", "Ok", null);
-        if (file != null) {
-            ApplicationWindowAwareCommand applicationWindowAwareCommand = tryLoadModel(file);
-            applicationWindowAwareCommand.execute();
-        }
-    }
-
-    private ApplicationWindowAwareCommand tryLoadModel(File file) {
+    private URL getURL(String url) {
         try {
-            URL fileUrl = tryGetURL(file);
-            Graph graph = jrdfModel.loadModel(fileUrl);
-            long numberOfTriples = tryGetNumberOfTriples(graph);
-            RdfLoadedCommand actionCommand = getRdfLoadedCommand();
-            actionCommand.setTriplesLoaded(numberOfTriples);
-            return actionCommand;
-        } catch (Exception e) {
-            RdfFailedToLoadCommand actionCommand = getRdfFailedToLoadCommand();
-            actionCommand.setFileName(file.getName());
-            return actionCommand;
-        }
-    }
-
-    private URL tryGetURL(File file) {
-        try {
-            return file.toURL();
+            return new URL(url);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private long tryGetNumberOfTriples(Graph graph) {
-        try {
-            return graph.getNumberOfTriples();
-        } catch (GraphException ge) {
-            throw new RuntimeException(ge);
-        }
-    }
-
-    private RdfLoadedCommand getRdfLoadedCommand() {
-        return (RdfLoadedCommand) getContext().getLocalCommandExecutor("rdfLoadedCommand");
-    }
-
-    private RdfFailedToLoadCommand getRdfFailedToLoadCommand() {
-        return (RdfFailedToLoadCommand) getContext().getLocalCommandExecutor("rdfFailedToLoadCommand");
-    }
-
-    private PageComponentContext getContext() {
-        PageComponent activeComponent = getApplicationWindow().getPage().getActiveComponent();
-        return activeComponent.getContext();
     }
 }
