@@ -69,6 +69,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.sparql.SparqlConnection;
 
 import java.net.URL;
+import java.net.URI;
 
 public class JRDFModelImpl implements JRDFModel {
     private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
@@ -78,9 +79,12 @@ public class JRDFModelImpl implements JRDFModel {
     public Graph loadModel(URL url) {
         try {
             Parser graphRdfXmlParser = new GraphRdfXmlParser(graph);
-            graphRdfXmlParser.parse(url.openStream(), url.toURI().toString());
+            // TODO: AN Replace with proper URL encoding!
+            URI uri =  new URI(url.toString().replace(" ", "%20"));
+            graphRdfXmlParser.parse(url.openStream(), uri.toASCIIString());
             return graph;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

@@ -11,6 +11,7 @@ import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URI;
 import java.util.Iterator;
 
 /**
@@ -28,7 +29,9 @@ public final class RdfXmlParserExample {
         InputStream in = url.openStream();
         final Graph jrdfMem = getGraph();
         Parser parser = new GraphRdfXmlParser(jrdfMem);
-        parser.parse(in, url.toURI().toString());
+        // TODO: AN Replace with proper URL encoding!
+        URI uri =  new URI(url.toString().replace(" ", "%20"));
+        parser.parse(in, uri.toString());
         Iterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         while (iter.hasNext()) {
             System.out.println("Graph: " + iter.next());
