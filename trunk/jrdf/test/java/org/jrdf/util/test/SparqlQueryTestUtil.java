@@ -116,6 +116,13 @@ public final class SparqlQueryTestUtil {
             "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} OPTIONAL\n" +
             "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
             "}";
+    public static final String QUERY_BOOK_1_AND_2_WITH_PREFIX = "PREFIX examplebook: <http://example.org/book/> \n" +
+        "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
+        createSelectClause() +
+        "WHERE { examplebook:book1 dc:title ?title . examplebook:book2 dc:title ?title }";
+    public static final String QUERY_SINGLE_OPTIONAL = createSelectClause() +
+        "WHERE { { ?x <" + FOAF_NAME + "> ?name } OPTIONAL { ?x <" + FOAF_NICK + "> ?nick } }";
+
     public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_2 = createBookDcTitleExpression(URI_BOOK_2, 2);

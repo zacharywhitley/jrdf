@@ -123,7 +123,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
 
             if (rhs.getClass().isAssignableFrom(Optional.class) && lhs != null) {
-                handleOptional(rhs, lhs);
+                handleOptional(lhs, rhs);
             } else if (rhs.getClass().isAssignableFrom(Conjunction.class) && lhs != null) {
                 ((Conjunction<ExpressionVisitor>) rhs).setLhs(lhs);
                 expression = rhs;
@@ -223,7 +223,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         return newAttributes;
     }
 
-    private void handleOptional(Expression<ExpressionVisitor> rhs, Expression<ExpressionVisitor> lhs) {
+    private void handleOptional(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
         if (rhsOptional.getLhs() != null) {
             expression = new Optional<ExpressionVisitor>(lhs, rhsOptional);
@@ -236,13 +236,15 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     private Expression<ExpressionVisitor> handleExistingLhsRhs(Expression<ExpressionVisitor> lhs,
             Expression<ExpressionVisitor> rhs) {
         if (lhs instanceof Optional && rhs instanceof Optional) {
-            return operationHandleOperation(lhs, rhs);
+            return joinTwoOptionals(lhs, rhs);
+        } else if (rhs instanceof Optional) {
+            return joinExpressionAndOptional(lhs, rhs);
         } else {
             return new Conjunction<ExpressionVisitor>(lhs, rhs);
         }
     }
 
-    private Expression<ExpressionVisitor> operationHandleOperation(Expression<ExpressionVisitor> lhs,
+    private Expression<ExpressionVisitor> joinTwoOptionals(Expression<ExpressionVisitor> lhs,
             Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> lhsOptional = (Optional<ExpressionVisitor>) lhs;
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
@@ -254,6 +256,17 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         } else if (lhsOptional.getLhs() == null) {
             lhsOptional.setLhs(rhs);
             return lhsOptional;
+        } else {
+            return new Conjunction<ExpressionVisitor>(lhs, rhs);
+        }
+    }
+
+    private Expression<ExpressionVisitor> joinExpressionAndOptional(Expression<ExpressionVisitor> lhs,
+        Expression<ExpressionVisitor> rhs) {
+        Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
+        if (rhsOptional.getLhs() == null) {
+            rhsOptional.setLhs(lhs);
+            return rhs;
         } else {
             return new Conjunction<ExpressionVisitor>(lhs, rhs);
         }
