@@ -1,6 +1,5 @@
 package org.jrdf.example;
 
-import org.jrdf.JRDFFactoryImpl;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -13,6 +12,11 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl;
+import org.jrdf.graph.mem.GraphFactory;
+import org.jrdf.graph.mem.GraphFactoryImpl;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
@@ -239,7 +243,9 @@ public class JrdfExample {
      * @return Graph
      */
     private Graph getGraph() {
-        return JRDFFactoryImpl.getFactory().getNewGraph();
+        LongIndex[] longIndexes = {new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+        GraphFactory factory = new GraphFactoryImpl(longIndexes, new NodePoolMemImpl());
+        return factory.getGraph();
     }
 
     /**
