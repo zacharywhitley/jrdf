@@ -183,8 +183,12 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (VariableCollector) FACTORY.getContext().getBean("variableCollector");
     }
 
-    public Union getNewUnion() {
+    public Union getNewMinimumUnion() {
         return (Union) FACTORY.getContext().getBean("minimumUnion");
+    }
+
+    public Union getNewOuterUnion() {
+        return (Union) FACTORY.getContext().getBean("outerUnion");
     }
 
     public SemiDifference getNewSemiDifference() {

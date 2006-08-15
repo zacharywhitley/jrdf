@@ -59,24 +59,42 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 
 import java.util.LinkedHashSet;
 
-public class OuterUnionImpl implements Union {
-    private final TupleEngine tupleEngine;
-    private final RelationProcessor relationProcessor;
+public class UnionSimplificationImpl implements UnionSimplification {
+    public LinkedHashSet<Relation> simplify(Relation relation1, Relation relation2) {
+        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+        checkForDeeOrDum(relation1, relation2, relations);
+        checkForSame(relation1, relation2, relations);
 
-    public OuterUnionImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
-        this.tupleEngine = tupleEngine;
-        this.relationProcessor = relationProcessor;
+        if (relations.size() == 0) {
+            relations.add(relation1);
+            relations.add(relation2);
+        }
+
+        return relations;
     }
 
-    public Relation union(Relation relation1, Relation relation2) {
-        UnionSimplification unionSimplification = new UnionSimplificationImpl();
-        LinkedHashSet<Relation> relations = unionSimplification.simplify(relation1, relation2);
-        return relationProcessor.processRelations(relations, tupleEngine);
+    private void checkForSame(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
+        if (relation1.equals(relation2)) {
+            relations.add(relation1);
+        } else if (relation1.getTuples().size() == 0 && relation2.getTuples().size() != 0) {
+            relations.add(relation2);
+        } else if (relation1.getTuples().size() != 0 && relation2.getTuples().size() == 0) {
+            relations.add(relation1);
+        }
+    }
+
+    private void checkForDeeOrDum(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
+        if (relation1 == RELATION_DUM) {
+            relations.add(relation2);
+        } else if (relation2 == RELATION_DUM) {
+            relations.add(relation1);
+        } else if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
+            relations.add(RELATION_DEE);
+        }
     }
 }
