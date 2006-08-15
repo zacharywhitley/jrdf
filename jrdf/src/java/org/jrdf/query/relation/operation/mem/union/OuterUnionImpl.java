@@ -77,6 +77,10 @@ public class OuterUnionImpl implements Union {
     public Relation union(Relation relation1, Relation relation2) {
         UnionSimplification unionSimplification = new UnionSimplificationImpl();
         LinkedHashSet<Relation> relations = unionSimplification.simplify(relation1, relation2);
-        return relationProcessor.processRelations(relations, tupleEngine);
+        if (relations.size() == 1) {
+            return relations.iterator().next();
+        } else {
+            return relationProcessor.processRelations(relations, tupleEngine);
+        }
     }
 }
