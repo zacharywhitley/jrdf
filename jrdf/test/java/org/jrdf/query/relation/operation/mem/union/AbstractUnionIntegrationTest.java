@@ -59,7 +59,6 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
@@ -77,27 +76,28 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR2_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
- * Tests the integration between union and other classes such as RelationDEE, RelationDUM and other relations.
+ * Tests the integration between union and other classes such as RelationDEE, RelationDUM and other relations.  Does
+ * not test subsumption.
  *
  * @author Andrew Newman
  * @version $Revision: 729 $
  */
-public class UnionEngineIntegrationTest extends TestCase {
-    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final Union UNION = FACTORY.getNewUnion();
+public abstract class AbstractUnionIntegrationTest extends TestCase {
+    private static final Set<Tuple> EMPTY_SET = Collections.emptySet();
 
     public void testTruthTableDEEandDUM() {
         // The union of DEE and DUM together (basically the truth table for OR).
@@ -115,6 +115,14 @@ public class UnionEngineIntegrationTest extends TestCase {
         // The union of DUM and R1 is R1.
         checkUnion(relation, relation, RELATION_DUM);
         checkUnion(relation, RELATION_DUM, relation);
+    }
+
+    public void testWithNoRowsRelation() {
+        Relation relation = createRelation(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2));
+        Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE);
+        Relation emptyRelation = createRelation(heading, EMPTY_SET);
+        checkUnion(relation, relation, emptyRelation);
+        checkUnion(relation, emptyRelation, relation);
     }
 
     public void testUnionCompatibleSameTuple() {
@@ -174,8 +182,10 @@ public class UnionEngineIntegrationTest extends TestCase {
 
     }
 
+    public abstract Union getUnion();
+
     private void checkUnion(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = UNION.union(relation1, relation2);
+        Relation relation = getUnion().union(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

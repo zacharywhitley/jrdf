@@ -59,24 +59,13 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
 import java.util.LinkedHashSet;
 
-public class OuterUnionImpl implements Union {
-    private final TupleEngine tupleEngine;
-    private final RelationProcessor relationProcessor;
-
-    public OuterUnionImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
-        this.tupleEngine = tupleEngine;
-        this.relationProcessor = relationProcessor;
-    }
-
-    public Relation union(Relation relation1, Relation relation2) {
-        UnionSimplification unionSimplification = new UnionSimplificationImpl();
-        LinkedHashSet<Relation> relations = unionSimplification.simplify(relation1, relation2);
-        return relationProcessor.processRelations(relations, tupleEngine);
-    }
+/**
+ * Returns either relation 1 or relation 2 if one is the identity of the other or other DEE or DUM.  If not then
+ * returns null.
+ */
+public interface UnionSimplification {
+    LinkedHashSet<Relation> simplify(Relation relation1, Relation relation2);
 }

@@ -112,24 +112,20 @@ public class NaturalJoinEngine implements TupleEngine {
     public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         SortedSet<AttributeValuePair> resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
+        boolean contradiction = false;
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = getAttribute(avps1, attribute);
             AttributeValuePair avp2 = getAttribute(avps2, attribute);
-            boolean added = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
+            contradiction = addAttributeValuePair(avp1, avp2, resultantAttributeValues);
 
             // If we didn't find one for the current heading end early.
-            if (!added) {
+            if (contradiction) {
                 break;
             }
         }
 
-        // TODO (AN) Change this back to matching the headings and failing on both values being null when it goes
-        // to outerunion and subsumption.
-
-
-        // Only add results if we have found more items to add.
-//        if (resultantAttributeValues.size() == headings.size()) {
-        if (resultantAttributeValues.size() > 0) {
+        // Only add results if we have found more items to add and there wasn't a contradiction in bound values.
+        if (resultantAttributeValues.size() > 0 && !contradiction) {
             Tuple t = tupleFactory.getTuple(resultantAttributeValues);
             result.add(t);
         }
@@ -159,23 +155,21 @@ public class NaturalJoinEngine implements TupleEngine {
             SortedSet<AttributeValuePair> resultantAttributeValues) {
         if (avp2 == null) {
             addResults(avp1, resultantAttributeValues);
-            return true;
+            return false;
         } else if (avpComparator.compare(avp1, avp2) == 0) {
             addNonNullaryAvp(avp1, avp2, resultantAttributeValues);
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 
     private boolean avp1Null(AttributeValuePair avp2, SortedSet<AttributeValuePair> resultantAttributeValues) {
         if (avp2 != null) {
             addResults(avp2, resultantAttributeValues);
-            return true;
+            return false;
         } else {
-            // TODO (AN) Test when both are null - added.
-            //return false;
-            return true;
+            return false;
         }
     }
 

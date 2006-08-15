@@ -60,8 +60,6 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
-import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
@@ -81,29 +79,12 @@ public class MinimumUnionImpl implements Union {
     }
 
     public Relation union(Relation relation1, Relation relation2) {
-        if (relation1 == RELATION_DUM) {
-            return relation2;
-        }
-
-        if (relation2 == RELATION_DUM) {
-            return relation1;
-        }
-
-        if (relation1.equals(relation2)) {
-            return relation1;
-        }
-
-        if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
-            return RELATION_DEE;
-        }
-        return performMinimumUnion(relation1, relation2);
+        UnionSimplification unionSimplification = new UnionSimplificationImpl();
+        LinkedHashSet<Relation> relations = unionSimplification.simplify(relation1, relation2);
+        return performMinimumUnion(relations);
     }
 
-    private Relation performMinimumUnion(Relation relation1, Relation relation2) {
-        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
-        relations.add(relation1);
-        relations.add(relation2);
-
+    private Relation performMinimumUnion(LinkedHashSet<Relation> relations) {
         Relation relation = relationProcessor.processRelations(relations, unionTupleEngine);
         Relation subsumptionRelation = relationProcessor.processRelations(relations, subsumptionTupleEngine);
 
