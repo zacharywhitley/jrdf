@@ -61,7 +61,7 @@ package org.jrdf.query.relation.operation.mem.union;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.TestJRDFFactory;
 
-public class OuterUnionIntegrationTestImpl extends AbstractUnionIntegrationTest {
+public class OuterUnionIntegrationTest extends AbstractUnionIntegrationTest {
     public Union getUnion() {
         return TestJRDFFactory.getFactory().getNewOuterUnion();
     }

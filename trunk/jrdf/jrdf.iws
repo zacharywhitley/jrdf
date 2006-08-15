@@ -166,99 +166,55 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AbstractUnionIntegrationTest.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="AbstractUnionIntegrationTest.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/AbstractUnionIntegrationTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="98" column="22" selection-start="5330" selection-end="5330" vertical-scroll-proportion="0.33333334">
+            <state line="102" column="15" selection-start="5510" selection-end="5510" vertical-scroll-proportion="0.56666666">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OuterUnionIntegrationTestImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/OuterUnionIntegrationTestImpl.java">
+      <file leaf-file-name="IntegrationTestRunner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/util/test/runner/IntegrationTestRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="0" selection-start="2787" selection-end="2787" vertical-scroll-proportion="0.18041237">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MinimumUnionIntegrationTestImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionIntegrationTestImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="67" column="29" selection-start="2992" selection-end="2992" vertical-scroll-proportion="0.28350514">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AbstractTripleUnitTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/graph/AbstractTripleUnitTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="31" selection-start="3173" selection-end="3173" vertical-scroll-proportion="0.33505154">
+            <state line="13" column="13" selection-start="248" selection-end="248" vertical-scroll-proportion="0.32258064">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TripleImplUnitTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/graph/mem/TripleImplUnitTest.java">
+      <file leaf-file-name="DefaultTestRunner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/util/test/runner/DefaultTestRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="19" selection-start="3160" selection-end="3160" vertical-scroll-proportion="0.33505154">
+            <state line="16" column="13" selection-start="409" selection-end="409" vertical-scroll-proportion="0.3548387">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MinimumUnionFullOuterJoinImplIntegrationTest.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionFullOuterJoinImplIntegrationTest.java">
+      <file leaf-file-name="UnitTestRunner.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/util/test/runner/UnitTestRunner.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="13" selection-start="3005" selection-end="3005" vertical-scroll-proportion="0.31746033">
+            <state line="13" column="13" selection-start="248" selection-end="248" vertical-scroll-proportion="0.32258064">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MinimumUnionImpl.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionImpl.java">
+      <file leaf-file-name="OuterUnionIntegrationTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/OuterUnionIntegrationTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="84" column="5" selection-start="3802" selection-end="3802" vertical-scroll-proportion="0.5670103">
+            <state line="63" column="13" selection-start="2800" selection-end="2800" vertical-scroll-proportion="0.19354838">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UnionSimplification.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/UnionSimplification.java">
+      <file leaf-file-name="MinimumUnionIntegrationTest.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionIntegrationTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="68" column="25" selection-start="2943" selection-end="2943" vertical-scroll-proportion="0.30927834">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UnionSimplificationImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/UnionSimplificationImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="66" column="0" selection-start="2928" selection-end="2928" vertical-scroll-proportion="0.25773194">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OuterUnionImpl.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/OuterUnionImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="79" column="0" selection-start="3365" selection-end="3542" vertical-scroll-proportion="0.46391752">
+            <state line="66" column="13" selection-start="2892" selection-end="2892" vertical-scroll-proportion="0.29032257">
               <folding />
             </state>
           </provider>
@@ -339,6 +295,72 @@
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
       <PATH_ELEMENT>
+        <option name="myItemId" value="util" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="org.jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="util" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="test" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="org.jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="util" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="test" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="runner" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="org.jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
         <option name="myItemId" value="query" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
@@ -362,32 +384,6 @@
       </PATH_ELEMENT>
       <PATH_ELEMENT>
         <option name="myItemId" value="relation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="query" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="relation" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="type" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
     </PATH>
@@ -549,6 +545,44 @@
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
       <PATH_ELEMENT>
+        <option name="myItemId" value="outer" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+    </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="org.jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="query" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="relation" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="operation" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="mem" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="join" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
         <option name="myItemId" value="natural" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
@@ -602,28 +636,6 @@
       </PATH_ELEMENT>
       <PATH_ELEMENT>
         <option name="myItemId" value="graph" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-    </PATH>
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf.ipr" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="org.jrdf" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="graph" />
-        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
-      </PATH_ELEMENT>
-      <PATH_ELEMENT>
-        <option name="myItemId" value="mem" />
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
       </PATH_ELEMENT>
     </PATH>
@@ -697,6 +709,24 @@
         <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
       </PATH_ELEMENT>
     </PATH>
+    <PATH>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf.ipr" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="jrdf" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+      </PATH_ELEMENT>
+      <PATH_ELEMENT>
+        <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src" />
+        <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+      </PATH_ELEMENT>
+    </PATH>
   </component>
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
@@ -753,11 +783,11 @@
       <recent name="org.jrdf.query.relation.operation.mem.RelationIntegrationTestHelper" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="org.jrdf.sparql.analysis" />
       <recent name="org.jrdf.gui.command" />
       <recent name="org.jrdf.sparql.builder" />
       <recent name="org.jrdf.query.relation.operation.mem.union" />
       <recent name="org.jrdf.query.relation.operation.mem.join.natural" />
+      <recent name="org.jrdf.query.expression" />
     </key>
     <key name="IntroduceConstantDialog.RECENTS_KEY">
       <recent name="" />
@@ -773,12 +803,12 @@
   <component name="RestoreUpdateTree" />
   <component name="RunManager">
     <activeType name="JUnit" />
-    <tempConfiguration selected="false" default="false" name="MinimumUnionIntegrationTestImpl" type="JUnit" factoryName="JUnit">
+    <tempConfiguration selected="false" default="false" name="MinimumUnionIntegrationTest" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="org.jrdf.query.relation.operation.mem.union" />
-      <option name="MAIN_CLASS_NAME" value="org.jrdf.query.relation.operation.mem.union.MinimumUnionIntegrationTestImpl" />
+      <option name="MAIN_CLASS_NAME" value="org.jrdf.query.relation.operation.mem.union.MinimumUnionIntegrationTest" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
@@ -791,25 +821,6 @@
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Run" />
     </tempConfiguration>
-    <configuration selected="false" default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$PROJECT_DIR$/../../../Desktop/IntelliJ IDEA.app/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-    </configuration>
-    <configuration selected="false" default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-    </configuration>
     <configuration selected="false" default="true" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" />
@@ -818,6 +829,13 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <module name="" />
+    </configuration>
+    <configuration selected="false" default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
     </configuration>
     <configuration selected="false" default="true" type="JUnit" factoryName="JUnit">
       <module name="" />
@@ -834,6 +852,18 @@
       <option name="TEST_SEARCH_SCOPE">
         <value defaultName="wholeProject" />
       </option>
+    </configuration>
+    <configuration selected="false" default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$PROJECT_DIR$/../../../Desktop/IntelliJ IDEA.app/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration selected="true" default="false" name="All Tests" type="JUnit" factoryName="JUnit">
       <module name="jrdf" />
@@ -1019,21 +1049,21 @@
     <layout>
       <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="11" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32818532" order="9" x="355" y="118" width="922" height="618" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.3345588" order="1" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.30420712" order="3" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.2365196" order="1" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.30528587" order="3" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="2" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.3106796" order="13" x="-43" y="425" width="1278" height="404" />
+      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.4368932" order="13" x="-43" y="425" width="1278" height="404" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.399137" order="8" />
       <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="6" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.5943905" order="10" />
       <window_info id="Favorites" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3297414" order="7" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.09620098" order="3" x="321" y="22" width="356" height="617" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.41100323" order="4" x="45" y="371" width="1279" height="404" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="true" weight="0.1672794" order="3" x="321" y="22" width="356" height="617" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.39805827" order="4" x="45" y="371" width="1279" height="404" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.25" order="4" />
       <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="5" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.3976834" order="6" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.39805827" order="6" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.4" order="2" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32818532" order="12" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.32901832" order="12" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="0" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="2" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="docked" type="docked" visible="false" weight="0.33" order="0" />
@@ -1056,7 +1086,7 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="PUT_FOCUS_INTO_COMMENT" value="true" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified to create stand alone jar." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed name of tests." />
     <option name="SAVE_LAST_COMMIT_MESSAGE" value="true" />
     <option name="CHECKIN_DIALOG_SPLITTER_PROPORTION" value="0.8" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
@@ -1070,16 +1100,16 @@
     <option name="UPDATE_GROUP_BY_PACKAGES" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="First cut of prefix handling" />
-    <MESSAGE value="Added error handling in parser." />
-    <MESSAGE value="Fixed style issues." />
-    <MESSAGE value="Glory page and removed unused features." />
-    <MESSAGE value="Fixed bug with URL encoding and loading multiple models." />
-    <MESSAGE value="Updated web site." />
-    <MESSAGE value="Updated jar." />
-    <MESSAGE value="Updated jars" />
-    <MESSAGE value="Changed to not use Spring." />
-    <MESSAGE value="Modified to create stand alone jar." />
+    <MESSAGE value="Added column sorting." />
+    <MESSAGE value="Made more OO." />
+    <MESSAGE value="Removed JRDF Connection.  Fixed bug with TripleBuilder (objects couldn't be URIs - weird)." />
+    <MESSAGE value="Code style changes." />
+    <MESSAGE value="Made TripleBuilder use visitor." />
+    <MESSAGE value="Added test coverage for variable subject, predicate and resource object." />
+    <MESSAGE value="Removed unused classes." />
+    <MESSAGE value="Code tidy up." />
+    <MESSAGE value="Adding reporting syntax error instead of silently failing." />
+    <MESSAGE value="Fixed name of tests." />
   </component>
   <component name="VssConfiguration">
     <option name="CLIENT_PATH" value="" />
@@ -1158,115 +1188,109 @@
     <option name="myLastEditedConfigurable" value="IDE Profiles" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/join/natural/NaturalJoinImplIntegrationTest.java">
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/join/outer/LeftOuterJoinImplIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="226" column="0" selection-start="12496" selection-end="12599" vertical-scroll-proportion="0.8732106">
+        <state line="86" column="0" selection-start="3268" selection-end="4020" vertical-scroll-proportion="0.52204174">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="87" column="0" selection-start="3903" selection-end="3903" vertical-scroll-proportion="0.42759407">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/graph/AbstractGraphUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="22" selection-start="3309" selection-end="3309" vertical-scroll-proportion="-5.866667">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/common/RelationProcessorImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="97" column="0" selection-start="4229" selection-end="4229" vertical-scroll-proportion="0.35913977">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/util/test/runner/DefaultTestRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="13" selection-start="409" selection-end="409" vertical-scroll-proportion="0.3548387">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/util/test/runner/IntegrationTestRunner.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="13" selection-start="248" selection-end="248" vertical-scroll-proportion="0.32258064">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="36" selection-start="267" selection-end="267" vertical-scroll-proportion="0.24691358">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build-setup.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="136" column="66" selection-start="7229" selection-end="7240" vertical-scroll-proportion="0.30938125">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/OuterUnionImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="51" selection-start="3289" selection-end="3289" vertical-scroll-proportion="0.35928145">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/OuterUnionEngine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="13" selection-start="3140" selection-end="3140" vertical-scroll-proportion="0.15873016">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/TestJRDFFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="189" column="28" selection-start="7211" selection-end="7211" vertical-scroll-proportion="1.8814139">
+        <state line="71" column="13" selection-start="3140" selection-end="3140" vertical-scroll-proportion="0.17964073">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionLeftOuterJoinImplIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="13" selection-start="3005" selection-end="3005" vertical-scroll-proportion="0.31746033">
+        <state line="83" column="13" selection-start="3976" selection-end="3976" vertical-scroll-proportion="0.37037036">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionFullOuterJoinImplIntegrationTest.java">
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/util/test/runner/UnitTestRunner.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="13" selection-start="3005" selection-end="3005" vertical-scroll-proportion="0.31746033">
+        <state line="13" column="13" selection-start="248" selection-end="248" vertical-scroll-proportion="0.32258064">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/graph/AbstractLiteral.java">
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="75" column="22" selection-start="2979" selection-end="2979" vertical-scroll-proportion="-0.75256556">
+        <state line="66" column="13" selection-start="2892" selection-end="2892" vertical-scroll-proportion="0.29032257">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/graph/AbstractTripleUnitTest.java">
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/OuterUnionIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="31" selection-start="3173" selection-end="3173" vertical-scroll-proportion="0.33505154">
+        <state line="63" column="13" selection-start="2800" selection-end="2800" vertical-scroll-proportion="0.19354838">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/graph/mem/TripleImplUnitTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="19" selection-start="3160" selection-end="3160" vertical-scroll-proportion="0.33505154">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/OuterUnionIntegrationTestImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="0" selection-start="2787" selection-end="2787" vertical-scroll-proportion="0.18041237">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionIntegrationTestImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="29" selection-start="2992" selection-end="2992" vertical-scroll-proportion="0.28350514">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/query/relation/operation/mem/union/AbstractUnionIntegrationTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="22" selection-start="5330" selection-end="5330" vertical-scroll-proportion="0.33333334">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/UnionSimplification.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="25" selection-start="2943" selection-end="2943" vertical-scroll-proportion="0.30927834">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/UnionSimplificationImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="66" column="0" selection-start="2928" selection-end="2928" vertical-scroll-proportion="0.25773194">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/OuterUnionImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="0" selection-start="3365" selection-end="3542" vertical-scroll-proportion="0.46391752">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/java/org/jrdf/query/relation/operation/mem/union/MinimumUnionImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="5" selection-start="3802" selection-end="3802" vertical-scroll-proportion="0.5670103">
+        <state line="102" column="15" selection-start="5510" selection-end="5510" vertical-scroll-proportion="0.56666666">
           <folding />
         </state>
       </provider>

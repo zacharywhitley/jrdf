@@ -64,7 +64,7 @@ import org.jrdf.TestJRDFFactory;
 /**
  * This is currently just testing normal minimum union - does not test subsumption.
  */
-public class MinimumUnionIntegrationTestImpl extends AbstractUnionIntegrationTest {
+public class MinimumUnionIntegrationTest extends AbstractUnionIntegrationTest {
     public Union getUnion() {
         return TestJRDFFactory.getFactory().getNewMinimumUnion();
     }
