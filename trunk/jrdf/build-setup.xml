@@ -75,6 +75,7 @@
     </patternset>
     <patternset id="integration.test.code.pattern">
         <include name="**/*IntegrationTest.java"/>
+        <exclude name="**/Abstract*"/>
     </patternset>
     <patternset id="all.code.pattern">
         <include name="**/*.java"/>

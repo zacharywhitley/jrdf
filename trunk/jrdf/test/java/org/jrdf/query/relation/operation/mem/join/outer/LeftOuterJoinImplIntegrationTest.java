@@ -75,15 +75,13 @@ public class LeftOuterJoinImplIntegrationTest extends TestCase {
 
     public void testLeftOuterJoin1() {
 //        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-//        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
-//        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4));
+//        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1));
 //
-//        Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_PREDICATE_R2, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
-//        tuple2.addAll(createASingleTuple(VAR_BAR1_PREDICATE_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R3));
+//        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2);
+//        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R3));
 //
-//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2);
-//        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R4, VAR_BAR2_PREDICATE_R4, POS_FOO4_PREDICATE_R2));
-//        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO3_OBJECT_R6));
+//        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R2);
+//        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO4_PREDICATE_R3));
 //
 //        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
