@@ -115,7 +115,7 @@ public final class Optional<V extends ExpressionVisitor> implements Expression<V
     }
 
     public String toString() {
-        return lhs + " OPTIONAL " + rhs;
+        return " { " + lhs + " OPTIONAL " + rhs + " } ";
     }
 
     private boolean determineEqualityFromFields(Optional o1, Optional o2) {

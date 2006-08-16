@@ -169,8 +169,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     public void testOptionalConstraint2() throws Exception {
-        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_ALIAS_EXP_2, FOAF_ALIAS_EXP_3);
-        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, optional1);
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(optional1, FOAF_ALIAS_EXP_3);
         checkConstraintExpression(QUERY_OPTIONAL_2, optional2);
     }
 
