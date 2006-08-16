@@ -310,7 +310,7 @@
          </constructor-arg>
      </bean>
 
-    <bean id="antiJoin" class="org.jrdf.query.relation.operation.mem.antijoin.AntiJoinImpl">
+    <bean id="antiJoin" class="org.jrdf.query.relation.operation.mem.join.anti.AntiJoinImpl">
         <constructor-arg>
             <ref bean="semiJoin"/>
         </constructor-arg>

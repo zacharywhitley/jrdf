@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.operation.mem.antijoin;
+package org.jrdf.query.relation.operation.mem.join.anti;
 
 import org.jrdf.query.relation.operation.AntiJoin;
 import org.jrdf.query.relation.operation.SemiDifference;
