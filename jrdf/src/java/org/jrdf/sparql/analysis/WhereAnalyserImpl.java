@@ -139,8 +139,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseATriple(ATriple node) {
         try {
             node.apply(tripleBuilder);
-            SortedSet<AttributeValuePair> attributeValuePairs = null;
-            attributeValuePairs = tripleBuilder.getTriples();
+            SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
             collector.addVariables(attributeValuePairs);
             expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
         } catch (ParserException e) {
@@ -226,7 +225,8 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     private void handleOptional(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
         if (rhsOptional.getLhs() != null) {
-            expression = new Optional<ExpressionVisitor>(lhs, rhsOptional);
+            Optional<ExpressionVisitor> optional = new Optional<ExpressionVisitor>(lhs, rhsOptional.getLhs());
+            expression = new Optional<ExpressionVisitor>(optional, rhsOptional.getRhs());
         } else {
             rhsOptional.setLhs(lhs);
             expression = rhsOptional;
