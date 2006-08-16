@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,69 +56,43 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.query.relation.constants;
+package org.jrdf.query.relation.operation.mem.join.semi;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.JRDFFactoryImpl;
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
-import static org.jrdf.query.relation.constants.NullaryTuple.NULLARY_TUPLE;
+import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import org.jrdf.query.relation.operation.DyadicJoin;
+import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
+import org.jrdf.query.relation.operation.mem.join.TupleEngine;
 
-import java.io.Serializable;
-import java.util.Collections;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.LinkedHashSet;
 
-/**
- * Dee is a relation with one tuple and is the base relation for NULLARY_TUPLE.
- * <p>It is also the identity with respect to JOIN i.e. JOIN {r, RelationDEE} is DEE and
- * JOIN {} is RelationDEE.</p>
- * <p>Again, this is going to change when operations are more properly filled out.</p>
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public final class RelationDEE implements Relation, Serializable {
-    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
-    private static final long serialVersionUID = -8473232661811978990L;
+public final class SemiJoinImpl implements DyadicJoin {
+    private final TupleEngine tupleEngine;
+    private final RelationProcessor relationProcessor;
 
-    /**
-     * The singleton version of RelationDEE.
-     */
-    public static final Relation RELATION_DEE = new RelationDEE();
-
-    /**
-     * There can be only one RelationDEE.
-     */
-    private RelationDEE() {
+    public SemiJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
+        this.tupleEngine = tupleEngine;
+        this.relationProcessor = relationProcessor;
     }
 
-    public Set<Attribute> getHeading() {
-        return Collections.emptySet();
-    }
+    public Relation join(Relation relation1, Relation relation2) {
+        if (relation1 == RELATION_DUM || relation2 == RELATION_DUM) {
+            return RELATION_DUM;
+        }
 
-    /**
-     * Returns the TUPLE_ZERO.
-     *
-     * @return the TUPLE_ZERO.
-     */
-    public Set<Tuple> getTuples() {
-        return Collections.singleton(NULLARY_TUPLE);
-    }
+        if (relation1 == RELATION_DEE) {
+            return RELATION_DEE;
+        }
 
-    // TODO (AN) Test drive me
-    public SortedSet<Attribute> getSortedHeading() {
-        SortedSet<Attribute> heading = new TreeSet<Attribute>(FACTORY.getNewAttributeComparator());
-        heading.addAll(getHeading());
-        return heading;
-    }
+        if (relation1 == relation2) {
+            return relation1;
+        }
 
-    // TODO (AN) Test drive me
-    public SortedSet<Tuple> getSortedTuples() {
-        SortedSet<Tuple> sorted = new TreeSet<Tuple>(FACTORY.getNewTupleComparator());
-        sorted.addAll(getTuples());
-        return sorted;
+        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+        relations.add(relation1);
+        relations.add(relation2);
+
+        return relationProcessor.processRelations(relations, tupleEngine);
     }
 }

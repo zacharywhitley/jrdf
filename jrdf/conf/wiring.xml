@@ -139,7 +139,7 @@
             <ref bean="outerUnion"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="minLeftOuterJoin"/>
+            <ref bean="leftOuterJoin"/>
         </constructor-arg>
     </bean>
 
@@ -253,7 +253,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.join.DyadicJoinImpl">
+    <bean id="semiJoin" class="org.jrdf.query.relation.operation.mem.join.semi.SemiJoinImpl">
         <constructor-arg>
             <ref bean="relationProcessor"/>
         </constructor-arg>
