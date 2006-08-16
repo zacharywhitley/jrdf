@@ -139,7 +139,7 @@
             <ref bean="outerUnion"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="leftOuterJoin"/>
+            <ref bean="minleftOuterJoin"/>
         </constructor-arg>
     </bean>
 
