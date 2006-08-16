@@ -90,20 +90,22 @@ public class SemiJoinEngine implements TupleEngine {
             SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         SortedSet<AttributeValuePair> allAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
         SortedSet<AttributeValuePair> lhsAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
+        boolean contradiction = false;
+
         for (Attribute attribute : headings) {
             AttributeValuePair avp1 = getAttribute(avps1, attribute);
             AttributeValuePair avp2 = getAttribute(avps2, attribute);
 
-            boolean added = addAttributeValuePair(avp1, avp2, allAttributeValuePairs, lhsAttributeValuePairs);
+            contradiction = addAttributeValuePair(avp1, avp2, allAttributeValuePairs, lhsAttributeValuePairs);
 
             // If we didn't find one for the current heading end early.
-            if (!added) {
+            if (contradiction) {
                 break;
             }
         }
 
         // Only add results if they are the same size
-        if (headings.size() == allAttributeValuePairs.size()) {
+        if ((allAttributeValuePairs.size() > 0 && !contradiction)) {
             Tuple t = tupleFactory.getTuple(lhsAttributeValuePairs);
             result.add(t);
         }
@@ -121,24 +123,38 @@ public class SemiJoinEngine implements TupleEngine {
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
             SortedSet<AttributeValuePair> resultantAttributeValues,
             SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
-        boolean added = false;
+
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
-            if (avp2 == null) {
-                addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
-                added = true;
-            } else if (avpComparator.compare(avp1, avp2) == 0) {
-                addNonNullaryAvp(avp1, avp2, resultantAttributeValues, lhsAttributeValuePairs);
-                added = true;
-            }
+            return avp1NotNull(avp2, avp1, resultantAttributeValues, lhsAttributeValuePairs);
         } else {
             // Add if avp1 is null and avp2 is not.
-            if (avp2 != null) {
-                resultantAttributeValues.add(avp2);
-                added = true;
-            }
+            return avp1Null(avp2, resultantAttributeValues, lhsAttributeValuePairs);
         }
-        return added;
+    }
+
+    private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1,
+            SortedSet<AttributeValuePair> resultantAttributeValues,
+            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
+        if (avp2 == null) {
+            addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
+            return false;
+        } else if (avpComparator.compare(avp1, avp2) == 0) {
+            addNonNullaryAvp(avp1, avp2, resultantAttributeValues, lhsAttributeValuePairs);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean avp1Null(AttributeValuePair avp2, SortedSet<AttributeValuePair> resultantAttributeValues,
+            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
+        if (avp2 != null) {
+            addResults(avp2, resultantAttributeValues, lhsAttributeValuePairs);
+            return false;
+        } else {
+            return false;
+        }
     }
 
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,

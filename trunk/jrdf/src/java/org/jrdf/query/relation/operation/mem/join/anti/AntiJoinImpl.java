@@ -58,16 +58,16 @@
 
 package org.jrdf.query.relation.operation.mem.join.anti;
 
-import org.jrdf.query.relation.operation.AntiJoin;
-import org.jrdf.query.relation.operation.SemiDifference;
-import org.jrdf.query.relation.operation.mem.join.DyadicJoinImpl;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.operation.AntiJoin;
+import org.jrdf.query.relation.operation.DyadicJoin;
+import org.jrdf.query.relation.operation.SemiDifference;
 
 public class AntiJoinImpl implements AntiJoin {
-    private final DyadicJoinImpl semiJoin;
+    private final DyadicJoin semiJoin;
     private final SemiDifference semiDifference;
 
-    public AntiJoinImpl(DyadicJoinImpl semiJoin, SemiDifference semiDifference) {
+    public AntiJoinImpl(DyadicJoin semiJoin, SemiDifference semiDifference) {
         this.semiJoin = semiJoin;
         this.semiDifference = semiDifference;
     }
