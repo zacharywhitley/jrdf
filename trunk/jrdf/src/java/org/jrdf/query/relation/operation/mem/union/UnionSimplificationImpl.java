@@ -78,6 +78,16 @@ public class UnionSimplificationImpl implements UnionSimplification {
         return relations;
     }
 
+    private void checkForDeeOrDum(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
+        if (relation1 == RELATION_DUM) {
+            relations.add(relation2);
+        } else if (relation2 == RELATION_DUM) {
+            relations.add(relation1);
+        } else if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
+            relations.add(RELATION_DEE);
+        }
+    }
+
     private void checkForSame(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
         if (relation1.equals(relation2)) {
             relations.add(relation1);
@@ -88,13 +98,4 @@ public class UnionSimplificationImpl implements UnionSimplification {
         }
     }
 
-    private void checkForDeeOrDum(Relation relation1, Relation relation2, LinkedHashSet<Relation> relations) {
-        if (relation1 == RELATION_DUM) {
-            relations.add(relation2);
-        } else if (relation2 == RELATION_DUM) {
-            relations.add(relation1);
-        } else if (relation1 == RELATION_DEE || relation2 == RELATION_DEE) {
-            relations.add(RELATION_DEE);
-        }
-    }
 }

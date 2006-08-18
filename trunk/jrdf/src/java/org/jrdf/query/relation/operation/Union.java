@@ -67,5 +67,6 @@ import org.jrdf.query.relation.Relation;
  * @version $Revision$
  */
 public interface Union extends Operation {
+    // TODO (AN) This really should be nadic
     Relation union(Relation relation1, Relation relation2);
 }
