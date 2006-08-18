@@ -87,8 +87,8 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_2;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_4;
-import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTION_3;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_5;
+import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTION_4;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -174,18 +174,24 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_OPTIONAL_2, optional2);
     }
 
+    public void testOptionalConstraint3() throws Exception {
+        Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
+        Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(optional1, FOAF_ALIAS_EXP_3);
+        checkConstraintExpression(SparqlQueryTestUtil.QUERY_OPTIONAL_3, optional2);
+    }
+
     public void testComplicatedOptional1() {
         Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
         Conjunction<ExpressionVisitor> expectedExpression = new Conjunction<ExpressionVisitor>(optional1, optional2);
-        checkConstraintExpression(QUERY_OPTION_3, expectedExpression);
+        checkConstraintExpression(QUERY_OPTION_4, expectedExpression);
     }
 
     public void testComplicatedOptional2() {
         Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
         Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
         Optional<ExpressionVisitor> expectedExpression = new Optional<ExpressionVisitor>(optional1, optional2);
-        checkConstraintExpression(QUERY_OPTIONAL_4, expectedExpression);
+        checkConstraintExpression(QUERY_OPTIONAL_5, expectedExpression);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
