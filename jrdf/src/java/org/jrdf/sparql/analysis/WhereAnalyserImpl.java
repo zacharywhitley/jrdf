@@ -225,8 +225,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     private void handleOptional(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
         if (rhsOptional.getLhs() != null) {
-            Optional<ExpressionVisitor> optional = new Optional<ExpressionVisitor>(lhs, rhsOptional.getLhs());
-            expression = new Optional<ExpressionVisitor>(optional, rhsOptional.getRhs());
+            expression = createNewOptional(lhs, rhsOptional);
         } else {
             rhsOptional.setLhs(lhs);
             expression = rhsOptional;
@@ -266,10 +265,16 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
         if (rhsOptional.getLhs() == null) {
             rhsOptional.setLhs(lhs);
-            return rhs;
+            return rhsOptional;
         } else {
-            return new Conjunction<ExpressionVisitor>(lhs, rhs);
+            return createNewOptional(lhs, rhsOptional);
         }
+    }
+
+    private Optional<ExpressionVisitor> createNewOptional(Expression<ExpressionVisitor> lhs,
+            Optional<ExpressionVisitor> rhsOptional) {
+        Optional<ExpressionVisitor> optional = new Optional<ExpressionVisitor>(lhs, rhsOptional.getLhs());
+        return new Optional<ExpressionVisitor>(optional, rhsOptional.getRhs());
     }
 
     private Expression<ExpressionVisitor> getExpression(Node node) {
