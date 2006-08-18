@@ -142,9 +142,9 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @Override
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
+        // TODO (AN) This really should be nadic and just pass in the rhs
         Relation rhs = getExpression(optional.getRhs());
         Relation lhs;
-        // TODO (AN) This really should be nadic 
         if (optional.getLhs() != null) {
             lhs = getExpression(optional.getLhs());
         } else {
