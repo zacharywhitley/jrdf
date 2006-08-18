@@ -213,7 +213,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             NodeType type = variables.get(variable.getLiteral());
             if (type == null) {
                 throw new ParserException(new TIdentifier(variable.getLiteral()), "Failed to find variable " +
-                        variable.getLiteral() + " in select clause");
+                        variable.getLiteral() + " in where clause. ");
             } else {
                 Attribute attribute = new AttributeImpl(variable, type);
                 newAttributes.add(attribute);
