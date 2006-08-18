@@ -63,16 +63,16 @@ import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.ExpressionVisitorAdapter;
+import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.expression.Optional;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.operation.DyadicJoin;
+import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.NadicJoin;
-import org.jrdf.query.relation.operation.DyadicJoin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -142,8 +142,14 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @Override
     public <V extends ExpressionVisitor> void visitOptional(Optional<V> optional) {
-        Relation lhs = getExpression(optional.getLhs());
         Relation rhs = getExpression(optional.getRhs());
+        Relation lhs;
+        // TODO (AN) This really should be nadic 
+        if (optional.getLhs() != null) {
+            lhs = getExpression(optional.getLhs());
+        } else {
+            lhs = rhs;
+        }
         result = fullOuterJoin.join(lhs, rhs);
     }
 
