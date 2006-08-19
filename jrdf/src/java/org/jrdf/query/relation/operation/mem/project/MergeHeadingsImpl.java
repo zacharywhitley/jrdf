@@ -76,9 +76,6 @@ import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Class description goes here.
- */
 public class MergeHeadingsImpl implements MergeHeadings {
     private TupleFactory tupleFactory;
     private RelationFactory relationFactory;
