@@ -131,6 +131,8 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
         SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
         result = restrict.restrict(result, singleAvp);
+        // TODO (AN) Another hack - restrict should probably allow composite nodes like
+        // SubjectObjectNode.
         if (allVariables != null) {
             Set<Attribute> newAttribues = createNewAttributes(singleAvp);
             result = project.include(result, newAttribues);
