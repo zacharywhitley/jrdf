@@ -113,8 +113,8 @@
         <mkdir dir="${dist.dir}/gui/main"/>
         <move file="${dist.dir}/gui/${project.jar}" todir="${dist.dir}/gui/main"/>
         <!-- Update uber jar with one-jar classes and manifest. -->
-        <jar destfile="${dist.dir}/gui/jrdf-gui-0.1.jar" manifest="${conf.dir}/boot-manifest.mf">
-            <fileset dir="${dist.dir}/gui" includes="**/*" excludes="jrdf-gui-0.1.jar"/>
+        <jar destfile="${dist.dir}/gui/${gui.jar}" manifest="${conf.dir}/boot-manifest.mf">
+            <fileset dir="${dist.dir}/gui" includes="**/*" excludes="${gui.jar}"/>
             <fileset dir="${prod.classes.dir}" includes="com/**/*"/>
             <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
             <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
