@@ -69,12 +69,16 @@ import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
+import org.jrdf.query.relation.type.NodeType;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -92,6 +96,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private NadicJoin naturalJoin;
     private org.jrdf.query.relation.operation.Union union;
     private DyadicJoin fullOuterJoin;
+    private Map<String, NodeType> allVariables;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
             org.jrdf.query.relation.operation.Union union, DyadicJoin fullOuterJoin) {
@@ -110,8 +115,13 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = newResult;
     }
 
+    public void setAllVariables(Map<String, NodeType> allVariables) {
+        this.allVariables = allVariables;
+    }
+
     @Override
     public <V extends ExpressionVisitor> void visitProjection(Projection<V> projection) {
+        setAllVariables(projection.getAllVariables());
         Relation expression = getExpression(projection.getNextExpression());
         Set<Attribute> attributes = projection.getAttributes();
         result = project.include(expression, attributes);
@@ -121,6 +131,10 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
         SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
         result = restrict.restrict(result, singleAvp);
+        if (allVariables != null) {
+            Set<Attribute> newAttribues = createNewAttributes(singleAvp);
+            result = project.include(result, newAttribues);
+        }
     }
 
     @Override
@@ -157,7 +171,25 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private <V extends ExpressionVisitor>Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, fullOuterJoin);
         queryEngine.setResult(result);
+        queryEngine.setAllVariables(allVariables);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();
     }
+
+    private Set<Attribute> createNewAttributes(SortedSet<AttributeValuePair> singleAvp) {
+        Set<Attribute> newAttribues = new HashSet<Attribute>();
+        for (AttributeValuePair avp : singleAvp) {
+            Attribute existingAttribute = avp.getAttribute();
+            AttributeName existingAttributeName = existingAttribute.getAttributeName();
+            String existingLiteral = existingAttributeName.getLiteral();
+            NodeType newNodeType = allVariables.get(existingLiteral);
+            if (newNodeType == null) {
+                newNodeType = existingAttribute.getType();
+            }
+            Attribute newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
+            newAttribues.add(newAttribute);
+        }
+        return newAttribues;
+    }
+
 }
