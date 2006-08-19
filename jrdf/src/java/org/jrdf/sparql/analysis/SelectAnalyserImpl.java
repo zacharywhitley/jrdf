@@ -117,8 +117,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
     public void caseAVariableListSelectClause(AVariableListSelectClause node) {
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
-            Expression<ExpressionVisitor> nextExpression = null;
-            nextExpression = analyser.getExpression();
+            Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
             LinkedHashSet<AttributeName> declaredVariables = getDeclaredVariables(node);
             LinkedHashSet<Attribute> attributes = analyser.getAttributes(declaredVariables);
             expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
