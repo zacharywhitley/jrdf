@@ -83,14 +83,16 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     private final LinkedHashSet<Attribute> attributes;
     private final LinkedHashSet<AttributeName> declaredVariables;
     private final Expression<ExpressionVisitor> nextExpression;
+    private Map<String, NodeType> allVariables;
 
-    public Projection(VariableCollector attributes, LinkedHashSet<AttributeName> declaredVariables,
+    public Projection(VariableCollector collector, LinkedHashSet<AttributeName> declaredVariables,
             Expression<ExpressionVisitor> nextExpression) throws ParserException {
-        checkNotNull(attributes, declaredVariables, nextExpression);
-        this.variableCollector = attributes;
+        checkNotNull(collector, declaredVariables, nextExpression);
+        this.variableCollector = collector;
         this.declaredVariables = declaredVariables;
         this.nextExpression = nextExpression;
         this.attributes = extractAttributes();
+        this.allVariables = collector.getVariables();
     }
 
     public void accept(ExpressionVisitor v) {
@@ -99,6 +101,10 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
 
     public LinkedHashSet<Attribute> getAttributes() {
         return attributes;
+    }
+
+    public Map<String, NodeType> getAllVariables() {
+        return allVariables;
     }
 
     public Expression<ExpressionVisitor> getNextExpression() {
@@ -148,5 +154,4 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     private boolean determineEqualityFromFields(Projection o1, Projection o2) {
         return o1.getAttributes().equals(o2.getAttributes());
     }
-
 }

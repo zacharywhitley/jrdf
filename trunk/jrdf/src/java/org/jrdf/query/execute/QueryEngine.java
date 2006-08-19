@@ -60,6 +60,9 @@ package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.type.NodeType;
+
+import java.util.Map;
 
 /**
  * An expression visitor that produces a relation result.
@@ -70,4 +73,5 @@ import org.jrdf.query.relation.Relation;
 public interface QueryEngine extends ExpressionVisitor {
     Relation getResult();
     void setResult(Relation newRelation);
+    void setAllVariables(Map<String, NodeType> variables);
 }

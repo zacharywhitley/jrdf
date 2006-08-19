@@ -74,9 +74,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 
-/**
- * Class description goes here.
- */
 public class VariableCollectorImpl implements VariableCollector {
     private Map<String, NodeType> variables = new HashMap<String, NodeType>();
 
