@@ -65,11 +65,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ABlockOfTriples;
@@ -82,15 +78,11 @@ import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PGroupGraphPattern;
 import org.jrdf.sparql.parser.node.PMoreTriples;
 import org.jrdf.sparql.parser.node.PUnionGraphPattern;
-import org.jrdf.sparql.parser.node.TIdentifier;
 import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -204,22 +196,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseAOptionalGraphPattern(AOptionalGraphPattern node) {
         Expression<ExpressionVisitor> rhs = getExpression((PGroupGraphPattern) node.getGroupGraphPattern().clone());
         expression = new Optional<ExpressionVisitor>(rhs);
-    }
-
-    public LinkedHashSet<Attribute> getAttributes(Set<AttributeName> declaredVariables) throws ParserException {
-        LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
-        Map<String, NodeType> variables = collector.getVariables();
-        for (AttributeName variable : declaredVariables) {
-            NodeType type = variables.get(variable.getLiteral());
-            if (type == null) {
-                throw new ParserException(new TIdentifier(variable.getLiteral()), "Failed to find variable " +
-                        variable.getLiteral() + " in where clause. ");
-            } else {
-                Attribute attribute = new AttributeImpl(variable, type);
-                newAttributes.add(attribute);
-            }
-        }
-        return newAttributes;
     }
 
     private void handleOptional(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {

@@ -62,7 +62,6 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
-import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
@@ -119,8 +118,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
             WhereAnalyser analyser = analyseWhereClause(node.parent());
             Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
             LinkedHashSet<AttributeName> declaredVariables = getDeclaredVariables(node);
-            LinkedHashSet<Attribute> attributes = analyser.getAttributes(declaredVariables);
-            expression = new Projection<ExpressionVisitor>(attributes, nextExpression);
+            expression = new Projection<ExpressionVisitor>(variableCollector, declaredVariables, nextExpression);
         } catch (ParserException e) {
             exception = e;
         }

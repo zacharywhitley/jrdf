@@ -59,10 +59,17 @@
 package org.jrdf.query.expression;
 
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.sparql.analysis.VariableCollector;
+import org.jrdf.sparql.parser.node.TIdentifier;
+import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.LinkedHashSet;
+import java.util.Map;
 
 /**
  * Variables in a SELECT cause.
@@ -72,13 +79,18 @@ import java.util.LinkedHashSet;
  */
 public final class Projection<V extends ExpressionVisitor> implements Expression<V> {
     private static final int DUMMY_HASHCODE = 47;
+    private final VariableCollector variableCollector;
     private final LinkedHashSet<Attribute> attributes;
+    private final LinkedHashSet<AttributeName> declaredVariables;
     private final Expression<ExpressionVisitor> nextExpression;
 
-    public Projection(LinkedHashSet<Attribute> attributes, Expression<ExpressionVisitor> nextExpression) {
-        checkNotNull(attributes, nextExpression);
-        this.attributes = attributes;
+    public Projection(VariableCollector attributes, LinkedHashSet<AttributeName> declaredVariables,
+            Expression<ExpressionVisitor> nextExpression) throws ParserException {
+        checkNotNull(attributes, declaredVariables, nextExpression);
+        this.variableCollector = attributes;
+        this.declaredVariables = declaredVariables;
         this.nextExpression = nextExpression;
+        this.attributes = extractAttributes();
     }
 
     public void accept(ExpressionVisitor v) {
@@ -114,10 +126,27 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
      * Delegates to <code>getAvp().toString()</code>.
      */
     public String toString() {
-        return "SELECT " + attributes + "\n" + nextExpression;
+        return "SELECT " + variableCollector + "\n" + nextExpression;
+    }
+
+    private LinkedHashSet<Attribute> extractAttributes() throws ParserException {
+        LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
+        Map<String, NodeType> variables = variableCollector.getVariables();
+        for (AttributeName variable : declaredVariables) {
+            NodeType type = variables.get(variable.getLiteral());
+            if (type == null) {
+                throw new ParserException(new TIdentifier(variable.getLiteral()), "Failed to find variable " +
+                        variable.getLiteral() + " in where clause. ");
+            } else {
+                Attribute attribute = new AttributeImpl(variable, type);
+                newAttributes.add(attribute);
+            }
+        }
+        return newAttributes;
     }
 
     private boolean determineEqualityFromFields(Projection o1, Projection o2) {
         return o1.getAttributes().equals(o2.getAttributes());
     }
+
 }
