@@ -59,10 +59,9 @@
 package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.Attribute;
+import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.MockTestUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -75,7 +74,7 @@ import java.util.LinkedHashSet;
  * @version $Revision:$
  */
 public class ProjectionUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = {LinkedHashSet.class, Expression.class};
+    private static final Class[] PARAM_TYPES = {VariableCollector.class, LinkedHashSet.class, Expression.class};
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Expression.class, Projection.class);
@@ -85,13 +84,5 @@ public class ProjectionUnitTest extends TestCase {
 
     public void testNullToConstructorThrowsException() {
         ArgumentTestUtil.checkConstructNullAssertion(Projection.class, PARAM_TYPES);
-    }
-
-    @SuppressWarnings( {"unchecked"} )
-    public void testGetAttributes() {
-        LinkedHashSet<Attribute> expectedSet = MockTestUtil.createMock(LinkedHashSet.class);
-        Expression expectedExpression = MockTestUtil.createMock(Expression.class);
-        Projection projection = new Projection(expectedSet, expectedExpression);
-        assertSame(expectedSet, projection.getAttributes());
     }
 }
