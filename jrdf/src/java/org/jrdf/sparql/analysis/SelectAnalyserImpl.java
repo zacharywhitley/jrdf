@@ -81,8 +81,6 @@ import java.util.List;
  * @version $Revision: 683 $
  */
 public final class SelectAnalyserImpl extends DepthFirstAdapter implements SelectAnalyser {
-
-    // FIXME TJA: Should eventually be using a Expression builder here.
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private final VariableCollector variableCollector;

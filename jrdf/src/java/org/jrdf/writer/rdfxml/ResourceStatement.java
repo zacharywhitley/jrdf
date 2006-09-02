@@ -75,7 +75,7 @@ import java.io.PrintWriter;
  *
  * @author TurnerRX
  */
-public class ResourceStatement extends RdfXmlWritable {
+public class ResourceStatement implements RdfXmlWritable {
 
     private static final String URI_LIT = "\t<${pred}${lang}${type}>${lit}</${pred}>";
     private static final String URI_URI = "\t<${pred} rdf:resource=\"${resource}\"/>";
@@ -106,7 +106,6 @@ public class ResourceStatement extends RdfXmlWritable {
         this.triple = triple;
     }
 
-    @Override
     public void write(PrintWriter writer) throws IOException, WriteException {
         PredicateNode predicate = triple.getPredicate();
         ObjectNode object = triple.getObject();

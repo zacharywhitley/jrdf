@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,28 +55,24 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.writer.rdfxml;
 
 import org.jrdf.writer.WriteException;
 
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.IOException;
 
 /**
- * Represents an abstract entity that can be written in RDF/XML format.
- *
- * @author TurnerRX
+ * Class description goes here.
  */
-public abstract class RdfXmlWritable {
-
+public interface RdfXmlWritable {
     /**
      * Writes contents to the writer in RDF/XML format.
      *
      * @param writer Writer output
-     * @throws IOException    If an exception occurs while writing output.
-     * @throws WriteException If contents could not be written.
+     * @throws java.io.IOException    If an exception occurs while writing output.
+     * @throws org.jrdf.writer.WriteException If contents could not be written.
      */
-    public void write(PrintWriter writer) throws IOException, WriteException {
-        throw new UnsupportedOperationException("write not implemented.");
-    }
+    void write(PrintWriter writer) throws IOException, WriteException;
 }

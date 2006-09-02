@@ -84,7 +84,6 @@ public final class QueryImpl implements Query, Serializable {
 
     // FIXME: Check for immutability of parameters.
     // FIXME TJA: Implement equals() and hashCode()
-
     private static final long serialVersionUID = 409607492370028929L;
     private Expression<ExpressionVisitor> expression;
     private final GraphRelationFactory graphRelationFactory;

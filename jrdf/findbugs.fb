@@ -1,5 +1,5 @@
 [Jar files]
-./build/dist/jrdf-0.4.jar
+./build/dist/jar/jrdf-0.4.1.jar
 [Source dirs]
 ./src/java
 ./test/java

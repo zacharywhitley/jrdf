@@ -320,8 +320,9 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     private boolean dataTypesEqual(Literal tmpLiteral) {
-        return (null != getDatatypeURI()) && (null != tmpLiteral.getDatatypeURI()) &&
-            getDatatypeURI().toString().equals(tmpLiteral.getDatatypeURI().toString());
+        URI tmpLiteralDatatype = tmpLiteral.getDatatypeURI();
+        return (null != getDatatypeURI()) && (null != tmpLiteralDatatype) &&
+            getDatatypeURI().toString().equals(tmpLiteralDatatype.toString());
     }
 
     /**
@@ -332,11 +333,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     private String appendType() {
         String appendString = "";
-
         if (null != getDatatypeURI()) {
             appendString = "^^<" + getDatatypeURI() + '>';
-        } else if (!"".equals(language)) {
-            appendString = '@' + language;
+        } else if (!"".equals(getLanguage())) {
+            appendString = '@' + getLanguage();
         }
 
         return appendString;

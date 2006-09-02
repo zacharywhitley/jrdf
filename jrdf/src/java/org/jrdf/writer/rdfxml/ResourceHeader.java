@@ -72,7 +72,7 @@ import java.net.URI;
  *
  * @author TurnerRX
  */
-public class ResourceHeader extends RdfXmlWritable {
+public class ResourceHeader implements RdfXmlWritable {
     private static final String RESOURCE_HEADER = "<rdf:Description rdf:about=\"${resource}\">";
     private static final String BLANK_NODE_HEADER = "<rdf:Description rdf:nodeID=\"${nodeId}\">";
     private SubjectNode subject;
@@ -89,7 +89,6 @@ public class ResourceHeader extends RdfXmlWritable {
         this.registry = registry;
     }
 
-    @Override
     public void write(PrintWriter writer) throws IOException, WriteException {
         if (subject instanceof URIReference) {
             write((URIReference) subject, writer);

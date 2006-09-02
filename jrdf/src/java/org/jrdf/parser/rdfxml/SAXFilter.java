@@ -34,10 +34,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -148,13 +148,13 @@ class SAXFilter implements org.xml.sax.ContentHandler {
      * The prefixes that are defined in the XML literal itself (this in
      * contrast to the namespaces from the XML literal's context).
      */
-    private List<String> xmlLiteralPrefixes = new ArrayList<String>();
+    private Set<String> xmlLiteralPrefixes = new HashSet<String>();
 
     /**
      * The prefixes that were used in an XML literal, but that were not
      * defined in it (but rather in the XML literal's context).
      */
-    private List<String> unknownPrefixesInXmlLiteral = new ArrayList<String>();
+    private Set<String> unknownPrefixesInXmlLiteral = new HashSet<String>();
 
     SAXFilter(RdfXmlParser rdfParser) throws TransformerConfigurationException {
         this.rdfParser = rdfParser;
@@ -348,8 +348,9 @@ class SAXFilter implements org.xml.sax.ContentHandler {
                 elInfo = peekStack();
             }
 
-            if (!qName.equals(elInfo.getqName())) {
-                rdfParser.sendFatalError("expected end tag </'" + elInfo.getqName() + ">, found </" + qName + ">");
+            String elInfoqName = elInfo.getqName();
+            if (!qName.equals(elInfoqName)) {
+                rdfParser.sendFatalError("expected end tag </'" + elInfoqName + ">, found </" + qName + ">");
             }
         }
 
@@ -458,9 +459,8 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
     private void checkAndCopyAttributes(Attributes attributes,
         ElementInfo elInfo) throws SAXException {
-        Atts atts = new Atts(attributes.getLength());
-
         int attCount = attributes.getLength();
+        Atts atts = new Atts(attCount);
         for (int i = 0; i < attCount; i++) {
             String qName = attributes.getQName(i);
             String value = attributes.getValue(i);
@@ -564,8 +564,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
             StringBuffer contextPrefixes = new StringBuffer(1024);
             ElementInfo topElement = peekStack();
 
-            for (int i = 0; i < unknownPrefixesCount; i++) {
-                String prefix = unknownPrefixesInXmlLiteral.get(i);
+            for (String prefix : unknownPrefixesInXmlLiteral) {
                 String namespace = topElement.getNamespace(prefix);
                 if (null != namespace) {
                     appendNamespaceDecl(contextPrefixes, prefix, namespace);

@@ -61,12 +61,14 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.relation.GraphRelation;
 
+import java.io.Serializable;
+
 /**
  * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface GraphRelationFactory {
+public interface GraphRelationFactory extends Serializable {
     GraphRelation createRelation(Graph graph);
 }

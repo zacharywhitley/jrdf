@@ -84,6 +84,7 @@ public final class IteratorFactoryImpl implements IteratorFactory {
         return new GraphIterator(graphHandlers[0]);
     }
 
+    // TODO (AN) Long indexes and graph handler move into one object? (next one too).
     public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
         return new OneFixedIterator(fixedFirstNode, longIndexes[index], graphHandlers[index]);
     }

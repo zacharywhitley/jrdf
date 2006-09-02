@@ -160,19 +160,20 @@ public final class UuidGenerator {
     }
 
     private static char[] convertToChars(StringBuffer seed) {
-        char[] chars = new char[seed.length()];
-        seed.getChars(0, seed.length(), chars, 0);
+        int seedLength = seed.length();
+        char[] chars = new char[seedLength];
+        seed.getChars(0, seedLength, chars, 0);
         return chars;
     }
 
     private static synchronized String getRandom() {
         long random = new SecureRandom().nextLong();
-        return "" + random;
+        return String.valueOf(random);
     }
 
     private static synchronized String getTime() {
         long callTime = System.currentTimeMillis();
-        return "" + callTime;
+        return String.valueOf(callTime);
     }
 
     private static synchronized long getCount() {

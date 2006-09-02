@@ -228,9 +228,6 @@
             <ref bean="tupleFactory"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="avpComparator"/>
-        </constructor-arg>
-        <constructor-arg>
             <ref bean="relationHelper"/>
         </constructor-arg>
     </bean>

@@ -68,11 +68,10 @@ import java.io.PrintWriter;
  *
  * @author TurnerRX
  */
-public class RdfXmlFooter extends RdfXmlWritable {
+public class RdfXmlFooter implements RdfXmlWritable {
 
     private static final String RDF_FOOTER = "</rdf:RDF>";
 
-    @Override
     public void write(PrintWriter writer) throws IOException, WriteException {
         writer.println(RDF_FOOTER);
     }
