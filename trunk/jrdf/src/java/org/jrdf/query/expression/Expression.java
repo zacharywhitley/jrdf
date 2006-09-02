@@ -58,6 +58,8 @@
 
 package org.jrdf.query.expression;
 
+import java.io.Serializable;
+
 /**
  * A pattern of triples applied to a graph to constrain the results of a query.
  * <p>Maps to a <code>GraphPattern</code> in the SPARQL grammar.</p>
@@ -65,6 +67,6 @@ package org.jrdf.query.expression;
  * @author Tom Adams
  * @version $Revision$
  */
-public interface Expression<V extends ExpressionVisitor> {
+public interface Expression<V extends ExpressionVisitor> extends Serializable {
     void accept(V v);
 }

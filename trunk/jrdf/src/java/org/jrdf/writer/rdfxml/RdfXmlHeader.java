@@ -70,7 +70,7 @@ import java.util.Set;
  *
  * @author TurnerRX
  */
-public class RdfXmlHeader extends RdfXmlWritable {
+public class RdfXmlHeader implements RdfXmlWritable {
 
     private static final String XML_VERSION = "1.0";
     private static final String ENCODING_DEFAULT = "UTF-8";
@@ -102,7 +102,6 @@ public class RdfXmlHeader extends RdfXmlWritable {
         this.names = names;
     }
 
-    @Override
     public void write(PrintWriter writer) throws IOException {
         writeXmlHeader(writer);
         writeDocTypeDef(writer);

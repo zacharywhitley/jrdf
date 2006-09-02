@@ -61,6 +61,8 @@ package org.jrdf.query.relation.type;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeEnum;
 
+// TODO (AN) This does a lot of comparisons by type - possibly move methods such as isPositionType to NodeType.
+
 /**
  * Compares only the type of attributes.
  *

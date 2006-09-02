@@ -60,7 +60,6 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
@@ -71,13 +70,10 @@ import java.util.SortedSet;
 
 public class OuterUnionEngine implements TupleEngine {
     private final TupleFactory tupleFactory;
-    private final AttributeValuePairComparator avpComparator;
     private final RelationHelper relationHelper;
 
-    public OuterUnionEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
-            RelationHelper relationHelper) {
+    public OuterUnionEngine(TupleFactory tupleFactory, RelationHelper relationHelper) {
         this.tupleFactory = tupleFactory;
-        this.avpComparator = avpComparator;
         this.relationHelper = relationHelper;
     }
 

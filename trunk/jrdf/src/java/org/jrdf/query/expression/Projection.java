@@ -78,12 +78,16 @@ import java.util.Map;
  * @version $Revision:$
  */
 public final class Projection<V extends ExpressionVisitor> implements Expression<V> {
+    private static final long serialVersionUID = -202508451953503285L;
     private static final int DUMMY_HASHCODE = 47;
-    private final VariableCollector variableCollector;
-    private final LinkedHashSet<Attribute> attributes;
-    private final LinkedHashSet<AttributeName> declaredVariables;
-    private final Expression<ExpressionVisitor> nextExpression;
+    private VariableCollector variableCollector;
+    private LinkedHashSet<Attribute> attributes;
+    private LinkedHashSet<AttributeName> declaredVariables;
+    private Expression<ExpressionVisitor> nextExpression;
     private Map<String, NodeType> allVariables;
+
+    private Projection() {
+    }
 
     public Projection(VariableCollector collector, LinkedHashSet<AttributeName> declaredVariables,
             Expression<ExpressionVisitor> nextExpression) throws ParserException {
@@ -139,10 +143,11 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
         Map<String, NodeType> variables = variableCollector.getVariables();
         for (AttributeName variable : declaredVariables) {
-            NodeType type = variables.get(variable.getLiteral());
+            String literal = variable.getLiteral();
+            NodeType type = variables.get(literal);
             if (type == null) {
-                throw new ParserException(new TIdentifier(variable.getLiteral()), "Failed to find variable " +
-                        variable.getLiteral() + " in where clause. ");
+                throw new ParserException(new TIdentifier(literal), "Failed to find variable " +
+                        literal + " in where clause. ");
             } else {
                 Attribute attribute = new AttributeImpl(variable, type);
                 newAttributes.add(attribute);

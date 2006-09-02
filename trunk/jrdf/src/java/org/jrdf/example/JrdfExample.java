@@ -297,8 +297,7 @@ public class JrdfExample {
 
         //print the contents
         while (iterator.hasNext()) {
-
-            System.out.println("" + iterator.next());
+            System.out.println(String.valueOf(iterator.next()));
         }
 
         //print an empty line as a spacer

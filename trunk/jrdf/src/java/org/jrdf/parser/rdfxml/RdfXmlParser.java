@@ -95,6 +95,11 @@ import java.util.Stack;
 public final class RdfXmlParser implements ConfigurableParser {
 
     /**
+     * String version of RDF's Base URI.  Remove when all APIs use URI instead of string.
+     */
+    private static final String BASE_URI_STR = RDF.BASE_URI.toString();
+
+    /**
      * The rdf:type resource. *
      */
     private URIReference RDF_TYPE;
@@ -552,7 +557,7 @@ public final class RdfXmlParser implements ConfigurableParser {
             }
         }
 
-        if (!"Description".equals(localName) || !namespaceURI.equals(RDF.BASE_URI.toString())) {
+        if (!"Description".equals(localName) || !namespaceURI.equals(BASE_URI_STR)) {
             // element name is uri's type
             URIReference className;
             if ("".equals(namespaceURI)) {
@@ -564,7 +569,7 @@ public final class RdfXmlParser implements ConfigurableParser {
             reportStatement(nodeResource, RDF_TYPE, className);
         }
 
-        Att type = atts.removeAtt(RDF.BASE_URI.toString(), "type");
+        Att type = atts.removeAtt(BASE_URI_STR, "type");
         if (null != type) {
             // rdf:type attribute, value is a URI-reference
             URIReference className = buildURIFromReference(type.getValue());
@@ -590,9 +595,9 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @return a resource or a bNode.
      */
     private SubjectNode getNodeResource(Atts atts) throws SAXException {
-        Att id = atts.removeAtt(RDF.BASE_URI.toString(), "ID");
-        Att about = atts.removeAtt(RDF.BASE_URI.toString(), "about");
-        Att nodeID = atts.removeAtt(RDF.BASE_URI.toString(), "nodeID");
+        Att id = atts.removeAtt(BASE_URI_STR, "ID");
+        Att about = atts.removeAtt(BASE_URI_STR, "about");
+        Att nodeID = atts.removeAtt(BASE_URI_STR, "nodeID");
 
         if (verifyData) {
             int definedAttsCount = 0;
@@ -664,7 +669,7 @@ public final class RdfXmlParser implements ConfigurableParser {
         // List expansion rule
         if (propURI.equals(RDF_LI)) {
             NodeElement subject = (NodeElement) peekStack(0);
-            propURI = createURIReference(RDF.BASE_URI.toString() + "_" + subject.getNextLiCounter());
+            propURI = createURIReference(BASE_URI_STR + "_" + subject.getNextLiCounter());
         }
 
         // Push the property on the stack.
@@ -672,14 +677,14 @@ public final class RdfXmlParser implements ConfigurableParser {
         elementStack.push(predicate);
 
         // Check if property has a reification ID
-        Att id = atts.removeAtt(RDF.BASE_URI.toString(), "ID");
+        Att id = atts.removeAtt(BASE_URI_STR, "ID");
         if (null != id) {
             URIReference reifURI = buildURIFromID(id.getValue());
             predicate.setReificationURI(reifURI);
         }
 
         // Check for presence of rdf:parseType attribute
-        Att parseType = atts.removeAtt(RDF.BASE_URI.toString(), "parseType");
+        Att parseType = atts.removeAtt(BASE_URI_STR, "parseType");
 
         if (null != parseType) {
             if (verifyData) {
@@ -754,7 +759,7 @@ public final class RdfXmlParser implements ConfigurableParser {
                 reportStatement(subject.getResource(), propURI, (ObjectNode) resourceRes);
                 handleReification((ObjectNode) resourceRes);
 
-                Att type = atts.removeAtt(RDF.BASE_URI.toString(), "type");
+                Att type = atts.removeAtt(BASE_URI_STR, "type");
                 if (null != type) {
                     // rdf:type attribute, value is a URI-reference
                     URIReference className = buildURIFromReference(type.getValue());
@@ -770,7 +775,7 @@ public final class RdfXmlParser implements ConfigurableParser {
             // Not an empty element, sub elements will follow.
 
             // Check for rdf:datatype attribute
-            Att datatype = atts.removeAtt(RDF.BASE_URI.toString(), "datatype");
+            Att datatype = atts.removeAtt(BASE_URI_STR, "datatype");
             if (null != datatype) {
                 predicate.setDatatype(datatype.getValue());
             }
@@ -789,8 +794,8 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @return a resource or a bNode.
      */
     private SubjectNode getPropertyResource(Atts atts) throws SAXException {
-        Att resource = atts.removeAtt(RDF.BASE_URI.toString(), "resource");
-        Att nodeID = atts.removeAtt(RDF.BASE_URI.toString(), "nodeID");
+        Att resource = atts.removeAtt(BASE_URI_STR, "resource");
+        Att nodeID = atts.removeAtt(BASE_URI_STR, "nodeID");
 
         if (verifyData) {
             int definedAttsCount = 0;
@@ -883,11 +888,12 @@ public final class RdfXmlParser implements ConfigurableParser {
     private URIReference buildURIFromReference(String uriReference) throws SAXException {
         URI relUri = URI.create(uriReference);
         if (verifyData) {
-            if (null == relUri.getScheme() && // Relative URI that is not a self-reference
-                !(null == relUri.getScheme() &&
-                    null == relUri.getAuthority() &&
-                    null == relUri.getQuery() &&
-                    0 == relUri.getPath().length()) &&
+            String uriScheme = relUri.getScheme();
+            String uriAuthority = relUri.getAuthority();
+            String uriQuery = relUri.getQuery();
+            String uriPath = relUri.getPath();
+            if (null == uriScheme && // Relative URI that is not a self-reference
+                !(null == uriAuthority && null == uriQuery && 0 == uriPath.length()) &&
                 baseURI.isOpaque()) {
                 sendError("Relative URI '" + uriReference + "' cannot be resolved using the opaque base URI '" +
                     baseURI + "'");
@@ -976,7 +982,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      */
     private void checkNodeEltName(String namespaceURI, String localName,
                                   String qName) throws SAXException {
-        if (RDF.BASE_URI.toString().equals(namespaceURI)) {
+        if (BASE_URI_STR.equals(namespaceURI)) {
 
             if ("Description".equals(localName) ||
                 "Seq".equals(localName) ||
@@ -1025,7 +1031,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      */
     private void checkPropertyEltName(String namespaceURI, String localName,
                                       String qName) throws SAXException {
-        if (RDF.BASE_URI.toString().equals(namespaceURI)) {
+        if (BASE_URI_STR.equals(namespaceURI)) {
 
             if ("LI".equals(localName) ||
                 "Seq".equals(localName) ||
@@ -1077,7 +1083,7 @@ public final class RdfXmlParser implements ConfigurableParser {
         while (iter.hasNext()) {
             Att att = (Att) iter.next();
 
-            if (RDF.BASE_URI.toString().equals(att.getNamespace())) {
+            if (BASE_URI_STR.equals(att.getNamespace())) {
                 String localName = att.getLocalName();
 
                 if ("Seq".equals(localName) ||
