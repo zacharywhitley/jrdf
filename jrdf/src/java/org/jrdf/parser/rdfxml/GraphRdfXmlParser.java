@@ -84,6 +84,7 @@ public class GraphRdfXmlParser implements Parser {
     public GraphRdfXmlParser(Graph graph) throws GraphException {
         parser = new RdfXmlParser(graph.getElementFactory());
         parser.setStatementHandler(new GraphStatementHandler(graph));
+        parser.setVerifyData(false);
     }
 
     public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {

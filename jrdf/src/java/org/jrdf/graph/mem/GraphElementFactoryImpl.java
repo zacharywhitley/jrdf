@@ -64,9 +64,9 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.util.UuidGenerator;
 
 import java.net.URI;
+import java.util.UUID;
 
 /**
  * A SkipListNode Factory is a class which create the various components of a graph.
@@ -102,7 +102,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         //get an Unique Identifier
         String uid;
         try {
-            uid = UuidGenerator.generateUuid();
+            uid = UUID.randomUUID().toString();
         } catch (Exception exception) {
             throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.", exception);
         }
