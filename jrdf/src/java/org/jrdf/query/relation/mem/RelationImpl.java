@@ -57,13 +57,13 @@
  */
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
+import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.HashSet;
@@ -79,7 +79,8 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class RelationImpl extends Primordial implements Relation {
+@SuppressWarnings({"unchecked"})
+public final class RelationImpl implements Relation {
     private Set<Attribute> heading;
     private Set<Tuple> tuples;
     private AttributeComparator attributeComparator;
@@ -115,11 +116,10 @@ public final class RelationImpl extends Primordial implements Relation {
     }
 
     // TODO (AN) Test drive me
-    @SuppressWarnings({ "unchecked" })
     public SortedSet<Attribute> getSortedHeading() {
         if (heading instanceof SortedSet) {
             if (((SortedSet) heading).comparator() != null) {
-                return (SortedSet) heading;
+                return (SortedSet<Attribute>) heading;
             }
         }
 
@@ -131,11 +131,10 @@ public final class RelationImpl extends Primordial implements Relation {
     }
 
     // TODO (AN) Test drive me
-    @SuppressWarnings({ "unchecked" })
     public SortedSet<Tuple> getSortedTuples() {
         if (tuples instanceof SortedSet) {
             if (((SortedSet) tuples).comparator() != null) {
-                return (SortedSet) tuples;
+                return (SortedSet<Tuple>) tuples;
             }
         }
         // TODO (AN) Turn this into a sort call instead?
@@ -143,6 +142,32 @@ public final class RelationImpl extends Primordial implements Relation {
         sortedTuples.addAll(tuples);
         tuples = sortedTuples;
         return sortedTuples;
+    }
+
+    public int hashCode() {
+        return tuples.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(Relation.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((Relation) obj);
+    }
+
+    private boolean determineEqualityFromFields(Relation answer) {
+        if (answer.getHeading().equals(getHeading())) {
+            if (answer.getTuples().equals(getTuples())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Set<Attribute> createHeadingFromTuples(Set<Tuple> newTuples) {

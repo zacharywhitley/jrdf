@@ -58,7 +58,6 @@
 
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -75,6 +74,7 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.EqualsUtil;
 
 import java.util.Set;
 import java.util.SortedSet;
@@ -87,8 +87,7 @@ import java.util.TreeSet;
  * @version $Id: RelationImpl.java 556 2006-06-13 06:38:55Z newmana $
  */
 // TODO (AN) Come back and add unit tests and integration tests!!!!!
-public final class GraphRelationImpl extends Primordial implements GraphRelation {
-
+public final class GraphRelationImpl implements GraphRelation {
     private final Graph graph;
     private final TupleComparator tupleComparator;
     private final TupleFactory tupleFactory;
@@ -122,6 +121,24 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
         throw new UnsupportedOperationException();
     }
 
+    public int hashCode() {
+        return graph.hashCode() ^ tupleComparator.hashCode() ^ tupleFactory.hashCode() ^ tupleFactory.hashCode() ^
+                attributeFactory.hashCode() ^ avpHelper.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(GraphRelation.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((GraphRelation) obj);
+    }
+
     public Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues) {
         Triple triple = avpHelper.createTriple(nameValues);
         Attribute[] attributes = avpHelper.createAttributes(nameValues);
@@ -153,4 +170,14 @@ public final class GraphRelationImpl extends Primordial implements GraphRelation
         Tuple tuple = tupleFactory.getTuple(avp);
         tuples.add(tuple);
     }
+
+    private boolean determineEqualityFromFields(GraphRelation graphRelation) {
+        if (graphRelation.getHeading().equals(getHeading())) {
+            if (graphRelation.getTuples().equals(getTuples())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

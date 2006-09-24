@@ -58,11 +58,11 @@
 
 package org.jrdf.query;
 
-import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
@@ -75,7 +75,7 @@ import java.util.SortedSet;
  *
  * @version $Revision$
  */
-public final class AnswerImpl extends Primordial implements Answer, Serializable {
+public final class AnswerImpl implements Answer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
     private final LinkedHashSet<Attribute> headings;
     private final Relation results;
@@ -154,4 +154,29 @@ public final class AnswerImpl extends Primordial implements Answer, Serializable
         return results;
     }
 
+    public int hashCode() {
+        return (int) (results.hashCode() ^ timeTaken);
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(Answer.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((Answer) obj);
+    }
+
+    private boolean determineEqualityFromFields(Answer answer) {
+        if (answer.getTimeTaken() == getTimeTaken()) {
+            if (answer.getResults().equals(getResults())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
