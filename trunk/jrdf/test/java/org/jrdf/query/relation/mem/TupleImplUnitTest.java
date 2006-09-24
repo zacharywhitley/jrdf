@@ -57,7 +57,6 @@
  */
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
@@ -73,7 +72,6 @@ import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_AT
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
@@ -127,7 +125,6 @@ public class TupleImplUnitTest extends TestCase {
     public static final Tuple TEST_TUPLES_3_1 = new TupleImpl(ATTRIBUTE_VALUE_SET_3_1, comparator);
 
     public void testClassProperties() {
-        checkExtensionOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Tuple.class, TupleImpl.class);
     }
 

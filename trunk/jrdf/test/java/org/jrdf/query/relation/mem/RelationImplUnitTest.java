@@ -57,8 +57,6 @@
  */
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
-import au.net.netstorm.boost.test.reflect.DefaultReflectTestUtil;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
@@ -102,7 +100,6 @@ public class RelationImplUnitTest extends TestCase {
     public static final Relation TEST_RELATION_3 = createRelation(createTuple(TUPLES_3));
 
     public void testClassProperties() {
-        new DefaultReflectTestUtil().isSubclassOf(Primordial.class, RelationImpl.class);
         checkImplementationOfInterfaceAndFinal(Relation.class, RelationImpl.class);
         checkConstructor(RelationImpl.class, 0, PARAM_TYPES_1);
         checkConstructor(RelationImpl.class, 0, PARAM_TYPES_2);

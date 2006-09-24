@@ -57,10 +57,10 @@
  */
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Set;
@@ -73,7 +73,8 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class TupleImpl extends Primordial implements Tuple {
+@SuppressWarnings({"unchecked"})
+public final class TupleImpl implements Tuple {
     private Set<AttributeValuePair> attributeValues;
     private final AttributeValuePairComparator attributeValuePairComparator;
 
@@ -89,11 +90,10 @@ public final class TupleImpl extends Primordial implements Tuple {
     }
 
     // TODO (AN) Test drive me
-    @SuppressWarnings({ "unchecked" })
     public SortedSet<AttributeValuePair> getSortedAttributeValues() {
         if (attributeValues instanceof SortedSet) {
             if (((SortedSet) attributeValues).comparator() != null) {
-                return (SortedSet) attributeValues;
+                return (SortedSet<AttributeValuePair>) attributeValues;
             }
         }
 
@@ -102,5 +102,26 @@ public final class TupleImpl extends Primordial implements Tuple {
         sortedPairs.addAll(attributeValues);
         attributeValues = sortedPairs;
         return sortedPairs;
+    }
+
+    public int hashCode() {
+        return attributeValues.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(Tuple.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((Tuple) obj);
+    }
+
+    private boolean determineEqualityFromFields(Tuple tuple) {
+        return tuple.getAttributeValues().equals(getAttributeValues());
     }
 }
