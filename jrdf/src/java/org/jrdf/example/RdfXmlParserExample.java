@@ -11,12 +11,12 @@ import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.GraphFactoryImpl;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EscapeURL;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 
 /**
  * A simple example of parsing in a RDF/XML file into an in memory JRDF graph.
@@ -31,14 +31,22 @@ public final class RdfXmlParserExample {
     public static void main(String[] args) throws Exception {
         URL url = getDocumentURL(args);
         InputStream in = url.openStream();
-        final Graph jrdfMem = getGraph();
-        Parser parser = new GraphRdfXmlParser(jrdfMem);
-        parser.parse(in, EscapeURL.toEscapedString(url));
-        Iterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        while (iter.hasNext()) {
-            System.out.println("Graph: " + iter.next());
+        try {
+            final Graph jrdfMem = getGraph();
+            Parser parser = new GraphRdfXmlParser(jrdfMem);
+            parser.parse(in, EscapeURL.toEscapedString(url));
+            ClosableIterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            try {
+                while (iter.hasNext()) {
+                    System.out.println("Graph: " + iter.next());
+                }
+                System.out.println("Total number of statements: " + jrdfMem.getNumberOfTriples());
+            } finally {
+                iter.close();
+            }
+        } finally {
+            in.close();
         }
-        in.close();
     }
 
     private static Graph getGraph() {
