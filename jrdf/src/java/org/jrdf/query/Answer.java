@@ -73,4 +73,6 @@ public interface Answer {
     long numberOfTuples();
 
     Relation getResults();
+
+    long getTimeTaken();
 }

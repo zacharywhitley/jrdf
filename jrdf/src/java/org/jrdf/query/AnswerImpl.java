@@ -79,9 +79,11 @@ public final class AnswerImpl extends Primordial implements Answer, Serializable
     private static final long serialVersionUID = 3778815984074679718L;
     private final LinkedHashSet<Attribute> headings;
     private final Relation results;
+    private final long timeTaken;
 
-    public AnswerImpl(Query query, Relation results) {
-        checkNotNull();
+    public AnswerImpl(Query query, Relation results, long timeTaken) {
+        this.timeTaken = timeTaken;
+        checkNotNull(query, results);
         this.results = results;
         this.headings = getHeading(query);
     }
@@ -127,6 +129,10 @@ public final class AnswerImpl extends Primordial implements Answer, Serializable
 
     public long numberOfTuples() {
         return results.getTuples().size();
+    }
+
+    public long getTimeTaken() {
+        return timeTaken;
     }
 
     private String[] getDataWithValues(SortedSet<AttributeValuePair> avps) {
