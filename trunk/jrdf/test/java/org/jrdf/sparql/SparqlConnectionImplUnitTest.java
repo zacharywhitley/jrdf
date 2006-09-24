@@ -108,7 +108,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
             METHOD_PARAM_TYPES);
     private static final InvalidQuerySyntaxException INVALID_QUERY_EXCEPTION = new InvalidQuerySyntaxException("");
     private MockFactory factory;
-    private static final AnswerImpl NO_ANSWER = new AnswerImpl(NO_QUERY, RELATION_DUM);
+    private static final AnswerImpl NO_ANSWER = new AnswerImpl(NO_QUERY, RELATION_DUM, 0);
 
     public void setUp() {
         factory = new MockFactory();

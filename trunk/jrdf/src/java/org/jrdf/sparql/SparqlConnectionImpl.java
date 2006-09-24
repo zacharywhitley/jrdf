@@ -102,7 +102,7 @@ public final class SparqlConnectionImpl implements SparqlConnection {
         checkNotEmptyString("queryText", queryText);
         Query query = builder.buildQuery(graph, queryText);
         if (graph.isEmpty()) {
-            return new AnswerImpl(NO_QUERY, RELATION_DUM);
+            return new AnswerImpl(NO_QUERY, RELATION_DUM, 0);
         }
         return query.executeQuery(graph, queryEngine);
     }

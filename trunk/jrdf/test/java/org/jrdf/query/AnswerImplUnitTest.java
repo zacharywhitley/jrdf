@@ -77,7 +77,8 @@ public final class AnswerImplUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(AnswerImpl.class, Modifier.PUBLIC, Query.class, Relation.class);
+        ClassPropertiesTestUtil.checkConstructor(AnswerImpl.class, Modifier.PUBLIC, Query.class, Relation.class,
+                Long.TYPE);
     }
 
     public void testSerialVersionUid() {

@@ -88,6 +88,6 @@ public class NoQuery implements Query, Serializable {
     }
 
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
-        return new AnswerImpl(NO_QUERY, RELATION_DUM);
+        return new AnswerImpl(NO_QUERY, RELATION_DUM, 0);
     }
 }

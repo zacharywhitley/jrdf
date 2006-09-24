@@ -67,7 +67,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-import org.jrdf.util.param.ParameterUtil;
 
 import java.io.Serializable;
 import static java.util.Collections.emptyList;
@@ -104,10 +103,11 @@ public final class QueryImpl implements Query, Serializable {
     }
 
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
-        ParameterUtil.checkNotNull(graph, queryEngine);
+        checkNotNull(graph, queryEngine);
+        long timeStarted = System.currentTimeMillis();
         queryEngine.setResult(graphRelationFactory.createRelation(graph));
         expression.accept(queryEngine);
         Relation results = queryEngine.getResult();
-        return new AnswerImpl(this, results);
+        return new AnswerImpl(this, results, System.currentTimeMillis() - timeStarted);
     }
 }

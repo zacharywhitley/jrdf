@@ -91,7 +91,7 @@ public class NewQueryCommand extends ApplicationWindowAwareCommand {
 
     protected void doExecuteCommand() {
         queryPanelView.setQuery(BLANK);
-        AnswerImpl answer = new AnswerImpl(NO_QUERY, RELATION_DUM);
+        AnswerImpl answer = new AnswerImpl(NO_QUERY, RELATION_DUM, 0);
         resultsPanelView.setResults(answer);
     }
 }

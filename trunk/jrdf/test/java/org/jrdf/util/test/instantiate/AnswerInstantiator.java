@@ -80,6 +80,7 @@ final class AnswerInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        return new ParamSpec(new Class[]{Query.class, Relation.class}, new Object[]{NO_QUERY, RELATION_DUM});
+        return new ParamSpec(new Class[]{Query.class, Relation.class, Long.TYPE},
+                new Object[]{NO_QUERY, RELATION_DUM, 0L});
     }
 }

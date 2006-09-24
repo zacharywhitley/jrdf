@@ -118,8 +118,10 @@ public class QueryViewImpl extends AbstractView implements ApplicationListener, 
 
     public void setResults(Answer answer) {
         resultsPanelView.setResults(answer);
-        String message = getMessage("resultsView.numResultsFound");
-        getStatusBar().setMessage(message + answer.numberOfTuples());
+        String resultsMsg = getMessage("resultsView.numResultsFound");
+        String timeTakenMsg = getMessage("resultsView.timeTakenForResults");
+        getStatusBar().setMessage(resultsMsg + answer.numberOfTuples() + ", " + timeTakenMsg + answer.getTimeTaken() +
+            " ms");
     }
 
     protected JComponent createControl() {
