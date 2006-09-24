@@ -57,10 +57,10 @@
  */
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.util.EqualsUtil;
 
 /**
  * Implementation of attribute-name:type-name combination.
@@ -68,8 +68,7 @@ import org.jrdf.query.relation.type.NodeType;
  * @author Andrew Newman
  * @version $Id$
  */
-// TODO (AN) Test drive Primordial usage.
-public final class AttributeImpl extends Primordial implements Attribute {
+public final class AttributeImpl implements Attribute {
     private static final long serialVersionUID = 6078409285334034368L;
     private AttributeName attributeName;
     private NodeType type;
@@ -88,5 +87,31 @@ public final class AttributeImpl extends Primordial implements Attribute {
 
     public NodeType getType() {
         return type;
+    }
+
+    public int hashCode() {
+        return attributeName.hashCode() ^ type.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(Attribute.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((Attribute) obj);
+    }
+
+    private boolean determineEqualityFromFields(Attribute attribute) {
+        if (attribute.getAttributeName().equals(getAttributeName())) {
+            if (attribute.getType().equals(getType())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

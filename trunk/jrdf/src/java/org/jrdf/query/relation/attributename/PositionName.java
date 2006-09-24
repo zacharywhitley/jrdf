@@ -57,9 +57,9 @@
  */
 package org.jrdf.query.relation.attributename;
 
-import au.net.netstorm.boost.primordial.Primordial;
+import org.jrdf.util.EqualsUtil;
 
-public final class PositionName extends Primordial implements AttributeName {
+public final class PositionName implements AttributeName {
     private static final long serialVersionUID = -7189416083387906477L;
     private String positionName;
 
@@ -72,5 +72,22 @@ public final class PositionName extends Primordial implements AttributeName {
 
     public String getLiteral() {
         return positionName;
+    }
+
+    public int hashCode() {
+        return positionName.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(PositionName.class, obj)) {
+            return false;
+        }
+        return ((AttributeName) obj).getLiteral().equals(getLiteral());
     }
 }
