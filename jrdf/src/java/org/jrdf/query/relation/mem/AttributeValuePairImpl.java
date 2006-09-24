@@ -57,10 +57,10 @@
  */
 package org.jrdf.query.relation.mem;
 
-import au.net.netstorm.boost.primordial.Primordial;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.util.EqualsUtil;
 
 /**
  * Implementation of an attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
@@ -71,7 +71,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 
 // TODO (AN) Add a check that the attribute type is consistent with the node type - or add it into the Factory.
 
-public final class AttributeValuePairImpl extends Primordial implements AttributeValuePair {
+public final class AttributeValuePairImpl implements AttributeValuePair {
     private static final long serialVersionUID = -5045948869879997736L;
     private Attribute attribute;
     private Node value;
@@ -90,5 +90,31 @@ public final class AttributeValuePairImpl extends Primordial implements Attribut
 
     public Node getValue() {
         return value;
+    }
+
+    public int hashCode() {
+        return attribute.hashCode() ^ value.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(AttributeValuePair.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((AttributeValuePair) obj);
+    }
+
+    private boolean determineEqualityFromFields(AttributeValuePair attributeValuePair) {
+        if (attributeValuePair.getAttribute().equals(getAttribute())) {
+            if (attributeValuePair.getValue().equals(getValue())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
