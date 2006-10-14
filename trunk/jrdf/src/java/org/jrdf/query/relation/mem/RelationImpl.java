@@ -63,7 +63,9 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.HashSet;
@@ -149,16 +151,20 @@ public final class RelationImpl implements Relation {
     }
 
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(Relation.class, obj)) {
-            return false;
+        if (hasSuperClassOrInterface(Relation.class, obj)) {
+            return determineEqualityFromFields((Relation) obj);
         }
-        return determineEqualityFromFields((Relation) obj);
+        return false;
+    }
+
+    public String toString() {
+        return tuples.toString();
     }
 
     private boolean determineEqualityFromFields(Relation answer) {
