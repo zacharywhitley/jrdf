@@ -77,9 +77,11 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.IOException;
 
+// FIXME Currently does LARL parsing (bottom-up) rather than LL (top-down).  This is not conformant with SPARQL:
+// "The outer optional graph pattern must match for any nested optional pattern to be matched."
+
 public final class SableCcSparqlParser implements SparqlParser {
 
-    // FIXME TJA: Test drive out throwing of InvalidQuerySyntaxException.
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
     private ParserFactory parserFactory;
     private GraphRelationFactory graphRelationFactory;
