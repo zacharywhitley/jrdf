@@ -60,7 +60,9 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 /**
  * Implementation of an attribute name/value consists of the name (SUBJECT, PREDICATE, etc.) and value.
@@ -92,21 +94,25 @@ public final class AttributeValuePairImpl implements AttributeValuePair {
         return value;
     }
 
+    public String toString() {
+        return "{" + attribute + ", " + value + "}";
+    }
+
     public int hashCode() {
         return attribute.hashCode() ^ value.hashCode();
     }
 
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(AttributeValuePair.class, obj)) {
-            return false;
+        if (hasSuperClassOrInterface(AttributeValuePair.class, obj)) {
+            return determineEqualityFromFields((AttributeValuePair) obj);
         }
-        return determineEqualityFromFields((AttributeValuePair) obj);
+        return false;
     }
 
     private boolean determineEqualityFromFields(AttributeValuePair attributeValuePair) {

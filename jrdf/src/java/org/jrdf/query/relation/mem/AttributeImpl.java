@@ -60,7 +60,9 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 /**
  * Implementation of attribute-name:type-name combination.
@@ -89,21 +91,25 @@ public final class AttributeImpl implements Attribute {
         return type;
     }
 
+    public String toString() {
+        return type.getName() + "|" + attributeName.getLiteral();
+    }
+
     public int hashCode() {
         return attributeName.hashCode() ^ type.hashCode();
     }
 
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(Attribute.class, obj)) {
-            return false;
+        if (hasSuperClassOrInterface(Attribute.class, obj)) {
+            return determineEqualityFromFields((Attribute) obj);
         }
-        return determineEqualityFromFields((Attribute) obj);
+        return false;
     }
 
     private boolean determineEqualityFromFields(Attribute attribute) {

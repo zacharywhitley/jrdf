@@ -60,7 +60,9 @@ package org.jrdf.query.relation.mem;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Set;
@@ -109,16 +111,20 @@ public final class TupleImpl implements Tuple {
     }
 
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(Tuple.class, obj)) {
-            return false;
+        if (hasSuperClassOrInterface(Tuple.class, obj)) {
+            return determineEqualityFromFields((Tuple) obj);
         }
-        return determineEqualityFromFields((Tuple) obj);
+        return false;
+    }
+
+    public String toString() {
+        return attributeValues.toString();
     }
 
     private boolean determineEqualityFromFields(Tuple tuple) {
