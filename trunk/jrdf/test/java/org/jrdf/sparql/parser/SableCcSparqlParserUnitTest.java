@@ -62,9 +62,9 @@ import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.parser.lexer.LexerException;
 import org.jrdf.sparql.parser.node.AQueryStart;
 import org.jrdf.sparql.parser.node.EOF;
@@ -100,7 +100,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1,1), "bar");
     private static final LexerException LEXER_EXECPTION = new LexerException("foo");
     private static final Exception IO_EXCEPTION = new IOException();
-    private static final SortedAttributeValuePairHelper AVP_HELPER = MockTestUtil.createMock(SortedAttributeValuePairHelper.class);
+    private static final AttributeValuePairHelper AVP_HELPER = MockTestUtil.createMock(AttributeValuePairHelper.class);
     private static final SortedAttributeFactory ATTRIBUTE_FACTORY = MockTestUtil.createMock(SortedAttributeFactory.class);
     private MockFactory mockFactory;
 
@@ -111,7 +111,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
         checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, GraphRelationFactory.class,
-                SortedAttributeValuePairHelper.class, SortedAttributeFactory.class);
+                AttributeValuePairHelper.class, SortedAttributeFactory.class);
     }
 
     public void testParseQueryFailsWithBadInput() {

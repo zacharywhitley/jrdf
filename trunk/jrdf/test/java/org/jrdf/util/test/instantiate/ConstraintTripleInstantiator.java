@@ -64,7 +64,7 @@ import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
-import java.util.SortedSet;
+import java.util.List;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.expression.Constraint}.
@@ -81,9 +81,9 @@ final class ConstraintTripleInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        SortedSet<AttributeValuePair> avp = TripleTestUtil.AVP_BOOK_1_DC_SUBJECT_LITERAL;
+        List<AttributeValuePair> avp = TripleTestUtil.AVP_BOOK_1_DC_SUBJECT_LITERAL;
         Object[] params = {avp};
-        Class<?>[] types = new Class[]{SortedSet.class};
+        Class<?>[] types = new Class[]{List.class};
         return new ParamSpec(types, params);
     }
 }

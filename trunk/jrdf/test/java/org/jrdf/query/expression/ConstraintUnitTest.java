@@ -59,9 +59,7 @@
 package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_1;
 import static org.jrdf.query.relation.mem.AttributeValuePairImplUnitTest.TEST_ATTRIBUTE_VALUE_2;
 import org.jrdf.util.test.ArgumentTestUtil;
@@ -72,9 +70,8 @@ import org.jrdf.util.test.SerializationTestUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Unit test for {@link Constraint}.
@@ -83,18 +80,16 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public final class ConstraintUnitTest extends TestCase {
-    private static final SortedSet<AttributeValuePair> AVP_1 =  createAvpSet(TEST_ATTRIBUTE_VALUE_1);
-    private static final SortedSet<AttributeValuePair> AVP_2 =  createAvpSet(TEST_ATTRIBUTE_VALUE_2);
+    private static final List<AttributeValuePair> AVP_1 =  createAvpSet(TEST_ATTRIBUTE_VALUE_1);
+    private static final List<AttributeValuePair> AVP_2 =  createAvpSet(TEST_ATTRIBUTE_VALUE_2);
     private static final Constraint CONSTRAINT_TRIPLE_1 = new Constraint<ExpressionVisitor>(AVP_1);
     private static final Constraint CONSTRAINT_TRIPLE_2 = new Constraint<ExpressionVisitor>(AVP_2);
-    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final AttributeValuePairComparator AVP_COMPARATOR = FACTORY.getNewAttributeValuePairComparator();
-    private static final Class[] PARAM_TYPES = {SortedSet.class};
+    private static final Class[] PARAM_TYPES = {List.class};
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Expression.class, Constraint.class);
         checkInstanceImplementsInterface(Serializable.class, Constraint.class);
-        checkConstructor(Constraint.class, Modifier.PUBLIC, SortedSet.class);
+        checkConstructor(Constraint.class, Modifier.PUBLIC, List.class);
     }
 
     public void testSerialVersionUID() {
@@ -107,11 +102,11 @@ public final class ConstraintUnitTest extends TestCase {
 
     public void getAvp() {
         Constraint constraint = new Constraint<ExpressionVisitor>(AVP_1);
-        assertEquals(AVP_1, constraint.getAvp());
+        assertEquals(AVP_1, constraint.getAvp(null));
     }
 
-    private static SortedSet<AttributeValuePair> createAvpSet(AttributeValuePair testAttributeValue) {
-        SortedSet<AttributeValuePair> set = new TreeSet<AttributeValuePair>(AVP_COMPARATOR);
+    private static List<AttributeValuePair> createAvpSet(AttributeValuePair testAttributeValue) {
+        List<AttributeValuePair> set = new ArrayList<AttributeValuePair>();
         set.add(testAttributeValue);
         return set;
     }
@@ -209,7 +204,7 @@ public final class ConstraintUnitTest extends TestCase {
         assertFalse(x.equals(y));
     }
 
-    private void checkToStringDelegatesToTriple(Set<AttributeValuePair> avp, Constraint contraint) {
+    private void checkToStringDelegatesToTriple(List<AttributeValuePair> avp, Constraint contraint) {
         assertEquals(avp.toString(), contraint.toString());
     }
 }

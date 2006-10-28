@@ -75,7 +75,7 @@ import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
@@ -86,7 +86,6 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
 
 
 /**
@@ -115,22 +114,21 @@ public class TripleTestUtil {
 
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
 
-    private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
+    private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
 
-    public static final SortedSet<AttributeValuePair> AVP_BOOK_1_DC_SUBJECT_LITERAL
-            = createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+    public static final List<AttributeValuePair> AVP_BOOK_1_DC_SUBJECT_LITERAL =
+            createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
 
     public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
-        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, createAttributes(suffix));
+        List<AttributeValuePair> avp = AVP_HELPER.createAvp(dcTitleTriple, createAttributes(suffix));
         return new Constraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, URI predicate,
             String varObject, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
-        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(triple,
-                createAttributes(varSubject, varObject, suffix));
+        List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createAttributes(varSubject, varObject, suffix));
         return new Constraint<ExpressionVisitor>(avp);
     }
 
@@ -183,7 +181,7 @@ public class TripleTestUtil {
         return NodeTestUtil.createTriple(subject, predicate, object);
     }
 
-    private static SortedSet<AttributeValuePair> createAvp(Triple tripleBook1DcSubjectLiteral) {
+    private static List<AttributeValuePair> createAvp(Triple tripleBook1DcSubjectLiteral) {
         return AVP_HELPER.createAvp(tripleBook1DcSubjectLiteral);
     }
 

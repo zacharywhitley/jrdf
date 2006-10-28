@@ -63,7 +63,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * Allows the creation of sorted AttributeValuePairs.
@@ -71,14 +70,14 @@ import java.util.SortedSet;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface SortedAttributeValuePairHelper {
-    SortedSet<AttributeValuePair> createAvp(Triple triple);
+public interface AttributeValuePairHelper {
+    List<AttributeValuePair> createAvp(Triple triple);
 
-    SortedSet<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray);
+    List<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray);
 
     Triple createTriple(List<AttributeValuePair> avp);
 
-    SortedSet<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes);
+    List<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes);
 
     Attribute[] createAttributes(List<AttributeValuePair> nameValues);
 }

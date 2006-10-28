@@ -64,9 +64,9 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
@@ -83,7 +83,7 @@ import static org.jrdf.util.test.TripleTestUtil.URI_DC_SUBJECT;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 
 import java.lang.reflect.Modifier;
-import java.util.SortedSet;
+import java.util.List;
 
 public final class TripleBuilderImplUnitTest extends TestCase {
 
@@ -100,7 +100,7 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     private static final TripleSpec VARIABLE_VARIABLE_BOOK_TITLE =
             new VariableResourceTripleSpec(VARIABLE_NAME_SUBJECT, VARIABLE_NAME_TITLE, URI_DC_SUBJECT);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
+    private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
     private TripleBuilder tripleBuilder;
 
     @Override
@@ -108,14 +108,14 @@ public final class TripleBuilderImplUnitTest extends TestCase {
         super.setUp();
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
-        tripleBuilder = new TripleBuilderImpl(FACTORY.getNewGraph(), FACTORY.getNewSortedAttributeValuePairHelper(),
+        tripleBuilder = new TripleBuilderImpl(FACTORY.getNewGraph(), FACTORY.getNewAttributeValuePairHelper(),
                 newSortedAttributeFactory);
     }
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilderImpl.class);
         ClassPropertiesTestUtil.checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC, Graph.class,
-                SortedAttributeValuePairHelper.class, SortedAttributeFactory.class);
+                AttributeValuePairHelper.class, SortedAttributeFactory.class);
     }
 
     public void testBuildTripleFromParserNode() throws Exception {
@@ -139,18 +139,18 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     }
 
     private void checkBuiltTripleWithVariable(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
+        List<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
     private void checkBuiltTripleWithLiteral(Triple expectedTriple, TripleSpec actualTriple) throws Exception {
-        SortedSet<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
+        List<AttributeValuePair> avp = AVP_HELPER.createAvp(expectedTriple, actualTriple.asAttributes());
         checkBuildTriple(avp, actualTriple.getTriple());
     }
 
-    private void checkBuildTriple(SortedSet<AttributeValuePair> expectedAvp, ATriple triple) throws Exception {
+    private void checkBuildTriple(List<AttributeValuePair> expectedAvp, ATriple triple) throws Exception {
         triple.apply(tripleBuilder);
-        SortedSet<AttributeValuePair> actualAvp = tripleBuilder.getTriples();
+        List<AttributeValuePair> actualAvp = tripleBuilder.getTriples();
         assertEquals(expectedAvp, actualAvp);
     }
 }

@@ -72,14 +72,14 @@ import org.jrdf.query.relation.TupleFactory;
 public class GraphRelationFactoryImpl implements GraphRelationFactory {
     private static final long serialVersionUID = 5233852864536753744L;
     private SortedAttributeFactory attributeFactory;
-    private SortedAttributeValuePairHelper avpHelper;
+    private AttributeValuePairHelper avpHelper;
     private TupleComparator tupleComparator;
     private TupleFactory tupleFactory;
 
     private GraphRelationFactoryImpl() {
     }
 
-    public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, SortedAttributeValuePairHelper avpHelper,
+    public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, AttributeValuePairHelper avpHelper,
             TupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.attributeFactory = attributeFactory;
         this.tupleComparator = tupleComparator;

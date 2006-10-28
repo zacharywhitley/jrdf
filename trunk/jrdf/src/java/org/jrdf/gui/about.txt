@@ -3,7 +3,7 @@
 <td valign="top">
 <b>JRDF SPARQL GUI</b><br>
 <p>
-Version: 0.1<br>
+Version: 0.3<br>
 <p>
 &copy; Copyright 2003-2006</a> the original author or authors.
 </td>

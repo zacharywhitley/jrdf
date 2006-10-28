@@ -59,15 +59,16 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockTestUtil;
 
 import java.lang.reflect.Modifier;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,7 +83,8 @@ public class TupleFactoryImplUnitTest extends TestCase {
     private static final String[] CONSTRUCTOR_NAMES = {"attributeValuePairComparator"};
     private static final AttributeValuePairComparator AVP_COMPARATOR =
             MockTestUtil.createMock(AttributeValuePairComparator.class);
-    private static final Set<AttributeValuePair> AVP = MockTestUtil.createMock(Set.class);
+    private static final Set<AttributeValuePair> MOCK_AVP = MockTestUtil.createMock(Set.class);
+    private static final List<AttributeValuePair> AVP_LIST = MockTestUtil.createMock(List.class);
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TupleFactory.class, TupleFactoryImpl.class);
@@ -96,10 +98,14 @@ public class TupleFactoryImplUnitTest extends TestCase {
                 CONSTRUCTOR_NAMES);
     }
 
-    public void testGetTuple() {
+    public void testGetTupleBySet() {
         TupleFactory tupleFactory = new TupleFactoryImpl(AVP_COMPARATOR);
-        Tuple tuple = tupleFactory.getTuple(AVP);
-        assertSame(AVP, tuple.getAttributeValues());
+        Tuple tuple = tupleFactory.getTuple(MOCK_AVP);
+        assertSame(MOCK_AVP, tuple.getAttributeValues());
         assertTrue(tuple instanceof TupleImpl);
     }
+
+// TODO (AN) Add test for testing creating a tuple with a list.
+//    public void testGetTupleByList() {
+//    }
 }

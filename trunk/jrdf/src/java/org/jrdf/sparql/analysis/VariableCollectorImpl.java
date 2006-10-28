@@ -71,13 +71,13 @@ import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 public class VariableCollectorImpl implements VariableCollector {
     private Map<String, NodeType> variables = new HashMap<String, NodeType>();
 
-    public void addVariables(SortedSet<AttributeValuePair> avps) {
+    public void addVariables(List<AttributeValuePair> avps) {
         for (AttributeValuePair avp : avps) {
             Attribute attribute = avp.getAttribute();
             if (attribute.getAttributeName() instanceof VariableName) {
