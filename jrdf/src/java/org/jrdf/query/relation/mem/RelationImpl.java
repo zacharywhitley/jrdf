@@ -81,7 +81,7 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id$
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public final class RelationImpl implements Relation {
     private Set<Attribute> heading;
     private Set<Tuple> tuples;

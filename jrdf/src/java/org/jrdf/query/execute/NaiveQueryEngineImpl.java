@@ -166,7 +166,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = fullOuterJoin.join(lhs, rhs);
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, fullOuterJoin);
         queryEngine.setResult(result);
