@@ -62,8 +62,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 
-import java.util.Set;
-import java.util.SortedSet;
+import java.util.List;
 
 /**
  * Returns the list of relations with the same set of attributes.
@@ -72,10 +71,10 @@ import java.util.SortedSet;
  * @version $Revision$
  */
 public interface Restrict extends Operation {
-    Relation restrict(Relation relation, Set<AttributeValuePair> nameValues);
+    Relation restrict(Relation relation, List<AttributeValuePair> nameValues);
 
     // TODO (AN) Does this break symmetry and closure?
     // TODO (AN) Must be three specific attribute value pairs - where the attributes are Subject, Predicate and Object
     // or Blank Node, URI or Literal and the values either ANY_NODE or constants.
-    Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues);
+    Relation restrict(GraphRelation relation, List<AttributeValuePair> nameValues);
 }

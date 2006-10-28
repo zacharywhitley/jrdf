@@ -71,13 +71,16 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.type.NodeType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -130,13 +133,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     @Override
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
         SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
-        result = restrict.restrict(result, singleAvp);
-        // TODO (AN) Another hack - restrict should probably allow composite nodes like
-        // SubjectObjectNode.
-        if (allVariables != null) {
-            Set<Attribute> newAttribues = createNewAttributes(singleAvp);
-            result = project.include(result, newAttribues);
-        }
+        result = restrict.restrict(result, replaceAttributes(singleAvp));
     }
 
     @Override
@@ -169,8 +166,8 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = fullOuterJoin.join(lhs, rhs);
     }
 
-    @SuppressWarnings({ "unchecked" })
-    private <V extends ExpressionVisitor>Relation getExpression(Expression<V> expression) {
+    @SuppressWarnings({"unchecked"})
+    private <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, fullOuterJoin);
         queryEngine.setResult(result);
         queryEngine.setAllVariables(allVariables);
@@ -178,20 +175,31 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         return queryEngine.getResult();
     }
 
-    private Set<Attribute> createNewAttributes(SortedSet<AttributeValuePair> singleAvp) {
-        Set<Attribute> newAttribues = new HashSet<Attribute>();
+    private List<AttributeValuePair> replaceAttributes(SortedSet<AttributeValuePair> singleAvp) {
+        List<AttributeValuePair> newAvps = new ArrayList<AttributeValuePair>();
         for (AttributeValuePair avp : singleAvp) {
             Attribute existingAttribute = avp.getAttribute();
-            AttributeName existingAttributeName = existingAttribute.getAttributeName();
-            String existingLiteral = existingAttributeName.getLiteral();
-            NodeType newNodeType = allVariables.get(existingLiteral);
-            if (newNodeType == null) {
-                newNodeType = existingAttribute.getType();
+            Attribute newAttribute;
+            if (allVariables != null) {
+                newAttribute = createNewAttribute(existingAttribute);
+            } else {
+                newAttribute = existingAttribute;
             }
-            Attribute newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
-            newAttribues.add(newAttribute);
+
+            newAvps.add(new AttributeValuePairImpl(newAttribute, avp.getValue()));
         }
-        return newAttribues;
+        return newAvps;
     }
 
+    private Attribute createNewAttribute(Attribute existingAttribute) {
+        Attribute newAttribute;
+        AttributeName existingAttributeName = existingAttribute.getAttributeName();
+        String existingLiteral = existingAttributeName.getLiteral();
+        NodeType newNodeType = allVariables.get(existingLiteral);
+        if (newNodeType == null) {
+            newNodeType = existingAttribute.getType();
+        }
+        newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
+        return newAttribute;
+    }
 }
