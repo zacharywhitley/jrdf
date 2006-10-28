@@ -65,8 +65,8 @@ import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.operation.Restrict;
 
+import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * The relational operation that remove tuples that don't meet a specific criteria.
@@ -82,14 +82,14 @@ public class RestrictImpl implements Restrict {
     }
 
     // TODO (AN) Implement a table scan version when we can't get to a indexed/graph based relation.
-    public Relation restrict(Relation relation, Set<AttributeValuePair> nameValues) {
-        if (nameValues instanceof SortedSet && relation instanceof GraphRelation) {
-            return restrict((GraphRelation) relation, (SortedSet<AttributeValuePair>) nameValues);
+    public Relation restrict(Relation relation, List<AttributeValuePair> nameValues) {
+        if (relation instanceof GraphRelation) {
+            return restrict((GraphRelation) relation, nameValues);
         }
         throw new UnsupportedOperationException();
     }
 
-    public Relation restrict(GraphRelation relation, SortedSet<AttributeValuePair> nameValues) {
+    public Relation restrict(GraphRelation relation, List<AttributeValuePair> nameValues) {
         Set<Tuple> restrictedTuples = relation.getTuples(nameValues);
         return relationFactory.getRelation(restrictedTuples);
     }

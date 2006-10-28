@@ -62,6 +62,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 
+import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -75,9 +76,9 @@ public interface SortedAttributeValuePairHelper {
 
     SortedSet<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray);
 
-    Triple createTriple(SortedSet<AttributeValuePair> avp);
+    Triple createTriple(List<AttributeValuePair> avp);
 
     SortedSet<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes);
 
-    Attribute[] createAttributes(SortedSet<AttributeValuePair> nameValues);
+    Attribute[] createAttributes(List<AttributeValuePair> nameValues);
 }

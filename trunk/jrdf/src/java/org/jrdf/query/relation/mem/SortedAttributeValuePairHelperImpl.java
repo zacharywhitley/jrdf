@@ -70,7 +70,6 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -101,7 +100,7 @@ public class SortedAttributeValuePairHelperImpl implements SortedAttributeValueP
         return createAttributeValuePairs(attributes, triple);
     }
 
-    public Attribute[] createAttributes(SortedSet<AttributeValuePair> nameValues) {
+    public Attribute[] createAttributes(List<AttributeValuePair> nameValues) {
         List<Attribute> attributes = new ArrayList<Attribute>();
         for (AttributeValuePair avp : nameValues) {
             attributes.add(avp.getAttribute());
@@ -117,7 +116,7 @@ public class SortedAttributeValuePairHelperImpl implements SortedAttributeValueP
         return attributeValuePairs;
     }
 
-    public Triple createTriple(SortedSet<AttributeValuePair> avp) {
+    public Triple createTriple(List<AttributeValuePair> avp) {
         throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(avp);
         return getNodes(avp);
     }
@@ -143,13 +142,13 @@ public class SortedAttributeValuePairHelperImpl implements SortedAttributeValueP
         return attributes;
     }
 
-    private void throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(Set<AttributeValuePair> nameValues) {
+    private void throwIllegalArgumentExceptionIfNotThreeAttributeValuePairs(List<AttributeValuePair> nameValues) {
         if (nameValues.size() != TRIPLES) {
             throw new IllegalArgumentException("Can only get 3 tuples.");
         }
     }
 
-    private Triple getNodes(SortedSet<AttributeValuePair> nameValues) {
+    private Triple getNodes(List<AttributeValuePair> nameValues) {
         Iterator<AttributeValuePair> iterator = nameValues.iterator();
         SubjectNode subject = (SubjectNode) iterator.next().getValue();
         PredicateNode predicate = (PredicateNode) iterator.next().getValue();

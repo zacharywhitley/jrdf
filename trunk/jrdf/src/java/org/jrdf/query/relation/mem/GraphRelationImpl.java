@@ -76,6 +76,7 @@ import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -109,8 +110,14 @@ public final class GraphRelationImpl implements GraphRelation {
 
     public Set<Tuple> getTuples() {
         SortedSet<Attribute> heading = attributeFactory.createHeading();
-        Attribute[] attributes = heading.toArray(new Attribute[] {});
+        Attribute[] attributes = heading.toArray(new Attribute[]{});
         return getTuplesFromGraph(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, attributes);
+    }
+
+    public Set<Tuple> getTuples(List<AttributeValuePair> nameValues) {
+        Triple triple = avpHelper.createTriple(nameValues);
+        Attribute[] attributes = avpHelper.createAttributes(nameValues);
+        return getTuplesFromGraph(triple.getSubject(), triple.getPredicate(), triple.getObject(), attributes);
     }
 
     public SortedSet<Attribute> getSortedHeading() {
@@ -122,8 +129,7 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     public int hashCode() {
-        return graph.hashCode() ^ tupleComparator.hashCode() ^ tupleFactory.hashCode() ^ tupleFactory.hashCode() ^
-                attributeFactory.hashCode() ^ avpHelper.hashCode();
+        return graph.hashCode() ^ tupleComparator.hashCode() ^ attributeFactory.hashCode();
     }
 
     public boolean equals(Object obj) {
@@ -139,12 +145,6 @@ public final class GraphRelationImpl implements GraphRelation {
         return determineEqualityFromFields((GraphRelation) obj);
     }
 
-    public Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues) {
-        Triple triple = avpHelper.createTriple(nameValues);
-        Attribute[] attributes = avpHelper.createAttributes(nameValues);
-        return getTuplesFromGraph(triple.getSubject(), triple.getPredicate(), triple.getObject(), attributes);
-    }
-
     private Set<Tuple> getTuplesFromGraph(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
             Attribute[] attributes) {
         ClosableIterator<Triple> closableIterator = tryGetTriples(subjectNode, predicateNode, objectNode);
@@ -157,7 +157,7 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     private ClosableIterator<Triple> tryGetTriples(SubjectNode subjectNode, PredicateNode predicateNode,
-          ObjectNode objectNode) {
+            ObjectNode objectNode) {
         try {
             return graph.find(subjectNode, predicateNode, objectNode);
         } catch (GraphException e) {

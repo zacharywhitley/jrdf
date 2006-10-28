@@ -58,8 +58,8 @@
 
 package org.jrdf.query.relation;
 
+import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * A marker interface that indicates that the relation is of three columns - subject, predicate and object.
@@ -73,7 +73,8 @@ public interface GraphRelation extends Relation {
      * Returns the set of tuples based on the constraints given 3 attribute/value pairs.  Either of variable, type
      * and ANY_NODE or position name, type and node value.
      *
+     * @param nameValues an ordered list of 3 attribute value pairs in the subject, predicate and object position.
      * @return a set of tuples.
      */
-    Set<Tuple> getTuples(SortedSet<AttributeValuePair> nameValues);
+    Set<Tuple> getTuples(List<AttributeValuePair> nameValues);
 }
