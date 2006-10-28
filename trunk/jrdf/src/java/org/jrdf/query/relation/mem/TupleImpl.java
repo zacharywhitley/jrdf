@@ -75,7 +75,7 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Id$
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public final class TupleImpl implements Tuple {
     private Set<AttributeValuePair> attributeValues;
     private final AttributeValuePairComparator attributeValuePairComparator;
