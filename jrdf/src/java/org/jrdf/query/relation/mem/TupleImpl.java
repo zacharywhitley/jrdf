@@ -80,8 +80,7 @@ public final class TupleImpl implements Tuple {
     private Set<AttributeValuePair> attributeValues;
     private final AttributeValuePairComparator attributeValuePairComparator;
 
-    TupleImpl(Set<AttributeValuePair> attributeValues,
-            AttributeValuePairComparator attributeValuePairComparator) {
+    TupleImpl(Set<AttributeValuePair> attributeValues, AttributeValuePairComparator attributeValuePairComparator) {
         checkNotNull(attributeValues, attributeValuePairComparator);
         this.attributeValues = attributeValues;
         this.attributeValuePairComparator = attributeValuePairComparator;

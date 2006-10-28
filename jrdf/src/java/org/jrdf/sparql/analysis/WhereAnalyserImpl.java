@@ -83,7 +83,6 @@ import org.jrdf.sparql.parser.parser.ParserException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
 
 /**
  * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
@@ -131,7 +130,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     public void caseATriple(ATriple node) {
         try {
             node.apply(tripleBuilder);
-            SortedSet<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
+            List<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
             collector.addVariables(attributeValuePairs);
             expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
         } catch (ParserException e) {

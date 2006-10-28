@@ -58,12 +58,19 @@
 
 package org.jrdf.query.expression;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.mem.AttributeValuePairImpl;
+import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
-import java.util.SortedSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A expression expression comprising a single expression.
@@ -74,15 +81,26 @@ import java.util.SortedSet;
 public final class Constraint<V extends ExpressionVisitor> implements Expression<V>, Serializable {
     private static final long serialVersionUID = 4538228991602138679L;
     private static final int DUMMY_HASHCODE = 47;
-    private SortedSet<AttributeValuePair> avp;
+    private List<AttributeValuePair> singleAvp;
 
-    public Constraint(SortedSet<AttributeValuePair> avp) {
-        checkNotNull(avp);
-        this.avp = avp;
+    public Constraint(List<AttributeValuePair> singleAvp) {
+        checkNotNull(singleAvp);
+        this.singleAvp = singleAvp;
     }
 
-    public SortedSet<AttributeValuePair> getAvp() {
-        return avp;
+    public List<AttributeValuePair> getAvp(Map<String, NodeType> allVariables) {
+        List<AttributeValuePair> newAvps = new ArrayList<AttributeValuePair>();
+        for (AttributeValuePair avp : singleAvp) {
+            Attribute existingAttribute = avp.getAttribute();
+            Attribute newAttribute;
+            if (allVariables != null) {
+                newAttribute = createNewAttribute(existingAttribute, allVariables);
+            } else {
+                newAttribute = existingAttribute;
+            }
+            newAvps.add(new AttributeValuePairImpl(newAttribute, avp.getValue()));
+        }
+        return newAvps;
     }
 
     public void accept(V v) {
@@ -111,10 +129,22 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
      * Delegates to <code>getAvp().toString()</code>.
      */
     public String toString() {
-        return avp.toString();
+        return singleAvp.toString();
     }
 
     private boolean determineEqualityFromFields(Constraint o1, Constraint o2) {
-        return o1.getAvp().equals(o2.getAvp());
+        return o1.singleAvp.equals(o2.singleAvp);
+    }
+
+    private Attribute createNewAttribute(Attribute existingAttribute, Map<String, NodeType> allVariables) {
+        Attribute newAttribute;
+        AttributeName existingAttributeName = existingAttribute.getAttributeName();
+        String existingLiteral = existingAttributeName.getLiteral();
+        NodeType newNodeType = allVariables.get(existingLiteral);
+        if (newNodeType == null) {
+            newNodeType = existingAttribute.getType();
+        }
+        newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
+        return newAttribute;
     }
 }

@@ -58,6 +58,7 @@
 
 package org.jrdf.query.relation;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -69,4 +70,6 @@ import java.util.Set;
  */
 public interface TupleFactory {
     Tuple getTuple(Set<AttributeValuePair> avp);
+
+    Tuple getTuple(List<AttributeValuePair> avp);
 }

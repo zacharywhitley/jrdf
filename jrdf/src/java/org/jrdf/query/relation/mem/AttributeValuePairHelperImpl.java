@@ -65,13 +65,11 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.mem.TripleImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.query.relation.AttributeValuePairComparator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Allows the creation of sroted AttributeValuePairs.
@@ -79,23 +77,20 @@ import java.util.TreeSet;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class SortedAttributeValuePairHelperImpl implements SortedAttributeValuePairHelper {
+public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
     private final SortedAttributeFactory sortedAttributeFactory;
-    private final AttributeValuePairComparator avpComparator;
     private static final int TRIPLES = 3;
 
-    public SortedAttributeValuePairHelperImpl(SortedAttributeFactory sortedAttributeFactory,
-            AttributeValuePairComparator avpComparator) {
+    public AttributeValuePairHelperImpl(SortedAttributeFactory sortedAttributeFactory) {
         this.sortedAttributeFactory = sortedAttributeFactory;
-        this.avpComparator = avpComparator;
     }
 
-    public SortedSet<AttributeValuePair> createAvp(Triple triple) {
+    public List<AttributeValuePair> createAvp(Triple triple) {
         Attribute[] attributes = getAttributes();
         return createAttributeValuePairs(attributes, triple);
     }
 
-    public SortedSet<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes) {
+    public List<AttributeValuePair> createAvp(Triple triple, Attribute[] attributes) {
         // TODO (AN) Check that there are only 3 attributes.
         return createAttributeValuePairs(attributes, triple);
     }
@@ -108,8 +103,8 @@ public class SortedAttributeValuePairHelperImpl implements SortedAttributeValueP
         return attributes.toArray(new Attribute[]{});
     }
 
-    public SortedSet<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray) {
-        TreeSet<AttributeValuePair> attributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
+    public List<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray) {
+        List<AttributeValuePair> attributeValuePairs = new ArrayList<AttributeValuePair>();
         for (AttributeValuePair attributeValuePair : attributeValuePairsArray) {
             attributeValuePairs.add(attributeValuePair);
         }
@@ -121,11 +116,11 @@ public class SortedAttributeValuePairHelperImpl implements SortedAttributeValueP
         return getNodes(avp);
     }
 
-    private TreeSet<AttributeValuePair> createAttributeValuePairs(Attribute[] attributes, Triple triple) {
+    private List<AttributeValuePair> createAttributeValuePairs(Attribute[] attributes, Triple triple) {
         AttributeValuePair subjectAv = new AttributeValuePairImpl(attributes[0], triple.getSubject());
         AttributeValuePair predicateAv = new AttributeValuePairImpl(attributes[1], triple.getPredicate());
         AttributeValuePair objectAv = new AttributeValuePairImpl(attributes[2], triple.getObject());
-        TreeSet<AttributeValuePair> attributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
+        List<AttributeValuePair> attributeValuePairs = new ArrayList<AttributeValuePair>();
         attributeValuePairs.add(subjectAv);
         attributeValuePairs.add(predicateAv);
         attributeValuePairs.add(objectAv);

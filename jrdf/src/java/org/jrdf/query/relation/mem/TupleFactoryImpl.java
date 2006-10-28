@@ -64,7 +64,9 @@ import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Creates purely in memory implementations of tuples.
@@ -82,5 +84,11 @@ public final class TupleFactoryImpl implements TupleFactory {
 
     public Tuple getTuple(Set<AttributeValuePair> avp) {
         return new TupleImpl(avp, attributeValuePairComparator);
+    }
+
+    public Tuple getTuple(List<AttributeValuePair> avp) {
+        TreeSet<AttributeValuePair> valuePairs = new TreeSet<AttributeValuePair>(attributeValuePairComparator);
+        valuePairs.addAll(avp);
+        return new TupleImpl(valuePairs, attributeValuePairComparator);
     }
 }

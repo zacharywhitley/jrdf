@@ -62,10 +62,10 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.Graph;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
+import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.sparql.builder.LiteralTripleSpec;
-import org.jrdf.sparql.builder.VariableTripleSpec;
 import org.jrdf.sparql.builder.TripleSpec;
+import org.jrdf.sparql.builder.VariableTripleSpec;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 
@@ -86,7 +86,7 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
             new LiteralTripleSpec(URI_BOOK_1, URI_DC_TITLE, LITERAL_BOOK_TITLE);
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
-    private static final SortedAttributeValuePairHelper AVP_HELPER = FACTORY.getNewSortedAttributeValuePairHelper();
+    private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
 
     public void testMe() {}
 

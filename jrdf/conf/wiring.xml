@@ -116,7 +116,7 @@
             <ref bean="graphRelationFactory"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="sortedAttributeValuePairHelper"/>
+            <ref bean="attributeValuePairHelper"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="sortedAttributeFactory"/>
@@ -153,12 +153,9 @@
         </constructor-arg>
     </bean>
 
-    <bean id="sortedAttributeValuePairHelper" class="org.jrdf.query.relation.mem.SortedAttributeValuePairHelperImpl">
+    <bean id="attributeValuePairHelper" class="org.jrdf.query.relation.mem.AttributeValuePairHelperImpl">
         <constructor-arg>
             <ref bean="sortedAttributeFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="avpComparator"/>
         </constructor-arg>
     </bean>
 
@@ -167,7 +164,7 @@
             <ref bean="sortedAttributeFactory"/>
         </constructor-arg>
         <constructor-arg>
-            <ref bean="sortedAttributeValuePairHelper"/>
+            <ref bean="attributeValuePairHelper"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="tupleComparator"/>

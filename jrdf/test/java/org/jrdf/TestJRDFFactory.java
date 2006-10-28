@@ -59,7 +59,6 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -67,8 +66,8 @@ import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
+import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
@@ -77,6 +76,7 @@ import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.analysis.VariableCollector;
+import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.ParserFactory;
 import org.jrdf.sparql.parser.SparqlParser;
@@ -159,8 +159,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (TripleBuilder) FACTORY.getContext().getBean("tripleBuilder");
     }
 
-    public SortedAttributeValuePairHelper getNewSortedAttributeValuePairHelper() {
-        return (SortedAttributeValuePairHelper) FACTORY.getContext().getBean("sortedAttributeValuePairHelper");
+    public AttributeValuePairHelper getNewAttributeValuePairHelper() {
+        return (AttributeValuePairHelper) FACTORY.getContext().getBean("attributeValuePairHelper");
     }
 
     public TypeComparator getNewTypeComparator() {

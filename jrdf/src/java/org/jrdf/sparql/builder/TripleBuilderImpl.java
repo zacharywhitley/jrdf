@@ -65,8 +65,8 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Node;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
@@ -79,7 +79,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 public final class TripleBuilderImpl extends DepthFirstAdapter implements TripleBuilder {
     // FIXME TJA: Test drive out code to do with graphs, creating triples & resources, etc. into a utility.
@@ -88,14 +87,14 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
     private static final NodeType PREDICATE_NODE_TYPE = new PredicateNodeType();
     private static final NodeType OBJECT_NODE_TYPE = new ObjectNodeType();
     private static final NodeType[] TYPES = {SUBJECT_NODE_TYPE, PREDICATE_NODE_TYPE, OBJECT_NODE_TYPE};
-    private final SortedAttributeValuePairHelper avpHelper;
+    private final AttributeValuePairHelper avpHelper;
     private final Graph graph;
     private final SortedAttributeFactory sortedAttributeFactory;
-    private SortedSet<AttributeValuePair> avp;
+    private List<AttributeValuePair> avp;
     private Map<String, String> prefixMap = new HashMap<String, String>();
     private ParserException exception;
 
-    public TripleBuilderImpl(Graph graph, SortedAttributeValuePairHelper avpHelper,
+    public TripleBuilderImpl(Graph graph, AttributeValuePairHelper avpHelper,
             SortedAttributeFactory sortedAttributeFactory) {
         this.avpHelper = avpHelper;
         this.graph = graph;
@@ -107,7 +106,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
      *
      * @return The local version of the given <var>tripleNode</var>
      */
-    public SortedSet<AttributeValuePair> getTriples() throws ParserException {
+    public List<AttributeValuePair> getTriples() throws ParserException {
         if (exception != null) {
             throw exception;
         } else {

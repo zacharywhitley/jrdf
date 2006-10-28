@@ -126,7 +126,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), FACTORY.getNewGraphRelationFactory(),
-                FACTORY.getNewSortedAttributeValuePairHelper(), newSortedAttributeFactory);
+                FACTORY.getNewAttributeValuePairHelper(), newSortedAttributeFactory);
     }
 
     public void testSingleConstraint() {

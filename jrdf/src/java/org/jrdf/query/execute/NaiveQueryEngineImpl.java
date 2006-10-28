@@ -69,21 +69,16 @@ import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.type.NodeType;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * An implementation of a Query Engine that does not try to optimize or transform the query.  Simply evaluates the
@@ -132,8 +127,8 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
 
     @Override
     public <V extends ExpressionVisitor> void visitConstraint(Constraint<V> constraint) {
-        SortedSet<AttributeValuePair> singleAvp = constraint.getAvp();
-        result = restrict.restrict(result, replaceAttributes(singleAvp));
+        List<AttributeValuePair> singleAvp = constraint.getAvp(allVariables);
+        result = restrict.restrict(result, singleAvp);
     }
 
     @Override
@@ -173,33 +168,5 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         queryEngine.setAllVariables(allVariables);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();
-    }
-
-    private List<AttributeValuePair> replaceAttributes(SortedSet<AttributeValuePair> singleAvp) {
-        List<AttributeValuePair> newAvps = new ArrayList<AttributeValuePair>();
-        for (AttributeValuePair avp : singleAvp) {
-            Attribute existingAttribute = avp.getAttribute();
-            Attribute newAttribute;
-            if (allVariables != null) {
-                newAttribute = createNewAttribute(existingAttribute);
-            } else {
-                newAttribute = existingAttribute;
-            }
-
-            newAvps.add(new AttributeValuePairImpl(newAttribute, avp.getValue()));
-        }
-        return newAvps;
-    }
-
-    private Attribute createNewAttribute(Attribute existingAttribute) {
-        Attribute newAttribute;
-        AttributeName existingAttributeName = existingAttribute.getAttributeName();
-        String existingLiteral = existingAttributeName.getLiteral();
-        NodeType newNodeType = allVariables.get(existingLiteral);
-        if (newNodeType == null) {
-            newNodeType = existingAttribute.getType();
-        }
-        newAttribute = new AttributeImpl(existingAttributeName, newNodeType);
-        return newAttribute;
     }
 }

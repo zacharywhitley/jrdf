@@ -93,10 +93,10 @@ public final class GraphRelationImpl implements GraphRelation {
     private final TupleComparator tupleComparator;
     private final TupleFactory tupleFactory;
     private final SortedAttributeFactory attributeFactory;
-    private final SortedAttributeValuePairHelper avpHelper;
+    private final AttributeValuePairHelper avpHelper;
 
     public GraphRelationImpl(Graph graph, SortedAttributeFactory attributeFactory,
-            SortedAttributeValuePairHelper avpHelper, TupleComparator tupleComparator, TupleFactory tupleFactory) {
+            AttributeValuePairHelper avpHelper, TupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.graph = graph;
         this.attributeFactory = attributeFactory;
         this.avpHelper = avpHelper;
@@ -166,7 +166,7 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     private void addTripleToTuples(Set<Tuple> tuples, Triple triple, Attribute[] attributes) {
-        Set<AttributeValuePair> avp = avpHelper.createAvp(triple, attributes);
+        List<AttributeValuePair> avp = avpHelper.createAvp(triple, attributes);
         Tuple tuple = tupleFactory.getTuple(avp);
         tuples.add(tuple);
     }

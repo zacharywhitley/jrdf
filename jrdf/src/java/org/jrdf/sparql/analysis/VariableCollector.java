@@ -61,14 +61,14 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.type.NodeType;
 
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 /**
  * Class description goes here.
  */
 public interface VariableCollector {
-    void addVariables(SortedSet<AttributeValuePair> avps);
+    void addVariables(List<AttributeValuePair> avps);
 
     Map<String, NodeType> getVariables();
 }

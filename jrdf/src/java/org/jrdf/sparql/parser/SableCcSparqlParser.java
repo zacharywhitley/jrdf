@@ -61,9 +61,9 @@ package org.jrdf.sparql.parser;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
-import org.jrdf.query.relation.mem.SortedAttributeValuePairHelper;
 import org.jrdf.sparql.analysis.SparqlAnalyser;
 import org.jrdf.sparql.analysis.SparqlAnalyserImpl;
 import org.jrdf.sparql.builder.TripleBuilder;
@@ -85,11 +85,11 @@ public final class SableCcSparqlParser implements SparqlParser {
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
     private ParserFactory parserFactory;
     private GraphRelationFactory graphRelationFactory;
-    private final SortedAttributeValuePairHelper avpHelper;
+    private final AttributeValuePairHelper avpHelper;
     private final SortedAttributeFactory sortedAttributeFactory;
 
     public SableCcSparqlParser(ParserFactory parserFactory, GraphRelationFactory graphRelationFactory,
-            SortedAttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
+            AttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
         this.parserFactory = parserFactory;
         this.graphRelationFactory = graphRelationFactory;
         this.avpHelper = avpHelper;
