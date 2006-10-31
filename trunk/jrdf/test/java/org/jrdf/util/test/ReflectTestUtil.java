@@ -62,8 +62,8 @@ import junit.framework.Assert;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Test utilities that use relection.
@@ -79,15 +79,19 @@ public final class ReflectTestUtil {
     private ReflectTestUtil() {
     }
 
-    public static void checkFieldValue(Object ref, String fieldName, Object expectedValue) {
+    public static Object getFieldValue(Object ref, String fieldName) {
         Field field = getField(ref.getClass(), fieldName);
         field.setAccessible(true);
         try {
-            Object actual = field.get(ref);
-            Assert.assertEquals("Field value in field: " + fieldName, expectedValue, actual);
+            return field.get(ref);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void checkFieldValue(Object ref, String fieldName, Object expectedValue) {
+        Object actual = getFieldValue(ref, fieldName);
+        Assert.assertEquals("Field value in field: " + fieldName, expectedValue, actual);
     }
 
     public static void insertFieldValue(Object ref, String fieldName, Object fieldValue) {
@@ -100,7 +104,7 @@ public final class ReflectTestUtil {
     }
 
     public static Field getField(Class<?> cls, String fieldName) {
-        try {            
+        try {
             return cls.getDeclaredField(fieldName);
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);

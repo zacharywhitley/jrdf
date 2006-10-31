@@ -59,7 +59,6 @@
 package org.jrdf.query;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
@@ -70,8 +69,7 @@ import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 
 /**
  * Unit test for {@link AnswerImpl}.
@@ -86,8 +84,8 @@ public final class AnswerImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
         checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
-        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, Query.class, Relation.class, Long.TYPE);
-        checkConstructNullAssertion(AnswerImpl.class, new Class[]{Query.class, Relation.class, Long.TYPE});
+        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, LinkedHashSet.class, Relation.class, Long.TYPE);
+        checkConstructNullAssertion(AnswerImpl.class, new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE});
     }
 
     public void testSerialVersionUid() {
@@ -95,14 +93,10 @@ public final class AnswerImplUnitTest extends TestCase {
     }
 
     public void testNullArgument() {
-        Query query = factory.createMock(Query.class);
         Relation relation = factory.createMock(Relation.class);
-        List<Attribute> variables = new ArrayList<Attribute>();
-        Attribute attribute = factory.createMock(Attribute.class);
-        variables.add(attribute);
-        EasyMock.expect(query.getVariables()).andReturn(variables);
+        LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
         factory.replay();
-        new AnswerImpl(query, relation, 100);
+        new AnswerImpl(heading, relation, 100);
         factory.verify();
     }
 }

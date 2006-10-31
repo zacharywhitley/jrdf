@@ -60,9 +60,6 @@ package org.jrdf.query;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.query.relation.Attribute;
-
-import java.util.List;
 
 /**
  * A query to a graph.
@@ -71,8 +68,5 @@ import java.util.List;
  * @version $Id$
  */
 public interface Query {
-
-    List<Attribute> getVariables();
-
     Answer executeQuery(Graph graph, QueryEngine queryEngine);
 }

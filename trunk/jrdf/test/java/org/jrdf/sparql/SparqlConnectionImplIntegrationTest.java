@@ -60,7 +60,6 @@ package org.jrdf.sparql;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -74,6 +73,8 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.sparql.builder.QueryBuilder;
+import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
@@ -136,7 +137,7 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
     private Relation executeQuery(SparqlConnection connection, String query) {
         try {
             Answer answer = connection.executeQuery(GRAPH, query);
-            return answer.getResults();
+            return (Relation) ReflectTestUtil.getFieldValue(answer, "results");
         } catch (InvalidQuerySyntaxException e) {
             throw new RuntimeException(e);
         } catch (GraphException e) {

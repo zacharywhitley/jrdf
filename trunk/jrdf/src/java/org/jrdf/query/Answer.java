@@ -58,8 +58,6 @@
 
 package org.jrdf.query;
 
-import org.jrdf.query.relation.Relation;
-
 /**
  * An answer to a query.
  *
@@ -71,8 +69,6 @@ public interface Answer {
     String[][] getColumnValues();
 
     long numberOfTuples();
-
-    Relation getResults();
 
     long getTimeTaken();
 }
