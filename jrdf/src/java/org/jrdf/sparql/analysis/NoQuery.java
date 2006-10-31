@@ -58,16 +58,16 @@
 
 package org.jrdf.sparql.analysis;
 
-import org.jrdf.query.Query;
+import org.jrdf.graph.Graph;
 import org.jrdf.query.Answer;
 import org.jrdf.query.AnswerImpl;
+import org.jrdf.query.Query;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
-import org.jrdf.graph.Graph;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -88,6 +88,6 @@ public class NoQuery implements Query, Serializable {
     }
 
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
-        return new AnswerImpl(NO_QUERY, RELATION_DUM, 0);
+        return new AnswerImpl(NO_HEADER, RELATION_DUM, 0);
     }
 }

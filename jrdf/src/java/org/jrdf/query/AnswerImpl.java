@@ -67,7 +67,6 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.SortedSet;
 
 /**
@@ -77,37 +76,21 @@ import java.util.SortedSet;
  */
 public final class AnswerImpl implements Answer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
-    private final LinkedHashSet<Attribute> headings;
+    private final LinkedHashSet<Attribute> heading;
     private final Relation results;
     private final long timeTaken;
 
-    public AnswerImpl(Query query, Relation results, long timeTaken) {
-        checkNotNull(query, results);
-        this.timeTaken = timeTaken;
+    public AnswerImpl(LinkedHashSet<Attribute> heading, Relation results, long timeTaken) {
+        checkNotNull(heading, results);
+        this.heading = heading;
         this.results = results;
-        this.headings = getHeading(query);
-    }
-
-    private LinkedHashSet<Attribute> getHeading(Query query) {
-        LinkedHashSet<Attribute> heading;
-        List<Attribute> variables = query.getVariables();
-        if (variables.size() == 0) {
-            SortedSet<Attribute> sortedHeading = results.getSortedHeading();
-            heading = new LinkedHashSet<Attribute>(sortedHeading);
-        } else {
-            heading = new LinkedHashSet<Attribute>(variables);
-        }
-        return heading;
-    }
-
-    public Relation getResults() {
-        return results;
+        this.timeTaken = timeTaken;
     }
 
     public String[] getColumnNames() {
-        String[] resultColumnNames = new String[headings.size()];
+        String[] resultColumnNames = new String[heading.size()];
         int index = 0;
-        for (Attribute attribute : headings) {
+        for (Attribute attribute : heading) {
             resultColumnNames[index] = attribute.getAttributeName().getLiteral() + " | " +
                     attribute.getType().getName();
             index++;
@@ -117,7 +100,7 @@ public final class AnswerImpl implements Answer, Serializable {
 
     public String[][] getColumnValues() {
         SortedSet<Tuple> sortedTuples = results.getSortedTuples();
-        String table[][] = new String[sortedTuples.size()][headings.size()];
+        String table[][] = new String[sortedTuples.size()][heading.size()];
         int index = 0;
         for (Tuple sortedTuple : sortedTuples) {
             SortedSet<AttributeValuePair> avps = sortedTuple.getSortedAttributeValues();
@@ -146,16 +129,16 @@ public final class AnswerImpl implements Answer, Serializable {
         if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(Answer.class, obj)) {
+        if (EqualsUtil.differentClasses(AnswerImpl.class, obj.getClass())) {
             return false;
         }
-        return determineEqualityFromFields((Answer) obj);
+        return determineEqualityFromFields((AnswerImpl) obj);
     }
 
     private String[] getDataWithValues(SortedSet<AttributeValuePair> avps) {
-        String[] results = new String[headings.size()];
+        String[] results = new String[heading.size()];
         int index = 0;
-        for (Attribute headingAttribute : headings) {
+        for (Attribute headingAttribute : heading) {
             boolean foundValue = false;
             for (AttributeValuePair avp : avps) {
                 if (avp.getAttribute().equals(headingAttribute)) {
@@ -171,9 +154,9 @@ public final class AnswerImpl implements Answer, Serializable {
         return results;
     }
 
-    private boolean determineEqualityFromFields(Answer answer) {
+    private boolean determineEqualityFromFields(AnswerImpl answer) {
         if (answer.getTimeTaken() == getTimeTaken()) {
-            if (answer.getResults().equals(getResults())) {
+            if (answer.results.equals(results)) {
                 return true;
             }
         }

@@ -70,8 +70,10 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
 import static java.util.Collections.emptyList;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
 
 /**
  * Default implementation of a {@link Query}.
@@ -93,21 +95,33 @@ public final class QueryImpl implements Query, Serializable {
         this.graphRelationFactory = graphRelationFactory;
     }
 
-    public List<Attribute> getVariables() {
-        if (expression instanceof Projection) {
-            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
-            return new LinkedList<Attribute>(projection.getAttributes());
-        } else {
-            return emptyList();
-        }
-    }
-
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
         queryEngine.setResult(graphRelationFactory.createRelation(graph));
         expression.accept(queryEngine);
         Relation results = queryEngine.getResult();
-        return new AnswerImpl(this, results, System.currentTimeMillis() - timeStarted);
+        return new AnswerImpl(getHeading(results), results, System.currentTimeMillis() - timeStarted);
+    }
+
+    private LinkedHashSet<Attribute> getHeading(Relation results) {
+        LinkedHashSet<Attribute> heading;
+        List<Attribute> variables = getVariables();
+        if (variables.size() == 0) {
+            SortedSet<Attribute> sortedHeading = results.getSortedHeading();
+            heading = new LinkedHashSet<Attribute>(sortedHeading);
+        } else {
+            heading = new LinkedHashSet<Attribute>(variables);
+        }
+        return heading;
+    }
+
+    private List<Attribute> getVariables() {
+        if (expression instanceof Projection) {
+            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
+            return new LinkedList<Attribute>(projection.getAttributes());
+        } else {
+            return emptyList();
+        }
     }
 }

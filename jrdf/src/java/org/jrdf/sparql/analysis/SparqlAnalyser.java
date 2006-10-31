@@ -59,8 +59,11 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.Query;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.sparql.parser.analysis.Analysis;
 import org.jrdf.sparql.parser.parser.ParserException;
+
+import java.util.LinkedHashSet;
 
 /**
  * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
@@ -74,6 +77,11 @@ public interface SparqlAnalyser extends Analysis {
      * Indicates that this analyser has not processed a query yet.
      */
     Query NO_QUERY = new NoQuery();
+
+    /**
+     * An empty header
+     */
+    LinkedHashSet NO_HEADER = new LinkedHashSet<Attribute>();
 
     /**
      * Returns the query processed by this analyser.

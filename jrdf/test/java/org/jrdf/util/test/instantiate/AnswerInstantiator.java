@@ -59,12 +59,13 @@
 package org.jrdf.util.test.instantiate;
 
 import org.jrdf.query.AnswerImpl;
-import org.jrdf.query.Query;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
-import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
+
+import java.util.LinkedHashSet;
 
 /**
  * {@link Instantiator} for {@link org.jrdf.query.AnswerImpl}.
@@ -80,7 +81,7 @@ final class AnswerInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        return new ParamSpec(new Class[]{Query.class, Relation.class, Long.TYPE},
-                new Object[]{NO_QUERY, RELATION_DUM, 0L});
+        return new ParamSpec(new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE},
+                new Object[]{NO_HEADER, RELATION_DUM, 0L});
     }
 }
