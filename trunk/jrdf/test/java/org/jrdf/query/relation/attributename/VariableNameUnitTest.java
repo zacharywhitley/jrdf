@@ -57,6 +57,7 @@
  */
 package org.jrdf.query.relation.attributename;
 
+import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
@@ -86,6 +87,13 @@ public class VariableNameUnitTest extends TestCase {
     public void testConstructor() {
         checkStandardConstructor(VARIABLE_NAME_1);
         checkStandardConstructor(VARIABLE_NAME_2);
+    }
+
+    public void testEquals() {
+        VariableName original = new VariableName(VARIABLE_NAME_1);
+        VariableName equal = new VariableName(VARIABLE_NAME_1);
+        VariableName notEqual = new VariableName(VARIABLE_NAME_2);
+        new EqualsTester(original, equal, notEqual, null);
     }
 
     private void checkStandardConstructor(String variableName) {

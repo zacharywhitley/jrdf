@@ -57,6 +57,7 @@
  */
 package org.jrdf.query.relation.mem;
 
+import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
 import static org.jrdf.graph.AnyNode.ANY_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -101,6 +102,13 @@ public class AttributeValuePairImplUnitTest extends TestCase {
         checkStandardConstructor(TEST_ATTRIBUTE_BAR_VAR, ANY_SUBJECT_NODE);
     }
 
+    public void testEquals() {
+        AttributeValuePair original = TEST_ATTRIBUTE_VALUE_1;
+        AttributeValuePair equal = TEST_ATTRIBUTE_VALUE_1;
+        AttributeValuePair notEqual = TEST_ATTRIBUTE_VALUE_2;
+        new EqualsTester(original, equal, notEqual, null);
+    }
+    
     private void checkStandardConstructor(Attribute attributeName, Node node) {
         AttributeValuePair attributeValuePair = new AttributeValuePairImpl(attributeName, node);
         checkFieldValue(attributeValuePair, ATTRIBUTE_NAME, attributeName);
