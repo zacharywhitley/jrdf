@@ -31,7 +31,9 @@
         <!-- Create emma instrumented classes if turned on -->
         <emma enabled="${emma.enabled}">
             <instr instrpath="${prod.classes.dir}" destdir="${out.instr.dir}/classes"
-                   metadatafile="${coverage.dir}/metadata.emma" merge="true"/>
+                   metadatafile="${coverage.dir}/metadata.emma" merge="true">
+                <filter value="${emma.filter}" />
+            </instr>    
         </emma>
 
         <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
