@@ -59,23 +59,23 @@
 package org.jrdf.sparql;
 
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.expect;
 import org.easymock.IMocksControl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
+import org.jrdf.query.AnswerImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.query.AnswerImpl;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import org.jrdf.sparql.builder.QueryBuilder;
-import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
 import org.jrdf.query.execute.QueryEngine;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_QUERY;
+import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.ParameterDefinition;
 import org.jrdf.util.test.ReflectTestUtil;
 
@@ -90,16 +90,17 @@ import java.net.URL;
  */
 @SuppressWarnings({"unchecked"})
 public class SparqlConnectionImplUnitTest extends TestCase {
+    private static final MockFactory factory = new MockFactory();
     private static final URL NO_SECURITY_DOMAIN = SparqlConnectionUrl.NO_SECURITY_DOMAIN_URL;
     private static final String NULL = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
     private static final String QUERY_ITQL = "select $s $p $o from <rmi://localhost/server1#> where $s $p $o ;";
     private static final String FIELD_BUILDER = "builder";
-    private static final QueryBuilder BUILDER = MockTestUtil.createMock(QueryBuilder.class);
-    private static final Answer ANSWER = MockTestUtil.createMock(Answer.class);
-    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
-    private static final QueryEngine QUERY_ENGINE = MockTestUtil.createMock(QueryEngine.class);
+    private static final QueryBuilder BUILDER = factory.createMock(QueryBuilder.class);
+    private static final Answer ANSWER = factory.createMock(Answer.class);
+    private static final Graph GRAPH = factory.createMock(Graph.class);
+    private static final QueryEngine QUERY_ENGINE = factory.createMock(QueryEngine.class);
     private static final String METHOD_NAME = "executeQuery";
     private static final Class[] PARAM_TYPES = { URL.class, QueryBuilder.class, QueryEngine.class};
     private static final String[] METHOD_PARAM_NAMES = {"graph", "queryText"};
@@ -107,11 +108,10 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(METHOD_PARAM_NAMES,
             METHOD_PARAM_TYPES);
     private static final InvalidQuerySyntaxException INVALID_QUERY_EXCEPTION = new InvalidQuerySyntaxException("");
-    private MockFactory factory;
     private static final AnswerImpl NO_ANSWER = new AnswerImpl(NO_QUERY, RELATION_DUM, 0);
 
     public void setUp() {
-        factory = new MockFactory();
+        factory.reset();
     }
 
     public void testClassProperties() {
@@ -138,6 +138,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
 
     public void testExecuteQuery() throws Exception {
         QueryEngine queryEngine = createQueryEngine();
+        expect(GRAPH.isEmpty()).andReturn(false);
         Query query = createQuery(GRAPH, queryEngine);
         QueryBuilder builder = createBuilder(GRAPH, QUERY_ITQL, query);
         SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, queryEngine);
@@ -150,7 +151,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     public void testEmptyGraph() throws Exception {
         QueryEngine queryEngine = createQueryEngine();
         Graph graph = createEmptyGraph();
-        Query query = MockTestUtil.createMock(Query.class);
+        Query query = factory.createMock(Query.class);
         QueryBuilder builder = createBuilder(graph, QUERY_ITQL, query);
         SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, queryEngine);
         factory.replay();

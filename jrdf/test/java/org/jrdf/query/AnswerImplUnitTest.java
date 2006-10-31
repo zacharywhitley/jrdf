@@ -59,12 +59,19 @@
 package org.jrdf.query;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.SerializationTestUtil;
+import org.easymock.EasyMock;
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.util.test.ArgumentTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.MockFactory;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Unit test for {@link AnswerImpl}.
@@ -74,14 +81,28 @@ import java.lang.reflect.Modifier;
  */
 public final class AnswerImplUnitTest extends TestCase {
 
+    private MockFactory factory = new MockFactory();
+
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(AnswerImpl.class, Modifier.PUBLIC, Query.class, Relation.class,
-                Long.TYPE);
+        checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
+        checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
+        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, Query.class, Relation.class, Long.TYPE);
+        ArgumentTestUtil.checkConstructNullAssertion(AnswerImpl.class, new Class[]{Query.class, Relation.class, Long.TYPE});
     }
 
     public void testSerialVersionUid() {
-        SerializationTestUtil.checkSerialialVersionUid(AnswerImpl.class, 3778815984074679718L);
+        checkSerialialVersionUid(AnswerImpl.class, 3778815984074679718L);
+    }
+
+    public void testNullArgument() {
+        Query query = factory.createMock(Query.class);
+        Relation relation = factory.createMock(Relation.class);
+        List<Attribute> variables = new ArrayList<Attribute>();
+        Attribute attribute = factory.createMock(Attribute.class);
+        variables.add(attribute);
+        EasyMock.expect(query.getVariables()).andReturn(variables);
+        factory.replay();
+        new AnswerImpl(query, relation, 100);
+        factory.verify();
     }
 }

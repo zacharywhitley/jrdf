@@ -72,7 +72,6 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
-import static org.jrdf.util.test.MockTestUtil.createMock;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -82,9 +81,10 @@ import java.util.Set;
 import java.util.SortedSet;
 
 public class RelationHelperImplUnitTest extends TestCase {
+    private static final MockFactory factory = new MockFactory();
     private static final Class[] PARAMETERS = { AttributeComparator.class };
     private static final String[] PARAMETER_NAMES = { "attributeComparator" };
-    private static final AttributeComparator MOCK_ATTRIBUTE_COMPARATOR = createMock(AttributeComparator.class);
+    private static final AttributeComparator MOCK_ATTRIBUTE_COMPARATOR = factory.createMock(AttributeComparator.class);
     private static final AttributeComparator REAL_ATTRIBUTE_COMPARATOR = getFactory().getNewAttributeComparator();
     private MockFactory mockFactory;
 

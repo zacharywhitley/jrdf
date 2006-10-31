@@ -81,18 +81,17 @@ import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 
 public final class SableCcSparqlParserUnitTest extends TestCase {
-
+    private static final MockFactory factory = new MockFactory();
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
-    private static final ParserFactory PARSER_FACTORY = MockTestUtil.createMock(ParserFactory.class);
-    private static final GraphRelationFactory GRAPH_RELATION_FACTORY = MockTestUtil.createMock(GraphRelationFactory.class);
+    private static final Graph GRAPH = factory.createMock(Graph.class);
+    private static final ParserFactory PARSER_FACTORY = factory.createMock(ParserFactory.class);
+    private static final GraphRelationFactory GRAPH_RELATION_FACTORY = factory.createMock(GraphRelationFactory.class);
     private static final String QUERY_TEXT_MESSAGE = "queryText cannot be null";
     private static final String QUERY_TEXT_EMPTY = "queryText cannot be the empty string";
     private static final String GRAPH_MESSAGE = "Parameter 1 cannot be null";
@@ -100,8 +99,8 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1,1), "bar");
     private static final LexerException LEXER_EXECPTION = new LexerException("foo");
     private static final Exception IO_EXCEPTION = new IOException();
-    private static final AttributeValuePairHelper AVP_HELPER = MockTestUtil.createMock(AttributeValuePairHelper.class);
-    private static final SortedAttributeFactory ATTRIBUTE_FACTORY = MockTestUtil.createMock(SortedAttributeFactory.class);
+    private static final AttributeValuePairHelper AVP_HELPER = factory.createMock(AttributeValuePairHelper.class);
+    private static final SortedAttributeFactory ATTRIBUTE_FACTORY = factory.createMock(SortedAttributeFactory.class);
     private MockFactory mockFactory;
 
     public void setUp() {

@@ -58,8 +58,9 @@
 
 package org.jrdf.util.test;
 
-import static org.jrdf.util.test.MockTestUtil.*;
-import static org.jrdf.util.test.ReflectTestUtil.*;
+import static org.jrdf.util.test.ReflectTestUtil.callMethod;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
+import static org.jrdf.util.test.ReflectTestUtil.createInstanceUsingConstructor;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -67,6 +68,7 @@ import java.lang.reflect.InvocationTargetException;
  * Tests the contract of a method or constructor so that the methods throw IllegalArgumentException if null is passed.
  */
 public class ArgumentTestUtil {
+    private static final MockFactory factory = new MockFactory();
     private static final String PARAMETER_CANNOT_BE_NULL = " cannot be null";
 
     public static void checkConstructorSetsFieldsAndFieldsPrivate(final Class<?> clazz, final Class[] paramTypes,
@@ -82,7 +84,7 @@ public class ArgumentTestUtil {
     }
 
     public static void checkConstructorSetsFields(Class[] paramTypes, Class<?> clazz, String[] parameterNames) {
-        Object[] args = createArgs(paramTypes, -1);
+        Object[] args = factory.createArgs(paramTypes, -1);
         ParamSpec spec = new ParamSpec(paramTypes, args);
         Object obj = createInstanceUsingConstructor(clazz, spec);
         for (int index = 0; index < parameterNames.length; index++) {
@@ -92,28 +94,31 @@ public class ArgumentTestUtil {
 
     public static void checkConstructNullAssertion(final Class<?> clazz, final Class[] paramTypes) {
         for (int index = 0; index < paramTypes.length; index++) {
-            Object[] args = createArgs(paramTypes, index);
-            String message = "Parameter " + (index+1) + PARAMETER_CANNOT_BE_NULL;
-            final ParamSpec params = new ParamSpec(paramTypes, args);
-            AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    createInstanceAndRethrow(clazz, params);
-                }
-            });
+            if (!paramTypes[index].isPrimitive()) {
+                String message = "Parameter " + (index+1) + PARAMETER_CANNOT_BE_NULL;
+                Object[] args = factory.createArgs(paramTypes, index);
+                final ParamSpec params = new ParamSpec(paramTypes, args);
+                AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
+                    public void execute() throws Throwable {
+                        createInstanceAndRethrow(clazz, params);
+                    }
+                });
+            }
         }
     }
 
     public static void checkMethodNullAssertions(final Object obj, final String methodName,
             final ParameterDefinition paramDefinition) {
-        final Class[] parameterTypes = paramDefinition.getParameterTypes();
-        for (int index = 0; index < parameterTypes.length; index++) {
-            checkMethod(parameterTypes, index, methodName, obj);
+        int numberOfParams = paramDefinition.getParameterTypes().length;
+        boolean[] checkParameter = new boolean[numberOfParams];
+        for (int i = 0; i < checkParameter.length; i++) {
+            checkParameter[i] = true;
         }
+        checkMethodNullAssertions(obj, methodName, paramDefinition, checkParameter);
     }
 
-    // TODO (AN) Remove duplication with previous method.
-    public static void checkMethodNullAssertions(final ParameterDefinition paramDefinition, final Object obj,
-            final String methodName, final boolean[] checkParameter) {
+    public static void checkMethodNullAssertions(final Object obj, final String methodName, final ParameterDefinition paramDefinition,
+            final boolean[] checkParameter) {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index]) {
@@ -124,7 +129,7 @@ public class ArgumentTestUtil {
 
     private static void checkMethod(final Class[] parameterTypes, int index,
             final String methodName, final Object obj) {
-        final Object[] args = createArgs(parameterTypes, index);
+        final Object[] args = factory.createArgs(parameterTypes, index);
         String message = "Parameter " + (index+1) + " cannot be null";
         AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
             public void execute() throws Throwable {

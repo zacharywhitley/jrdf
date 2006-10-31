@@ -82,8 +82,8 @@ public final class AnswerImpl implements Answer, Serializable {
     private final long timeTaken;
 
     public AnswerImpl(Query query, Relation results, long timeTaken) {
-        this.timeTaken = timeTaken;
         checkNotNull(query, results);
+        this.timeTaken = timeTaken;
         this.results = results;
         this.headings = getHeading(query);
     }
@@ -135,6 +135,23 @@ public final class AnswerImpl implements Answer, Serializable {
         return timeTaken;
     }
 
+    public int hashCode() {
+        return (int) (results.hashCode() ^ timeTaken);
+    }
+
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(Answer.class, obj)) {
+            return false;
+        }
+        return determineEqualityFromFields((Answer) obj);
+    }
+
     private String[] getDataWithValues(SortedSet<AttributeValuePair> avps) {
         String[] results = new String[headings.size()];
         int index = 0;
@@ -152,23 +169,6 @@ public final class AnswerImpl implements Answer, Serializable {
             index++;
         }
         return results;
-    }
-
-    public int hashCode() {
-        return (int) (results.hashCode() ^ timeTaken);
-    }
-
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (!EqualsUtil.hasSuperClassOrInterface(Answer.class, obj)) {
-            return false;
-        }
-        return determineEqualityFromFields((Answer) obj);
     }
 
     private boolean determineEqualityFromFields(Answer answer) {
