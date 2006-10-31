@@ -79,7 +79,7 @@ public interface SparqlAnalyser extends Analysis {
     Query NO_QUERY = new NoQuery();
 
     /**
-     * An empty header
+     * An empty header.
      */
     LinkedHashSet NO_HEADER = new LinkedHashSet<Attribute>();
 

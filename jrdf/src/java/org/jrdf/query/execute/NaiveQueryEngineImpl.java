@@ -109,8 +109,8 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         return result;
     }
 
-    public void setResult(Relation newResult) {
-        result = newResult;
+    public void initialiseBaseRelation(Relation initialRelation) {
+        result = initialRelation;
     }
 
     public void setAllVariables(Map<String, NodeType> allVariables) {
@@ -164,7 +164,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
         QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, fullOuterJoin);
-        queryEngine.setResult(result);
+        queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         expression.accept((V) queryEngine);
         return queryEngine.getResult();
