@@ -69,17 +69,18 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.MockFactory;
 
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Set;
 
 public class RelationFactoryImplUnitTest extends TestCase {
+    private static final MockFactory factory = new MockFactory();
     private static final Class[] CONSTRUCTOR_TYPES = {AttributeComparator.class, TupleComparator.class};
     private static final String[] CONSTRUCTOR_NAMES = {"attributeComparator", "tupleComparator"};
-    private static final AttributeComparator ATTRIBUTE_COMPARATOR = MockTestUtil.createMock(AttributeComparator.class);
-    private static final TupleComparator TUPLE_COMPARATOR = MockTestUtil.createMock(TupleComparator.class);
+    private static final AttributeComparator ATTRIBUTE_COMPARATOR = factory.createMock(AttributeComparator.class);
+    private static final TupleComparator TUPLE_COMPARATOR = factory.createMock(TupleComparator.class);
     private static final Set<Tuple> tuples = new HashSet<Tuple>();
     private static final Set<Attribute> HEADING = new HashSet<Attribute>();
 

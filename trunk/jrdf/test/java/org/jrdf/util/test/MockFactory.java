@@ -59,9 +59,14 @@ package org.jrdf.util.test;
 
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
+import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A utility that allows you to treat a collection of MockControls.
@@ -70,41 +75,88 @@ import java.util.Map;
  * @version $Id$
  */
 public class MockFactory {
-    private Map<IMocksControl, IMocksControl> controls = new HashMap<IMocksControl, IMocksControl>();
+    private static final ArnoldTheInstantiator INSTANTIATOR = new ArnoldTheInstantiator();
+    private List<IMocksControl> controls = new ArrayList<IMocksControl>();
+
+    @SuppressWarnings({ "unchecked" })
+    public <T>T createMock(Class<T> clazz) {
+        if (clazz.isPrimitive()) {
+            if (clazz.getClass() == Long.TYPE.getClass()) {
+                return (T) new Long(1l);
+            }
+            else {
+                throw new UnsupportedOperationException("Cannot create type: " + clazz);
+            }
+        } else if (isStubClass(clazz)) {
+            return (T) createStubClass(clazz);
+        } else {
+            IMocksControl control = EasyMock.createControl();
+            controls.add(control);
+            return control.createMock(clazz);
+        }
+    }
+
+    /**
+     * Creates mocked implementations of the parameter type given.
+     *
+     * @param parameterTypes the types to create.
+     * @param index          the index to use in which to create a null Object - can be -1 and will not create any nulls.
+     * @return an array of created types.
+     */
+    @SuppressWarnings({"unchecked"})
+    public Object[] createArgs(Class[] parameterTypes, int index) {
+        Object[] objects = new Object[parameterTypes.length];
+        for (int i = 0; i < parameterTypes.length; i++) {
+            if (i != index) {
+                objects[i] = createMock(parameterTypes[i]);
+            }
+        }
+        return objects;
+    }
 
     public IMocksControl createControl() {
         IMocksControl control = EasyMock.createControl();
-        controls.put(control, control);
+        controls.add(control);
         return control;
     }
 
     public IMocksControl createNiceControl() {
         IMocksControl niceControl = EasyMock.createNiceControl();
-        controls.put(niceControl, niceControl);
+        controls.add(niceControl);
         return niceControl;
     }
 
     public IMocksControl createStrictControl() {
         IMocksControl strictControl = EasyMock.createStrictControl();
-        controls.put(strictControl, strictControl);
+        controls.add(strictControl);
         return strictControl;
     }
 
     public void replay() {
-        for (IMocksControl control : controls.values()) {
+        for (IMocksControl control : controls) {
             control.replay();
         }
     }
 
     public void verify() {
-        for (IMocksControl control : controls.values()) {
+        for (IMocksControl control : controls) {
             control.verify();
         }
     }
 
     public void reset() {
-        for (IMocksControl control : controls.values()) {
+        for (IMocksControl control : controls) {
             control.reset();
         }
+    }
+
+    private static boolean isStubClass(Class clazz) {
+        return (clazz.equals(URL.class) || clazz.equals(URI.class) ||
+                clazz.equals(String.class)) || clazz.equals(ATriple.class) ||
+                clazz.equals(Set.class);
+    }
+
+    private static Object createStubClass(Class clazz) {
+        return INSTANTIATOR.instantiate(clazz);
     }
 }

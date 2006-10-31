@@ -70,7 +70,6 @@ import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.MockTestUtil;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -82,12 +81,13 @@ import java.lang.reflect.Modifier;
  * @version $Id$
  */
 public class SparqlQueryBuilderUnitTest extends TestCase {
-    private static final SparqlParser SPARQL_PARSER = MockTestUtil.createMock(SparqlParser.class);
+    private static final MockFactory factory = new MockFactory();
+    private static final SparqlParser SPARQL_PARSER = factory.createMock(SparqlParser.class);
     private static final String NULL_STRING = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
     private static final String QUERY_GOOD = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final Graph GRAPH = MockTestUtil.createMock(Graph.class);
+    private static final Graph GRAPH = factory.createMock(Graph.class);
     private static final String CANNOT_BE_NULL = "queryText cannot be null";
     private static final String CANNOT_BE_EMPTY = "queryText cannot be the empty string";
     private MockFactory mockFactory;
@@ -154,7 +154,7 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
         IMocksControl control = mockFactory.createControl();
         SparqlParser parser = control.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);
-        control.andReturn(MockTestUtil.createMock(Query.class));
+        control.andReturn(factory.createMock(Query.class));
         return parser;
     }
 }

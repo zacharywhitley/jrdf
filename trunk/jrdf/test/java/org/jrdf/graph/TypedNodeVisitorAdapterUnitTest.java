@@ -63,7 +63,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import org.jrdf.util.test.MockTestUtil;
+import org.jrdf.util.test.MockFactory;
 
 import java.lang.reflect.Modifier;
 
@@ -74,9 +74,10 @@ import java.lang.reflect.Modifier;
  * @version $Revision:$
  */
 public class TypedNodeVisitorAdapterUnitTest extends TestCase {
-    private static final BlankNode BLANK_NODE = MockTestUtil.createMock(BlankNode.class);
-    private static final Literal LITERAL = MockTestUtil.createMock(Literal.class);
-    private static final URIReference URI_REFERENCE = MockTestUtil.createMock(URIReference.class);
+    private static final MockFactory factory = new MockFactory();
+    private static final BlankNode BLANK_NODE = factory.createMock(BlankNode.class);
+    private static final Literal LITERAL = factory.createMock(Literal.class);
+    private static final URIReference URI_REFERENCE = factory.createMock(URIReference.class);
 
     public void testClassProperties() {
         checkClassPublic(TypedNodeVisitorAdapter.class);

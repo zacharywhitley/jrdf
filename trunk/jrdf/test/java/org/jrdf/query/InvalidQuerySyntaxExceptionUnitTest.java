@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,14 +56,30 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.util.test;
+package org.jrdf.query;
+
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ExceptionTestUtil.testFinalClassProperties;
+import static org.jrdf.util.test.ExceptionTestUtil.testMessageAndThrowableConstructor;
+import static org.jrdf.util.test.ExceptionTestUtil.testMessageConstructor;
+import static org.jrdf.util.test.ExceptionTestUtil.testThrowableConstructor;
 
 /**
- * Create a mock with no expectations.
+ * Test properties of exception.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public class MockTestUtil {
+public class InvalidQuerySyntaxExceptionUnitTest extends TestCase {
+    private static final Class<InvalidQuerySyntaxException> CLASS = InvalidQuerySyntaxException.class;
 
+    public void testClassProperties() {
+        testFinalClassProperties(CLASS);
+    }
+
+    public void testConstructors() {
+        testMessageConstructor(CLASS);
+        testThrowableConstructor(CLASS);
+        testMessageAndThrowableConstructor(CLASS);
+    }
 }

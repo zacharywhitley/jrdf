@@ -70,7 +70,6 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.MockTestUtil;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -82,10 +81,11 @@ import java.lang.reflect.Modifier;
  * @version $Id$
  */
 public class AttributeComparatorImplUnitTest extends TestCase {
-    private static final Attribute ATTRIBUTE = MockTestUtil.createMock(Attribute.class);
-    private static final TypeComparator NODE_COMPARATOR = MockTestUtil.createMock(TypeComparator.class);
+    private static final MockFactory factory = new MockFactory();
+    private static final Attribute ATTRIBUTE = factory.createMock(Attribute.class);
+    private static final TypeComparator NODE_COMPARATOR = factory.createMock(TypeComparator.class);
     private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR
-            = MockTestUtil.createMock(AttributeNameComparator.class);
+            = factory.createMock(AttributeNameComparator.class);
     private MockFactory mockFactory;
     private static final int BEFORE = 1;
     private static final int AFTER = -1;
@@ -110,7 +110,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
 
     public void testIdentity() {
         AttributeComparator comparator = createComparator(NODE_COMPARATOR, ATTRIBUTE_NAME_COMPARATOR);
-        Attribute att2 = new TestAttribute(MockTestUtil.createMock(Attribute.class));
+        Attribute att2 = new TestAttribute(factory.createMock(Attribute.class));
         TestAttribute att1 = new TestAttribute(att2);
         int result = comparator.compare(att1, att2);
         assertTrue("Should return equal for att1, att2", result == 0);
@@ -126,8 +126,8 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     // TODO (AN) Finish testAttributeNameComparator
 
     private void checkNodeTypeComparator(int expectedResult) {
-        NodeType t1 = MockTestUtil.createMock(NodeType.class);
-        NodeType t2 = MockTestUtil.createMock(NodeType.class);
+        NodeType t1 = factory.createMock(NodeType.class);
+        NodeType t2 = factory.createMock(NodeType.class);
         Attribute attribute1 = createAttribute(t1);
         Attribute attribute2 = createAttribute(t2);
         TypeComparator typeComparator = createTypeComparator(t1, t2, expectedResult);
