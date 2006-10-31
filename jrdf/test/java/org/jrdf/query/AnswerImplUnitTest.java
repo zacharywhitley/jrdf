@@ -62,7 +62,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
-import org.jrdf.util.test.ArgumentTestUtil;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
@@ -87,7 +87,7 @@ public final class AnswerImplUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
         checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
         checkConstructor(AnswerImpl.class, Modifier.PUBLIC, Query.class, Relation.class, Long.TYPE);
-        ArgumentTestUtil.checkConstructNullAssertion(AnswerImpl.class, new Class[]{Query.class, Relation.class, Long.TYPE});
+        checkConstructNullAssertion(AnswerImpl.class, new Class[]{Query.class, Relation.class, Long.TYPE});
     }
 
     public void testSerialVersionUid() {
