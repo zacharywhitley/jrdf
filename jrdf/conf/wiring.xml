@@ -91,9 +91,6 @@
 
     <!-- Query Classes -->
     <bean id="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
-        <constructor-arg type="java.net.URL">
-            <value>http://jrdf.sf.net/connection#NO_SECURITY</value>
-        </constructor-arg>
         <constructor-arg>
             <ref bean="queryBuilder"/>
         </constructor-arg>

@@ -71,8 +71,6 @@ import org.jrdf.sparql.builder.QueryBuilder;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.net.URL;
-
 
 /**
  * Default implementation of a {@link SparqlConnection}.
@@ -89,10 +87,11 @@ public final class SparqlConnectionImpl implements SparqlConnection {
     /**
      * Creates a new SPARQL connection.
      *
-     * @param securityDomain The security domain of the graph.
+     * @param builder the query builder that builds queries.
+     * @param queryEngine the engine that executed the query.
      */
-    public SparqlConnectionImpl(URL securityDomain, QueryBuilder builder, QueryEngine queryEngine) {
-        checkNotNull(securityDomain, builder, queryEngine);
+    public SparqlConnectionImpl(QueryBuilder builder, QueryEngine queryEngine) {
+        checkNotNull(builder, queryEngine);
         this.queryEngine = queryEngine;
         this.builder = builder;
     }

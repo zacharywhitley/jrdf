@@ -81,7 +81,7 @@ public interface SparqlAnalyser extends Analysis {
     /**
      * An empty header.
      */
-    LinkedHashSet NO_HEADER = new LinkedHashSet<Attribute>();
+    LinkedHashSet<Attribute> NO_HEADER = new LinkedHashSet<Attribute>();
 
     /**
      * Returns the query processed by this analyser.

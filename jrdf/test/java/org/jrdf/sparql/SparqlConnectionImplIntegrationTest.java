@@ -82,18 +82,13 @@ import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
 import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * Integration test for {@link SparqlConnectionImpl}.
- */
 public final class SparqlConnectionImplIntegrationTest extends TestCase {
 
     // FIXME TJA: Add test that ensures that createConnection() returns a new connection each time.
 
-    private static final URL NO_SECURITY_DOMAIN = SparqlConnectionUrl.NO_SECURITY_DOMAIN_URL;
     private static final String QUERY_SHOULD_RETURN_ONE_SOLUTION = QUERY_BOOK_1_DC_TITLE;
     private static final String QUERY_SHOULD_RETURN_NOTHING = QUERY_BOOK_2_DC_TITLE;
     private static final URI URI_SUBJECT = URI_BOOK_1;
@@ -119,7 +114,7 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
     }
 
     private SparqlConnection createRawConnection() {
-        return new SparqlConnectionImpl(NO_SECURITY_DOMAIN, QUERY_BUILDER, QUERY_ENGINE);
+        return new SparqlConnectionImpl(QUERY_BUILDER, QUERY_ENGINE);
     }
 
     private void checkConnectionReturnsOneSolution(SparqlConnection connection) {
