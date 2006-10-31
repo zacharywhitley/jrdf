@@ -80,18 +80,10 @@ import org.jrdf.util.test.ParameterDefinition;
 import org.jrdf.util.test.ReflectTestUtil;
 
 import java.lang.reflect.Modifier;
-import java.net.URL;
 
-/**
- * Unit test for {@link SparqlConnectionImpl}.
- *
- * @author Tom Adams
- * @version $Id$
- */
 @SuppressWarnings({"unchecked"})
 public class SparqlConnectionImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
-    private static final URL NO_SECURITY_DOMAIN = SparqlConnectionUrl.NO_SECURITY_DOMAIN_URL;
     private static final String NULL = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
@@ -102,7 +94,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final Graph GRAPH = factory.createMock(Graph.class);
     private static final QueryEngine QUERY_ENGINE = factory.createMock(QueryEngine.class);
     private static final String METHOD_NAME = "executeQuery";
-    private static final Class[] PARAM_TYPES = { URL.class, QueryBuilder.class, QueryEngine.class};
+    private static final Class[] PARAM_TYPES = { QueryBuilder.class, QueryEngine.class};
     private static final String[] METHOD_PARAM_NAMES = {"graph", "queryText"};
     private static final Class[] METHOD_PARAM_TYPES = {Graph.class, String.class};
     private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(METHOD_PARAM_NAMES,
@@ -116,8 +108,8 @@ public class SparqlConnectionImplUnitTest extends TestCase {
 
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(SparqlConnection.class, SparqlConnectionImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(SparqlConnectionImpl.class, Modifier.PUBLIC, URL.class,
-                QueryBuilder.class, QueryEngine.class);
+        ClassPropertiesTestUtil.checkConstructor(SparqlConnectionImpl.class, Modifier.PUBLIC, QueryBuilder.class,
+                QueryEngine.class);
     }
 
     public void testNullsInConstructor() {
@@ -141,7 +133,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         expect(GRAPH.isEmpty()).andReturn(false);
         Query query = createQuery(GRAPH, queryEngine);
         QueryBuilder builder = createBuilder(GRAPH, QUERY_ITQL, query);
-        SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, queryEngine);
+        SparqlConnection connection = new SparqlConnectionImpl(builder, queryEngine);
         factory.replay();
         Answer answer = connection.executeQuery(GRAPH, QUERY_ITQL);
         factory.verify();
@@ -153,7 +145,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         Graph graph = createEmptyGraph();
         Query query = factory.createMock(Query.class);
         QueryBuilder builder = createBuilder(graph, QUERY_ITQL, query);
-        SparqlConnection connection = new SparqlConnectionImpl(NO_SECURITY_DOMAIN, builder, queryEngine);
+        SparqlConnection connection = new SparqlConnectionImpl(builder, queryEngine);
         factory.replay();
         Answer answer = connection.executeQuery(graph, QUERY_ITQL);
         factory.verify();
@@ -236,6 +228,6 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     private SparqlConnectionImpl createSparqlConnection() {
-        return new SparqlConnectionImpl(NO_SECURITY_DOMAIN, BUILDER, QUERY_ENGINE);
+        return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
 }

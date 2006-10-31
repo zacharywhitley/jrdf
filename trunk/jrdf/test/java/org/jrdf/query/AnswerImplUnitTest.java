@@ -78,14 +78,14 @@ import java.util.LinkedHashSet;
  * @version $Revision$
  */
 public final class AnswerImplUnitTest extends TestCase {
-
+    private static final Class[] PARAM_TYPES = new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE};
     private MockFactory factory = new MockFactory();
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Answer.class, AnswerImpl.class);
         checkImplementationOfInterfaceAndFinal(Serializable.class, AnswerImpl.class);
-        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, LinkedHashSet.class, Relation.class, Long.TYPE);
-        checkConstructNullAssertion(AnswerImpl.class, new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE});
+        checkConstructor(AnswerImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(AnswerImpl.class, PARAM_TYPES);
     }
 
     public void testSerialVersionUid() {
