@@ -72,6 +72,6 @@ import java.util.Map;
  */
 public interface QueryEngine extends ExpressionVisitor {
     Relation getResult();
-    void setResult(Relation newRelation);
+    void initialiseBaseRelation(Relation newRelation);
     void setAllVariables(Map<String, NodeType> variables);
 }

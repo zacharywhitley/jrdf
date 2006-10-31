@@ -64,6 +64,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -98,22 +99,16 @@ public final class QueryImpl implements Query, Serializable {
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
-        queryEngine.setResult(graphRelationFactory.createRelation(graph));
-        expression.accept(queryEngine);
-        Relation results = queryEngine.getResult();
-        return new AnswerImpl(getHeading(results), results, System.currentTimeMillis() - timeStarted);
+        Relation result = getResult(graph, queryEngine);
+        LinkedHashSet<Attribute> heading = getHeading(result.getSortedHeading(), getVariables());
+        return new AnswerImpl(heading, result, System.currentTimeMillis() - timeStarted);
     }
 
-    private LinkedHashSet<Attribute> getHeading(Relation results) {
-        LinkedHashSet<Attribute> heading;
-        List<Attribute> variables = getVariables();
-        if (variables.size() == 0) {
-            SortedSet<Attribute> sortedHeading = results.getSortedHeading();
-            heading = new LinkedHashSet<Attribute>(sortedHeading);
-        } else {
-            heading = new LinkedHashSet<Attribute>(variables);
-        }
-        return heading;
+    private Relation getResult(Graph graph, QueryEngine queryEngine) {
+        GraphRelation entireGraph = graphRelationFactory.createRelation(graph);
+        queryEngine.initialiseBaseRelation(entireGraph);
+        expression.accept(queryEngine);
+        return queryEngine.getResult();
     }
 
     private List<Attribute> getVariables() {
@@ -123,5 +118,15 @@ public final class QueryImpl implements Query, Serializable {
         } else {
             return emptyList();
         }
+    }
+
+    private LinkedHashSet<Attribute> getHeading(SortedSet<Attribute> sortedHeading, List<Attribute> variables) {
+        LinkedHashSet<Attribute> heading;
+        if (variables.size() == 0) {
+            heading = new LinkedHashSet<Attribute>(sortedHeading);
+        } else {
+            heading = new LinkedHashSet<Attribute>(variables);
+        }
+        return heading;
     }
 }
