@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,36 +56,22 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-
 package org.jrdf.query.relation.type;
 
-import java.util.Collections;
-import java.util.Set;
+import junit.framework.TestCase;
 
-/**
- * An URI Reference node type.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public final class URIReferenceNodeType implements NodeType {
-    private static final NodeType INSTANCE = new URIReferenceNodeType();
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
-    private static final long serialVersionUID = -46947819855688266L;
+public class LiteralNodeTypeUnitTest extends TestCase {
+    private static final Class<LiteralNodeType> CLAZZ = LiteralNodeType.class;
+    private static final long EXPECTED_UID = 8059107808615405657L;
+    private static final NodeType NODE_TYPE = new LiteralNodeType();
+    private static final String EXPECTED_NAME = "Literal";
+    private static final NodeType EXPECTED_INSTANCE_1 = new LiteralNodeType();
 
-    public String getName() {
-        return "URI Reference";
-    }
-
-    public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
-    }
-
-    public int hashCode() {
-        return getName().hashCode();
-    }
-
-    public boolean equals(Object obj) {
-        return obj instanceof URIReferenceNodeType;
+    public void testNodeType() {
+        NodeTypeTestUtil.checkClassProperties(CLAZZ);
+        NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
+        NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
+        NodeTypeTestUtil.checkEquals(NODE_TYPE, new LiteralNodeType());
+        NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE_1);
     }
 }

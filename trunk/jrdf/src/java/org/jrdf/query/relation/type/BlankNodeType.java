@@ -68,16 +68,24 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class BlankNodeType implements NodeType {
+public final class BlankNodeType implements NodeType {
     private static final NodeType INSTANCE = new BlankNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 1645735853855887744L;
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
+    }
 
     public String getName() {
         return "BlankNode";
     }
 
-    public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        return obj instanceof BlankNodeType;
     }
 }
