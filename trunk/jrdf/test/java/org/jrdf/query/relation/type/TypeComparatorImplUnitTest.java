@@ -60,7 +60,10 @@ package org.jrdf.query.relation.type;
 
 import junit.framework.TestCase;
 import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.MockFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -72,11 +75,23 @@ import java.lang.reflect.Modifier;
  * @version $Revision:$
  */
 public class TypeComparatorImplUnitTest extends TestCase {
+    private static final MockFactory factory = new MockFactory();
+    private static final NodeTypeComparator NODE_TYPE_COMPARATOR = factory.createMock(NodeTypeComparator.class);
+    private static final int EQUAL = 0;
+
     public void testClassProperties() {
-        ClassPropertiesTestUtil
-                .checkImplementationOfInterfaceAndFinal(TypeComparator.class, TypeComparatorImpl.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, TypeComparator.class);
-        ClassPropertiesTestUtil.checkConstructor(TypeComparatorImpl.class, Modifier.PUBLIC,
-                NodeTypeComparator.class);
+        checkImplementationOfInterfaceAndFinal(TypeComparator.class, TypeComparatorImpl.class);
+        checkImplementationOfInterface(Serializable.class, TypeComparator.class);
+        checkConstructor(TypeComparatorImpl.class, Modifier.PRIVATE);
+        checkConstructor(TypeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
+    }
+
+    public void testCompareEqual() {
+        NodeType firstNodeType = factory.createMock(NodeType.class);
+        factory.replay();
+        TypeComparator typeComparator = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
+        int result = typeComparator.compare(firstNodeType, firstNodeType);
+        factory.verify();
+        assertTrue(EQUAL == result);
     }
 }

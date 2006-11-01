@@ -76,8 +76,7 @@ public final class TypeComparatorImpl implements TypeComparator {
     private static final int BEFORE = -1;
     private NodeTypeComparator nodeTypeComparator;
 
-    public TypeComparatorImpl() {
-
+    private TypeComparatorImpl() {
     }
 
     public TypeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
