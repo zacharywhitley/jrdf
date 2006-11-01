@@ -58,34 +58,20 @@
 
 package org.jrdf.query.relation.type;
 
-import java.util.HashSet;
-import java.util.Set;
+import junit.framework.TestCase;
 
-/**
- * An subjectpredicate node type.
- *
- * @author Andrew Newman
- * @version $Revision: 651 $
- */
-public final class PredicateObjectNodeType implements NodeType {
-    private static final long serialVersionUID = 799086809870140765L;
+public class SubjectNodeTypeUnitTest extends TestCase {
+    private static final Class<SubjectNodeType> CLAZZ = SubjectNodeType.class;
+    private static final long EXPECTED_UID = 2422061978414712391L;
+    private static final NodeType NODE_TYPE = new SubjectNodeType();
+    private static final String EXPECTED_NAME = "Subject";
+    private static final NodeType EXPECTED_INSTANCE_1 = new SubjectNodeType();
 
-    public String getName() {
-        return "PredicateObject";
-    }
-
-    public Set<NodeType> composedOf() {
-        HashSet<NodeType> nodeTypes = new HashSet<NodeType>();
-        nodeTypes.add(new PredicateNodeType());
-        nodeTypes.add(new ObjectNodeType());
-        return nodeTypes;
-    }
-
-    public int hashCode() {
-        return getName().hashCode();
-    }
-
-    public boolean equals(Object obj) {
-        return obj instanceof PredicateObjectNodeType;
+    public void testNodeType() {
+        NodeTypeTestUtil.checkClassProperties(CLAZZ);
+        NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
+        NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
+        NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE_1);
+        NodeTypeTestUtil.checkEquals(NODE_TYPE);
     }
 }

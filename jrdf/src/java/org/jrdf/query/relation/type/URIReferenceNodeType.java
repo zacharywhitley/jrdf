@@ -73,11 +73,11 @@ public class URIReferenceNodeType implements NodeType {
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = -46947819855688266L;
 
-    public String getName() {
-        return "URI Reference";
-    }
-
     public Set<NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
+    }
+
+    public String getName() {
+        return "URI Reference";
     }
 }

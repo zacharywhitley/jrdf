@@ -58,34 +58,21 @@
 
 package org.jrdf.query.relation.type;
 
-import java.util.HashSet;
-import java.util.Set;
+import junit.framework.TestCase;
 
-/**
- * An subjectpredicate node type.
- *
- * @author Andrew Newman
- * @version $Revision: 651 $
- */
-public final class PredicateObjectNodeType implements NodeType {
-    private static final long serialVersionUID = 799086809870140765L;
+public class SubjectPredicateNodeTypeUnitTest extends TestCase {
+    private static final Class<SubjectPredicateNodeType> CLAZZ = SubjectPredicateNodeType.class;
+    private static final long EXPECTED_UID = 799086809870140765L;
+    private static final NodeType NODE_TYPE = new SubjectPredicateNodeType();
+    private static final String EXPECTED_NAME = "SubjectPredicate";
+    private static final NodeType EXPECTED_INSTANCE_1 = new SubjectNodeType();
+    private static final NodeType EXPECTED_INSTANCE_2 = new PredicateNodeType();
 
-    public String getName() {
-        return "PredicateObject";
-    }
-
-    public Set<NodeType> composedOf() {
-        HashSet<NodeType> nodeTypes = new HashSet<NodeType>();
-        nodeTypes.add(new PredicateNodeType());
-        nodeTypes.add(new ObjectNodeType());
-        return nodeTypes;
-    }
-
-    public int hashCode() {
-        return getName().hashCode();
-    }
-
-    public boolean equals(Object obj) {
-        return obj instanceof PredicateObjectNodeType;
+    public void testNodeType() {
+        NodeTypeTestUtil.checkClassProperties(CLAZZ);
+        NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
+        NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
+        NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE_1, EXPECTED_INSTANCE_2);
+        NodeTypeTestUtil.checkEquals(NODE_TYPE);
     }
 }
