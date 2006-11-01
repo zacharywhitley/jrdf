@@ -68,16 +68,24 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class LiteralNodeType implements NodeType {
+public final class LiteralNodeType implements NodeType {
     private static final NodeType INSTANCE = new LiteralNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 8059107808615405657L;
+
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
+    }
 
     public String getName() {
         return "Literal";
     }
 
-    public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        return obj instanceof LiteralNodeType;
     }
 }
