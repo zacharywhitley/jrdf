@@ -72,7 +72,7 @@ public class SubjectObjectNodeTypeUnitTest extends TestCase {
         NodeTypeTestUtil.checkClassProperties(CLAZZ);
         NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
         NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
+        NodeTypeTestUtil.checkEquals(NODE_TYPE, new SubjectObjectNodeType());
         NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE_1, EXPECTED_INSTANCE_2);
-        NodeTypeTestUtil.checkEquals(NODE_TYPE);
     }
 }

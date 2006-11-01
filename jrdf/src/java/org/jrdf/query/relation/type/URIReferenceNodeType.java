@@ -68,16 +68,24 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class URIReferenceNodeType implements NodeType {
+public final class URIReferenceNodeType implements NodeType {
     private static final NodeType INSTANCE = new URIReferenceNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = -46947819855688266L;
+
+    public String getName() {
+        return "URI Reference";
+    }
 
     public Set<NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
     }
 
-    public String getName() {
-        return "URI Reference";
+    public int hashCode() {
+        return getName().hashCode();
+    }
+    
+    public boolean equals(Object obj) {
+        return obj instanceof URIReferenceNodeType;
     }
 }
