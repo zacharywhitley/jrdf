@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,36 +56,23 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-
 package org.jrdf.query.relation.type;
 
-import java.util.Collections;
-import java.util.Set;
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ReflectTestUtil.getFieldValue;
 
-/**
- * An predicate node type.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public class PredicateNodeType implements NodeType {
-    private static final NodeType INSTANCE = new PredicateNodeType();
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
-    private static final long serialVersionUID = -5313315028523572144L;
+public class ObjectNodeTypeUnitTest extends TestCase {
+    private static final Class<ObjectNodeType> CLAZZ = ObjectNodeType.class;
+    private static final long EXPECTED_UID = 8047443471499147543L;
+    private static final NodeType OBJECT_NODE_TYPE = new ObjectNodeType();
+    private static final String EXPECTED_NAME = "Object";
+    private static final NodeType EXPECTED_INSTANCE = (NodeType) getFieldValue(OBJECT_NODE_TYPE, "INSTANCE");
 
-    public String getName() {
-        return "Predicate";
-    }
-
-    public int hashCode() {
-        return getName().hashCode();
-    }
-
-    public boolean equals(Object obj) {
-        return obj instanceof PredicateNodeType;
-    }
-
-    public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
+    public void testNodeType() {
+        NodeTypeTestUtil.checkClassProperties(CLAZZ);
+        NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
+        NodeTypeTestUtil.checkGetName(OBJECT_NODE_TYPE, EXPECTED_NAME);
+        NodeTypeTestUtil.checkComposedOf(OBJECT_NODE_TYPE, EXPECTED_INSTANCE);
+        NodeTypeTestUtil.checkEquals(OBJECT_NODE_TYPE);
     }
 }

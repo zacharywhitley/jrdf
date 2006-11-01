@@ -90,7 +90,7 @@ public final class ConstraintsAnalyserImplUnitTest extends TestCase {
 
     public void testMe() {}
 
-//    public void testClassProperties() {
+//    public void checkClassProperties() {
 //        ClassPropertiesTestUtil.checkExtensionOf(Analysis.class, SparqlAnalyser.class);
 //        ClassPropertiesTestUtil
 //                .checkImplementationOfInterfaceAndFinal(SparqlAnalyser.class, SparqlAnalyserImpl.class);

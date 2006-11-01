@@ -69,20 +69,6 @@ import java.util.Set;
  * @version $Revision$
  */
 public interface NodeType extends Serializable {
-    /**
-     * Returns true if this NodeType is a super-type of the given type.
-     *
-     * @param type the type to test to see if it can be accepted into this type.
-     * @return true if this NodeType is a super-type of the given type.
-     */
-    boolean isAssignableFrom(NodeType type);
-
-    /**
-     * Returns true if this NodeType is process compatible with the given type.  NadicJoinImpl compatible means that the
-     * given type can be joined and considered to be this type i.e. blank nodes and uri references to subject nodes,
-     * uri references to any positional node type, predicate nodes to uri references, etc.
-     */
-    boolean isJoinCompatible(NodeType type);
 
     /**
      * Returns the name of the type.

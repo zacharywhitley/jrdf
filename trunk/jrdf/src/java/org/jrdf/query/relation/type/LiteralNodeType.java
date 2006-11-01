@@ -73,14 +73,6 @@ public class LiteralNodeType implements NodeType {
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 8059107808615405657L;
 
-    public boolean isAssignableFrom(NodeType type) {
-        return type instanceof LiteralNodeType;
-    }
-
-    public boolean isJoinCompatible(NodeType type) {
-        return isAssignableFrom(type);
-    }
-
     public String getName() {
         return "Literal";
     }
