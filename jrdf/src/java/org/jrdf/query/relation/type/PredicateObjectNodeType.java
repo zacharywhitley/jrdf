@@ -58,9 +58,6 @@
 
 package org.jrdf.query.relation.type;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -72,15 +69,6 @@ import java.util.Set;
  */
 public class PredicateObjectNodeType implements NodeType {
     private static final long serialVersionUID = 799086809870140765L;
-
-    public boolean isAssignableFrom(NodeType type) {
-        return type instanceof PredicateNode || type instanceof ObjectNode;
-    }
-
-    public boolean isJoinCompatible(NodeType type) {
-        return isAssignableFrom(type) || type instanceof BlankNodeType || type instanceof URIReferenceNodeType ||
-                type instanceof LiteralNodeType;
-    }
 
     public String getName() {
         return "PredicateObject";

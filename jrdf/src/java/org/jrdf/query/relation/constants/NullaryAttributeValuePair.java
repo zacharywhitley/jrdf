@@ -139,14 +139,6 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
         private NullaryNodeType() {
         }
 
-        public boolean isAssignableFrom(NodeType type) {
-            return true;
-        }
-
-        public boolean isJoinCompatible(NodeType type) {
-            return true;
-        }
-
         public String getName() {
             return "TRUE";
         }

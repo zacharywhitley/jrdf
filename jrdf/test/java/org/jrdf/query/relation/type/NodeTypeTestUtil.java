@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,36 +56,45 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-
 package org.jrdf.query.relation.type;
 
-import java.util.Collections;
+import com.gargoylesoftware.base.testing.EqualsTester;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.jrdf.util.test.SerializationTestUtil;
+
+import java.io.Serializable;
+import java.lang.reflect.Modifier;
+import java.util.Iterator;
 import java.util.Set;
 
-/**
- * An predicate node type.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public class PredicateNodeType implements NodeType {
-    private static final NodeType INSTANCE = new PredicateNodeType();
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
-    private static final long serialVersionUID = -5313315028523572144L;
+public class NodeTypeTestUtil extends TestCase {
 
-    public String getName() {
-        return "Predicate";
+    public static void checkClassProperties(Class<?> clazz) {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeType.class, clazz);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, clazz);
+        ClassPropertiesTestUtil.checkConstructor(clazz, Modifier.PUBLIC);
     }
 
-    public int hashCode() {
-        return getName().hashCode();
+    public static void checkSerialVersionUid(Class<?> clazz, long expectedUid) {
+        SerializationTestUtil.checkSerialialVersionUid(clazz, expectedUid);
     }
 
-    public boolean equals(Object obj) {
-        return obj instanceof PredicateNodeType;
+    public static void checkGetName(NodeType obj, String expectedName) {
+        assertEquals(expectedName, obj.getName());
     }
 
-    public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
+    public static void checkComposedOf(NodeType actualNodeType, NodeType... expectedNodeTypes) {
+        Set<NodeType> nodeTypes = actualNodeType.composedOf();
+        assertEquals(expectedNodeTypes.length, nodeTypes.size());
+        Iterator<NodeType> iterator = nodeTypes.iterator();
+        for (int i = 0; i < expectedNodeTypes.length; i++) {
+            assertTrue("Should have another node type entry", iterator.hasNext());
+            assertEquals(expectedNodeTypes[i], iterator.next());
+        }
+    }
+
+    public static void checkEquals(NodeType nodeType) {
+        new EqualsTester(nodeType, nodeType, null, null);
     }
 }

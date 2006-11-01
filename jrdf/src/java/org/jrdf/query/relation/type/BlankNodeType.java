@@ -73,14 +73,6 @@ public class BlankNodeType implements NodeType {
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 1645735853855887744L;
 
-    public boolean isAssignableFrom(NodeType type) {
-        return type instanceof BlankNodeType;
-    }
-
-    public boolean isJoinCompatible(NodeType type) {
-        return isAssignableFrom(type);
-    }
-
     public String getName() {
         return "BlankNode";
     }
