@@ -68,7 +68,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class SubjectNodeType implements NodeType {
+public final class SubjectNodeType implements NodeType {
     private static final long serialVersionUID = 2422061978414712391L;
     private static final NodeType INSTANCE = new SubjectNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
@@ -77,15 +77,15 @@ public class SubjectNodeType implements NodeType {
         return "Subject";
     }
 
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
+    }
+
     public int hashCode() {
         return getName().hashCode();
     }
 
     public boolean equals(Object obj) {
         return obj instanceof SubjectNodeType;
-    }
-
-    public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
     }
 }

@@ -68,7 +68,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class PredicateNodeType implements NodeType {
+public final class PredicateNodeType implements NodeType {
     private static final NodeType INSTANCE = new PredicateNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = -5313315028523572144L;
@@ -77,15 +77,15 @@ public class PredicateNodeType implements NodeType {
         return "Predicate";
     }
 
+    public Set<NodeType> composedOf() {
+        return COMPOSITION_NODE_TYPE;
+    }
+
     public int hashCode() {
         return getName().hashCode();
     }
 
     public boolean equals(Object obj) {
         return obj instanceof PredicateNodeType;
-    }
-
-    public Set<NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
     }
 }
