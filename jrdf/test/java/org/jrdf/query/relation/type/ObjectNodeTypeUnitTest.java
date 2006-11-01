@@ -59,20 +59,19 @@
 package org.jrdf.query.relation.type;
 
 import junit.framework.TestCase;
-import static org.jrdf.util.test.ReflectTestUtil.getFieldValue;
 
 public class ObjectNodeTypeUnitTest extends TestCase {
     private static final Class<ObjectNodeType> CLAZZ = ObjectNodeType.class;
     private static final long EXPECTED_UID = 8047443471499147543L;
-    private static final NodeType OBJECT_NODE_TYPE = new ObjectNodeType();
+    private static final NodeType NODE_TYPE = new ObjectNodeType();
     private static final String EXPECTED_NAME = "Object";
-    private static final NodeType EXPECTED_INSTANCE = (NodeType) getFieldValue(OBJECT_NODE_TYPE, "INSTANCE");
+    private static final NodeType EXPECTED_INSTANCE = new ObjectNodeType();
 
     public void testNodeType() {
         NodeTypeTestUtil.checkClassProperties(CLAZZ);
         NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
-        NodeTypeTestUtil.checkGetName(OBJECT_NODE_TYPE, EXPECTED_NAME);
-        NodeTypeTestUtil.checkComposedOf(OBJECT_NODE_TYPE, EXPECTED_INSTANCE);
-        NodeTypeTestUtil.checkEquals(OBJECT_NODE_TYPE);
+        NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
+        NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE);
+        NodeTypeTestUtil.checkEquals(NODE_TYPE);
     }
 }
