@@ -58,40 +58,21 @@
 
 package org.jrdf.query.relation.type;
 
-import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.SerializationTestUtil;
 
-import java.io.Serializable;
-import java.lang.reflect.Modifier;
-import java.util.Set;
+public class PredicateObjectNodeTypeUnitTest extends TestCase {
+    private static final Class<PredicateObjectNodeType> CLAZZ = PredicateObjectNodeType.class;
+    private static final long EXPECTED_UID = 799086809870140765L;
+    private static final NodeType NODE_TYPE = new PredicateObjectNodeType();
+    private static final String EXPECTED_NAME = "PredicateObject";
+    private static final NodeType EXPECTED_INSTANCE_1 = new ObjectNodeType();
+    private static final NodeType EXPECTED_INSTANCE_2 = new PredicateNodeType();
 
-public class NodeTypeTestUtil extends TestCase {
-
-    public static void checkClassProperties(Class<?> clazz) {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeType.class, clazz);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, clazz);
-        ClassPropertiesTestUtil.checkConstructor(clazz, Modifier.PUBLIC);
-    }
-
-    public static void checkSerialVersionUid(Class<?> clazz, long expectedUid) {
-        SerializationTestUtil.checkSerialialVersionUid(clazz, expectedUid);
-    }
-
-    public static void checkGetName(NodeType obj, String expectedName) {
-        assertEquals(expectedName, obj.getName());
-    }
-
-    public static void checkComposedOf(NodeType actualNodeType, NodeType... expectedNodeTypes) {
-        Set<NodeType> nodeTypes = actualNodeType.composedOf();
-        assertEquals(expectedNodeTypes.length, nodeTypes.size());
-        for (NodeType expectedNodeType : expectedNodeTypes) {
-            assertTrue(nodeTypes.contains(expectedNodeType));
-        }
-    }
-
-    public static void checkEquals(NodeType nodeType) {
-        new EqualsTester(nodeType, nodeType, null, null);
+    public void testNodeType() {
+        NodeTypeTestUtil.checkClassProperties(CLAZZ);
+        NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
+        NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
+        NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE_1, EXPECTED_INSTANCE_2);
+        NodeTypeTestUtil.checkEquals(NODE_TYPE);
     }
 }
