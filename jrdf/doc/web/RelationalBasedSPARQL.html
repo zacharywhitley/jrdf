@@ -366,29 +366,29 @@ reuse these techniques by treating intermediate results using a slightly non-tra
 approach. This approach is discussed in future work.</p>
 <p>Another difference between Pérez et al. and Galindo-Legaria is the definition of left outer join.
 In Pérez et al. it is defined as:</p>
-    <pre class="formula">Ω1 <img src="u27d5.PNG" height="15" width="15"/> Ω2 = (Ω1 <img src="u22c8.PNG" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ Ω2)</pre>
+    <pre class="formula">Ω1 <img src="u27d5.PNG" alt="left outer join" height="15" width="15"/> Ω2 = (Ω1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ Ω2)</pre>
 <p>Where Ω is a set of mappings, where a mapping is a partial function of variables (V) to tuples
 (T). Tuples (T) consist of the positional elements subject (v1), predicate (v2) and object (v3)
 of an RDF statement.</p>
 <p>Galindo-Legaria [<a href="#ref12">12</a>] defines left outer join of two relations R1 and R2 as:</p>
-    <pre class="formula">R1 <img src="u27d5.PNG" height="15" width="15"/> R2 := (R1 <img src="u22c8.PNG" height="15" width="15"/> R2) <img src="u228e.PNG" height="15" width="15"/> (R1 <img src="u22b3.PNG" height="15" width="15"/> R2)</pre>
-<p>Where, ⋈ is the join of R1 and R2 on some predicate, <img src="u228e.PNG" height="15" width="15"/> is outer union and <img src="u22b3.PNG" height="15" width="15"/> is antijoin.
+    <pre class="formula">R1 <img src="u27d5.PNG" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> R2) <img src="u228e.PNG" alt="outer union" height="15" width="15"/> (R1 <img src="u22b3.PNG" alt="antijoin" height="15" width="15"/> R2)</pre>
+<p>Where, ⋈ is the join of R1 and R2 on some predicate, <img src="u228e.PNG" alt="outer union" height="15" width="15"/> is outer union and <img src="u22b3.PNG" alt="antijoin" height="15" width="15"/> is antijoin.
 Antijoin is defined as:</p>
-    <pre class="formula">R1 <img src="u22b3.PNG" height="15" width="15"/> R2 := R1 <img src="uff0d.PNG" height="15" width="15"/> (R1 <img src="u22c9.PNG" height="15" width="15"/> R2)</pre>
-<p>This is the difference between R1 and the result of the semijoin (<img src="u22c9.PNG" height="15" width="15"/>) of R1 and R2. Where
+    <pre class="formula">R1 <img src="u22b3.PNG" alt="antijoin" height="15" width="15"/> R2 := R1 <img src="uff0d.PNG" height="15" width="15"/> (R1 <img src="u22c9.PNG" alt="semijoin" height="15" width="15"/> R2)</pre>
+<p>This is the difference between R1 and the result of the semijoin (<img src="u22c9.PNG" alt="semijoin" height="15" width="15"/>) of R1 and R2. Where
 semijoin is:</p>
-    <pre class="formula">R1 <img src="u22c9.PNG" height="15" width="15"/> R2 := π(R1) (R1 <img src="u22c8.PNG" height="15" width="15"/> R2)</pre>
-<p>Where π(R1) is project on R1 from the results of <img src="u22c9.PNG" height="15" width="15"/> the join of R1 and R2.</p>
+    <pre class="formula">R1 <img src="u22c9.PNG" alt="semijoin" height="15" width="15"/> R2 := π(R1) (R1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> R2)</pre>
+<p>Where π(R1) is project on R1 from the results of <img src="u22c9.PNG" alt="semijoin" height="15" width="15"/> the join of R1 and R2.</p>
 <p>The important distinction to make is that Pérez et al.’s definition uses the difference between
 two sets of tuples (∖) rather than the antijoin. In Appendix A.5, Lemma 3 of [<a href="#ref22">22</a>] it is shown
 that:</p>
-    <pre class="formula">(Ω1 ∖ Ω2) = Ω1 ∖ (Ω1 <img src="u22c8.PNG" height="15" width="15"/> Ω2)</pre>
+    <pre class="formula">(Ω1 ∖ Ω2) = Ω1 ∖ (Ω1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> Ω2)</pre>
 
 <div id="page8"/>
 <p>The expanded version of left outer join becomes:</p>
-    <pre class="formula">Ω1 <img src="u27d5.PNG" height="15" width="15"/> Ω2 = (Ω1 <img src="u22c8.PNG" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ (Ω1 <img src="u22c8.PNG" height="15" width="15"/> Ω2))</pre>
+    <pre class="formula">Ω1 <img src="u27d5.PNG" alt="left outer join" height="15" width="15"/> Ω2 = (Ω1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ (Ω1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> Ω2))</pre>
 <p>While Galindo-Legaria’s left outer join with antijoin and semijoin expanded becomes:</p>
-    <pre class="formula">R1 <img src="u27d5.PNG" height="15" width="15"/> R2 := (R1 <img src="u22c8.PNG" height="15" width="15"/> R2) <img src="u228e.PNG" height="15" width="15"/> (R1 − (π(R1) (R1 <img src="u22c9.PNG" height="15" width="15"/> R2)))</pre>
+    <pre class="formula">R1 <img src="u27d5.PNG" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> R2) <img src="u228e.PNG" alt="outer union" height="15" width="15"/> (R1 − (π(R1) (R1 <img src="u22c9.PNG" alt="semijoin" height="15" width="15"/> R2)))</pre>
 <p>The only difference is the use of semijoin over join. While both of these operations produce
 the same overall result for left outer join, the use of semijoin is considered superior from the
 point of view of efficiency. This is highlighted by Galindo -Legaria [<a href="#ref12">12</a>]:</p>
@@ -405,9 +405,9 @@ OPTIONAL has a lower precedence than its join operation [<a href="#ref22">22</a>
 <p>Tuple subsumption is defined as t1 subsumes t2 if t1 has more values that are not null than t2
 and that the values in t2 that are not null are equal to t1. The removal of subsumed tuples in R
 is denoted as R↓ <!-- was ￬ -->. The minimum union of R1 and R2 is defined as:</p>
-      <pre class="formula">R1 ⊕ R2 := (R1 <img src="u228e.PNG" height="15" width="15"/> R2) ↓</pre>
+      <pre class="formula">R1 ⊕ R2 := (R1 <img src="u228e.PNG" alt="outer union" height="15" width="15"/> R2) ↓</pre>
 <p>Left outer join of R1 and R2 is then defined as:</p>
-      <pre class="formula">R1 <img src="u27d5.PNG" height="15" width="15"/> R2 := R1 ⋈ R2 ⊕ R1</pre>
+      <pre class="formula">R1 <img src="u27d5.PNG" alt="left outer join" height="15" width="15"/> R2 := R1 <img src="u22c8.PNG" alt="join" height="15" width="15"/> R2 ⊕ R1</pre>
     <h3 id="SPARQL">2.8 Other Issues with SPARQL</h3>
 <p>Harris [<a href="#ref16">16</a>] defines three other cases where the relational model will have problems processing
 value constraints - specifically within FILTER operations. They are:</p>
