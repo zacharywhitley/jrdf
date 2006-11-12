@@ -83,10 +83,10 @@ can be used as a basis to extend SPARQL functionality.
 
     <ul>
       <li><a href="#Overview">1 Overview</a><ul>
-	  <li><a href="#Introduction">1.1 Introduction</a></li>
+	  <li><a href="#Introduction1">1.1 Introduction</a></li>
 	</ul></li>
-      <li><a href="#Work">2 Related Work</a><ul>
-	  <li><a href="#Introduction">2.1 Introduction</a></li>
+      <li><a href="#RelatedWork">2 Related Work</a><ul>
+	  <li><a href="#Introduction2">2.1 Introduction</a></li>
 	  <li><a href="#Model">2.2 Motivations for Creating a Formal Model</a></li>
 	  <li><a href="#NULL">2.3 The Use of NULL</a></li>
 	  <li><a href="#Duplicates">2.4 Duplicates</a></li>
@@ -103,7 +103,7 @@ can be used as a basis to extend SPARQL functionality.
 	  <li><a href="#Joins">4.4 Order Independent Joins</a></li>
 	  <li><a href="#OptimisationEffects">4.5 Effect of Optimisation</a></li>
 	</ul></li>
-      <li><a href="#Work">5 Future Work</a><ul>
+      <li><a href="#FutureWork">5 Future Work</a><ul>
 	  <li><a href="#Extending">5.1 Extending the use of the Relational Model</a></li>
 	  <li><a href="#Optimisations">5.2 Further Optimisations</a></li>
 	  <li><a href="#SQL">5.3 A Minimum Union version of OPTIONAL Using SQL</a></li>
@@ -113,7 +113,7 @@ can be used as a basis to extend SPARQL functionality.
     </ul>
 
     <h2 id="Overview">1 Overview</h2>
-    <h3 id="Introduction">1.1 Introduction</h3>
+    <h3 id="Introduction1">1.1 Introduction</h3>
 <p>Resource Description Framework (RDF) is a part of the W3C’s Semantic Web initiative.
 RDF is a simple graph-based data model for representing information on the Web [<a href="#ref18">18</a>]. It has
 a formal data model, with formal semantics, and is designed to be simple, open, and extensible
@@ -151,8 +151,6 @@ design of an RDF query language should support [<a href="#ref14">14</a>]:</p>
 <li>The ability to handle incomplete or contradictory information.</li>
 </ul>
 <p>The beneficial properties of a query language for the Semantic Web defined by Bailey et al.
-
-2
 [<a href="#ref1">1</a>] include:</p>
 
 <ul>
@@ -231,8 +229,8 @@ querying RDF.</li>
 </ol>
 
 <div id="page4"/>
-    <h2 id="Work">2 Related Work</h2>
-    <h3 id="Introduction">2.1 Introduction</h3>
+    <h2 id="RelatedWork">2 Related Work</h2>
+    <h3 id="Introduction2">2.1 Introduction</h3>
 <p>The main work to date dealing with mapping SPARQL to the relational model has been
 motivated, in part, to efficiently answer queries. The use of NULL, duplicates and the order
 in which operations are executed have been the main incompatibilities highlighted so far. With
@@ -366,29 +364,29 @@ reuse these techniques by treating intermediate results using a slightly non-tra
 approach. This approach is discussed in future work.</p>
 <p>Another difference between Pérez et al. and Galindo-Legaria is the definition of left outer join.
 In Pérez et al. it is defined as:</p>
-    <pre class="formula">Ω1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> Ω2 = (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ Ω2)</pre>
+    <p class="formula">Ω1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> Ω2 = (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ Ω2)</p>
 <p>Where Ω is a set of mappings, where a mapping is a partial function of variables (V) to tuples
 (T). Tuples (T) consist of the positional elements subject (v1), predicate (v2) and object (v3)
 of an RDF statement.</p>
 <p>Galindo-Legaria [<a href="#ref12">12</a>] defines left outer join of two relations R1 and R2 as:</p>
-    <pre class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2) <img src="u228E.png" alt="outer union" height="15" width="15"/> (R1 <img src="u22B3.png" alt="antijoin" height="15" width="15"/> R2)</pre>
+    <p class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2) <img src="u228E.png" alt="outer union" height="15" width="15"/> (R1 <img src="u22B3.png" alt="antijoin" height="15" width="15"/> R2)</p>
 <p>Where, ⋈ is the join of R1 and R2 on some predicate, <img src="u228E.png" alt="outer union" height="15" width="15"/> is outer union and <img src="u22B3.png" alt="antijoin" height="15" width="15"/> is antijoin.
 Antijoin is defined as:</p>
-    <pre class="formula">R1 <img src="u22B3.png" alt="antijoin" height="15" width="15"/> R2 := R1 <img src="uff0D.png" height="15" width="15"/> (R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2)</pre>
+    <p class="formula">R1 <img src="u22B3.png" alt="antijoin" height="15" width="15"/> R2 := R1 <img src="uFF0D.png" alt="minus" height="15" width="15"/> (R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2)</p>
 <p>This is the difference between R1 and the result of the semijoin (<img src="u22C9.png" alt="semijoin" height="15" width="15"/>) of R1 and R2. Where
 semijoin is:</p>
-    <pre class="formula">R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2 := π(R1) (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2)</pre>
+    <p class="formula">R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2 := π(R1) (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2)</p>
 <p>Where π(R1) is project on R1 from the results of <img src="u22C9.png" alt="semijoin" height="15" width="15"/> the join of R1 and R2.</p>
 <p>The important distinction to make is that Pérez et al.’s definition uses the difference between
 two sets of tuples (∖) rather than the antijoin. In Appendix A.5, Lemma 3 of [<a href="#ref22">22</a>] it is shown
 that:</p>
-    <pre class="formula">(Ω1 ∖ Ω2) = Ω1 ∖ (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2)</pre>
+    <p class="formula">(Ω1 ∖ Ω2) = Ω1 ∖ (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2)</p>
 
 <div id="page8"/>
 <p>The expanded version of left outer join becomes:</p>
-    <pre class="formula">Ω1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> Ω2 = (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2))</pre>
+    <p class="formula">Ω1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> Ω2 = (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2))</p>
 <p>While Galindo-Legaria’s left outer join with antijoin and semijoin expanded becomes:</p>
-    <pre class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2) <img src="u228E.png" alt="outer union" height="15" width="15"/> (R1 − (π(R1) (R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2)))</pre>
+    <p class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2) <img src="u228E.png" alt="outer union" height="15" width="15"/> (R1 − (π(R1) (R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2)))</p>
 <p>The only difference is the use of semijoin over join. While both of these operations produce
 the same overall result for left outer join, the use of semijoin is considered superior from the
 point of view of efficiency. This is highlighted by Galindo -Legaria [<a href="#ref12">12</a>]:</p>
@@ -405,9 +403,9 @@ OPTIONAL has a lower precedence than its join operation [<a href="#ref22">22</a>
 <p>Tuple subsumption is defined as t1 subsumes t2 if t1 has more values that are not null than t2
 and that the values in t2 that are not null are equal to t1. The removal of subsumed tuples in R
 is denoted as R↓ <!-- was ￬ -->. The minimum union of R1 and R2 is defined as:</p>
-      <pre class="formula">R1 ⊕ R2 := (R1 <img src="u228E.png" alt="outer union" height="15" width="15"/> R2) ↓</pre>
+      <p class="formula">R1 ⊕ R2 := (R1 <img src="u228E.png" alt="outer union" height="15" width="15"/> R2) ↓</p>
 <p>Left outer join of R1 and R2 is then defined as:</p>
-      <pre class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2 ⊕ R1</pre>
+      <p class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2 ⊕ R1</p>
     <h3 id="SPARQL">2.8 Other Issues with SPARQL</h3>
 <p>Harris [<a href="#ref16">16</a>] defines three other cases where the relational model will have problems processing
 value constraints - specifically within FILTER operations. They are:</p>
@@ -871,7 +869,7 @@ by comparing how many times faster “JRDF w/ Sub.” is compared to “JRDF”:
 the two.</p>
 
 <div id="page21"/>
-<h2 id="Work">5 Future Work</h2>
+<h2 id="FutureWork">5 Future Work</h2>
 <h3 id="Extending">5.1 Extending the use of the Relational Model</h3>
 <p>The relational model offers the ability to simplify and extend SPARQL. For example, the
 two SPARQL operations: CONSTRUCT and ASK are designed to produce two alternate
