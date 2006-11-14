@@ -531,8 +531,8 @@ Date [<a href="#ref6">6</a>] the following relations can be created:</p>
 	<tr><td>Parts2</td><td>‘Paris’</td></tr>
       </tbody>
     </table>
-</div>  
- 
+</div>
+
 <p style="clear: both">A similar representation using relations modified to use RDF components (RDF relations) is
 
 <a id="page12"/>
@@ -633,9 +633,9 @@ types supported consist of RDF positional types (SubjectNodeType, PredicateNodeT
 and ObjectNodeType), composite positional types (such as SubjectPredicateNodeType and
 all other unique combinations) and value types (BlankNodeType, LiteralNodeType and
 URIReferenceNodeType).</p>
-<p>One of the first designs proposed to be used in JRDF was to calculate compositional nodes 
-during joins.  When two relations were joined and a variable appeared in two different places, 
-a new node type was derived. For example, the join of two relations on a variable that appears 
+<p>One of the first designs proposed to be used in JRDF was to calculate compositional nodes
+during joins.  When two relations were joined and a variable appeared in two different places,
+a new node type was derived. For example, the join of two relations on a variable that appears
 both as a subject and a predicate results in it being associated with a new type
 “subjectpredicate”. Where, “subjectpredicate” is a composite type made of a subject and
 predicate node type.</p>
@@ -896,8 +896,8 @@ graph based on the results of a query. Each row will produce new entries in the 
 
 <p>Produces the set of statements: {a, c, d}{b,c,d}{a,c,e}{b,c,e}{c, c, d}{c,c,e}</p>
       <table border="1">
-	<tr><td>?foo:URI ?bar:URI</td></tr>
-	<tr><td>a b</td></tr>
+	<tr><td>?foo:URI</td><td>?bar:URI</td></tr>
+	<tr><td>a</td><td>b</td></tr>
 	  </table>
 
 <p>Produces the set of statements: {a, a, a} {a, a, b} {a, b, a} {a, b, b} {b, a, a} {b, a, b},
@@ -934,7 +934,7 @@ Cartesian products and could be applied to SPARQL optimisation.</p>
 scalability and performance characteristics and remains a key piece of infrastructure used in
 organisations. With this in mind it is important to consider how this work can be applied to
 SQL databases.</p>
-<p>Existing work translation SPARQL to SQL [<a href="#ref2">2</a>] did not apply a minimum union approach to
+<p>Existing work translating SPARQL to SQL [<a href="#ref2">2</a>] did not apply a minimum union approach to
 implementing OPTIONAL. Larson and Zhou have applied the Galindo-Legaria approach of
 translating queries into join-disjunctive form, where outer join queries are implemented as
 outer unions, using SQL for view matching [<a href="#ref19">19</a>]. The results from this work have shown that
