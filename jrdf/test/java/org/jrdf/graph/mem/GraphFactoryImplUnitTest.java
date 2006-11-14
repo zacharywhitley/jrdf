@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -55,42 +55,19 @@
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
+
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
+import junit.framework.TestCase;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
-import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
-/**
- * Creates a new Graph implementation based on required types.
- *
- * @author Andrew Newman
- * @version $Id$
- */
-public final class GraphFactoryImpl implements GraphFactory {
-    private LongIndex[] longIndexes;
-    private NodePoolMem nodePool;
-    private GraphHandler012 handler012;
-    private GraphElementFactory elementFactory;
-    private IteratorFactory iteratorFactory;
+import java.lang.reflect.Modifier;
 
-    public GraphFactoryImpl(LongIndex[] longIndexes, NodePoolMem nodePool) {
-        this.longIndexes = longIndexes;
-        this.nodePool = nodePool;
-        this.handler012 = new GraphHandler012(longIndexes, nodePool);
-        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, new GraphHandler[]{handler012,
-                new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)});
-        this.elementFactory = new GraphElementFactoryImpl(nodePool);
-    }
-
-    public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, elementFactory, handler012, iteratorFactory);
+public class GraphFactoryImplUnitTest extends TestCase {
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(GraphFactory.class, GraphFactoryImpl.class);
+        ClassPropertiesTestUtil.checkConstructor(GraphFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class, NodePoolMem.class);
     }
 }
