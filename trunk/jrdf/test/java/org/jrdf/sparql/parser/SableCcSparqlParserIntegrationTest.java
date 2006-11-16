@@ -97,6 +97,7 @@ import static org.jrdf.util.test.TripleTestUtil.createConstraintExpression;
 
 import java.lang.reflect.Field;
 
+@SuppressWarnings({"unchecked"})
 public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     // FIXME TJA: Triangulate on variables.
@@ -213,8 +214,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName) throws IllegalAccessException {
         Field field = ReflectTestUtil.getField(cls, fieldName);
         field.setAccessible(true);
-        Expression<ExpressionVisitor> expression = (Expression<ExpressionVisitor>) field.get(obj);
-        return expression;
+        return (Expression<ExpressionVisitor>) field.get(obj);
     }
 
     private Query parseQuery(String queryString) {
