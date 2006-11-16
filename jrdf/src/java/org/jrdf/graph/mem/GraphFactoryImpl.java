@@ -86,7 +86,7 @@ public final class GraphFactoryImpl implements GraphFactory {
         this.nodePool = nodePool;
         this.handler012 = new GraphHandler012(longIndexes, nodePool);
         this.iteratorFactory = new IteratorFactoryImpl(longIndexes, new GraphHandler[]{handler012,
-                new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)});
+            new GraphHandler120(longIndexes, nodePool), new GraphHandler201(longIndexes, nodePool)});
         this.elementFactory = new GraphElementFactoryImpl(nodePool);
     }
 
