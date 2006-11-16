@@ -68,6 +68,7 @@ import org.jrdf.query.expression.Conjunction;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
+import org.jrdf.query.expression.Projection;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
@@ -202,12 +203,18 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private Expression<ExpressionVisitor> getExpression(Query query) {
         try {
-            Field field = ReflectTestUtil.getField(QueryImpl.class, "expression");
-            field.setAccessible(true);
-            return (Expression<ExpressionVisitor>) field.get(query);
+            Expression<ExpressionVisitor> expression = getExpressionField(query, QueryImpl.class, "expression");
+            return getExpressionField(expression, Projection.class, "nextExpression");
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName) throws IllegalAccessException {
+        Field field = ReflectTestUtil.getField(cls, fieldName);
+        field.setAccessible(true);
+        Expression<ExpressionVisitor> expression = (Expression<ExpressionVisitor>) field.get(obj);
+        return expression;
     }
 
     private Query parseQuery(String queryString) {
