@@ -251,9 +251,6 @@
         <constructor-arg>
             <ref bean="relationFactory"/>
         </constructor-arg>
-        <constructor-arg>
-            <ref bean="mergeHeadings"/>
-        </constructor-arg>
     </bean>
 
     <bean id="restrict" class="org.jrdf.query.relation.operation.mem.restrict.RestrictImpl">
