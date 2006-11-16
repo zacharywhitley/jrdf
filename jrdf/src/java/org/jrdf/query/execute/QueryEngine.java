@@ -60,6 +60,7 @@ package org.jrdf.query.execute;
 
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
 
 import java.util.Map;
@@ -73,5 +74,5 @@ import java.util.Map;
 public interface QueryEngine extends ExpressionVisitor {
     Relation getResult();
     void initialiseBaseRelation(Relation newRelation);
-    void setAllVariables(Map<String, NodeType> variables);
+    void setAllVariables(Map<AttributeName, NodeType> variables);
 }

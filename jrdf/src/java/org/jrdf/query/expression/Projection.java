@@ -84,7 +84,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     private LinkedHashSet<Attribute> attributes;
     private LinkedHashSet<AttributeName> declaredVariables;
     private Expression<ExpressionVisitor> nextExpression;
-    private Map<String, NodeType> allVariables;
+    private Map<AttributeName, NodeType> allVariables;
 
     private Projection() {
     }
@@ -107,7 +107,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         return attributes;
     }
 
-    public Map<String, NodeType> getAllVariables() {
+    public Map<AttributeName, NodeType> getAllVariables() {
         return allVariables;
     }
 
@@ -141,11 +141,11 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
 
     private LinkedHashSet<Attribute> extractAttributes() throws ParserException {
         LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
-        Map<String, NodeType> variables = variableCollector.getVariables();
+        Map<AttributeName, NodeType> variables = variableCollector.getVariables();
         for (AttributeName variable : declaredVariables) {
-            String literal = variable.getLiteral();
-            NodeType type = variables.get(literal);
+            NodeType type = variables.get(variable);
             if (type == null) {
+                String literal = variable.getLiteral();
                 throw new ParserException(new TIdentifier(literal), "Failed to find variable " +
                         literal + " in where clause. ");
             } else {
