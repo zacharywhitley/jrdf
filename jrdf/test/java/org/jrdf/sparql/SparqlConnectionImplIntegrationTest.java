@@ -144,8 +144,6 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
         Tuple tuple = solutions.iterator().next();
         Set<AttributeValuePair> sortedAttributeValues = tuple.getSortedAttributeValues();
         Iterator<AttributeValuePair> iterator = sortedAttributeValues.iterator();
-        checkSubject((SubjectNode) iterator.next().getValue());
-        checkPredicate((PredicateNode) iterator.next().getValue());
         checkLiteral((Literal) iterator.next().getValue());
     }
 
