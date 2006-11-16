@@ -96,4 +96,8 @@ public final class VariableName implements AttributeName {
         }
         return ((AttributeName) obj).getLiteral().equals(getLiteral());
     }
+
+    public String toString() {
+        return variableName;
+    }
 }
