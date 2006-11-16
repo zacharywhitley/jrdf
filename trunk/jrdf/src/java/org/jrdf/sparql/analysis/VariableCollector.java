@@ -59,6 +59,7 @@
 package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
 
 import java.util.List;
@@ -70,5 +71,5 @@ import java.util.Map;
 public interface VariableCollector {
     void addVariables(List<AttributeValuePair> avps);
 
-    Map<String, NodeType> getVariables();
+    Map<AttributeName, NodeType> getVariables();
 }

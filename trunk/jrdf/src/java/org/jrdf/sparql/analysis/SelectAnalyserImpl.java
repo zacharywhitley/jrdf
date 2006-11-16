@@ -104,7 +104,11 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
     public void caseAWildcardSelectClause(AWildcardSelectClause node) {
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
-            expression = analyser.getExpression();
+//            expression = analyser.getExpression();
+            Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
+            LinkedHashSet<AttributeName> declaredVariables = new LinkedHashSet<AttributeName>();
+            declaredVariables.addAll(variableCollector.getVariables().keySet());
+            expression = new Projection<ExpressionVisitor>(variableCollector, declaredVariables, nextExpression);
         } catch (ParserException e) {
             exception = e;
         }
