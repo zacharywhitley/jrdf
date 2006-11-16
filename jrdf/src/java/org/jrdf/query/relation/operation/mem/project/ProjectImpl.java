@@ -78,12 +78,10 @@ import java.util.Set;
 public class ProjectImpl implements Project {
     private final TupleFactory tupleFactory;
     private final RelationFactory relationFactory;
-    private final MergeHeadings mergeHeadings;
 
-    public ProjectImpl(TupleFactory tupleFactory, RelationFactory relationFactory, MergeHeadings mergeHeadings) {
+    public ProjectImpl(TupleFactory tupleFactory, RelationFactory relationFactory) {
         this.tupleFactory = tupleFactory;
         this.relationFactory = relationFactory;
-        this.mergeHeadings = mergeHeadings;
     }
 
     public Relation include(Relation relation, Set<Attribute> attributes) {
@@ -91,8 +89,6 @@ public class ProjectImpl implements Project {
         if (relation.getHeading().equals(attributes)) {
             return relation;
         }
-
-        relation = mergeHeadings.merge(relation, attributes);
 
         Set<Attribute> newHeading = relation.getHeading();
         newHeading.retainAll(attributes);
@@ -106,7 +102,6 @@ public class ProjectImpl implements Project {
             return relation;
         }
 
-        relation = mergeHeadings.merge(relation, attributes);
         Set<Attribute> newHeading = relation.getHeading();
         newHeading.removeAll(attributes);
         return project(relation, newHeading);

@@ -171,15 +171,6 @@
         </constructor-arg>
     </bean>
 
-    <bean id="mergeHeadings" class="org.jrdf.query.relation.operation.mem.project.MergeHeadingsImpl">
-        <constructor-arg>
-            <ref bean="tupleFactory"/>
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="relationFactory"/>
-        </constructor-arg>
-    </bean>
-
     <!-- Relational Operators -->
     <bean id="relationHelper" class="org.jrdf.query.relation.mem.RelationHelperImpl">
         <constructor-arg>
