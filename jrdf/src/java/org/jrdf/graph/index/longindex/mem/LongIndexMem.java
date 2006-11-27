@@ -76,7 +76,6 @@ import java.util.Set;
  */
 public final class LongIndexMem implements LongIndex, Serializable {
     private static final long serialVersionUID = -8212815756891200898L;
-
     private Map<Long, Map<Long, Set<Long>>> index;
 
     public LongIndexMem() {
