@@ -86,11 +86,6 @@ public class TypeComparatorImplIntegrationTest extends TestCase {
         typeComparator = TestJRDFFactory.getFactory().getNewTypeComparator();
     }
 
-    public void testNullPointerException() {
-        checkNullPointerException(typeComparator, BNODE_TYPE, null);
-        checkNullPointerException(typeComparator, null, BNODE_TYPE);
-    }
-
     public void testIdentity() {
         assertEquals(EQUAL, typeComparator.compare(BNODE_TYPE, BNODE_TYPE));
     }
@@ -129,16 +124,5 @@ public class TypeComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, typeComparator.compare(SUBJECT_POSITIONAL_NODE, BNODE_TYPE));
         assertEquals(AFTER, typeComparator.compare(PREDICATE_POSITIONAL_NODE, URI_NODE_TYPE));
         assertEquals(AFTER, typeComparator.compare(OBJECT_POSITIONAL_NODE, LITERAL_NODE_TYPE));
-    }
-
-    // TODO (AN) Duplication with other comparator tests
-    private void checkNullPointerException(final TypeComparator attComparator, final NodeType type1,
-                                           final NodeType type2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                attComparator.compare(type1, type2);
-            }
-        });
     }
 }

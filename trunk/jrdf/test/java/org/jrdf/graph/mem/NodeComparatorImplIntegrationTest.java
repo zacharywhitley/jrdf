@@ -67,6 +67,8 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ComparatorTestUtil;
+import static org.jrdf.util.test.ComparatorTestUtil.*;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
@@ -143,14 +145,5 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
         assertEquals(BEFORE, nodeComparator.compare(LITERAL_1, LITERAL_2));
         assertEquals(AFTER, nodeComparator.compare(LITERAL_2, LITERAL_1));
         assertEquals(EQUAL, nodeComparator.compare(LITERAL_2, new LiteralImpl("foo")));
-    }
-
-    private void checkNullPointerException(final NodeComparator nodeComparator, final Node node1, final Node node2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                nodeComparator.compare(node1, node2);
-            }
-        });
     }
 }

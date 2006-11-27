@@ -64,6 +64,8 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ComparatorTestUtil;
+import static org.jrdf.util.test.ComparatorTestUtil.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -76,8 +78,14 @@ import java.lang.reflect.Modifier;
  */
 public class TypeComparatorImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
-    private static final NodeTypeComparator NODE_TYPE_COMPARATOR = factory.createMock(NodeTypeComparator.class);
     private static final int EQUAL = 0;
+    private TypeComparator typeComparator;
+    private NodeType mockNodeType;
+
+    public void setUp() {
+        typeComparator = new TypeComparatorImpl(factory.createMock(NodeTypeComparator.class));
+        mockNodeType = factory.createMock(NodeType.class);
+    }
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(TypeComparator.class, TypeComparatorImpl.class);
@@ -86,11 +94,14 @@ public class TypeComparatorImplUnitTest extends TestCase {
         checkConstructor(TypeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
     }
 
+    public void testNullPointerException() {
+        checkNullPointerException(typeComparator, mockNodeType, null);
+        checkNullPointerException(typeComparator, null, mockNodeType);
+    }
+
     public void testCompareEqual() {
-        NodeType firstNodeType = factory.createMock(NodeType.class);
         factory.replay();
-        TypeComparator typeComparator = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
-        int result = typeComparator.compare(firstNodeType, firstNodeType);
+        int result = typeComparator.compare(mockNodeType, mockNodeType);
         factory.verify();
         assertTrue(EQUAL == result);
     }

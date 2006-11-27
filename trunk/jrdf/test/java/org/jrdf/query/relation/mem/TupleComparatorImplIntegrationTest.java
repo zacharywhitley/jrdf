@@ -70,6 +70,8 @@ import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_5;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
 import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ComparatorTestUtil;
+import static org.jrdf.util.test.ComparatorTestUtil.*;
 
 /**
  * Test for the implementation of TupleComparatorImpl.
@@ -133,15 +135,5 @@ public class TupleComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_1_2, TEST_TUPLE_1_3));
         assertEquals(AFTER, tupleComparator.compare(TEST_TUPLE_1_2, TEST_TUPLE_3_1));
         assertEquals(EQUAL, tupleComparator.compare(TEST_TUPLE_1_3, TEST_TUPLE_3_1));
-    }
-
-    private void checkNullPointerException(final TupleComparator tupleComparator, final Tuple tuple1,
-                                           final Tuple tuple2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                tupleComparator.compare(tuple1, tuple2);
-            }
-        });
     }
 }
