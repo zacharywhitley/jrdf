@@ -70,6 +70,8 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ComparatorTestUtil;
+import static org.jrdf.util.test.ComparatorTestUtil.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -160,17 +162,6 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     private AttributeComparator createComparator(TypeComparator nodeComparator,
             AttributeNameComparator attributeNameComparator) {
         return new AttributeComparatorImpl(nodeComparator, attributeNameComparator);
-    }
-
-    // TODO (AN) Duplication with other comparator tests
-    private void checkNullPointerException(final AttributeComparator attComparator, final Attribute att,
-            final Attribute att2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                attComparator.compare(att, att2);
-            }
-        });
     }
 
     private static class TestAttribute implements Attribute {

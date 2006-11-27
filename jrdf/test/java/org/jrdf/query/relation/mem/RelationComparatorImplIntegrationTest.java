@@ -65,6 +65,8 @@ import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_1;
 import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_2;
 import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_3;
 import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ComparatorTestUtil;
+import static org.jrdf.util.test.ComparatorTestUtil.*;
 
 /**
  * Test for the implementation of NodeComparatorImpl.
@@ -106,15 +108,5 @@ public class RelationComparatorImplIntegrationTest extends TestCase {
 
     public void testTupleOrderAntiCommutation() {
         assertEquals(AFTER, relationComparator.compare(TEST_RELATION_3, TEST_RELATION_2));
-    }
-
-    private void checkNullPointerException(final RelationComparator relationComparator, final Relation relation1,
-                                           final Relation relation2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                relationComparator.compare(relation1, relation2);
-            }
-        });
     }
 }

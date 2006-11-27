@@ -67,6 +67,8 @@ import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLAR
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_BAR_LITERAL;
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_FOO_LITERAL;
 import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ComparatorTestUtil;
+import static org.jrdf.util.test.ComparatorTestUtil.*;
 
 /**
  * Test for the implementation of NodeComparatorImpl.
@@ -117,16 +119,5 @@ public class AttributeValuePairComparatorImplIntegrationTest extends TestCase {
 
     public void testOrderOfValuesAntiCommutation() {
         assertEquals(AFTER, avpComparator.compare(TEST_AVP_3, TEST_AVP_1));
-    }
-
-    // TODO (AN) Duplication with other comparator tests
-    private void checkNullPointerException(final AttributeValuePairComparator avpComparator,
-                                           final AttributeValuePair node1, final AttributeValuePair node2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                avpComparator.compare(node1, node2);
-            }
-        });
     }
 }

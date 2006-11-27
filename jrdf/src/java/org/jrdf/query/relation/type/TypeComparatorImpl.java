@@ -60,6 +60,7 @@ package org.jrdf.query.relation.type;
 
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeEnum;
+import org.jrdf.query.relation.AttributeValuePair;
 
 // TODO (AN) This does a lot of comparisons by type - possibly move methods such as isPositionType to NodeType.
 
@@ -84,6 +85,8 @@ public final class TypeComparatorImpl implements TypeComparator {
     }
 
     public int compare(NodeType type1, NodeType type2) {
+        ifNullThrowException(type1, type2);
+
         if (type1.equals(type2)) {
             return EQUAL;
         }
@@ -143,5 +146,11 @@ public final class TypeComparatorImpl implements TypeComparator {
         NodeTypeEnum nodeType2Enum = NodeTypeEnum.getNodeType(type2.getClass());
         result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
         return result;
+    }
+
+    private void ifNullThrowException(NodeType nodeType1, NodeType nodeType2) {
+        if (nodeType1 == null || nodeType2 == null) {
+            throw new NullPointerException();
+        }
     }
 }

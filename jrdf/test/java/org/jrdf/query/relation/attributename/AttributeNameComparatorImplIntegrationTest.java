@@ -60,6 +60,8 @@ package org.jrdf.query.relation.attributename;
 
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.ComparatorTestUtil;
+import static org.jrdf.util.test.ComparatorTestUtil.*;
 import junit.framework.TestCase;
 
 /**
@@ -104,16 +106,5 @@ public class AttributeNameComparatorImplIntegrationTest extends TestCase {
         assertEquals(AFTER, attNameComparator.compare(VAR_BAR, POS_BAR));
         assertEquals(AFTER, attNameComparator.compare(VAR_BAR, POS_FOO));
         assertEquals(AFTER, attNameComparator.compare(POS_FOO, POS_BAR));
-    }
-
-    // TODO (AN) Duplication with other comparator tests
-    private void checkNullPointerException(final AttributeNameComparator attNameComparator, final AttributeName att,
-                                           final AttributeName att2) {
-        AssertThrows.assertThrows(NullPointerException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                //noinspection unchecked
-                attNameComparator.compare(att, att2);
-            }
-        });
     }
 }
