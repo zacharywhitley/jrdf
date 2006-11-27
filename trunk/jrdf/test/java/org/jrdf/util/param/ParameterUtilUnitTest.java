@@ -91,6 +91,7 @@ public final class ParameterUtilUnitTest extends TestCase {
     }
 
     public void testNotNullInASingleMethodCall() {
+        checkVarArgsNullCheck(1, null);
         checkVarArgsNullCheck(1, (Object) null);
         checkVarArgsNullCheck(2, NON_NULL_OBJECT, null);
         checkVarArgsNullCheck(3, NON_NULL_OBJECT, NON_NULL_OBJECT, null);

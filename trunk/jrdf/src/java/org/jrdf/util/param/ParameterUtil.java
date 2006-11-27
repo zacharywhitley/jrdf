@@ -62,24 +62,7 @@ package org.jrdf.util.param;
  * Utility for checking parameters to methods.
  */
 public final class ParameterUtil {
-    private static final ParameterChecker NULL_CHECKER = new NullChecker();
-    private static final ParameterChecker EMPTY_STRING_CHECKER = new EmtpyStringChecker();
-
     private ParameterUtil() {
-    }
-
-    // TODO (AN) Remove other users of this.
-    /**
-     * Checks if <var>param</var> is <code>null</code> and throws an exception if it is.
-     *
-     * @param name  The name of the parameter to check.
-     * @param param The parameter to check.
-     * @throws IllegalArgumentException If <var>param</var> is <code>null</code>.
-     */
-    public static void checkNotNull(String name, Object param) throws IllegalArgumentException {
-        if (!NULL_CHECKER.paramAllowed(param)) {
-            throw new IllegalArgumentException(name + " cannot be null");
-        }
     }
 
     /**
@@ -90,12 +73,20 @@ public final class ParameterUtil {
      * @throws IllegalArgumentException If <var>param</var> is <code>null</code> or the empty string.
      */
     public static void checkNotEmptyString(String name, String param) throws IllegalArgumentException {
-        checkNotNull(name, param);
-        if (!EMPTY_STRING_CHECKER.paramAllowed(param)) {
+        if (param == null) {
+            throw new IllegalArgumentException(name + " cannot be null");
+        }
+        if (param.trim().equals("")) {
             throw new IllegalArgumentException(name + " cannot be the empty string");
         }
     }
 
+    /**
+     * Checks if <var>params</var> are <code>null</code> or any elements are null.
+     *
+     * @param params The parameter to check.
+     * @throws IllegalArgumentException If <var>params</var> is <code>null</code> or any elements are null.
+     */
     public static void checkNotNull(Object... params) {
         if (params == null) {
             raise(1);
