@@ -151,10 +151,8 @@ public class SemiJoinEngine implements TupleEngine {
             SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         if (avp2 != null) {
             addResults(avp2, resultantAttributeValues, lhsAttributeValuePairs);
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,

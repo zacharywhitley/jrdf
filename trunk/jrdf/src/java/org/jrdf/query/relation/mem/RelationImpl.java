@@ -69,7 +69,6 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -92,7 +91,8 @@ public final class RelationImpl implements Relation {
     // get the maximum heading values.
     RelationImpl(Set<Tuple> tuples, AttributeComparator attributeComparator, TupleComparator tupleComparator) {
         checkNotNull(tuples, attributeComparator, tupleComparator);
-        create(createHeadingFromTuples(tuples), tuples, attributeComparator, tupleComparator);
+        Set<Attribute> fromTuples = createHeadingFromTuples(tuples);
+        create(fromTuples, tuples, attributeComparator, tupleComparator);
     }
 
     RelationImpl(Set<Attribute> heading, Set<Tuple> tuples, AttributeComparator attributeComparator,
@@ -178,9 +178,7 @@ public final class RelationImpl implements Relation {
 
     private Set<Attribute> createHeadingFromTuples(Set<Tuple> newTuples) {
         Set<Attribute> heading = new HashSet<Attribute>();
-        Iterator<Tuple> iterator = newTuples.iterator();
-        if (iterator.hasNext()) {
-            Tuple tuple = iterator.next();
+        for (Tuple tuple : newTuples) {
             addHeading(tuple, heading);
         }
         return heading;

@@ -60,6 +60,7 @@ package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
 import org.easymock.classextension.IMocksControl;
+import org.easymock.EasyMock;
 import static org.jrdf.TestJRDFFactory.getFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -135,8 +136,7 @@ public class RelationHelperImplUnitTest extends TestCase {
     private Relation createRelation(Set<Attribute> set) {
         IMocksControl control = mockFactory.createControl();
         Relation relation = control.createMock(Relation.class);
-        relation.getHeading();
-        control.andReturn(set);
+        EasyMock.expect(relation.getHeading()).andReturn(set);
         return relation;
     }
 
