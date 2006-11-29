@@ -72,45 +72,19 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+import org.jrdf.query.relation.operation.mem.AbstractLeftOuterJoinIntegrationTest;
 
 import java.util.Set;
 
 /**
- * Tests the integration between optional and other classes.
+ * Extends AbstractLeftOuterJoinIntegrationTest to ensure that the standard relation version of left outer join is
+ * correct wrt to the contract of SPARQL's OPTIONAL.
  *
  * @author Andrew Newman
  * @version $Revision: 717 $
  */
-public class LeftOuterJoinImplIntegrationTest extends TestCase {
-    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final DyadicJoin LEFT_OUTER_JOIN = FACTORY.getNewLeftOuterJoin();
-
-    public void testLeftOuterJoin1() {
-        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3);
-        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1));
-
-        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2);
-        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R3));
-
-        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R2);
-        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO4_PREDICATE_R3));
-
-        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+public class LeftOuterJoinImplIntegrationTest extends AbstractLeftOuterJoinIntegrationTest {
+    public DyadicJoin getJoin() {
+        return TestJRDFFactory.getFactory().getNewLeftOuterJoin();
     }
-
-    private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = LEFT_OUTER_JOIN.join(relation1, relation2);
-
-//        Set<Tuple> sortedTuples = relation.getSortedTuples();
-//        Set<Tuple> sortedTuples2 = expected.getSortedTuples();
-//        System.err.println("Sorted Actual tuples relation: " + relation.getSortedTuples());
-//        System.err.println("Sorted Expected tuples relation: " + expected.getSortedTuples());
-//        System.err.println("-------------------------------");
-//        boolean isEqual = sortedTuples.equals(sortedTuples2);
-//        System.err.println("Sorted Expected tuples relation1: " + isEqual);
-//        System.err.println("Sorted Expected tuples relation2: " + expected.getSortedTuples().equals(relation.getSortedTuples()));
-//        System.err.println("Sorted Expected tuples relation3: " + relation.getSortedTuples().equals(expected.getSortedTuples()));
-        assertEquals(expectedResult, relation);
-    }
-
 }
