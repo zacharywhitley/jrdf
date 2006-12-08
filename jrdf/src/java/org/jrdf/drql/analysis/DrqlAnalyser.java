@@ -56,14 +56,38 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.drql.parser;
+package org.jrdf.drql.analysis;
+
+import org.jrdf.query.Query;
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.drql.parser.analysis.Analysis;
+import org.jrdf.drql.parser.parser.ParserException;
+
+import java.util.LinkedHashSet;
 
 /**
- * Parses <a href="http://www.w3.org/TR/rdf-drql-query/">SPARQL</a> textual queries into
- * {@linkplain org.jrdf.query.Query queries}.
+ * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
  *
  * @author Tom Adams
  * @version $Revision: 982 $
  */
-public interface SparqlParser extends QueryParser {
+public interface DrqlAnalyser extends Analysis {
+
+    /**
+     * Indicates that this analyser has not processed a query yet.
+     */
+    Query NO_QUERY = new NoQuery();
+
+    /**
+     * An empty header.
+     */
+    LinkedHashSet<Attribute> NO_HEADER = new LinkedHashSet<Attribute>();
+
+    /**
+     * Returns the query processed by this analyser.
+     *
+     * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
+     */
+    Query getQuery() throws ParserException;
+
 }

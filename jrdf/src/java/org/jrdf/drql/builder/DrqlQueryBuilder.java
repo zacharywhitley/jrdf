@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,62 +56,36 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.drql.analysis;
+package org.jrdf.drql.builder;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.query.QueryImpl;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.drql.builder.TripleBuilder;
-import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.drql.parser.node.Start;
-import org.jrdf.drql.parser.parser.ParserException;
-import org.jrdf.util.param.ParameterUtil;
+import org.jrdf.drql.parser.DrqlParser;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
- * Default implementation of {@link SparqlAnalyser}.
+ * Builds SPARQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
  *
  * @author Tom Adams
- * @version $Revision: 982 $
+ * @version $Id: DrqlQueryBuilder.java 598 2006-06-20 01:47:56Z newmana $
  */
-public final class SparqlAnalyserImpl extends DepthFirstAdapter implements SparqlAnalyser {
-    private Query query = NO_QUERY;
-    private TripleBuilder tripleBuilder;
-    private Graph graph;
-    private final GraphRelationFactory graphRelationFactory;
-    private Expression<ExpressionVisitor> expression;
-    private ParserException exception;
+public final class DrqlQueryBuilder implements QueryBuilder {
 
-    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, GraphRelationFactory graphRelationFactory) {
-        ParameterUtil.checkNotNull(tripleBuilder, graph, graphRelationFactory);
-        this.tripleBuilder = tripleBuilder;
-        this.graph = graph;
-        this.graphRelationFactory = graphRelationFactory;
+    private final DrqlParser parser;
+
+    public DrqlQueryBuilder(DrqlParser parser) {
+        checkNotNull(parser);
+        this.parser = parser;
     }
 
     /**
      * {@inheritDoc}
      */
-    public Query getQuery() throws ParserException {
-        if (exception != null) {
-            throw exception;
-        }
-        if (expression != null && query == NO_QUERY) {
-            query = new QueryImpl(expression, graphRelationFactory);
-        }
-        return query;
-    }
-
-    @Override
-    public void inStart(Start node) {
-        try {
-            PrefixAnalyser analyser = new PrefixAnalyserImpl(tripleBuilder, graph);
-            node.apply(analyser);
-            expression = analyser.getExpression();
-        } catch (ParserException e) {
-            exception = e;
-        }
+    public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
+        checkNotNull(graph);
+        checkNotEmptyString("queryText", queryText);
+        return parser.parseQuery(graph, queryText);
     }
 }

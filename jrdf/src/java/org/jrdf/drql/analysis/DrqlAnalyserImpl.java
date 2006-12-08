@@ -58,36 +58,60 @@
 
 package org.jrdf.drql.analysis;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.drql.parser.analysis.Analysis;
+import org.jrdf.query.QueryImpl;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.drql.builder.TripleBuilder;
+import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.drql.parser.node.Start;
 import org.jrdf.drql.parser.parser.ParserException;
-
-import java.util.LinkedHashSet;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
- * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
+ * Default implementation of {@link DrqlAnalyser}.
  *
  * @author Tom Adams
  * @version $Revision: 982 $
  */
-public interface SparqlAnalyser extends Analysis {
+public final class DrqlAnalyserImpl extends DepthFirstAdapter implements DrqlAnalyser {
+    private Query query = NO_QUERY;
+    private TripleBuilder tripleBuilder;
+    private Graph graph;
+    private final GraphRelationFactory graphRelationFactory;
+    private Expression<ExpressionVisitor> expression;
+    private ParserException exception;
+
+    public DrqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, GraphRelationFactory graphRelationFactory) {
+        ParameterUtil.checkNotNull(tripleBuilder, graph, graphRelationFactory);
+        this.tripleBuilder = tripleBuilder;
+        this.graph = graph;
+        this.graphRelationFactory = graphRelationFactory;
+    }
 
     /**
-     * Indicates that this analyser has not processed a query yet.
+     * {@inheritDoc}
      */
-    Query NO_QUERY = new NoQuery();
+    public Query getQuery() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
+        if (expression != null && query == NO_QUERY) {
+            query = new QueryImpl(expression, graphRelationFactory);
+        }
+        return query;
+    }
 
-    /**
-     * An empty header.
-     */
-    LinkedHashSet<Attribute> NO_HEADER = new LinkedHashSet<Attribute>();
-
-    /**
-     * Returns the query processed by this analyser.
-     *
-     * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
-     */
-    Query getQuery() throws ParserException;
-
+    @Override
+    public void inStart(Start node) {
+        try {
+            PrefixAnalyser analyser = new PrefixAnalyserImpl(tripleBuilder, graph);
+            node.apply(analyser);
+            expression = analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
 }

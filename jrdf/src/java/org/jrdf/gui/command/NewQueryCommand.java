@@ -62,7 +62,7 @@ import org.jrdf.gui.view.QueryPanelView;
 import org.jrdf.gui.view.ResultsPanelView;
 import org.jrdf.query.AnswerImpl;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.drql.analysis.SparqlAnalyser.NO_HEADER;
+import static org.jrdf.drql.analysis.DrqlAnalyser.NO_HEADER;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
