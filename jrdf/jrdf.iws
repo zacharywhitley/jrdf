@@ -17,70 +17,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/WhereAnalyserImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/PrefixAnalyserImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder/TripleBuilderImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/VariableCollector.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/parser/ParserFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder/QueryBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder/LocalObjectBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/package.html" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder/ElementBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/parser" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/NoQuery.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/SparqlAnalyserImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/SelectAnalyserImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/parser/QueryParser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/PrefixAnalyser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/VariableCollectorImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/parser/SparqlParser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder/TripleBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/parser/SableCcSparqlParser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/SelectAnalyser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/SparqlConnection.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder/ElementBuilderImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/builder/SparqlQueryBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/VariableAnalyser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/SparqlConnectionImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/parser/ParserFactoryImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/SinglePrefixAnalyser.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/SparqlAnalyser.java" afterPath="" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/jrdf.iws" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/java/org/jrdf2/drql/analysis/WhereAnalyser.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/SparqlConnectionImplIntegrationTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/parser/SableCcSparqlParserIntegrationTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/builder/VariableResourceTripleSpec.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/parser/SableCcSparqlParserUnitTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/parser/SparqlParserUnitTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/SparqlConnectionImplUnitTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/parser" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/builder" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/builder/TripleBuilderImplUnitTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/builder/SparqlQueryBuilderUnitTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/analysis" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/builder/TripleSpec.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/builder/VariableTripleSpec.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/builder/LiteralTripleSpec.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/java/org/jrdf/sparql/analysis/ConstraintsAnalyserImplUnitTest.java" afterPath="" />
     </list>
-    <list name="Failed commit: Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/SparqlConnectionImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/SparqlConnectionImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/LocalObjectBuilder.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/LocalObjectBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/PrefixAnalyser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/PrefixAnalyser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SparqlAnalyserImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SparqlAnalyserImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/SparqlConnection.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/SparqlConnection.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/QueryBuilder.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/QueryBuilder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/ParserFactoryImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/ParserFactoryImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/QueryParser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/QueryParser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SelectAnalyserImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SelectAnalyserImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/SableCcSparqlParser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/SableCcSparqlParser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/WhereAnalyser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/WhereAnalyser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/NoQuery.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/NoQuery.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/SparqlQueryBuilder.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/SparqlQueryBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/SparqlParser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/SparqlParser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/TripleBuilderImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/TripleBuilderImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/VariableCollector.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/VariableCollector.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SparqlAnalyser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SparqlAnalyser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/TripleBuilder.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/TripleBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SelectAnalyser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SelectAnalyser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/ElementBuilder.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/ElementBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/WhereAnalyserImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/WhereAnalyserImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/VariableCollectorImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/VariableCollectorImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/ParserFactory.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/parser/ParserFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SinglePrefixAnalyser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/SinglePrefixAnalyser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/VariableAnalyser.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/VariableAnalyser.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/PrefixAnalyserImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/analysis/PrefixAnalyserImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/ElementBuilderImpl.java" afterPath="$PROJECT_DIR$/src/java/org/jrdf/drql/builder/ElementBuilderImpl.java" />
-    </list>
+    <list name="Failed commit: Default" comment="" />
   </component>
   <component name="ChangeListSynchronizer" />
   <component name="ChangesViewManager" flattened_view="true" />
@@ -193,7 +147,19 @@
     <favorites_list name="jrdf" />
   </component>
   <component name="FavoritesProjectViewPane" />
-  <component name="FileEditorManager" />
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="ConstraintsAnalyserImplUnitTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/drql/analysis/ConstraintsAnalyserImplUnitTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="95" column="26" selection-start="4536" selection-end="4536" vertical-scroll-proportion="0.51972157">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
   <component name="FindManager">
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
@@ -342,7 +308,7 @@
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
         <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/test/java/org/jrdf/sparql" />
+          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/test/java/org/jrdf/drql" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -387,10 +353,6 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/java/org" />
-          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-        </PATH_ELEMENT>
-        <PATH_ELEMENT>
-          <option name="myItemId" value="PsiDirectory:$PROJECT_DIR$/src/java/org/jrdf2/drql" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -517,6 +479,13 @@
   </component>
   <component name="RestoreUpdateTree" />
   <component name="RunManager">
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application" enabled="false" merge="false">
       <option name="MAIN_CLASS_NAME" />
       <option name="VM_PARAMETERS" />
@@ -526,25 +495,6 @@
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
       <module name="" />
-    </configuration>
-    <configuration default="true" type="Remote" factoryName="Remote">
-      <option name="USE_SOCKET_TRANSPORT" value="true" />
-      <option name="SERVER_MODE" value="false" />
-      <option name="SHMEM_ADDRESS" value="javadebug" />
-      <option name="HOST" value="localhost" />
-      <option name="PORT" value="5005" />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="" />
@@ -564,6 +514,18 @@
       <method>
         <option name="Make" value="true" />
       </method>
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
     </configuration>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
       <Host>localhost</Host>
@@ -647,32 +609,32 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1680" height="1024" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
-      <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="CVS" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="7" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24954017" order="0" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24954017" order="0" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="1" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="1" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901832" order="-1" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901832" order="8" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="6" />
-      <window_info id="Profile" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
-      <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
+      <window_info id="Profile" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
+      <window_info id="Module Dependencies" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24954017" order="1" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3322546" order="-1" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3315393" order="8" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="2" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
-      <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
+      <window_info id="File View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="3" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="4" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" order="0" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="-1" />
-      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="8" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" order="0" />
+      <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="2" />
       <window_info id="EJB" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="3" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" order="5" />
     </layout>
@@ -786,6 +748,14 @@
   <component name="com.intellij.profile.ui.ErrorOptionsConfigurable" proportions="" version="1">
     <option name="myLastEditedConfigurable" />
   </component>
-  <component name="editorHistoryManager" />
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/test/java/org/jrdf/drql/analysis/ConstraintsAnalyserImplUnitTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="95" column="26" selection-start="4536" selection-end="4536" vertical-scroll-proportion="0.51972157">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
 </project>
 
