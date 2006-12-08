@@ -60,12 +60,6 @@ package org.jrdf.query.relation.operation;
 
 import org.jrdf.query.relation.Relation;
 
-/**
- * Similar to Union in SPARQL or OR in Algebra A.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
 public interface Union extends Operation {
     // TODO (AN) This really should be nadic
     Relation union(Relation relation1, Relation relation2);

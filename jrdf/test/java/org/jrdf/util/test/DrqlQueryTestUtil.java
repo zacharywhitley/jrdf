@@ -69,7 +69,7 @@ import static org.jrdf.util.test.TripleTestUtil.*;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class SparqlQueryTestUtil {
+public final class DrqlQueryTestUtil {
 
     public static final String VARIABLE_PREFIX = "?";
     public static final String VARIABLE_NAME_TITLE = "title";
@@ -133,7 +133,7 @@ public final class SparqlQueryTestUtil {
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_2 = createBookDcTitleExpression(URI_BOOK_2, 2);
     public static final Expression<ExpressionVisitor> BOOK_3_DC_TITLE_ID_3 = createBookDcTitleExpression(URI_BOOK_3, 3);
 
-    private SparqlQueryTestUtil() {
+    private DrqlQueryTestUtil() {
     }
 
     private static String createQueryString(String subjectUri, String predicateUri, String objectVariable) {

@@ -62,7 +62,7 @@ import org.springframework.richclient.application.Application;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * Saves a SPARQL query.
+ * Saves a DRQL query.
  *
  * @author Andrew Newman
  * @version $Revision:$
