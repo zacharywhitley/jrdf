@@ -85,7 +85,7 @@ public final class DrqlConnectionImpl implements DrqlConnection {
     private final QueryEngine queryEngine;
 
     /**
-     * Creates a new SPARQL connection.
+     * Creates a new DRQL connection.
      *
      * @param builder the query builder that builds queries.
      * @param queryEngine the engine that executed the query.

@@ -65,7 +65,7 @@ import java.io.PushbackReader;
 import java.io.StringReader;
 
 /**
- * Creates new SPARQL Parsers.
+ * Creates new DRQL Parsers.
  *
  * @author Andrew Newman
  * @version $Revision:$

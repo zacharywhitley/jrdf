@@ -58,31 +58,10 @@
 
 package org.jrdf.query.relation.operation.mem.join.outer;
 
-import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.operation.DyadicJoin;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R2;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R1;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 import org.jrdf.query.relation.operation.mem.AbstractLeftOuterJoinIntegrationTest;
 
-import java.util.Set;
-
-/**
- * Extends AbstractLeftOuterJoinIntegrationTest to ensure that the standard relation version of left outer join is
- * correct wrt to the contract of SPARQL's OPTIONAL.
- *
- * @author Andrew Newman
- * @version $Revision: 717 $
- */
 public class LeftOuterJoinImplIntegrationTest extends AbstractLeftOuterJoinIntegrationTest {
     public DyadicJoin getJoin() {
         return TestJRDFFactory.getFactory().getNewLeftOuterJoin();

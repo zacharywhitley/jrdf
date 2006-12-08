@@ -62,7 +62,7 @@ import java.io.Serializable;
 
 /**
  * A pattern of triples applied to a graph to constrain the results of a query.
- * <p>Maps to a <code>GraphPattern</code> in the SPARQL grammar.</p>
+ * <p>Maps to a <code>GraphPattern</code> in the DRQL grammar.</p>
  *
  * @author Tom Adams
  * @version $Revision$

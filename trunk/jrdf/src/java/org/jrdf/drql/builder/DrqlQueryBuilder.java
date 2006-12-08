@@ -66,7 +66,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
- * Builds SPARQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
+ * Builds DRQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
  *
  * @author Tom Adams
  * @version $Id: DrqlQueryBuilder.java 598 2006-06-20 01:47:56Z newmana $
