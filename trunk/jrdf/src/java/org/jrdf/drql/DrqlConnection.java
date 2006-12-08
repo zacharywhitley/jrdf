@@ -64,7 +64,7 @@ import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 
 /**
- * A connection through which to send <a href="http://www.w3.org/TR/rdf-drql-query/">SPARQL</a> queries.
+ * A connection through which to send DRQL queries.
  *
  * @author Tom Adams
  * @version $Revision: 982 $
