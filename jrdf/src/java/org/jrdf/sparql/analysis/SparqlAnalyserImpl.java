@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
@@ -64,10 +64,10 @@ import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.Start;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.builder.TripleBuilder;
+import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.drql.parser.node.Start;
+import org.jrdf.drql.parser.parser.ParserException;
 import org.jrdf.util.param.ParameterUtil;
 
 /**

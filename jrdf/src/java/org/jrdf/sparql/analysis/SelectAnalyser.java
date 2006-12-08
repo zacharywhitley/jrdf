@@ -56,12 +56,12 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Expression;
-import org.jrdf.sparql.parser.node.Switch;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.parser.node.Switch;
+import org.jrdf.drql.parser.parser.ParserException;
 
 public interface SelectAnalyser extends Switch {
     Expression<ExpressionVisitor> getExpression() throws ParserException;

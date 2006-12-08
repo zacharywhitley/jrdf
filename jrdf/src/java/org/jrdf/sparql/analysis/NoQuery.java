@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Answer;
@@ -67,7 +67,7 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.relation.Attribute;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
+import static org.jrdf.drql.analysis.SparqlAnalyser.NO_HEADER;
 
 import java.io.Serializable;
 import java.util.Collections;

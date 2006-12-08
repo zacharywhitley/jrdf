@@ -56,16 +56,16 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
-import org.jrdf.sparql.builder.LiteralTripleSpec;
-import org.jrdf.sparql.builder.TripleSpec;
-import org.jrdf.sparql.builder.VariableTripleSpec;
+import org.jrdf.drql.builder.LiteralTripleSpec;
+import org.jrdf.drql.builder.TripleSpec;
+import org.jrdf.drql.builder.VariableTripleSpec;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
 

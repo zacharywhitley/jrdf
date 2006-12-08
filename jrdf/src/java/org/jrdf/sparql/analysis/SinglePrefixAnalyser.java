@@ -56,11 +56,11 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.APrefixPrefixdecl;
-import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.drql.parser.node.APrefixPrefixdecl;
+import org.jrdf.drql.builder.TripleBuilder;
 
 public class SinglePrefixAnalyser extends DepthFirstAdapter {
     private final TripleBuilder tripleBuilder;

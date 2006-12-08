@@ -56,10 +56,10 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.drql.parser.node.ATriple;
 
 /**
  * Class description goes here.

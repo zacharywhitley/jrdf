@@ -56,12 +56,12 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
 import org.jrdf.query.Query;
 import org.jrdf.query.relation.Attribute;
-import org.jrdf.sparql.parser.analysis.Analysis;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.parser.analysis.Analysis;
+import org.jrdf.drql.parser.parser.ParserException;
 
 import java.util.LinkedHashSet;
 

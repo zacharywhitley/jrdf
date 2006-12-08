@@ -74,12 +74,12 @@ import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.type.TypeComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.jrdf.sparql.analysis.VariableCollector;
-import org.jrdf.sparql.builder.QueryBuilder;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.parser.ParserFactory;
-import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.drql.SparqlConnection;
+import org.jrdf.drql.analysis.VariableCollector;
+import org.jrdf.drql.builder.QueryBuilder;
+import org.jrdf.drql.builder.TripleBuilder;
+import org.jrdf.drql.parser.ParserFactory;
+import org.jrdf.drql.parser.SparqlParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**

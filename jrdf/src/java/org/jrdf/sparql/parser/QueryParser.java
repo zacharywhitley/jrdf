@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.drql.parser;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
@@ -65,7 +65,7 @@ import org.jrdf.query.Query;
 /**
  * Parses {@link String}s into {@linkplain org.jrdf.query.Query queries}.
  * <p>Implementations of this interface adapt between a compiler neutral
- * {@linkplain org.jrdf.sparql.builder.QueryBuilder builder} and a specific compiler.</p>
+ * {@linkplain org.jrdf.drql.builder.QueryBuilder builder} and a specific compiler.</p>
  *
  * @author Tom Adams
  * @version $Id$

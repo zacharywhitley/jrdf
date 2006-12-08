@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.PositionName;
@@ -64,17 +64,17 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.sparql.parser.node.PObjectTripleElement;
-import org.jrdf.sparql.parser.node.PStrand;
-import org.jrdf.sparql.parser.node.AEscapedStrand;
-import org.jrdf.sparql.parser.node.TEscapedtext;
-import org.jrdf.sparql.parser.node.ALiteral;
-import org.jrdf.sparql.parser.node.TQuote;
-import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
-import org.jrdf.sparql.parser.node.TResource;
+import org.jrdf.drql.parser.node.ATriple;
+import org.jrdf.drql.parser.node.PResourceTripleElement;
+import org.jrdf.drql.parser.node.PObjectTripleElement;
+import org.jrdf.drql.parser.node.PStrand;
+import org.jrdf.drql.parser.node.AEscapedStrand;
+import org.jrdf.drql.parser.node.TEscapedtext;
+import org.jrdf.drql.parser.node.ALiteral;
+import org.jrdf.drql.parser.node.TQuote;
+import org.jrdf.drql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.drql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.drql.parser.node.TResource;
 
 import java.net.URI;
 import java.util.ArrayList;

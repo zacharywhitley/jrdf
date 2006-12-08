@@ -56,9 +56,9 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
-import org.jrdf.sparql.parser.node.Node;
+import org.jrdf.drql.parser.node.Node;
 
 interface LocalObjectBuilder<L, S extends Node> {
 

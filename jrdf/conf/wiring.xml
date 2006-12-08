@@ -90,7 +90,7 @@
     </bean>
 
     <!-- Query Classes -->
-    <bean id="sparqlConnection" class="org.jrdf.sparql.SparqlConnectionImpl">
+    <bean id="sparqlConnection" class="org.jrdf.drql.SparqlConnectionImpl">
         <constructor-arg>
             <ref bean="queryBuilder"/>
         </constructor-arg>
@@ -99,13 +99,13 @@
         </constructor-arg>
     </bean>
 
-    <bean id="queryBuilder" class="org.jrdf.sparql.builder.SparqlQueryBuilder">
+    <bean id="queryBuilder" class="org.jrdf.drql.builder.SparqlQueryBuilder">
         <constructor-arg>
             <ref bean="sparqlParser"/>
         </constructor-arg>
     </bean>
 
-    <bean id="sparqlParser" class="org.jrdf.sparql.parser.SableCcSparqlParser">
+    <bean id="sparqlParser" class="org.jrdf.drql.parser.SableCcSparqlParser">
         <constructor-arg>
             <ref bean="parserFactory"/>
         </constructor-arg>
@@ -120,7 +120,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="parserFactory" class="org.jrdf.sparql.parser.ParserFactoryImpl"/>
+    <bean id="parserFactory" class="org.jrdf.drql.parser.ParserFactoryImpl"/>
 
     <bean id="queryEngine" class="org.jrdf.query.execute.NaiveQueryEngineImpl">
         <constructor-arg>

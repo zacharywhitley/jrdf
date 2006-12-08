@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.drql;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
@@ -64,7 +64,7 @@ import org.jrdf.query.Answer;
 import org.jrdf.query.InvalidQuerySyntaxException;
 
 /**
- * A connection through which to send <a href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL</a> queries.
+ * A connection through which to send <a href="http://www.w3.org/TR/rdf-drql-query/">SPARQL</a> queries.
  *
  * @author Tom Adams
  * @version $Revision$

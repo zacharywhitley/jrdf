@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.type.PredicateNodeType;
@@ -65,15 +65,15 @@ import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.attributename.PositionName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.sparql.parser.node.PObjectTripleElement;
-import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
-import org.jrdf.sparql.parser.node.TResource;
-import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
-import org.jrdf.sparql.parser.node.TVariableprefix;
-import org.jrdf.sparql.parser.node.TIdentifier;
-import org.jrdf.sparql.parser.node.AVariable;
+import org.jrdf.drql.parser.node.ATriple;
+import org.jrdf.drql.parser.node.PResourceTripleElement;
+import org.jrdf.drql.parser.node.PObjectTripleElement;
+import org.jrdf.drql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.drql.parser.node.TResource;
+import org.jrdf.drql.parser.node.AVariableObjectTripleElement;
+import org.jrdf.drql.parser.node.TVariableprefix;
+import org.jrdf.drql.parser.node.TIdentifier;
+import org.jrdf.drql.parser.node.AVariable;
 
 import java.net.URI;
 import java.util.List;

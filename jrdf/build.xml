@@ -33,7 +33,7 @@
             <instr instrpath="${prod.classes.dir}" destdir="${out.instr.dir}/classes"
                    metadatafile="${coverage.dir}/metadata.emma" merge="true">
                 <filter value="${emma.filter}" />
-            </instr>    
+            </instr>
         </emma>
 
         <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
@@ -134,7 +134,7 @@
                  source="${java.src.version}"
                  windowtitle="${project.longname} Framework ${project.version.full}"
                  doctitle="${project.longname} Framework ${project.version.full}">
-            <excludepackage name="org.jrdf.sparql.parser.analysis"/>
+            <excludepackage name="org.jrdf.drql.parser.analysis"/>
             <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
         </javadoc>
     </target>

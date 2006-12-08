@@ -56,10 +56,10 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.drql.parser;
 
-import org.jrdf.sparql.parser.lexer.Lexer;
-import org.jrdf.sparql.parser.parser.Parser;
+import org.jrdf.drql.parser.lexer.Lexer;
+import org.jrdf.drql.parser.parser.Parser;
 
 import java.io.PushbackReader;
 import java.io.StringReader;
