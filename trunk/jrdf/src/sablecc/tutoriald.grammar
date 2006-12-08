@@ -59,7 +59,7 @@ Tokens
     {lit}                       text        = nonquote+;
 
 Ignored Tokens
-    blank, comment, escape, endcomment, endurl, hash, url;
+    blank, comment, escape, endcomment, endurl, hash, url, comma;
 
 Productions
     start =
@@ -135,4 +135,4 @@ Productions
         datatypeprefix resource;
 
     variable =
-        identifier comma;
+        identifier ;
