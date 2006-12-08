@@ -64,7 +64,7 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.drql.SparqlConnection;
+import org.jrdf.drql.DrqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -88,7 +88,7 @@ public interface JRDFFactory {
 
     RelationComparator getNewRelationComparator();
 
-    SparqlConnection getNewSparqlConnection();
+    DrqlConnection getNewSparqlConnection();
 
     ClassPathXmlApplicationContext getContext();
 }

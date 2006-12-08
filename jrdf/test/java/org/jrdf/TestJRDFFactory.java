@@ -74,7 +74,7 @@ import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.type.TypeComparator;
-import org.jrdf.drql.SparqlConnection;
+import org.jrdf.drql.DrqlConnection;
 import org.jrdf.drql.analysis.VariableCollector;
 import org.jrdf.drql.builder.QueryBuilder;
 import org.jrdf.drql.builder.TripleBuilder;
@@ -135,7 +135,7 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (DyadicJoin) FACTORY.getContext().getBean("semiJoin");
     }
 
-    public SparqlConnection getNewSparqlConnection() {
+    public DrqlConnection getNewSparqlConnection() {
         return FACTORY.getNewSparqlConnection();
     }
 

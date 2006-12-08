@@ -69,7 +69,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
  * @author Tom Adams
  * @version $Revision: 982 $
  */
-public interface SparqlConnection {
+public interface DrqlConnection {
 
     Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
 }
