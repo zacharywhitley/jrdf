@@ -9,7 +9,7 @@
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="gen-src" depends="gen-sparql-parser, gen-ntriples-parser"/>
+    <target name="gen-src" depends="gen-drql-parser, gen-ntriples-parser"/>
 
     <target name="checkstyle">
         <checkstyle config="${conf.dir}/checkstyle.xml">
@@ -75,7 +75,7 @@
         </sequential>
     </macrodef>
 
-    <target name="dist" depends="compile,-copy-sparql-sablecc-resources,-copy-ntriples-sablecc-resources">
+    <target name="dist" depends="compile,-copy-drql-sablecc-resources,-copy-ntriples-sablecc-resources">
         <antcall target="-dist-jar"/>
         <antcall target="-dist-gui"/>
     </target>
@@ -100,7 +100,7 @@
         </pathconvert>
         <jar destfile="${dist.dir}/gui/${project.jar}">
             <manifest>
-                <attribute name="Main-Class" value="org.jrdf.gui.SparqlGui"/>
+                <attribute name="Main-Class" value="org.jrdf.gui.drqlGui"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}" excludes="com/**/*"/>
