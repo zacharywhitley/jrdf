@@ -56,9 +56,9 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.drql.parser;
 
-import org.jrdf.sparql.parser.parser.Parser;
+import org.jrdf.drql.parser.parser.Parser;
 
 /**
  * A builder that always throws exceptions.

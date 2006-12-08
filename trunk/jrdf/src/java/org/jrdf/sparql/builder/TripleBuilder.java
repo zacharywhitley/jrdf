@@ -56,11 +56,11 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.sparql.parser.node.Switch;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.parser.node.Switch;
+import org.jrdf.drql.parser.parser.ParserException;
 
 import java.util.List;
 

@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.drql.parser;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
@@ -64,14 +64,14 @@ import org.jrdf.query.Query;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
-import org.jrdf.sparql.analysis.SparqlAnalyser;
-import org.jrdf.sparql.analysis.SparqlAnalyserImpl;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.builder.TripleBuilderImpl;
-import org.jrdf.sparql.parser.lexer.LexerException;
-import org.jrdf.sparql.parser.node.Start;
-import org.jrdf.sparql.parser.parser.Parser;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.analysis.SparqlAnalyser;
+import org.jrdf.drql.analysis.SparqlAnalyserImpl;
+import org.jrdf.drql.builder.TripleBuilder;
+import org.jrdf.drql.builder.TripleBuilderImpl;
+import org.jrdf.drql.parser.lexer.LexerException;
+import org.jrdf.drql.parser.node.Start;
+import org.jrdf.drql.parser.parser.Parser;
+import org.jrdf.drql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

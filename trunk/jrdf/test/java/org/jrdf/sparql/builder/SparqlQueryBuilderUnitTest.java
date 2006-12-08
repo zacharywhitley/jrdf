@@ -56,14 +56,14 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import junit.framework.TestCase;
 import org.easymock.classextension.IMocksControl;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.sparql.parser.SparqlParser;
+import org.jrdf.drql.parser.SparqlParser;
 import org.jrdf.util.param.ParameterTestUtil;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import org.jrdf.util.test.AssertThrows;
@@ -75,7 +75,7 @@ import org.jrdf.util.test.SparqlQueryTestUtil;
 import java.lang.reflect.Modifier;
 
 /**
- * Unit test for {@link org.jrdf.sparql.builder.SparqlQueryBuilder}.
+ * Unit test for {@link org.jrdf.drql.builder.SparqlQueryBuilder}.
  *
  * @author Tom Adams
  * @version $Id$

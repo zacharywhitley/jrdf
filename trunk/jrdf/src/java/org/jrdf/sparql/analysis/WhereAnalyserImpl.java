@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Conjunction;
@@ -66,26 +66,26 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Optional;
 import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeValuePair;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.ABlockOfTriples;
-import org.jrdf.sparql.parser.node.AFilteredBasicGraphPatternGraphPattern;
-import org.jrdf.sparql.parser.node.AGroupOrUnionGraphPattern;
-import org.jrdf.sparql.parser.node.AOperationPattern;
-import org.jrdf.sparql.parser.node.AOptionalGraphPattern;
-import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.PGroupGraphPattern;
-import org.jrdf.sparql.parser.node.PMoreTriples;
-import org.jrdf.sparql.parser.node.PUnionGraphPattern;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.builder.TripleBuilder;
+import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.drql.parser.node.ABlockOfTriples;
+import org.jrdf.drql.parser.node.AFilteredBasicGraphPatternGraphPattern;
+import org.jrdf.drql.parser.node.AGroupOrUnionGraphPattern;
+import org.jrdf.drql.parser.node.AOperationPattern;
+import org.jrdf.drql.parser.node.AOptionalGraphPattern;
+import org.jrdf.drql.parser.node.ATriple;
+import org.jrdf.drql.parser.node.Node;
+import org.jrdf.drql.parser.node.PGroupGraphPattern;
+import org.jrdf.drql.parser.node.PMoreTriples;
+import org.jrdf.drql.parser.node.PUnionGraphPattern;
+import org.jrdf.drql.parser.parser.ParserException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
+ * Default implementation of {@link org.jrdf.drql.analysis.SparqlAnalyser}.
  */
 public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereAnalyser {
     private TripleBuilder tripleBuilder;

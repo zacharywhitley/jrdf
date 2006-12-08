@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.drql.parser;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;

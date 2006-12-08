@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.drql.parser;
 
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
@@ -65,14 +65,14 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
-import org.jrdf.sparql.parser.lexer.LexerException;
-import org.jrdf.sparql.parser.node.AQueryStart;
-import org.jrdf.sparql.parser.node.EOF;
-import org.jrdf.sparql.parser.node.PStart;
-import org.jrdf.sparql.parser.node.Start;
-import org.jrdf.sparql.parser.node.TBlank;
-import org.jrdf.sparql.parser.parser.Parser;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.parser.lexer.LexerException;
+import org.jrdf.drql.parser.node.AQueryStart;
+import org.jrdf.drql.parser.node.EOF;
+import org.jrdf.drql.parser.node.PStart;
+import org.jrdf.drql.parser.node.Start;
+import org.jrdf.drql.parser.node.TBlank;
+import org.jrdf.drql.parser.parser.Parser;
+import org.jrdf.drql.parser.parser.ParserException;
 import static org.jrdf.util.param.ParameterTestUtil.EMPTY_STRING;
 import static org.jrdf.util.param.ParameterTestUtil.NON_EMPTY_STRING;
 import static org.jrdf.util.param.ParameterTestUtil.NULL_STRING;

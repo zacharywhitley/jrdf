@@ -69,7 +69,7 @@ import org.jrdf.graph.mem.URIReferenceImpl;
 import org.jrdf.query.AnswerImpl;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.relation.constants.NullaryTuple;
-import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.drql.parser.node.ATriple;
 import org.jrdf.util.test.ReflectTestUtil;
 
 import java.net.MalformedURLException;

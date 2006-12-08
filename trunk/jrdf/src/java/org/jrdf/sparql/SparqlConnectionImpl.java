@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql;
+package org.jrdf.drql;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
@@ -66,8 +66,8 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.execute.QueryEngine;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
-import org.jrdf.sparql.builder.QueryBuilder;
+import static org.jrdf.drql.analysis.SparqlAnalyser.NO_HEADER;
+import org.jrdf.drql.builder.QueryBuilder;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

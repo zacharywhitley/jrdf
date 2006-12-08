@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -71,9 +71,9 @@ import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.drql.parser.node.ATriple;
+import org.jrdf.drql.parser.parser.ParserException;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -134,7 +134,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
         }
     }
 
-    private AttributeValuePair getElement(org.jrdf.sparql.parser.node.Node node, Node graphNode, NodeType nodeType,
+    private AttributeValuePair getElement(org.jrdf.drql.parser.node.Node node, Node graphNode, NodeType nodeType,
             Attribute attribute, Graph graph) throws ParserException {
         ElementBuilder analyser = new ElementBuilderImpl(nodeType, graphNode, attribute, graph, prefixMap);
         node.apply(analyser);

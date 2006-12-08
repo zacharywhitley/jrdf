@@ -64,7 +64,7 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.drql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**

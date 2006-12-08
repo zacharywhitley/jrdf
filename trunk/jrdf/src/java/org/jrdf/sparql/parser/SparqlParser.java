@@ -56,10 +56,10 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.parser;
+package org.jrdf.drql.parser;
 
 /**
- * Parses <a href="http://www.w3.org/TR/rdf-sparql-query/">SPARQL</a> textual queries into
+ * Parses <a href="http://www.w3.org/TR/rdf-drql-query/">SPARQL</a> textual queries into
  * {@linkplain org.jrdf.query.Query queries}.
  *
  * @author Tom Adams

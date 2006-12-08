@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -70,18 +70,18 @@ import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.mem.AttributeValuePairImpl;
 import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
-import org.jrdf.sparql.parser.node.AQnameObjectTripleElement;
-import org.jrdf.sparql.parser.node.AQnameResourceTripleElement;
-import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
-import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
-import org.jrdf.sparql.parser.node.AVariable;
-import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
-import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
-import org.jrdf.sparql.parser.node.PLiteral;
-import org.jrdf.sparql.parser.node.TIdentifier;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.drql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.drql.parser.node.AQnameObjectTripleElement;
+import org.jrdf.drql.parser.node.AQnameResourceTripleElement;
+import org.jrdf.drql.parser.node.AResourceObjectTripleElement;
+import org.jrdf.drql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.drql.parser.node.AVariable;
+import org.jrdf.drql.parser.node.AVariableObjectTripleElement;
+import org.jrdf.drql.parser.node.AVariableResourceTripleElement;
+import org.jrdf.drql.parser.node.PLiteral;
+import org.jrdf.drql.parser.node.TIdentifier;
+import org.jrdf.drql.parser.parser.ParserException;
 
 import java.net.URI;
 import java.util.Map;

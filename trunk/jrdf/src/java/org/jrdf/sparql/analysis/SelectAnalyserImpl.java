@@ -56,26 +56,26 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.analysis;
+package org.jrdf.drql.analysis;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.sparql.builder.TripleBuilder;
-import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.sparql.parser.node.AVariableListSelectClause;
-import org.jrdf.sparql.parser.node.AWildcardSelectClause;
-import org.jrdf.sparql.parser.node.Node;
-import org.jrdf.sparql.parser.node.PVariable;
-import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.drql.builder.TripleBuilder;
+import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.drql.parser.node.AVariableListSelectClause;
+import org.jrdf.drql.parser.node.AWildcardSelectClause;
+import org.jrdf.drql.parser.node.Node;
+import org.jrdf.drql.parser.node.PVariable;
+import org.jrdf.drql.parser.parser.ParserException;
 
 import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * Default implementation of {@link org.jrdf.sparql.analysis.SparqlAnalyser}.
+ * Default implementation of {@link org.jrdf.drql.analysis.SparqlAnalyser}.
  *
  * @author Tom Adams
  * @version $Revision: 683 $

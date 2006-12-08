@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.sparql.builder;
+package org.jrdf.drql.builder;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
@@ -67,7 +67,7 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.drql.parser.node.ATriple;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
