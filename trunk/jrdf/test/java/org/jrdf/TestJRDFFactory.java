@@ -135,8 +135,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (DyadicJoin) FACTORY.getContext().getBean("semiJoin");
     }
 
-    public DrqlConnection getNewSparqlConnection() {
-        return FACTORY.getNewSparqlConnection();
+    public DrqlConnection getNewDrqlConnection() {
+        return FACTORY.getNewDrqlConnection();
     }
 
     public ClassPathXmlApplicationContext getContext() {
@@ -151,8 +151,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (Project) FACTORY.getContext().getBean("project");
     }
 
-    public DrqlParser getNewSparqlParser() {
-        return (DrqlParser) FACTORY.getContext().getBean("sparqlParser");
+    public DrqlParser getNewDrqlParser() {
+        return (DrqlParser) FACTORY.getContext().getBean("drqlParser");
     }
 
     public TripleBuilder getNewTripleBuilder() {

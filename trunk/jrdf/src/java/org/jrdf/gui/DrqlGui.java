@@ -60,7 +60,7 @@ package org.jrdf.gui;
 
 import org.springframework.richclient.application.ApplicationLauncher;
 
-public final class SparqlGui {
+public final class DrqlGui {
     private static final String ROOT_CONTEXT = "/org/jrdf/gui/ctx";
     private static final String RICHCLIENT_APPLICATION_CONTEXT = ROOT_CONTEXT +
         "/richclient-application-context.xml";
