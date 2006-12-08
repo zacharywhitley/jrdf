@@ -64,10 +64,10 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.drql.builder.TripleBuilder;
 import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.drql.parser.node.APrefixdeclProlog;
-import org.jrdf.drql.parser.node.AVariableListSelectClause;
-import org.jrdf.drql.parser.node.AWildcardSelectClause;
 import org.jrdf.drql.parser.node.Node;
 import org.jrdf.drql.parser.node.PPrefixdecl;
+import org.jrdf.drql.parser.node.AWildcardProjectClause;
+import org.jrdf.drql.parser.node.AVariableListProjectClause;
 import org.jrdf.drql.parser.parser.ParserException;
 
 import java.util.LinkedList;
@@ -91,13 +91,13 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
     }
 
     @Override
-    public void caseAWildcardSelectClause(AWildcardSelectClause node) {
-        expression = analyseSelectClause(node);
+    public void caseAWildcardProjectClause(AWildcardProjectClause node) {
+        expression = analyseProjectClause(node);
     }
 
     @Override
-    public void caseAVariableListSelectClause(AVariableListSelectClause node) {
-        expression = analyseSelectClause(node);
+    public void caseAVariableListProjectClause(AVariableListProjectClause node) {
+        expression = analyseProjectClause(node);
     }
 
     @Override
@@ -109,9 +109,9 @@ public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnaly
         }
     }
 
-    private Expression<ExpressionVisitor> analyseSelectClause(Node node) {
+    private Expression<ExpressionVisitor> analyseProjectClause(Node node) {
         try {
-            SelectAnalyser analyser = new SelectAnalyserImpl(tripleBuilder, graph);
+            ProjectAnalyser analyser = new ProjectAnalyserImpl(tripleBuilder, graph);
             node.apply(analyser);
             return analyser.getExpression();
         } catch (ParserException e) {

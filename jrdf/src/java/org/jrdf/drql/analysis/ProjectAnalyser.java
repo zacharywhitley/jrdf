@@ -63,6 +63,6 @@ import org.jrdf.query.expression.Expression;
 import org.jrdf.drql.parser.node.Switch;
 import org.jrdf.drql.parser.parser.ParserException;
 
-public interface SelectAnalyser extends Switch {
+public interface ProjectAnalyser extends Switch {
     Expression<ExpressionVisitor> getExpression() throws ParserException;
 }

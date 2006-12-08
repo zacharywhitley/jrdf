@@ -68,9 +68,8 @@ public class VariableAnalyser extends DepthFirstAdapter {
 
     @Override
     public void caseAVariable(AVariable node) {
-        String prefix = node.getVariableprefix().getText();
         String attributeName = node.getIdentifier().getText();
-        variableName = new VariableName(prefix + attributeName);
+        variableName = new VariableName(attributeName);
     }
 
     public AttributeName getVariableName() {

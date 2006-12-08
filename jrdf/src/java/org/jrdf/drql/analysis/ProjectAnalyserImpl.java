@@ -65,10 +65,10 @@ import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.drql.builder.TripleBuilder;
 import org.jrdf.drql.parser.analysis.DepthFirstAdapter;
-import org.jrdf.drql.parser.node.AVariableListSelectClause;
-import org.jrdf.drql.parser.node.AWildcardSelectClause;
 import org.jrdf.drql.parser.node.Node;
 import org.jrdf.drql.parser.node.PVariable;
+import org.jrdf.drql.parser.node.AWildcardProjectClause;
+import org.jrdf.drql.parser.node.AVariableListProjectClause;
 import org.jrdf.drql.parser.parser.ParserException;
 
 import java.util.LinkedHashSet;
@@ -80,14 +80,14 @@ import java.util.List;
  * @author Tom Adams
  * @version $Revision: 683 $
  */
-public final class SelectAnalyserImpl extends DepthFirstAdapter implements SelectAnalyser {
+public final class ProjectAnalyserImpl extends DepthFirstAdapter implements ProjectAnalyser {
     private TripleBuilder tripleBuilder;
     private Graph graph;
     private final VariableCollector variableCollector;
     private Expression<ExpressionVisitor> expression;
     private ParserException exception;
 
-    public SelectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
+    public ProjectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
         this.variableCollector = new VariableCollectorImpl();
@@ -101,7 +101,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
     }
 
     @Override
-    public void caseAWildcardSelectClause(AWildcardSelectClause node) {
+    public void caseAWildcardProjectClause(AWildcardProjectClause node) {
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
             Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
@@ -113,7 +113,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
     }
 
     @Override
-    public void caseAVariableListSelectClause(AVariableListSelectClause node) {
+    public void caseAVariableListProjectClause(AVariableListProjectClause node) {
         try {
             WhereAnalyser analyser = analyseWhereClause(node.parent());
             Expression<ExpressionVisitor> nextExpression = analyser.getExpression();
@@ -136,7 +136,7 @@ public final class SelectAnalyserImpl extends DepthFirstAdapter implements Selec
         return declaredVariables;
     }
 
-    private LinkedHashSet<AttributeName> getDeclaredVariables(AVariableListSelectClause node) {
+    private LinkedHashSet<AttributeName> getDeclaredVariables(AVariableListProjectClause node) {
         List<PVariable> variables = node.getVariable();
         LinkedHashSet<AttributeName> variableNames = new LinkedHashSet<AttributeName>();
         for (PVariable variable : variables) {
