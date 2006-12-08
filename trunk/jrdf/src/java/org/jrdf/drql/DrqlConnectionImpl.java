@@ -73,12 +73,12 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 
 /**
- * Default implementation of a {@link SparqlConnection}.
+ * Default implementation of a {@link DrqlConnection}.
  *
  * @author Tom Adams
- * @version $Id: SparqlConnectionImpl.java 982 2006-12-08 08:42:51Z newmana $
+ * @version $Id: DrqlConnectionImpl.java 982 2006-12-08 08:42:51Z newmana $
  */
-public final class SparqlConnectionImpl implements SparqlConnection {
+public final class DrqlConnectionImpl implements DrqlConnection {
 
     // FIXME TJA: Ensure connections are threadsafe.
     private QueryBuilder builder;
@@ -90,7 +90,7 @@ public final class SparqlConnectionImpl implements SparqlConnection {
      * @param builder the query builder that builds queries.
      * @param queryEngine the engine that executed the query.
      */
-    public SparqlConnectionImpl(QueryBuilder builder, QueryEngine queryEngine) {
+    public DrqlConnectionImpl(QueryBuilder builder, QueryEngine queryEngine) {
         checkNotNull(builder, queryEngine);
         this.queryEngine = queryEngine;
         this.builder = builder;
