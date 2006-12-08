@@ -88,7 +88,7 @@ public interface JRDFFactory {
 
     RelationComparator getNewRelationComparator();
 
-    DrqlConnection getNewSparqlConnection();
+    DrqlConnection getNewDrqlConnection();
 
     ClassPathXmlApplicationContext getContext();
 }

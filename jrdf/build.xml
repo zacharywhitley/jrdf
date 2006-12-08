@@ -2,7 +2,7 @@
 <project name="jrdf" default="dist" basedir=".">
 
     <import file="build-setup.xml"/>
-    <import file="build-sparql.xml"/>
+    <import file="build-drql.xml"/>
     <import file="build-ntriples.xml"/>
 
     <target name="clean">
