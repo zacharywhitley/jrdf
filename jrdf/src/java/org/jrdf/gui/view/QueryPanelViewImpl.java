@@ -70,7 +70,7 @@ import java.awt.BorderLayout;
  * @version $Revision:$
  */
 public class QueryPanelViewImpl implements PanelView, QueryPanelView {
-    private static final String QUERY = "{ * } WHERE { s, p, o, }";
+    private static final String QUERY = "{ * } WHERE { s, p, o }";
     private JTextArea textArea = new JTextArea(QUERY);
 
     public JPanel getJPanel() {
