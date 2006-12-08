@@ -1,7 +1,7 @@
 <table>
 <tr>
 <td valign="top">
-<b>JRDF SPARQL GUI</b><br>
+<b>JRDF DRQL GUI</b><br>
 <p>
 Version: 0.3<br>
 <p>
