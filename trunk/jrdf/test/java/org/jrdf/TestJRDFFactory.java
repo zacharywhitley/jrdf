@@ -79,7 +79,7 @@ import org.jrdf.drql.analysis.VariableCollector;
 import org.jrdf.drql.builder.QueryBuilder;
 import org.jrdf.drql.builder.TripleBuilder;
 import org.jrdf.drql.parser.ParserFactory;
-import org.jrdf.drql.parser.SparqlParser;
+import org.jrdf.drql.parser.DrqlParser;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -151,8 +151,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (Project) FACTORY.getContext().getBean("project");
     }
 
-    public SparqlParser getNewSparqlParser() {
-        return (SparqlParser) FACTORY.getContext().getBean("sparqlParser");
+    public DrqlParser getNewSparqlParser() {
+        return (DrqlParser) FACTORY.getContext().getBean("sparqlParser");
     }
 
     public TripleBuilder getNewTripleBuilder() {

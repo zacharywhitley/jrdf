@@ -66,7 +66,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.execute.QueryEngine;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.drql.analysis.SparqlAnalyser.NO_HEADER;
+import static org.jrdf.drql.analysis.DrqlAnalyser.NO_HEADER;
 import org.jrdf.drql.builder.QueryBuilder;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;

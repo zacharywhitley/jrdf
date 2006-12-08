@@ -61,7 +61,7 @@ package org.jrdf.util.test.instantiate;
 import org.jrdf.query.AnswerImpl;
 import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.drql.analysis.SparqlAnalyser.NO_HEADER;
+import static org.jrdf.drql.analysis.DrqlAnalyser.NO_HEADER;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 

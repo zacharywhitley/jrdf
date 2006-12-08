@@ -64,8 +64,8 @@ import org.jrdf.query.Query;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
-import org.jrdf.drql.analysis.SparqlAnalyser;
-import org.jrdf.drql.analysis.SparqlAnalyserImpl;
+import org.jrdf.drql.analysis.DrqlAnalyser;
+import org.jrdf.drql.analysis.DrqlAnalyserImpl;
 import org.jrdf.drql.builder.TripleBuilder;
 import org.jrdf.drql.builder.TripleBuilderImpl;
 import org.jrdf.drql.parser.lexer.LexerException;
@@ -80,7 +80,7 @@ import java.io.IOException;
 // FIXME Currently does LARL parsing (bottom-up) rather than LL (top-down).  This is not conformant with SPARQL:
 // "The outer optional graph pattern must match for any nested optional pattern to be matched."
 
-public final class SableCcSparqlParser implements SparqlParser {
+public final class SableCcDrqlParser implements DrqlParser {
 
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
     private ParserFactory parserFactory;
@@ -88,7 +88,7 @@ public final class SableCcSparqlParser implements SparqlParser {
     private final AttributeValuePairHelper avpHelper;
     private final SortedAttributeFactory sortedAttributeFactory;
 
-    public SableCcSparqlParser(ParserFactory parserFactory, GraphRelationFactory graphRelationFactory,
+    public SableCcDrqlParser(ParserFactory parserFactory, GraphRelationFactory graphRelationFactory,
             AttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
         this.parserFactory = parserFactory;
         this.graphRelationFactory = graphRelationFactory;
@@ -125,7 +125,7 @@ public final class SableCcSparqlParser implements SparqlParser {
 
     private Query analyseQuery(Graph graph, Start start) throws InvalidQuerySyntaxException {
         TripleBuilder builder = new TripleBuilderImpl(graph, avpHelper, sortedAttributeFactory);
-        SparqlAnalyser analyser = new SparqlAnalyserImpl(builder, graph, graphRelationFactory);
+        DrqlAnalyser analyser = new DrqlAnalyserImpl(builder, graph, graphRelationFactory);
         start.apply(analyser);
         try {
             return analyser.getQuery();

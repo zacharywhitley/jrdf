@@ -75,7 +75,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * Default implementation of {@link org.jrdf.drql.analysis.SparqlAnalyser}.
+ * Default implementation of {@link org.jrdf.drql.analysis.DrqlAnalyser}.
  *
  * @author Tom Adams
  * @version $Revision: 683 $

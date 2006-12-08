@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,36 +56,14 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.drql.builder;
-
-import org.jrdf.graph.Graph;
-import org.jrdf.query.InvalidQuerySyntaxException;
-import org.jrdf.query.Query;
-import org.jrdf.drql.parser.SparqlParser;
-import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+package org.jrdf.drql.parser;
 
 /**
- * Builds SPARQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
+ * Parses <a href="http://www.w3.org/TR/rdf-drql-query/">SPARQL</a> textual queries into
+ * {@linkplain org.jrdf.query.Query queries}.
  *
  * @author Tom Adams
- * @version $Id: SparqlQueryBuilder.java 598 2006-06-20 01:47:56Z newmana $
+ * @version $Revision: 982 $
  */
-public final class SparqlQueryBuilder implements QueryBuilder {
-
-    private final SparqlParser parser;
-
-    public SparqlQueryBuilder(SparqlParser parser) {
-        checkNotNull(parser);
-        this.parser = parser;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
-        checkNotNull(graph);
-        checkNotEmptyString("queryText", queryText);
-        return parser.parseQuery(graph, queryText);
-    }
+public interface DrqlParser extends QueryParser {
 }

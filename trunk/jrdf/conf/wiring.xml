@@ -99,13 +99,13 @@
         </constructor-arg>
     </bean>
 
-    <bean id="queryBuilder" class="org.jrdf.drql.builder.SparqlQueryBuilder">
+    <bean id="queryBuilder" class="org.jrdf.drql.builder.DrqlQueryBuilder">
         <constructor-arg>
             <ref bean="sparqlParser"/>
         </constructor-arg>
     </bean>
 
-    <bean id="sparqlParser" class="org.jrdf.drql.parser.SableCcSparqlParser">
+    <bean id="sparqlParser" class="org.jrdf.drql.parser.SableCcDrqlParser">
         <constructor-arg>
             <ref bean="parserFactory"/>
         </constructor-arg>

@@ -85,7 +85,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Default implementation of {@link org.jrdf.drql.analysis.SparqlAnalyser}.
+ * Default implementation of {@link org.jrdf.drql.analysis.DrqlAnalyser}.
  */
 public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereAnalyser {
     private TripleBuilder tripleBuilder;
