@@ -75,10 +75,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VariableCollectorImpl implements VariableCollector {
+public class AttributeCollectorImpl implements VariableCollector {
     private Map<AttributeName, NodeType> variables = new HashMap<AttributeName, NodeType>();
 
-    public void addVariables(List<AttributeValuePair> avps) {
+    public void addConstraints(List<AttributeValuePair> avps) {
         for (AttributeValuePair avp : avps) {
             Attribute attribute = avp.getAttribute();
             if (attribute.getAttributeName() instanceof VariableName) {
@@ -87,11 +87,13 @@ public class VariableCollectorImpl implements VariableCollector {
                 } else {
                     addNewEntry(attribute);
                 }
+            } else {
+                addNewEntry(attribute);
             }
         }
     }
 
-    public Map<AttributeName, NodeType> getVariables() {
+    public Map<AttributeName, NodeType> getAttributes() {
         return variables;
     }
 

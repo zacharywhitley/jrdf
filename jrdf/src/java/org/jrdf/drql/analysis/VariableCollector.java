@@ -69,7 +69,7 @@ import java.util.Map;
  * Class description goes here.
  */
 public interface VariableCollector {
-    void addVariables(List<AttributeValuePair> avps);
+    void addConstraints(List<AttributeValuePair> avps);
 
-    Map<AttributeName, NodeType> getVariables();
+    Map<AttributeName, NodeType> getAttributes();
 }
