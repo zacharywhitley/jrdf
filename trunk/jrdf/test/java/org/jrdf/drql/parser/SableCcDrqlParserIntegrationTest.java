@@ -73,14 +73,13 @@ import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.DrqlQueryTestUtil;
 import static org.jrdf.util.test.DrqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.DrqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
 import static org.jrdf.util.test.DrqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
 import static org.jrdf.util.test.DrqlQueryTestUtil.BOOK_3_DC_TITLE_ID_3;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_1_AND_2;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_1_AND_2_AND_3;
+import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_1_AND_2_INNER_RIGHT;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_1_AND_2_WITH_PREFIX;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_1_UNION_2;
@@ -88,8 +87,11 @@ import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_1_UNION_2_UNION_3;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_BOOK_2_DC_TITLE;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_OPTIONAL_1;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_OPTIONAL_2;
+import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_OPTIONAL_3;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_OPTIONAL_5;
 import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_OPTION_4;
+import static org.jrdf.util.test.DrqlQueryTestUtil.QUERY_SINGLE_OPTIONAL;
+import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -146,6 +148,10 @@ public final class SableCcDrqlParserIntegrationTest extends TestCase {
     public void testTwoConstraints() {
         checkConstraintExpression(QUERY_BOOK_1_AND_2, BOOK1_AND_2_CONJUNCTION);
     }
+    
+    public void testTwoNestConstraintsInnerRight() {
+        checkConstraintExpression(QUERY_BOOK_1_AND_2_INNER_RIGHT, BOOK1_AND_2_CONJUNCTION);
+    }
 
     public void testThreeConstraints() {
         checkConstraintExpression(QUERY_BOOK_1_AND_2_AND_3, BOOK1_AND_2_AND_3_CONJUNCTION);
@@ -161,7 +167,7 @@ public final class SableCcDrqlParserIntegrationTest extends TestCase {
 
     public void testSingleOptionalConstraint() throws Exception {
         Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_NICK_EXP_2);
-        checkConstraintExpression(DrqlQueryTestUtil.QUERY_SINGLE_OPTIONAL, optional1);
+        checkConstraintExpression(QUERY_SINGLE_OPTIONAL, optional1);
     }
 
     public void testOptionalConstraint1() throws Exception {
@@ -179,7 +185,7 @@ public final class SableCcDrqlParserIntegrationTest extends TestCase {
     public void testOptionalConstraint3() throws Exception {
         Optional<ExpressionVisitor> optional1 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_1, FOAF_ALIAS_EXP_2);
         Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(optional1, FOAF_ALIAS_EXP_3);
-        checkConstraintExpression(DrqlQueryTestUtil.QUERY_OPTIONAL_3, optional2);
+        checkConstraintExpression(QUERY_OPTIONAL_3, optional2);
     }
 
     public void testComplicatedOptional1() {
