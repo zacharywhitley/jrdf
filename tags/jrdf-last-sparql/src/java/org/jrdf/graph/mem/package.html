@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Java RDF (JRDF) In Memory Graph Package</title>
+</head>
+
+<body>
+<p>
+    This package is an implementation of the JRDF Graph API. The basis for this is an in memory index consistenting
+    of three separate indexation schemes:
+    <ul>
+        <li>012 - Subject, Predicate, Object</li>
+        <li>120 - Predicate, Object, Subject</li>
+        <li>201 - Object, Subject, Predicate</li>
+    </ul>
+</p>
+
+<p>
+    The implementation of the iterators allows deletion of the nodes as they are being iterated. There is currently
+    no locking to prevent multiple access of the data structures.
+
+    There is no transactional boundaries around the Graph although this maybe applied later or a lock free algorithm
+    developed.
+</p>
+
+<p>
+    The current Graph and all of its objects are serializable. This provides other implementations and client/server
+    APIs a mechanism for transporting RDF data over the wire using Java's default serialization mechanism.
+</p>
+</body>
+</html>

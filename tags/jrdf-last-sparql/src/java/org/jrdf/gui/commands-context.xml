@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+    "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+    <bean id="windowCommandManager"
+          class="org.springframework.richclient.application.support.ApplicationWindowCommandManager">
+        <property name="sharedCommandIds">
+            <list>
+                <value>saveAsCommand</value>
+                <value>undoCommand</value>
+                <value>redoCommand</value>
+                <value>cutCommand</value>
+                <value>copyCommand</value>
+                <value>pasteCommand</value>
+                <value>selectAllCommand</value>
+                <value>deleteCommand</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="toolBar" class="org.springframework.richclient.command.CommandGroupFactoryBean">
+        <property name="members">
+            <list>
+                <ref bean="loadRdfCommand"/>
+                <ref bean="newQueryCommand"/>
+                <ref bean="runQueryCommand"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="menuBar" class="org.springframework.richclient.command.CommandGroupFactoryBean">
+        <property name="members">
+            <list>
+                <ref bean="fileMenu"/>
+                <ref bean="helpMenu"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="fileMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
+        <property name="members">
+            <list>
+                <ref bean="loadRdfCommand"/>
+                <ref bean="queryMenu"/>
+                <bean class="org.springframework.richclient.command.support.ExitCommand"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="loadRdfCommand" class="org.jrdf.gui.command.LoadRdfCommand">
+        <property name="JRDFModel">
+            <ref bean="jrdfModel"/>
+        </property>
+    </bean>
+
+    <bean id="jrdfModel" class="org.jrdf.gui.model.JRDFModelImpl">
+    </bean>
+
+    <bean id="queryMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
+        <property name="members">
+            <list>
+                <ref bean="newQueryCommand"/>
+                <ref bean="runQueryCommand"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="newQueryCommand" class="org.jrdf.gui.command.NewQueryCommand">
+        <property name="queryPanelView">
+            <ref bean="queryPanelView"/>
+        </property>
+        <property name="resultsPanelView">
+            <ref bean="resultsPanelView"/>
+        </property>
+    </bean>
+
+    <bean id="runQueryCommand" class="org.jrdf.gui.command.RunQueryCommand">
+        <property name="JRDFModel">
+            <ref bean="jrdfModel"/>
+        </property>
+        <property name="queryPanelView">
+            <ref bean="queryPanelView"/>
+        </property>
+    </bean>
+
+    <bean id="helpMenu" class="org.springframework.richclient.command.CommandGroupFactoryBean">
+        <property name="members">
+            <list>
+                <ref bean="aboutCommand"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="aboutCommand" class="org.springframework.richclient.command.support.AboutCommand">
+        <property name="aboutTextPath">
+            <value>org/jrdf/gui/about.txt</value>
+        </property>
+    </bean>
+</beans>
