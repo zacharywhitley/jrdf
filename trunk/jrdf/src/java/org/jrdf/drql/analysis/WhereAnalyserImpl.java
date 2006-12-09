@@ -131,7 +131,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         try {
             node.apply(tripleBuilder);
             List<AttributeValuePair> attributeValuePairs = tripleBuilder.getTriples();
-            collector.addVariables(attributeValuePairs);
+            collector.addConstraints(attributeValuePairs);
             expression = new Constraint<ExpressionVisitor>(attributeValuePairs);
         } catch (ParserException e) {
             exception = e;

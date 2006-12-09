@@ -90,7 +90,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
     public ProjectAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
         this.tripleBuilder = tripleBuilder;
         this.graph = graph;
-        this.variableCollector = new VariableCollectorImpl();
+        this.variableCollector = new AttributeCollectorImpl();
     }
 
     public Expression<ExpressionVisitor> getExpression() throws ParserException {
@@ -132,7 +132,7 @@ public final class ProjectAnalyserImpl extends DepthFirstAdapter implements Proj
 
     private LinkedHashSet<AttributeName> getAllVariables() {
         LinkedHashSet<AttributeName> declaredVariables = new LinkedHashSet<AttributeName>();
-        declaredVariables.addAll(variableCollector.getVariables().keySet());
+        declaredVariables.addAll(variableCollector.getAttributes().keySet());
         return declaredVariables;
     }
 
