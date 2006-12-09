@@ -71,10 +71,9 @@ import static org.jrdf.util.test.TripleTestUtil.*;
  */
 public final class DrqlQueryTestUtil {
 
-    public static final String VARIABLE_PREFIX = "?";
     public static final String VARIABLE_NAME_TITLE = "title";
     public static final String VARIABLE_NAME_SUBJECT = "subject";
-    public static final String VARIABLE_TITLE = VARIABLE_PREFIX + VARIABLE_NAME_TITLE;
+    public static final String VARIABLE_TITLE = VARIABLE_NAME_TITLE;
     private static final String SUBJECT_URI_1 = URI_BOOK_1.toString();
     private static final String SUBJECT_URI_2 = URI_BOOK_2.toString();
     private static final String SUBJECT_URI_3 = URI_BOOK_3.toString();
@@ -97,36 +96,36 @@ public final class DrqlQueryTestUtil {
             createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " } \nUNION {" +
             createTriple(SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
     public static final String QUERY_OPTIONAL_1 =  createSelectClause() +
-                "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick\n" +
-                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
+                "WHERE  { x <" + FOAF_NAME + "> name JOIN \n" +
+                "         OPTIONAL { x <" + FOAF_NICK + "> nick\n" +
+                "         OPTIONAL { x <" + FOAF_MBOX + "> mbox } }\n" +
                 "       }";
     public static final String QUERY_OPTIONAL_2 =  createSelectClause() +
-                "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?alias }\n" +
-                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?alias }\n" +
+                "WHERE  { x <" + FOAF_NAME + "> name JOIN\n" +
+                "         OPTIONAL { x <" + FOAF_NICK + "> alias }\n" +
+                "         OPTIONAL { x <" + FOAF_MBOX + "> alias }\n" +
                 "       }";
     public static final String QUERY_OPTIONAL_3 =  createSelectClause() +
-                "WHERE  { { ?x <" + FOAF_NAME + "> ?name } .\n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?alias }\n" +
-                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?alias }\n" +
+                "WHERE  { { x <" + FOAF_NAME + "> name } JOIN\n" +
+                "         OPTIONAL { x <" + FOAF_NICK + "> alias }\n" +
+                "         OPTIONAL { x <" + FOAF_MBOX + "> alias }\n" +
                 "       }";
     public static final String QUERY_OPTION_4 = createSelectClause() +
             "WHERE  { \n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} .\n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
+            "  { x <" + FOAF_NAME + "> name OPTIONAL { x <" + FOAF_NICK + "> nick }} JOIN\n" +
+            "  { x <" + FOAF_NAME + "> name OPTIONAL { x  <" + FOAF_MBOX + "> mbox }}\n" +
             "}";
     public static final String QUERY_OPTIONAL_5 = createSelectClause() +
             "WHERE  { \n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} OPTIONAL\n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
+            "  { x <" + FOAF_NAME + "> name OPTIONAL { x <" + FOAF_NICK + "> nick }} OPTIONAL\n" +
+            "  { x <" + FOAF_NAME + "> name OPTIONAL { x  <" + FOAF_MBOX + "> mbox }}\n" +
             "}";
     public static final String QUERY_BOOK_1_AND_2_WITH_PREFIX = "PREFIX examplebook: <http://example.org/book/> \n" +
         "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
         createSelectClause() +
-        "WHERE { examplebook:book1 dc:title ?title . examplebook:book2 dc:title ?title }";
+        "WHERE { examplebook:book1 dc:title title JOIN examplebook:book2 dc:title title }";
     public static final String QUERY_SINGLE_OPTIONAL = createSelectClause() +
-        "WHERE { { ?x <" + FOAF_NAME + "> ?name } OPTIONAL { ?x <" + FOAF_NICK + "> ?nick } }";
+        "WHERE { { x <" + FOAF_NAME + "> name } OPTIONAL { x <" + FOAF_NICK + "> nick } }";
 
     public static final Expression<ExpressionVisitor> BOOK_1_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_1, 1);
     public static final Expression<ExpressionVisitor> BOOK_2_DC_TITLE_ID_1 = createBookDcTitleExpression(URI_BOOK_2, 1);
@@ -148,7 +147,7 @@ public final class DrqlQueryTestUtil {
     }
 
     private static String createSelectClause() {
-        return "SELECT * ";
+        return "SELECT {} ";
     }
 
     private static String createWhereClause(String[] constraints) {
@@ -185,7 +184,7 @@ public final class DrqlQueryTestUtil {
 
     private static void appendAnd(int i, String[] constraints, StringBuffer buffer) {
         if (i < (constraints.length / 3 -1)) {
-            buffer.append(" . ");
+            buffer.append(" JOIN ");
         }
     }
 }
