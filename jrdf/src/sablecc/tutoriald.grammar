@@ -29,7 +29,9 @@ States
 
 Tokens
     {def}                prefix      = ('PREFIX' | 'prefix');
+    {def}                select      = ('SELECT' | 'select');
     {def}                where       = ('WHERE' | 'where');
+    {def}                join        = ('JOIN' | 'join');
     {def}                union       = ('UNION' | 'union');
     {def}                optional    = ('OPTIONAL' | 'optional');
 
@@ -72,8 +74,8 @@ Productions
         {prefix} prefix identifier? colon resource ;
 
     project_clause =
-        {variable_list} lpar variable+ rpar |
-        {wildcard} lpar asterisk rpar ;
+        {variable_list} select lpar variable+ rpar |
+        {wildcard} select lpar rpar ;
 
     where_clause =
         where? group_graph_pattern;
@@ -88,13 +90,13 @@ Productions
         {block_of_triples} block_of_triples? ;
 
     block_of_triples =
-        triple period? more_triples* ;
+        triple join? more_triples* ;
 
     more_triples =
-        triple period? ;
+        triple join? ;
 
     operation_pattern =
-        graph_pattern_not_triples period? graph_pattern ;
+        graph_pattern_not_triples join? graph_pattern ;
 
     graph_pattern_not_triples =
         {optional_graph_pattern} optional_graph_pattern |
