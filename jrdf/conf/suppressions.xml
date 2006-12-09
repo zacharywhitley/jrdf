@@ -8,6 +8,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="TripleBuilderImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="AttributeCollectorImpl.java"/>
+    <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="EscapeUtil.java"/>
     <suppress checks="JavaNCSS" files="RDF.java"/>

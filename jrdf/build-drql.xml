@@ -4,13 +4,13 @@
     <import file="build-setup.xml"/>
 
     <target name="gen-drql-parser" depends="-drql-parser-uptodate" unless="drql-parser-uptodate">
-        <sablecc.macro grammar.file="tutoriald.grammar"/>
+        <sablecc.macro grammar.file="drql.grammar"/>
     </target>
 
     <target name="-drql-parser-uptodate">
         <uptodate property="drql-parser-uptodate"
                   targetfile="${gen.src.dir}/org/jrdf/drql/parser/analysis/DepthFirstAdapter.java">
-            <srcfiles dir="${sablecc.src.dir}" includes="tutoriald.grammar"/>
+            <srcfiles dir="${sablecc.src.dir}" includes="drql.grammar"/>
         </uptodate>
     </target>
 
