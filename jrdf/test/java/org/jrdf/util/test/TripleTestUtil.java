@@ -188,7 +188,7 @@ public class TripleTestUtil {
     private static Attribute[] createAttributes(long suffix) {
         AttributeName subjectName = new PositionName("SUBJECT" + suffix);
         AttributeName predicateName = new PositionName("PREDICATE" + suffix);
-        AttributeName objectName = new VariableName("?title");
+        AttributeName objectName = new VariableName("title");
         return createAttributes(subjectName, predicateName, objectName);
     }
 
