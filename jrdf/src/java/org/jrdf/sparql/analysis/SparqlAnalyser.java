@@ -66,7 +66,7 @@ import org.jrdf.sparql.parser.parser.ParserException;
 import java.util.LinkedHashSet;
 
 /**
- * A DRQL implementation of a SableCC {@linkplain Analysis analyser}.
+ * A SPARQL implementation of a SableCC {@linkplain Analysis analyser}.
  *
  * @author Tom Adams
  * @version $Revision: 982 $

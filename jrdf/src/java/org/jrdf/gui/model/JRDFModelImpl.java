@@ -74,7 +74,7 @@ import java.net.URL;
 public class JRDFModelImpl implements JRDFModel {
     private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
     private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = FACTORY.getNewDrqlConnection();
+    private SparqlConnection connection = FACTORY.getNewSparqlConnection();
 
     public Graph loadModel(URL url) {
         try {

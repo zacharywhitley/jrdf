@@ -59,7 +59,7 @@
 package org.jrdf.sparql.parser;
 
 /**
- * Parses DRQL textual queries into {@linkplain org.jrdf.query.Query queries}.
+ * Parses SPARQL textual queries into {@linkplain org.jrdf.query.Query queries}.
  *
  * @author Tom Adams
  * @version $Revision: 982 $

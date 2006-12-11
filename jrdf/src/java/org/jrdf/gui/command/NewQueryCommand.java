@@ -66,7 +66,7 @@ import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * Creates a new DRQL query.
+ * Creates a new SPARQL query.
  *
  * @author Andrew Newman
  * @version $Revision:$

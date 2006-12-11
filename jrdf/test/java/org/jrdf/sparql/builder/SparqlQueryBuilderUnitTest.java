@@ -78,11 +78,11 @@ import java.lang.reflect.Modifier;
  * Unit test for {@link org.jrdf.sparql.builder.SparqlQueryBuilder}.
  *
  * @author Tom Adams
- * @version $Id: DrqlQueryBuilderUnitTest.java 921 2006-10-31 09:52:43Z newmana $
+ * @version $Id: SparqlQueryBuilderUnitTest.java 921 2006-10-31 09:52:43Z newmana $
  */
-public class DrqlQueryBuilderUnitTest extends TestCase {
+public class SparqlQueryBuilderUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
-    private static final SparqlParser Drql_PARSER = factory.createMock(SparqlParser.class);
+    private static final SparqlParser SPARQL_PARSER = factory.createMock(SparqlParser.class);
     private static final String NULL_STRING = ParameterTestUtil.NULL_STRING;
     private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
     private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
@@ -107,7 +107,7 @@ public class DrqlQueryBuilderUnitTest extends TestCase {
     }
 
     public void testBadParams() throws Exception {
-        SparqlQueryBuilder builder = new SparqlQueryBuilder(Drql_PARSER);
+        SparqlQueryBuilder builder = new SparqlQueryBuilder(SPARQL_PARSER);
         checkBadParam(builder, NULL_STRING, CANNOT_BE_NULL);
         checkBadParam(builder, EMPTY_STRING, CANNOT_BE_EMPTY);
         checkBadParam(builder, SINGLE_SPACE, CANNOT_BE_EMPTY);
