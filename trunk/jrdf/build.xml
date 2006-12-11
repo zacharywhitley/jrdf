@@ -2,14 +2,14 @@
 <project name="jrdf" default="dist" basedir=".">
 
     <import file="build-setup.xml"/>
-    <import file="build-drql.xml"/>
+    <import file="build-sparql.xml"/>
     <import file="build-ntriples.xml"/>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
     </target>
 
-    <target name="gen-src" depends="gen-drql-parser, gen-ntriples-parser"/>
+    <target name="gen-src" depends="gen-sparql-parser, gen-ntriples-parser"/>
 
     <target name="checkstyle">
         <checkstyle config="${conf.dir}/checkstyle.xml">
@@ -75,7 +75,7 @@
         </sequential>
     </macrodef>
 
-    <target name="dist" depends="compile,-copy-drql-sablecc-resources,-copy-ntriples-sablecc-resources">
+    <target name="dist" depends="compile,-copy-sparql-sablecc-resources,-copy-ntriples-sablecc-resources">
         <antcall target="-dist-jar"/>
         <antcall target="-dist-gui"/>
     </target>
@@ -100,7 +100,7 @@
         </pathconvert>
         <jar destfile="${dist.dir}/gui/${project.jar}">
             <manifest>
-                <attribute name="Main-Class" value="org.jrdf.gui.drqlGui"/>
+                <attribute name="Main-Class" value="org.jrdf.gui.SparqlGui"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}" excludes="com/**/*"/>
@@ -134,7 +134,7 @@
                  source="${java.src.version}"
                  windowtitle="${project.longname} Framework ${project.version.full}"
                  doctitle="${project.longname} Framework ${project.version.full}">
-            <excludepackage name="org.jrdf.drql.parser.analysis"/>
+            <excludepackage name="org.jrdf.sparql.parser.analysis"/>
             <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
         </javadoc>
     </target>

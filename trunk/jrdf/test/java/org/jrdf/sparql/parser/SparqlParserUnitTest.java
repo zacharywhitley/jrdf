@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision: 436 $
+ * $Date: 2005-12-19 23:19:55 +1000 (Mon, 19 Dec 2005) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,20 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.sparql.parser;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
+ * Unit test for {@link SparqlParser}.
  *
- * @author Andrew Newman
- * @version $Revision:$
+ * @author Tom Adams
+ * @version $Revision: 436 $
  */
-public interface JRDFFactory {
-    void refresh();
+public final class SparqlParserUnitTest extends TestCase {
 
-    Graph getNewGraph();
-
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
-
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewDrqlConnection();
-
-    ClassPathXmlApplicationContext getContext();
+    public void testClassProperties() {
+        ClassPropertiesTestUtil.checkExtensionOf(QueryParser.class, SparqlParser.class);
+    }
 }

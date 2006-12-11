@@ -59,7 +59,7 @@
 package org.jrdf.query.expression;
 
 import junit.framework.TestCase;
-import org.jrdf.drql.analysis.VariableCollector;
+import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 

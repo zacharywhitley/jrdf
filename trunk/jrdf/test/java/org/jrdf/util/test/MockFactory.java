@@ -59,7 +59,7 @@ package org.jrdf.util.test;
 
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
-import org.jrdf.drql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.util.test.instantiate.ArnoldTheInstantiator;
 
 import java.net.URI;
