@@ -124,9 +124,9 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         Start start = createStart();
         Parser parser = createParser(start);
         ParserFactory parserFactory = createParserFactory(parser);
-        SableCcSparqlParser sableCcDrqlParser = createSableCcDrqlParser(parserFactory);
+        SableCcSparqlParser ccSparqlParser = createSableCcSparqlParser(parserFactory);
         mockFactory.replay();
-        sableCcDrqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
+        ccSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
         mockFactory.verify();
     }
 
@@ -179,7 +179,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private void checkBadInput(final Graph graph, final String query, String errorMessage) {
-        final SparqlParser sableCcSparqlParser = createSableCcDrqlParser(PARSER_FACTORY);
+        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY);
         AssertThrows.assertThrows(IllegalArgumentException.class, errorMessage, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 sableCcSparqlParser.parseQuery(graph, query);
@@ -187,7 +187,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         });
     }
 
-    private SableCcSparqlParser createSableCcDrqlParser(ParserFactory parserFactory) {
+    private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory) {
         return new SableCcSparqlParser(parserFactory, GRAPH_RELATION_FACTORY, AVP_HELPER, ATTRIBUTE_FACTORY);
     }
 
@@ -195,11 +195,11 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
             throws Exception {
         Parser parser = createParser(exception);
         ParserFactory parserFactory = createParserFactory(parser);
-        final SableCcSparqlParser ccDrqlParser = createSableCcDrqlParser(parserFactory);
+        final SableCcSparqlParser ccSparqlParser = createSableCcSparqlParser(parserFactory);
         mockFactory.replay();
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, errorMsg, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                ccDrqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
+                ccSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
             }
         });
         mockFactory.verify();

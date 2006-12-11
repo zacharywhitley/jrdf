@@ -63,7 +63,7 @@ import org.jrdf.query.InvalidQuerySyntaxException;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * DRQL query with an query error.
+ * SPARQL query with an query error.
  *
  * @author Andrew Newman
  * @version $Revision:$

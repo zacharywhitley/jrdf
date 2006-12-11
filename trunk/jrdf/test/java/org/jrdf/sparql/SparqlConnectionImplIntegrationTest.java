@@ -108,7 +108,7 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
         GRAPH.add(subject, predicate, object);
     }
 
-    public void testCreateDrqlConnection() {
+    public void testCreateSparqlConnection() {
         checkConnectionReturnsOneSolution(createRawConnection());
         checkConnectionReturnsNoSolutions(createRawConnection());
     }

@@ -68,7 +68,7 @@ import org.springframework.richclient.application.PageComponentContext;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * Run a DRQL query.
+ * Run a SPARQL query.
  *
  * @author Andrew Newman
  * @version $Revision:$

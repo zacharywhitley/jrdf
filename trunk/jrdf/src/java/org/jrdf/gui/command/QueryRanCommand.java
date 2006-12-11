@@ -63,7 +63,7 @@ import org.jrdf.query.Answer;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
- * Run an DRQL query.
+ * Run an SPARQL query.
  *
  * @author Andrew Newman
  * @version $Revision:$

@@ -116,13 +116,13 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         ArgumentTestUtil.checkConstructNullAssertion(SparqlConnectionImpl.class, PARAM_TYPES);
     }
 
-    public void testCreateDrqlConnectionNullContract() {
-        SparqlConnection sparqlConnection = createDrqlConnection();
+    public void testCreateSparqlConnectionNullContract() {
+        SparqlConnection sparqlConnection = createSparqlConnection();
         ArgumentTestUtil.checkMethodNullAssertions(sparqlConnection, METHOD_NAME, PARAM_DEFINITION);
     }
 
     public void testExecuteSimpleBadQuery() throws Exception {
-        SparqlConnection connection = createDrqlConnection();
+        SparqlConnection connection = createSparqlConnection();
         checkBadParam(connection, NULL);
         checkBadParam(connection, EMPTY_STRING);
         checkBadParam(connection, SINGLE_SPACE);
@@ -198,7 +198,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     private SparqlConnection createConnection(QueryBuilder builder) {
-        SparqlConnection connection = createDrqlConnection();
+        SparqlConnection connection = createSparqlConnection();
         ReflectTestUtil.insertFieldValue(connection, FIELD_BUILDER, builder);
         return connection;
     }
@@ -227,7 +227,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         return builder;
     }
 
-    private SparqlConnectionImpl createDrqlConnection() {
+    private SparqlConnectionImpl createSparqlConnection() {
         return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
 }

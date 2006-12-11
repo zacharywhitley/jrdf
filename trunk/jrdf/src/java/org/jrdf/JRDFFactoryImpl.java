@@ -120,8 +120,8 @@ public final class JRDFFactoryImpl implements JRDFFactory {
         return (RelationComparator) BEAN_FACTORY.getBean("relationComparator");
     }
 
-    public SparqlConnection getNewDrqlConnection() {
-        return (SparqlConnection) BEAN_FACTORY.getBean("drqlConnection");
+    public SparqlConnection getNewSparqlConnection() {
+        return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
 
     public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
