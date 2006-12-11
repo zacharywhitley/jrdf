@@ -56,39 +56,30 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.sparql.parser;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jrdf.sparql.parser.lexer.Lexer;
+import org.jrdf.sparql.parser.parser.Parser;
+
+import java.io.PushbackReader;
+import java.io.StringReader;
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
+ * Creates new DRQL Parsers.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface JRDFFactory {
-    void refresh();
+public class ParserFactoryImpl implements ParserFactory {
+    private static final int PUSHBACK_BUFFER_SIZE = 256;
 
-    Graph getNewGraph();
+    public ParserFactoryImpl() {
+    }
 
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
-
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewDrqlConnection();
-
-    ClassPathXmlApplicationContext getContext();
+    public Parser getParser(String queryText) {
+        StringReader in = new StringReader(queryText);
+        PushbackReader reader = new PushbackReader(in, PUSHBACK_BUFFER_SIZE);
+        Lexer lexer = new Lexer(reader);
+        return new Parser(lexer);
+    }
 }

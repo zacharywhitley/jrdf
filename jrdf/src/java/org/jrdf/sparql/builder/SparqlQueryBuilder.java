@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,36 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.sparql.builder;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.sparql.parser.SparqlParser;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
+ * Builds DRQL queries in {@link String} form into {@link org.jrdf.query.Query} objects.
  *
- * @author Andrew Newman
- * @version $Revision:$
+ * @author Tom Adams
+ * @version $Id: SparqlQueryBuilder.java 598 2006-06-20 01:47:56Z newmana $
  */
-public interface JRDFFactory {
-    void refresh();
+public final class SparqlQueryBuilder implements QueryBuilder {
 
-    Graph getNewGraph();
+    private final SparqlParser parser;
 
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
+    public SparqlQueryBuilder(SparqlParser parser) {
+        checkNotNull(parser);
+        this.parser = parser;
+    }
 
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewDrqlConnection();
-
-    ClassPathXmlApplicationContext getContext();
+    /**
+     * {@inheritDoc}
+     */
+    public Query buildQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException {
+        checkNotNull(graph);
+        checkNotEmptyString("queryText", queryText);
+        return parser.parseQuery(graph, queryText);
+    }
 }

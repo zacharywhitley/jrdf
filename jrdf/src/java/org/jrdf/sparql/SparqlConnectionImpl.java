@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,53 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.sparql;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jrdf.graph.GraphException;
+import org.jrdf.query.Answer;
+import org.jrdf.query.AnswerImpl;
+import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
+import org.jrdf.query.execute.QueryEngine;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
+import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
+import org.jrdf.sparql.builder.QueryBuilder;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
+ * Default implementation of a {@link SparqlConnection}.
  *
- * @author Andrew Newman
- * @version $Revision:$
+ * @author Tom Adams
+ * @version $Id: SparqlConnectionImpl.java 982 2006-12-08 08:42:51Z newmana $
  */
-public interface JRDFFactory {
-    void refresh();
+public final class SparqlConnectionImpl implements SparqlConnection {
 
-    Graph getNewGraph();
+    // FIXME TJA: Ensure connections are threadsafe.
+    private QueryBuilder builder;
+    private final QueryEngine queryEngine;
 
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
+    /**
+     * Creates a new DRQL connection.
+     *
+     * @param builder the query builder that builds queries.
+     * @param queryEngine the engine that executed the query.
+     */
+    public SparqlConnectionImpl(QueryBuilder builder, QueryEngine queryEngine) {
+        checkNotNull(builder, queryEngine);
+        this.queryEngine = queryEngine;
+        this.builder = builder;
+    }
 
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewDrqlConnection();
-
-    ClassPathXmlApplicationContext getContext();
+    public Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException {
+        checkNotNull(graph, queryText);
+        checkNotEmptyString("queryText", queryText);
+        Query query = builder.buildQuery(graph, queryText);
+        if (graph.isEmpty()) {
+            return new AnswerImpl(NO_HEADER, RELATION_DUM, 0);
+        }
+        return query.executeQuery(graph, queryEngine);
+    }
 }

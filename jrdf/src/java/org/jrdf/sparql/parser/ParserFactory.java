@@ -56,39 +56,16 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.sparql.parser;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jrdf.sparql.parser.parser.Parser;
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
+ * A builder that always throws exceptions.
  *
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface JRDFFactory {
-    void refresh();
-
-    Graph getNewGraph();
-
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
-
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewDrqlConnection();
-
-    ClassPathXmlApplicationContext getContext();
+public interface ParserFactory {
+    Parser getParser(String queryText);
 }

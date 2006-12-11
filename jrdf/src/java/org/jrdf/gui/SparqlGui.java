@@ -56,39 +56,21 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.gui;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.richclient.application.ApplicationLauncher;
 
-/**
- * A simple wrapper around Spring wiring to return types objects.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public interface JRDFFactory {
-    void refresh();
+public final class SparqlGui {
+    private static final String ROOT_CONTEXT = "/org/jrdf/gui/ctx";
+    private static final String RICHCLIENT_APPLICATION_CONTEXT = ROOT_CONTEXT +
+        "/richclient-application-context.xml";
+    private static final String GRAPH_WIRING = "wiring.xml";
 
-    Graph getNewGraph();
-
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
-
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewDrqlConnection();
-
-    ClassPathXmlApplicationContext getContext();
+    public static void main(String[] args) {
+        try {
+            new ApplicationLauncher(new String[]{RICHCLIENT_APPLICATION_CONTEXT, GRAPH_WIRING});
+        } catch (Exception e) {
+            System.exit(1);
+        }
+    }
 }

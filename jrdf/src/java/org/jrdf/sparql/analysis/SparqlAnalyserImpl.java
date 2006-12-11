@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 439 $
- * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2005 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,62 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jrdf.query.Query;
+import org.jrdf.query.QueryImpl;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.Start;
+import org.jrdf.sparql.parser.parser.ParserException;
+import org.jrdf.util.param.ParameterUtil;
 
 /**
- * A simple wrapper around Spring wiring to return types objects.
+ * Default implementation of {@link SparqlAnalyser}.
  *
- * @author Andrew Newman
- * @version $Revision:$
+ * @author Tom Adams
+ * @version $Revision: 982 $
  */
-public interface JRDFFactory {
-    void refresh();
+public final class SparqlAnalyserImpl extends DepthFirstAdapter implements SparqlAnalyser {
+    private Query query = NO_QUERY;
+    private TripleBuilder tripleBuilder;
+    private Graph graph;
+    private final GraphRelationFactory graphRelationFactory;
+    private Expression<ExpressionVisitor> expression;
+    private ParserException exception;
 
-    Graph getNewGraph();
+    public SparqlAnalyserImpl(TripleBuilder tripleBuilder, Graph graph, GraphRelationFactory graphRelationFactory) {
+        ParameterUtil.checkNotNull(tripleBuilder, graph, graphRelationFactory);
+        this.tripleBuilder = tripleBuilder;
+        this.graph = graph;
+        this.graphRelationFactory = graphRelationFactory;
+    }
 
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
+    /**
+     * {@inheritDoc}
+     */
+    public Query getQuery() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
+        if (expression != null && query == NO_QUERY) {
+            query = new QueryImpl(expression, graphRelationFactory);
+        }
+        return query;
+    }
 
-    NodeComparator getNewNodeComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
-
-    RelationComparator getNewRelationComparator();
-
-    SparqlConnection getNewDrqlConnection();
-
-    ClassPathXmlApplicationContext getContext();
+    @Override
+    public void inStart(Start node) {
+        try {
+            PrefixAnalyser analyser = new PrefixAnalyserImpl(tripleBuilder, graph);
+            node.apply(analyser);
+            expression = analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+        }
+    }
 }

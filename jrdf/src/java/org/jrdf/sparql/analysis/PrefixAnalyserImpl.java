@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,39 +56,68 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf;
+package org.jrdf.sparql.analysis;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
-import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.sparql.SparqlConnection;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jrdf.query.expression.Expression;
+import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.sparql.builder.TripleBuilder;
+import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.APrefixdeclProlog;
+import org.jrdf.sparql.parser.node.Node;
+import org.jrdf.sparql.parser.node.PPrefixdecl;
+import org.jrdf.sparql.parser.node.AWildcardSelectClause;
+import org.jrdf.sparql.parser.node.AVariableListSelectClause;
+import org.jrdf.sparql.parser.parser.ParserException;
 
-/**
- * A simple wrapper around Spring wiring to return types objects.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public interface JRDFFactory {
-    void refresh();
+import java.util.LinkedList;
 
-    Graph getNewGraph();
+public class PrefixAnalyserImpl extends DepthFirstAdapter implements PrefixAnalyser {
+    private TripleBuilder tripleBuilder;
+    private Graph graph;
+    private Expression<ExpressionVisitor> expression;
+    private ParserException exception;
 
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
+    public PrefixAnalyserImpl(TripleBuilder tripleBuilder, Graph graph) {
+        this.tripleBuilder = tripleBuilder;
+        this.graph = graph;
+    }
 
-    NodeComparator getNewNodeComparator();
+    public Expression<ExpressionVisitor> getExpression() throws ParserException {
+        if (exception != null) {
+            throw exception;
+        }
+        return expression;
+    }
 
-    AttributeComparator getNewAttributeComparator();
+    @Override
+    public void caseAWildcardSelectClause(AWildcardSelectClause node) {
+        expression = analyseProjectClause(node);
+    }
 
-    TupleComparator getNewTupleComparator();
+    @Override
+    public void caseAVariableListSelectClause(AVariableListSelectClause node) {
+        expression = analyseProjectClause(node);
+    }
 
-    RelationComparator getNewRelationComparator();
+    @Override
+    public void caseAPrefixdeclProlog(APrefixdeclProlog node) {
+        LinkedList<PPrefixdecl> prefixdecl = node.getPrefixdecl();
+        SinglePrefixAnalyser prefixAnalyser = new SinglePrefixAnalyser(tripleBuilder);
+        for (PPrefixdecl pPrefixdecl : prefixdecl) {
+            pPrefixdecl.apply(prefixAnalyser);
+        }
+    }
 
-    SparqlConnection getNewDrqlConnection();
+    private Expression<ExpressionVisitor> analyseProjectClause(Node node) {
+        try {
+            ProjectAnalyser analyser = new ProjectAnalyserImpl(tripleBuilder, graph);
+            node.apply(analyser);
+            return analyser.getExpression();
+        } catch (ParserException e) {
+            exception = e;
+            return null;
+        }
+    }
 
-    ClassPathXmlApplicationContext getContext();
 }
