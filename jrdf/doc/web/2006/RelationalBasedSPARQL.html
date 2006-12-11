@@ -376,7 +376,7 @@ Antijoin is defined as:</p>
 <p>This is the difference between R1 and the result of the semijoin (<img src="u22C9.png" alt="semijoin" height="15" width="15"/>) of R1 and R2. Where
 semijoin is:</p>
     <p class="formula">R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2 := π(R1) (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2)</p>
-<p>Where π(R1) is project on R1 from the results of <img src="u22C9.png" alt="semijoin" height="15" width="15"/> the join of R1 and R2.</p>
+<p>Where π(R1) is project on R1 from the results of <img src="u22C8.png" alt="join" height="15" width="15"/> the join of R1 and R2.</p>
 <p>The important distinction to make is that Pérez et al.’s definition uses the difference between
 two sets of tuples (∖) rather than the antijoin. In Appendix A.5, Lemma 3 of [<a href="#ref22">22</a>] it is shown
 that:</p>
@@ -386,7 +386,7 @@ that:</p>
 <p>The expanded version of left outer join becomes:</p>
     <p class="formula">Ω1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> Ω2 = (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2) ∪ (Ω1 ∖ (Ω1 <img src="u22C8.png" alt="join" height="15" width="15"/> Ω2))</p>
 <p>While Galindo-Legaria’s left outer join with antijoin and semijoin expanded becomes:</p>
-    <p class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2) <img src="u228E.png" alt="outer union" height="15" width="15"/> (R1 − (π(R1) (R1 <img src="u22C9.png" alt="semijoin" height="15" width="15"/> R2)))</p>
+    <p class="formula">R1 <img src="u27D5.png" alt="left outer join" height="15" width="15"/> R2 := (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2) <img src="u228E.png" alt="outer union" height="15" width="15"/> (R1 − (π(R1) (R1 <img src="u22C8.png" alt="join" height="15" width="15"/> R2)))</p>
 <p>The only difference is the use of semijoin over join. While both of these operations produce
 the same overall result for left outer join, the use of semijoin is considered superior from the
 point of view of efficiency. This is highlighted by Galindo -Legaria [<a href="#ref12">12</a>]:</p>
