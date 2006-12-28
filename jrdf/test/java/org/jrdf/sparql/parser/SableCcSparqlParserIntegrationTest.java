@@ -213,7 +213,6 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
-        System.err.println("Query " + queryString);
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
         assertEquals(expectedExpression, actualExpression);
