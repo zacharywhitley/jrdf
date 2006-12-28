@@ -58,9 +58,11 @@ Tokens
 
   {res}                       resource    = urlchar*;
   {def->qlit, qlit->def}      quote       = quote;  /* ' */
-  {qlit->esc}                 escape      = '\';
+  {def->dbqlit, dbqlit->def}  dbquote     = dbquote;
+  {qlit->esc, dbqlit->esc}    escape      = '\';
   {esc->qlit}                 escapedtext = character;
-  {qlit}                      text        = nonquote+;
+  {qlit}                      qtext        = nonquote+;
+  {dbqlit}                    dbqtext      = nondbquote+;
 
 Ignored Tokens
   blank, comment, escape, endcomment, endurl, hash, url;
@@ -132,7 +134,7 @@ Productions
     [opening]:quote strand* [closing]:quote;  /*datatype?;*/
 
   strand =
-    {unescaped} text |
+    {unescaped} qtext |
     {escaped}   escapedtext;
 
   datatype =
