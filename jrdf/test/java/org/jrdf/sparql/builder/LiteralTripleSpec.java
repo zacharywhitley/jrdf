@@ -64,17 +64,17 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.sparql.parser.node.PObjectTripleElement;
-import org.jrdf.sparql.parser.node.PStrand;
 import org.jrdf.sparql.parser.node.AEscapedStrand;
-import org.jrdf.sparql.parser.node.TEscapedtext;
 import org.jrdf.sparql.parser.node.ALiteral;
-import org.jrdf.sparql.parser.node.TQuote;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
+import org.jrdf.sparql.parser.node.ATriple;
+import org.jrdf.sparql.parser.node.PObjectTripleElement;
+import org.jrdf.sparql.parser.node.PResourceTripleElement;
+import org.jrdf.sparql.parser.node.PStrand;
+import org.jrdf.sparql.parser.node.TEscapedtext;
 import org.jrdf.sparql.parser.node.TResource;
+import org.jrdf.sparql.parser.node.TQuote;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -107,8 +107,7 @@ public final class LiteralTripleSpec implements TripleSpec {
         PResourceTripleElement subjectElement = createResourceTripleElement(subjectUri);
         PResourceTripleElement predicateElement = createResourceTripleElement(predicateUri);
         PObjectTripleElement objectElement = createLiteralTripleElement(literal);
-        ATriple triple = new ATriple(subjectElement, predicateElement, objectElement);
-        return triple;
+        return new ATriple(subjectElement, predicateElement, objectElement);
     }
 
     private PObjectTripleElement createLiteralTripleElement(String object) {
