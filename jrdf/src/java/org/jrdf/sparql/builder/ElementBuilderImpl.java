@@ -81,6 +81,8 @@ import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
 import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.TIdentifier;
+import org.jrdf.sparql.parser.node.AQuotedLiteralLiteral;
+import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
 import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.net.URI;
@@ -91,6 +93,7 @@ import java.util.Map;
 @SuppressWarnings({ "MethodParameterOfConcreteClass", "CastToConcreteClass", "LocalVariableOfConcreteClass" })
 public final class ElementBuilderImpl extends DepthFirstAdapter implements ElementBuilder {
     private static final String SINGLE_QUOTE = "'";
+    private static final String DOUBLE_QUOTE = "\"";
     private AttributeValuePair avp;
     private final NodeType nodeType;
     private final Node graphNode;
@@ -181,18 +184,24 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         }
     }
 
-// FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &
+    // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &
     // Kowari::ItqlIntepreter::getLiteralText()
     // FIXME TJA: Handle datatypes.
     // FIXME TJA: Handle language code.
     private String extractTextFromLiteralNode(PLiteral literal) {
-        return trim(stripQuotes(literal));
+        String quote = "";
+        if (literal instanceof AQuotedLiteralLiteral) {
+            quote = SINGLE_QUOTE;
+        } else if (literal instanceof ADbQuotedLiteralLiteral) {
+            quote = DOUBLE_QUOTE;
+        }
+        return trim(stripQuotes(literal, quote));
     }
 
-    private String stripQuotes(PLiteral literal) {
+    private String stripQuotes(PLiteral literal, String quoteType) {
         String lexicalValue = literal.toString();
-        int start = lexicalValue.indexOf(SINGLE_QUOTE) + 1;
-        int end = lexicalValue.lastIndexOf(SINGLE_QUOTE);
+        int start = lexicalValue.indexOf(quoteType) + 1;
+        int end = lexicalValue.lastIndexOf(quoteType);
         return lexicalValue.substring(start, end);
     }
 
