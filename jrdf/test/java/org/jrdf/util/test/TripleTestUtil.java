@@ -66,6 +66,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.Literal;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -128,7 +129,16 @@ public class TripleTestUtil {
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, URI predicate,
             String varObject, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
-        List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createAttributes(varSubject, varObject, suffix));
+        List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectObjectVariableAttributes(varSubject,
+                varObject, suffix));
+        return new Constraint<ExpressionVisitor>(avp);
+    }
+
+    public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, String varPredicate,
+            Literal constLiteral, long suffix) {
+        Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, constLiteral);
+        List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectPredicateVariableAttributes(
+                varSubject, varPredicate, suffix));
         return new Constraint<ExpressionVisitor>(avp);
     }
 
@@ -192,10 +202,17 @@ public class TripleTestUtil {
         return createAttributes(subjectName, predicateName, objectName);
     }
 
-    private static Attribute[] createAttributes(String subject, String object, long suffix) {
+    private static Attribute[] createSubjectObjectVariableAttributes(String subject, String object, long suffix) {
         AttributeName subjectName = new VariableName(subject);
         AttributeName predicateName = new PositionName("PREDICATE" + suffix);
         AttributeName objectName = new VariableName(object);
+        return createAttributes(subjectName, predicateName, objectName);
+    }
+
+    private static Attribute[] createSubjectPredicateVariableAttributes(String subject, String predicate, long suffix) {
+        AttributeName subjectName = new VariableName(subject);
+        AttributeName predicateName = new VariableName(predicate);
+        AttributeName objectName = new PositionName("OBJECT" + suffix);
         return createAttributes(subjectName, predicateName, objectName);
     }
 
