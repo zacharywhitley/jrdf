@@ -121,8 +121,8 @@ public class JarClassLoader extends ClassLoader {
     }
 
 
-    protected Map byteCode = new HashMap();
-    protected Map pdCache = Collections.synchronizedMap(new HashMap());
+    protected Map<String, ByteCode> byteCode = new HashMap<String, ByteCode>();
+    protected Map<String, ProtectionDomain> pdCache = Collections.synchronizedMap(new HashMap<String, ProtectionDomain>());
 
     protected boolean record = false, flatten = false, unpackFindResource = false;
     protected boolean verbose = false, info = false;
@@ -431,7 +431,7 @@ public class JarClassLoader extends ClassLoader {
             }
             // Use a protectionDomain to associate the codebase with the
             // class.
-            ProtectionDomain pd = (ProtectionDomain) pdCache.get(bytecode.codebase);
+            ProtectionDomain pd = pdCache.get(bytecode.codebase);
             if (pd == null) {
                 ProtectionDomain cd = JarClassLoader.class.getProtectionDomain();
                 URL url = cd.getCodeSource().getLocation();
@@ -526,7 +526,7 @@ public class JarClassLoader extends ClassLoader {
     /**
      * Resolve a resource name.  Look first in jar-relative, then in global scope.
      *
-     * @param resource
+     * @param $resource
      * @return
      */
     protected String resolve(String $resource) {
