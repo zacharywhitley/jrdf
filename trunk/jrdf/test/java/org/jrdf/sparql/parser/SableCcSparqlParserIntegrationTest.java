@@ -207,11 +207,14 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         checkConstraintExpression(QUERY_OPTIONAL_5, expectedExpression);
     }
 
-    public void testLiteralWithNoDataTypeOrLanguage() {
+    public void testQuotedLiteralWithNoDataTypeOrLanguage() {
         checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_SINGLE_QUOTES, TITLE_EXP_1);
-        //checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_DOUBLE_QUOTES, TITLE_EXP_1);
     }
 
+    public void testDoubleQuotedLiteralWithNoDataTypeOrLanguage() {
+        checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_DOUBLE_QUOTES, TITLE_EXP_1);
+    }
+    
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);

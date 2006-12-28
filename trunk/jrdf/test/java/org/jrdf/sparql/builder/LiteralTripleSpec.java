@@ -64,17 +64,17 @@ import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.sparql.parser.node.AEscapedStrand;
-import org.jrdf.sparql.parser.node.ALiteral;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AQuotedEscapedQuotedStrand;
+import org.jrdf.sparql.parser.node.AQuotedLiteralLiteral;
 import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.PObjectTripleElement;
+import org.jrdf.sparql.parser.node.PQuotedStrand;
 import org.jrdf.sparql.parser.node.PResourceTripleElement;
-import org.jrdf.sparql.parser.node.PStrand;
-import org.jrdf.sparql.parser.node.TEscapedtext;
-import org.jrdf.sparql.parser.node.TResource;
 import org.jrdf.sparql.parser.node.TQuote;
+import org.jrdf.sparql.parser.node.TResource;
+import org.jrdf.sparql.parser.node.TQescapedtext;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -111,9 +111,9 @@ public final class LiteralTripleSpec implements TripleSpec {
     }
 
     private PObjectTripleElement createLiteralTripleElement(String object) {
-        List<PStrand> strand = new ArrayList<PStrand>();
-        strand.add(new AEscapedStrand(new TEscapedtext(object)));
-        ALiteral literal = new ALiteral(new TQuote("'"), strand, new TQuote("'"));
+        List<PQuotedStrand> strand = new ArrayList<PQuotedStrand>();
+        strand.add(new AQuotedEscapedQuotedStrand(new TQescapedtext(object)));
+        AQuotedLiteralLiteral literal = new AQuotedLiteralLiteral(new TQuote("'"), strand, new TQuote("'"));
         return new ALiteralObjectTripleElement(literal);
     }
 
