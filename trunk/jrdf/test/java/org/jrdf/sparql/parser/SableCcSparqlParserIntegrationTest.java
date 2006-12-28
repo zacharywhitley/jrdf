@@ -61,6 +61,7 @@ package org.jrdf.sparql.parser;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Literal;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
@@ -73,6 +74,9 @@ import org.jrdf.query.expression.Union;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
+import org.jrdf.util.test.NodeTestUtil;
+import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.SparqlQueryTestUtil;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_1_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_1;
 import static org.jrdf.util.test.SparqlQueryTestUtil.BOOK_2_DC_TITLE_ID_2;
@@ -91,7 +95,6 @@ import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_3;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTIONAL_5;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_OPTION_4;
 import static org.jrdf.util.test.SparqlQueryTestUtil.QUERY_SINGLE_OPTIONAL;
-import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
 import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
@@ -109,6 +112,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
 
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final Graph GRAPH = FACTORY.getNewGraph();
+    private static final Literal LITERAL = NodeTestUtil.createLiteral("The Pragmatic Programmer");
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
             = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_CONJUNCTION
@@ -124,6 +128,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX, "alias", 3);
     private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME, "name", 3);
     private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX, "mbox", 4);
+    private static final Expression<ExpressionVisitor> TITLE_EXP_1 = createConstraintExpression("s", "p", LITERAL, 1);
     private QueryParser parser;
 
     public void setUp() throws Exception {
@@ -200,6 +205,11 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         Optional<ExpressionVisitor> optional2 = new Optional<ExpressionVisitor>(FOAF_NAME_EXP_3, FOAF_MBOX_EXP_4);
         Optional<ExpressionVisitor> expectedExpression = new Optional<ExpressionVisitor>(optional1, optional2);
         checkConstraintExpression(QUERY_OPTIONAL_5, expectedExpression);
+    }
+
+    public void testLiteralWithNoDataTypeOrLanguage() {
+        checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_SINGLE_QUOTES, TITLE_EXP_1);
+        //checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_DOUBLE_QUOTES, TITLE_EXP_1);
     }
 
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {

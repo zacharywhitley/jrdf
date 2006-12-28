@@ -69,6 +69,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphElementFactoryException;
 
 import java.net.URI;
 
@@ -95,6 +96,22 @@ public final class NodeTestUtil {
         try {
             return getElementFactory().createLiteral(literal);
         } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Literal createLiteral(String literal, String language) {
+        try {
+            return getElementFactory().createLiteral(literal, language);
+        } catch (GraphElementFactoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Literal createLiteral(String literal, URI datatype) {
+        try {
+            return getElementFactory().createLiteral(literal, datatype);
+        } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
     }
