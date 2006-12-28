@@ -72,6 +72,7 @@ import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Unit test for {@link Constraint}.
@@ -79,6 +80,7 @@ import java.util.List;
  * @author Tom Adams
  * @version $Revision$
  */
+@SuppressWarnings({ "unchecked" })
 public final class ConstraintUnitTest extends TestCase {
     private static final List<AttributeValuePair> AVP_1 =  createAvpSet(TEST_ATTRIBUTE_VALUE_1);
     private static final List<AttributeValuePair> AVP_2 =  createAvpSet(TEST_ATTRIBUTE_VALUE_2);
@@ -102,7 +104,7 @@ public final class ConstraintUnitTest extends TestCase {
 
     public void getAvp() {
         Constraint constraint = new Constraint<ExpressionVisitor>(AVP_1);
-        assertEquals(AVP_1, constraint.getAvp(null));
+        assertEquals(AVP_1, constraint.getAvp(Collections.EMPTY_MAP));
     }
 
     private static List<AttributeValuePair> createAvpSet(AttributeValuePair testAttributeValue) {

@@ -101,6 +101,7 @@ import java.util.Collections;
  * @author Andrew Newman
  * @version $Revision$
  */
+@SuppressWarnings({ "unchecked" })
 public class NaturalJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
