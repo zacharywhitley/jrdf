@@ -12,10 +12,13 @@ Helpers
   tab        = 9;
   lf         = 10;
   cr         = 13;
+  dbquote    = 34;
+  quote      = 39;
   sl         = 47;
   whitespace = ' ' | tab | lf | cr;
   nonblank   = [33..126];
-  nonquote   = [character - [39 + '\']];
+  nonquote   = [character - [quote + '\']];
+  nondbquote = [character - [dbquote + '\']];
   nonslash   = [[33..126] - sl];
   urlchar    = [character - '>'];
 
@@ -23,7 +26,8 @@ States
   def,      /* default state */
   com,      /* comment */
   esc,      /* escaping character in quoted literal with '\' */
-  lit,      /* quoted literal */
+  qlit,     /* quoted literal */
+  dbqlit,   /* double quoted literal */
   res,      /* tagged resource */
   var;      /* escaping variable name with '?' or '$' */
 
@@ -53,10 +57,10 @@ Tokens
   {def}                       asterisk       = '*';
 
   {res}                       resource    = urlchar*;
-  {def->lit, lit->def}        quote       = 39;  /* ' */
-  {lit->esc}                  escape      = '\';
-  {esc->lit}                  escapedtext = character;
-  {lit}                       text        = nonquote+;
+  {def->qlit, qlit->def}      quote       = quote;  /* ' */
+  {qlit->esc}                 escape      = '\';
+  {esc->qlit}                 escapedtext = character;
+  {qlit}                      text        = nonquote+;
 
 Ignored Tokens
   blank, comment, escape, endcomment, endurl, hash, url;
