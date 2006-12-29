@@ -58,12 +58,70 @@
 
 package org.jrdf.sparql.builder;
 
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.sparql.parser.analysis.AnalysisAdapter;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AQuotedLiteralLiteral;
+import org.jrdf.sparql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.sparql.parser.node.PLiteral;
+import org.jrdf.sparql.parser.node.PQuotedStrand;
+import org.jrdf.sparql.parser.node.Switch;
+import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
+import org.jrdf.sparql.parser.node.PDbQuotedStrand;
+import org.jrdf.sparql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public final class LiteralBuilderImpl implements LiteralBuilder {
+import java.util.LinkedList;
 
-    public Literal createLiteral(ALiteralObjectTripleElement element) {
-        return null;
+public final class LiteralBuilderImpl extends AnalysisAdapter implements LiteralBuilder, Switch {
+    private final GraphElementFactory factory;
+    private GraphElementFactoryException exception;
+    private Literal result;
+
+    public LiteralBuilderImpl(GraphElementFactory newFactory) {
+        checkNotNull(newFactory);
+        factory = newFactory;
+    }
+
+    public Literal createLiteral(ALiteralObjectTripleElement element) throws GraphElementFactoryException {
+        checkNotNull(element);
+        exception = null;
+        PLiteral pLiteral = element.getLiteral();
+        pLiteral.apply(this);
+        if (exception == null) {
+            return result;
+        } else {
+            throw exception;
+        }
+    }
+
+    @Override
+    public void caseAQuotedLiteralLiteral(AQuotedLiteralLiteral node) {
+        LinkedList<PQuotedStrand> list = node.getQuotedStrand();
+        PQuotedStrand tmpStrand = list.get(0);
+        if (tmpStrand instanceof AQuotedUnescapedQuotedStrand) {
+            AQuotedUnescapedQuotedStrand strand = (AQuotedUnescapedQuotedStrand) tmpStrand;
+            createLiteral(strand.getQtext().getText());
+        }
+    }
+
+    @Override
+    public void caseADbQuotedLiteralLiteral(ADbQuotedLiteralLiteral node) {
+        LinkedList<PDbQuotedStrand> list = node.getDbQuotedStrand();
+        PDbQuotedStrand tmpStrand = list.get(0);
+        if (tmpStrand instanceof ADbQuotedUnescapedDbQuotedStrand) {
+            ADbQuotedUnescapedDbQuotedStrand strand = (ADbQuotedUnescapedDbQuotedStrand) tmpStrand;
+            createLiteral(strand.getDbqtext().getText());
+        }
+    }
+
+    private void createLiteral(String s) {
+        try {
+            result = factory.createLiteral(s);
+        } catch (GraphElementFactoryException e) {
+            exception = e;
+        }
     }
 }
