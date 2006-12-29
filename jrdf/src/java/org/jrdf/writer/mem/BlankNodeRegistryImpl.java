@@ -58,8 +58,10 @@
 package org.jrdf.writer.mem;
 
 import org.jrdf.graph.BlankNode;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 
+import java.util.List;
 import java.util.ArrayList;
 
 /**
@@ -67,10 +69,8 @@ import java.util.ArrayList;
  *
  * @author TurnerRX
  */
-// TODO (AN) Combine this with parser's PaserBlankNodeFactory
-public class BlankNodeRegistryImpl implements BlankNodeRegistry {
-
-    private ArrayList<BlankNode> bNodes = new ArrayList<BlankNode>();
+public final class BlankNodeRegistryImpl implements BlankNodeRegistry {
+    private final List<BlankNode> bNodes = new ArrayList<BlankNode>();
 
     /**
      * If the node has already been registered, it's node Id is returned,
@@ -80,12 +80,12 @@ public class BlankNodeRegistryImpl implements BlankNodeRegistry {
      * @return String node ID
      */
     public String getNodeId(BlankNode node) {
+        checkNotNull(node);
         long id = bNodes.indexOf(node);
-        if (id == -1) {
+        if (id < 0) {
             bNodes.add(node);
             id = bNodes.indexOf(node);
         }
         return "bNode_" + id;
     }
-
 }

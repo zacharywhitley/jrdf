@@ -59,7 +59,6 @@
 package org.jrdf.sparql.builder;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
@@ -188,7 +187,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     private URIReference createResource(String uri) {
         try {
-            return getElementFactory().createResource(new URI(uri));
+            return currentGraph.getElementFactory().createResource(new URI(uri));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -201,9 +200,5 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private GraphElementFactory getElementFactory() {
-        return currentGraph.getElementFactory();
     }
 }
