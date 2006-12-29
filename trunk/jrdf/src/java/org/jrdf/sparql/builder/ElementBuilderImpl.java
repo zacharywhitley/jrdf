@@ -79,10 +79,7 @@ import org.jrdf.sparql.parser.node.AResourceResourceTripleElement;
 import org.jrdf.sparql.parser.node.AVariable;
 import org.jrdf.sparql.parser.node.AVariableObjectTripleElement;
 import org.jrdf.sparql.parser.node.AVariableResourceTripleElement;
-import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.TIdentifier;
-import org.jrdf.sparql.parser.node.AQuotedLiteralLiteral;
-import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
 import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.net.URI;
@@ -92,8 +89,6 @@ import java.util.Map;
 
 @SuppressWarnings({ "MethodParameterOfConcreteClass", "CastToConcreteClass", "LocalVariableOfConcreteClass" })
 public final class ElementBuilderImpl extends DepthFirstAdapter implements ElementBuilder {
-    private static final String SINGLE_QUOTE = "'";
-    private static final String DOUBLE_QUOTE = "\"";
     private AttributeValuePair avp;
     private final NodeType nodeType;
     private final Node graphNode;
@@ -153,8 +148,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     @Override
     public void caseALiteralObjectTripleElement(ALiteralObjectTripleElement node) {
-        String text = extractTextFromLiteralNode(node.getLiteral());
-        avp = new AttributeValuePairImpl(attribute, createLiteral(text));
+        avp = new AttributeValuePairImpl(attribute, createLiteral(node));
     }
 
     private AttributeValuePair createAttributeValuePair(NodeType type, Node anyNode, String variableName) {
@@ -184,37 +178,12 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         }
     }
 
-    // FIXME TJA: For a better way to do this, see Kowari::ItqlIntepreter::toLiteralImpl() &
-    // Kowari::ItqlIntepreter::getLiteralText()
-    // FIXME TJA: Handle datatypes.
-    // FIXME TJA: Handle language code.
-    private String extractTextFromLiteralNode(PLiteral literal) {
-        String quote = "";
-        if (literal instanceof AQuotedLiteralLiteral) {
-            quote = SINGLE_QUOTE;
-        } else if (literal instanceof ADbQuotedLiteralLiteral) {
-            quote = DOUBLE_QUOTE;
-        }
-        return trim(stripQuotes(literal, quote));
-    }
-
-    private String stripQuotes(PLiteral literal, String quoteType) {
-        String lexicalValue = literal.toString();
-        int start = lexicalValue.indexOf(quoteType) + 1;
-        int end = lexicalValue.lastIndexOf(quoteType);
-        return lexicalValue.substring(start, end);
-    }
-
     private String getStringForm(AResourceResourceTripleElement resourceNode) {
         return resourceNode.getResource().getText();
     }
 
     private String getStringForm(AResourceObjectTripleElement resourceNode) {
         return resourceNode.getResource().getText();
-    }
-
-    private String trim(String s) {
-        return s.trim();
     }
 
     private URIReference createResource(String uri) {
@@ -225,9 +194,10 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
         }
     }
 
-    private Literal createLiteral(String lexicalValue) {
+    private Literal createLiteral(ALiteralObjectTripleElement node) {
         try {
-            return getElementFactory().createLiteral(lexicalValue);
+            LiteralBuilder literalBuilder = new LiteralBuilderImpl(currentGraph.getElementFactory());
+            return literalBuilder.createLiteral(node);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

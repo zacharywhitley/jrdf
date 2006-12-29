@@ -59,21 +59,119 @@
 package org.jrdf.sparql.builder;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import org.easymock.classextension.IMocksControl;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Literal;
+import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
+import org.jrdf.sparql.parser.node.AQuotedLiteralLiteral;
+import org.jrdf.sparql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.sparql.parser.node.PQuotedStrand;
+import org.jrdf.sparql.parser.node.TQtext;
+import org.jrdf.sparql.parser.node.TQuote;
+import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
+import org.jrdf.sparql.parser.node.TDbquote;
+import org.jrdf.sparql.parser.node.PDbQuotedStrand;
+import org.jrdf.sparql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
+import org.jrdf.sparql.parser.node.TDbqtext;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ParameterDefinition;
 
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LiteralBuilderImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
+    private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[] {GraphElementFactory.class};
+    private static final String[] PARAM_NAMES = {"element"};
+    private static final Class[] PARAM_TYPES = {ALiteralObjectTripleElement.class};
+    private static final ParameterDefinition BUILD_PARAM_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
+    private static final LiteralBuilder BUILDER = new LiteralBuilderImpl(factory.createMock(GraphElementFactory.class));
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(LiteralBuilder.class, LiteralBuilderImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(LiteralBuilderImpl.class, Modifier.PUBLIC);
+        checkImplementationOfInterfaceAndFinal(LiteralBuilder.class, LiteralBuilderImpl.class);
+        checkConstructor(LiteralBuilderImpl.class, Modifier.PUBLIC, GraphElementFactory.class);
     }
 
     public void testBadParams() throws Exception {
-        LiteralBuilder builder = new LiteralBuilderImpl();
+        checkConstructorSetsFieldsAndFieldsPrivateFinal(LiteralBuilderImpl.class,
+                CONSTRUCTOR_PARAM_TYPES, new String[] {"factory"});
+        checkConstructNullAssertion(LiteralBuilderImpl.class, CONSTRUCTOR_PARAM_TYPES);
+        checkMethodNullAssertions(BUILDER, "createLiteral", BUILD_PARAM_DEFINITION);
+    }
+
+    public void testCreateLiteralFromQuotedLiteral() throws Exception {
+        checkLiteralCreation(createQuotedElement());
+    }
+
+    public void testCreateLiteralFromDoubleQuotedLiteral() throws Exception {
+        checkLiteralCreation(createDoubleQuotedElement());
+    }
+
+    public void testCreateLiteralWithException() throws Exception {
+        factory.reset();
+        IMocksControl mocksControl = factory.createControl();
+        final LiteralBuilder builder = createBuilder(mocksControl);
+        mocksControl.andThrow(new GraphElementFactoryException("foo"));
+
+        factory.replay();
+        checkThrowsException(builder);
+        factory.verify();
+    }
+
+    private void checkLiteralCreation(ALiteralObjectTripleElement element) throws GraphElementFactoryException {
+        factory.reset();
+        Literal literal = factory.createMock(Literal.class);
+        IMocksControl mocksControl = factory.createControl();
+        LiteralBuilder builder = createBuilder(mocksControl);
+        mocksControl.andReturn(literal);
+
+        factory.replay();
+        checkReturnsLiteral(builder, element, literal);
+        factory.verify();
+    }
+
+    private void checkReturnsLiteral(LiteralBuilder builder, ALiteralObjectTripleElement element, Literal expectedLiteral) throws GraphElementFactoryException {
+        Literal actualLiteral = builder.createLiteral(element);
+        assertNotNull(actualLiteral);
+        assertEquals(expectedLiteral, actualLiteral);
+    }
+
+    private void checkThrowsException(final LiteralBuilder builder) {
+        AssertThrows.assertThrows(GraphElementFactoryException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                builder.createLiteral(createQuotedElement());
+            }
+        });
+    }
+
+    private LiteralBuilder createBuilder(IMocksControl mocksControl) throws GraphElementFactoryException {
+        GraphElementFactory graphFactory = mocksControl.createMock(GraphElementFactory.class);
+        graphFactory.createLiteral("hello");
+        return new LiteralBuilderImpl(graphFactory);
+    }
+
+    private ALiteralObjectTripleElement createQuotedElement() {
+        List<PQuotedStrand> strand = new ArrayList<PQuotedStrand>();
+        strand.add(new AQuotedUnescapedQuotedStrand(new TQtext("hello")));
+        TQuote tQuote = new TQuote("'");
+        AQuotedLiteralLiteral quotedLiteralLiteral = new AQuotedLiteralLiteral(tQuote, strand, tQuote);
+        return new ALiteralObjectTripleElement(quotedLiteralLiteral);
+    }
+
+    private ALiteralObjectTripleElement createDoubleQuotedElement() {
+        List<PDbQuotedStrand> strand = new ArrayList<PDbQuotedStrand>();
+        strand.add(new ADbQuotedUnescapedDbQuotedStrand(new TDbqtext("hello")));
+        TDbquote tDbquote = new TDbquote("\"");
+        ADbQuotedLiteralLiteral quotedLiteralLiteral = new ADbQuotedLiteralLiteral(tDbquote, strand, tDbquote);
+        return new ALiteralObjectTripleElement(quotedLiteralLiteral);
     }
 }
 
