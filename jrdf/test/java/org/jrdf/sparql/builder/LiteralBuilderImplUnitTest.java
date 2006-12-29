@@ -87,6 +87,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({ "unchecked" })
 public class LiteralBuilderImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
     private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[] {GraphElementFactory.class};

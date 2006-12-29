@@ -89,7 +89,7 @@ public final class ParameterUtil {
      */
     public static void checkNotNull(Object... params) {
         if (params == null) {
-            raise(1);
+            throw new IllegalArgumentException("Parameter 1 cannot be null");
         } else {
             checkEachParameter(params);
         }
@@ -99,12 +99,9 @@ public final class ParameterUtil {
     private static void checkEachParameter(Object... params) {
         for (int i = 0; i < params.length; i++) {
             if (params[i] == null) {
-                raise((i + 1));
+                throw new IllegalArgumentException("Parameter " + (i + 1) + " cannot be null");
             }
         }
     }
 
-    private static void raise(int i) {
-        throw new IllegalArgumentException("Parameter " + i + " cannot be null");
-    }
 }

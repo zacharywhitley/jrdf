@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003, 2004 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -58,27 +58,42 @@
 
 package org.jrdf.sparql.parser;
 
-import org.jrdf.sparql.parser.lexer.Lexer;
+import junit.framework.TestCase;
 import org.jrdf.sparql.parser.parser.Parser;
-import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldStatic;
+import org.jrdf.util.test.ParameterDefinition;
+import org.jrdf.util.test.ReflectTestUtil;
 
-import java.io.PushbackReader;
-import java.io.StringReader;
+import java.lang.reflect.Modifier;
 
-/**
- * Creates new SPARQL Parsers.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
-public final class ParserFactoryImpl implements ParserFactory {
-    private static final int PUSHBACK_BUFFER_SIZE = 256;
+public final class ParserFactoryImplUnitTest extends TestCase {
+    private static final int BUFFER_SIZE = 256;
+    private static final String BUFFER_SIZE_FIELD = "PUSHBACK_BUFFER_SIZE";
 
-    public Parser getParser(String queryText) {
-        checkNotEmptyString("queryText", queryText);
-        StringReader in = new StringReader(queryText);
-        PushbackReader reader = new PushbackReader(in, PUSHBACK_BUFFER_SIZE);
-        Lexer lexer = new Lexer(reader);
-        return new Parser(lexer);
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(ParserFactory.class, ParserFactoryImpl.class);
+        checkConstructor(ParserFactoryImpl.class, Modifier.PUBLIC);
+    }
+
+    public void testSetBufferSize() {
+        checkFieldIsOfTypePrivateAndFinal(ParserFactoryImpl.class, Integer.TYPE, BUFFER_SIZE_FIELD);
+        checkFieldStatic(ParserFactoryImpl.class, BUFFER_SIZE_FIELD);
+        ReflectTestUtil.checkFieldValue(new ParserFactoryImpl(), BUFFER_SIZE_FIELD, BUFFER_SIZE);
+    }
+
+    public void testCreateParserBadQuery() {
+        ParserFactory parserFactory = new ParserFactoryImpl();
+        checkMethodNullAndEmptyAssertions(parserFactory, "getParser", new ParameterDefinition(
+                new String[]{"queryText"}, new Class[]{String.class}));
+    }
+
+    public void testCreateParser() {
+        ParserFactory parserFactory = new ParserFactoryImpl();
+        Parser parser = parserFactory.getParser("foo");
+        assertNotNull(parser);
     }
 }
