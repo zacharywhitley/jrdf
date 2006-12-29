@@ -77,15 +77,15 @@ import java.net.URI;
  */
 public abstract class AbstractTripleUnitTest extends TestCase {
 
-    private Triple TRIPLE_ALL_NULL_1;
-    private Triple TRIPLE_ALL_NULL_2;
-    private Triple TRIPLE_1;
-    private Triple TRIPLE_2;
-    private URIReference URI_URN_FOO;
-    private Triple TRIPLE_URI_URN_FOO;
-    private Triple TRIPLE_NULL_SUBJECT;
-    private Triple TRIPLE_NULL_PREDICATE;
-    private Triple TRIPLE_NULL_OBJECT;
+    private Triple tripleAllNull1;
+    private Triple tripleAllNull2;
+    private Triple triple1;
+    private Triple triple2;
+    private URIReference uriUrnFoo;
+    private Triple tripleUriUrnFoo;
+    private Triple tripleNullSubject;
+    private Triple tripleNullPredicate;
+    private Triple tripleNullObject;
 
     /**
      * Constructs a new test with the given name.
@@ -97,15 +97,15 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     public void setUp() throws Exception {
-        TRIPLE_ALL_NULL_1 = createTriple(null, null, null);
-        TRIPLE_ALL_NULL_2 = createTriple(null, null, null);
-        TRIPLE_1 = createTriple(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
-        TRIPLE_2 = createTriple(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
-        URI_URN_FOO = createResource(URI.create("urn:foo"));
-        TRIPLE_URI_URN_FOO = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        TRIPLE_NULL_SUBJECT = createTriple(null, URI_URN_FOO, URI_URN_FOO);
-        TRIPLE_NULL_PREDICATE = createTriple(URI_URN_FOO, null, URI_URN_FOO);
-        TRIPLE_NULL_OBJECT = createTriple(URI_URN_FOO, URI_URN_FOO, null);
+        tripleAllNull1 = createTriple(null, null, null);
+        tripleAllNull2 = createTriple(null, null, null);
+        triple1 = createTriple(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
+        triple2 = createTriple(TripleTestUtil.URI_BOOK_1, TripleTestUtil.URI_DC_TITLE);
+        uriUrnFoo = createResource(URI.create("urn:foo"));
+        tripleUriUrnFoo = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        tripleNullSubject = createTriple(null, uriUrnFoo, uriUrnFoo);
+        tripleNullPredicate = createTriple(uriUrnFoo, null, uriUrnFoo);
+        tripleNullObject = createTriple(uriUrnFoo, uriUrnFoo, null);
     }
 
     public abstract Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
@@ -147,15 +147,15 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkConsistentHashCode() {
-        checkConsistentHashCode(TRIPLE_ALL_NULL_1);
-        checkConsistentHashCode(TRIPLE_ALL_NULL_2);
-        checkConsistentHashCode(TRIPLE_1);
-        checkConsistentHashCode(TRIPLE_2);
+        checkConsistentHashCode(tripleAllNull1);
+        checkConsistentHashCode(tripleAllNull2);
+        checkConsistentHashCode(triple1);
+        checkConsistentHashCode(triple2);
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
-        Triple x = TRIPLE_1;
-        Triple y = TRIPLE_2;
+        Triple x = triple1;
+        Triple y = triple2;
         checkEqual(x, y);
         assertEquals(x.hashCode(), y.hashCode());
     }
@@ -172,46 +172,46 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkDifferentClass() {
-        checkNotEqual(TRIPLE_1, URI_URN_FOO);
+        checkNotEqual(triple1, uriUrnFoo);
     }
 
     private void checkSymmetric() {
-        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple y = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
         checkEqual(x, y);
         checkEqual(y, y);
     }
 
     private void checkTransitive() {
-        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple z = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple y = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple z = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
         checkEqual(x, y);
         checkEqual(y, z);
         checkEqual(x, z);
     }
 
     private void checkConsistentEquals() {
-        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple y = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
         checkEqual(x, y);
         checkEqual(x, y);
     }
 
     private void checkUnequal() {
-        checkNotEqual(TRIPLE_ALL_NULL_1, TRIPLE_URI_URN_FOO);
-        checkNotEqual(TRIPLE_NULL_SUBJECT, TRIPLE_URI_URN_FOO);
+        checkNotEqual(tripleAllNull1, tripleUriUrnFoo);
+        checkNotEqual(tripleNullSubject, tripleUriUrnFoo);
     }
 
     private void checkSameValueSameReference() {
-        Triple x = TRIPLE_1;
+        Triple x = triple1;
         Triple y = x;
         checkEqual(x, y);
     }
 
     private void checkSameValueDifferentReference() {
-        Triple x = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple y = createTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple x = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple y = createTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
         checkEqual(x, y);
     }
 
@@ -221,15 +221,15 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkBothNull() {
-        checkSameTripleIsEqual(null, URI_URN_FOO, URI_URN_FOO);
-        checkSameTripleIsEqual(URI_URN_FOO, null, URI_URN_FOO);
-        checkSameTripleIsEqual(URI_URN_FOO, URI_URN_FOO, null);
+        checkSameTripleIsEqual(null, uriUrnFoo, uriUrnFoo);
+        checkSameTripleIsEqual(uriUrnFoo, null, uriUrnFoo);
+        checkSameTripleIsEqual(uriUrnFoo, uriUrnFoo, null);
     }
 
     private void checkEitherNull() {
-        checkNotEqual(TRIPLE_NULL_SUBJECT, TRIPLE_URI_URN_FOO);
-        checkNotEqual(TRIPLE_NULL_PREDICATE, TRIPLE_URI_URN_FOO);
-        checkNotEqual(TRIPLE_NULL_OBJECT, TRIPLE_URI_URN_FOO);
+        checkNotEqual(tripleNullSubject, tripleUriUrnFoo);
+        checkNotEqual(tripleNullPredicate, tripleUriUrnFoo);
+        checkNotEqual(tripleNullObject, tripleUriUrnFoo);
     }
 
     private void checkSameTripleIsEqual(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
@@ -239,7 +239,7 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkNullComparisonObject() {
-        checkNotEqual(TRIPLE_1, null);
+        checkNotEqual(triple1, null);
     }
 
     private void checkEqual(Triple x, Triple y) {
@@ -251,8 +251,8 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkDifferentImplementationsAreEqual() {
-        Triple t1 = new TestTriple(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
-        Triple t2 = new TestTriple2(URI_URN_FOO, URI_URN_FOO, URI_URN_FOO);
+        Triple t1 = new TestTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple t2 = new TestTriple2(uriUrnFoo, uriUrnFoo, uriUrnFoo);
         assertEquals(t1, t2);
     }
 
