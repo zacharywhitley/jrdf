@@ -85,24 +85,28 @@ import java.io.IOException;
 import java.lang.reflect.Modifier;
 
 public final class SableCcSparqlParserUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
-    private static final Graph GRAPH = factory.createMock(Graph.class);
-    private static final ParserFactory PARSER_FACTORY = factory.createMock(ParserFactory.class);
-    private static final GraphRelationFactory GRAPH_RELATION_FACTORY = factory.createMock(GraphRelationFactory.class);
     private static final String ERROR_MSG = "Unable to parse query syntax";
     private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1,1), "bar");
     private static final LexerException LEXER_EXECPTION = new LexerException("foo");
     private static final Exception IO_EXCEPTION = new IOException();
-    private static final AttributeValuePairHelper AVP_HELPER = factory.createMock(AttributeValuePairHelper.class);
-    private static final SortedAttributeFactory ATTRIBUTE_FACTORY = factory.createMock(SortedAttributeFactory.class);
     private static final String[] PARAM_NAMES = {"graph", "queryText"};
     private static final Class[] PARAM_TYPES = {Graph.class, String.class};
     private static final ParameterDefinition BUILD_PARAM_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
     private MockFactory mockFactory;
+    private Graph graph;
+    private ParserFactory parserFactory;
+    private GraphRelationFactory graphRelationFactory;
+    private AttributeValuePairHelper avpHelper;
+    private SortedAttributeFactory attributeFactory;
 
     public void setUp() {
         mockFactory = new MockFactory();
+        graph = mockFactory.createMock(Graph.class);
+        parserFactory = mockFactory.createMock(ParserFactory.class);
+        graphRelationFactory = mockFactory.createMock(GraphRelationFactory.class);
+        avpHelper = mockFactory.createMock(AttributeValuePairHelper.class);
+        attributeFactory = mockFactory.createMock(SortedAttributeFactory.class);
     }
 
     public void testClassProperties() {
@@ -112,7 +116,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     public void testParseQueryFailsWithBadInput() {
-        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(PARSER_FACTORY);
+        final SparqlParser sableCcSparqlParser = createSableCcSparqlParser(parserFactory);
         checkMethodNullAndEmptyAssertions(sableCcSparqlParser, "parseQuery", BUILD_PARAM_DEFINITION);
     }
 
@@ -122,7 +126,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         ParserFactory parserFactory = createParserFactory(parser);
         SableCcSparqlParser ccSparqlParser = createSableCcSparqlParser(parserFactory);
         mockFactory.replay();
-        ccSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
+        ccSparqlParser.parseQuery(graph, QUERY_BOOK_1_DC_TITLE);
         mockFactory.verify();
     }
 
@@ -175,7 +179,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private SableCcSparqlParser createSableCcSparqlParser(ParserFactory parserFactory) {
-        return new SableCcSparqlParser(parserFactory, GRAPH_RELATION_FACTORY, AVP_HELPER, ATTRIBUTE_FACTORY);
+        return new SableCcSparqlParser(parserFactory, graphRelationFactory, avpHelper, attributeFactory);
     }
 
     private void checkThrowsException(Exception exception, String errorMsg)
@@ -186,7 +190,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         mockFactory.replay();
         AssertThrows.assertThrows(InvalidQuerySyntaxException.class, errorMsg, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                ccSparqlParser.parseQuery(GRAPH, QUERY_BOOK_1_DC_TITLE);
+                ccSparqlParser.parseQuery(graph, QUERY_BOOK_1_DC_TITLE);
             }
         });
         mockFactory.verify();
