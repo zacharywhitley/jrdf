@@ -64,12 +64,13 @@ import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
 import org.jrdf.sparql.parser.SparqlParser;
-import org.jrdf.util.param.ParameterTestUtil;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ParameterDefinition;
 import org.jrdf.util.test.SparqlQueryTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -83,19 +84,12 @@ import java.lang.reflect.Modifier;
 public class SparqlQueryBuilderUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
     private static final SparqlParser SPARQL_PARSER = factory.createMock(SparqlParser.class);
-    private static final String NULL_STRING = ParameterTestUtil.NULL_STRING;
-    private static final String EMPTY_STRING = ParameterTestUtil.EMPTY_STRING;
-    private static final String SINGLE_SPACE = ParameterTestUtil.SINGLE_SPACE;
     private static final String QUERY_GOOD = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final Graph GRAPH = factory.createMock(Graph.class);
-    private static final String CANNOT_BE_NULL = "queryText cannot be null";
-    private static final String CANNOT_BE_EMPTY = "queryText cannot be the empty string";
-    private MockFactory mockFactory;
-    private static final Class[] PARAM_TYPES = {SparqlParser.class};
-
-    public void setUp() {
-        mockFactory = new MockFactory();
-    }
+    private static final Class[] CONSTRUCTOR_PARAM_TYPES = {SparqlParser.class};
+    private static final String[] PARAM_NAMES = {"graph", "queryText"};
+    private static final Class[] PARAM_TYPES = {Graph.class, String.class};
+    private static final ParameterDefinition BUILD_PARAM_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(QueryBuilder.class, SparqlQueryBuilder.class);
@@ -103,14 +97,12 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
     }
 
     public void testNullsInConstructor() {
-        checkConstructNullAssertion(SparqlQueryBuilder.class, PARAM_TYPES);
+        checkConstructNullAssertion(SparqlQueryBuilder.class, CONSTRUCTOR_PARAM_TYPES);
     }
 
     public void testBadParams() throws Exception {
         SparqlQueryBuilder builder = new SparqlQueryBuilder(SPARQL_PARSER);
-        checkBadParam(builder, NULL_STRING, CANNOT_BE_NULL);
-        checkBadParam(builder, EMPTY_STRING, CANNOT_BE_EMPTY);
-        checkBadParam(builder, SINGLE_SPACE, CANNOT_BE_EMPTY);
+        checkMethodNullAndEmptyAssertions(builder, "buildQuery", BUILD_PARAM_DEFINITION);
     }
 
     public void testExceptionPassthroughFromParser() {
@@ -118,31 +110,24 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
             public void execute() throws Throwable {
                 SparqlParser parser = createParserThrowsException();
                 QueryBuilder builder = new SparqlQueryBuilder(parser);
-                mockFactory.replay();
+                factory.replay();
                 builder.buildQuery(GRAPH, QUERY_GOOD);
-                mockFactory.verify();
+                factory.verify();
             }
         });
     }
 
     public void testBuildQuery() throws Exception {
+        factory.reset();
         SparqlParser parser = createParser();
         QueryBuilder builder = new SparqlQueryBuilder(parser);
-        mockFactory.replay();
+        factory.replay();
         builder.buildQuery(GRAPH, QUERY_GOOD);
-        mockFactory.verify();
-    }
-
-    private void checkBadParam(final SparqlQueryBuilder builder, final String param, String message) throws Exception {
-        AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                builder.buildQuery(GRAPH, param);
-            }
-        });
+        factory.verify();
     }
 
     private SparqlParser createParserThrowsException() throws Exception {
-        IMocksControl control = mockFactory.createControl();
+        IMocksControl control = factory.createControl();
         SparqlParser parser = control.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);
         control.andThrow(new InvalidQuerySyntaxException(""));
@@ -151,7 +136,7 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
 
     @SuppressWarnings({"unchecked"})
     private SparqlParser createParser() throws Exception {
-        IMocksControl control = mockFactory.createControl();
+        IMocksControl control = factory.createControl();
         SparqlParser parser = control.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);
         control.andReturn(factory.createMock(Query.class));

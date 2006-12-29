@@ -69,7 +69,8 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class ArgumentTestUtil {
     private static final MockFactory factory = new MockFactory();
-    private static final String PARAMETER_CANNOT_BE_NULL = " cannot be null";
+    private static final String CANNOT_BE_NULL = " cannot be null";
+    private static final String CANNOT_BE_EMPTY = " cannot be the empty string";
 
     public static void checkConstructorSetsFieldsAndFieldsPrivate(final Class<?> clazz, final Class[] paramTypes,
             final String[] parameterNames) {
@@ -95,7 +96,7 @@ public class ArgumentTestUtil {
     public static void checkConstructNullAssertion(final Class<?> clazz, final Class[] paramTypes) {
         for (int index = 0; index < paramTypes.length; index++) {
             if (!paramTypes[index].isPrimitive()) {
-                String message = "Parameter " + (index+1) + PARAMETER_CANNOT_BE_NULL;
+                String message = "Parameter " + (index+1) + CANNOT_BE_NULL;
                 Object[] args = factory.createArgs(paramTypes, index);
                 final ParamSpec params = new ParamSpec(paramTypes, args);
                 AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
@@ -117,20 +118,45 @@ public class ArgumentTestUtil {
         checkMethodNullAssertions(obj, methodName, paramDefinition, checkParameter);
     }
 
-    public static void checkMethodNullAssertions(final Object obj, final String methodName, final ParameterDefinition paramDefinition,
-            final boolean[] checkParameter) {
+    public static void checkMethodNullAndEmptyAssertions(final Object obj, final String methodName,
+            final ParameterDefinition paramDefinition) {
+        int numberOfParams = paramDefinition.getParameterTypes().length;
+        boolean[] checkParameter = new boolean[numberOfParams];
+        for (int i = 0; i < checkParameter.length; i++) {
+            checkParameter[i] = true;
+        }
+        checkMethodNullAndEmptyStringAssertions(obj, methodName, paramDefinition, checkParameter);
+    }
+
+    private static void checkMethodNullAssertions(final Object obj, final String methodName,
+            final ParameterDefinition paramDefinition, final boolean[] checkParameter) {
         final Class[] parameterTypes = paramDefinition.getParameterTypes();
         for (int index = 0; index < parameterTypes.length; index++) {
             if (checkParameter[index]) {
-                checkMethod(parameterTypes, index, methodName, obj);
+                final Object[] args = factory.createArgs(parameterTypes, index);
+                String message = "Parameter " + (index +1) + CANNOT_BE_NULL;
+                checkThrowsIllegalArgumentException(message, obj, methodName, parameterTypes, args);
             }
         }
     }
 
-    private static void checkMethod(final Class[] parameterTypes, int index,
-            final String methodName, final Object obj) {
-        final Object[] args = factory.createArgs(parameterTypes, index);
-        String message = "Parameter " + (index+1) + " cannot be null";
+    private static void checkMethodNullAndEmptyStringAssertions(Object obj, String methodName,
+            ParameterDefinition paramDefinition, boolean[] checkParameter) {
+        final Class[] parameterTypes = paramDefinition.getParameterTypes();
+        for (int index = 0; index < parameterTypes.length; index++) {
+            if (checkParameter[index] && parameterTypes[index].equals(String.class)) {
+                final Object[] args = factory.createArgs(parameterTypes, index);
+                String message = "Parameter " + (paramDefinition.getParameterNames()[index]);
+                checkThrowsIllegalArgumentException(message + CANNOT_BE_NULL, obj, methodName, parameterTypes, args);
+                args[index] = "";
+                checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
+                args[index] = " ";
+                checkThrowsIllegalArgumentException(message + CANNOT_BE_EMPTY, obj, methodName, parameterTypes, args);
+            }
+        }
+    }
+
+    private static void checkThrowsIllegalArgumentException(String message, final Object obj, final String methodName, final Class[] parameterTypes, final Object[] args) {
         AssertThrows.assertThrows(IllegalArgumentException.class, message, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 callMethod(obj, methodName, parameterTypes, args);
