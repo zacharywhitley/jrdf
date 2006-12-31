@@ -179,12 +179,11 @@ public abstract class AbstractUnionIntegrationTest extends TestCase {
         Set<Attribute> heading = createHeading(POS_FOO1_SUBJECT, POS_FOO2_PREDICATE, POS_FOO3_OBJECT,
                 VAR_BAR1_SUBJECT, VAR_BAR2_PREDICATE, VAR_BAR1_OBJECT);
         checkUnion(createRelation(heading, resultTuple), createRelation(tuple1), createRelation(tuple2));
-
     }
 
     public abstract Union getUnion();
 
-    private void checkUnion(Relation expectedResult, Relation relation1, Relation relation2) {
+    protected void checkUnion(Relation expectedResult, Relation relation1, Relation relation2) {
         Relation relation = getUnion().union(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
