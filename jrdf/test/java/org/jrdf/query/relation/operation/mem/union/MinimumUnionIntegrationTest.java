@@ -59,13 +59,46 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.operation.Union;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R5;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_SUBJECTPREDICATE_R3;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+import org.jrdf.query.relation.Tuple;
 import org.jrdf.TestJRDFFactory;
 
+import java.util.Set;
+
 /**
- * This is currently just testing normal minimum union - does not test subsumption.
+ * Test both common union properties and tuple subsumption.
  */
 public class MinimumUnionIntegrationTest extends AbstractUnionIntegrationTest {
     public Union getUnion() {
         return TestJRDFFactory.getFactory().getNewMinimumUnion();
+    }
+
+    public void testIsNotLeftOuterJoinOrOuterUnion() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2);
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3));
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R5));
+
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                VAR_BAR1_SUBJECTPREDICATE_R3);
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
+
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R5);
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                VAR_BAR1_SUBJECTPREDICATE_R3));
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
+
+        checkUnion(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
 }

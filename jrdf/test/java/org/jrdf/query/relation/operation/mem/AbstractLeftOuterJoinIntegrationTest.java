@@ -12,6 +12,7 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R2;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO4_PREDICATE_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.*;
 import org.jrdf.query.relation.operation.DyadicJoin;
 
 import java.util.Set;
@@ -33,6 +34,42 @@ public abstract class AbstractLeftOuterJoinIntegrationTest extends TestCase {
 
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, VAR_BAR1_PREDICATE_R2, POS_FOO3_OBJECT_R3, POS_FOO4_PREDICATE_R2);
         resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R1, POS_FOO4_PREDICATE_R3));
+
+        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+    }
+
+    public void testLeftOuterJoin2() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2);
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3));
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R5));
+
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                VAR_BAR1_SUBJECTPREDICATE_R3);
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
+
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                VAR_BAR1_SUBJECTPREDICATE_R3);
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R5));
+
+        checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
+    }
+
+    public void testLeftOuterJoin3() {
+        Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2);
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3));
+        tuple1.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
+
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                VAR_BAR1_SUBJECTPREDICATE_R3);
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        tuple2.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R5));
+
+        Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO4_PREDICATE_R2, POS_FOO3_OBJECT_R3,
+                VAR_BAR1_SUBJECTPREDICATE_R3);
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO4_PREDICATE_R3, POS_FOO3_OBJECT_R4));
+        resultTuple.addAll(createASingleTuple(POS_FOO1_SUBJECT_R4, POS_FOO4_PREDICATE_R2));
 
         checkJoin(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
