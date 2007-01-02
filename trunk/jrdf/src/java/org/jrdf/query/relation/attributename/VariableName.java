@@ -98,6 +98,6 @@ public final class VariableName implements AttributeName {
     }
 
     public String toString() {
-        return variableName;
+        return "?" + variableName;
     }
 }
