@@ -81,10 +81,13 @@ public class MockFactory {
     @SuppressWarnings({ "unchecked" })
     public <T>T createMock(Class<T> clazz) {
         if (clazz.isPrimitive()) {
-            if (clazz.getClass() == Long.TYPE.getClass()) {
+            if (clazz.equals(Long.TYPE)) {
                 return (T) new Long(1l);
-            }
-            else {
+            } else if (clazz.equals(Boolean.TYPE)) {
+                return (T) Boolean.TRUE;
+            } else if (clazz.equals(Integer.TYPE)) {
+                return (T) new Integer(123);
+            } else {
                 throw new UnsupportedOperationException("Cannot create type: " + clazz);
             }
         } else if (isStubClass(clazz)) {

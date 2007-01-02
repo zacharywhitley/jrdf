@@ -80,12 +80,14 @@ public final class AnswerImpl implements Answer, Serializable {
     private final LinkedHashSet<Attribute> heading;
     private final Relation results;
     private final long timeTaken;
+    private boolean hasProjected;
 
-    public AnswerImpl(LinkedHashSet<Attribute> heading, Relation results, long timeTaken) {
+    public AnswerImpl(LinkedHashSet<Attribute> heading, Relation results, long timeTaken, boolean hasProjected) {
         checkNotNull(heading, results);
         this.heading = heading;
         this.results = results;
         this.timeTaken = timeTaken;
+        this.hasProjected = hasProjected;
     }
 
     public String[] getColumnNames() {

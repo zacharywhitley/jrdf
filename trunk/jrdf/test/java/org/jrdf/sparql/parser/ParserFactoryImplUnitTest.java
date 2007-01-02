@@ -65,8 +65,11 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldStatic;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
 import org.jrdf.util.test.ParameterDefinition;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.util.test.FieldPropertiesTestUtil;
+import static org.jrdf.util.test.ReflectTestUtil.*;
 
 import java.lang.reflect.Modifier;
 
@@ -81,8 +84,8 @@ public final class ParserFactoryImplUnitTest extends TestCase {
 
     public void testSetBufferSize() {
         checkFieldIsOfTypePrivateAndFinal(ParserFactoryImpl.class, Integer.TYPE, BUFFER_SIZE_FIELD);
-        checkFieldStatic(ParserFactoryImpl.class, BUFFER_SIZE_FIELD);
-        ReflectTestUtil.checkFieldValue(new ParserFactoryImpl(), BUFFER_SIZE_FIELD, BUFFER_SIZE);
+        checkFieldPrivateConstant(ParserFactoryImpl.class, BUFFER_SIZE_FIELD);
+        checkFieldValue(new ParserFactoryImpl(), BUFFER_SIZE_FIELD, BUFFER_SIZE);
     }
 
     public void testCreateParserBadQuery() {

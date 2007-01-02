@@ -101,7 +101,7 @@ public final class QueryImpl implements Query, Serializable {
         long timeStarted = System.currentTimeMillis();
         Relation result = getResult(graph, queryEngine);
         LinkedHashSet<Attribute> heading = getHeading(result.getSortedHeading(), getVariables());
-        return new AnswerImpl(heading, result, System.currentTimeMillis() - timeStarted);
+        return new AnswerImpl(heading, result, System.currentTimeMillis() - timeStarted, hasProjected());
     }
 
     private Relation getResult(Graph graph, QueryEngine queryEngine) {
@@ -109,15 +109,6 @@ public final class QueryImpl implements Query, Serializable {
         queryEngine.initialiseBaseRelation(entireGraph);
         expression.accept(queryEngine);
         return queryEngine.getResult();
-    }
-
-    private List<Attribute> getVariables() {
-        if (expression instanceof Projection) {
-            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
-            return new LinkedList<Attribute>(projection.getAttributes());
-        } else {
-            return emptyList();
-        }
     }
 
     private LinkedHashSet<Attribute> getHeading(SortedSet<Attribute> sortedHeading, List<Attribute> variables) {
@@ -128,5 +119,18 @@ public final class QueryImpl implements Query, Serializable {
             heading = new LinkedHashSet<Attribute>(variables);
         }
         return heading;
+    }
+
+    private List<Attribute> getVariables() {
+        if (hasProjected()) {
+            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
+            return new LinkedList<Attribute>(projection.getAttributes());
+        } else {
+            return emptyList();
+        }
+    }
+
+    private boolean hasProjected() {
+        return expression instanceof Projection;
     }
 }
