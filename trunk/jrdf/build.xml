@@ -87,7 +87,7 @@
             <manifest>
                 <attribute name="Main-Class" value="org.jrdf.example.RdfXmlParserExample"/>
             </manifest>
-            <fileset dir="${prod.classes.dir}" excludes="com/**/*, org/jrdf/gui/**/*"/>
+            <fileset dir="${prod.classes.dir}" excludes="com/**/*"/>
         </jar>
     </target>
 

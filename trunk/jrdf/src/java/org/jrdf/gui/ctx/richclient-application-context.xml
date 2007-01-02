@@ -15,10 +15,7 @@
     <bean id="applicationDescriptor"
           class="org.springframework.richclient.application.support.DefaultApplicationDescriptor">
         <property name="version">
-            <value>1.0</value>
-        </property>
-        <property name="buildId">
-            <value>200606131100</value>
+            <value>0.3</value>
         </property>
     </bean>
 
@@ -29,6 +26,20 @@
         </property>
         <property name="startingPageId">
             <value>queryView</value>
+        </property>
+    </bean>
+
+    <bean id="serviceLocator" class="org.springframework.richclient.application.ApplicationServicesLocator">
+        <property name="applicationServices" ref="applicationServices"/>
+    </bean>
+
+    <bean id="applicationServices"
+          class="org.springframework.richclient.application.support.DefaultApplicationServices">
+        <property name="imageSourceId">
+            <idref bean="imageSource"/>
+        </property>
+        <property name="applicationObjectConfigurerId">
+            <idref bean="applicationObjectConfigurer"/>
         </property>
     </bean>
 
