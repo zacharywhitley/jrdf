@@ -21,6 +21,7 @@ Helpers
   nondbquote = [character - [dbquote + '\']];
   nonslash   = [[33..126] - sl];
   urlchar    = [character - '>'];
+  echar      = 't' | 'b' | 'n' | 'r' | 'f' | '\' | dbquote | quote; 
 
 States
   def,      /* default state */
