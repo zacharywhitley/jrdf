@@ -62,15 +62,16 @@ import org.springframework.richclient.application.ApplicationLauncher;
 
 public final class SparqlGui {
     private static final String ROOT_CONTEXT = "/org/jrdf/gui/ctx";
-    private static final String RICHCLIENT_APPLICATION_SPLASH = ROOT_CONTEXT +
+    private static final String STARTUP_APPLICATION_CONTEXT = ROOT_CONTEXT +
         "/richclient-application-splash.xml";
     private static final String RICHCLIENT_APPLICATION_CONTEXT = ROOT_CONTEXT +
         "/richclient-application-context.xml";
     private static final String GRAPH_WIRING = "wiring.xml";
+    private static final String[] ROOT_APPLICATION_CONTEXT = new String[]{RICHCLIENT_APPLICATION_CONTEXT, GRAPH_WIRING};
 
     public static void main(String[] args) {
         try {
-            new ApplicationLauncher(RICHCLIENT_APPLICATION_SPLASH, new String[]{RICHCLIENT_APPLICATION_CONTEXT, GRAPH_WIRING});
+            new ApplicationLauncher(STARTUP_APPLICATION_CONTEXT, ROOT_APPLICATION_CONTEXT);
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);

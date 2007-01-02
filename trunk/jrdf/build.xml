@@ -39,7 +39,7 @@
         <!-- Configuration for Wiring up the various components using Spring and other configuration files-->
         <copy todir="${prod.classes.dir}">
             <fileset dir="${prod.src.dir}" includes="**/commands-context.xml"/>
-            <fileset dir="${prod.src.dir}" includes="**/richclient-application-context.xml"/>
+            <fileset dir="${prod.src.dir}" includes="**/richclient-application-splash.xml"/>
             <fileset dir="${prod.src.dir}" includes="**/richclient-application-context.xml"/>
             <fileset dir="${prod.src.dir}" includes="**/images.properties"/>
             <fileset dir="${prod.src.dir}" includes="**/messages.properties"/>
