@@ -101,5 +101,6 @@ public class PositionNameUnitTest extends TestCase {
         AttributeName pos = new PositionName(positionName);
         checkFieldValue(pos, POSITION_FIELD_NAME, positionName);
         assertEquals(positionName, pos.getLiteral());
+        assertEquals(positionName, pos.toString());
     }
 }

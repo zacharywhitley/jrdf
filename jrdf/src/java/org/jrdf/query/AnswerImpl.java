@@ -62,6 +62,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -91,8 +92,8 @@ public final class AnswerImpl implements Answer, Serializable {
         String[] resultColumnNames = new String[heading.size()];
         int index = 0;
         for (Attribute attribute : heading) {
-            resultColumnNames[index] = attribute.getAttributeName().getLiteral() + " | " +
-                    attribute.getType().getName();
+            AttributeName attributeName = attribute.getAttributeName();
+            resultColumnNames[index] = attributeName.toString() + " | " + attribute.getType().getName();
             index++;
         }
         return resultColumnNames;

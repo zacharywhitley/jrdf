@@ -90,4 +90,8 @@ public final class PositionName implements AttributeName {
         }
         return ((AttributeName) obj).getLiteral().equals(getLiteral());
     }
+
+    public String toString() {
+        return positionName;
+    }
 }
