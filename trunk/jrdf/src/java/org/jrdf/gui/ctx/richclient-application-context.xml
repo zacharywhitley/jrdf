@@ -15,7 +15,7 @@
     <bean id="applicationDescriptor"
           class="org.springframework.richclient.application.support.DefaultApplicationDescriptor">
         <property name="version">
-            <value>0.3</value>
+            <value>0.3.1</value>
         </property>
     </bean>
 
