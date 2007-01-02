@@ -67,9 +67,9 @@ import org.jrdf.query.Answer;
 import org.jrdf.query.AnswerImpl;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
+import org.jrdf.query.EmptyAnswer;
+import static org.jrdf.query.EmptyAnswer.*;
 import org.jrdf.query.execute.QueryEngine;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
 import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ArgumentTestUtil;
@@ -100,7 +100,6 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(METHOD_PARAM_NAMES,
             METHOD_PARAM_TYPES);
     private static final InvalidQuerySyntaxException INVALID_QUERY_EXCEPTION = new InvalidQuerySyntaxException("");
-    private static final AnswerImpl NO_ANSWER = new AnswerImpl(NO_HEADER, RELATION_DUM, 0);
 
     public void setUp() {
         factory.reset();
@@ -149,7 +148,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
         factory.replay();
         Answer answer = connection.executeQuery(graph, QUERY_ITQL);
         factory.verify();
-        assertEquals(NO_ANSWER, answer);
+        assertEquals(EMPTY_ANSWER, answer);
     }
 
     public void testGraphExceptionPassthrough() throws Exception {

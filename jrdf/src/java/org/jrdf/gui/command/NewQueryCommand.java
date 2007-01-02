@@ -60,9 +60,7 @@ package org.jrdf.gui.command;
 
 import org.jrdf.gui.view.QueryPanelView;
 import org.jrdf.gui.view.ResultsPanelView;
-import org.jrdf.query.AnswerImpl;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
-import static org.jrdf.sparql.analysis.SparqlAnalyser.NO_HEADER;
+import org.jrdf.query.Answer;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
@@ -91,7 +89,8 @@ public class NewQueryCommand extends ApplicationWindowAwareCommand {
 
     protected void doExecuteCommand() {
         queryPanelView.setQuery(BLANK);
-        AnswerImpl answer = new AnswerImpl(NO_HEADER, RELATION_DUM, 0);
+        //AnswerImpl answer = new AnswerImpl(NO_HEADER, RELATION_DUM, 0);
+        Answer answer = null;
         resultsPanelView.setResults(answer);
     }
 }

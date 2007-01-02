@@ -105,6 +105,18 @@ public class FieldPropertiesTestUtil {
         checkFieldHasModifier(cls, fieldName, Modifier.PRIVATE);
     }
 
+    public static void checkFieldPublicConstant(Class<?> cls, String fieldName) {
+        checkFieldHasModifier(cls, fieldName, Modifier.PUBLIC);
+        checkFieldHasModifier(cls, fieldName, Modifier.STATIC);
+        checkFieldHasModifier(cls, fieldName, Modifier.FINAL);
+    }
+
+    public static void checkFieldPrivateConstant(Class<?> cls, String fieldName) {
+        checkFieldHasModifier(cls, fieldName, Modifier.PRIVATE);
+        checkFieldHasModifier(cls, fieldName, Modifier.STATIC);
+        checkFieldHasModifier(cls, fieldName, Modifier.FINAL);
+    }
+
     public static boolean isFieldOfType(Class<?> clazz, Class<?> expectedType, String fieldName) {
         Field field = ReflectTestUtil.getField(clazz, fieldName);
         return field.getType().equals(expectedType);
