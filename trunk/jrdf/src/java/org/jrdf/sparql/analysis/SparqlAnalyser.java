@@ -71,11 +71,6 @@ import org.jrdf.sparql.parser.parser.ParserException;
 public interface SparqlAnalyser extends Analysis {
 
     /**
-     * Indicates that this analyser has not processed a query yet.
-     */
-    Query NO_QUERY = new NoQuery();
-
-    /**
      * Returns the query processed by this analyser.
      *
      * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.

@@ -68,6 +68,7 @@ import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.ParserException;
+import static org.jrdf.sparql.analysis.NoQuery.*;
 import org.jrdf.util.param.ParameterUtil;
 
 /**

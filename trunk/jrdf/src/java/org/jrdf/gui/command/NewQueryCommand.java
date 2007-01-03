@@ -60,7 +60,7 @@ package org.jrdf.gui.command;
 
 import org.jrdf.gui.view.QueryPanelView;
 import org.jrdf.gui.view.ResultsPanelView;
-import org.jrdf.query.Answer;
+import static org.jrdf.query.EmptyAnswer.EMPTY_ANSWER;
 import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
@@ -89,8 +89,6 @@ public class NewQueryCommand extends ApplicationWindowAwareCommand {
 
     protected void doExecuteCommand() {
         queryPanelView.setQuery(BLANK);
-        //AnswerImpl answer = new AnswerImpl(NO_HEADER, RELATION_DUM, 0);
-        Answer answer = null;
-        resultsPanelView.setResults(answer);
+        resultsPanelView.setResults(EMPTY_ANSWER);
     }
 }
