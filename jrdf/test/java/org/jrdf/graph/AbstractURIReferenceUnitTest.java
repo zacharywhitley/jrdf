@@ -59,9 +59,12 @@
 package org.jrdf.graph;
 
 import junit.framework.TestCase;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.SerializationTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -104,23 +107,22 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
     public abstract void testClassProperties();
 
-    protected void checkClassProperties(Class newClass) {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(URIReference.class, newClass);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, newClass);
-        ClassPropertiesTestUtil.checkExtensionOf(AbstractURIReference.class, newClass);
+    protected void checkClassProperties(Class newClass, Class[] paramTypes) {
+        checkImplementationOfInterface(URIReference.class, newClass);
+        checkImplementationOfInterface(Serializable.class, newClass);
+        checkExtensionOf(AbstractURIReference.class, newClass);
+        checkConstructNullAssertion(newClass, paramTypes);
     }
 
     protected void checkAbstractClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterface(URIReference.class, AbstractURIReference.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AbstractURIReference.class);
-        ClassPropertiesTestUtil.checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class);
-        ClassPropertiesTestUtil
-                .checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class, boolean.class);
-        SerializationTestUtil.checkSerialialVersionUid(AbstractURIReference.class, 8034954863132812197L);
+        checkImplementationOfInterface(URIReference.class, AbstractURIReference.class);
+        checkImplementationOfInterface(Serializable.class, AbstractURIReference.class);
+        checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class);
+        checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class, boolean.class);
+        checkSerialialVersionUid(AbstractURIReference.class, 8034954863132812197L);
     }
 
     public void testConstructor() throws Exception {
-        checkNullURIThrowsException();
         checkNotAbsoluteURIThrowsException();
         checkNotAbsoluteURINoCheck();
     }
@@ -203,15 +205,6 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
     private void checkNullComparisonObject() {
         checkNotEquals(ref1, null);
-    }
-
-    private void checkNullURIThrowsException() {
-        AssertThrows
-                .assertThrows(IllegalArgumentException.class, "Null \"newUri\" parameter", new AssertThrows.Block() {
-                    public void execute() throws Throwable {
-                        createResource(null);
-                    }
-                });
     }
 
     private void checkNotAbsoluteURIThrowsException() {
