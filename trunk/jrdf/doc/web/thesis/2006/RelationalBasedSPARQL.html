@@ -889,19 +889,18 @@ results).” [<a href="#ref6">6</a>].</p>
 graph based on the results of a query. Each row will produce new entries in the graph.</p>
 <p>Some examples of results being turned into graphs include:</p>
       <table border="1">
-	<tr><td>?s1:subject</td><td>?s2:subject</td><td>?p:predicate</td><td>object:?o1</td><td>object:?o2</td></tr>
-	<tr><td>A</td><td>b</td><td>c</td><td>d</td><td>e</td></tr>
-	<tr><td>A</td><td>c</td><td>c</td><td>d</td><td>e</td></tr>
+	<tr><td>?s1:subject</td><td>?s2:subject</td><td>?p:predicate</td><td>?o1:object</td><td>?o2:object</td></tr>
+	<tr><td>a</td><td>b</td><td>c</td><td>d</td><td>e</td></tr>
+	<tr><td>a</td><td>c</td><td>c</td><td>d</td><td>e</td></tr>
 	  </table>
 
-<p>Produces the set of statements: {a, c, d}{b,c,d}{a,c,e}{b,c,e}{c, c, d}{c,c,e}</p>
+<p>Produces the set of statements: {{a, c, d}, {b, c, d}, {a, c, e}, {b, c, e}, {c, c, d}, {c, c, e}}</p>
       <table border="1">
 	<tr><td>?foo:URI</td><td>?bar:URI</td></tr>
 	<tr><td>a</td><td>b</td></tr>
 	  </table>
 
-<p>Produces the set of statements: {a, a, a} {a, a, b} {a, b, a} {a, b, b} {b, a, a} {b, a, b},
-{b,b,a}, {b,b,b}</p>
+<p>Produces the set of statements: {{a, a, a}, {a, a, b}, {a, b, a}, {a, b, b}, {b, a, a}, {b, a, b}, {b, b, a}, {b, b, b}}</p>
 <p>Finally, the use of nested relations [<a href="#ref6">6</a>] may off a more efficient way of returning results than
 currently provided [<a href="#ref3">3</a>].</p>
 <h3 id="Optimisations">5.2 Further Optimisations</h3>
