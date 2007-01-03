@@ -121,6 +121,7 @@ public final class ArnoldTheInstantiator {
         instantiators.put(URL.class, new URLInstantiator());
         instantiators.put(URI.class, new URIInstantiator());
         instantiators.put(String.class, new StringInstantiator());
+        instantiators.put(Long.class, new LongInstantiator());
         instantiators.put(ATriple.class, new ATripleInstantiator());
         instantiators.put(Set.class, new SetInstantiator());
     }

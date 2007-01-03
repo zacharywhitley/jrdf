@@ -156,7 +156,7 @@ public class MockFactory {
     private static boolean isStubClass(Class clazz) {
         return (clazz.equals(URL.class) || clazz.equals(URI.class) ||
                 clazz.equals(String.class)) || clazz.equals(ATriple.class) ||
-                clazz.equals(Set.class);
+                clazz.equals(Set.class) || clazz.equals(Long.class);
     }
 
     private static Object createStubClass(Class clazz) {

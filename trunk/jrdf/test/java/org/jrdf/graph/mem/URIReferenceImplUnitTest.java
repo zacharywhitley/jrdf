@@ -94,21 +94,8 @@ public final class URIReferenceImplUnitTest extends AbstractURIReferenceUnitTest
     }
 
     public void testClassProperties() {
-        this.checkClassProperties(URIReferenceImpl.class);
+        this.checkClassProperties(URIReferenceImpl.class, new Class[]{URI.class, Long.class});
+        this.checkClassProperties(URIReferenceImpl.class, new Class[]{URI.class, Boolean.TYPE, Long.class});
         this.checkAbstractClassProperties();
-    }
-
-    /**
-     * Hook for test runner to obtain a test suite from.
-     *
-     * @return The test suite
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(URIReferenceImplUnitTest.class);
-        suite.addTest(new URIReferenceImplUnitTest("testClassProperties"));
-        suite.addTest(new URIReferenceImplUnitTest("testConstructor"));
-        suite.addTest(new URIReferenceImplUnitTest("testHashCode"));
-        suite.addTest(new URIReferenceImplUnitTest("testEquals"));
-        return suite;
     }
 }

@@ -61,6 +61,7 @@ package org.jrdf.graph.mem;
 // Java 2 standard packages
 
 import org.jrdf.graph.AbstractURIReference;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -101,6 +102,7 @@ public class URIReferenceImpl extends AbstractURIReference implements MemNode, S
      */
     URIReferenceImpl(URI newUri, Long newId) {
         super(newUri);
+        checkNotNull(newUri, newId);
         id = newId;
     }
 
@@ -113,6 +115,7 @@ public class URIReferenceImpl extends AbstractURIReference implements MemNode, S
      */
     URIReferenceImpl(URI newUri, boolean validate, Long newId) {
         super(newUri, validate);
+        checkNotNull(newUri, validate, newId);
         id = newId;
     }
 
