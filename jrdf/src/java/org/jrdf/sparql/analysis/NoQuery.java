@@ -63,26 +63,18 @@ import org.jrdf.query.Answer;
 import static org.jrdf.query.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.Query;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.query.expression.Expression;
-import org.jrdf.query.expression.ExpressionVisitor;
-import org.jrdf.query.relation.Attribute;
 
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
 
-/**
- * Class description goes here.
- */
-public class NoQuery implements Query, Serializable {
+public final class NoQuery implements Query, Serializable {
     private static final long serialVersionUID = -1815852679585213051L;
 
-    public List<Attribute> getVariables() {
-        return Collections.emptyList();
-    }
+    /**
+     * A query that always returns an empty answer.
+     */
+    public static final Query NO_QUERY = new NoQuery();
 
-    public Expression<ExpressionVisitor> getConstraintExpression() {
-        throw new UnsupportedOperationException("Retrieving the expression expression is not supported");
+    private NoQuery() {
     }
 
     public Answer executeQuery(Graph graph, QueryEngine queryEngine) {

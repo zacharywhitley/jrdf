@@ -33,6 +33,7 @@ public class EmptyAnswerUnitTest extends TestCase {
 
     public void testEmptyAnswerValues() {
         Answer answer = EmptyAnswer.EMPTY_ANSWER;
+        assertNotNull(answer);
         assertTrue(Arrays.equals(new String[]{}, answer.getColumnNames()));
         assertTrue(Arrays.equals(new String[][]{}, answer.getColumnValues()));
         assertEquals(0, answer.getTimeTaken());
