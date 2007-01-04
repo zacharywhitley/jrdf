@@ -70,11 +70,7 @@ import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
-import static java.util.Collections.emptyList;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.SortedSet;
 
 /**
  * Default implementation of a {@link Query}.
@@ -100,8 +96,17 @@ public final class QueryImpl implements Query, Serializable {
         checkNotNull(graph, queryEngine);
         long timeStarted = System.currentTimeMillis();
         Relation result = getResult(graph, queryEngine);
-        LinkedHashSet<Attribute> heading = getHeading(result.getSortedHeading(), getVariables());
+        LinkedHashSet<Attribute> heading = getHeading(result);
         return new AnswerImpl(heading, result, System.currentTimeMillis() - timeStarted, hasProjected());
+    }
+
+    private LinkedHashSet<Attribute> getHeading(Relation relation) {
+        if (hasProjected()) {
+            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
+            return new LinkedHashSet<Attribute>(projection.getAttributes());
+        } else {
+            return new LinkedHashSet<Attribute>(relation.getSortedHeading());
+        }
     }
 
     private Relation getResult(Graph graph, QueryEngine queryEngine) {
@@ -109,25 +114,6 @@ public final class QueryImpl implements Query, Serializable {
         queryEngine.initialiseBaseRelation(entireGraph);
         expression.accept(queryEngine);
         return queryEngine.getResult();
-    }
-
-    private LinkedHashSet<Attribute> getHeading(SortedSet<Attribute> sortedHeading, List<Attribute> variables) {
-        LinkedHashSet<Attribute> heading;
-        if (variables.size() == 0) {
-            heading = new LinkedHashSet<Attribute>(sortedHeading);
-        } else {
-            heading = new LinkedHashSet<Attribute>(variables);
-        }
-        return heading;
-    }
-
-    private List<Attribute> getVariables() {
-        if (hasProjected()) {
-            Projection<ExpressionVisitor> projection = (Projection<ExpressionVisitor>) expression;
-            return new LinkedList<Attribute>(projection.getAttributes());
-        } else {
-            return emptyList();
-        }
     }
 
     private boolean hasProjected() {

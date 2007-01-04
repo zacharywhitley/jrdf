@@ -100,7 +100,7 @@ public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
         for (AttributeValuePair avp : nameValues) {
             attributes.add(avp.getAttribute());
         }
-        return attributes.toArray(new Attribute[]{});
+        return attributes.toArray(new Attribute[attributes.size()]);
     }
 
     public List<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray) {
