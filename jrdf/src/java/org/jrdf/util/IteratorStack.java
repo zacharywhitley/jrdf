@@ -141,6 +141,8 @@ public class IteratorStack<T> implements Iterator<T> {
         return iter.hasNext() || !stack.isEmpty();
     }
 
+    // TODO AN Do this break the iterator contract - and not throw NoSuchElementException - rather it will throw an
+    // EmptyStackException.
     public T next() {
         return pop();
     }

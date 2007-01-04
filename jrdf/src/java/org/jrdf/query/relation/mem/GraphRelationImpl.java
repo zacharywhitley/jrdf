@@ -110,7 +110,7 @@ public final class GraphRelationImpl implements GraphRelation {
 
     public Set<Tuple> getTuples() {
         SortedSet<Attribute> heading = attributeFactory.createHeading();
-        Attribute[] attributes = heading.toArray(new Attribute[]{});
+        Attribute[] attributes = heading.toArray(new Attribute[heading.size()]);
         return getTuplesFromGraph(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, attributes);
     }
 
