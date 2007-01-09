@@ -61,9 +61,12 @@ package org.jrdf.query.relation.constants;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.JRDFFactoryImpl;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.query.relation.mem.AttributeValuePairComparatorImpl;
+import org.jrdf.query.relation.mem.AttributeComparatorImpl;
 import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;
 
 import java.io.ObjectStreamException;

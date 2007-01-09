@@ -60,12 +60,9 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.mem.GraphFactory;
-import org.jrdf.query.JrdfQueryExecutorFactory;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationComparator;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -79,7 +76,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public final class JRDFFactoryImpl implements JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
     private static final ClassPathXmlApplicationContext BEAN_FACTORY =
-            new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
     private JRDFFactoryImpl() {
     }
@@ -105,10 +102,6 @@ public final class JRDFFactoryImpl implements JRDFFactory {
         return (AttributeValuePairComparator) BEAN_FACTORY.getBean("avpComparator");
     }
 
-    public NodeComparator getNewNodeComparator() {
-        return (NodeComparator) BEAN_FACTORY.getBean("nodeComparator");
-    }
-
     public AttributeComparator getNewAttributeComparator() {
         return (AttributeComparator) BEAN_FACTORY.getBean("attributeComparator");
     }
@@ -117,16 +110,7 @@ public final class JRDFFactoryImpl implements JRDFFactory {
         return (TupleComparator) BEAN_FACTORY.getBean("tupleComparator");
     }
 
-    public RelationComparator getNewRelationComparator() {
-        return (RelationComparator) BEAN_FACTORY.getBean("relationComparator");
-    }
-
     public SparqlConnection getNewSparqlConnection() {
         return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
-
-    public JrdfQueryExecutorFactory getNewJrdfQueryExecutorFactory() {
-        return (JrdfQueryExecutorFactory) BEAN_FACTORY.getBean("jrdfQueryExecutorFactory");
-    }
-
 }
