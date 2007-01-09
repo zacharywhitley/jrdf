@@ -88,7 +88,7 @@ import java.util.Set;
  * @version $Id$
  */
 public class TupleImplUnitTest extends TestCase {
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairComparator comparator = FACTORY.getNewAttributeValuePairComparator();
     private static final Class[] CONSTRUCTOR_TYPES = { Set.class, AttributeValuePairComparator.class };
     private static final String[] CONSTRUCTOR_NAMES = { "attributeValues", "attributeValuePairComparator" };

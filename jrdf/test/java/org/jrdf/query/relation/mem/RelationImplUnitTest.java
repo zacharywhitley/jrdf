@@ -88,7 +88,7 @@ public class RelationImplUnitTest extends TestCase {
     private static final Tuple[] TUPLES_3 = {TEST_TUPLE_6};
     private static final String HEADING_NAME = "heading";
     private static final String TUPLES_NAME = "tuples";
-    private static final JRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
     private static final Class[] PARAM_TYPES_1 = {Set.class, AttributeComparator.class, TupleComparator.class};

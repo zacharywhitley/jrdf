@@ -59,12 +59,12 @@
 
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.NullaryTuple.NULLARY_TUPLE;
+import org.jrdf.query.relation.mem.ComparatorFactory;
+import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -82,7 +82,7 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public final class RelationDEE implements Relation, Serializable {
-    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
+    private static final ComparatorFactory FACTORY = new ComparatorFactoryImpl();
     private static final long serialVersionUID = -8473232661811978990L;
 
     /**
@@ -111,14 +111,14 @@ public final class RelationDEE implements Relation, Serializable {
 
     // TODO (AN) Test drive me
     public SortedSet<Attribute> getSortedHeading() {
-        SortedSet<Attribute> heading = new TreeSet<Attribute>(FACTORY.getNewAttributeComparator());
+        SortedSet<Attribute> heading = new TreeSet<Attribute>(FACTORY.createAttributeComparator());
         heading.addAll(getHeading());
         return heading;
     }
 
     // TODO (AN) Test drive me
     public SortedSet<Tuple> getSortedTuples() {
-        SortedSet<Tuple> sorted = new TreeSet<Tuple>(FACTORY.getNewTupleComparator());
+        SortedSet<Tuple> sorted = new TreeSet<Tuple>(FACTORY.createTupleComparator());
         sorted.addAll(getTuples());
         return sorted;
     }
