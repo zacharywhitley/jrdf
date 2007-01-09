@@ -60,9 +60,6 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.sparql.SparqlConnection;
 
 /**
@@ -75,12 +72,6 @@ public interface JRDFFactory {
     void refresh();
 
     Graph getNewGraph();
-
-    AttributeValuePairComparator getNewAttributeValuePairComparator();
-
-    AttributeComparator getNewAttributeComparator();
-
-    TupleComparator getNewTupleComparator();
 
     SparqlConnection getNewSparqlConnection();
 }

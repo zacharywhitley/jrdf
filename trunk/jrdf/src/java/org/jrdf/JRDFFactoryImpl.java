@@ -61,9 +61,6 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.mem.GraphFactory;
-import org.jrdf.query.relation.AttributeComparator;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.sparql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -96,18 +93,6 @@ public final class JRDFFactoryImpl implements JRDFFactory {
     public Graph getNewGraph() {
         GraphFactory graphFactory = (GraphFactory) BEAN_FACTORY.getBean("graphFactory");
         return graphFactory.getGraph();
-    }
-
-    public AttributeValuePairComparator getNewAttributeValuePairComparator() {
-        return (AttributeValuePairComparator) BEAN_FACTORY.getBean("avpComparator");
-    }
-
-    public AttributeComparator getNewAttributeComparator() {
-        return (AttributeComparator) BEAN_FACTORY.getBean("attributeComparator");
-    }
-
-    public TupleComparator getNewTupleComparator() {
-        return (TupleComparator) BEAN_FACTORY.getBean("tupleComparator");
     }
 
     public SparqlConnection getNewSparqlConnection() {
