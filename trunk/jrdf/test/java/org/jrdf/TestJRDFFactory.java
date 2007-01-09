@@ -60,6 +60,7 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -90,8 +91,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @version $Id$
  */
 public final class TestJRDFFactory implements JRDFFactory {
-    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
     private static final TestJRDFFactory SELF = new TestJRDFFactory();
+    private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
+    private static final ClassPathXmlApplicationContext BEAN_FACTORY =
+        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
     private TestJRDFFactory() {
     }
@@ -101,122 +104,119 @@ public final class TestJRDFFactory implements JRDFFactory {
     }
 
     public void refresh() {
-        FACTORY.refresh();
+        BEAN_FACTORY.refresh();
     }
 
     public Graph getNewGraph() {
-        return FACTORY.getNewGraph();
+        GraphFactory graphFactory = (GraphFactory) BEAN_FACTORY.getBean("graphFactory");
+        return graphFactory.getGraph();
     }
 
     public AttributeValuePairComparator getNewAttributeValuePairComparator() {
-        return FACTORY.getNewAttributeValuePairComparator();
-    }
-
-    public NodeComparator getNewNodeComparator() {
-        return FACTORY.getNewNodeComparator();
+        return (AttributeValuePairComparator) BEAN_FACTORY.getBean("avpComparator");
     }
 
     public AttributeComparator getNewAttributeComparator() {
-        return FACTORY.getNewAttributeComparator();
+        return (AttributeComparator) BEAN_FACTORY.getBean("attributeComparator");
     }
 
     public TupleComparator getNewTupleComparator() {
-        return FACTORY.getNewTupleComparator();
-    }
-
-    public RelationComparator getNewRelationComparator() {
-        return FACTORY.getNewRelationComparator();
-    }
-
-    public NadicJoin getNewNaturalJoin() {
-        return (NadicJoin) FACTORY.getContext().getBean("naturalJoin");
-    }
-
-    public DyadicJoin getNewSemiJoin() {
-        return (DyadicJoin) FACTORY.getContext().getBean("semiJoin");
+        return (TupleComparator) BEAN_FACTORY.getBean("tupleComparator");
     }
 
     public SparqlConnection getNewSparqlConnection() {
-        return FACTORY.getNewSparqlConnection();
+        return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
 
-    public ClassPathXmlApplicationContext getContext() {
-        return FACTORY.getContext();
+    public NodeComparator getNewNodeComparator() {
+        return (NodeComparator) BEAN_FACTORY.getBean("nodeComparator");
+    }
+
+    public RelationComparator getNewRelationComparator() {
+        return (RelationComparator) BEAN_FACTORY.getBean("relationComparator");
+    }
+
+    public NadicJoin getNewNaturalJoin() {
+        return (NadicJoin) BEAN_FACTORY.getBean("naturalJoin");
+    }
+
+    public DyadicJoin getNewSemiJoin() {
+        return (DyadicJoin) BEAN_FACTORY.getBean("semiJoin");
     }
 
     public QueryBuilder getNewQueryBuilder() {
-        return (QueryBuilder) FACTORY.getContext().getBean("queryBuilder");
+        return (QueryBuilder) BEAN_FACTORY.getBean("queryBuilder");
     }
 
     public Project getNewProject() {
-        return (Project) FACTORY.getContext().getBean("project");
+        return (Project) BEAN_FACTORY.getBean("project");
     }
 
     public SparqlParser getNewSparqlParser() {
-        return (SparqlParser) FACTORY.getContext().getBean("sparqlParser");
+        return (SparqlParser) BEAN_FACTORY.getBean("sparqlParser");
     }
 
     public TripleBuilder getNewTripleBuilder() {
-        return (TripleBuilder) FACTORY.getContext().getBean("tripleBuilder");
+        return (TripleBuilder) BEAN_FACTORY.getBean("tripleBuilder");
     }
 
     public AttributeValuePairHelper getNewAttributeValuePairHelper() {
-        return (AttributeValuePairHelper) FACTORY.getContext().getBean("attributeValuePairHelper");
+        return (AttributeValuePairHelper) BEAN_FACTORY.getBean("attributeValuePairHelper");
     }
 
     public TypeComparator getNewTypeComparator() {
-        return (TypeComparator) FACTORY.getContext().getBean("typeComparator");
+        return (TypeComparator) BEAN_FACTORY.getBean("typeComparator");
     }
 
     public AttributeNameComparator getNewAttributeNameComparator() {
-        return (AttributeNameComparator) FACTORY.getContext().getBean("attributeNameComparator");
+        return (AttributeNameComparator) BEAN_FACTORY.getBean("attributeNameComparator");
     }
 
     public ParserFactory getNewParserFactory() {
-        return (ParserFactory) FACTORY.getContext().getBean("parserFactory");
+        return (ParserFactory) BEAN_FACTORY.getBean("parserFactory");
     }
 
     public RelationFactory getNewRelationFactory() {
-        return (RelationFactory) FACTORY.getContext().getBean("relationFactory");
+        return (RelationFactory) BEAN_FACTORY.getBean("relationFactory");
     }
 
     public VariableCollector getNewVariableCollector() {
-        return (VariableCollector) FACTORY.getContext().getBean("variableCollector");
+        return (VariableCollector) BEAN_FACTORY.getBean("variableCollector");
     }
 
     public Union getNewMinimumUnion() {
-        return (Union) FACTORY.getContext().getBean("minimumUnion");
+        return (Union) BEAN_FACTORY.getBean("minimumUnion");
     }
 
     public Union getNewOuterUnion() {
-        return (Union) FACTORY.getContext().getBean("outerUnion");
+        return (Union) BEAN_FACTORY.getBean("outerUnion");
     }
 
     public SemiDifference getNewSemiDifference() {
-        return (SemiDifference) FACTORY.getContext().getBean("semiDifference");
+        return (SemiDifference) BEAN_FACTORY.getBean("semiDifference");
     }
 
     public DyadicJoin getNewLeftOuterJoin() {
-        return (DyadicJoin) FACTORY.getContext().getBean("leftOuterJoin");
+        return (DyadicJoin) BEAN_FACTORY.getBean("leftOuterJoin");
     }
 
     public DyadicJoin getNewFullOuterJoin() {
-        return (DyadicJoin) FACTORY.getContext().getBean("fullOuterJoin");
+        return (DyadicJoin) BEAN_FACTORY.getBean("fullOuterJoin");
     }
 
     public QueryEngine getNewQueryEngine() {
-        return (QueryEngine) FACTORY.getContext().getBean("queryEngine");
+        return (QueryEngine) BEAN_FACTORY.getBean("queryEngine");
     }
 
     public DyadicJoin getNewMinimumFullOuterJoin() {
-        return (DyadicJoin) FACTORY.getContext().getBean("minFullOuterJoin");
+        return (DyadicJoin) BEAN_FACTORY.getBean("minFullOuterJoin");
     }
 
     public DyadicJoin getNewMinimumLeftOuterJoin() {
-        return (DyadicJoin) FACTORY.getContext().getBean("minLeftOuterJoin");
+        return (DyadicJoin) BEAN_FACTORY.getBean("minLeftOuterJoin");
     }
 
     public GraphRelationFactory getNewGraphRelationFactory() {
-        return (GraphRelationFactory) FACTORY.getContext().getBean("graphRelationFactory");
+        return (GraphRelationFactory) BEAN_FACTORY.getBean("graphRelationFactory");
     }
 }
