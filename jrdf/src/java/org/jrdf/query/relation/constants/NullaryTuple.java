@@ -59,13 +59,12 @@
 
 package org.jrdf.query.relation.constants;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;
 import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
+import org.jrdf.query.relation.mem.ComparatorFactory;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
@@ -81,18 +80,14 @@ import java.util.TreeSet;
  * @version $Revision$
  */
 public final class NullaryTuple implements Tuple, Serializable {
-
-    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
+    private static final ComparatorFactory FACTORY = new ComparatorFactoryImpl();
     private static final long serialVersionUID = 1808216129525892255L;
-
     /**
      * The node which represents the boolean logic value "NULLARY_TUPLE".
      */
     public static final Tuple NULLARY_TUPLE = new NullaryTuple();
     private static final AttributeValuePair NULLARY_AVP = NULLARY_ATTRIBUTE_VALUE_PAIR;
     private static final Set<AttributeValuePair> NULLARY_AVP_SET = Collections.singleton(NULLARY_AVP);
-    private static final ComparatorFactoryImpl COMPARATOR_FACTORY =
-        new ComparatorFactoryImpl();
 
     private NullaryTuple() {
     }
@@ -106,7 +101,7 @@ public final class NullaryTuple implements Tuple, Serializable {
     }
 
     public SortedSet<AttributeValuePair> getSortedAttributeValues() {
-        AttributeValuePairComparator avpComparator = COMPARATOR_FACTORY.createAttributeValuePairComparator();
+        AttributeValuePairComparator avpComparator = FACTORY.createAttributeValuePairComparator();
         SortedSet<AttributeValuePair> sortedPairs = new TreeSet<AttributeValuePair>(avpComparator);
         sortedPairs.addAll(NULLARY_AVP_SET);
         return sortedPairs;
