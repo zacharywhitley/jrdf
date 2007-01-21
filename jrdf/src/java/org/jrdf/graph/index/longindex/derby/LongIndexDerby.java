@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 439 $
+ * $Date: 2006-01-27 06:19:29 +1000 (Fri, 27 Jan 2006) $
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -54,37 +54,50 @@
  * This software consists of voluntary contributions made by many
  * individuals on behalf of the JRDF Project.  For more
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
- *
  */
 
-package org.jrdf.graph.index.longindex.mem;
+package org.jrdf.graph.index.longindex.derby;
 
+import org.apache.derby.iapi.error.StandardException;
+import org.apache.derby.iapi.services.context.ContextManager;
+import org.apache.derby.iapi.services.context.ContextService;
+import org.apache.derby.iapi.services.monitor.Monitor;
+import org.apache.derby.iapi.store.access.DiskHashtable;
+import org.apache.derby.iapi.store.access.TransactionController;
+import org.apache.derby.iapi.types.SQLLongint;
+import org.apache.derby.impl.store.access.RAMAccessManager;
+import org.apache.derby.impl.store.access.RllRAMAccessManager;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.longindex.LongIndex;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * An in memory version of ${@link org.jrdf.graph.index.longindex.LongIndex}.
+ * An on disk version of ${@link org.jrdf.graph.index.longindex.LongIndex} using Apache Derby.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 977 $
  */
-public final class LongIndexMem implements LongIndex, Serializable {
-    private static final long serialVersionUID = -8212815756891200898L;
-    private Map<Long, Map<Long, Set<Long>>> index;
+public final class LongIndexDerby implements LongIndex, Serializable {
+    private static final int TRIPLE = 3;
+    private static final long serialVersionUID = 3241176547880485018L;
+    private DiskHashtable diskHashtable;
 
-    public LongIndexMem() {
-        index = new HashMap<Long, Map<Long, Set<Long>>>();
-    }
-
-    public LongIndexMem(Map<Long, Map<Long, Set<Long>>> newIndex) {
-        index = newIndex;
+    public LongIndexDerby() {
+        try {
+            Monitor.getStream();
+            ContextService service = ContextService.getFactory();
+            ContextManager contextManager = service.newContextManager();
+            service.setCurrentContextManager(contextManager);
+            RAMAccessManager ramAccessManager = new RllRAMAccessManager();
+            TransactionController controller = ramAccessManager.getAndNameTransaction(contextManager, "foo");
+            diskHashtable = new DiskHashtable(controller, new SQLLongint[TRIPLE], new int[]{0, 1, 2}, true, true);
+        } catch (StandardException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void add(Long[] triple) {
@@ -92,26 +105,11 @@ public final class LongIndexMem implements LongIndex, Serializable {
     }
 
     public void add(Long first, Long second, Long third) {
-        // find the sub index
-        Map<Long, Set<Long>> subIndex = index.get(first);
-        // check that the subindex exists
-        if (null == subIndex) {
-            // no, so create it and add it to the index
-            subIndex = new HashMap<Long, Set<Long>>();
-            index.put(first, subIndex);
+        try {
+            diskHashtable.put(first, new Long[]{second, third});
+        } catch (StandardException e) {
+            throw new RuntimeException(e);
         }
-
-        // find the final group
-        Set<Long> group = subIndex.get(second);
-        // check that the group exists
-        if (null == group) {
-            // no, so create it and add it to the subindex
-            group = new HashSet<Long>();
-            subIndex.put(second, group);
-        }
-
-        // Add the final node to the group
-        group.add(third);
     }
 
     public void remove(Long[] triple) throws GraphException {
@@ -119,55 +117,26 @@ public final class LongIndexMem implements LongIndex, Serializable {
     }
 
     public void remove(Long first, Long second, Long third) throws GraphException {
-
-        // find the sub index
-        Map<Long, Set<Long>> subIndex = index.get(first);
-        // check that the subindex exists
-        if (null == subIndex) {
-            throw new GraphException("Unable to remove nonexistent statement");
-        }
-        // find the final group
-        Set<Long> group = subIndex.get(second);
-        // check that the group exists
-        if (null == group) {
-            throw new GraphException("Unable to remove nonexistent statement");
-        }
-        // remove from the group, report error if it didn't exist
-        if (!group.remove(third)) {
-            throw new GraphException("Unable to remove nonexistent statement");
-        }
-        // clean up the graph
-        if (group.isEmpty()) {
-            subIndex.remove(second);
-            if (subIndex.isEmpty()) {
-                index.remove(first);
-            }
+        try {
+            diskHashtable.remove(first);
+        } catch (StandardException e) {
+            throw new RuntimeException();
         }
     }
 
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
-        return index.entrySet().iterator();
+        return null;
     }
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
-        return index.get(first);
+        return null;
     }
 
     public boolean removeSubIndex(Long first) {
-        index.remove(first);
-        return index.containsKey(first);
+        return true;
     }
 
     public long getSize() {
-        long size = 0;
-        // go over the index map
-        for (Map<Long, Set<Long>> map : index.values()) {
-            // go over the sub indexes
-            for (Set<Long> s : map.values()) {
-                // accumulate the sizes of the groups
-                size += s.size();
-            }
-        }
-        return size;
+        return diskHashtable.size();
     }
 }
