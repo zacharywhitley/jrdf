@@ -61,13 +61,18 @@ package org.jrdf.graph.index.longindex.derby;
 import junit.framework.TestCase;
 import org.apache.derby.impl.store.access.RAMAccessManager;
 import org.apache.derby.impl.store.access.RllRAMAccessManager;
+import org.apache.derby.iapi.sql.conn.LanguageConnectionContext;
+import org.apache.derby.iapi.services.context.ContextService;
+import org.jrdf.util.test.ReflectTestUtil;
 
 /**
  * Class description goes here.
  */
 public class LongIndexDerbyUnitTest extends TestCase {
-    public void testStartUp() {
+    public void testAdd() {
         LongIndexDerby indexDerby = new LongIndexDerby();
-        assertTrue(true);
+        indexDerby.add(1L,1L,1L);
+        indexDerby.add(1L,1L,2L);
+        assertEquals(2, indexDerby.getSize());
     }
 }

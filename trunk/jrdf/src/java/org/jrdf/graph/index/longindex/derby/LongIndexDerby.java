@@ -59,29 +59,24 @@
 package org.jrdf.graph.index.longindex.derby;
 
 import org.apache.derby.iapi.error.StandardException;
-import org.apache.derby.iapi.services.context.ContextManager;
-import org.apache.derby.iapi.services.context.ContextService;
-import org.apache.derby.iapi.services.monitor.Monitor;
 import org.apache.derby.iapi.store.access.DiskHashtable;
+import org.apache.derby.iapi.store.access.KeyHasher;
 import org.apache.derby.iapi.store.access.TransactionController;
 import org.apache.derby.iapi.types.SQLLongint;
-import org.apache.derby.impl.store.access.RAMAccessManager;
-import org.apache.derby.impl.store.access.RllRAMAccessManager;
-import org.apache.derby.impl.jdbc.TransactionResourceImpl;
+import org.apache.derby.iapi.types.DataValueDescriptor;
+import org.apache.derby.iapi.sql.conn.LanguageConnectionContext;
+import org.apache.derby.iapi.services.context.ContextService;
 import org.apache.derby.impl.jdbc.EmbedConnection30;
-import org.apache.derby.jdbc.InternalDriver;
-import org.apache.derby.jdbc.Driver30;
 import org.apache.derby.jdbc.EmbeddedDriver;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.longindex.LongIndex;
 
 import java.io.Serializable;
+import java.sql.DriverManager;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.Connection;
 
 /**
  * An on disk version of ${@link org.jrdf.graph.index.longindex.LongIndex} using Apache Derby.
@@ -92,16 +87,25 @@ import java.sql.Connection;
 public final class LongIndexDerby implements LongIndex, Serializable {
     private static final int TRIPLE = 3;
     private static final long serialVersionUID = 3241176547880485018L;
+    private static final int[] INDEXES = new int[]{0, 1, 2};
+    private static final DataValueDescriptor[] TEMPLATE = new DataValueDescriptor[]{new SQLLongint(), new SQLLongint(), new SQLLongint()};
     private DiskHashtable diskHashtable;
+    private TransactionController controller;
+    private EmbedConnection30 connection;
+    private LanguageConnectionContext languageConnectionContext;
 
     public LongIndexDerby() {
         try {
             String driverStr = "org.apache.derby.jdbc.EmbeddedDriver";
             EmbeddedDriver driver = (EmbeddedDriver) Class.forName(driverStr).newInstance();
-            EmbedConnection30 connection = (EmbedConnection30) DriverManager.getConnection("jdbc:derby:" + "derbyDB;create=true");
-            TransactionController controller = connection.getLanguageConnection().getTransactionExecute();
-            diskHashtable = new DiskHashtable(controller,
-                new SQLLongint[]{new SQLLongint(), new SQLLongint(), new SQLLongint()}, new int[]{0, 1, 2}, true, true);
+            connection = (EmbedConnection30) DriverManager.getConnection(
+                "jdbc:derby:" + "derbyDB;create=true");
+            languageConnectionContext = connection.getLanguageConnection();
+            languageConnectionContext.setRunTimeStatisticsMode(true);
+            controller = languageConnectionContext.getTransactionExecute();
+            ContextService service = ContextService.getFactory();
+            service.setCurrentContextManager(languageConnectionContext.getContextManager());
+            diskHashtable = new DiskHashtable(controller, TEMPLATE, INDEXES, true, true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -113,8 +117,11 @@ public final class LongIndexDerby implements LongIndex, Serializable {
 
     public void add(Long first, Long second, Long third) {
         try {
-            diskHashtable.put(first, new Long[]{second, third});
-        } catch (StandardException e) {
+            DataValueDescriptor[] row = new DataValueDescriptor[]{new SQLLongint(first), new SQLLongint(second),
+                new SQLLongint(third)};
+            KeyHasher keyHasher = (KeyHasher) KeyHasher.buildHashKey(row, INDEXES);
+            diskHashtable.put(keyHasher, row);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -127,11 +134,20 @@ public final class LongIndexDerby implements LongIndex, Serializable {
         try {
             diskHashtable.remove(first);
         } catch (StandardException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
+        try {
+            Enumeration enumeration = diskHashtable.elements();
+            while (enumeration.hasMoreElements()) {
+                Object o = enumeration.nextElement();
+                System.err.println("First " + o.getClass());
+            }
+        } catch (StandardException e) {
+            throw new RuntimeException(e);
+        }
         return null;
     }
 
