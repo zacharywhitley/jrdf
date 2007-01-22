@@ -89,20 +89,17 @@ public final class LongIndexDerby implements LongIndex, Serializable {
     private static final long serialVersionUID = 3241176547880485018L;
     private static final int[] INDEXES = new int[]{0, 1, 2};
     private static final DataValueDescriptor[] TEMPLATE = new DataValueDescriptor[]{new SQLLongint(), new SQLLongint(), new SQLLongint()};
-    private DiskHashtable diskHashtable;
-    private TransactionController controller;
-    private EmbedConnection30 connection;
-    private LanguageConnectionContext languageConnectionContext;
+    private final DiskHashtable diskHashtable;
 
     public LongIndexDerby() {
         try {
             String driverStr = "org.apache.derby.jdbc.EmbeddedDriver";
             EmbeddedDriver driver = (EmbeddedDriver) Class.forName(driverStr).newInstance();
-            connection = (EmbedConnection30) DriverManager.getConnection(
+            final EmbedConnection30 connection = (EmbedConnection30) DriverManager.getConnection(
                 "jdbc:derby:" + "derbyDB;create=true");
-            languageConnectionContext = connection.getLanguageConnection();
+            final LanguageConnectionContext languageConnectionContext = connection.getLanguageConnection();
             languageConnectionContext.setRunTimeStatisticsMode(true);
-            controller = languageConnectionContext.getTransactionExecute();
+            final TransactionController controller = languageConnectionContext.getTransactionExecute();
             ContextService service = ContextService.getFactory();
             service.setCurrentContextManager(languageConnectionContext.getContextManager());
             diskHashtable = new DiskHashtable(controller, TEMPLATE, INDEXES, true, true);
@@ -132,7 +129,10 @@ public final class LongIndexDerby implements LongIndex, Serializable {
 
     public void remove(Long first, Long second, Long third) throws GraphException {
         try {
-            diskHashtable.remove(first);
+            DataValueDescriptor[] row = new DataValueDescriptor[]{new SQLLongint(first), new SQLLongint(second),
+                new SQLLongint(third)};
+            KeyHasher keyHasher = (KeyHasher) KeyHasher.buildHashKey(row, INDEXES);
+            diskHashtable.remove(keyHasher);
         } catch (StandardException e) {
             throw new RuntimeException(e);
         }
