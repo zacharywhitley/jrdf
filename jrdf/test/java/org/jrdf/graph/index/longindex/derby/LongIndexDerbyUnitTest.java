@@ -64,15 +64,31 @@ import org.apache.derby.impl.store.access.RllRAMAccessManager;
 import org.apache.derby.iapi.sql.conn.LanguageConnectionContext;
 import org.apache.derby.iapi.services.context.ContextService;
 import org.jrdf.util.test.ReflectTestUtil;
+import org.jrdf.graph.GraphException;
 
 /**
  * Class description goes here.
  */
 public class LongIndexDerbyUnitTest extends TestCase {
+    private LongIndexDerby indexDerby;
+
+    public void setUp() {
+        indexDerby = new LongIndexDerby();
+    }
+
     public void testAdd() {
-        LongIndexDerby indexDerby = new LongIndexDerby();
         indexDerby.add(1L,1L,1L);
         indexDerby.add(1L,1L,2L);
         assertEquals(2, indexDerby.getSize());
+    }
+
+    public void testRemove() throws GraphException {
+        indexDerby.add(1L,1L,3L);
+        indexDerby.add(1L,1L,4L);
+        assertEquals(2, indexDerby.getSize());
+        indexDerby.remove(1L,1L,3L);
+        assertEquals(1, indexDerby.getSize());
+        indexDerby.remove(1L,1L,4L);
+        assertEquals(0, indexDerby.getSize());
     }
 }
