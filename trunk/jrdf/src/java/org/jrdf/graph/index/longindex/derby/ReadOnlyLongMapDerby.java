@@ -58,55 +58,72 @@
 
 package org.jrdf.graph.index.longindex.derby;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.GraphException;
-import org.apache.derby.jdbc.EmbeddedDriver;
-import org.apache.derby.impl.jdbc.EmbedConnection30;
-import org.apache.derby.iapi.sql.conn.LanguageConnectionContext;
-import org.apache.derby.iapi.services.context.ContextService;
-import org.apache.derby.iapi.store.access.DiskHashtable;
-import org.apache.derby.iapi.store.access.TransactionController;
-import org.apache.derby.iapi.types.DataValueDescriptor;
-import org.apache.derby.iapi.types.SQLLongint;
+import org.apache.derby.iapi.store.access.BackingStoreHashtable;
 import org.apache.derby.iapi.error.StandardException;
 
-import java.sql.DriverManager;
+import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
 
 /**
  * Class description goes here.
  */
-public class LongIndexDerbyUnitTest extends TestCase {
-    private static final int[] INDEXES = new int[]{0, 1, 2};
-    private static final DataValueDescriptor[] TEMPLATE = {new SQLLongint(), new SQLLongint(), new SQLLongint()};
-    private LongIndexDerby indexDerby;
+public class ReadOnlyLongMapDerby implements Map<Long, Set<Long>> {
+    private final BackingStoreHashtable hashtable;
 
-    public void setUp() throws Exception {
-            String driverStr = "org.apache.derby.jdbc.EmbeddedDriver";
-            EmbeddedDriver driver = (EmbeddedDriver) Class.forName(driverStr).newInstance();
-            final EmbedConnection30 connection = (EmbedConnection30) DriverManager.getConnection(
-                "jdbc:derby:derbyDB;create=true");
-            final LanguageConnectionContext languageConnectionContext = connection.getLanguageConnection();
-            languageConnectionContext.setRunTimeStatisticsMode(true);
-        TransactionController controller = languageConnectionContext.getTransactionExecute();
-        ContextService service = ContextService.getFactory();
-            service.setCurrentContextManager(languageConnectionContext.getContextManager());
-        DiskHashtable diskHashtable = new DiskHashtable(controller, TEMPLATE, INDEXES, true, true);
-        indexDerby = new LongIndexDerby(diskHashtable, controller);
+    public ReadOnlyLongMapDerby(BackingStoreHashtable hashtable) {
+        this.hashtable = hashtable;
     }
 
-    public void testAdd() throws StandardException {
-        indexDerby.add(1L,1L,1L);
-        indexDerby.add(1L,1L,2L);
-        assertEquals(2, indexDerby.getSize());
-
+    public int size() {
+        try {
+            return hashtable.size();
+        } catch (StandardException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void testRemove() throws GraphException {
-        indexDerby.add(1L,1L,1L);
-        indexDerby.add(1L,1L,2L);
-        indexDerby.remove(1L,1L,1L);
-        assertEquals(1, indexDerby.getSize());
-        indexDerby.remove(1L,1L,2L);
-        assertEquals(0, indexDerby.getSize());
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    public boolean containsKey(Object key) {
+        return true;
+    }
+
+    public boolean containsValue(Object value) {
+        return false;
+    }
+
+    public Set<Long> get(Object key) {
+        return null;
+    }
+
+    public Set<Long> keySet() {
+        return null;
+    }
+
+    public Collection<Set<Long>> values() {
+        return null;
+    }
+
+    public Set<Entry<Long, Set<Long>>> entrySet() {
+        return null;
+    }
+
+    public Set<Long> put(Long key, Set<Long> value) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Set<Long> remove(Object key) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void putAll(Map<? extends Long, ? extends Set<Long>> t) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void clear() {
+        throw new UnsupportedOperationException();
     }
 }

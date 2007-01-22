@@ -61,6 +61,7 @@ package org.jrdf.graph.index.longindex.derby;
 import org.apache.derby.iapi.error.StandardException;
 import org.apache.derby.iapi.store.access.DiskHashtable;
 import org.apache.derby.iapi.store.access.KeyHasher;
+import org.apache.derby.iapi.store.access.TransactionController;
 import org.apache.derby.iapi.types.DataValueDescriptor;
 import org.apache.derby.iapi.types.SQLLongint;
 import org.jrdf.graph.GraphException;
@@ -79,10 +80,12 @@ import java.util.Set;
  */
 public final class LongIndexDerby implements LongIndex {
     private static final int[] INDEXES = new int[]{0, 1, 2};
-    private DiskHashtable diskHashtable;
+    private final DiskHashtable diskHashtable;
+    private final TransactionController controller;
 
-    public LongIndexDerby(final DiskHashtable diskHashtable) {
+    public LongIndexDerby(final DiskHashtable diskHashtable, TransactionController controller) {
         this.diskHashtable = diskHashtable;
+        this.controller = controller;
     }
 
     public void add(Long[] triple) {
@@ -137,6 +140,6 @@ public final class LongIndexDerby implements LongIndex {
     }
 
     public long getSize() {
-      return diskHashtable.size();
+        return diskHashtable.size();
     }
 }
