@@ -67,6 +67,11 @@ import org.apache.derby.iapi.store.access.TransactionController;
 import org.apache.derby.iapi.types.SQLLongint;
 import org.apache.derby.impl.store.access.RAMAccessManager;
 import org.apache.derby.impl.store.access.RllRAMAccessManager;
+import org.apache.derby.impl.jdbc.TransactionResourceImpl;
+import org.apache.derby.impl.jdbc.EmbedConnection30;
+import org.apache.derby.jdbc.InternalDriver;
+import org.apache.derby.jdbc.Driver30;
+import org.apache.derby.jdbc.EmbeddedDriver;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.longindex.LongIndex;
 
@@ -74,6 +79,9 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.Connection;
 
 /**
  * An on disk version of ${@link org.jrdf.graph.index.longindex.LongIndex} using Apache Derby.
@@ -88,14 +96,13 @@ public final class LongIndexDerby implements LongIndex, Serializable {
 
     public LongIndexDerby() {
         try {
-            Monitor.getStream();
-            ContextService service = ContextService.getFactory();
-            ContextManager contextManager = service.newContextManager();
-            service.setCurrentContextManager(contextManager);
-            RAMAccessManager ramAccessManager = new RllRAMAccessManager();
-            TransactionController controller = ramAccessManager.getAndNameTransaction(contextManager, "foo");
-            diskHashtable = new DiskHashtable(controller, new SQLLongint[TRIPLE], new int[]{0, 1, 2}, true, true);
-        } catch (StandardException e) {
+            String driverStr = "org.apache.derby.jdbc.EmbeddedDriver";
+            EmbeddedDriver driver = (EmbeddedDriver) Class.forName(driverStr).newInstance();
+            EmbedConnection30 connection = (EmbedConnection30) DriverManager.getConnection("jdbc:derby:" + "derbyDB;create=true");
+            TransactionController controller = connection.getLanguageConnection().getTransactionExecute();
+            diskHashtable = new DiskHashtable(controller,
+                new SQLLongint[]{new SQLLongint(), new SQLLongint(), new SQLLongint()}, new int[]{0, 1, 2}, true, true);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
