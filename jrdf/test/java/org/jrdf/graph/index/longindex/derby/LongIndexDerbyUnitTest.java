@@ -59,36 +59,54 @@
 package org.jrdf.graph.index.longindex.derby;
 
 import junit.framework.TestCase;
-import org.apache.derby.impl.store.access.RAMAccessManager;
-import org.apache.derby.impl.store.access.RllRAMAccessManager;
+import org.jrdf.graph.GraphException;
+import org.apache.derby.jdbc.EmbeddedDriver;
+import org.apache.derby.impl.jdbc.EmbedConnection30;
 import org.apache.derby.iapi.sql.conn.LanguageConnectionContext;
 import org.apache.derby.iapi.services.context.ContextService;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.graph.GraphException;
+import org.apache.derby.iapi.store.access.DiskHashtable;
+import org.apache.derby.iapi.store.access.TransactionController;
+import org.apache.derby.iapi.types.DataValueDescriptor;
+import org.apache.derby.iapi.types.SQLLongint;
+import org.apache.derby.iapi.error.StandardException;
+
+import java.sql.DriverManager;
 
 /**
  * Class description goes here.
  */
 public class LongIndexDerbyUnitTest extends TestCase {
+    private static final int[] INDEXES = new int[]{0, 1, 2};
+    private static final DataValueDescriptor[] TEMPLATE = {new SQLLongint(), new SQLLongint(), new SQLLongint()};
     private LongIndexDerby indexDerby;
 
-    public void setUp() {
-        indexDerby = new LongIndexDerby();
+    public void setUp() throws Exception {
+            String driverStr = "org.apache.derby.jdbc.EmbeddedDriver";
+            EmbeddedDriver driver = (EmbeddedDriver) Class.forName(driverStr).newInstance();
+            final EmbedConnection30 connection = (EmbedConnection30) DriverManager.getConnection(
+                "jdbc:derby:derbyDB;create=true");
+            final LanguageConnectionContext languageConnectionContext = connection.getLanguageConnection();
+            languageConnectionContext.setRunTimeStatisticsMode(true);
+        TransactionController controller = languageConnectionContext.getTransactionExecute();
+        ContextService service = ContextService.getFactory();
+            service.setCurrentContextManager(languageConnectionContext.getContextManager());
+        DiskHashtable diskHashtable = new DiskHashtable(controller, TEMPLATE, INDEXES, true, true);
+        indexDerby = new LongIndexDerby(diskHashtable);
     }
 
-    public void testAdd() {
+    public void testAdd() throws StandardException {
         indexDerby.add(1L,1L,1L);
         indexDerby.add(1L,1L,2L);
         assertEquals(2, indexDerby.getSize());
+
     }
 
     public void testRemove() throws GraphException {
-        indexDerby.add(1L,1L,3L);
-        indexDerby.add(1L,1L,4L);
-        assertEquals(2, indexDerby.getSize());
-        indexDerby.remove(1L,1L,3L);
+        indexDerby.add(1L,1L,1L);
+        indexDerby.add(1L,1L,2L);
+        indexDerby.remove(1L,1L,1L);
         assertEquals(1, indexDerby.getSize());
-        indexDerby.remove(1L,1L,4L);
+        indexDerby.remove(1L,1L,2L);
         assertEquals(0, indexDerby.getSize());
     }
 }

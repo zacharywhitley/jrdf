@@ -61,17 +61,11 @@ package org.jrdf.graph.index.longindex.derby;
 import org.apache.derby.iapi.error.StandardException;
 import org.apache.derby.iapi.store.access.DiskHashtable;
 import org.apache.derby.iapi.store.access.KeyHasher;
-import org.apache.derby.iapi.store.access.TransactionController;
-import org.apache.derby.iapi.types.SQLLongint;
 import org.apache.derby.iapi.types.DataValueDescriptor;
-import org.apache.derby.iapi.sql.conn.LanguageConnectionContext;
-import org.apache.derby.iapi.services.context.ContextService;
-import org.apache.derby.impl.jdbc.EmbedConnection30;
-import org.apache.derby.jdbc.EmbeddedDriver;
+import org.apache.derby.iapi.types.SQLLongint;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.longindex.LongIndex;
 
-import java.sql.DriverManager;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
@@ -84,26 +78,11 @@ import java.util.Set;
  * @version $Revision: 977 $
  */
 public final class LongIndexDerby implements LongIndex {
-    private static final int TRIPLE = 3;
     private static final int[] INDEXES = new int[]{0, 1, 2};
-    private static final DataValueDescriptor[] TEMPLATE = {new SQLLongint(), new SQLLongint(), new SQLLongint()};
-    private final DiskHashtable diskHashtable;
+    private DiskHashtable diskHashtable;
 
-    public LongIndexDerby() {
-        try {
-            String driverStr = "org.apache.derby.jdbc.EmbeddedDriver";
-            EmbeddedDriver driver = (EmbeddedDriver) Class.forName(driverStr).newInstance();
-            final EmbedConnection30 connection = (EmbedConnection30) DriverManager.getConnection(
-                "jdbc:derby:" + "derbyDB;create=true");
-            final LanguageConnectionContext languageConnectionContext = connection.getLanguageConnection();
-            languageConnectionContext.setRunTimeStatisticsMode(true);
-            final TransactionController controller = languageConnectionContext.getTransactionExecute();
-            ContextService service = ContextService.getFactory();
-            service.setCurrentContextManager(languageConnectionContext.getContextManager());
-            diskHashtable = new DiskHashtable(controller, TEMPLATE, INDEXES, true, true);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public LongIndexDerby(final DiskHashtable diskHashtable) {
+        this.diskHashtable = diskHashtable;
     }
 
     public void add(Long[] triple) {
@@ -158,6 +137,6 @@ public final class LongIndexDerby implements LongIndex {
     }
 
     public long getSize() {
-        return diskHashtable.size();
+      return diskHashtable.size();
     }
 }
