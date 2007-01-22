@@ -71,7 +71,6 @@ import org.apache.derby.jdbc.EmbeddedDriver;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.longindex.LongIndex;
 
-import java.io.Serializable;
 import java.sql.DriverManager;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -84,11 +83,10 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 977 $
  */
-public final class LongIndexDerby implements LongIndex, Serializable {
+public final class LongIndexDerby implements LongIndex {
     private static final int TRIPLE = 3;
-    private static final long serialVersionUID = 3241176547880485018L;
     private static final int[] INDEXES = new int[]{0, 1, 2};
-    private static final DataValueDescriptor[] TEMPLATE = new DataValueDescriptor[]{new SQLLongint(), new SQLLongint(), new SQLLongint()};
+    private static final DataValueDescriptor[] TEMPLATE = {new SQLLongint(), new SQLLongint(), new SQLLongint()};
     private final DiskHashtable diskHashtable;
 
     public LongIndexDerby() {
