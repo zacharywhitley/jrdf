@@ -67,12 +67,15 @@ import org.jrdf.query.relation.operation.Union;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * A full minimum union outer join is the result of a left minimum union outer join unioned with relation 2.
+ */
 public class MinimumUnionFullOuterJoinImpl implements DyadicJoin {
-    private final NadicJoin naturalJoin;
+    private final MinimumUnionLeftOuterJoin leftOuterJoin;
     private final Union union;
 
-    public MinimumUnionFullOuterJoinImpl(NadicJoin naturalJoin, Union minimumUnion) {
-        this.naturalJoin = naturalJoin;
+    public MinimumUnionFullOuterJoinImpl(MinimumUnionLeftOuterJoin leftOuterJoin, Union minimumUnion) {
+        this.leftOuterJoin = leftOuterJoin;
         this.union = minimumUnion;
     }
 
@@ -81,11 +84,7 @@ public class MinimumUnionFullOuterJoinImpl implements DyadicJoin {
     // subsumption.
 
     public Relation join(Relation relation1, Relation relation2) {
-        Set<Relation> relations = new HashSet<Relation>();
-        relations.add(relation1);
-        relations.add(relation2);
-        Relation joinResult = naturalJoin.join(relations);
-        Relation minUnionResult = union.union(joinResult, relation1);
+        Relation minUnionResult = leftOuterJoin.join(relation1, relation2);
         return union.union(minUnionResult, relation2);
     }
 }

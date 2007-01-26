@@ -67,7 +67,7 @@ import org.jrdf.query.relation.Relation;
 import java.util.Set;
 import java.util.HashSet;
 
-public class MinimumUnionLeftOuterJoinImpl implements DyadicJoin {
+public class MinimumUnionLeftOuterJoinImpl implements MinimumUnionLeftOuterJoin {
     private final NadicJoin naturalJoin;
     private final Union union;
 
