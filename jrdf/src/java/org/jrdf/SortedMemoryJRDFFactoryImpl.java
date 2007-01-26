@@ -83,6 +83,8 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
         new AttributeValuePairComparatorImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
     private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
+    private static final QueryBuilder BUILDER = createQueryBuilder();
+    private static final QueryEngine QUERY_ENGINE = createQueryEngine();
 
     private SortedMemoryJRDFFactoryImpl() {
     }
@@ -99,12 +101,10 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     }
 
     public SparqlConnection getNewSparqlConnection() {
-        QueryBuilder builder = createQueryBuilder();
-        QueryEngine queryEngine = createQueryEngine();
-        return new SparqlConnectionImpl(builder, queryEngine);
+        return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
 
-    private QueryBuilder createQueryBuilder() {
+    private static QueryBuilder createQueryBuilder() {
         AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl(ATTRIBUTE_FACTORY);
         GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,
             TUPLE_COMPARATOR, TUPLE_FACTORY);
@@ -114,7 +114,7 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
         return new SparqlQueryBuilder(sparqlParser);
     }
 
-    private QueryEngine createQueryEngine() {
+    private static QueryEngine createQueryEngine() {
         RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
         Project project = new ProjectImpl(TUPLE_FACTORY, relationFactory);
         RelationProcessor relationProcessor = new RelationProcessorImpl(relationFactory, TUPLE_COMPARATOR);
