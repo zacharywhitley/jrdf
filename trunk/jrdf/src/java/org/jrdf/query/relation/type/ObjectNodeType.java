@@ -89,4 +89,15 @@ public final class ObjectNodeType implements PositionalNodeType {
     public boolean equals(Object obj) {
         return obj instanceof ObjectNodeType;
     }
+
+    public PositionalNodeType upgrade(PositionalNodeType newNodeType) {
+        Class<? extends PositionalNodeType> newClazz = newNodeType.getClass();
+        if (newClazz.equals(SubjectNodeType.class)) {
+            return new SubjectObjectNodeType();
+        } else if (newClazz.equals(PredicateNodeType.class)) {
+            return new PredicateObjectNodeType();
+        } else {
+            return this;
+        }
+    }
 }

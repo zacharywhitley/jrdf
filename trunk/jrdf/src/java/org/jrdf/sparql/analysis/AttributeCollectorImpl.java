@@ -71,13 +71,24 @@ import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.query.relation.type.SubjectObjectNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateNodeType;
 import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
+import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AttributeCollectorImpl implements VariableCollector {
-    private Map<AttributeName, NodeType> variables = new HashMap<AttributeName, NodeType>();
+/**
+ * A variable collector takes the attribute value pairs from constraints and add them to a map.  Used to construct
+ * queries.
+ *
+ * As node types are gathered they are upgraded to compount types if they have stood in different positions in a
+ * constraint.  For example ?uri <> <> . <> ?uri <> would create a attribute ?uri which of of type 
+ * SubjectPredicateNodeType.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1078 $
+ */public class AttributeCollectorImpl implements VariableCollector {
+    private Map<AttributeName, PositionalNodeType> variables = new HashMap<AttributeName, PositionalNodeType>();
 
     public void addConstraints(List<AttributeValuePair> avps) {
         for (AttributeValuePair avp : avps) {
@@ -94,18 +105,24 @@ public class AttributeCollectorImpl implements VariableCollector {
         }
     }
 
-    public Map<AttributeName, NodeType> getAttributes() {
+    public Map<AttributeName, PositionalNodeType> getAttributes() {
         return variables;
     }
 
     private void updateEntry(Attribute newAttribute) {
         AttributeName key = newAttribute.getAttributeName();
-        NodeType currentEntry = variables.get(key);
-        Class<? extends NodeType> currentClazz = currentEntry.getClass();
-        Class<? extends NodeType> newClazz = newAttribute.getType().getClass();
-        if (!currentClazz.equals(newClazz)) {
-            upgradeNodeType(currentClazz, newClazz, key);
+        PositionalNodeType currentEntry = variables.get(key);
+        NodeType type = newAttribute.getType();
+        if (type instanceof PositionalNodeType) {
+            if (!currentEntry.getClass().equals(type.getClass())) {
+                //upgradeNodeType(currentClazz, newClazz, key);
+                upgradeNodeType2(key, currentEntry, (PositionalNodeType) type);
+            }
         }
+    }
+
+    private void upgradeNodeType2(AttributeName key, PositionalNodeType currentNodeType, PositionalNodeType newNodeType) {
+        variables.put(key, currentNodeType.upgrade(newNodeType));
     }
 
     private void upgradeNodeType(Class<? extends NodeType> currentClazz, Class<? extends NodeType> newClazz,
@@ -168,6 +185,9 @@ public class AttributeCollectorImpl implements VariableCollector {
     }
 
     private void addNewEntry(Attribute attribute) {
-        variables.put(attribute.getAttributeName(), attribute.getType());
+        NodeType nodeType = attribute.getType();
+        if (nodeType instanceof PositionalNodeType) {
+            variables.put(attribute.getAttributeName(), (PositionalNodeType) nodeType);
+        }
     }
 }
