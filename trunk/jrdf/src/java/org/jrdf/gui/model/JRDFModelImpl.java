@@ -60,7 +60,6 @@
 package org.jrdf.gui.model;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SpringJRDFFactoryImpl;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;

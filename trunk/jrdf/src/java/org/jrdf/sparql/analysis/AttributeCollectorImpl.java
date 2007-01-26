@@ -125,6 +125,30 @@ public class AttributeCollectorImpl implements VariableCollector {
         }
     }
 
+    private void upgradeSubjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
+        if (newClazz.equals(PredicateNodeType.class)) {
+            variables.put(key, new SubjectPredicateNodeType());
+        } else if (newClazz.equals(ObjectNodeType.class)) {
+            variables.put(key, new SubjectObjectNodeType());
+        }
+    }
+
+    private void upgradePredicateNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
+        if (newClazz.equals(SubjectNodeType.class)) {
+            variables.put(key, new SubjectPredicateNodeType());
+        } else if (newClazz.equals(ObjectNodeType.class)) {
+            variables.put(key, new SubjectObjectNodeType());
+        }
+    }
+
+    private void upgradeObjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
+        if (newClazz.equals(SubjectNodeType.class)) {
+            variables.put(key, new SubjectObjectNodeType());
+        } else if (newClazz.equals(PredicateNodeType.class)) {
+            variables.put(key, new PredicateObjectNodeType());
+        }
+    }
+
     private void upgradePredicateObjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
         if (newClazz.equals(SubjectNodeType.class)) {
             variables.put(key, new SubjectPredicateObjectNodeType());
@@ -140,30 +164,6 @@ public class AttributeCollectorImpl implements VariableCollector {
     private void upgradeSubjectPredicateNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
         if (newClazz.equals(ObjectNodeType.class)) {
             variables.put(key, new SubjectPredicateObjectNodeType());
-        }
-    }
-
-    private void upgradeObjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(SubjectNodeType.class)) {
-            variables.put(key, new SubjectObjectNodeType());
-        } else if (newClazz.equals(PredicateNodeType.class)) {
-            variables.put(key, new PredicateObjectNodeType());
-        }
-    }
-
-    private void upgradePredicateNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(SubjectNodeType.class)) {
-            variables.put(key, new SubjectPredicateNodeType());
-        } else if (newClazz.equals(ObjectNodeType.class)) {
-            variables.put(key, new SubjectObjectNodeType());
-        }
-    }
-
-    private void upgradeSubjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(PredicateNodeType.class)) {
-            variables.put(key, new SubjectPredicateNodeType());
-        } else if (newClazz.equals(ObjectNodeType.class)) {
-            variables.put(key, new SubjectObjectNodeType());
         }
     }
 

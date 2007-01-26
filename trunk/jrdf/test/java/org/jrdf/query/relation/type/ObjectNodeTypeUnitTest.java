@@ -60,6 +60,7 @@
 package org.jrdf.query.relation.type;
 
 import junit.framework.TestCase;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 public class ObjectNodeTypeUnitTest extends TestCase {
     private static final Class<ObjectNodeType> CLAZZ = ObjectNodeType.class;
@@ -74,5 +75,6 @@ public class ObjectNodeTypeUnitTest extends TestCase {
         NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
         NodeTypeTestUtil.checkEquals(NODE_TYPE, new ObjectNodeType());
         NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(PositionalNodeType.class, CLAZZ);
     }
 }

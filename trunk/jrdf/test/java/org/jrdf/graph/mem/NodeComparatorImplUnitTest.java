@@ -78,6 +78,7 @@ public class NodeComparatorImplUnitTest extends TestCase {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, NodeComparator.class);        
         ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
+        ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PRIVATE);
         ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
     }
 }
