@@ -61,7 +61,6 @@ package org.jrdf.sparql.analysis;
 
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
-import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.List;
