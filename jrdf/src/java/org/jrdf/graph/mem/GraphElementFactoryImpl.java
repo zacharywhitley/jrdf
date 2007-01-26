@@ -123,21 +123,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
     public URIReference createResource(URI uri) throws GraphElementFactoryException {
-        if (null == uri) {
-            throw new GraphElementFactoryException("URI may not be null for a URIReference");
-        }
-
-        // check if the node already exists in the string pool
-        Long nodeId = nodePool.getNodeIdByString(uri.toString());
-        if (null != nodeId) {
-            return (URIReference) nodePool.getNodeById(nodeId);
-        }
-
-        // create the node identifier and add
-        nodeId = nodePool.getNextNodeId();
-        URIReference node = new URIReferenceImpl(uri, nodeId);
-        nodePool.registerNode((MemNode) node);
-        return node;
+        return createResource(uri, true);
     }
 
     /**
