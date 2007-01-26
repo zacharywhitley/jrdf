@@ -59,7 +59,7 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.execute.NaiveQueryEngineImpl;
 
 /**
- * Uses default in memory constructors to create JRDF entry points.  Returns a sorted results.
+ * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
  */
 public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     private static final LongIndex[] LONG_INDEXES =
