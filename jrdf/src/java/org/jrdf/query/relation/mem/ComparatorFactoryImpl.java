@@ -84,7 +84,7 @@ public class ComparatorFactoryImpl implements ComparatorFactory {
     }
 
     private NodeComparatorImpl createNodeComparator() {
-        return new NodeComparatorImpl();
+        return new NodeComparatorImpl(new NodeTypeComparatorImpl());
     }
 
     private TypeComparator createTypeComparator() {
