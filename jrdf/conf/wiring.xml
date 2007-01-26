@@ -327,7 +327,7 @@
 
     <bean id="minFullOuterJoin" class="org.jrdf.query.relation.operation.mem.union.MinimumUnionFullOuterJoinImpl">
         <constructor-arg>
-            <ref bean="naturalJoin"/>
+            <ref bean="minLeftOuterJoin"/>
         </constructor-arg>
         <constructor-arg>
             <ref bean="minimumUnion"/>
