@@ -72,15 +72,15 @@ import org.jrdf.query.relation.type.TypeComparator;
 public final class AttributeComparatorImpl implements AttributeComparator {
     private static final long serialVersionUID = 525733919495463710L;
     private static final int EQUAL = 0;
-    private TypeComparator nodeTypeComparator;
+    private TypeComparator typeComparator;
     private AttributeNameComparator attributeNameComparator;
 
     private AttributeComparatorImpl() {
 
     }
 
-    public AttributeComparatorImpl(TypeComparator nodeTypeComparator, AttributeNameComparator attributeNameComparator) {
-        this.nodeTypeComparator = nodeTypeComparator;
+    public AttributeComparatorImpl(TypeComparator typeComparator, AttributeNameComparator attributeNameComparator) {
+        this.typeComparator = typeComparator;
         this.attributeNameComparator = attributeNameComparator;
     }
 
@@ -93,7 +93,7 @@ public final class AttributeComparatorImpl implements AttributeComparator {
             return EQUAL;
         }
 
-        result = nodeTypeComparator.compare(attribute1.getType(), attribute2.getType());
+        result = typeComparator.compare(attribute1.getType(), attribute2.getType());
 
         if (result == EQUAL) {
             result = attributeNameComparator.compare(attribute1.getAttributeName(), attribute2.getAttributeName());

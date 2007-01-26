@@ -60,7 +60,6 @@
 package org.jrdf.gui.model;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.JRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.parser.Parser;
@@ -73,7 +72,7 @@ import org.jrdf.util.EscapeURL;
 import java.net.URL;
 
 public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = JRDFFactoryImpl.getFactory();
+    private static final JRDFFactory FACTORY = SpringJRDFFactoryImpl.getFactory();
     private Graph graph = FACTORY.getNewGraph();
     private SparqlConnection connection = FACTORY.getNewSparqlConnection();
 

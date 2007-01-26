@@ -69,9 +69,23 @@ import org.jrdf.sparql.SparqlConnection;
  * @version $Revision:$
  */
 public interface JRDFFactory {
+
+    /**
+     * Reload any configuration files used to create the objects.
+     */
     void refresh();
 
+    /**
+     * Create a new JRDF graph depending on the current configuration.
+     *
+     * @return a new instance of a JRDF graph.
+     */
     Graph getNewGraph();
 
+    /**
+     * Create a new connection to perform SPARQL operations depending on the current configuration.
+     *
+     * @return a new instance of a SPARQL connection.
+     */
     SparqlConnection getNewSparqlConnection();
 }
