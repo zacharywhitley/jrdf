@@ -66,6 +66,7 @@ import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.SemiDifference;
+import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 
 import java.util.Collections;
 import java.util.Set;
@@ -77,10 +78,14 @@ public class SemiDifferenceImpl implements SemiDifference {
 
     private final RelationFactory relationFactory;
     private TupleComparator tupleComparator;
+    private RelationProcessor relationProcessor;
 
-    public SemiDifferenceImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
+    public SemiDifferenceImpl(RelationProcessor relationProcessor, RelationFactory relationFactory,
+        TupleComparator tupleComparator
+    ) {
         this.relationFactory = relationFactory;
         this.tupleComparator = tupleComparator;
+        this.relationProcessor = relationProcessor;
     }
 
     public Relation minus(Relation relation1, Relation relation2) {
@@ -92,7 +97,7 @@ public class SemiDifferenceImpl implements SemiDifference {
         SortedSet<Tuple> resultTuples = new TreeSet<Tuple>(tupleComparator);
         performMinus(relation1, relation2, resultTuples);
         result = relationFactory.getRelation(resultTuples);
-        return convertToConstants(result);
+        return relationProcessor.convertToConstants(result);
     }
 
     private Relation deeOrDumOperations(Relation relation1, Relation relation2) {
@@ -134,17 +139,5 @@ public class SemiDifferenceImpl implements SemiDifference {
                 resultTuples.add(tuple1);
             }
         }
-    }
-
-    // TODO (AN) Duplicate of RelationProcessorImpl
-    private Relation convertToConstants(Relation resultRelation) {
-        if (resultRelation.getHeading().size() == 0) {
-            if (resultRelation.getTuples().size() == 0) {
-                return RELATION_DUM;
-            } else {
-                return RELATION_DEE;
-            }
-        }
-        return resultRelation;
     }
 }

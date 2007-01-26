@@ -113,6 +113,17 @@ public final class RelationProcessorImpl implements RelationProcessor, Serializa
         return convertToConstants(resultRelation);
     }
 
+    public Relation convertToConstants(Relation resultRelation) {
+        if (resultRelation.getHeading().size() == 0) {
+            if (resultRelation.getTuples().size() == 0) {
+                return RELATION_DUM;
+            } else {
+                return RELATION_DEE;
+            }
+        }
+        return resultRelation;
+    }
+
     private SortedSet<Tuple> processTuples(SortedSet<Attribute> headings, SortedSet<Tuple> tuples1,
             SortedSet<Tuple> tuples2, TupleEngine tupleEngine) {
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
@@ -129,17 +140,6 @@ public final class RelationProcessorImpl implements RelationProcessor, Serializa
         SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
         SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
         tupleEngine.process(headings, avps1, avps2, result);
-    }
-
-    private Relation convertToConstants(Relation resultRelation) {
-        if (resultRelation.getHeading().size() == 0) {
-            if (resultRelation.getTuples().size() == 0) {
-                return RELATION_DUM;
-            } else {
-                return RELATION_DEE;
-            }
-        }
-        return resultRelation;
     }
 
 }

@@ -287,6 +287,9 @@
         <constructor-arg>
              <ref bean="tupleComparator"/>
          </constructor-arg>
+        <constructor-arg>
+            <ref bean="relationProcessor"/>
+        </constructor-arg>
      </bean>
 
     <bean id="antiJoin" class="org.jrdf.query.relation.operation.mem.join.anti.AntiJoinImpl">

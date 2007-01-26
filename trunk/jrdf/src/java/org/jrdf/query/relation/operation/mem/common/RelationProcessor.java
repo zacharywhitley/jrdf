@@ -69,4 +69,6 @@ import java.util.Set;
  */
 public interface RelationProcessor {
     Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine);
+
+    Relation convertToConstants(Relation resultRelation);
 }
