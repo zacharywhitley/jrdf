@@ -10,11 +10,9 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactoryImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
-    <suppress checks="JavaNCSS" files="EscapeUtil.java"/>
     <suppress checks="JavaNCSS" files="RDF.java"/>
     <suppress checks="JavaNCSS" files="RDFS.java"/>
     <suppress checks="JavaNCSS" files="JrdfExample.java"/>
-    <suppress checks="JavaNCSS" files="RdfXmlParserExample.java"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl.java"/>
 
     <!-- RDF/XML Writer -->

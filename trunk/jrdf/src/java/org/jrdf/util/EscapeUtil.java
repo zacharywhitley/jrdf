@@ -58,6 +58,8 @@
  */
 package org.jrdf.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,8 +83,8 @@ public final class EscapeUtil {
      * This is used by the {@link #escape} method.
      */
     private static final Pattern PATTERN = Pattern.compile("[\uD800\uDC00-\uDBFF\uDFFF]" +
-            "|" +
-            "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
+        "|" +
+        "[\\x00-\\x1F\\x22\\\\\\x7F-\\uFFFF]");
 
     /**
      * How many characters at a time to decode for 8 bit encoding.
@@ -93,6 +95,20 @@ public final class EscapeUtil {
      * How many characters at a time to decode for 16 bit encoding.
      */
     private static final int CHARACTER_LENGTH_16_BIT = 7;
+
+    /**
+     * Look up for escaping characters.
+     */
+    private static final Map<Character, String> CHAR_ESCAPE_LOOKUP = new HashMap<Character, String>() {
+        private static final long serialVersionUID = 321L;
+        {
+            put('\t', "\\\\t");
+            put('\n', "\\\\n");
+            put('\r', "\\\\r");
+            put('"', "\\\\\\\"");
+            put('\\', "\\\\\\\\");
+        }
+    };
 
 
     private EscapeUtil() {
@@ -132,6 +148,7 @@ public final class EscapeUtil {
     /**
      * Depending of the character sequence we're escaping, determine an appropriate replacement.
      *
+     * @param matcher Used to match values.
      * @return escaped string value.
      * @throws IllegalStateException if there is no handler to perform the relevant match.
      */
@@ -152,30 +169,12 @@ public final class EscapeUtil {
     }
 
     private static String escape16Bit(String groupString) {
-        String escapeString;
-        switch (groupString.charAt(0)) {
-            case '\t': // tab
-                escapeString = "\\\\t";
-                break;
-            case '\n': // newline
-                escapeString = "\\\\n";
-                break;
-            case '\r': // carriage return
-                escapeString = "\\\\r";
-                break;
-            case '"':  // quote
-                escapeString = "\\\\\\\"";
-                break;
-            case '\\': // backslash
-                escapeString = "\\\\\\\\";
-                break;
-            default:   // other characters use 4-digit hex escapes
-                escapeString = format16BitCharacter(groupString);
-                assert CHARACTER_LENGTH_16_BIT == escapeString.length();
-                assert escapeString.startsWith("\\\\u");
-                break;
+        char firstChar = groupString.charAt(0);
+        if (CHAR_ESCAPE_LOOKUP.keySet().contains(firstChar)) {
+            return CHAR_ESCAPE_LOOKUP.get(firstChar);
+        } else {
+            return format16BitCharacter(groupString);
         }
-        return escapeString;
     }
 
     private static String escape8Bit(String groupString) {
