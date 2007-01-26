@@ -101,13 +101,7 @@ public abstract class AbstractURIReference implements URIReference, Serializable
      *                                  not absolute
      */
     protected AbstractURIReference(URI newUri) throws IllegalArgumentException {
-        checkNotNull(newUri);
-        if (!newUri.isAbsolute()) {
-            throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
-        }
-
-        // Initialize the field
-        uri = newUri;
+        validateAndAddUri(newUri, true);
     }
 
     /**
@@ -122,7 +116,15 @@ public abstract class AbstractURIReference implements URIReference, Serializable
      *                                  validate is true.
      */
     protected AbstractURIReference(URI newUri, boolean validate) throws IllegalArgumentException {
-        checkNotNull(newUri);
+        validateAndAddUri(newUri, validate);
+    }
+
+    private void validateAndAddUri(URI newUri, boolean validate) {
+        // Validate "newUri" parameter
+        if (null == newUri) {
+            throw new IllegalArgumentException("Null \"newUri\" parameter");
+        }
+
         if (validate && !newUri.isAbsolute()) {
             throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
         }
