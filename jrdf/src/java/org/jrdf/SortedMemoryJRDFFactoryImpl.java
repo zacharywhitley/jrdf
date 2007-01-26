@@ -60,6 +60,9 @@ import org.jrdf.query.execute.NaiveQueryEngineImpl;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
+ *
+ * @author Andrew Newman
+ * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     private static final LongIndex[] LONG_INDEXES =
