@@ -64,13 +64,6 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.NodeType;
-import org.jrdf.query.relation.type.ObjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
-import org.jrdf.query.relation.type.PredicateObjectNodeType;
-import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.query.relation.type.SubjectObjectNodeType;
-import org.jrdf.query.relation.type.SubjectPredicateNodeType;
-import org.jrdf.query.relation.type.SubjectPredicateObjectNodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.HashMap;
@@ -82,12 +75,13 @@ import java.util.Map;
  * queries.
  *
  * As node types are gathered they are upgraded to compount types if they have stood in different positions in a
- * constraint.  For example ?uri <> <> . <> ?uri <> would create a attribute ?uri which of of type 
+ * constraint.  For example ?uri <> <> . <> ?uri <> would create a attribute ?uri which of of type
  * SubjectPredicateNodeType.
  *
  * @author Andrew Newman
  * @version $Revision: 1078 $
- */public class AttributeCollectorImpl implements VariableCollector {
+ */
+public class AttributeCollectorImpl implements VariableCollector {
     private Map<AttributeName, PositionalNodeType> variables = new HashMap<AttributeName, PositionalNodeType>();
 
     public void addConstraints(List<AttributeValuePair> avps) {
@@ -115,72 +109,8 @@ import java.util.Map;
         NodeType type = newAttribute.getType();
         if (type instanceof PositionalNodeType) {
             if (!currentEntry.getClass().equals(type.getClass())) {
-                //upgradeNodeType(currentClazz, newClazz, key);
-                upgradeNodeType2(key, currentEntry, (PositionalNodeType) type);
+                variables.put(key, currentEntry.upgrade((PositionalNodeType) type));
             }
-        }
-    }
-
-    private void upgradeNodeType2(AttributeName key, PositionalNodeType currentNodeType, PositionalNodeType newNodeType) {
-        variables.put(key, currentNodeType.upgrade(newNodeType));
-    }
-
-    private void upgradeNodeType(Class<? extends NodeType> currentClazz, Class<? extends NodeType> newClazz,
-            AttributeName key) {
-        if (currentClazz.equals(SubjectNodeType.class)) {
-            upgradeSubjectNodeType(newClazz, key);
-        } else if (currentClazz.equals(PredicateNodeType.class)) {
-            upgradePredicateNodeType(newClazz, key);
-        } else if (currentClazz.equals(ObjectNodeType.class)) {
-            upgradeObjectNodeType(newClazz, key);
-        } else if (currentClazz.equals(SubjectPredicateNodeType.class)) {
-            upgradeSubjectPredicateNodeType(newClazz, key);
-        } else if (currentClazz.equals(SubjectObjectNodeType.class)) {
-            upgradeSubjectObjectNodeType(newClazz, key);
-        } else if (currentClazz.equals(PredicateObjectNodeType.class)) {
-            upgradePredicateObjectNodeType(newClazz, key);
-        }
-    }
-
-    private void upgradeSubjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(PredicateNodeType.class)) {
-            variables.put(key, new SubjectPredicateNodeType());
-        } else if (newClazz.equals(ObjectNodeType.class)) {
-            variables.put(key, new SubjectObjectNodeType());
-        }
-    }
-
-    private void upgradePredicateNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(SubjectNodeType.class)) {
-            variables.put(key, new SubjectPredicateNodeType());
-        } else if (newClazz.equals(ObjectNodeType.class)) {
-            variables.put(key, new SubjectObjectNodeType());
-        }
-    }
-
-    private void upgradeObjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(SubjectNodeType.class)) {
-            variables.put(key, new SubjectObjectNodeType());
-        } else if (newClazz.equals(PredicateNodeType.class)) {
-            variables.put(key, new PredicateObjectNodeType());
-        }
-    }
-
-    private void upgradePredicateObjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(SubjectNodeType.class)) {
-            variables.put(key, new SubjectPredicateObjectNodeType());
-        }
-    }
-
-    private void upgradeSubjectObjectNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(PredicateNodeType.class)) {
-            variables.put(key, new SubjectPredicateObjectNodeType());
-        }
-    }
-
-    private void upgradeSubjectPredicateNodeType(Class<? extends NodeType> newClazz, AttributeName key) {
-        if (newClazz.equals(ObjectNodeType.class)) {
-            variables.put(key, new SubjectPredicateObjectNodeType());
         }
     }
 
