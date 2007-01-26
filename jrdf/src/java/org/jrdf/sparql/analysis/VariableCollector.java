@@ -62,15 +62,20 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Class description goes here.
+ * A variable collector takes the attribute value pairs from constraints and add them to a map.  Used to construct
+ * queries.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1078 $
  */
 public interface VariableCollector {
     void addConstraints(List<AttributeValuePair> avps);
 
-    Map<AttributeName, NodeType> getAttributes();
+    Map<AttributeName, PositionalNodeType> getAttributes();
 }

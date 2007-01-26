@@ -63,6 +63,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.mem.AttributeImpl;
 import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.PositionalNodeType;
 import org.jrdf.sparql.analysis.VariableCollector;
 import org.jrdf.sparql.parser.node.TIdentifier;
 import org.jrdf.sparql.parser.parser.ParserException;
@@ -85,7 +86,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     private LinkedHashSet<Attribute> attributes;
     private LinkedHashSet<AttributeName> declaredVariables;
     private Expression<ExpressionVisitor> nextExpression;
-    private Map<AttributeName, NodeType> allVariables;
+    private Map<AttributeName, PositionalNodeType> allVariables;
 
     private Projection() {
     }
@@ -108,7 +109,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
         return attributes;
     }
 
-    public Map<AttributeName, NodeType> getAllVariables() {
+    public Map<AttributeName, PositionalNodeType> getAllVariables() {
         return allVariables;
     }
 
@@ -142,7 +143,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
 
     private LinkedHashSet<Attribute> extractAttributes() throws ParserException {
         LinkedHashSet<Attribute> newAttributes = new LinkedHashSet<Attribute>();
-        Map<AttributeName, NodeType> variables = variableCollector.getAttributes();
+        Map<AttributeName, PositionalNodeType> variables = variableCollector.getAttributes();
         for (AttributeName variable : declaredVariables) {
             NodeType type = variables.get(variable);
             if (type == null) {

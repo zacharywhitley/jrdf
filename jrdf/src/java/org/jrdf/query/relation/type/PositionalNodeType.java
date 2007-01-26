@@ -9,4 +9,13 @@ package org.jrdf.query.relation.type;
  */
 
 public interface PositionalNodeType extends NodeType {
+
+    /**
+     * Given a new node type what is the new compound node type.  For example, if this was a SubjectNodeType and
+     * it was given a parameter of ObjectNodeType it should return SubjectObjectNodeType.
+     *
+     * @param newNodeType the new node type to upgrade the current node type to.
+     * @return the new instance of a compound node type.
+     */
+    PositionalNodeType upgrade(PositionalNodeType newNodeType);
 }

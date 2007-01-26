@@ -90,4 +90,8 @@ public final class SubjectPredicateObjectNodeType implements PositionalNodeType 
         nodeTypes.add(new ObjectNodeType());
         return nodeTypes;
     }
+
+    public PositionalNodeType upgrade(PositionalNodeType newNodeType) {
+        return this;
+    }
 }

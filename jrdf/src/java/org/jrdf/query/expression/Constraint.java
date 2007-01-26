@@ -89,7 +89,7 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
         this.singleAvp = singleAvp;
     }
 
-    public List<AttributeValuePair> getAvp(Map<AttributeName, NodeType> allVariables) {
+    public List<AttributeValuePair> getAvp(Map<AttributeName, ? extends NodeType> allVariables) {
         List<AttributeValuePair> newAvps = new ArrayList<AttributeValuePair>();
         for (AttributeValuePair avp : singleAvp) {
             Attribute existingAttribute = avp.getAttribute();
@@ -137,7 +137,8 @@ public final class Constraint<V extends ExpressionVisitor> implements Expression
         return o1.singleAvp.equals(o2.singleAvp);
     }
 
-    private Attribute createNewAttribute(Attribute existingAttribute, Map<AttributeName, NodeType> allVariables) {
+    private Attribute createNewAttribute(Attribute existingAttribute, Map<AttributeName,
+        ? extends NodeType> allVariables) {
         Attribute newAttribute;
         AttributeName existingAttributeName = existingAttribute.getAttributeName();
         NodeType newNodeType = allVariables.get(existingAttributeName);

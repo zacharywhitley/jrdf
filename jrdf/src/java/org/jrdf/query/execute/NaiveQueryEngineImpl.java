@@ -76,6 +76,7 @@ import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Project;
 import org.jrdf.query.relation.operation.Restrict;
 import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.HashSet;
 import java.util.List;
@@ -96,7 +97,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private NadicJoin naturalJoin;
     private org.jrdf.query.relation.operation.Union union;
     private DyadicJoin leftOuterJoin;
-    private Map<AttributeName, NodeType> allVariables;
+    private Map<AttributeName, PositionalNodeType> allVariables;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
             org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin) {
@@ -115,7 +116,7 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         result = initialRelation;
     }
 
-    public void setAllVariables(Map<AttributeName, NodeType> allVariables) {
+    public void setAllVariables(Map<AttributeName, PositionalNodeType> allVariables) {
         this.allVariables = allVariables;
     }
 
