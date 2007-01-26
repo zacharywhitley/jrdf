@@ -69,7 +69,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class ObjectNodeType implements NodeType {
+public final class ObjectNodeType implements PositionalNodeType {
     private static final NodeType INSTANCE = new ObjectNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 8047443471499147543L;
