@@ -60,7 +60,7 @@
 package org.jrdf.graph;
 
 import org.jrdf.util.EqualsUtil;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -121,10 +121,7 @@ public abstract class AbstractURIReference implements URIReference, Serializable
 
     private void validateAndAddUri(URI newUri, boolean validate) {
         // Validate "newUri" parameter
-        if (null == newUri) {
-            throw new IllegalArgumentException("Null \"newUri\" parameter");
-        }
-
+        checkNotNull(newUri);
         if (validate && !newUri.isAbsolute()) {
             throw new IllegalArgumentException("\"" + newUri + "\" is not absolute");
         }
