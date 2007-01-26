@@ -18,7 +18,6 @@
     <!-- RDF/XML Writer -->
     <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter.java"/>
     <suppress checks="JavaNCSS" files="RdfXmlWriter.java"/>
-    <suppress checks="JavaNCSS" files="ResourceStatement.java"/>
 
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>
