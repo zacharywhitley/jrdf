@@ -149,20 +149,32 @@ public class ResourceStatement implements RdfXmlWritable {
         String literal = object.getEscapedLexicalForm();
         statement = statement.replaceAll("\\$\\{lit\\}", literal);
         // replace any language or datatype
-        String lang = "";
-        String type = "";
+        String lang = getLanguage(object);
+        String type = getDatatype(object);
         // one or the other - not both
-        if (object.getDatatypeURI() != null) {
-            type = DATATYPE;
-            type = type.replaceAll("\\$\\{datatype\\}", object.getDatatypeURI().toString());
-        } else if (object.getLanguage() != null && !"".equals(object.getLanguage())) {
-            lang = LANGUAGE;
-            lang = lang.replaceAll("\\$\\{language\\}", object.getLanguage());
-        }
         statement = statement.replaceAll("\\$\\{lang\\}", lang);
         statement = statement.replaceAll("\\$\\{type\\}", type);
         // output
         writer.println(statement);
+    }
+
+    private String getLanguage(Literal object) {
+        String language = object.getLanguage();
+        if (language != null && !"".equals(language)) {
+            String lang = LANGUAGE;
+            return lang.replaceAll("\\$\\{language\\}", language);
+        } else {
+            return "";
+        }
+    }
+
+    private String getDatatype(Literal object) {
+        if (object.getDatatypeURI() != null) {
+            String type = DATATYPE;
+            return type.replaceAll("\\$\\{datatype\\}", object.getDatatypeURI().toString());
+        } else {
+            return "";
+        }
     }
 
     private void write(URIReference predicate, BlankNode object, PrintWriter writer) throws WriteException {
