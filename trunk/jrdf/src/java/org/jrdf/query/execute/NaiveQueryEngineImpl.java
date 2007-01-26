@@ -95,16 +95,16 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
     private Restrict restrict;
     private NadicJoin naturalJoin;
     private org.jrdf.query.relation.operation.Union union;
-    private DyadicJoin fullOuterJoin;
+    private DyadicJoin leftOuterJoin;
     private Map<AttributeName, NodeType> allVariables;
 
     public NaiveQueryEngineImpl(Project project, NadicJoin naturalJoin, Restrict restrict,
-            org.jrdf.query.relation.operation.Union union, DyadicJoin fullOuterJoin) {
+            org.jrdf.query.relation.operation.Union union, DyadicJoin leftOuterJoin) {
         this.project = project;
         this.naturalJoin = naturalJoin;
         this.restrict = restrict;
         this.union = union;
-        this.fullOuterJoin = fullOuterJoin;
+        this.leftOuterJoin = leftOuterJoin;
     }
 
     public Relation getResult() {
@@ -160,12 +160,12 @@ public class NaiveQueryEngineImpl extends ExpressionVisitorAdapter implements Qu
         } else {
             lhs = rhs;
         }
-        result = fullOuterJoin.join(lhs, rhs);
+        result = leftOuterJoin.join(lhs, rhs);
     }
 
     @SuppressWarnings({ "unchecked" })
     private <V extends ExpressionVisitor> Relation getExpression(Expression<V> expression) {
-        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, fullOuterJoin);
+        QueryEngine queryEngine = new NaiveQueryEngineImpl(project, naturalJoin, restrict, union, leftOuterJoin);
         queryEngine.initialiseBaseRelation(result);
         queryEngine.setAllVariables(allVariables);
         expression.accept((V) queryEngine);

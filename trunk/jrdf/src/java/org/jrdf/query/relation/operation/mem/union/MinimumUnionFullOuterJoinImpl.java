@@ -61,11 +61,7 @@ package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.DyadicJoin;
-import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Union;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A full minimum union outer join is the result of a left minimum union outer join unioned with relation 2.

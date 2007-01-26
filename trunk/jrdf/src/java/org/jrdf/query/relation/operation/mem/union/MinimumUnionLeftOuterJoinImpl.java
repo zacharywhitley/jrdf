@@ -59,7 +59,6 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
-import org.jrdf.query.relation.operation.DyadicJoin;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Union;
 import org.jrdf.query.relation.Relation;

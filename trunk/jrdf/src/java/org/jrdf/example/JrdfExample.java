@@ -71,12 +71,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl;
-import org.jrdf.graph.mem.GraphFactory;
-import org.jrdf.graph.mem.GraphFactoryImpl;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.JRDFFactory;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -88,23 +84,25 @@ import java.util.Iterator;
  */
 public class JrdfExample {
 
+    private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
+
     //Resources
     private URIReference person;
-    private BlankNode address;
 
+    private BlankNode address;
     //Properties
     private URIReference hasAddress;
     private URIReference hasStreet;
     private URIReference hasCity;
     private URIReference hasState;
-    private URIReference hasPostCode;
 
+    private URIReference hasPostCode;
     //Values
     private Literal street;
     private Literal city;
     private Literal state;
-    private Literal postCode;
 
+    private Literal postCode;
     //Statements
     private Triple addressStatement;
     private Triple streetStatement;
@@ -130,7 +128,7 @@ public class JrdfExample {
 
         //get a JRDF Graph
         System.out.println("Creating Graph...");
-        Graph graph = getGraph();
+        Graph graph = JRDF_FACTORY.getNewGraph();
 
         //create example data
         initializeData(graph);
@@ -294,17 +292,6 @@ public class JrdfExample {
 
         //print the contents
         print("Graph contains (after remove): ", graph);
-    }
-
-    /**
-     * Returns an in-memory JRDF Graph implementation.
-     *
-     * @return Graph
-     */
-    private Graph getGraph() {
-        LongIndex[] longIndexes = {new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        GraphFactory factory = new GraphFactoryImpl(longIndexes, new NodePoolMemImpl());
-        return factory.getGraph();
     }
 
     /**
