@@ -71,10 +71,10 @@ public class ObjectNodeTypeUnitTest extends TestCase {
 
     public void testNodeType() {
         NodeTypeTestUtil.checkClassProperties(CLAZZ);
+        ClassPropertiesTestUtil.checkImplementationOfInterface(PositionalNodeType.class, CLAZZ);
         NodeTypeTestUtil.checkSerialVersionUid(CLAZZ, EXPECTED_UID);
         NodeTypeTestUtil.checkGetName(NODE_TYPE, EXPECTED_NAME);
         NodeTypeTestUtil.checkEquals(NODE_TYPE, new ObjectNodeType());
         NodeTypeTestUtil.checkComposedOf(NODE_TYPE, EXPECTED_INSTANCE);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(PositionalNodeType.class, CLAZZ);
     }
 }

@@ -68,7 +68,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 651 $
  */
-public final class SubjectPredicateObjectNodeType implements NodeType {
+public final class SubjectPredicateObjectNodeType implements PositionalNodeType {
     private static final long serialVersionUID = 799086809870140765L;
 
     public String getName() {
