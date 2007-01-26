@@ -60,6 +60,7 @@
 package org.jrdf.gui.model;
 
 import org.jrdf.JRDFFactory;
+import org.jrdf.SpringJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.parser.Parser;

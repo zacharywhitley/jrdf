@@ -7,6 +7,7 @@ import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl;
 import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
+import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.GraphFactory;
@@ -65,12 +66,6 @@ import org.jrdf.query.execute.NaiveQueryEngineImpl;
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
-    private static final LongIndex[] LONG_INDEXES =
-        new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-    private static final NodePoolMem NODE_POOL = new NodePoolMemImpl();
-    private static final NodeComparator COMPARATOR = new NodeComparatorImpl(new NodeTypeComparatorImpl());
-    private static final GraphFactory ORDERED_GRAPH_FACTORY = new OrderedGraphFactoryImpl(LONG_INDEXES, NODE_POOL,
-        COMPARATOR);
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
     private static final TypeComparator TYPE_COMPARATOR = new TypeComparatorImpl(NODE_TYPE_COMPARATOR);
     private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR = new AttributeNameComparatorImpl();
@@ -97,7 +92,11 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     }
 
     public Graph getNewGraph() {
-        return ORDERED_GRAPH_FACTORY.getGraph();
+        LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+        NodePoolMem nodePool = new NodePoolMemImpl();
+        NodeComparatorImpl comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePool, comparator);
+        return orderedGraphFactory.getGraph();
     }
 
     public SparqlConnection getNewSparqlConnection() {
