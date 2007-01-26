@@ -68,6 +68,7 @@ import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EscapeURL;
 import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
