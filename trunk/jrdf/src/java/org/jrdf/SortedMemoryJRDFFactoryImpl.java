@@ -73,7 +73,7 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
         ATTRIBUTE_NAME_COMPARATOR);
     private static final SortedAttributeFactory ATTRIBUTE_FACTORY = new SortedAttributeFactoryImpl(
         ATTRIBUTE_COMPARATOR, 0L);
-    private static final NodeComparator NODE_COMPARATOR = new NodeComparatorImpl();
+    private static final NodeComparator NODE_COMPARATOR = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
     private static final AttributeValuePairComparator ATTRIBUTE_VALUE_PAIR_COMPARATOR =
         new AttributeValuePairComparatorImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
@@ -94,7 +94,7 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     public Graph getNewGraph() {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         NodePoolMem nodePool = new NodePoolMemImpl();
-        NodeComparatorImpl comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        NodeComparatorImpl comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
         GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePool, comparator);
         return orderedGraphFactory.getGraph();
     }
