@@ -70,5 +70,17 @@ import org.jrdf.graph.BlankNode;
  */
 // TODO (AN) Combine this with parser's PaserBlankNodeFactory
 public interface BlankNodeRegistry {
+    /**
+     * If the node has already been registered, it's node Id is returned,
+     * otherwise it is registered and the new node Id is returned.
+     *
+     * @param node BlankNode
+     * @return String node ID
+     */
     String getNodeId(BlankNode node);
+
+    /**
+     * Reset the associations between blank nodes and node ids.
+     */
+    void reset();
 }

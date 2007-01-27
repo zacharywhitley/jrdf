@@ -73,13 +73,6 @@ import java.util.ArrayList;
 public final class BlankNodeRegistryImpl implements BlankNodeRegistry {
     private final List<BlankNode> bNodes = new ArrayList<BlankNode>();
 
-    /**
-     * If the node has already been registered, it's node Id is returned,
-     * otherwise it is registered and the new node Id is returned.
-     *
-     * @param node BlankNode
-     * @return String node ID
-     */
     public String getNodeId(BlankNode node) {
         checkNotNull(node);
         long id = bNodes.indexOf(node);
@@ -88,5 +81,12 @@ public final class BlankNodeRegistryImpl implements BlankNodeRegistry {
             id = bNodes.indexOf(node);
         }
         return "bNode_" + id;
+    }
+
+    /**
+     * Reset the associations between blank nodes and node ids.
+     */
+    public void reset() {
+        bNodes.clear();
     }
 }

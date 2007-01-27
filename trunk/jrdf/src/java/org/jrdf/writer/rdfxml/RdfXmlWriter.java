@@ -68,10 +68,9 @@ import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.IteratorStack;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
-import org.jrdf.writer.mem.BlankNodeRegistryImpl;
+import org.jrdf.writer.RdfNamespaceMap;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -90,7 +89,6 @@ public class RdfXmlWriter implements RdfWriter {
      */
     private PrintWriter printWriter;
 
-
     /**
      * Current triple off the stack.
      */
@@ -104,12 +102,17 @@ public class RdfXmlWriter implements RdfWriter {
     /**
      * Used to track blank nodes.
      */
-    private BlankNodeRegistry registry;
+    private BlankNodeRegistry blankNodeRegistry;
 
     /**
      * Containing mappings between partial URIs and namespaces.
      */
     private RdfNamespaceMap names;
+
+    public RdfXmlWriter(BlankNodeRegistry blankNodeRegistry, RdfNamespaceMap names) {
+        this.blankNodeRegistry = blankNodeRegistry;
+        this.names = names;
+    }
 
     public void write(Graph graph, OutputStream stream) throws IOException, WriteException, GraphException {
         OutputStreamWriter writer = new OutputStreamWriter(stream);
@@ -135,8 +138,8 @@ public class RdfXmlWriter implements RdfWriter {
             WriteException {
         try {
             // Initialize values.
-            registry = new BlankNodeRegistryImpl();
-            names = new RdfNamespaceMap();
+            blankNodeRegistry.reset();
+            names.reset();
             names.load(graph);
 
             // header
@@ -195,13 +198,13 @@ public class RdfXmlWriter implements RdfWriter {
     }
 
     private void writeHeader() throws IOException, WriteException {
-        ResourceHeader header = new ResourceHeader(currentSubject, registry);
+        ResourceHeader header = new ResourceHeader(currentSubject, blankNodeRegistry);
         header.write(printWriter);
     }
 
     private void writeStatements(IteratorStack<Triple> stack) throws IOException, WriteException {
         // write statements
-        ResourceStatement statement = new ResourceStatement(names, registry);
+        ResourceStatement statement = new ResourceStatement(names, blankNodeRegistry);
         statement.setAndWriteTriple(currentTriple, printWriter);
         while (stack.hasNext()) {
             currentTriple = stack.pop();
