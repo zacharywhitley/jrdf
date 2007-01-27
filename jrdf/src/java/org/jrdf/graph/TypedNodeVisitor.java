@@ -88,4 +88,11 @@ public interface TypedNodeVisitor {
      * @param literal the Literal to visit.
      */
     void visitLiteral(Literal literal);
+
+    /**
+     * Visit node.
+     *
+     * @param node the node to visit.
+     */
+    void visitNode(Node node);
 }

@@ -96,4 +96,13 @@ public class TypedNodeVisitorAdapter implements TypedNodeVisitor {
     public void visitLiteral(Literal literal) {
         // this method is left intentionally blank.
     }
+
+    /**
+     * Visit node.
+     *
+     * @param node the node to visit.
+     */
+    public void visitNode(Node node) {
+        // this method is left intentionally blank.
+    }
 }
