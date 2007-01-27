@@ -4,11 +4,9 @@
 
 <beans>
     <!-- Graph Classes -->
-    <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false">
-    </bean>
+    <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false"/>
 
-    <bean class="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl" singleton="false">
-    </bean>
+    <bean class="org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl" singleton="false"/>
 
     <bean id="graphFactory" class="org.jrdf.graph.mem.OrderedGraphFactoryImpl" singleton="false">
         <constructor-arg>
