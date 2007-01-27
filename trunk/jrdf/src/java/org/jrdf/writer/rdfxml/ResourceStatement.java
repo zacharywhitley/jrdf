@@ -113,6 +113,12 @@ public class ResourceStatement implements RdfXmlWritable {
         write(predicate, object, writer);
     }
 
+    public void setAndWriteTriple(Triple triple, PrintWriter writer) throws IOException, WriteException {
+        setTriple(triple);
+        write(writer);
+    }
+
+
     private void write(PredicateNode predicate, ObjectNode object, PrintWriter writer) throws WriteException {
         if (!(predicate instanceof URIReference)) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());

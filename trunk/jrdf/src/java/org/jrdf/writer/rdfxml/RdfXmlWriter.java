@@ -85,6 +85,31 @@ import java.io.Writer;
  * @author TurnerRX
  */
 public class RdfXmlWriter implements RdfWriter {
+    /**
+     * PrintWriter output. Caller is responsible for closing stream.
+     */
+    private PrintWriter printWriter;
+
+
+    /**
+     * Current triple off the stack.
+     */
+    private Triple currentTriple;
+
+    /**
+     * The current subject node.
+     */
+    private SubjectNode currentSubject;
+
+    /**
+     * Used to track blank nodes.
+     */
+    private BlankNodeRegistry registry;
+
+    /**
+     * Containing mappings between partial URIs and namespaces.
+     */
+    private RdfNamespaceMap names;
 
     public void write(Graph graph, OutputStream stream) throws IOException, WriteException, GraphException {
         OutputStreamWriter writer = new OutputStreamWriter(stream);
@@ -92,8 +117,8 @@ public class RdfXmlWriter implements RdfWriter {
     }
 
     public void write(Graph graph, Writer writer) throws IOException, WriteException, GraphException {
-        PrintWriter printWriter = new PrintWriter(writer);
-        write(graph, printWriter, null);
+        printWriter = new PrintWriter(writer);
+        write(graph, (String) null);
     }
 
     /**
@@ -101,29 +126,32 @@ public class RdfXmlWriter implements RdfWriter {
      * in the XML header.
      *
      * @param graph    Graph to be written.
-     * @param writer   PrintWriter output. Caller is responsible for closing stream.
      * @param encoding String XML encoding attribute.
      * @throws IOException    If the graph contents cannot be written to the output.
      * @throws GraphException If the graph cannot be read.
      * @throws WriteException If the contents could not be written
      */
-    private void write(Graph graph, PrintWriter writer, String encoding) throws IOException, GraphException,
+    private void write(Graph graph, String encoding) throws IOException, GraphException,
             WriteException {
         try {
-            // load namespaces
-            RdfNamespaceMap names = new RdfNamespaceMap();
+            // Initialize values.
+            registry = new BlankNodeRegistryImpl();
+            names = new RdfNamespaceMap();
             names.load(graph);
+
             // header
             RdfXmlHeader header = new RdfXmlHeader(encoding, names);
-            header.write(writer);
+            header.write(printWriter);
+
             // body
-            writeStatements(graph, writer, names);
+            writeStatements(graph);
+
             // footer
             RdfXmlFooter footer = new RdfXmlFooter();
-            footer.write(writer);
+            footer.write(printWriter);
         } finally {
-            if (writer != null) {
-                writer.flush();
+            if (printWriter != null) {
+                printWriter.flush();
             }
         }
     }
@@ -132,30 +160,22 @@ public class RdfXmlWriter implements RdfWriter {
      * Writes all statements in the Graph to the writer.
      *
      * @param graph  Graph containing statements.
-     * @param writer PrintWriter output
-     * @param names  RdfNamespaceMap containgin mappings between partial URIs and namespaces.
      * @throws GraphException If the graph cannot be read.
      * @throws IOException    If the statements cannot be written.
      * @throws WriteException If the statements could not be written.
      */
-    private void writeStatements(Graph graph, PrintWriter writer, RdfNamespaceMap names) throws GraphException,
-            IOException, WriteException {
-        ClosableIterator<Triple> iter = null;
+    private void writeStatements(Graph graph) throws GraphException, IOException, WriteException {
+        // get all statements
+        // TODO - ensure these statements are ordered.
+        // write one subject at a time
+        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
-            BlankNodeRegistry registry = new BlankNodeRegistryImpl();
-            // get all statements
-            // TODO - ensure these statements are ordered.
-            iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-                    ANY_OBJECT_NODE);
-            // write one subject at a time
             IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
             while (iter.hasNext()) {
-                writeSubject(stack, writer, names, registry);
+                writeSubject(stack);
             }
         } finally {
-            if (iter != null) {
-                iter.close();
-            }
+            iter.close();
         }
     }
 
@@ -163,42 +183,39 @@ public class RdfXmlWriter implements RdfWriter {
      * Writes a Resource with all its statements to the writer.
      *
      * @param stack    IteratorStack<Triple>
-     * @param writer   PrintWriter output
-     * @param names    RdfNamespaceMap containing mappings between partial URIs and
-     *                 namespaces.
-     * @param registry BlankNodeRegistry Used to track blank nodes.
      * @throws IOException    If an IOException is encountered while writing the subject.
      * @throws WriteException If the subject could not be written
      */
-    private void writeSubject(IteratorStack<Triple> stack, PrintWriter writer, RdfNamespaceMap names,
-                              BlankNodeRegistry registry) throws IOException, WriteException {
-        if (!stack.hasNext()) {
-            return;
-        }
-        // init
-        Triple triple = stack.pop();
-        SubjectNode subject = triple.getSubject();
-        // write header
-        ResourceHeader header = new ResourceHeader(subject, registry);
-        header.write(writer);
-        // write statements
-        ResourceStatement statement = new ResourceStatement(names, registry);
-        statement.setTriple(triple);
-        statement.write(writer);
-        while (stack.hasNext()) {
-            triple = stack.pop();
-            // put it back if it is not the right subject
-            if (!subject.equals(triple.getSubject())) {
-                stack.push(triple);
-                break;
-            }
-            statement.setTriple(triple);
-            statement.write(writer);
-        }
-
-        // write footer
-        ResourceFooter footer = new ResourceFooter(subject);
-        footer.write(writer);
+    private void writeSubject(IteratorStack<Triple> stack) throws IOException, WriteException {
+        currentTriple = stack.pop();
+        currentSubject = currentTriple.getSubject();
+        writeHeader();
+        writeStatements(stack);
+        writeFooter();
     }
 
+    private void writeHeader() throws IOException, WriteException {
+        ResourceHeader header = new ResourceHeader(currentSubject, registry);
+        header.write(printWriter);
+    }
+
+    private void writeStatements(IteratorStack<Triple> stack) throws IOException, WriteException {
+        // write statements
+        ResourceStatement statement = new ResourceStatement(names, registry);
+        statement.setAndWriteTriple(currentTriple, printWriter);
+        while (stack.hasNext()) {
+            currentTriple = stack.pop();
+            // Have we run out of the same subject - if so push it back on an stop iterating.
+            if (!currentSubject.equals(currentTriple.getSubject())) {
+                stack.push(currentTriple);
+                break;
+            }
+            statement.setAndWriteTriple(currentTriple, printWriter);
+        }
+    }
+
+    private void writeFooter() throws IOException, WriteException {
+        ResourceFooter footer = new ResourceFooter(currentSubject);
+        footer.write(printWriter);
+    }
 }
