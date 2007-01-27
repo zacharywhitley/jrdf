@@ -93,7 +93,7 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     public Graph getNewGraph() {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         NodePoolMem nodePool = new NodePoolMemImpl();
-        NodeComparatorImpl comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
+        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
         GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePool, comparator);
         return orderedGraphFactory.getGraph();
     }
