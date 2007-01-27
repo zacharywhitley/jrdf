@@ -65,8 +65,8 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
+import org.jrdf.writer.RdfNamespaceMap;
 
 import java.io.IOException;
 import java.io.PrintWriter;
