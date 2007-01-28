@@ -14,16 +14,17 @@ Helpers
   lowercase    = ['a'..'z'];
   uppercase    = ['A'..'Z'];
   character    = [32..126];
+  commentchar  = [character - [cr + lf ]];   
   letter       = lowercase | uppercase;
   whitespace   = space | tab;
+  comment      = '#' commentchar*;
 
 States
-  def,     /* default state */
-  com;     /* comment */
+  def;     /* default state */
 
 Tokens
-  {def}                blank       = whitespace+;
   {def}                whitespace  = whitespace;
+  {def}                comment     = comment;
   {def}                eoln        = cr | lf | cr lf;
   {def}                dot         = '.';
   {def}                lessthan    = '<';
@@ -37,18 +38,13 @@ Tokens
   {def}                language    = (lowercase)+('-'(letter)+)*;
   {def}                nodename    = (letter)(letter|digit)*;
 
-  {def->com}           hash        = '#';
-  {com}                comment     = [character - [cr + lf]];
-  {com->def}           endcomment  = (cr | lf)+;
-
-Ignored Tokens
-  blank, comment, endcomment;
-
 Productions
   document = line*;
 
   line =
-    triple? eoln;
+    {empty} whitespace* eoln |
+    {comment} whitespace* comment eoln |
+    {triple} whitespace* triple eoln;
 
   triple =
     subject [subjectspace]:whitespace+
