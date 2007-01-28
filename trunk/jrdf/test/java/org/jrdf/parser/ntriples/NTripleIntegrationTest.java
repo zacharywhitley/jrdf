@@ -67,18 +67,21 @@ import java.io.PushbackReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import org.jrdf.sparql.parser.lexer.Lexer;
-import org.jrdf.sparql.parser.parser.Parser;
+import org.jrdf.parser.ntriples.parser.Parser;
+import org.jrdf.parser.ntriples.parser.ParserException;
+import org.jrdf.parser.ntriples.lexer.Lexer;
+import org.jrdf.parser.ntriples.lexer.LexerException;
 
 public class NTripleIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final int PUSHBACK_BUFFER_SIZE = 256;
 
-    public void testParseFile() throws IOException {
+    public void testParseFile() throws IOException, ParserException, LexerException {
         InputStream in = getSampleDate();
         PushbackReader reader = new PushbackReader(new InputStreamReader(in), PUSHBACK_BUFFER_SIZE);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
+        //parser.parse();
     }
     
     public InputStream getSampleDate() throws IOException {
