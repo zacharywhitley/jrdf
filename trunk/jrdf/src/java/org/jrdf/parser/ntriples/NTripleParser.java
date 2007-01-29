@@ -60,6 +60,12 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
@@ -75,8 +81,12 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.net.URI;
 
 public class NTripleParser implements Parser, StatementHandlerConfiguration {
+    private static final int SUBJECT_GROUP = 1;
+    private static final int PREDICATE_GROUP = 2;
+    private static final int OBJECT_GROUP = 3;
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
         "([\\x20-\\x7E]+)\\p{Blank}+" +
@@ -87,9 +97,7 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
     private final GraphElementFactory graphElementFactory;
     private final ParserBlankNodeFactory parserBlankNodeFactory;
     private StatementHandler sh;
-    private static final int SUBJECT_GROUP = 1;
-    private static final int PREDICATE_GROUP = 2;
-    private static final int OBJECT_GROUP = 3;
+    private LineNumberReader bufferedReader;
 
     /**
      * Creates a parser with an in memory blank node map.
@@ -107,34 +115,64 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
         this.parserBlankNodeFactory = parserBlankNodeFactory;
     }
 
+    public void setStatementHandler(StatementHandler sh) {
+        this.sh = sh;
+    }
+
     public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {
         parse(new InputStreamReader(in), baseURI);
     }
 
     public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
-        LineNumberReader bufferedReader = new LineNumberReader(reader);
+        bufferedReader = new LineNumberReader(reader);
         String line;
         Matcher tripleRegexMatcher;
         while ((line = bufferedReader.readLine()) != null) {
             if (!COMMENT_REGEX.matcher(line).matches()) {
                 tripleRegexMatcher = TRIPLE_REGEX.matcher(line);
                 if (tripleRegexMatcher.matches()) {
-                    parseTriple(tripleRegexMatcher, line);
+                    try {
+                        parseTriple(tripleRegexMatcher, line);
+                    } catch (GraphElementFactoryException e) {
+                        new GraphException(e);
+                    }
                 }
             }
         }
     }
 
-    private void parseTriple(Matcher tripleRegexMatcher, String line) {
-        String subject = tripleRegexMatcher.group(SUBJECT_GROUP);
-        String predicate = tripleRegexMatcher.group(PREDICATE_GROUP);
-        String object = tripleRegexMatcher.group(OBJECT_GROUP);
-        System.err.println("Subject: " + subject);
-        System.err.println("Predicate: " + predicate);
-        System.err.println("Object: " + object);
+    private void parseTriple(Matcher tripleRegexMatcher, String line)
+        throws GraphElementFactoryException, ParseException, StatementHandlerException {
+        SubjectNode subject = parseSubject(tripleRegexMatcher.group(SUBJECT_GROUP));
+        PredicateNode predicate = parsePredicate(tripleRegexMatcher.group(PREDICATE_GROUP));
+        ObjectNode object = parseObject(tripleRegexMatcher.group(OBJECT_GROUP));
+        if (subject != null && predicate != null && object != null) {
+            sh.handleStatement(subject, predicate, object);
+        }
     }
 
-    public void setStatementHandler(StatementHandler sh) {
-        this.sh = sh;
+    private SubjectNode parseSubject(String s) throws GraphElementFactoryException, ParseException {
+        return parserURIReference(s);
+    }
+
+    private PredicateNode parsePredicate(String s) throws GraphElementFactoryException, ParseException {
+        return parserURIReference(s);
+    }
+
+    private ObjectNode parseObject(String s) throws GraphElementFactoryException, ParseException {
+        return parserURIReference(s);
+    }
+
+    private URIReference parserURIReference(String s) throws GraphElementFactoryException, ParseException {
+        if (s.startsWith("<")) {
+            try {
+                URI uri = URI.create(s.substring(1, s.length() - 2));
+                return graphElementFactory.createResource(uri);
+            } catch (IllegalArgumentException iae) {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }
