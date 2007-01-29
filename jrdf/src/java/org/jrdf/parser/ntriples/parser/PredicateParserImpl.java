@@ -59,7 +59,6 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.parser.ParseException;
@@ -72,6 +71,6 @@ public class PredicateParserImpl implements PredicateParser {
     }
 
     public PredicateNode parsePredicate(String s) throws GraphElementFactoryException, ParseException {
-        return uriReferenceParser.parserURIReference(s);
+        return uriReferenceParser.parseURIReference(s);
     }
 }
