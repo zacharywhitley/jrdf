@@ -63,7 +63,6 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.parser.ParseException;
@@ -72,6 +71,14 @@ import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerConfiguration;
 import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
+import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 
 import java.io.IOException;
@@ -81,7 +88,6 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.net.URI;
 
 public class NTripleParser implements Parser, StatementHandlerConfiguration {
     private static final int SUBJECT_GROUP = 1;
@@ -96,6 +102,10 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
 
     private final GraphElementFactory graphElementFactory;
     private final ParserBlankNodeFactory parserBlankNodeFactory;
+    private final URIReferenceParser uriReferenceParser;
+    private final SubjectParser subjectParser;
+    private final PredicateParser predicateParser;
+    private ObjectParser objectParser;
     private StatementHandler sh;
     private LineNumberReader bufferedReader;
 
@@ -113,6 +123,10 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
         ParserBlankNodeFactory parserBlankNodeFactory) {
         this.graphElementFactory = graphElementFactory;
         this.parserBlankNodeFactory = parserBlankNodeFactory;
+        this.uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
+        this.subjectParser = new SubjectParserImpl(uriReferenceParser);
+        this.predicateParser = new PredicateParserImpl(uriReferenceParser);
+        this.objectParser = new ObjectParserImpl(uriReferenceParser);
     }
 
     public void setStatementHandler(StatementHandler sh) {
@@ -143,36 +157,11 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
 
     private void parseTriple(Matcher tripleRegexMatcher, String line)
         throws GraphElementFactoryException, ParseException, StatementHandlerException {
-        SubjectNode subject = parseSubject(tripleRegexMatcher.group(SUBJECT_GROUP));
-        PredicateNode predicate = parsePredicate(tripleRegexMatcher.group(PREDICATE_GROUP));
-        ObjectNode object = parseObject(tripleRegexMatcher.group(OBJECT_GROUP));
+        SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher.group(SUBJECT_GROUP));
+        PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher.group(PREDICATE_GROUP));
+        ObjectNode object = objectParser.parseObject(tripleRegexMatcher.group(OBJECT_GROUP));
         if (subject != null && predicate != null && object != null) {
             sh.handleStatement(subject, predicate, object);
-        }
-    }
-
-    private SubjectNode parseSubject(String s) throws GraphElementFactoryException, ParseException {
-        return parserURIReference(s);
-    }
-
-    private PredicateNode parsePredicate(String s) throws GraphElementFactoryException, ParseException {
-        return parserURIReference(s);
-    }
-
-    private ObjectNode parseObject(String s) throws GraphElementFactoryException, ParseException {
-        return parserURIReference(s);
-    }
-
-    private URIReference parserURIReference(String s) throws GraphElementFactoryException, ParseException {
-        if (s.startsWith("<")) {
-            try {
-                URI uri = URI.create(s.substring(1, s.length() - 2));
-                return graphElementFactory.createResource(uri);
-            } catch (IllegalArgumentException iae) {
-                return null;
-            }
-        } else {
-            return null;
         }
     }
 }
