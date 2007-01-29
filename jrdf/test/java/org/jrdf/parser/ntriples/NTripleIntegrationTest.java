@@ -88,9 +88,9 @@ public class NTripleIntegrationTest extends TestCase {
         TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
         Graph newGraph = testJRDFFactory.getNewGraph();
         NTripleParser nTripleParser = new NTripleParser(newGraph.getElementFactory());
-        nTripleParser.parse(in, "foo");
         GraphStatementHandler statementHandler = new GraphStatementHandler(newGraph);
         nTripleParser.setStatementHandler(statementHandler);
+        nTripleParser.parse(in, "foo");
         ClosableIterator<Triple> closableIterator = newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
             ANY_OBJECT_NODE);
         try {
