@@ -59,7 +59,6 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.parser.ParseException;
