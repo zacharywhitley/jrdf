@@ -73,10 +73,10 @@ public class URIReferenceParserImpl implements URIReferenceParser {
         this.graphElementFactory = graphElementFactory;
     }
 
-    public URIReference parserURIReference(String s) throws GraphElementFactoryException, ParseException {
+    public URIReference parseURIReference(String s) throws GraphElementFactoryException, ParseException {
         if (s.startsWith("<")) {
             try {
-                URI uri = URI.create(s.substring(1, s.length() - 2));
+                URI uri = URI.create(s.substring(1, s.indexOf(">")));
                 return graphElementFactory.createResource(uri);
             } catch (IllegalArgumentException iae) {
                 return null;

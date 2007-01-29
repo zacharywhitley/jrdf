@@ -79,6 +79,8 @@ import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
 import org.jrdf.parser.ntriples.parser.PredicateParser;
 import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
 import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 
 import java.io.IOException;
@@ -103,9 +105,10 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
     private final GraphElementFactory graphElementFactory;
     private final ParserBlankNodeFactory parserBlankNodeFactory;
     private final URIReferenceParser uriReferenceParser;
+    private final BlankNodeParser blankNodeParser;
     private final SubjectParser subjectParser;
     private final PredicateParser predicateParser;
-    private ObjectParser objectParser;
+    private final ObjectParser objectParser;
     private StatementHandler sh;
     private LineNumberReader bufferedReader;
 
@@ -124,9 +127,10 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
         this.graphElementFactory = graphElementFactory;
         this.parserBlankNodeFactory = parserBlankNodeFactory;
         this.uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
-        this.subjectParser = new SubjectParserImpl(uriReferenceParser);
+        this.blankNodeParser = new BlankNodeParserImpl(graphElementFactory, parserBlankNodeFactory);
+        this.subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
         this.predicateParser = new PredicateParserImpl(uriReferenceParser);
-        this.objectParser = new ObjectParserImpl(uriReferenceParser);
+        this.objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser);
     }
 
     public void setStatementHandler(StatementHandler sh) {

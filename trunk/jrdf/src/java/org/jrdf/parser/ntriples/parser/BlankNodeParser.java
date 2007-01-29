@@ -59,26 +59,11 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.ParseException;
 
-public class SubjectParserImpl implements SubjectParser {
-    private final URIReferenceParser uriReferenceParser;
-    private final BlankNodeParser blankNodeParser;
-
-    public SubjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser) {
-        this.uriReferenceParser = uriReferenceParser;
-        this.blankNodeParser = blankNodeParser;
-    }
-
-    public SubjectNode parseSubject(String s) throws GraphElementFactoryException, ParseException {
-        URIReference uriReference = uriReferenceParser.parseURIReference(s);
-        if (uriReference == null) {
-            return blankNodeParser.parserBlankNode(s);
-        } else {
-            return uriReference;
-        }
-    }
+public interface BlankNodeParser {
+    BlankNode parserBlankNode(String s) throws GraphElementFactoryException, ParseException;
 }

@@ -59,26 +59,32 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ParserBlankNodeFactory;
 
-public class SubjectParserImpl implements SubjectParser {
-    private final URIReferenceParser uriReferenceParser;
-    private final BlankNodeParser blankNodeParser;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    public SubjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser) {
-        this.uriReferenceParser = uriReferenceParser;
-        this.blankNodeParser = blankNodeParser;
+public class BlankNodeParserImpl implements BlankNodeParser {
+    private static final Pattern NODE_ID_REGEX = Pattern.compile("_:(\\p{Alpha}\\p{Alnum}*).*");
+    private final GraphElementFactory graphElementFactory;
+    private final ParserBlankNodeFactory parserBlankNodeFactory;
+
+    public BlankNodeParserImpl(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory) {
+        this.graphElementFactory = graphElementFactory;
+        this.parserBlankNodeFactory = parserBlankNodeFactory;
     }
 
-    public SubjectNode parseSubject(String s) throws GraphElementFactoryException, ParseException {
-        URIReference uriReference = uriReferenceParser.parseURIReference(s);
-        if (uriReference == null) {
-            return blankNodeParser.parserBlankNode(s);
+    public BlankNode parserBlankNode(String s) throws GraphElementFactoryException, ParseException {
+        Matcher matcher = NODE_ID_REGEX.matcher(s);
+        if (matcher.matches()) {
+            String nodeId = matcher.group(1);
+            return parserBlankNodeFactory.createBlankNode(nodeId);
         } else {
-            return uriReference;
+            return null;
         }
     }
 }

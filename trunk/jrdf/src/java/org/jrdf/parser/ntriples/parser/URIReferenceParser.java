@@ -64,5 +64,5 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 
 public interface URIReferenceParser {
-    URIReference parserURIReference(String s) throws GraphElementFactoryException, ParseException;
+    URIReference parseURIReference(String s) throws GraphElementFactoryException, ParseException;
 }
