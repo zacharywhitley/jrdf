@@ -75,15 +75,15 @@ import org.jrdf.graph.SubjectNode;
  */
 public class GraphStatementHandler implements StatementHandler {
 
-    private final Graph jrdfMem;
+    private final Graph graph;
 
-    public GraphStatementHandler(Graph jrdfMem) {
-        this.jrdfMem = jrdfMem;
+    public GraphStatementHandler(Graph graph) {
+        this.graph = graph;
     }
 
     public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
-            jrdfMem.add(subject, predicate, object);
+            graph.add(subject, predicate, object);
         } catch (Exception e) {
             throw new RuntimeException("Failed to add: " + subject + ", " + predicate + ", " + object +
                     " to the graph.");

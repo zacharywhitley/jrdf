@@ -65,7 +65,7 @@ package org.jrdf.parser;
  * @author Andrew Newman
  * @version $Revision: 363 $
  */
-public interface ParserConfiguration {
+public interface ParserConfiguration extends StatementHandlerConfiguration {
 
     /**
      * Constant indicating that datatypes semantics should be ignored.
@@ -83,14 +83,6 @@ public interface ParserConfiguration {
      * normalized to their canonical representation.
      */
     int DT_NORMALIZE = 30;
-
-    /**
-     * Sets the StatementHandler that will be notified of statements that
-     * are parsed by this parser.
-     *
-     * @param sh the StatementHandler.
-     */
-    void setStatementHandler(StatementHandler sh);
 
     /**
      * Sets the ParseErrorListener that will be notified of any errors

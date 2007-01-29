@@ -57,53 +57,14 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser;
 
-import junit.framework.TestCase;
-
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-
-import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.Triple;
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
-
-public class NTripleIntegrationTest extends TestCase {
-    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
-    private static final int PUSHBACK_BUFFER_SIZE = 256;
-
-    public void testParseFile() throws Exception {
-        InputStream in = getSampleDate();
-        TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
-        Graph newGraph = testJRDFFactory.getNewGraph();
-        NTripleParser nTripleParser = new NTripleParser(newGraph.getElementFactory());
-        nTripleParser.parse(in, "foo");
-        GraphStatementHandler statementHandler = new GraphStatementHandler(newGraph);
-        nTripleParser.setStatementHandler(statementHandler);
-        ClosableIterator<Triple> closableIterator = newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE);
-        try {
-            while (closableIterator.hasNext()) {
-                System.err.println("Got: " + closableIterator.next());
-            }
-        } finally {
-            closableIterator.close();
-        }
-    }
-    
-    public InputStream getSampleDate() throws IOException {
-        URL source = getClass().getClassLoader().getResource(TEST_DATA);
-        return source.openStream();
-    }
+public interface StatementHandlerConfiguration {
+    /**
+     * Sets the StatementHandler that will be notified of statements that
+     * are parsed by this parser.
+     *
+     * @param sh the StatementHandler.
+     */
+    void setStatementHandler(StatementHandler sh);
 }
