@@ -62,21 +62,30 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.ParseException;
 
 public class ObjectParserImpl implements ObjectParser {
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
+    private final LiteralParserImpl literalParser;
 
-    public ObjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser) {
+    public ObjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser,
+        LiteralParserImpl literalParser) {
         this.uriReferenceParser = uriReferenceParser;
         this.blankNodeParser = blankNodeParser;
+        this.literalParser = literalParser;
     }
 
     public ObjectNode parseObject(String s) throws GraphElementFactoryException, ParseException {
         URIReference uriReference = uriReferenceParser.parseURIReference(s);
         if (uriReference == null) {
-            return blankNodeParser.parserBlankNode(s);
+            BlankNode blankNode = blankNodeParser.parserBlankNode(s);
+            if (blankNode == null) {
+                return literalParser.parseLiteral(s);
+            } else {
+                return blankNode;
+            }
         } else {
             return uriReference;
         }

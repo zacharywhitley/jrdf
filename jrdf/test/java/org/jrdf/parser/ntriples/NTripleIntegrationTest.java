@@ -60,24 +60,18 @@
 package org.jrdf.parser.ntriples;
 
 import junit.framework.TestCase;
-
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.InputStreamReader;
-import java.net.URL;
-
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.parser.GraphStatementHandler;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.Triple;
-import static org.jrdf.graph.AnyObjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnySubjectNode.*;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.util.ClosableIterator;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class NTripleIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";

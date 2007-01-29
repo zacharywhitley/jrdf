@@ -70,7 +70,7 @@ import java.util.regex.Matcher;
 public class LiteralParserImpl implements LiteralParser {
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\"([\\x20-\\x7E]+)\"" +
         "(" +
-        "(\\@([a-z]+('-'[a-z0-9]+)*)" +
+        "(\\@(\\p{Lower})+(\\-[a-z0-9]+)*)?.*" +
         "|" +
         "(\\^\\^([\\x20-\\x7E]+))" +
         ")");
@@ -81,8 +81,16 @@ public class LiteralParserImpl implements LiteralParser {
     }
 
     public Literal parseLiteral(String s) throws GraphElementFactoryException, ParseException {
+        System.err.println("s: " + s);
         Matcher matcher = LANGUAGE_REGEX.matcher(s);
-        System.err.println("Got " + matcher.matches());
-        return null;
+        if (matcher.matches()) {
+            System.err.println("Groups: " + matcher.groupCount());
+            for (int i = 1; i <= matcher.groupCount(); i++) {
+                System.err.println("Got: " + matcher.group(i));
+            }
+            return null;
+        } else {
+            return null;
+        }
     }
 }
