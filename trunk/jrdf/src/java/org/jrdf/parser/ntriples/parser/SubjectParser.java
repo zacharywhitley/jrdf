@@ -63,6 +63,8 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 
+import java.util.regex.Matcher;
+
 public interface SubjectParser {
-    SubjectNode parseSubject(String s) throws GraphElementFactoryException, ParseException;
+    SubjectNode parseSubject(Matcher tripleRegexMatcher, String s) throws GraphElementFactoryException, ParseException;
 }

@@ -64,6 +64,8 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
 
+import java.util.regex.Matcher;
+
 public class SubjectParserImpl implements SubjectParser {
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
@@ -73,7 +75,7 @@ public class SubjectParserImpl implements SubjectParser {
         this.blankNodeParser = blankNodeParser;
     }
 
-    public SubjectNode parseSubject(String s) throws GraphElementFactoryException, ParseException {
+    public SubjectNode parseSubject(Matcher tripleRegexMatcher, String s) throws GraphElementFactoryException, ParseException {
         URIReference uriReference = uriReferenceParser.parseURIReference(s);
         if (uriReference == null) {
             return blankNodeParser.parserBlankNode(s);
