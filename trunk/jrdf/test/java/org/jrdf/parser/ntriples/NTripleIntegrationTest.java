@@ -66,7 +66,22 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
+import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
@@ -80,7 +95,8 @@ public class NTripleIntegrationTest extends TestCase {
         InputStream in = getSampleDate();
         TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
         Graph newGraph = testJRDFFactory.getNewGraph();
-        NTripleParser nTripleParser = new NTripleParser(newGraph.getElementFactory());
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+        NTripleParser nTripleParser = createParser(newGraph.getElementFactory(), blankNodeFactory);
         GraphStatementHandler statementHandler = new GraphStatementHandler(newGraph);
         nTripleParser.setStatementHandler(statementHandler);
         nTripleParser.parse(in, "foo");
@@ -98,5 +114,16 @@ public class NTripleIntegrationTest extends TestCase {
     public InputStream getSampleDate() throws IOException {
         URL source = getClass().getClassLoader().getResource(TEST_DATA);
         return source.openStream();
+    }
+
+    private NTripleParser createParser(GraphElementFactory graphElementFactory,
+            ParserBlankNodeFactory parserBlankNodeFactory) {
+        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
+        LiteralParser literalParser = new LiteralParserImpl(graphElementFactory);
+        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
+        SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
+        PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
+        ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
+        return new NTripleParser(subjectParser, predicateParser, objectParser);
     }
 }

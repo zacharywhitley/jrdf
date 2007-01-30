@@ -60,7 +60,6 @@
 package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParserBlankNodeFactory;
@@ -70,11 +69,9 @@ import java.util.regex.Pattern;
 
 public class BlankNodeParserImpl implements BlankNodeParser {
     private static final Pattern NODE_ID_REGEX = Pattern.compile("_:(\\p{Alpha}\\p{Alnum}*).*");
-    private final GraphElementFactory graphElementFactory;
     private final ParserBlankNodeFactory parserBlankNodeFactory;
 
-    public BlankNodeParserImpl(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory) {
-        this.graphElementFactory = graphElementFactory;
+    public BlankNodeParserImpl(ParserBlankNodeFactory parserBlankNodeFactory) {
         this.parserBlankNodeFactory = parserBlankNodeFactory;
     }
 

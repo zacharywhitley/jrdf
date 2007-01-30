@@ -68,10 +68,10 @@ import org.jrdf.parser.ParseException;
 public class ObjectParserImpl implements ObjectParser {
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
-    private final LiteralParserImpl literalParser;
+    private final LiteralParser literalParser;
 
     public ObjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser,
-        LiteralParserImpl literalParser) {
+        LiteralParser literalParser) {
         this.uriReferenceParser = uriReferenceParser;
         this.blankNodeParser = blankNodeParser;
         this.literalParser = literalParser;
