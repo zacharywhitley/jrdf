@@ -98,9 +98,9 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
     private static final int OBJECT_GROUP = 3;
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "([\\x20-\\x7E]+)\\p{Blank}+" +
-        "([\\x20-\\x7E]+)\\p{Blank}+" +
-        "([\\x20-\\x7E]+)\\p{Blank}*" +
+        "(\\<[\\x20-\\x7E]+\\>|_:\\p{Alpha}\\p{Alnum}*)\\p{Blank}+" +
+        "(\\<[\\x20-\\x7E]+\\>)\\p{Blank}+" +
+        "(\\<[\\x20-\\x7E]+\\>|_:\\p{Alpha}\\p{Alnum}*\\\"[\\x20-\\x7E]+\\\"|[\\x20-\\x7E]+)\\p{Blank}*" +
         "\\.\\p{Blank}*");
 
     private final GraphElementFactory graphElementFactory;
@@ -153,7 +153,7 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
                 tripleRegexMatcher = TRIPLE_REGEX.matcher(line);
                 if (tripleRegexMatcher.matches()) {
                     try {
-                        parseTriple(tripleRegexMatcher, line);
+                        parseTriple(tripleRegexMatcher);
                     } catch (GraphElementFactoryException e) {
                         new GraphException(e);
                     }
@@ -162,7 +162,7 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
         }
     }
 
-    private void parseTriple(Matcher tripleRegexMatcher, String line)
+    private void parseTriple(Matcher tripleRegexMatcher)
         throws GraphElementFactoryException, ParseException, StatementHandlerException {
         SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher.group(SUBJECT_GROUP));
         PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher.group(PREDICATE_GROUP));

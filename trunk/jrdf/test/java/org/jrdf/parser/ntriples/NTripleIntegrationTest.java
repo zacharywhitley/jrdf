@@ -75,7 +75,6 @@ import java.net.URL;
 
 public class NTripleIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
-    private static final int PUSHBACK_BUFFER_SIZE = 256;
 
     public void testParseFile() throws Exception {
         InputStream in = getSampleDate();
@@ -95,7 +94,7 @@ public class NTripleIntegrationTest extends TestCase {
             closableIterator.close();
         }
     }
-    
+
     public InputStream getSampleDate() throws IOException {
         URL source = getClass().getClassLoader().getResource(TEST_DATA);
         return source.openStream();

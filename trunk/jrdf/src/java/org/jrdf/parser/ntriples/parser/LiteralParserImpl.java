@@ -81,13 +81,8 @@ public class LiteralParserImpl implements LiteralParser {
     }
 
     public Literal parseLiteral(String s) throws GraphElementFactoryException, ParseException {
-        System.err.println("s: " + s);
         Matcher matcher = LANGUAGE_REGEX.matcher(s);
         if (matcher.matches()) {
-            System.err.println("Groups: " + matcher.groupCount());
-            for (int i = 1; i <= matcher.groupCount(); i++) {
-                System.err.println("Got: " + matcher.group(i));
-            }
             return null;
         } else {
             return null;
