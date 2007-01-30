@@ -66,14 +66,13 @@ import org.jrdf.parser.ParseException;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.net.URI;
 
 public class LiteralParserImpl implements LiteralParser {
-    private static final Pattern LANGUAGE_REGEX = Pattern.compile("\"([\\x20-\\x7E]+)\"" +
+    private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
         "(" +
-        "(\\@(\\p{Lower})+(\\-[a-z0-9]+)*)?.*" +
-        "|" +
-        "(\\^\\^([\\x20-\\x7E]+))" +
-        ")");
+        "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
+        ").*");
     private final GraphElementFactory graphElementFactory;
 
     public LiteralParserImpl(GraphElementFactory graphElementFactory) {
@@ -83,7 +82,16 @@ public class LiteralParserImpl implements LiteralParser {
     public Literal parseLiteral(String s) throws GraphElementFactoryException, ParseException {
         Matcher matcher = LANGUAGE_REGEX.matcher(s);
         if (matcher.matches()) {
-            return null;
+            String literal = matcher.group(1);
+            String language = matcher.group(5);
+            String datatype = matcher.group(8);
+            if (language != null) {
+                return graphElementFactory.createLiteral(literal, language);
+            } else if (datatype != null) {
+                return graphElementFactory.createLiteral(literal, URI.create(datatype));
+            } else {
+                return graphElementFactory.createLiteral(literal);
+            }
         } else {
             return null;
         }

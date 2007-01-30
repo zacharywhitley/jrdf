@@ -164,7 +164,7 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
 
     private void parseTriple(Matcher tripleRegexMatcher)
         throws GraphElementFactoryException, ParseException, StatementHandlerException {
-        SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher.group(SUBJECT_GROUP));
+        SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher, tripleRegexMatcher.group(SUBJECT_GROUP));
         PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher.group(PREDICATE_GROUP));
         ObjectNode object = objectParser.parseObject(tripleRegexMatcher.group(OBJECT_GROUP));
         if (subject != null && predicate != null && object != null) {
