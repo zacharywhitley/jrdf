@@ -59,30 +59,19 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerConfiguration;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
 import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
-import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,37 +92,15 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
         "(\\<[\\x20-\\x7E]+\\>|_:\\p{Alpha}\\p{Alnum}*\\\"[\\x20-\\x7E]+\\\"|[\\x20-\\x7E]+)\\p{Blank}*" +
         "\\.\\p{Blank}*");
 
-    private final GraphElementFactory graphElementFactory;
-    private final ParserBlankNodeFactory parserBlankNodeFactory;
-    private final URIReferenceParser uriReferenceParser;
-    private final BlankNodeParser blankNodeParser;
-    private final LiteralParserImpl literalParser;
     private final SubjectParser subjectParser;
     private final PredicateParser predicateParser;
     private final ObjectParser objectParser;
     private StatementHandler sh;
-    private LineNumberReader bufferedReader;
 
-    /**
-     * Creates a parser with an in memory blank node map.
-     *
-     * @param graphElementFactory used to create new triples.
-     * @throws GraphException
-     */
-    public NTripleParser(GraphElementFactory graphElementFactory) {
-        this(graphElementFactory, new ParserBlankNodeFactoryImpl(graphElementFactory));
-    }
-
-    public NTripleParser(GraphElementFactory graphElementFactory,
-        ParserBlankNodeFactory parserBlankNodeFactory) {
-        this.graphElementFactory = graphElementFactory;
-        this.parserBlankNodeFactory = parserBlankNodeFactory;
-        this.uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
-        this.blankNodeParser = new BlankNodeParserImpl(graphElementFactory, parserBlankNodeFactory);
-        this.literalParser = new LiteralParserImpl(graphElementFactory);
-        this.subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
-        this.predicateParser = new PredicateParserImpl(uriReferenceParser);
-        this.objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
+    public NTripleParser(SubjectParser subjectParser, PredicateParser predicateParser, ObjectParser objectParser) {
+        this.subjectParser = subjectParser;
+        this.predicateParser = predicateParser;
+        this.objectParser = objectParser;
     }
 
     public void setStatementHandler(StatementHandler sh) {
@@ -145,7 +112,7 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
     }
 
     public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
-        bufferedReader = new LineNumberReader(reader);
+        LineNumberReader bufferedReader = new LineNumberReader(reader);
         String line;
         Matcher tripleRegexMatcher;
         while ((line = bufferedReader.readLine()) != null) {
