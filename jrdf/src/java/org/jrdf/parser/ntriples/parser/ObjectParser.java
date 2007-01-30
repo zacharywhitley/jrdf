@@ -63,6 +63,8 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 
+import java.util.regex.Matcher;
+
 public interface ObjectParser {
-    ObjectNode parseObject(String s) throws GraphElementFactoryException, ParseException;
+    ObjectNode parseObject(Matcher matcher) throws GraphElementFactoryException, ParseException;
 }

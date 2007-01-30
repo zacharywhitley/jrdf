@@ -64,11 +64,7 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class BlankNodeParserImpl implements BlankNodeParser {
-    private static final Pattern NODE_ID_REGEX = Pattern.compile("_:(\\p{Alpha}\\p{Alnum}*).*");
     private final ParserBlankNodeFactory parserBlankNodeFactory;
 
     public BlankNodeParserImpl(ParserBlankNodeFactory parserBlankNodeFactory) {
@@ -76,12 +72,6 @@ public class BlankNodeParserImpl implements BlankNodeParser {
     }
 
     public BlankNode parserBlankNode(String s) throws GraphElementFactoryException, ParseException {
-        Matcher matcher = NODE_ID_REGEX.matcher(s);
-        if (matcher.matches()) {
-            String nodeId = matcher.group(1);
-            return parserBlankNodeFactory.createBlankNode(nodeId);
-        } else {
-            return null;
-        }
+        return parserBlankNodeFactory.createBlankNode(s);
     }
 }

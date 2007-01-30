@@ -59,9 +59,9 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
 
 import java.net.URI;
@@ -74,14 +74,9 @@ public class URIReferenceParserImpl implements URIReferenceParser {
     }
 
     public URIReference parseURIReference(String s) throws GraphElementFactoryException, ParseException {
-        if (s.startsWith("<")) {
-            try {
-                URI uri = URI.create(s.substring(1, s.indexOf(">")));
-                return graphElementFactory.createResource(uri);
-            } catch (IllegalArgumentException iae) {
-                return null;
-            }
-        } else {
+        try {
+            return graphElementFactory.createResource(URI.create(s));
+        } catch (IllegalArgumentException iae) {
             return null;
         }
     }
