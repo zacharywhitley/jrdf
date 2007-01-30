@@ -63,6 +63,8 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 
+import java.util.regex.Matcher;
+
 public interface PredicateParser {
-    PredicateNode parsePredicate(String s) throws GraphElementFactoryException, ParseException;
+    PredicateNode parsePredicate(Matcher matcher) throws GraphElementFactoryException, ParseException;
 }

@@ -60,10 +60,10 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.GraphException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandler;
@@ -82,14 +82,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NTripleParser implements Parser, StatementHandlerConfiguration {
-    private static final int SUBJECT_GROUP = 1;
-    private static final int PREDICATE_GROUP = 2;
-    private static final int OBJECT_GROUP = 3;
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(\\<[\\x20-\\x7E]+\\>|_:\\p{Alpha}\\p{Alnum}*)\\p{Blank}+" +
-        "(\\<[\\x20-\\x7E]+\\>)\\p{Blank}+" +
-        "(\\<[\\x20-\\x7E]+\\>|_:\\p{Alpha}\\p{Alnum}*\\\"[\\x20-\\x7E]+\\\"|[\\x20-\\x7E]+)\\p{Blank}*" +
+        "(\\<([\\x20-\\x7E]+)\\>|_:((\\p{Alpha}\\p{Alnum}*)))\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+)\\>)\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+)\\>|_:((\\p{Alpha}\\p{Alnum}*))|((([\\x20-\\x7E]+))))\\p{Blank}*" +
         "\\.\\p{Blank}*");
 
     private final SubjectParser subjectParser;
@@ -131,9 +128,9 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
 
     private void parseTriple(Matcher tripleRegexMatcher)
         throws GraphElementFactoryException, ParseException, StatementHandlerException {
-        SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher, tripleRegexMatcher.group(SUBJECT_GROUP));
-        PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher.group(PREDICATE_GROUP));
-        ObjectNode object = objectParser.parseObject(tripleRegexMatcher.group(OBJECT_GROUP));
+        SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
+        PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
+        ObjectNode object = objectParser.parseObject(tripleRegexMatcher);
         if (subject != null && predicate != null && object != null) {
             sh.handleStatement(subject, predicate, object);
         }

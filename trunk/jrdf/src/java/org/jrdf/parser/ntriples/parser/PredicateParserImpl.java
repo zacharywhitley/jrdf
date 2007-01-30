@@ -63,14 +63,21 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.parser.ParseException;
 
+import java.util.regex.Matcher;
+
 public class PredicateParserImpl implements PredicateParser {
+    private static final int URI_GROUP = 6;
     private final URIReferenceParser uriReferenceParser;
 
     public PredicateParserImpl(URIReferenceParser uriReferenceParser) {
         this.uriReferenceParser = uriReferenceParser;
     }
 
-    public PredicateNode parsePredicate(String s) throws GraphElementFactoryException, ParseException {
-        return uriReferenceParser.parseURIReference(s);
+    public PredicateNode parsePredicate(Matcher matcher) throws GraphElementFactoryException, ParseException {
+        if (matcher.group(URI_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        } else {
+            return null;
+        }
     }
 }

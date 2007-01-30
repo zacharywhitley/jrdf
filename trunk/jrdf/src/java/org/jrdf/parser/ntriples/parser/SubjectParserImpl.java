@@ -59,14 +59,15 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
 
 import java.util.regex.Matcher;
 
 public class SubjectParserImpl implements SubjectParser {
+    private static final int URI_GROUP = 2;
+    private static final int BLANK_NODE_GROUP = 3;
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
 
@@ -75,12 +76,13 @@ public class SubjectParserImpl implements SubjectParser {
         this.blankNodeParser = blankNodeParser;
     }
 
-    public SubjectNode parseSubject(Matcher tripleRegexMatcher, String s) throws GraphElementFactoryException, ParseException {
-        URIReference uriReference = uriReferenceParser.parseURIReference(s);
-        if (uriReference == null) {
-            return blankNodeParser.parserBlankNode(s);
+    public SubjectNode parseSubject(Matcher matcher) throws GraphElementFactoryException, ParseException {
+        if (matcher.group(URI_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
+            return blankNodeParser.parserBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else {
-            return uriReference;
+            return null;
         }
     }
 }

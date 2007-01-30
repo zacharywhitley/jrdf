@@ -61,11 +61,14 @@ package org.jrdf.parser.ntriples.parser;
 
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.ParseException;
 
+import java.util.regex.Matcher;
+
 public class ObjectParserImpl implements ObjectParser {
+    private static final int URI_GROUP = 8;
+    private static final int BLANK_NODE_GROUP = 9;
+    private static final int LITERAL_GROUP = 11;
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
     private final LiteralParser literalParser;
@@ -77,17 +80,15 @@ public class ObjectParserImpl implements ObjectParser {
         this.literalParser = literalParser;
     }
 
-    public ObjectNode parseObject(String s) throws GraphElementFactoryException, ParseException {
-        URIReference uriReference = uriReferenceParser.parseURIReference(s);
-        if (uriReference == null) {
-            BlankNode blankNode = blankNodeParser.parserBlankNode(s);
-            if (blankNode == null) {
-                return literalParser.parseLiteral(s);
-            } else {
-                return blankNode;
-            }
+    public ObjectNode parseObject(Matcher matcher) throws GraphElementFactoryException, ParseException {
+        if (matcher.group(URI_GROUP) != null) {
+            return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
+        } else if (matcher.group(BLANK_NODE_GROUP) != null) {
+            return blankNodeParser.parserBlankNode(matcher.group(BLANK_NODE_GROUP));
+        } else if (matcher.group(LITERAL_GROUP) != null) {
+            return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
         } else {
-            return uriReference;
+            return null;
         }
     }
 }
