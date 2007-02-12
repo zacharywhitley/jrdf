@@ -73,6 +73,9 @@ public class LiteralParserImpl implements LiteralParser {
         "(" +
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
         ").*");
+    private static final int LITERAL_INDEX = 1;
+    private static final int LANGUAGE_INDEX = 5;
+    private static final int DATATYPE_INDEX = 8;
     private final GraphElementFactory graphElementFactory;
 
     public LiteralParserImpl(GraphElementFactory graphElementFactory) {
@@ -82,9 +85,9 @@ public class LiteralParserImpl implements LiteralParser {
     public Literal parseLiteral(String s) throws GraphElementFactoryException, ParseException {
         Matcher matcher = LANGUAGE_REGEX.matcher(s);
         if (matcher.matches()) {
-            String literal = matcher.group(1);
-            String language = matcher.group(5);
-            String datatype = matcher.group(8);
+            String literal = matcher.group(LITERAL_INDEX);
+            String language = matcher.group(LANGUAGE_INDEX);
+            String datatype = matcher.group(DATATYPE_INDEX);
             if (language != null) {
                 return graphElementFactory.createLiteral(literal, language);
             } else if (datatype != null) {
