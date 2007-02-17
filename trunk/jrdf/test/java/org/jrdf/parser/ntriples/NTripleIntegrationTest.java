@@ -66,6 +66,7 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.Literal;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
@@ -92,7 +93,11 @@ public class NTripleIntegrationTest extends TestCase {
             ANY_OBJECT_NODE);
         try {
             while (closableIterator.hasNext()) {
-                System.err.println("Got: " + closableIterator.next());
+                Triple triple = closableIterator.next();
+                if (triple.getObject() instanceof Literal) {
+                    System.err.println("Real value: " + ((Literal) triple.getObject()).getLexicalForm());
+                }
+                System.err.println("Got: " + triple);
             }
         } finally {
             closableIterator.close();
