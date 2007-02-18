@@ -66,7 +66,6 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.Literal;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
@@ -80,7 +79,22 @@ public class NTriplesParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
 
     public void testParseFile() throws Exception {
-        InputStream in = getSampleDate();
+        ClosableIterator<Triple> closableIterator = init();
+        try {
+            int counter = 0;
+            while (closableIterator.hasNext()) {
+                Triple triple = closableIterator.next();
+                counter++;
+            }
+            // Should be 30?
+            assertEquals(29, counter);
+        } finally {
+            closableIterator.close();
+        }
+    }
+
+    private ClosableIterator<Triple> init() throws Exception {
+        InputStream in = getSampleData();
         TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
         Graph newGraph = testJRDFFactory.getNewGraph();
         ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
@@ -89,22 +103,10 @@ public class NTriplesParserIntegrationTest extends TestCase {
         GraphStatementHandler statementHandler = new GraphStatementHandler(newGraph);
         nTriplesParser.setStatementHandler(statementHandler);
         nTriplesParser.parse(in, "foo");
-        ClosableIterator<Triple> closableIterator = newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE);
-        try {
-            while (closableIterator.hasNext()) {
-                Triple triple = closableIterator.next();
-                if (triple.getObject() instanceof Literal) {
-                    System.err.println("Real value: " + ((Literal) triple.getObject()).getLexicalForm());
-                }
-                System.err.println("Got: " + triple);
-            }
-        } finally {
-            closableIterator.close();
-        }
+        return newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
     }
 
-    public InputStream getSampleDate() throws IOException {
+    public InputStream getSampleData() throws IOException {
         URL source = getClass().getClassLoader().getResource(TEST_DATA);
         return source.openStream();
     }

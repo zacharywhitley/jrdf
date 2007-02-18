@@ -61,7 +61,6 @@ package org.jrdf.parser.ntriples;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
@@ -77,27 +76,30 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
 
     public void testParseFile() throws Exception {
-        InputStream in = getSampleDate();
-        TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
-        Graph newGraph = testJRDFFactory.getNewGraph();
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
-        RDFInputFactory factory = NTriplesRDFInputFactoryImpl.newInstance();
-        RDFEventReader eventReader = factory.createRDFEventReader(in, URI.create("foo"), newGraph, blankNodeFactory);
-
+        RDFEventReader eventReader = init();
         try {
+            int counter = 0;
             while (eventReader.hasNext()) {
                 Triple triple = eventReader.next();
-                if (triple.getObject() instanceof Literal) {
-                    System.err.println("Real value: " + ((Literal) triple.getObject()).getLexicalForm());
-                }
-                System.err.println("Got: " + triple);
+                counter++;
             }
+            // Should be 30?
+            assertEquals(29, counter);
         } finally {
             eventReader.close();
         }
     }
 
-    public InputStream getSampleDate() throws IOException {
+    private RDFEventReader init() throws IOException {
+        InputStream in = getSampleData();
+        TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
+        Graph newGraph = testJRDFFactory.getNewGraph();
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+        RDFInputFactory factory = NTriplesRDFInputFactoryImpl.newInstance();
+        return factory.createRDFEventReader(in, URI.create("foo"), newGraph, blankNodeFactory);
+    }
+
+    public InputStream getSampleData() throws IOException {
         URL source = getClass().getClassLoader().getResource(TEST_DATA);
         return source.openStream();
     }

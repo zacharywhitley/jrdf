@@ -79,6 +79,7 @@ import java.io.Reader;
 import java.net.URI;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.NoSuchElementException;
 
 public class NTriplesEventReader implements RDFEventReader {
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
@@ -94,7 +95,7 @@ public class NTriplesEventReader implements RDFEventReader {
     private final PredicateParser predicateParser;
     private final ObjectParser objectParser;
     private final TripleFactory factory;
-    private Triple currentTriple;
+    private Triple nextTriple;
 
     public NTriplesEventReader(final InputStream in, final URI baseURI, final TripleFactory factory,
             final SubjectParser subjectParser, final PredicateParser predicateParser,
@@ -114,13 +115,17 @@ public class NTriplesEventReader implements RDFEventReader {
     }
 
     public boolean hasNext() {
-        return currentTriple != null;
+        return nextTriple != null;
     }
 
     public Triple next() {
-        Triple triple = currentTriple;
+        Triple currentTriple = nextTriple;
         parseNext();
-        return triple;
+        if (currentTriple != null) {
+            return currentTriple;
+        } else {
+            throw new NoSuchElementException();
+        }
     }
 
     public void remove() {
@@ -132,9 +137,11 @@ public class NTriplesEventReader implements RDFEventReader {
         Triple triple = null;
         while (line != null && triple == null) {
             triple = parseLine(line, triple);
-            line = getLine();
+            if (triple == null) {
+                line = getLine();
+            }
         }
-        currentTriple = triple;
+        nextTriple = triple;
     }
 
     public boolean close() {
