@@ -58,12 +58,47 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.GraphElementFactory;
+import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.RDFEventReader;
+import org.jrdf.parser.RDFInputFactory;
+import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 
-/**
- * Class description goes here.
- */
-public interface ParserFactory {
-    NTriplesParser createParser(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory);
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+
+public class NTriplesEventReaderIntegrationTest extends TestCase {
+    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
+
+    public void testParseFile() throws Exception {
+        InputStream in = getSampleDate();
+        TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
+        Graph newGraph = testJRDFFactory.getNewGraph();
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+        RDFInputFactory factory = NTriplesRDFInputFactoryImpl.newInstance();
+        RDFEventReader eventReader = factory.createRDFEventReader(in, URI.create("foo"), newGraph, blankNodeFactory);
+
+        try {
+            while (eventReader.hasNext()) {
+                Triple triple = eventReader.next();
+                if (triple.getObject() instanceof Literal) {
+                    System.err.println("Real value: " + ((Literal) triple.getObject()).getLexicalForm());
+                }
+                System.err.println("Got: " + triple);
+            }
+        } finally {
+            eventReader.close();
+        }
+    }
+
+    public InputStream getSampleDate() throws IOException {
+        URL source = getClass().getClassLoader().getResource(TEST_DATA);
+        return source.openStream();
+    }
 }

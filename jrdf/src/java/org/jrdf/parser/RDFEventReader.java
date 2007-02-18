@@ -56,14 +56,13 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser;
 
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.Triple;
 
 /**
  * Class description goes here.
  */
-public interface ParserFactory {
-    NTriplesParser createParser(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory);
+public interface RDFEventReader extends ClosableIterator<Triple> {
 }

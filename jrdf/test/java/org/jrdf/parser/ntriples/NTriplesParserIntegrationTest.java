@@ -76,7 +76,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class NTripleIntegrationTest extends TestCase {
+public class NTriplesParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
 
     public void testParseFile() throws Exception {
@@ -85,10 +85,10 @@ public class NTripleIntegrationTest extends TestCase {
         Graph newGraph = testJRDFFactory.getNewGraph();
         ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
         ParserFactory factory = new ParserFactoryImpl();
-        NTripleParser nTripleParser = factory.createParser(newGraph.getElementFactory(), blankNodeFactory);
+        NTriplesParser nTriplesParser = factory.createParser(newGraph.getElementFactory(), blankNodeFactory);
         GraphStatementHandler statementHandler = new GraphStatementHandler(newGraph);
-        nTripleParser.setStatementHandler(statementHandler);
-        nTripleParser.parse(in, "foo");
+        nTriplesParser.setStatementHandler(statementHandler);
+        nTriplesParser.parse(in, "foo");
         ClosableIterator<Triple> closableIterator = newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
             ANY_OBJECT_NODE);
         try {
