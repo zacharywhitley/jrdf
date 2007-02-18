@@ -77,7 +77,7 @@ import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
  * Class description goes here.
  */
 public class ParserFactoryImpl implements ParserFactory {
-    public NTripleParser createParser(GraphElementFactory graphElementFactory,
+    public NTriplesParser createParser(GraphElementFactory graphElementFactory,
             ParserBlankNodeFactory parserBlankNodeFactory) {
         BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
         LiteralParser literalParser = new LiteralParserImpl(graphElementFactory);
@@ -85,6 +85,6 @@ public class ParserFactoryImpl implements ParserFactory {
         SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
         PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
         ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
-        return new NTripleParser(subjectParser, predicateParser, objectParser);
+        return new NTriplesParser(subjectParser, predicateParser, objectParser);
     }
 }

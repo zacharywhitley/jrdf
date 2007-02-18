@@ -56,14 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser;
 
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.graph.Graph;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URI;
 
 /**
  * Class description goes here.
  */
-public interface ParserFactory {
-    NTriplesParser createParser(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory);
+public interface RDFInputFactory {
+    RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
+    RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
+    ParseErrorListener getRDFReporter();
 }

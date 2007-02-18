@@ -58,12 +58,69 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.parser.ParseErrorListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.RDFEventReader;
+import org.jrdf.parser.RDFInputFactory;
+import org.jrdf.parser.ntriples.parser.BlankNodeParser;
+import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
+import org.jrdf.parser.ntriples.parser.LiteralParser;
+import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
+import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.net.URI;
 
 /**
  * Class description goes here.
  */
-public interface ParserFactory {
-    NTriplesParser createParser(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory);
+public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
+    private static final RDFInputFactory FACTORY = new NTriplesRDFInputFactoryImpl();
+    private SubjectParser subjectParser;
+    private PredicateParser predicateParser;
+    private ObjectParser objectParser;
+
+    public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph,
+            ParserBlankNodeFactory blankNodeFactory) {
+        init(graph, blankNodeFactory);
+        return new NTriplesEventReader(stream, baseURI, graph.getTripleFactory(), subjectParser, predicateParser,
+                objectParser);
+    }
+
+    public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
+            ParserBlankNodeFactory blankNodeFactory) {
+        init(graph, blankNodeFactory);
+        return new NTriplesEventReader(reader, baseURI, graph.getTripleFactory(), subjectParser, predicateParser,
+                objectParser);
+    }
+
+    public ParseErrorListener getRDFReporter() {
+        return null;
+    }
+
+    public static RDFInputFactory newInstance() {
+        return FACTORY;
+    }
+
+    public static RDFInputFactory newInstance(String factoryId, ClassLoader classLoader) {
+        throw new UnsupportedOperationException();
+    }
+
+    private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
+        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory());
+        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
+        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory());
+        subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
+        predicateParser = new PredicateParserImpl(referenceParser);
+        objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
+    }
 }

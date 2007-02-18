@@ -81,7 +81,7 @@ import java.io.Reader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NTripleParser implements Parser, StatementHandlerConfiguration {
+public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
         "(\\<([\\x20-\\x7E]+)\\>|_:((\\p{Alpha}\\p{Alnum}*)))\\p{Blank}+" +
@@ -94,7 +94,7 @@ public class NTripleParser implements Parser, StatementHandlerConfiguration {
     private final ObjectParser objectParser;
     private StatementHandler sh;
 
-    public NTripleParser(SubjectParser subjectParser, PredicateParser predicateParser, ObjectParser objectParser) {
+    public NTriplesParser(SubjectParser subjectParser, PredicateParser predicateParser, ObjectParser objectParser) {
         this.subjectParser = subjectParser;
         this.predicateParser = predicateParser;
         this.objectParser = objectParser;
