@@ -65,7 +65,10 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
@@ -73,21 +76,34 @@ import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class NTriplesParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
+    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
+    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
 
     public void testParseFile() throws Exception {
         ClosableIterator<Triple> closableIterator = init();
         try {
-            int counter = 0;
+            Set<Triple> actualResults = new HashSet<Triple>();
             while (closableIterator.hasNext()) {
                 Triple triple = closableIterator.next();
-                counter++;
+                actualResults.add(triple);
             }
-            // Should be 30?
-            assertEquals(29, counter);
+            // Should be 30 missing:
+            // <http://example.org/resource26> <http://example.org/property>
+            // "a <b></b> c"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
+            assertEquals(29, actualResults.size());
+            Set<Triple> triples = expectedResults();
+            Iterator<Triple> iterator = triples.iterator();
+            while (iterator.hasNext()) {
+                assertTrue(actualResults.contains(iterator.next()));
+            }
         } finally {
             closableIterator.close();
         }
@@ -95,15 +111,30 @@ public class NTriplesParserIntegrationTest extends TestCase {
 
     private ClosableIterator<Triple> init() throws Exception {
         InputStream in = getSampleData();
-        TestJRDFFactory testJRDFFactory = TestJRDFFactory.getFactory();
-        Graph newGraph = testJRDFFactory.getNewGraph();
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
         ParserFactory factory = new ParserFactoryImpl();
-        NTriplesParser nTriplesParser = factory.createParser(newGraph.getElementFactory(), blankNodeFactory);
-        GraphStatementHandler statementHandler = new GraphStatementHandler(newGraph);
+        NTriplesParser nTriplesParser = factory.createParser(NEW_GRAPH.getElementFactory(), blankNodeFactory);
+        GraphStatementHandler statementHandler = new GraphStatementHandler(NEW_GRAPH);
         nTriplesParser.setStatementHandler(statementHandler);
         nTriplesParser.parse(in, "foo");
-        return newGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        return NEW_GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+    }
+
+    private Set<Triple> expectedResults() throws Exception {
+        //<http://example.org/resource1> <http://example.org/property> <http://example.org/resource2>
+        //<http://example.org/resource3> <http://example.org/property> <http://example.org/resource2>
+        Set<Triple> answers = new HashSet<Triple>();
+        GraphElementFactory graphElementFactory = NEW_GRAPH.getElementFactory();
+        TripleFactory tripleFactory = NEW_GRAPH.getTripleFactory();
+        URIReference r1 = graphElementFactory.createResource(URI.create("http://example.org/resource1"));
+        URIReference p = graphElementFactory.createResource(URI.create("http://example.org/property"));
+        URIReference r2 = graphElementFactory.createResource(URI.create("http://example.org/resource2"));
+        answers.add(tripleFactory.createTriple(r1, p, r2));
+        for (int i = 3; i < 6; i++) {
+            URIReference r = graphElementFactory.createResource(URI.create("http://example.org/resource" + i));
+            answers.add(tripleFactory.createTriple(r, p, r2));
+        }
+        return answers;
     }
 
     public InputStream getSampleData() throws IOException {
