@@ -180,6 +180,7 @@ public class NTriplesEventReader implements RDFEventReader {
             if (subject != null && predicate != null && object != null) {
                 return factory.createTriple(subject, predicate, object);
             } else {
+                // This is an error.
                 return null;
             }
         } catch (GraphElementFactoryException e) {

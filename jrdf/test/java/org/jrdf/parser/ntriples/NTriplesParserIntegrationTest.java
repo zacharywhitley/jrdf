@@ -69,6 +69,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
@@ -81,11 +82,14 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 public class NTriplesParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
+    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
 
     public void testParseFile() throws Exception {
         ClosableIterator<Triple> closableIterator = init();
@@ -108,9 +112,8 @@ public class NTriplesParserIntegrationTest extends TestCase {
 
     private ClosableIterator<Triple> init() throws Exception {
         InputStream in = getSampleData();
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
         ParserFactory factory = new ParserFactoryImpl();
-        NTriplesParser nTriplesParser = factory.createParser(NEW_GRAPH.getElementFactory(), blankNodeFactory);
+        NTriplesParser nTriplesParser = factory.createParser(NEW_GRAPH.getElementFactory(), BLANK_NODE_FACTORY);
         GraphStatementHandler statementHandler = new GraphStatementHandler(NEW_GRAPH);
         nTriplesParser.setStatementHandler(statementHandler);
         nTriplesParser.parse(in, "foo");
@@ -118,19 +121,24 @@ public class NTriplesParserIntegrationTest extends TestCase {
     }
 
     private Set<Triple> expectedResults() throws Exception {
-        //<http://example.org/resource1> <http://example.org/property> <http://example.org/resource2>
-        //<http://example.org/resource3> <http://example.org/property> <http://example.org/resource2>
         Set<Triple> answers = new HashSet<Triple>();
         GraphElementFactory graphElementFactory = NEW_GRAPH.getElementFactory();
         TripleFactory tripleFactory = NEW_GRAPH.getTripleFactory();
-        URIReference r1 = graphElementFactory.createResource(URI.create("http://example.org/resource1"));
-        URIReference p = graphElementFactory.createResource(URI.create("http://example.org/property"));
-        URIReference r2 = graphElementFactory.createResource(URI.create("http://example.org/resource2"));
-        answers.add(tripleFactory.createTriple(r1, p, r2));
-        for (int i = 3; i < 6; i++) {
-            URIReference r = graphElementFactory.createResource(URI.create("http://example.org/resource" + i));
-            answers.add(tripleFactory.createTriple(r, p, r2));
+        List<URIReference> refs = new ArrayList<URIReference>();
+        for (int i = 0; i < 32; i++) {
+            refs.add(graphElementFactory.createResource(URI.create("http://example.org/resource" + i)));
         }
+        URIReference p = graphElementFactory.createResource(URI.create("http://example.org/property"));
+        BlankNode anon = BLANK_NODE_FACTORY.createBlankNode("anon");
+        answers.add(tripleFactory.createTriple(refs.get(1), p, refs.get(2)));
+        answers.add(tripleFactory.createTriple(anon, p, refs.get(2)));
+        answers.add(tripleFactory.createTriple(refs.get(2), p, anon));
+        answers.add(tripleFactory.createTriple(refs.get(3), p, refs.get(2)));
+        answers.add(tripleFactory.createTriple(refs.get(4), p, refs.get(2)));
+        answers.add(tripleFactory.createTriple(refs.get(5), p, refs.get(2)));
+        answers.add(tripleFactory.createTriple(refs.get(6), p, refs.get(2)));
+        answers.add(tripleFactory.createTriple(refs.get(13), p, refs.get(2)));
+        answers.add(tripleFactory.createTriple(refs.get(15), p, anon));
         return answers;
     }
 
