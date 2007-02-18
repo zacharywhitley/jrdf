@@ -133,6 +133,8 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
         ObjectNode object = objectParser.parseObject(tripleRegexMatcher);
         if (subject != null && predicate != null && object != null) {
             sh.handleStatement(subject, predicate, object);
-        }
+        } //else {
+            // This is an error
+        //}
     }
 }
