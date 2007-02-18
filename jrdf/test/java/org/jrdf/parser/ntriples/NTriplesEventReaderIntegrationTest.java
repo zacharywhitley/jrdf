@@ -83,7 +83,9 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
                 Triple triple = eventReader.next();
                 counter++;
             }
-            // Should be 30?
+            // Should be 30 missing:
+            // <http://example.org/resource26> <http://example.org/property>
+            // "a <b></b> c"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
             assertEquals(29, counter);
         } finally {
             eventReader.close();
