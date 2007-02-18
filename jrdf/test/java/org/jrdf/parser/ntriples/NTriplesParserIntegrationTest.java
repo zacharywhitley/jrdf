@@ -95,10 +95,7 @@ public class NTriplesParserIntegrationTest extends TestCase {
                 Triple triple = closableIterator.next();
                 actualResults.add(triple);
             }
-            // Should be 30 missing:
-            // <http://example.org/resource26> <http://example.org/property>
-            // "a <b></b> c"^^<http://www.w3.org/2000/01/rdf-schema#XMLLiteral> .
-            assertEquals(29, actualResults.size());
+            assertEquals(30, actualResults.size());
             Set<Triple> triples = expectedResults();
             Iterator<Triple> iterator = triples.iterator();
             while (iterator.hasNext()) {

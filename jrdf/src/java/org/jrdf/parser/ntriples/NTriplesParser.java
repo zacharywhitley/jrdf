@@ -84,9 +84,9 @@ import java.util.regex.Pattern;
 public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     private static final Pattern COMMENT_REGEX = Pattern.compile("\\p{Blank}*#([\\x20-\\x7E[^\\n\\r]])*");
     private static final Pattern TRIPLE_REGEX = Pattern.compile("\\p{Blank}*" +
-        "(\\<([\\x20-\\x7E]+)\\>|_:((\\p{Alpha}\\p{Alnum}*)))\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+)\\>)\\p{Blank}+" +
-        "(\\<([\\x20-\\x7E]+)\\>|_:((\\p{Alpha}\\p{Alnum}*))|((([\\x20-\\x7E]+))))\\p{Blank}*" +
+        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?)))\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+?)\\>)\\p{Blank}+" +
+        "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
         "\\.\\p{Blank}*");
 
     private final SubjectParser subjectParser;
