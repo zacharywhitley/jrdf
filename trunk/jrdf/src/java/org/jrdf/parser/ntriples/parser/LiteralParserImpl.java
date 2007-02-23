@@ -73,12 +73,14 @@ public class LiteralParserImpl implements LiteralParser {
             "(" +
             "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
             ").*");
-    private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile("(\\\\((\\\\)|(\")|(n)|(r)|(t)))");
+    private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
+            "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private static final int LITERAL_INDEX = 1;
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
     private static final int LITERAL_ESCAPE_INDEX = 0;
     private final GraphElementFactory graphElementFactory;
+    private static final int UNICODE_16BIT_INDEX = 9;
 
     public LiteralParserImpl(GraphElementFactory graphElementFactory) {
         this.graphElementFactory = graphElementFactory;
@@ -125,6 +127,12 @@ public class LiteralParserImpl implements LiteralParser {
                 matcher.appendReplacement(buffer, "\r");
             } else if (escapeChar.equals("\\t")) {
                 matcher.appendReplacement(buffer, "\t");
+            } else if (escapeChar.startsWith("\\u")) {
+                String unicodeValue = matcher.group(UNICODE_16BIT_INDEX);
+                matcher.appendReplacement(buffer, String.valueOf((char) Integer.parseInt(unicodeValue, 16)));
+            } else if (escapeChar.startsWith("\\U")) {
+                //String unicodeValue = matcher.group(UNICODE_16BIT_INDEX);
+                //matcher.appendReplacement(buffer, String.valueOf((char) Integer.parseInt(unicodeValue, 16)));
             }
         } while (matcher.find());
         matcher.appendTail(buffer);
