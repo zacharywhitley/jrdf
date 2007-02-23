@@ -64,12 +64,12 @@ import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
@@ -79,11 +79,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class NTriplesParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
@@ -101,9 +100,8 @@ public class NTriplesParserIntegrationTest extends TestCase {
             }
             assertEquals(30, actualResults.size());
             Set<Triple> triples = expectedResults();
-            Iterator<Triple> iterator = triples.iterator();
-            while (iterator.hasNext()) {
-                assertTrue(actualResults.contains(iterator.next()));
+            for (Triple triple : triples) {
+                assertTrue(actualResults.contains(triple));
             }
         } finally {
             closableIterator.close();
@@ -139,6 +137,8 @@ public class NTriplesParserIntegrationTest extends TestCase {
         answers.add(tripleFactory.createTriple(refs.get(6), p, refs.get(2)));
         answers.add(tripleFactory.createTriple(refs.get(13), p, refs.get(2)));
         answers.add(tripleFactory.createTriple(refs.get(15), p, anon));
+        answers.add(tripleFactory.createTriple(refs.get(16), p, graphElementFactory.createLiteral("\u00E9")));
+        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\u20AC")));
         return answers;
     }
 
