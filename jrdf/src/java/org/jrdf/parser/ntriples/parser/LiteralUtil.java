@@ -56,41 +56,11 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser.ntriples;
-
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralUtil;
-import org.jrdf.parser.ntriples.parser.LiteralUtilImpl;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
-import org.jrdf.util.boundary.RegexMatcherFactory;
+package org.jrdf.parser.ntriples.parser;
 
 /**
  * Class description goes here.
  */
-public class ParserFactoryImpl implements ParserFactory {
-    public NTriplesParser createParser(GraphElementFactory graphElementFactory,
-            ParserBlankNodeFactory parserBlankNodeFactory) {
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
-        RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        LiteralUtil literalUtil = new LiteralUtilImpl(matcherFactory);
-        LiteralParser literalParser = new LiteralParserImpl(graphElementFactory, matcherFactory, literalUtil);
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
-        SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
-        PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
-        ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
-        return new NTriplesParser(subjectParser, predicateParser, objectParser);
-    }
+public interface LiteralUtil {
+    String unescapeLiteral(String literal);
 }

@@ -75,7 +75,10 @@ import org.jrdf.parser.ntriples.parser.SubjectParser;
 import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
+import org.jrdf.parser.ntriples.parser.LiteralUtil;
+import org.jrdf.parser.ntriples.parser.LiteralUtilImpl;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -119,7 +122,9 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
         URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory());
         BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
-        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), new RegexMatcherFactoryImpl());
+        RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
+        LiteralUtil literalUtil = new LiteralUtilImpl(matcherFactory);
+        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), matcherFactory, literalUtil);
         subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
         predicateParser = new PredicateParserImpl(referenceParser);
         objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);
