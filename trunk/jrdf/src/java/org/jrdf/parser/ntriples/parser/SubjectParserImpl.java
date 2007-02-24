@@ -80,7 +80,7 @@ public class SubjectParserImpl implements SubjectParser {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
-            return blankNodeParser.parserBlankNode(matcher.group(BLANK_NODE_GROUP));
+            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else {
             return null;
         }

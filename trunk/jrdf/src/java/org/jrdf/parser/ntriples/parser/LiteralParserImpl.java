@@ -63,12 +63,15 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.parser.ParseException;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LiteralParserImpl implements LiteralParser {
+public final class LiteralParserImpl implements LiteralParser {
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
             "(" +
             "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
@@ -81,15 +84,19 @@ public class LiteralParserImpl implements LiteralParser {
     private static final int LITERAL_ESCAPE_INDEX = 0;
     private static final int UNICODE_4DIGIT_INDEX = 9;
     private static final int UNICODE_8DIGIT_INDEX = 11;
-    private final GraphElementFactory graphElementFactory;
     private static final int HEX_RADIX = 16;
+    private final GraphElementFactory graphElementFactory;
+    private final RegexMatcherFactory regexMatcherFactory;
 
-    public LiteralParserImpl(GraphElementFactory graphElementFactory) {
+    public LiteralParserImpl(GraphElementFactory graphElementFactory, RegexMatcherFactory regexMatcherFactory) {
+        checkNotNull(graphElementFactory, regexMatcherFactory);
         this.graphElementFactory = graphElementFactory;
+        this.regexMatcherFactory = regexMatcherFactory;
     }
 
     public Literal parseLiteral(String s) throws GraphElementFactoryException, ParseException {
-        Matcher matcher = LANGUAGE_REGEX.matcher(s);
+        checkNotEmptyString("s", s);
+        RegexMatcher matcher = regexMatcherFactory.createMatcher(LANGUAGE_REGEX, s);
         if (matcher.matches()) {
             String literal = unescapeLiteral(matcher.group(LITERAL_INDEX));
             String language = matcher.group(LANGUAGE_INDEX);
@@ -107,7 +114,7 @@ public class LiteralParserImpl implements LiteralParser {
     }
 
     private String unescapeLiteral(String literal) {
-        Matcher matcher = LITERAL_ESCAPE_REGEX.matcher(literal);
+        RegexMatcher matcher = regexMatcherFactory.createMatcher(LITERAL_ESCAPE_REGEX, literal);
         if (!matcher.find()) {
             return literal;
         } else {
@@ -116,7 +123,7 @@ public class LiteralParserImpl implements LiteralParser {
     }
 
     // Can fail on each of these lines when parsing - handle error.
-    private String hasCharactersToEscape(Matcher matcher) {
+    private String hasCharactersToEscape(RegexMatcher matcher) {
         StringBuffer buffer = new StringBuffer();
         do {
             String escapeChar = matcher.group(LITERAL_ESCAPE_INDEX);
@@ -141,7 +148,7 @@ public class LiteralParserImpl implements LiteralParser {
     }
 
     // Can fail on each of these lines when parsing - handle error.
-    private void appendUnicode(Matcher matcher, StringBuffer buffer, int group) {
+    private void appendUnicode(RegexMatcher matcher, StringBuffer buffer, int group) {
         String unicodeString = matcher.group(group);
         int unicodeValue = Integer.parseInt(unicodeString, HEX_RADIX);
         char[] chars = Character.toChars(unicodeValue);

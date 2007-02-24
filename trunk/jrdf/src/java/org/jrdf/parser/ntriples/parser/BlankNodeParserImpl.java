@@ -74,7 +74,7 @@ public final class BlankNodeParserImpl implements BlankNodeParser {
         this.parserBlankNodeFactory = parserBlankNodeFactory;
     }
 
-    public BlankNode parserBlankNode(String s) throws GraphElementFactoryException, ParseException {
+    public BlankNode parseBlankNode(String s) throws GraphElementFactoryException, ParseException {
         checkNotEmptyString("s", s);
         return parserBlankNodeFactory.createBlankNode(s);
     }

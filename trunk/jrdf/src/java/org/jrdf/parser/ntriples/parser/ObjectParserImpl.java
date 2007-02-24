@@ -84,7 +84,7 @@ public class ObjectParserImpl implements ObjectParser {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
-            return blankNodeParser.parserBlankNode(matcher.group(BLANK_NODE_GROUP));
+            return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else if (matcher.group(LITERAL_GROUP) != null) {
             return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
         } else {

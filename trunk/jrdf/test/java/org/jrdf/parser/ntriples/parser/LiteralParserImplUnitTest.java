@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,36 +56,43 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.ntriples.parser;
 
+import junit.framework.TestCase;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ParameterDefinition;
+import org.jrdf.util.test.StandardClassPropertiesTestUtil;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 
-/**
- * Class description goes here.
- */
-public class ParserFactoryImpl implements ParserFactory {
-    public NTriplesParser createParser(GraphElementFactory graphElementFactory,
-            ParserBlankNodeFactory parserBlankNodeFactory) {
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
-        LiteralParser literalParser = new LiteralParserImpl(graphElementFactory, new RegexMatcherFactoryImpl());
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
-        SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
-        PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
-        ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
-        return new NTriplesParser(subjectParser, predicateParser, objectParser);
+public class LiteralParserImplUnitTest extends TestCase {
+    private static final Class<LiteralParser> TARGET_INTERFACE = LiteralParser.class;
+    private static final Class<LiteralParserImpl> TEST_CLASS = LiteralParserImpl.class;
+    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, RegexMatcherFactory.class};
+    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "regexMatcherFactory"};
+    private final MockFactory mockFactory = new MockFactory();
+
+    public void testClassProperties() {
+        StandardClassPropertiesTestUtil.hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
+
+    public void testMethodProperties() {
+        GraphElementFactory elementFactory = mockFactory.createMock(GraphElementFactory.class);
+        RegexMatcherFactory regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
+        LiteralParser parser = new LiteralParserImpl(elementFactory, regexMatcherFactory);
+        ArgumentTestUtil.checkMethodNullAndEmptyAssertions(parser, "parseLiteral", new ParameterDefinition(
+                new String[] {"s"}, new Class[]{String.class}));
+    }
+
+//    public void testCreateBlankNode() throws Exception {
+//        ParserBlankNodeFactory nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
+//        BlankNode blankNode = mockFactory.createMock(BlankNode.class);
+//        String nodeId = "string" + Math.random();
+//        EasyMock.expect(nodeFactory.createBlankNode(nodeId)).andReturn(blankNode);
+//        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(nodeFactory);
+//        mockFactory.replay();
+//        blankNodeParser.parseBlankNode(nodeId);
+//        mockFactory.verify();
+//    }
 }
