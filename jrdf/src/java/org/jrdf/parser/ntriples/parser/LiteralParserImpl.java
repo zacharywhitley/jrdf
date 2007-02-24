@@ -107,6 +107,7 @@ public final class LiteralParserImpl implements LiteralParser {
 
     private Literal createLiteral(String language, String literal, String datatype, String s) throws ParseException {
         try {
+            checkEitherLanguageOrDatatype(language, datatype, s);
             if (language != null) {
                 return graphElementFactory.createLiteral(literal, language);
             } else if (datatype != null) {
@@ -116,6 +117,12 @@ public final class LiteralParserImpl implements LiteralParser {
             }
         } catch (GraphElementFactoryException gefe) {
             throw new ParseException("Failed to create literal from line: " + s, 1);
+        }
+    }
+
+    private void checkEitherLanguageOrDatatype(String language, String datatype, String s) throws ParseException {
+        if (language != null && datatype != null) {
+            throw new ParseException("Cannot create a literal with both language and data type from line: " + s, 1);
         }
     }
 }
