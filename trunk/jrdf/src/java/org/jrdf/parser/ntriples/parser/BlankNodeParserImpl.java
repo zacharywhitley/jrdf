@@ -63,11 +63,13 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public class BlankNodeParserImpl implements BlankNodeParser {
+public final class BlankNodeParserImpl implements BlankNodeParser {
     private final ParserBlankNodeFactory parserBlankNodeFactory;
 
     public BlankNodeParserImpl(ParserBlankNodeFactory parserBlankNodeFactory) {
+        checkNotNull(parserBlankNodeFactory);
         this.parserBlankNodeFactory = parserBlankNodeFactory;
     }
 
