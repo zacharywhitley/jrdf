@@ -83,7 +83,7 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
                 Triple triple = eventReader.next();
                 counter++;
             }
-            assertEquals(30, counter);
+            assertEquals(33, counter);
         } finally {
             eventReader.close();
         }

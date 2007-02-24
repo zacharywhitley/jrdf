@@ -79,8 +79,10 @@ public class LiteralParserImpl implements LiteralParser {
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
     private static final int LITERAL_ESCAPE_INDEX = 0;
+    private static final int UNICODE_4DIGIT_INDEX = 9;
+    private static final int UNICODE_8DIGIT_INDEX = 11;
     private final GraphElementFactory graphElementFactory;
-    private static final int UNICODE_16BIT_INDEX = 9;
+    private static final int HEX_RADIX = 16;
 
     public LiteralParserImpl(GraphElementFactory graphElementFactory) {
         this.graphElementFactory = graphElementFactory;
@@ -113,6 +115,7 @@ public class LiteralParserImpl implements LiteralParser {
         }
     }
 
+    // Can fail on each of these lines when parsing - handle error.
     private String hasCharactersToEscape(Matcher matcher) {
         StringBuffer buffer = new StringBuffer();
         do {
@@ -128,14 +131,20 @@ public class LiteralParserImpl implements LiteralParser {
             } else if (escapeChar.equals("\\t")) {
                 matcher.appendReplacement(buffer, "\t");
             } else if (escapeChar.startsWith("\\u")) {
-                String unicodeValue = matcher.group(UNICODE_16BIT_INDEX);
-                matcher.appendReplacement(buffer, String.valueOf((char) Integer.parseInt(unicodeValue, 16)));
+                appendUnicode(matcher, buffer, UNICODE_4DIGIT_INDEX);
             } else if (escapeChar.startsWith("\\U")) {
-                //String unicodeValue = matcher.group(UNICODE_16BIT_INDEX);
-                //matcher.appendReplacement(buffer, String.valueOf((char) Integer.parseInt(unicodeValue, 16)));
+                appendUnicode(matcher, buffer, UNICODE_8DIGIT_INDEX);
             }
         } while (matcher.find());
         matcher.appendTail(buffer);
         return buffer.toString();
+    }
+
+    // Can fail on each of these lines when parsing - handle error.
+    private void appendUnicode(Matcher matcher, StringBuffer buffer, int group) {
+        String unicodeString = matcher.group(group);
+        int unicodeValue = Integer.parseInt(unicodeString, HEX_RADIX);
+        char[] chars = Character.toChars(unicodeValue);
+        matcher.appendReplacement(buffer, String.valueOf(chars));
     }
 }

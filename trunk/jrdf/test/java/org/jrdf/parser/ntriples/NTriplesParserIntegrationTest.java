@@ -89,6 +89,7 @@ public class NTriplesParserIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
+    private static final int TOTAL_TRIPLES = 33;
 
     public void testParseFile() throws Exception {
         ClosableIterator<Triple> closableIterator = init();
@@ -98,10 +99,10 @@ public class NTriplesParserIntegrationTest extends TestCase {
                 Triple triple = closableIterator.next();
                 actualResults.add(triple);
             }
-            assertEquals(30, actualResults.size());
+            assertEquals(TOTAL_TRIPLES, actualResults.size());
             Set<Triple> triples = expectedResults();
             for (Triple triple : triples) {
-                assertTrue(actualResults.contains(triple));
+                assertTrue("Expected: " + triple, actualResults.contains(triple));
             }
         } finally {
             closableIterator.close();
@@ -123,7 +124,7 @@ public class NTriplesParserIntegrationTest extends TestCase {
         GraphElementFactory graphElementFactory = NEW_GRAPH.getElementFactory();
         TripleFactory tripleFactory = NEW_GRAPH.getTripleFactory();
         List<URIReference> refs = new ArrayList<URIReference>();
-        for (int i = 0; i < 32; i++) {
+        for (int i = 0; i < TOTAL_TRIPLES; i++) {
             refs.add(graphElementFactory.createResource(URI.create("http://example.org/resource" + i)));
         }
         URIReference p = graphElementFactory.createResource(URI.create("http://example.org/property"));
@@ -139,6 +140,9 @@ public class NTriplesParserIntegrationTest extends TestCase {
         answers.add(tripleFactory.createTriple(refs.get(15), p, anon));
         answers.add(tripleFactory.createTriple(refs.get(16), p, graphElementFactory.createLiteral("\u00E9")));
         answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\u20AC")));
+        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uD800\uDC00")));
+        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uD84C\uDFB4")));
+        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uDBFF\uDFFF")));
         return answers;
     }
 
