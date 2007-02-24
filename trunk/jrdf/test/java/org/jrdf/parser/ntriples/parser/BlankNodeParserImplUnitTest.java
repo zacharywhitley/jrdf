@@ -61,7 +61,9 @@ package org.jrdf.parser.ntriples.parser;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.ParseException;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
@@ -73,27 +75,49 @@ public class BlankNodeParserImplUnitTest extends TestCase {
     private static final Class[] PARAM_TYPES = new Class[] {ParserBlankNodeFactory.class};
     private static final String[] PARAMETER_NAMES = new String[] {"parserBlankNodeFactory"};
     private final MockFactory mockFactory = new MockFactory();
+    private ParserBlankNodeFactory nodeFactory;
+    private BlankNode blankNode;
+    private BlankNodeParser parser;
+    private static final String NODE_ID = "string" + Math.random();
+
+    public void setUp() {
+        nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
+        blankNode = mockFactory.createMock(BlankNode.class);
+        parser = new BlankNodeParserImpl(nodeFactory);
+    }
 
     public void testClassProperties() {
         hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
     public void testMethodProperties() {
-        ParserBlankNodeFactory nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
-        BlankNodeParser parser = new BlankNodeParserImpl(nodeFactory);
         checkMethodNullAndEmptyAssertions(parser, "parseBlankNode", new ParameterDefinition(
                 new String[] {"s"}, new Class[]{String.class}));
     }
 
-    // TODO (AN) Only have one exception on the parseBlankNode method.
     public void testCreateBlankNode() throws Exception {
-        ParserBlankNodeFactory nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
-        BlankNode blankNode = mockFactory.createMock(BlankNode.class);
-        String nodeId = "string" + Math.random();
-        expect(nodeFactory.createBlankNode(nodeId)).andReturn(blankNode);
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(nodeFactory);
+        expect(nodeFactory.createBlankNode(NODE_ID)).andReturn(blankNode);
         mockFactory.replay();
-        blankNodeParser.parseBlankNode(nodeId);
+        BlankNode actualBlankNode = parser.parseBlankNode(NODE_ID);
+        assertTrue(blankNode == actualBlankNode);
         mockFactory.verify();
+    }
+
+    public void testCreateBlankNodeWithException() throws Exception {
+        expect(nodeFactory.createBlankNode(NODE_ID)).andThrow(new GraphElementFactoryException(""));
+        mockFactory.replay();
+        checkThrowsException();
+        mockFactory.verify();
+    }
+
+    private void checkThrowsException() {
+        try {
+            parser.parseBlankNode(NODE_ID);
+        } catch (ParseException p) {
+            assertEquals("Failed to create blank node: " + NODE_ID, p.getMessage());
+            assertEquals(1, p.getColumnNumber());
+        } catch (Throwable t) {
+            fail("Should not throw exception: " + t.getClass());
+        }
     }
 }
