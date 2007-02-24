@@ -95,9 +95,10 @@ public final class LiteralParserImpl implements LiteralParser {
         checkNotEmptyString("s", s);
         RegexMatcher matcher = regexMatcherFactory.createMatcher(LANGUAGE_REGEX, s);
         if (matcher.matches()) {
+            String ntriplesLiteral = matcher.group(LITERAL_INDEX);
+            String literal = literalUtil.unescapeLiteral(ntriplesLiteral);
             String language = matcher.group(LANGUAGE_INDEX);
             String datatype = matcher.group(DATATYPE_INDEX);
-            String literal = literalUtil.unescapeLiteral(matcher.group(LITERAL_INDEX));
             return createLiteral(language, literal, datatype, s);
         } else {
             throw new ParseException("Didn't find a matching literal", 1);
