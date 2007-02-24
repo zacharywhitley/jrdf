@@ -59,11 +59,9 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.ParseException;
 
 public interface BlankNodeParser {
-    // TODO (AN) Only have one exception on the parseBlankNode method.
-    BlankNode parseBlankNode(String s) throws GraphElementFactoryException, ParseException;
+    BlankNode parseBlankNode(String s) throws ParseException;
 }
