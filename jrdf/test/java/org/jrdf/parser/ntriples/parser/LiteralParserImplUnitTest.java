@@ -62,6 +62,8 @@ import junit.framework.TestCase;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
@@ -84,18 +86,23 @@ public class LiteralParserImplUnitTest extends TestCase {
             "(" +
             "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
             ").*");
+    private static final int LITERAL_INDEX = 1;
+    private static final int LANGUAGE_INDEX = 5;
+    private static final int DATATYPE_INDEX = 8;
     private final MockFactory mockFactory = new MockFactory();
     private GraphElementFactory elementFactory;
     private RegexMatcherFactory regexMatcherFactory;
     private RegexMatcher matcher;
     private LiteralParser parser;
     private LiteralUtil literalUtil;
+    private Literal expectedLiteral;
 
     public void setUp() {
         elementFactory = mockFactory.createMock(GraphElementFactory.class);
         regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
         matcher = mockFactory.createMock(RegexMatcher.class);
         literalUtil = mockFactory.createMock(LiteralUtil.class);
+        expectedLiteral = mockFactory.createMock(Literal.class);
         parser = new LiteralParserImpl(elementFactory, regexMatcherFactory, literalUtil);
     }
 
@@ -108,16 +115,25 @@ public class LiteralParserImplUnitTest extends TestCase {
                 new String[] {"s"}, new Class[]{String.class}));
     }
 
-    public void testParseLiteral() throws Exception {
+    public void testParseLiteralWithException() throws Exception {
         expect(matcher.matches()).andReturn(false);
         final String line = "string" + Math.random();
         expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(line))).andReturn(matcher);
         mockFactory.replay();
-        checkThrowsException(line);
+        checkThrowsParseException(line);
         mockFactory.verify();
     }
 
-    private void checkThrowsException(String line) {
+    public void testParsePlainLiteral() throws Exception {
+        final String unescapedLiteral = "string" + Math.random();
+        final String line = parserExpectations(unescapedLiteral, null, null);
+        mockFactory.replay();
+        Literal actualLiteral = parser.parseLiteral(line);
+        assertTrue(expectedLiteral == actualLiteral);
+        mockFactory.verify();
+    }
+
+    private void checkThrowsParseException(String line) {
         try {
             parser.parseLiteral(line);
         } catch (ParseException p) {
@@ -126,5 +142,19 @@ public class LiteralParserImplUnitTest extends TestCase {
         } catch (Throwable t) {
             fail("Should not throw exception: " + t.getClass());
         }
+    }
+
+    private String parserExpectations(String unescapedLiteral, String language, String datatype)
+            throws GraphElementFactoryException {
+        final String line = "string" + Math.random();
+        final String literal = "string" + Math.random();
+        expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(line))).andReturn(matcher);
+        expect(matcher.matches()).andReturn(true);
+        expect(matcher.group(LITERAL_INDEX)).andReturn(literal);
+        expect(literalUtil.unescapeLiteral(literal)).andReturn(unescapedLiteral);
+        expect(matcher.group(LANGUAGE_INDEX)).andReturn(language);
+        expect(matcher.group(DATATYPE_INDEX)).andReturn(datatype);
+        expect(elementFactory.createLiteral(unescapedLiteral)).andReturn(expectedLiteral);
+        return line;
     }
 }
