@@ -59,16 +59,40 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.expect;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
 public class BlankNodeParserUnitTest extends TestCase {
-    private static final Class<BlankNodeParserImpl> TEST_CLASS = BlankNodeParserImpl.class;
     private static final Class<BlankNodeParser> TARGET_INTERFACE = BlankNodeParser.class;
+    private static final Class<BlankNodeParserImpl> TEST_CLASS = BlankNodeParserImpl.class;
     private static final Class[] PARAM_TYPES = new Class[] {ParserBlankNodeFactory.class};
     private static final String[] PARAMETER_NAMES = new String[] {"parserBlankNodeFactory"};
+    private final MockFactory mockFactory = new MockFactory();
 
     public void testClassProperties() {
         hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+    }
+
+    public void testMethodProperties() {
+        ParserBlankNodeFactory nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
+        BlankNodeParser parser = new BlankNodeParserImpl(nodeFactory);
+        checkMethodNullAndEmptyAssertions(parser, "parserBlankNode", new ParameterDefinition(
+                new String[] {"s"}, new Class[]{String.class}));
+    }
+
+    public void testCreateBlankNode() throws Exception {
+        ParserBlankNodeFactory nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
+        BlankNode blankNode = mockFactory.createMock(BlankNode.class);
+        String nodeId = "string" + Math.random();
+        expect(nodeFactory.createBlankNode(nodeId)).andReturn(blankNode);
+        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(nodeFactory);
+        mockFactory.replay();
+        blankNodeParser.parserBlankNode(nodeId);
+        mockFactory.verify();
     }
 }
