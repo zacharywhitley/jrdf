@@ -63,6 +63,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class BlankNodeParserImpl implements BlankNodeParser {
@@ -74,6 +75,7 @@ public final class BlankNodeParserImpl implements BlankNodeParser {
     }
 
     public BlankNode parserBlankNode(String s) throws GraphElementFactoryException, ParseException {
+        checkNotEmptyString("s", s);
         return parserBlankNodeFactory.createBlankNode(s);
     }
 }
