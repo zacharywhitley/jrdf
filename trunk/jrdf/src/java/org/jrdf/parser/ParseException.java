@@ -43,6 +43,17 @@ public class ParseException extends Exception {
      * Creates a new ParseException.
      *
      * @param msg      An error message.
+     * @param columnNo A column number associated with the message.
+     */
+    public ParseException(String msg, int columnNo) {
+        super(msg);
+        this.columnNo = columnNo;
+    }
+
+    /**
+     * Creates a new ParseException.
+     *
+     * @param msg      An error message.
      * @param lineNo   A line number associated with the message.
      * @param columnNo A column number associated with the message.
      */

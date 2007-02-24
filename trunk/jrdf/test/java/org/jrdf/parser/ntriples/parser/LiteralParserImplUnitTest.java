@@ -62,49 +62,69 @@ import junit.framework.TestCase;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.parser.ParseException;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.test.ArgumentTestUtil;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.StandardClassPropertiesTestUtil;
+import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
 import java.util.regex.Pattern;
 
 public class LiteralParserImplUnitTest extends TestCase {
     private static final Class<LiteralParser> TARGET_INTERFACE = LiteralParser.class;
     private static final Class<LiteralParserImpl> TEST_CLASS = LiteralParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, RegexMatcherFactory.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "regexMatcherFactory"};
+    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, RegexMatcherFactory.class,
+        LiteralUtil.class};
+    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "regexMatcherFactory",
+        "literalUtil"};
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
             "(" +
             "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
             ").*");
     private final MockFactory mockFactory = new MockFactory();
+    private GraphElementFactory elementFactory;
+    private RegexMatcherFactory regexMatcherFactory;
+    private RegexMatcher matcher;
+    private LiteralParser parser;
+    private LiteralUtil literalUtil;
+
+    public void setUp() {
+        elementFactory = mockFactory.createMock(GraphElementFactory.class);
+        regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
+        matcher = mockFactory.createMock(RegexMatcher.class);
+        literalUtil = mockFactory.createMock(LiteralUtil.class);
+        parser = new LiteralParserImpl(elementFactory, regexMatcherFactory, literalUtil);
+    }
 
     public void testClassProperties() {
-        StandardClassPropertiesTestUtil.hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+        hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
     public void testMethodProperties() {
-        GraphElementFactory elementFactory = mockFactory.createMock(GraphElementFactory.class);
-        RegexMatcherFactory regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
-        LiteralParser parser = new LiteralParserImpl(elementFactory, regexMatcherFactory);
-        ArgumentTestUtil.checkMethodNullAndEmptyAssertions(parser, "parseLiteral", new ParameterDefinition(
+        checkMethodNullAndEmptyAssertions(parser, "parseLiteral", new ParameterDefinition(
                 new String[] {"s"}, new Class[]{String.class}));
     }
 
     public void testParseLiteral() throws Exception {
-        GraphElementFactory elementFactory = mockFactory.createMock(GraphElementFactory.class);
-        RegexMatcherFactory regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
-        RegexMatcher matcher = mockFactory.createMock(RegexMatcher.class);
         expect(matcher.matches()).andReturn(false);
-        String line = "string" + Math.random();
+        final String line = "string" + Math.random();
         expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(line))).andReturn(matcher);
-        LiteralParser parser = new LiteralParserImpl(elementFactory, regexMatcherFactory);
         mockFactory.replay();
-        parser.parseLiteral(line);
+        checkThrowsException(line);
         mockFactory.verify();
+    }
+
+    private void checkThrowsException(String line) {
+        try {
+            parser.parseLiteral(line);
+        } catch (ParseException p) {
+            assertEquals("Didn't find a matching literal", p.getMessage());
+            assertEquals(1, p.getColumnNumber());
+        } catch (Throwable t) {
+            fail("Should not throw exception: " + t.getClass());
+        }
     }
 }

@@ -76,31 +76,36 @@ public final class LiteralParserImpl implements LiteralParser {
             "(" +
             "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
             ").*");
-    private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
-            "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private static final int LITERAL_INDEX = 1;
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
-    private static final int LITERAL_ESCAPE_INDEX = 0;
-    private static final int UNICODE_4DIGIT_INDEX = 9;
-    private static final int UNICODE_8DIGIT_INDEX = 11;
-    private static final int HEX_RADIX = 16;
     private final GraphElementFactory graphElementFactory;
     private final RegexMatcherFactory regexMatcherFactory;
+    private final LiteralUtil literalUtil;
 
-    public LiteralParserImpl(GraphElementFactory graphElementFactory, RegexMatcherFactory regexMatcherFactory) {
-        checkNotNull(graphElementFactory, regexMatcherFactory);
+    public LiteralParserImpl(GraphElementFactory graphElementFactory, RegexMatcherFactory regexMatcherFactory,
+            LiteralUtil literalUtil) {
+        checkNotNull(graphElementFactory, regexMatcherFactory, literalUtil);
         this.graphElementFactory = graphElementFactory;
         this.regexMatcherFactory = regexMatcherFactory;
+        this.literalUtil = literalUtil;
     }
 
-    public Literal parseLiteral(String s) throws GraphElementFactoryException, ParseException {
+    public Literal parseLiteral(String s) throws ParseException {
         checkNotEmptyString("s", s);
         RegexMatcher matcher = regexMatcherFactory.createMatcher(LANGUAGE_REGEX, s);
         if (matcher.matches()) {
-            String literal = unescapeLiteral(matcher.group(LITERAL_INDEX));
             String language = matcher.group(LANGUAGE_INDEX);
             String datatype = matcher.group(DATATYPE_INDEX);
+            String literal = literalUtil.unescapeLiteral(matcher.group(LITERAL_INDEX));
+            return createLiteral(language, literal, datatype, s);
+        } else {
+            throw new ParseException("Didn't find a matching literal", 1);
+        }
+    }
+
+    private Literal createLiteral(String language, String literal, String datatype, String s) throws ParseException {
+        try {
             if (language != null) {
                 return graphElementFactory.createLiteral(literal, language);
             } else if (datatype != null) {
@@ -108,50 +113,8 @@ public final class LiteralParserImpl implements LiteralParser {
             } else {
                 return graphElementFactory.createLiteral(literal);
             }
-        } else {
-            return null;
+        } catch (GraphElementFactoryException gefe) {
+            throw new ParseException("Failed to create literal from line: " + s, 1);
         }
-    }
-
-    private String unescapeLiteral(String literal) {
-        RegexMatcher matcher = regexMatcherFactory.createMatcher(LITERAL_ESCAPE_REGEX, literal);
-        if (!matcher.find()) {
-            return literal;
-        } else {
-            return hasCharactersToEscape(matcher);
-        }
-    }
-
-    // Can fail on each of these lines when parsing - handle error.
-    private String hasCharactersToEscape(RegexMatcher matcher) {
-        StringBuffer buffer = new StringBuffer();
-        do {
-            String escapeChar = matcher.group(LITERAL_ESCAPE_INDEX);
-            if (escapeChar.equals("\\\\")) {
-                matcher.appendReplacement(buffer, "\\\\");
-            } else if (escapeChar.equals("\\\"")) {
-                matcher.appendReplacement(buffer, "\"");
-            } else if (escapeChar.equals("\\n")) {
-                matcher.appendReplacement(buffer, "\n");
-            } else if (escapeChar.equals("\\r")) {
-                matcher.appendReplacement(buffer, "\r");
-            } else if (escapeChar.equals("\\t")) {
-                matcher.appendReplacement(buffer, "\t");
-            } else if (escapeChar.startsWith("\\u")) {
-                appendUnicode(matcher, buffer, UNICODE_4DIGIT_INDEX);
-            } else if (escapeChar.startsWith("\\U")) {
-                appendUnicode(matcher, buffer, UNICODE_8DIGIT_INDEX);
-            }
-        } while (matcher.find());
-        matcher.appendTail(buffer);
-        return buffer.toString();
-    }
-
-    // Can fail on each of these lines when parsing - handle error.
-    private void appendUnicode(RegexMatcher matcher, StringBuffer buffer, int group) {
-        String unicodeString = matcher.group(group);
-        int unicodeValue = Integer.parseInt(unicodeString, HEX_RADIX);
-        char[] chars = Character.toChars(unicodeValue);
-        matcher.appendReplacement(buffer, String.valueOf(chars));
     }
 }

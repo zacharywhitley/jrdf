@@ -59,10 +59,9 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.parser.ParseException;
 
 public interface LiteralParser {
-    Literal parseLiteral(String s) throws GraphElementFactoryException, ParseException;
+    Literal parseLiteral(String s) throws ParseException;
 }
