@@ -56,55 +56,37 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser.ntriples.parser;
+package org.jrdf.util.boundary;
 
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import org.jrdf.graph.GraphElementFactory;
-import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.test.ArgumentTestUtil;
-import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.StandardClassPropertiesTestUtil;
+import org.easymock.IArgumentMatcher;
+import org.easymock.EasyMock;
 
 import java.util.regex.Pattern;
 
-public class LiteralParserImplUnitTest extends TestCase {
-    private static final Class<LiteralParser> TARGET_INTERFACE = LiteralParser.class;
-    private static final Class<LiteralParserImpl> TEST_CLASS = LiteralParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, RegexMatcherFactory.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "regexMatcherFactory"};
-    private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
-            "(" +
-            "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-            ").*");
-    private final MockFactory mockFactory = new MockFactory();
+/**
+ * Class description goes here.
+ */
+public class PatternArgumentMatcher implements IArgumentMatcher {
+    private final Pattern expectedPattern;
 
-    public void testClassProperties() {
-        StandardClassPropertiesTestUtil.hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+    public PatternArgumentMatcher(Pattern expectedPattern) {
+        this.expectedPattern = expectedPattern;
     }
 
-    public void testMethodProperties() {
-        GraphElementFactory elementFactory = mockFactory.createMock(GraphElementFactory.class);
-        RegexMatcherFactory regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
-        LiteralParser parser = new LiteralParserImpl(elementFactory, regexMatcherFactory);
-        ArgumentTestUtil.checkMethodNullAndEmptyAssertions(parser, "parseLiteral", new ParameterDefinition(
-                new String[] {"s"}, new Class[]{String.class}));
+    public boolean matches(Object object) {
+        if (!(object instanceof Pattern)) {
+            return false;
+        }
+        Pattern actualPattern = (Pattern) object;
+        return expectedPattern.pattern().equals(actualPattern.pattern());
     }
 
-    public void testParseLiteral() throws Exception {
-        GraphElementFactory elementFactory = mockFactory.createMock(GraphElementFactory.class);
-        RegexMatcherFactory regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
-        RegexMatcher matcher = mockFactory.createMock(RegexMatcher.class);
-        expect(matcher.matches()).andReturn(false);
-        String line = "string" + Math.random();
-        expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(line))).andReturn(matcher);
-        LiteralParser parser = new LiteralParserImpl(elementFactory, regexMatcherFactory);
-        mockFactory.replay();
-        parser.parseLiteral(line);
-        mockFactory.verify();
+    public void appendTo(StringBuffer buffer) {
+        buffer.append("Expected: " + expectedPattern.pattern());
+    }
+
+    public static <T extends Pattern>T eqPattern(T in) {
+        EasyMock.reportMatcher(new PatternArgumentMatcher(in));
+        return null;
     }
 }
