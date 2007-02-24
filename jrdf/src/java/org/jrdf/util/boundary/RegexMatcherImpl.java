@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,36 +56,61 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.util.boundary;
 
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import java.util.regex.Matcher;
 
 /**
  * Class description goes here.
  */
-public class ParserFactoryImpl implements ParserFactory {
-    public NTriplesParser createParser(GraphElementFactory graphElementFactory,
-            ParserBlankNodeFactory parserBlankNodeFactory) {
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
-        LiteralParser literalParser = new LiteralParserImpl(graphElementFactory, new RegexMatcherFactoryImpl());
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
-        SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
-        PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
-        ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
-        return new NTriplesParser(subjectParser, predicateParser, objectParser);
+public class RegexMatcherImpl implements RegexMatcher {
+    private final Matcher matcher;
+
+    RegexMatcherImpl(Matcher matcher) {
+        this.matcher = matcher;
+    }
+
+    public boolean find() {
+        return matcher.find();
+    }
+
+    public boolean matches() {
+        return matcher.matches();
+    }
+
+    public int start() {
+        return matcher.start();
+    }
+
+    public int start(int group) {
+        return matcher.start(group);
+    }
+
+    public int end() {
+        return matcher.end();
+    }
+
+    public int end(int group) {
+        return matcher.end(group);
+    }
+
+    public String group() {
+        return matcher.group();
+    }
+
+    public String group(int group) {
+        return matcher.group(group);
+    }
+
+    public int groupCount() {
+        return matcher.groupCount();
+    }
+
+    public void appendReplacement(StringBuffer sb, String replacement) {
+        matcher.appendReplacement(sb, replacement);
+    }
+
+    public void appendTail(StringBuffer sb) {
+        matcher.appendTail(sb);
     }
 }

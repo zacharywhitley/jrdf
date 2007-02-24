@@ -67,7 +67,7 @@ import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
-public class BlankNodeParserUnitTest extends TestCase {
+public class BlankNodeParserImplUnitTest extends TestCase {
     private static final Class<BlankNodeParser> TARGET_INTERFACE = BlankNodeParser.class;
     private static final Class<BlankNodeParserImpl> TEST_CLASS = BlankNodeParserImpl.class;
     private static final Class[] PARAM_TYPES = new Class[] {ParserBlankNodeFactory.class};
@@ -81,10 +81,11 @@ public class BlankNodeParserUnitTest extends TestCase {
     public void testMethodProperties() {
         ParserBlankNodeFactory nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
         BlankNodeParser parser = new BlankNodeParserImpl(nodeFactory);
-        checkMethodNullAndEmptyAssertions(parser, "parserBlankNode", new ParameterDefinition(
+        checkMethodNullAndEmptyAssertions(parser, "parseBlankNode", new ParameterDefinition(
                 new String[] {"s"}, new Class[]{String.class}));
     }
 
+    // TODO (AN) Only have one exception on the parseBlankNode method.
     public void testCreateBlankNode() throws Exception {
         ParserBlankNodeFactory nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
         BlankNode blankNode = mockFactory.createMock(BlankNode.class);
@@ -92,7 +93,7 @@ public class BlankNodeParserUnitTest extends TestCase {
         expect(nodeFactory.createBlankNode(nodeId)).andReturn(blankNode);
         BlankNodeParser blankNodeParser = new BlankNodeParserImpl(nodeFactory);
         mockFactory.replay();
-        blankNodeParser.parserBlankNode(nodeId);
+        blankNodeParser.parseBlankNode(nodeId);
         mockFactory.verify();
     }
 }

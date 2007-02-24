@@ -64,5 +64,6 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.parser.ParseException;
 
 public interface BlankNodeParser {
-    BlankNode parserBlankNode(String s) throws GraphElementFactoryException, ParseException;
+    // TODO (AN) Only have one exception on the parseBlankNode method.
+    BlankNode parseBlankNode(String s) throws GraphElementFactoryException, ParseException;
 }
