@@ -58,69 +58,53 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.util.boundary.RegexMatcher;
+import junit.framework.TestCase;
 import org.jrdf.util.boundary.RegexMatcherFactory;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.util.boundary.RegexMatcher;
+import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.ParameterDefinition;
+import org.jrdf.util.test.MockFactory;
+import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.eq;
 
 import java.util.regex.Pattern;
 
-/**
- * Class description goes here.
- */
-public final class LiteralUtilImpl implements LiteralUtil {
+public class LiteralUtilImplUnitTest extends TestCase {
+    private static final Class<?> TARGET_INTERFACE = LiteralUtil.class;
+    private static final Class<?> TEST_CLASS = LiteralUtilImpl.class;
+    private static final Class[] PARAM_TYPES = {RegexMatcherFactory.class};
+    private static final String[] PARAMETER_NAMES = {"regexMatcherFactory"};
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
             "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
-    private static final int LITERAL_ESCAPE_INDEX = 0;
-    private static final int UNICODE_4DIGIT_INDEX = 9;
-    private static final int UNICODE_8DIGIT_INDEX = 11;
-    private static final int HEX_RADIX = 16;
-    private final RegexMatcherFactory regexMatcherFactory;
+    private MockFactory factory = new MockFactory();
+    private RegexMatcherFactory regexMatcherFactory;
+    private RegexMatcher matcher;
+    private LiteralUtil util;
 
-    public LiteralUtilImpl(RegexMatcherFactory regexMatcherFactory) {
-        checkNotNull(regexMatcherFactory);
-        this.regexMatcherFactory = regexMatcherFactory;
+    public void setUp() {
+        regexMatcherFactory = factory.createMock(RegexMatcherFactory.class);
+        matcher = factory.createMock(RegexMatcher.class);
+        util = new LiteralUtilImpl(regexMatcherFactory);
     }
 
-    public String unescapeLiteral(String literal) {
-        checkNotNull(literal);
-        RegexMatcher matcher = regexMatcherFactory.createMatcher(LITERAL_ESCAPE_REGEX, literal);
-        if (!matcher.find()) {
-            return literal;
-        } else {
-            return hasCharactersToEscape(matcher);
-        }
+    public void testClassProperties() {
+        hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
-    // Can fail on each of these lines when parsing - handle error.
-    private String hasCharactersToEscape(RegexMatcher matcher) {
-        StringBuffer buffer = new StringBuffer();
-        do {
-            String escapeChar = matcher.group(LITERAL_ESCAPE_INDEX);
-            if (escapeChar.equals("\\\\")) {
-                matcher.appendReplacement(buffer, "\\\\");
-            } else if (escapeChar.equals("\\\"")) {
-                matcher.appendReplacement(buffer, "\"");
-            } else if (escapeChar.equals("\\n")) {
-                matcher.appendReplacement(buffer, "\n");
-            } else if (escapeChar.equals("\\r")) {
-                matcher.appendReplacement(buffer, "\r");
-            } else if (escapeChar.equals("\\t")) {
-                matcher.appendReplacement(buffer, "\t");
-            } else if (escapeChar.startsWith("\\u")) {
-                appendUnicode(matcher, buffer, UNICODE_4DIGIT_INDEX);
-            } else if (escapeChar.startsWith("\\U")) {
-                appendUnicode(matcher, buffer, UNICODE_8DIGIT_INDEX);
-            }
-        } while (matcher.find());
-        matcher.appendTail(buffer);
-        return buffer.toString();
+    public void testMethodProperties() {
+        ArgumentTestUtil.checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
+                new String[] {"literal"}, new Class[]{String.class}));
     }
 
-    // Can fail on each of these lines when parsing - handle error.
-    private void appendUnicode(RegexMatcher matcher, StringBuffer buffer, int group) {
-        String unicodeString = matcher.group(group);
-        int unicodeValue = Integer.parseInt(unicodeString, HEX_RADIX);
-        char[] chars = Character.toChars(unicodeValue);
-        matcher.appendReplacement(buffer, String.valueOf(chars));
+    public void testUnescapeLiteral() {
+        final String line = "string" + Math.random();
+        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(line))).andReturn(matcher);
+        expect(matcher.find()).andReturn(false);
+        factory.replay();
+        String s = util.unescapeLiteral(line);
+        assertTrue(s == line);
+        factory.verify();
     }
 }
