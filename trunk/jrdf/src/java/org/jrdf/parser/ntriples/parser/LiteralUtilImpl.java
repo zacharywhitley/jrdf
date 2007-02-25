@@ -63,6 +63,8 @@ import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Class description goes here.
@@ -74,6 +76,16 @@ public final class LiteralUtilImpl implements LiteralUtil {
     private static final int UNICODE_4DIGIT_INDEX = 9;
     private static final int UNICODE_8DIGIT_INDEX = 11;
     private static final int HEX_RADIX = 16;
+    private static final Map<String, String> LITERAL_ESCAPE_LOOKUP = new HashMap<String, String>() {
+        private static final long serialVersionUID = 321L;
+        {
+            put("\\\\", "\\\\");
+            put("\\\"", "\\\"");
+            put("\\n", "\n");
+            put("\\r", "\r");
+            put("\\t", "\t");
+        }
+    };
     private final RegexMatcherFactory regexMatcherFactory;
 
     public LiteralUtilImpl(RegexMatcherFactory regexMatcherFactory) {
@@ -96,16 +108,9 @@ public final class LiteralUtilImpl implements LiteralUtil {
         StringBuffer buffer = new StringBuffer();
         do {
             String escapeChar = matcher.group(LITERAL_ESCAPE_INDEX);
-            if (escapeChar.equals("\\\\")) {
-                matcher.appendReplacement(buffer, "\\\\");
-            } else if (escapeChar.equals("\\\"")) {
-                matcher.appendReplacement(buffer, "\"");
-            } else if (escapeChar.equals("\\n")) {
-                matcher.appendReplacement(buffer, "\n");
-            } else if (escapeChar.equals("\\r")) {
-                matcher.appendReplacement(buffer, "\r");
-            } else if (escapeChar.equals("\\t")) {
-                matcher.appendReplacement(buffer, "\t");
+            String escapeValue = LITERAL_ESCAPE_LOOKUP.get(escapeChar);
+            if (escapeValue != null) {
+                matcher.appendReplacement(buffer, escapeValue);
             } else if (escapeChar.startsWith("\\u")) {
                 appendUnicode(matcher, buffer, UNICODE_4DIGIT_INDEX);
             } else if (escapeChar.startsWith("\\U")) {
