@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -60,30 +60,30 @@ package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
-import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
-public class BlankNodeParserImplUnitTest extends TestCase {
-    private static final Class<BlankNodeParser> TARGET_INTERFACE = BlankNodeParser.class;
-    private static final Class<BlankNodeParserImpl> TEST_CLASS = BlankNodeParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {ParserBlankNodeFactory.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"parserBlankNodeFactory"};
-    private static final String NODE_ID = "string" + Math.random();
+public class URIReferenceParserImplUnitTest extends TestCase {
+    private static final Class<URIReferenceParser> TARGET_INTERFACE = URIReferenceParser.class;
+    private static final Class<URIReferenceParserImpl> TEST_CLASS = URIReferenceParserImpl.class;
+    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class,};
+    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory"};
+    private static final String LINE = "string" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
-    private ParserBlankNodeFactory nodeFactory;
-    private BlankNode blankNode;
-    private BlankNodeParser parser;
+    private URIReferenceParser uriReferenceParser;
+    private GraphElementFactory graphElementFactory;
+    private URIReference uriReference;
 
     public void setUp() {
-        nodeFactory = mockFactory.createMock(ParserBlankNodeFactory.class);
-        blankNode = mockFactory.createMock(BlankNode.class);
-        parser = new BlankNodeParserImpl(nodeFactory);
+        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
+        uriReference = mockFactory.createMock(URIReference.class);
+        uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
     }
 
     public void testClassProperties() {
@@ -91,30 +91,35 @@ public class BlankNodeParserImplUnitTest extends TestCase {
     }
 
     public void testMethodProperties() {
-        checkMethodNullAndEmptyAssertions(parser, "parseBlankNode", new ParameterDefinition(
+        checkMethodNullAndEmptyAssertions(uriReferenceParser, "parseURIReference", new ParameterDefinition(
                 new String[] {"s"}, new Class[]{String.class}));
     }
 
-    public void testCreateBlankNode() throws Exception {
-        expect(nodeFactory.createBlankNode(NODE_ID)).andReturn(blankNode);
+    public void testCreateURIReference() throws Exception {
+        expect(uriReferenceParser.parseURIReference(LINE)).andReturn(uriReference);
         mockFactory.replay();
-        BlankNode actualBlankNode = parser.parseBlankNode(NODE_ID);
-        assertTrue(blankNode == actualBlankNode);
+        URIReference actualURIReference = uriReferenceParser.parseURIReference(LINE);
+        assertTrue(uriReference == actualURIReference);
         mockFactory.verify();
     }
 
-    public void testCreateBlankNodeWithException() throws Exception {
-        expect(nodeFactory.createBlankNode(NODE_ID)).andThrow(new GraphElementFactoryException(""));
+    public void testCreateURIReferenceWithException() throws Exception {
+        expect(uriReferenceParser.parseURIReference(LINE)).andThrow(new GraphElementFactoryException(""));
         mockFactory.replay();
-        checkThrowsException();
+        checkThrowsException(LINE);
         mockFactory.verify();
+        mockFactory.reset();
     }
 
-    private void checkThrowsException() {
+    public void testBaseURIThrowsException() throws Exception {
+        checkThrowsException("asd$#@:%!@#!");
+    }
+
+    private void checkThrowsException(String line) {
         try {
-            parser.parseBlankNode(NODE_ID);
+            uriReferenceParser.parseURIReference(line);
         } catch (ParseException p) {
-            assertEquals("Failed to create blank node: " + NODE_ID, p.getMessage());
+            assertEquals("Failed to create URI Reference: " + line, p.getMessage());
             assertEquals(1, p.getColumnNumber());
         } catch (Throwable t) {
             fail("Should not throw exception: " + t.getClass());
