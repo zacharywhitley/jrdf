@@ -65,6 +65,7 @@ import org.jrdf.util.boundary.RegexMatcher;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public final class ObjectParserImpl implements ObjectParser {
+    private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 8;
     private static final int BLANK_NODE_GROUP = 9;
     private static final int LITERAL_GROUP = 11;
@@ -89,7 +90,7 @@ public final class ObjectParserImpl implements ObjectParser {
         } else if (matcher.group(LITERAL_GROUP) != null) {
             return literalParser.parseLiteral(matcher.group(LITERAL_GROUP));
         } else {
-            return null;
+            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
         }
     }
 }

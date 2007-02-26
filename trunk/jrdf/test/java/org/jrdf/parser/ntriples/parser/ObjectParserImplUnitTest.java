@@ -79,6 +79,7 @@ public class ObjectParserImplUnitTest extends TestCase {
     private static final String[] PARAMETER_NAMES = new String[] {"uriReferenceParser", "blankNodeParser",
         "literalParser"};
     private static final String MATCHER = "match" + Math.random();
+    private static final String LINE = "line" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
     private URIReferenceParser uriReferenceParser;
     private BlankNodeParser blankNodeParser;
@@ -103,30 +104,56 @@ public class ObjectParserImplUnitTest extends TestCase {
                 new String[] {"regexMatcher"}, new Class[]{RegexMatcher.class}));
     }
 
-    // TODO (AN) Fix this bollocks
     public void testParseObjectURI() throws Exception {
         URIReference expectedUriReference = mockFactory.createMock(URIReference.class);
-        BlankNode expectedBlankNode = mockFactory.createMock(BlankNode.class);
-        Literal expectedLiteral = mockFactory.createMock(Literal.class);
         expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
         expect(regexMatcher.group(8)).andReturn(MATCHER).times(2);
-        checkParseObject(expectedUriReference);
+        checkParse(expectedUriReference);
+    }
+
+    public void testParseBlankNode() throws Exception {
+        BlankNode expectedBlankNode = mockFactory.createMock(BlankNode.class);
         expect(blankNodeParser.parseBlankNode(MATCHER)).andReturn(expectedBlankNode);
         expect(regexMatcher.group(8)).andReturn(null).times(1);
         expect(regexMatcher.group(9)).andReturn(MATCHER).times(2);
-        checkParseObject(expectedBlankNode);
+        checkParse(expectedBlankNode);
+    }
+
+    public void testParseLiteral() throws Exception {
+        Literal expectedLiteral = mockFactory.createMock(Literal.class);
         expect(literalParser.parseLiteral(MATCHER)).andReturn(expectedLiteral);
         expect(regexMatcher.group(8)).andReturn(null).times(1);
         expect(regexMatcher.group(9)).andReturn(null).times(1);
         expect(regexMatcher.group(11)).andReturn(MATCHER).times(2);
-        checkParseObject(expectedLiteral);
+        checkParse(expectedLiteral);
     }
 
-    private void checkParseObject(ObjectNode expectedUriReference) throws ParseException {
+    public void testDoesntParse() throws Exception {
+        expect(regexMatcher.group(8)).andReturn(null).times(1);
+        expect(regexMatcher.group(9)).andReturn(null).times(1);
+        expect(regexMatcher.group(11)).andReturn(null).times(1);
+        expect(regexMatcher.group(0)).andReturn(LINE).times(1);
+        mockFactory.replay();
+        checkThrowsException();
+        mockFactory.verify();
+    }
+
+    private void checkParse(ObjectNode expectedUriReference) throws ParseException {
         mockFactory.replay();
         ObjectNode objectNode = objectParser.parseObject(regexMatcher);
         assertTrue(expectedUriReference == objectNode);
         mockFactory.verify();
-        mockFactory.reset();
+    }
+
+    private void checkThrowsException() {
+        try {
+            objectParser.parseObject(regexMatcher);
+        } catch (ParseException p) {
+            assertEquals("Failed to parse line: " + LINE, p.getMessage());
+            assertEquals(1, p.getColumnNumber());
+        } catch (Throwable t) {
+            t.printStackTrace();
+            fail("Should not throw exception: " + t.getClass());
+        }
     }
 }
