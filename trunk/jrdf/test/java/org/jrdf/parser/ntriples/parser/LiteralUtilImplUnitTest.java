@@ -59,15 +59,16 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcher;
-import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
-import org.jrdf.util.test.ArgumentTestUtil;
-import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.MockFactory;
-import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
-import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ParameterDefinition;
+import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
 import java.util.regex.Pattern;
 
@@ -82,6 +83,7 @@ public class LiteralUtilImplUnitTest extends TestCase {
     private RegexMatcherFactory regexMatcherFactory;
     private RegexMatcher matcher;
     private LiteralUtil util;
+    private static final String LINE = "string" + Math.random();
 
     public void setUp() {
         regexMatcherFactory = factory.createMock(RegexMatcherFactory.class);
@@ -105,6 +107,50 @@ public class LiteralUtilImplUnitTest extends TestCase {
         factory.replay();
         String s = util.unescapeLiteral(line);
         assertTrue(s == line);
+        factory.verify();
+    }
+
+    public void testEscapeLiteralLookup() {
+        checkCharacterEscape("\\\\", "\\\\");
+        checkCharacterEscape("\\\"", "\\\"");
+        checkCharacterEscape("\\n", "\n");
+        checkCharacterEscape("\\r", "\r");
+        checkCharacterEscape("\\t", "\t");
+    }
+
+    public void testEscapeLiteral4DigitUnicode() {
+        checkUnicode("\\u000f", 9);
+    }
+
+    public void testEscapeLiteral8DigitUnicode() {
+        checkUnicode("\\U00000000f", 11);
+    }
+
+    private void checkCharacterEscape(String key, String value) {
+        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(LINE))).andReturn(matcher);
+        expect(matcher.find()).andReturn(true);
+        expect(matcher.group(0)).andReturn(key);
+        matcher.appendReplacement((StringBuffer) anyObject(), eq(value));
+        expect(matcher.find()).andReturn(false);
+        matcher.appendTail((StringBuffer) anyObject());
+        factory.replay();
+        String s = util.unescapeLiteral(LINE);
+        assertEquals("", s);
+        factory.verify();
+        factory.reset();
+    }
+
+    private void checkUnicode(String string, int group) {
+        expect(regexMatcherFactory.createMatcher(eqPattern(LITERAL_ESCAPE_REGEX), eq(LINE))).andReturn(matcher);
+        expect(matcher.find()).andReturn(true);
+        expect(matcher.group(0)).andReturn(string);
+        expect(matcher.group(group)).andReturn("0f");
+        matcher.appendReplacement((StringBuffer) anyObject(), eq(new String(Character.toChars(15))));
+        expect(matcher.find()).andReturn(false);
+        matcher.appendTail((StringBuffer) anyObject());
+        factory.replay();
+        String s = util.unescapeLiteral(LINE);
+        assertEquals("", s);
         factory.verify();
     }
 }
