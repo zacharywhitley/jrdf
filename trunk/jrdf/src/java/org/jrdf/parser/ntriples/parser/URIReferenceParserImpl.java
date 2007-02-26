@@ -63,21 +63,27 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
 
-public class URIReferenceParserImpl implements URIReferenceParser {
+public final class URIReferenceParserImpl implements URIReferenceParser {
     private final GraphElementFactory graphElementFactory;
 
     public URIReferenceParserImpl(GraphElementFactory graphElementFactory) {
+        checkNotNull(graphElementFactory);
         this.graphElementFactory = graphElementFactory;
     }
 
-    public URIReference parseURIReference(String s) throws GraphElementFactoryException, ParseException {
+    public URIReference parseURIReference(String s) throws ParseException {
+        checkNotEmptyString("s", s);
         try {
             return graphElementFactory.createResource(URI.create(s));
         } catch (IllegalArgumentException iae) {
-            return null;
+            throw new ParseException("Failed to create URI Reference: " + s, 1);
+        } catch (GraphElementFactoryException e) {
+            throw new ParseException("Failed to create URI Reference: " + s, 1);
         }
     }
 }
