@@ -58,7 +58,6 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -188,8 +187,6 @@ public class NTriplesEventReader implements RDFEventReader {
                 // This is an error.
                 return null;
             }
-        } catch (GraphElementFactoryException e) {
-            throw new RuntimeException(e);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         } catch (TripleFactoryException e) {

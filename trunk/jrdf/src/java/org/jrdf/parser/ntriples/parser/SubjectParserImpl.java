@@ -59,29 +59,32 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-public class SubjectParserImpl implements SubjectParser {
+public final class SubjectParserImpl implements SubjectParser {
+    private static final int LINE_GROUP = 0;
     private static final int URI_GROUP = 2;
     private static final int BLANK_NODE_GROUP = 3;
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
 
     public SubjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser) {
+        checkNotNull(uriReferenceParser, blankNodeParser);
         this.uriReferenceParser = uriReferenceParser;
         this.blankNodeParser = blankNodeParser;
     }
 
-    public SubjectNode parseSubject(RegexMatcher matcher) throws GraphElementFactoryException, ParseException {
+    public SubjectNode parseSubject(RegexMatcher matcher) throws ParseException {
+        checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {
             return blankNodeParser.parseBlankNode(matcher.group(BLANK_NODE_GROUP));
         } else {
-            return null;
+            throw new ParseException("Failed to parse line: " + matcher.group(LINE_GROUP), 1);
         }
     }
 }
