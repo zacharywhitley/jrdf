@@ -59,7 +59,6 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
@@ -81,7 +80,7 @@ public final class ObjectParserImpl implements ObjectParser {
         this.literalParser = literalParser;
     }
 
-    public ObjectNode parseObject(RegexMatcher matcher) throws GraphElementFactoryException, ParseException {
+    public ObjectNode parseObject(RegexMatcher matcher) throws ParseException {
         checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
