@@ -62,10 +62,10 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.parser.ParseException;
+import org.jrdf.util.boundary.RegexMatcher;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.regex.Matcher;
-
-public class ObjectParserImpl implements ObjectParser {
+public final class ObjectParserImpl implements ObjectParser {
     private static final int URI_GROUP = 8;
     private static final int BLANK_NODE_GROUP = 9;
     private static final int LITERAL_GROUP = 11;
@@ -75,12 +75,14 @@ public class ObjectParserImpl implements ObjectParser {
 
     public ObjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser,
         LiteralParser literalParser) {
+        checkNotNull(uriReferenceParser, blankNodeParser, literalParser);
         this.uriReferenceParser = uriReferenceParser;
         this.blankNodeParser = blankNodeParser;
         this.literalParser = literalParser;
     }
 
-    public ObjectNode parseObject(Matcher matcher) throws GraphElementFactoryException, ParseException {
+    public ObjectNode parseObject(RegexMatcher matcher) throws GraphElementFactoryException, ParseException {
+        checkNotNull(matcher);
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {

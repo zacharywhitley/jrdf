@@ -62,8 +62,7 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
-
-import java.util.regex.Matcher;
+import org.jrdf.util.boundary.RegexMatcher;
 
 public class SubjectParserImpl implements SubjectParser {
     private static final int URI_GROUP = 2;
@@ -76,7 +75,7 @@ public class SubjectParserImpl implements SubjectParser {
         this.blankNodeParser = blankNodeParser;
     }
 
-    public SubjectNode parseSubject(Matcher matcher) throws GraphElementFactoryException, ParseException {
+    public SubjectNode parseSubject(RegexMatcher matcher) throws GraphElementFactoryException, ParseException {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else if (matcher.group(BLANK_NODE_GROUP) != null) {

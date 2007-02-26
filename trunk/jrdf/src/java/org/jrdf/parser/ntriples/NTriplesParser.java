@@ -60,10 +60,10 @@
 package org.jrdf.parser.ntriples;
 
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.GraphException;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandler;
@@ -72,13 +72,14 @@ import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.parser.ntriples.parser.ObjectParser;
 import org.jrdf.parser.ntriples.parser.PredicateParser;
 import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NTriplesParser implements Parser, StatementHandlerConfiguration {
@@ -92,12 +93,15 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     private final SubjectParser subjectParser;
     private final PredicateParser predicateParser;
     private final ObjectParser objectParser;
+    private final RegexMatcherFactory regexMatcherFactory;
     private StatementHandler sh;
 
-    public NTriplesParser(SubjectParser subjectParser, PredicateParser predicateParser, ObjectParser objectParser) {
+    public NTriplesParser(SubjectParser subjectParser, PredicateParser predicateParser, ObjectParser objectParser,
+            RegexMatcherFactory regexMatcherFactory) {
         this.subjectParser = subjectParser;
         this.predicateParser = predicateParser;
         this.objectParser = objectParser;
+        this.regexMatcherFactory = regexMatcherFactory;
     }
 
     public void setStatementHandler(StatementHandler sh) {
@@ -111,10 +115,11 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
         LineNumberReader bufferedReader = new LineNumberReader(reader);
         String line;
-        Matcher tripleRegexMatcher;
+        RegexMatcher tripleRegexMatcher;
         while ((line = bufferedReader.readLine()) != null) {
-            if (!COMMENT_REGEX.matcher(line).matches()) {
-                tripleRegexMatcher = TRIPLE_REGEX.matcher(line);
+            RegexMatcher commentMatcher = regexMatcherFactory.createMatcher(COMMENT_REGEX, line);
+            if (!commentMatcher.matches()) {
+                tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
                 if (tripleRegexMatcher.matches()) {
                     try {
                         parseTriple(tripleRegexMatcher);
@@ -126,7 +131,7 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
         }
     }
 
-    private void parseTriple(Matcher tripleRegexMatcher)
+    private void parseTriple(RegexMatcher tripleRegexMatcher)
         throws GraphElementFactoryException, ParseException, StatementHandlerException {
         SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
         PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);

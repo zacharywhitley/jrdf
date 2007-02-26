@@ -89,6 +89,7 @@ import java.net.URI;
  */
 public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private static final RDFInputFactory FACTORY = new NTriplesRDFInputFactoryImpl();
+    private static final RegexMatcherFactory REGEX_MATCHER_FACTORY = new RegexMatcherFactoryImpl();
     private SubjectParser subjectParser;
     private PredicateParser predicateParser;
     private ObjectParser objectParser;
@@ -97,14 +98,14 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
             ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
         return new NTriplesEventReader(stream, baseURI, graph.getTripleFactory(), subjectParser, predicateParser,
-                objectParser);
+                objectParser, REGEX_MATCHER_FACTORY);
     }
 
     public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
             ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
         return new NTriplesEventReader(reader, baseURI, graph.getTripleFactory(), subjectParser, predicateParser,
-                objectParser);
+                objectParser, REGEX_MATCHER_FACTORY);
     }
 
     public ParseErrorListener getRDFReporter() {
