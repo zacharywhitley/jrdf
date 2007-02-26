@@ -59,71 +59,75 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.expect;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
+import org.easymock.EasyMock;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParseException;
-import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
+import org.jrdf.util.test.StandardClassPropertiesTestUtil;
 
-public class URIReferenceParserImplUnitTest extends TestCase {
-    private static final Class<URIReferenceParser> TARGET_INTERFACE = URIReferenceParser.class;
-    private static final Class<URIReferenceParserImpl> TEST_CLASS = URIReferenceParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class,};
-    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory"};
-    private static final String LINE = "string" + Math.random();
+public class PredicateParserImplUnitTest extends TestCase {
+    private static final Class<PredicateParser> TARGET_INTERFACE = PredicateParser.class;
+    private static final Class<PredicateParserImpl> TEST_CLASS = PredicateParserImpl.class;
+    private static final Class[] PARAM_TYPES = new Class[] {URIReferenceParser.class};
+    private static final String[] PARAMETER_NAMES = new String[] {"uriReferenceParser"};
+    private static final String MATCHER = "match" + Math.random();
+    private static final String LINE = "line" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
     private URIReferenceParser uriReferenceParser;
-    private GraphElementFactory graphElementFactory;
-    private URIReference uriReference;
+    private PredicateParser predicateParser;
+    private RegexMatcher regexMatcher;
 
     public void setUp() {
-        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-        uriReference = mockFactory.createMock(URIReference.class);
-        uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
+        uriReferenceParser = mockFactory.createMock(URIReferenceParser.class);
+        predicateParser = new PredicateParserImpl(uriReferenceParser);
+        regexMatcher = mockFactory.createMock(RegexMatcher.class);
     }
 
     public void testClassProperties() {
-        hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+        StandardClassPropertiesTestUtil.hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
     }
 
     public void testMethodProperties() {
-        checkMethodNullAndEmptyAssertions(uriReferenceParser, "parseURIReference", new ParameterDefinition(
-                new String[] {"s"}, new Class[]{String.class}));
+        ArgumentTestUtil.checkMethodNullAssertions(predicateParser, "parsePredicate", new ParameterDefinition(
+                new String[] {"regexMatcher"}, new Class[]{RegexMatcher.class}));
     }
 
-    public void testCreateURIReference() throws Exception {
-        expect(uriReferenceParser.parseURIReference(LINE)).andReturn(uriReference);
+    public void testParseObjectURI() throws Exception {
+        URIReference expectedUriReference = mockFactory.createMock(URIReference.class);
+        EasyMock.expect(uriReferenceParser.parseURIReference(MATCHER)).andReturn(expectedUriReference);
+        EasyMock.expect(regexMatcher.group(6)).andReturn(MATCHER).times(2);
+        checkParse(expectedUriReference);
+    }
+
+    public void testDoesntParse() throws Exception {
+        EasyMock.expect(regexMatcher.group(6)).andReturn(null).times(1);
+        EasyMock.expect(regexMatcher.group(0)).andReturn(LINE).times(1);
         mockFactory.replay();
-        URIReference actualURIReference = uriReferenceParser.parseURIReference(LINE);
-        assertTrue(uriReference == actualURIReference);
+        checkThrowsException();
         mockFactory.verify();
     }
 
-    public void testCreateURIReferenceWithException() throws Exception {
-        expect(uriReferenceParser.parseURIReference(LINE)).andThrow(new GraphElementFactoryException(""));
+    private void checkParse(ObjectNode expectedUriReference) throws ParseException {
         mockFactory.replay();
-        checkThrowsException(LINE);
+        PredicateNode predicateNode = predicateParser.parsePredicate(regexMatcher);
+        assertTrue(expectedUriReference == predicateNode);
         mockFactory.verify();
-        mockFactory.reset();
     }
 
-    public void testBaseURIThrowsException() throws Exception {
-        checkThrowsException("asd$#@:%!@#!");
-    }
-
-    private void checkThrowsException(String line) {
+    private void checkThrowsException() {
         try {
-            uriReferenceParser.parseURIReference(line);
+            predicateParser.parsePredicate(regexMatcher);
             fail("Didn't throw parse exception");
         } catch (ParseException p) {
-            assertEquals("Failed to create URI Reference: " + line, p.getMessage());
+            assertEquals("Failed to parse line: " + LINE, p.getMessage());
             assertEquals(1, p.getColumnNumber());
         } catch (Throwable t) {
-            fail("Should not throw exception: " + t.getClass());
+            fail("Should not throw exception: " + t.getClass() + " msg: " + t.getMessage());
         }
     }
 }
