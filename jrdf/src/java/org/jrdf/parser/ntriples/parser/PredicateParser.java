@@ -59,12 +59,11 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.parser.ParseException;
-
-import java.util.regex.Matcher;
+import org.jrdf.util.boundary.RegexMatcher;
 
 public interface PredicateParser {
-    PredicateNode parsePredicate(Matcher matcher) throws GraphElementFactoryException, ParseException;
+    PredicateNode parsePredicate(RegexMatcher matcher) throws GraphElementFactoryException, ParseException;
 }

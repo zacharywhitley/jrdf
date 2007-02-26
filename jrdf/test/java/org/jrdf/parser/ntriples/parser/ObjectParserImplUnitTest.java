@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2006 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -56,41 +56,41 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.ntriples.parser.BlankNodeParser;
-import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralParser;
-import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralUtil;
-import org.jrdf.parser.ntriples.parser.LiteralUtilImpl;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
-import org.jrdf.util.boundary.RegexMatcherFactory;
+import junit.framework.TestCase;
+import org.jrdf.util.boundary.RegexMatcher;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ParameterDefinition;
+import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
-/**
- * Class description goes here.
- */
-public class ParserFactoryImpl implements ParserFactory {
-    public NTriplesParser createParser(GraphElementFactory graphElementFactory,
-            ParserBlankNodeFactory parserBlankNodeFactory) {
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
-        RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        LiteralUtil literalUtil = new LiteralUtilImpl(matcherFactory);
-        LiteralParser literalParser = new LiteralParserImpl(graphElementFactory, matcherFactory, literalUtil);
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
-        SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
-        PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
-        ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
-        return new NTriplesParser(subjectParser, predicateParser, objectParser, matcherFactory);
+public class ObjectParserImplUnitTest extends TestCase {
+    private static final Class<ObjectParser> TARGET_INTERFACE = ObjectParser.class;
+    private static final Class<ObjectParserImpl> TEST_CLASS = ObjectParserImpl.class;
+    private static final Class[] PARAM_TYPES = new Class[] {URIReferenceParser.class, BlankNodeParser.class,
+        LiteralParser.class};
+    private static final String[] PARAMETER_NAMES = new String[] {"uriReferenceParser", "blankNodeParser",
+        "literalParser"};
+    private final MockFactory mockFactory = new MockFactory();
+    private URIReferenceParser uriReferenceParser;
+    private BlankNodeParser blankNodeParser;
+    private LiteralParser literalParser;
+    private ObjectParser objectParser;
+
+    public void setUp() {
+        uriReferenceParser = mockFactory.createMock(URIReferenceParser.class);
+        blankNodeParser = mockFactory.createMock(BlankNodeParser.class);
+        literalParser = mockFactory.createMock(LiteralParser.class);
+        objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
+    }
+
+    public void testClassProperties() {
+        hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+    }
+
+    public void testMethodProperties() {
+        ArgumentTestUtil.checkMethodNullAssertions(objectParser, "parseObject", new ParameterDefinition(
+                new String[] {"regexMatcher"}, new Class[]{RegexMatcher.class}));
     }
 }

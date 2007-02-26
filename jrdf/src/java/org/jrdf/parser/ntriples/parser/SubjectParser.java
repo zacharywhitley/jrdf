@@ -59,12 +59,11 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.parser.ParseException;
-
-import java.util.regex.Matcher;
+import org.jrdf.util.boundary.RegexMatcher;
 
 public interface SubjectParser {
-    SubjectNode parseSubject(Matcher tripleRegexMatcher) throws GraphElementFactoryException, ParseException;
+    SubjectNode parseSubject(RegexMatcher tripleRegexMatcher) throws GraphElementFactoryException, ParseException;
 }

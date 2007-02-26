@@ -62,8 +62,7 @@ package org.jrdf.parser.ntriples.parser;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.parser.ParseException;
-
-import java.util.regex.Matcher;
+import org.jrdf.util.boundary.RegexMatcher;
 
 public class PredicateParserImpl implements PredicateParser {
     private static final int URI_GROUP = 6;
@@ -73,7 +72,7 @@ public class PredicateParserImpl implements PredicateParser {
         this.uriReferenceParser = uriReferenceParser;
     }
 
-    public PredicateNode parsePredicate(Matcher matcher) throws GraphElementFactoryException, ParseException {
+    public PredicateNode parsePredicate(RegexMatcher matcher) throws GraphElementFactoryException, ParseException {
         if (matcher.group(URI_GROUP) != null) {
             return uriReferenceParser.parseURIReference(matcher.group(URI_GROUP));
         } else {
