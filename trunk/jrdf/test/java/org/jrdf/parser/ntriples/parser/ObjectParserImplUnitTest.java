@@ -148,12 +148,12 @@ public class ObjectParserImplUnitTest extends TestCase {
     private void checkThrowsException() {
         try {
             objectParser.parseObject(regexMatcher);
+            fail("Didn't throw parse exception");
         } catch (ParseException p) {
             assertEquals("Failed to parse line: " + LINE, p.getMessage());
             assertEquals(1, p.getColumnNumber());
         } catch (Throwable t) {
-            t.printStackTrace();
-            fail("Should not throw exception: " + t.getClass());
+            fail("Should not throw exception: " + t.getClass() + " msg: " + t.getMessage());
         }
     }
 }

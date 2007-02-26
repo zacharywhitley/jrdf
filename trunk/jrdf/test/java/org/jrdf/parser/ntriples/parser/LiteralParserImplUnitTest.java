@@ -189,12 +189,12 @@ public class LiteralParserImplUnitTest extends TestCase {
     private void checkThrowsParseException(String line, String msg) {
         try {
             parser.parseLiteral(line);
+            fail("Didn't throw parse exception");
         } catch (ParseException p) {
             assertEquals(msg, p.getMessage());
             assertEquals(1, p.getColumnNumber());
         } catch (Throwable t) {
-            t.printStackTrace();
-            fail("Should not throw exception: " + t.getClass());
+            fail("Should not throw exception: " + t.getClass() + " msg: " + t.getMessage());
         }
     }
 

@@ -113,11 +113,12 @@ public class BlankNodeParserImplUnitTest extends TestCase {
     private void checkThrowsException() {
         try {
             parser.parseBlankNode(NODE_ID);
+            fail("Didn't throw parse exception");
         } catch (ParseException p) {
             assertEquals("Failed to create blank node: " + NODE_ID, p.getMessage());
             assertEquals(1, p.getColumnNumber());
         } catch (Throwable t) {
-            fail("Should not throw exception: " + t.getClass());
+            fail("Should not throw exception: " + t.getClass() + " msg: " + t.getMessage());
         }
     }
 }
