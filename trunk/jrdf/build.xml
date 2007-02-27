@@ -133,8 +133,8 @@
                  additionalparam="-breakiterator" Use="true"
                  source="${java.src.version}"
                  windowtitle="${project.longname} Framework ${project.version.full}"
-                 doctitle="${project.longname} Framework ${project.version.full}">
-            <excludepackage name="org.jrdf.sparql.analysis, org.jrdf.sparql.parser.node"/>
+                 doctitle="${project.longname} Framework ${project.version.full}"
+                 excludepackagenames="org.jrdf.sparql.parser.analysis.*, org.jrdf.sparql.parser.lexer.*, org.jrdf.sparql.parser.node.*, org.jrdf.sparql.parser.parser.*">
             <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
         </javadoc>
     </target>
