@@ -127,14 +127,14 @@
         <mkdir dir="${javadoc.dir}"/>
         <javadoc destdir="${javadoc.dir}" author="true" version="true"
                  packagenames="org.jrdf.*"
-                 sourcepath="${prod.src.dir}"
-                 classpath="${prod.classes.dir}"
+                 sourcepath="${prod.src.dir};${gen.src.dir}"
+                 classpath="${prod.classes.dir};${lib.dir}/derby/derby-10.2.2.0.jar;${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar;${lib.dir}/spring/spring-beans-2.0.1.jar;${lib.dir}/spring/spring-context-2.0.1.jar;${lib.dir}/spring/spring-core-2.0.1.jar;${lib.dir}/spring-rcp/spring-richclient-full-0.2.1.jar"
                  failonerror="true"
                  additionalparam="-breakiterator" Use="true"
                  source="${java.src.version}"
                  windowtitle="${project.longname} Framework ${project.version.full}"
                  doctitle="${project.longname} Framework ${project.version.full}">
-            <excludepackage name="org.jrdf.sparql.parser.analysis"/>
+            <excludepackage name="org.jrdf.sparql.analysis, org.jrdf.sparql.parser.node"/>
             <link href="http://java.sun.com/j2se/1.5.0/docs/api"/>
         </javadoc>
     </target>
