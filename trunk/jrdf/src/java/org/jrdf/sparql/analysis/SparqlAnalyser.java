@@ -74,7 +74,9 @@ public interface SparqlAnalyser extends Analysis {
     /**
      * Returns the query processed by this analyser.
      *
-     * @return The query processed by this analyser, or {@link #NO_QUERY} if no query has been processed.
+     * @return The query processed by this analyser, or {@link org.jrdf.sparql.analysis.NoQuery} 
+     *      if no query has been processed.
+     * @throws ParserException if the SPARQL parser gets an exception when parsing.
      */
     Query getQuery() throws ParserException;
 

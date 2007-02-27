@@ -1,7 +1,24 @@
+JRDF Release 0.4.1
+==================
+* Initial SPARQL: PREFIX, SELECT, WHERE, OPTIONAL, . (JOIN) and UNION 
+  supported (Feature 1236476).
+* User interface for SPARQL Querying (Feature 1505272).
+* Allows sorted results from the Graph API's find() method (Feature 1475502).
+* RDF/XML Writer by Robert Turner (Feature 1499471).
+* Push and Pull NTriples parser (Feature 1669796).
+* Added visit(Node) (Feature 1624471).
+* Fixed lazy implementation of Hashcode and Equals (Bug 1564442).
+* Now displays the line number when creating a URI from an RDF/XML file 
+  fails (Bug 1564355).
+* Changed to use Java 1.5 UUID generator instead of own implementation 
+  (Bug 1560109).
+* Fixed JrdfExample (Bug 1467546).
+* Fixed AbstractTriple.equals handling null nodes (Bug 1273310).
+
 JRDF Release 0.3.4.3
 ====================
 * Still doesn't parser XML Literals correctly - can fail to parse who
-triples due to not flushing the output stream. Due to typo (and no test). 
+triples due to not flushing the output stream. Due to typo (and no test).
 (Bug 1511751).
 
 JRDF Release 0.4
@@ -10,8 +27,8 @@ JRDF Release 0.4
 * Began work on SPARQL support, graph and relational operations.
 * Began work on a NTriples parser.
 * Using an iterator from the result of a find to remove nodes from the
-same graph no longer produces a concurrent modification exception 
-(Bug 1457621). 
+same graph no longer produces a concurrent modification exception
+(Bug 1457621).
 * NTriple escaping now correctly handles surrogates in Java 1.5. (Bug 1364927).
 * Large XML Literals are now correctly parsed (Bug 1362611).
 * Fixed incorrect resolving of relative URIs correctly (Bug 1315291).
