@@ -74,6 +74,7 @@ import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import org.jrdf.util.ClosableIterator;
+import org.apache.derby.iapi.types.XML;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -100,7 +101,7 @@ public class NTriplesParserIntegrationTest extends TestCase {
                 actualResults.add(triple);
             }
             assertEquals(TOTAL_TRIPLES, actualResults.size());
-            Set<Triple> triples = expectedResults();
+            Set<Triple> triples = NTriplesParserTestUtil.expectedResults(NEW_GRAPH, BLANK_NODE_FACTORY, TOTAL_TRIPLES);
             for (Triple triple : triples) {
                 assertTrue("Expected: " + triple, actualResults.contains(triple));
             }
@@ -117,33 +118,6 @@ public class NTriplesParserIntegrationTest extends TestCase {
         nTriplesParser.setStatementHandler(statementHandler);
         nTriplesParser.parse(in, "foo");
         return NEW_GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-    }
-
-    private Set<Triple> expectedResults() throws Exception {
-        Set<Triple> answers = new HashSet<Triple>();
-        GraphElementFactory graphElementFactory = NEW_GRAPH.getElementFactory();
-        TripleFactory tripleFactory = NEW_GRAPH.getTripleFactory();
-        List<URIReference> refs = new ArrayList<URIReference>();
-        for (int i = 0; i < TOTAL_TRIPLES; i++) {
-            refs.add(graphElementFactory.createResource(URI.create("http://example.org/resource" + i)));
-        }
-        URIReference p = graphElementFactory.createResource(URI.create("http://example.org/property"));
-        BlankNode anon = BLANK_NODE_FACTORY.createBlankNode("anon");
-        answers.add(tripleFactory.createTriple(refs.get(1), p, refs.get(2)));
-        answers.add(tripleFactory.createTriple(anon, p, refs.get(2)));
-        answers.add(tripleFactory.createTriple(refs.get(2), p, anon));
-        answers.add(tripleFactory.createTriple(refs.get(3), p, refs.get(2)));
-        answers.add(tripleFactory.createTriple(refs.get(4), p, refs.get(2)));
-        answers.add(tripleFactory.createTriple(refs.get(5), p, refs.get(2)));
-        answers.add(tripleFactory.createTriple(refs.get(6), p, refs.get(2)));
-        answers.add(tripleFactory.createTriple(refs.get(13), p, refs.get(2)));
-        answers.add(tripleFactory.createTriple(refs.get(15), p, anon));
-        answers.add(tripleFactory.createTriple(refs.get(16), p, graphElementFactory.createLiteral("\u00E9")));
-        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\u20AC")));
-        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uD800\uDC00")));
-        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uD84C\uDFB4")));
-        answers.add(tripleFactory.createTriple(refs.get(17), p, graphElementFactory.createLiteral("\uDBFF\uDFFF")));
-        return answers;
     }
 
     public InputStream getSampleData() throws IOException {
