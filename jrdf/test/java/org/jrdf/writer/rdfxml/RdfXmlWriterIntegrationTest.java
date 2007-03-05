@@ -61,16 +61,18 @@ package org.jrdf.writer.rdfxml;
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.operation.mem.ComparisonImpl;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
-import org.jrdf.writer.RdfNamespaceMap;
-import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.mem.BlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 
@@ -79,6 +81,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URI;
 import java.net.URL;
 
 // TODO (AN) Add a test for when there are no triples in the graph - seems to produce something strange.
@@ -91,6 +94,18 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
 
     public void setUp() {
         comparison = new ComparisonImpl();
+    }
+
+    public void testWriteOneStatement() throws Exception {
+        Graph graph = TestJRDFFactory.getFactory().getNewGraph();
+        GraphElementFactory graphElementFactory = graph.getElementFactory();
+        URI uri = new URI("http://hello.com/foo");
+        URIReference resource = graphElementFactory.createResource(uri);
+        graph.add(resource, resource, resource);
+        StringWriter out = writeGraph(graph);
+        Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");
+        assertEquals(graph.getNumberOfTriples(), read.getNumberOfTriples());
+        assertTrue(comparison.areIsomorphic(graph, read));
     }
 
     public void testReadWriteGrounded() throws Exception {
