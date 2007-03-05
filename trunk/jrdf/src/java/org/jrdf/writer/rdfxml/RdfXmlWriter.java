@@ -174,7 +174,7 @@ public class RdfXmlWriter implements RdfWriter {
         ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
-            while (iter.hasNext()) {
+            while (stack.hasNext()) {
                 writeSubject(stack);
             }
         } finally {
