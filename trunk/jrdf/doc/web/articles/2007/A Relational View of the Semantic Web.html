@@ -341,34 +341,25 @@ supplier.&nbsp; </p>
 
 <p>Figure 2 Example of a Supplier Graph</p>
 
-<p>An alternative mapping could take a
-primary key (SNO is a
-likely candidate) as being the centre of all the values.&nbsp; This
-decision is similar
-to the
-surrogate vs natural key blank nodes cannot be searched on by value the
-same
-way a numeric surrogate key can.&nbsp;
-However, this limits the possibility of representing a
-supplier without
-a supplier number or duplicate rows that occur in SQL tables that
-don&rsquo;t have
-uniqueness constraints applied.&nbsp;
-Representing a supplier without a required attribute may
-not seem
+<p>An alternative mapping could take a primary key (SNO is a likely
+candidate) as being the centre of all the values.&nbsp; However, this
+limits the possibility of representing suppliers without a known
+supplier number or duplicate rows (ones that typically occur in SQL
+tables that don&rsquo;t have uniqueness constraints applied).&nbsp;
+Representing a supplier without a required attribute may not seem
 initially sensible for those used to creating data models in closed
-environments.&nbsp; However,
-on the Web
-or any large distributed system, agreement of what is a required
-attribute may
-not be able to be reached ahead of time or perhaps a central authority
-that
-creates the unique identifier may not be reachable at the time the data
-is
-stored.&nbsp; Blank
-nodes, on the other
-hand, can be created locally without requiring an authority to generate
-them.</p>
+environments.&nbsp; However, on the Web or any large distributed
+system, agreement of what is a required attribute may not be able to be
+reached ahead of time or perhaps an authority required to create unique
+identifiers may not be reachable at the time the data is stored.&nbsp;
+Similarly, detecting duplicates is something that may have to occur
+after the data is recorded.</p>
+<p>&nbsp;This decision of whether to choose between a blank node or
+unique identifier is similar to the surrogate vs. natural key in
+relational databases.&nbsp; The difference is that blank nodes cannot
+be searched on by value in the same way a numeric surrogate key
+can.&nbsp; The advantage is that blank nodes can be created locally and
+distributed globally without requiring an authority to generate them. </p>
 
 <p>An RDF graph is a lot less structured
 than the given typical
