@@ -73,7 +73,7 @@ public class AntiJoinImpl implements AntiJoin {
         this.semiDifference = semiDifference;
     }
 
-    public Relation antiJoin(Relation relation1, Relation relation2) {
+    public Relation join(Relation relation1, Relation relation2) {
         Relation semiJoinResult = semiJoin.join(relation1, relation2);
         return semiDifference.minus(relation1, semiJoinResult);
     }

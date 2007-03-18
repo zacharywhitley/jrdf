@@ -97,7 +97,7 @@ public interface GraphElementFactory {
      * @param uri      The URI of the resource.
      * @param validate true if we disbale checking to see if the URI is valid.
      * @return The newly created URI reference value.
-     * @throws GraphElementFactoryException
+     * @throws GraphElementFactoryException If the resource failed to be created.
      */
     URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException;
 

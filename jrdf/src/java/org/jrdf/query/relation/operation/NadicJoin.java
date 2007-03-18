@@ -65,12 +65,11 @@ import java.util.Set;
 
 
 /**
- * Combines n-relations.
+ * Merely a marker interface - used to differentiate between two types of join.  A join that combines n-relations.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
 public interface NadicJoin extends Operation {
-
     Relation join(Set<Relation> relation);
 }

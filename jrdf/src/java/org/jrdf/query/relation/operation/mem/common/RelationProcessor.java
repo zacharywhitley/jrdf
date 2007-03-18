@@ -68,7 +68,22 @@ import java.util.Set;
  * Common process engine - basically gets headings and then calls process on the process engine.
  */
 public interface RelationProcessor {
+    /**
+     * A set of relations that are to be processed by the tuple engine.  First headings are processed and then the
+     * bodies of the relations.
+     *
+     * @param relations the relations to be processed by the tuple engine.
+     * @param tupleEngine the engine.
+     * @return the result of calling the tuple engine with all relations given as input.
+     */
     Relation processRelations(Set<Relation> relations, TupleEngine tupleEngine);
 
+    /**
+     * Converts a relation with no heading and no tuples to false (TABLE_DUM) and a relation with no heading but some
+     * tuples to true (TABLE_DEE).
+     *
+     * @param resultRelation the relation to convert.
+     * @return either TABLE_DUM (false), TABLE_DEE (true) or the same relation.
+     */
     Relation convertToConstants(Relation resultRelation);
 }

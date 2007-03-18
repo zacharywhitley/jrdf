@@ -80,7 +80,7 @@ public class LeftOuterJoinImpl implements DyadicJoin {
     }
 
     public Relation join(Relation relation1, Relation relation2) {
-        Relation antiJoinResult = antiJoin.antiJoin(relation1, relation2);
+        Relation antiJoinResult = antiJoin.join(relation1, relation2);
         Set<Relation> relations = new HashSet<Relation>();
         relations.add(relation1);
         relations.add(relation2);
