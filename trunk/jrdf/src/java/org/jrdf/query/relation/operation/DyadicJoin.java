@@ -62,7 +62,8 @@ package org.jrdf.query.relation.operation;
 import org.jrdf.query.relation.Relation;
 
 /**
- * Combines two relations.
+ * Merely a marker interface - used to differentiate between two types of join.  This is a join that combines only
+ * two relations.
  *
  * @author Andrew Newman
  * @version $Revision: 436 $

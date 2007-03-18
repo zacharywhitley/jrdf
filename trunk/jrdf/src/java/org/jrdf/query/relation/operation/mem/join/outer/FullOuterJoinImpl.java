@@ -81,7 +81,7 @@ public class FullOuterJoinImpl implements DyadicJoin {
 
     public Relation join(Relation relation1, Relation relation2) {
         Relation leftOuterJoinResult = leftOuterJoin.join(relation1, relation2);
-        Relation antiJoinResult = antiJoin.antiJoin(relation2, relation1);
+        Relation antiJoinResult = antiJoin.join(relation2, relation1);
         return union.union(leftOuterJoinResult, antiJoinResult);
     }
 }
