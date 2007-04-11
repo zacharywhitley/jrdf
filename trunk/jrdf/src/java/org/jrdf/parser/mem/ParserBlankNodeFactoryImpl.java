@@ -97,25 +97,10 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
         valueFactory = newValueFactory;
     }
 
-    /**
-     * Always creates a new BlankNode object from the GraphElementFactory.
-     *
-     * @return the new BlankNode object.
-     * @throws GraphElementFactoryException if it fails to create a new blank node.
-     */
     public BlankNode createBlankNode() throws GraphElementFactoryException {
         return valueFactory.createResource();
     }
 
-    /**
-     * Returns the BlankNode for a <code>nodeID</code> that has not been seen
-     * before or calls the GraphElementFactory to create a new BlankNode
-     * otherwise.
-     *
-     * @param nodeID the node that labels the bNode in the file being parsed.
-     * @return the BlankNode object.
-     * @throws GraphElementFactoryException if it fails to create a new blank node.
-     */
     public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
         // Maybe the node ID has been used before:
         BlankNode result = bNodeIdMap.get(nodeID);
@@ -131,11 +116,12 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
         return result;
     }
 
-    /**
-     * Clears the internal Map.
-     */
     public void clear() {
         bNodeIdMap.clear();
+    }
+
+    public void close() {
+        // Nothing!
     }
 
 }
