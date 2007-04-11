@@ -100,7 +100,6 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-0.2.1.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/derby/derby-10.2.2.0.jar"/>
     </patternset>
 
     <patternset id="test.classpath.pattern">
@@ -121,7 +120,6 @@
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
         <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
-        <include name="${lib.dir}/derby/derby-10.2.2.0.jar"/>
    </patternset>
 
     <fileset id="production.code.fileset" dir="${prod.src.dir}">
