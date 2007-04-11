@@ -107,4 +107,8 @@ public interface ParserBlankNodeFactory {
      */
     void clear();
 
+    /**
+     * Close any resource used by the blank node factory.
+     */
+    void close();
 }

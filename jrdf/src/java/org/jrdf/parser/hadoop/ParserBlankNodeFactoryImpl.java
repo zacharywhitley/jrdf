@@ -63,79 +63,94 @@ import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.mem.BlankNodeImpl;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.LocalFileSystem;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.SetFile;
+import org.apache.hadoop.io.WritableComparator;
+import org.apache.hadoop.io.MapFile;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.WritableComparable;
+import org.apache.hadoop.io.SequenceFile;
+import org.apache.hadoop.io.NullWritable;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.io.IOException;
 
 /**
- * A factory for BlankNodes that uses a Map to keep track of the BlankNodes
+ * A factory for BlankNodes that uses a MapFile to keep track of the BlankNodes
  * that have been allocated by {@link #createBlankNode(String)} so that the
  * same BlankNode object can be returned for a given <code>nodeID</code>.
  *
- * @author David Makepeace
+ * @author Andrew Newman
  * @version $Revision: 1045 $
  */
 public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
+
+    private static final WritableComparator COMPARATOR = WritableComparator.get(Text.class);
 
     /**
      * A factory for creating BlankNodes (as well as resources and literals).
      */
     private GraphElementFactory valueFactory;
+    private final Configuration configuration;
+    private FileSystem fileSystem;
+    private String filename;
 
-    /**
-     * Mapping from bNode ID's as used in the RDF document to the
-     * object created for it by the GraphElementFactory.
-     */
-    private Map<String, BlankNode> bNodeIdMap = new HashMap<String, BlankNode>();
-
-    /**
-     * Create a new blank node factory with the given value factory.
-     *
-     * @param newValueFactory factory to create nodes with.
-     */
-    public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory) {
-        valueFactory = newValueFactory;
+    public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory, Configuration configuration,
+        String filename) throws IOException {
+        this.valueFactory = newValueFactory;
+        this.configuration = configuration;
+        this.fileSystem = FileSystem.getLocal(configuration);
+        this.filename = filename;
+        fileSystem.mkdirs(new Path(filename));
+        MapFile.Writer writer = new MapFile.Writer(configuration, fileSystem, filename, COMPARATOR,
+            Text.class, SequenceFile.CompressionType.NONE);
+        writer.close();
     }
 
-    /**
-     * Always creates a new BlankNode object from the GraphElementFactory.
-     *
-     * @return the new BlankNode object.
-     * @throws GraphElementFactoryException if it fails to create a new blank node.
-     */
     public BlankNode createBlankNode() throws GraphElementFactoryException {
         return valueFactory.createResource();
     }
 
-    /**
-     * Returns the BlankNode for a <code>nodeID</code> that has not been seen
-     * before or calls the GraphElementFactory to create a new BlankNode
-     * otherwise.
-     *
-     * @param nodeID the node that labels the bNode in the file being parsed.
-     * @return the BlankNode object.
-     * @throws GraphElementFactoryException if it fails to create a new blank node.
-     */
     public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
         // Maybe the node ID has been used before:
-        BlankNode result = bNodeIdMap.get(nodeID);
+        BlankNode result = null;
+        try {
+            MapFile.Reader reader = new MapFile.Reader(fileSystem, filename, configuration);
+            Text key = new Text(nodeID);
+            Text id = (Text) reader.get(key, new Text());
+            reader.close();
+            System.err.println("Id: " + id);
+            if (null != id) {
+                // Existing node
+                result = BlankNodeImpl.valueOf(id.toString());
+            } else {
+                // This is a new node ID, create a new BNode object for it
+                result = valueFactory.createResource();
 
-        if (null == result) {
-            // This is a new node ID, create a new BNode object for it
-            result = valueFactory.createResource();
-
-            // Remember it, the nodeID might occur again.
-            bNodeIdMap.put(nodeID, result);
+                // Remember it, the nodeID might occur again.
+                MapFile.Writer writer = new MapFile.Writer(configuration, fileSystem, filename, COMPARATOR,
+                    Text.class, SequenceFile.CompressionType.NONE);
+                writer.append(key, new Text(result.toString()));
+                writer.close();
+            }
+            return result;
+        } catch (IOException e) {
+            throw new GraphElementFactoryException(e);
         }
-
-        return result;
     }
 
-    /**
-     * Clears the internal Map.
-     */
     public void clear() {
-        bNodeIdMap.clear();
+        try {
+            MapFile.delete(fileSystem, filename);
+        } catch (IOException e) {
+        }
     }
 
+    public void close() {
+    }
 }
