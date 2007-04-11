@@ -59,25 +59,20 @@
 
 package org.jrdf.parser.hadoop;
 
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.mem.BlankNodeImpl;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.LocalFileSystem;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.SetFile;
-import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.io.MapFile;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.WritableComparator;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.mem.BlankNodeImpl;
+import org.jrdf.parser.ParserBlankNodeFactory;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.io.IOException;
 
 /**
@@ -97,7 +92,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
      */
     private GraphElementFactory valueFactory;
     private final Configuration configuration;
-    private FileSystem fileSystem;
+    private LocalFileSystem fileSystem;
     private String filename;
 
     public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory, Configuration configuration,
@@ -124,7 +119,6 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
             Text key = new Text(nodeID);
             Text id = (Text) reader.get(key, new Text());
             reader.close();
-            System.err.println("Id: " + id);
             if (null != id) {
                 // Existing node
                 result = BlankNodeImpl.valueOf(id.toString());
@@ -133,10 +127,13 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
                 result = valueFactory.createResource();
 
                 // Remember it, the nodeID might occur again.
-                MapFile.Writer writer = new MapFile.Writer(configuration, fileSystem, filename, COMPARATOR,
+                MapFile.Writer writer = new MapFile.Writer(configuration, fileSystem, filename + "new", COMPARATOR,
                     Text.class, SequenceFile.CompressionType.NONE);
                 writer.append(key, new Text(result.toString()));
                 writer.close();
+                SequenceFile.Sorter sorter = new SequenceFile.Sorter(fileSystem, COMPARATOR, Text.class, configuration);
+                sorter.sort(new Path[] {new Path(filename+"/data"), new Path(filename+"new/data")}, new Path(filename+"tmp/data"), true);
+                fileSystem.copyFromLocalFile(true, new Path(filename+"tmp/data"), new Path(filename+"/data"));
             }
             return result;
         } catch (IOException e) {
