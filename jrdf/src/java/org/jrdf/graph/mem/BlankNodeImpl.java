@@ -187,8 +187,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode, Seriali
      * @return BlankNodeImpl
      * @throws IllegalArgumentException
      */
-    public static BlankNode valueOf(String nodeString) throws
-            IllegalArgumentException {
+    public static BlankNode valueOf(String nodeString) throws IllegalArgumentException {
 
         String[] split = nodeString.split("#");
 

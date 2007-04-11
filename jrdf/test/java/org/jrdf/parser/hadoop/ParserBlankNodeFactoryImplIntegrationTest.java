@@ -60,21 +60,17 @@
 package org.jrdf.parser.hadoop;
 
 import junit.framework.TestCase;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileUtil;
+import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.mem.GraphImpl;
-import org.jrdf.TestJRDFFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
 
 public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
     private static final String TMP_DIR = System.getProperty("java.io.tmpdir");
@@ -87,7 +83,7 @@ public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
             FileUtil.fullyDelete(dir);
         }
     }
-    
+
     public void testCreateBlankNode() throws IOException, GraphElementFactoryException {
         newGraph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
@@ -96,7 +92,10 @@ public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
         BlankNode blankNode1 = blankNodeFactory.createBlankNode("hello");
         BlankNode blankNode2 = blankNodeFactory.createBlankNode("hello");
         assertEquals(blankNode1, blankNode2);
-        blankNodeFactory.close();
-        blankNodeFactory.clear();
+        for (int i = 0; i < 1000; i++) {
+            blankNodeFactory.createBlankNode("hello"+i);
+        }
+        //blankNodeFactory.close();
+        //blankNodeFactory.clear();
     }
 }
