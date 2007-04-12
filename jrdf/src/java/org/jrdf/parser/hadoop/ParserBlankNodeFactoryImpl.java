@@ -121,7 +121,8 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
                 region.put(lockId, new Text("id:basic"), result.toString().getBytes());
                 region.commit(lockId);
             } else {
-                result = BlankNodeImpl.valueOf(new String(bytes));
+                String nodeString = new String(bytes);
+                result = BlankNodeImpl.valueOf(nodeString.trim());
             }
             return result;
         } catch (IOException e) {
