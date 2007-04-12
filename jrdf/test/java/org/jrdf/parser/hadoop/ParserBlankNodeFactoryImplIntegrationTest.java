@@ -135,7 +135,7 @@ public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
         for (int i = 0; i < 1000; i++) {
             blankNodeFactory.createBlankNode("hello" + i);
         }
-        //blankNodeFactory.close();
+        blankNodeFactory.close();
         //blankNodeFactory.clear();
     }
 }

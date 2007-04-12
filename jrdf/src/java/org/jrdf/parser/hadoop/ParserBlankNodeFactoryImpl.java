@@ -96,7 +96,6 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
      * A factory for creating BlankNodes (as well as resources and literals).
      */
     private GraphElementFactory valueFactory;
-    private HMaster master;
     private HRegion region;
 
     public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory, HRegion region) throws IOException {
@@ -135,7 +134,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
 
     public void close() {
         try {
-            master.close();
+            region.close();
         } catch (IOException e) {
         }
     }
