@@ -61,7 +61,26 @@ package org.jrdf.parser.hadoop;
 
 import junit.framework.TestCase;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.dfs.DataNode;
+import org.apache.hadoop.dfs.DatanodeInfo;
+import org.apache.hadoop.dfs.FSConstants.StartupOption;
+import org.apache.hadoop.dfs.NameNode;
+import org.apache.hadoop.dfs.DFSAdmin;
+import org.apache.hadoop.dfs.MiniDFSCluster;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.FileUtil;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.HMaster;
+import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.HRegionServer;
+import org.apache.hadoop.hbase.HLog;
+import org.apache.hadoop.hbase.HRegion;
+import org.apache.hadoop.hbase.HRegionInfo;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.streaming.Environment;
+import org.apache.log4j.Level;
+import org.apache.log4j.PatternLayout;
+import org.apache.log.Logger;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
@@ -71,10 +90,12 @@ import org.jrdf.parser.ParserBlankNodeFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
 
 public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
     private static final String TMP_DIR = System.getProperty("java.io.tmpdir");
-    private static final String TEST_DIR = TMP_DIR + File.separator +  "set";
+    private static final String TEST_DIR = TMP_DIR + File.separator + "set";
     private Graph newGraph;
 
     public void setUp() throws IOException {
@@ -87,15 +108,34 @@ public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
     public void testCreateBlankNode() throws IOException, GraphElementFactoryException {
         newGraph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(graphElementFactory,
-            new Configuration(), TEST_DIR);
+
+        if(System.getProperty("test.build.data") == null) {
+           String dir = new File(new File("").getAbsolutePath(), "build/contrib/hbase/test").getAbsolutePath();
+           System.out.println(dir);
+           System.setProperty("test.build.data", dir);
+         }
+         Configuration conf = new Configuration();
+         MiniDFSCluster cluster = new MiniDFSCluster(conf, 2, true, null);
+         FileSystem fs = cluster.getFileSystem();
+         Path parentdir = new Path("/hbase");
+         fs.mkdirs(parentdir);
+         Path newlogdir = new Path(parentdir, "log");
+         Path oldlogfile = new Path(parentdir, "oldlogfile");
+
+         HLog log = new HLog(fs, newlogdir, conf);
+         HTableDescriptor desc = new HTableDescriptor("test", 3);
+         desc.addFamily(new Text("id"));
+         HRegion region = new HRegion(parentdir, log, fs, conf,
+             new HRegionInfo(1, desc, null, null), null, oldlogfile);
+
+        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(graphElementFactory, region);
         BlankNode blankNode1 = blankNodeFactory.createBlankNode("hello");
         BlankNode blankNode2 = blankNodeFactory.createBlankNode("hello");
         assertEquals(blankNode1, blankNode2);
-        for (int i = 0; i < 1000; i++) {
-            blankNodeFactory.createBlankNode("hello"+i);
-        }
-        //blankNodeFactory.close();
+//        for (int i = 0; i < 1000; i++) {
+//            blankNodeFactory.createBlankNode("hello" + i);
+//        }
+//        //blankNodeFactory.close();
         //blankNodeFactory.clear();
     }
 }
