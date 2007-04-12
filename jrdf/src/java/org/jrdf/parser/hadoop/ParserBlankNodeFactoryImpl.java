@@ -67,6 +67,13 @@ import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparator;
+import org.apache.hadoop.hbase.HMaster;
+import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.HServerAddress;
+import org.apache.hadoop.hbase.HRegion;
+import org.apache.hadoop.hbase.HRegionServer;
+import org.apache.hadoop.hbase.HRegionInfo;
+import org.apache.hadoop.hbase.HLog;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -85,26 +92,16 @@ import java.io.IOException;
  */
 public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
 
-    private static final WritableComparator COMPARATOR = WritableComparator.get(Text.class);
-
     /**
      * A factory for creating BlankNodes (as well as resources and literals).
      */
     private GraphElementFactory valueFactory;
-    private final Configuration configuration;
-    private LocalFileSystem fileSystem;
-    private String filename;
+    private HMaster master;
+    private HRegion region;
 
-    public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory, Configuration configuration,
-        String filename) throws IOException {
+    public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory, HRegion region) throws IOException {
         this.valueFactory = newValueFactory;
-        this.configuration = configuration;
-        this.fileSystem = FileSystem.getLocal(configuration);
-        this.filename = filename;
-        fileSystem.mkdirs(new Path(filename));
-        MapFile.Writer writer = new MapFile.Writer(configuration, fileSystem, filename, COMPARATOR,
-            Text.class, SequenceFile.CompressionType.NONE);
-        writer.close();
+        this.region = region;
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {
@@ -113,27 +110,19 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
 
     public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
         // Maybe the node ID has been used before:
-        BlankNode result = null;
         try {
-            MapFile.Reader reader = new MapFile.Reader(fileSystem, filename, configuration);
-            Text key = new Text(nodeID);
-            Text id = (Text) reader.get(key, new Text());
-            reader.close();
-            if (null != id) {
-                // Existing node
-                result = BlankNodeImpl.valueOf(id.toString());
-            } else {
+            byte[] bytes = region.get(new Text(nodeID), new Text("id:basic"));
+            BlankNode result;
+            if (bytes == null) {
                 // This is a new node ID, create a new BNode object for it
                 result = valueFactory.createResource();
 
                 // Remember it, the nodeID might occur again.
-                MapFile.Writer writer = new MapFile.Writer(configuration, fileSystem, filename + "new", COMPARATOR,
-                    Text.class, SequenceFile.CompressionType.NONE);
-                writer.append(key, new Text(result.toString()));
-                writer.close();
-                SequenceFile.Sorter sorter = new SequenceFile.Sorter(fileSystem, COMPARATOR, Text.class, configuration);
-                sorter.sort(new Path[] {new Path(filename+"/data"), new Path(filename+"new/data")}, new Path(filename+"tmp/data"), true);
-                fileSystem.copyFromLocalFile(true, new Path(filename+"tmp/data"), new Path(filename+"/data"));
+                long lockId = region.startUpdate(new Text(nodeID));
+                region.put(lockId, new Text("id:basic"), result.toString().getBytes());
+                region.commit(lockId);
+            } else {
+                result = BlankNodeImpl.valueOf(new String(bytes));
             }
             return result;
         } catch (IOException e) {
@@ -142,12 +131,12 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
     }
 
     public void clear() {
-        try {
-            MapFile.delete(fileSystem, filename);
-        } catch (IOException e) {
-        }
     }
 
     public void close() {
+        try {
+            master.close();
+        } catch (IOException e) {
+        }
     }
 }
