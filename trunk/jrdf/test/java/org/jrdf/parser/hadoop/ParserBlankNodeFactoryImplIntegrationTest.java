@@ -96,6 +96,15 @@ import java.util.ArrayList;
 public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
     private static final String TMP_DIR = System.getProperty("java.io.tmpdir");
     private static final String TEST_DIR = TMP_DIR + File.separator + "set";
+    private static final Path PARENTDIR = new Path("/hbase");
+    private static final Configuration CONF = new Configuration();
+    private static final Path NEWLOGDIR = new Path(PARENTDIR, "log");
+    private static final Path OLDLOGFILE = new Path(PARENTDIR, "oldlogfile");
+    private HTableDescriptor desc;
+    private HRegionInfo info;
+    private HLog log;
+    private FileSystem fs;
+    private MiniDFSCluster cluster;
     private Graph newGraph;
 
     public void setUp() throws IOException {
@@ -103,39 +112,51 @@ public class ParserBlankNodeFactoryImplIntegrationTest extends TestCase {
         if (dir.exists()) {
             FileUtil.fullyDelete(dir);
         }
+        if(System.getProperty("test.build.data") == null) {
+           String testDir = new File(new File("").getAbsolutePath(), "build/contrib/hbase/test").getAbsolutePath();
+           System.out.println(testDir);
+           System.setProperty("test.build.data", testDir);
+         }
+        cluster = new MiniDFSCluster(CONF, 2, true, null);
+        fs = cluster.getFileSystem();
+        log = new HLog(fs, NEWLOGDIR, CONF);
+        fs.mkdirs(PARENTDIR);
+        desc = new HTableDescriptor("test", 3);
+        desc.addFamily(new Text("id"));
+        info = new HRegionInfo(1, desc, null, null);
     }
 
     public void testCreateBlankNode() throws IOException, GraphElementFactoryException {
         newGraph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
-
-        if(System.getProperty("test.build.data") == null) {
-           String dir = new File(new File("").getAbsolutePath(), "build/contrib/hbase/test").getAbsolutePath();
-           System.out.println(dir);
-           System.setProperty("test.build.data", dir);
-         }
-         Configuration conf = new Configuration();
-         MiniDFSCluster cluster = new MiniDFSCluster(conf, 2, true, null);
-         FileSystem fs = cluster.getFileSystem();
-         Path parentdir = new Path("/hbase");
-         fs.mkdirs(parentdir);
-         Path newlogdir = new Path(parentdir, "log");
-         Path oldlogfile = new Path(parentdir, "oldlogfile");
-
-         HLog log = new HLog(fs, newlogdir, conf);
-         HTableDescriptor desc = new HTableDescriptor("test", 3);
-         desc.addFamily(new Text("id"));
-         HRegion region = new HRegion(parentdir, log, fs, conf,
-             new HRegionInfo(1, desc, null, null), null, oldlogfile);
-
-        ParserBlankNodeFactory blankNodeFactory = new ParserBlankNodeFactoryImpl(graphElementFactory, region);
-        BlankNode blankNode1 = blankNodeFactory.createBlankNode("hello");
-        BlankNode blankNode2 = blankNodeFactory.createBlankNode("hello");
-        assertEquals(blankNode1, blankNode2);
-        for (int i = 0; i < 1000; i++) {
-            blankNodeFactory.createBlankNode("hello" + i);
-        }
+        ParserBlankNodeFactory blankNodeFactory = createBlankNodeFactory(graphElementFactory);
+        ArrayList<BlankNode> blankNodes = createBlankNodes(blankNodeFactory);
+        checkNodes(blankNodes, blankNodeFactory);
         blankNodeFactory.close();
-        //blankNodeFactory.clear();
+        blankNodeFactory = createBlankNodeFactory(graphElementFactory);
+        checkNodes(blankNodes, blankNodeFactory);
+    }
+
+    private ParserBlankNodeFactory createBlankNodeFactory(GraphElementFactory graphElementFactory) throws IOException {
+        HRegion region = new HRegion(PARENTDIR, log, fs, CONF, info, null, OLDLOGFILE);
+        return new ParserBlankNodeFactoryImpl(graphElementFactory, region);
+    }
+
+    private ArrayList<BlankNode> createBlankNodes(ParserBlankNodeFactory blankNodeFactory)
+        throws GraphElementFactoryException {
+        ArrayList<BlankNode> blankNodes = new ArrayList<BlankNode>();
+        for (int i = 0; i < 1000; i++) {
+            BlankNode blankNode = blankNodeFactory.createBlankNode("hello" + i);
+            blankNodes.add(blankNode);
+        }
+        return blankNodes;
+    }
+
+    private void checkNodes(ArrayList<BlankNode> blankNodes, ParserBlankNodeFactory blankNodeFactory)
+        throws GraphElementFactoryException {
+        for (int i = 1000; i > 0; i--) {
+            BlankNode blankNode = blankNodes.get(i-1);
+            assertEquals(blankNodeFactory.createBlankNode("hello" + (i-1)), blankNode);
+        }
     }
 }
