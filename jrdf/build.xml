@@ -162,7 +162,6 @@
             <mkdir dir="${@{type}.test.results.dir}"/>
             <junit failureproperty="@{type}.test.failed" fork="true" forkmode="perBatch">
                 <classpath refid="@{type}.test.class.path"/>
-                <formatter type="brief" usefile="false"/>
                 <batchtest todir="${@{type}.test.results.dir}">
                     <fileset refid="@{type}.test.code.fileset"/>
                 </batchtest>
