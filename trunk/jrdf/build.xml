@@ -47,7 +47,7 @@
         </copy>
 
         <!-- Test data used by the RDF/XML Parser and Writer and NTriples Reader -->
-        <copy todir="${prod.classes.dir}">
+        <copy todir="${test.classes.dir}">
             <fileset dir="${test.src.dir}" includes="**/*.rdf"/>
             <fileset dir="${test.src.dir}" includes="**/*.nt"/>
         </copy>
