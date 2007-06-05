@@ -45,6 +45,7 @@ import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
 import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
+import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
 import org.jrdf.sparql.SparqlConnection;
@@ -117,11 +118,12 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
         Project project = new ProjectImpl(TUPLE_FACTORY, relationFactory);
         RelationProcessor relationProcessor = new RelationProcessorImpl(relationFactory, TUPLE_COMPARATOR);
         RelationHelper relationHelper = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
-        TupleEngine tupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, ATTRIBUTE_VALUE_PAIR_COMPARATOR,
+        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, ATTRIBUTE_VALUE_PAIR_COMPARATOR,
             relationHelper);
-        NadicJoin join = new NadicJoinImpl(relationProcessor, tupleEngine);
+        TupleEngine unionTupleEngine = new OuterUnionEngine(TUPLE_FACTORY, relationHelper);
+        NadicJoin join = new NadicJoinImpl(relationProcessor, joinTupleEngine);
         Restrict restrict = new RestrictImpl(relationFactory);
-        Union union = new OuterUnionImpl(relationProcessor, tupleEngine);
+        Union union = new OuterUnionImpl(relationProcessor, unionTupleEngine);
         DyadicJoin leftOuterJoin = new MinimumUnionLeftOuterJoinImpl(join, union);
         return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin);
     }
