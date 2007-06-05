@@ -1,3 +1,8 @@
+JRDF Release 0.4.1.1
+====================
+* Fixed JRDFModelImpl re-wires components (Bug 1731097).
+* Fixed error in SortedMemoryJRDFFactoryImpl (Bug 1731094). 
+
 JRDF Release 0.4.1
 ==================
 * Initial SPARQL: PREFIX, SELECT, WHERE, OPTIONAL, . (JOIN) and UNION 
