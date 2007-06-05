@@ -63,6 +63,7 @@ import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.query.Answer;
@@ -73,13 +74,18 @@ import org.jrdf.util.EscapeURL;
 import java.net.URL;
 
 public class JRDFModelImpl implements JRDFModel {
-    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph graph = FACTORY.getNewGraph();
-    private SparqlConnection connection = FACTORY.getNewSparqlConnection();
+    private final GraphFactory graphFactory;
+    private Graph graph;
+    private SparqlConnection connection;
+
+    public JRDFModelImpl(GraphFactory graphFactory, SparqlConnection connection) {
+        this.graphFactory = graphFactory;
+        this.connection = connection;
+    }
 
     public Graph loadModel(URL url) {
         try {
-            graph = FACTORY.getNewGraph();
+            graph = graphFactory.getGraph();
             Parser graphRdfXmlParser = new GraphRdfXmlParser(graph);
             graphRdfXmlParser.parse(url.openStream(), EscapeURL.toEscapedString(url));
             return graph;
