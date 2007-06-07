@@ -87,22 +87,22 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * The lexical form of the literal.
      */
-    private String lexicalForm;
+    protected String lexicalForm;
 
     /**
      * The language code of the literal.
      */
-    private String language;
+    protected String language;
 
     /**
      * Whether the literal is well formed XML.
      */
-    private boolean wellFormedXML;
+    protected boolean wellFormedXML;
 
     /**
      * RDF datatype URI, <code>null</code> for untyped literal.
      */
-    private URI datatypeURI;
+    protected URI datatypeURI;
 
     /**
      * Construct a plain literal.

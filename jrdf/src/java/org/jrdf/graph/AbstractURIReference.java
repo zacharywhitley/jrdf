@@ -85,7 +85,7 @@ public abstract class AbstractURIReference implements URIReference, Serializable
     /**
      * The URI of the node.
      */
-    private URI uri;
+    protected URI uri;
 
     protected AbstractURIReference() {
 
