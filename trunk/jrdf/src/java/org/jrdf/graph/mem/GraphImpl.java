@@ -314,15 +314,15 @@ public class GraphImpl implements Graph, Serializable {
 
     private boolean containsAnySubject(Long[] values, PredicateNode predicate, ObjectNode object) {
         if (ANY_PREDICATE_NODE != predicate) {
-            // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
-            return containsAnySubjectFixedPredicate(values, object);
+            return containsAnySubjectAnyPredicate(values, object);
         } else {
             // AnySubjectNode, AnyPredicateNode, obj.
             return longIndex201.contains(values[2]);
         }
     }
 
-    private boolean containsAnySubjectFixedPredicate(Long[] values, ObjectNode object) {
+    private boolean containsAnySubjectAnyPredicate(Long[] values, ObjectNode object) {
+        // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
         Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
         if (null != predIndex) {
             if (ANY_OBJECT_NODE != object) {
