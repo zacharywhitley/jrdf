@@ -106,6 +106,11 @@ public final class ComparisonImpl implements Comparison {
         if (g1 == null || g2 == null) {
             return false;
         }
+        return checkGraphs(g1, g2);
+
+    }
+
+    private boolean checkGraphs(Graph g1, Graph g2) throws GraphException {
         // check grounding
         boolean g1Grounded = isGrounded(g1);
         boolean g2Gounded = isGrounded(g2);

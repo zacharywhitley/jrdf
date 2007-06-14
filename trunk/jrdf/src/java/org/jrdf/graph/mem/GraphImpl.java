@@ -248,7 +248,6 @@ public class GraphImpl implements Graph, Serializable {
         try {
             values = nodePool.localize(subject, predicate, object);
         } catch (GraphException ge) {
-
             // Graph exception on localize implies that the subject, predicate or
             // object did not exist in the graph.
             return false;
@@ -276,20 +275,25 @@ public class GraphImpl implements Graph, Serializable {
         if (ANY_PREDICATE_NODE == predicate) {
             return containsAnyPredicate(object, values);
         } else {
-            // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
-            // look up the predicate
-            Set<Long> group = subIndex.get(values[1]);
-            if (null == group) {
-                return false;
-            }
+            return containsFixedPredicate(subIndex, values, object);
 
-            // Object not null.  Must be subj, pred, obj.
-            if (ANY_OBJECT_NODE != object) {
-                return group.contains(values[2]);
-            } else {
-                // Was subj, pred, AnyObjectNode - must be true if we get this far.
-                return true;
-            }
+        }
+    }
+
+    private boolean containsFixedPredicate(Map<Long, Set<Long>> subIndex, Long[] values, ObjectNode object) {
+        // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
+        // look up the predicate
+        Set<Long> group = subIndex.get(values[1]);
+        if (null == group) {
+            return false;
+        }
+
+        // Object not null.  Must be subj, pred, obj.
+        if (ANY_OBJECT_NODE != object) {
+            return group.contains(values[2]);
+        } else {
+            // Was subj, pred, AnyObjectNode - must be true if we get this far.
+            return true;
         }
     }
 
@@ -299,22 +303,27 @@ public class GraphImpl implements Graph, Serializable {
             Map<Long, Set<Long>> objIndex = longIndex201.getSubIndex(values[2]);
             return null != objIndex;
         } else {
-            // Predicate is not null.  Could be null, pred, null or null, pred, obj.
-            Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
+            return containsFixedPredicate(values, object);
 
-            // If predicate not found return false.
-            if (null == predIndex) {
-                return false;
-            }
+        }
+    }
 
-            // If the object is any object node and we found the predicate return true.
-            if (ANY_OBJECT_NODE == object) {
-                return true;
-            } else {
-                // Was null, pred, obj
-                Set<Long> group = predIndex.get(values[2]);
-                return null != group;
-            }
+    private boolean containsFixedPredicate(Long[] values, ObjectNode object) {
+        // Predicate is not any predicate.  Could be ANY, pred, ANY or ANY, pred, obj.
+        Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
+
+        // If predicate not found return false.
+        if (null == predIndex) {
+            return false;
+        }
+
+        // If the object is any object node and we found the predicate return true.
+        if (ANY_OBJECT_NODE == object) {
+            return true;
+        } else {
+            // Was null, pred, obj
+            Set<Long> group = predIndex.get(values[2]);
+            return null != group;
         }
     }
 
