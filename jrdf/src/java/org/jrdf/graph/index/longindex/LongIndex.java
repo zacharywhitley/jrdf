@@ -129,6 +129,14 @@ public interface LongIndex {
     Map<Long, Set<Long>> getSubIndex(Long first);
 
     /**
+     * Returns true if the value given exists in the index.
+     *
+     * @param first the key to search for.
+     * @return true if the key exsts.
+     */
+    boolean contains(Long first);
+
+    /**
      * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
      * given and it will remove all the associated predicate and objects for that subject.
      *
