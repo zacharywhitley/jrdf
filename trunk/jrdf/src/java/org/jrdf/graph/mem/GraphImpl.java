@@ -234,7 +234,6 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, CONTAIN_CANT_USE_NULLS);
 
@@ -253,94 +252,89 @@ public class GraphImpl implements Graph, Serializable {
             return false;
         }
 
-        // AnySubjectNode.
-        if (ANY_SUBJECT_NODE == subject) {
-            return containsAnySubject(predicate, values, object);
-        } else {
-            // Subject is not anything.
+        if (ANY_SUBJECT_NODE != subject) {
+            // subj, *, *
             return containsFixedSubject(values, predicate, object);
-
+        } else {
+            // AnySubjectNode, *, *
+            return containsAnySubject(values, predicate, object);
         }
     }
 
     private boolean containsFixedSubject(Long[] values, PredicateNode predicate, ObjectNode object) {
-        Map<Long, Set<Long>> subIndex = longIndex012.getSubIndex(values[0]);
-
-        // If subject not found return false.
-        if (null == subIndex) {
-            return false;
-        }
-
-        // AnyPredicateNode.  Could be subj, AnyPredicateNode, AnyObjectNode or subj, AnyPredicateNode, obj.
-        if (ANY_PREDICATE_NODE == predicate) {
-            return containsAnyPredicate(object, values);
+        if (longIndex012.contains(values[0])) {
+            if (ANY_PREDICATE_NODE != predicate) {
+                // subj, pred, AnyObjectNode or subj, pred, obj
+                return containsFixedSubjectFixedPredicate(values, object);
+            } else {
+                // subj, AnyPredicateNode, AnyObjectNode or subj, AnyPredicateNode, obj.
+                return containsFixedSubjectAnyPredicate(values, object);
+            }
         } else {
-            return containsFixedPredicate(subIndex, values, object);
-
+            // If subject not found return false.
+            return false;
         }
     }
 
-    private boolean containsFixedPredicate(Map<Long, Set<Long>> subIndex, Long[] values, ObjectNode object) {
-        // Predicate not any node.  Could be subj, pred, obj or subj, pred, AnyObjectNode.
-        // look up the predicate
-        Set<Long> group = subIndex.get(values[1]);
-        if (null == group) {
+    private boolean containsFixedSubjectFixedPredicate(Long[] values, ObjectNode object) {
+        Map<Long, Set<Long>> subjIndex = longIndex012.getSubIndex(values[0]);
+        Set<Long> subjPredIndex = subjIndex.get(values[1]);
+        if (null != subjPredIndex) {
+            if (ANY_OBJECT_NODE != object) {
+                // Must be subj, pred, obj.
+                return subjPredIndex.contains(values[2]);
+            } else {
+                // Was subj, pred, AnyObjectNode - must be true if we get this far.
+                return true;
+            }
+        } else {
+            // subj, pred not found.
             return false;
         }
+    }
 
-        // Object not null.  Must be subj, pred, obj.
+    private boolean containsFixedSubjectAnyPredicate(Long[] values, ObjectNode object) {
         if (ANY_OBJECT_NODE != object) {
-            return group.contains(values[2]);
-        } else {
-            // Was subj, pred, AnyObjectNode - must be true if we get this far.
-            return true;
-        }
-    }
-
-    private boolean containsAnySubject(PredicateNode predicate, Long[] values, ObjectNode object) {
-        // AnySubjectNode, AnyPredicateNode, obj.
-        if (ANY_PREDICATE_NODE == predicate) {
+            // Was subj, AnyPredicateNode, obj
+            // Use 201 index to find object and then subject.
             Map<Long, Set<Long>> objIndex = longIndex201.getSubIndex(values[2]);
-            return null != objIndex;
-        } else {
-            return containsFixedPredicate(values, object);
-
-        }
-    }
-
-    private boolean containsFixedPredicate(Long[] values, ObjectNode object) {
-        // Predicate is not any predicate.  Could be ANY, pred, ANY or ANY, pred, obj.
-        Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
-
-        // If predicate not found return false.
-        if (null == predIndex) {
-            return false;
-        }
-
-        // If the object is any object node and we found the predicate return true.
-        if (ANY_OBJECT_NODE == object) {
-            return true;
-        } else {
-            // Was null, pred, obj
-            Set<Long> group = predIndex.get(values[2]);
-            return null != group;
-        }
-    }
-
-    private boolean containsAnyPredicate(ObjectNode object, Long[] values) {
-        // If its AnyObjectNode then we've found all we need to find.
-        if (ANY_OBJECT_NODE == object) {
-            return true;
-        } else {
-            // If the object is not any node we need to find subj, AnyObjectNode, obj
-            Map<Long, Set<Long>> objIndex = longIndex201.getSubIndex(values[2]);
-
-            if (null == objIndex) {
+            if (null != objIndex) {
+                // Find object.
+                return null != objIndex.get(values[0]);
+            } else {
+                // Didn't find subject.
                 return false;
             }
+        } else {
+            // Was subj, AnyPredicate, AnyObject
+            // If its AnyObjectNode then we've found all we need to find.
+            return true;
+        }
+    }
 
-            Set<Long> group = objIndex.get(values[0]);
-            return null != group;
+    private boolean containsAnySubject(Long[] values, PredicateNode predicate, ObjectNode object) {
+        if (ANY_PREDICATE_NODE != predicate) {
+            // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
+            return containsAnySubjectFixedPredicate(values, object);
+        } else {
+            // AnySubjectNode, AnyPredicateNode, obj.
+            return longIndex201.contains(values[2]);
+        }
+    }
+
+    private boolean containsAnySubjectFixedPredicate(Long[] values, ObjectNode object) {
+        Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
+        if (null != predIndex) {
+            if (ANY_OBJECT_NODE != object) {
+                // Was AnySubjectNode, pred, obj
+                return null != predIndex.get(values[2]);
+            } else {
+                // If the object is any object node and we found the predicate return true.
+                return true;
+            }
+        } else {
+            // If predicate not found return false.
+            return false;
         }
     }
 

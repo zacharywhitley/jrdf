@@ -153,6 +153,10 @@ public final class LongIndexMem implements LongIndex, Serializable {
         return index.get(first);
     }
 
+    public boolean contains(Long first) {
+        return index.containsKey(first);
+    }
+
     public boolean removeSubIndex(Long first) {
         index.remove(first);
         return index.containsKey(first);
