@@ -15,7 +15,6 @@
     <suppress checks="JavaNCSS" files="RDFS.java"/>
     <suppress checks="JavaNCSS" files="JrdfExample.java"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl.java"/>
-    <suppress checks="ReturnCount" files="GraphImpl.java"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl.java"/>
     <suppress checks="ReturnCount" files="SemiJoinImpl.java"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl.java"/>
