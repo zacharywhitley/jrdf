@@ -236,22 +236,25 @@ public class GraphImpl implements Graph, Serializable {
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, CONTAIN_CANT_USE_NULLS);
-
-        // Return true if all are any AnyNodes and size is greater than zero.
+        boolean returnValue;
         if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
-            return 0L < longIndex012.getSize();
+            // Return true if all are any AnyNodes and size is greater than zero.
+            returnValue = 0L < longIndex012.getSize();
+        } else {
+            try {
+                // Get local node values
+                Long[] values = nodePool.localize(subject, predicate, object);
+                returnValue = containsValues(values, subject, predicate, object);
+            } catch (GraphException ge) {
+                // Graph exception on localize implies that the subject, predicate or
+                // object did not exist in the graph.
+                returnValue = false;
+            }
         }
+        return returnValue;
+    }
 
-        // Get local node values
-        Long[] values;
-        try {
-            values = nodePool.localize(subject, predicate, object);
-        } catch (GraphException ge) {
-            // Graph exception on localize implies that the subject, predicate or
-            // object did not exist in the graph.
-            return false;
-        }
-
+    private boolean containsValues(Long[] values, SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         if (ANY_SUBJECT_NODE != subject) {
             // subj, *, *
             return containsFixedSubject(values, predicate, object);
