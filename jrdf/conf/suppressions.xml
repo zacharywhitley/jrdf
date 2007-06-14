@@ -15,6 +15,11 @@
     <suppress checks="JavaNCSS" files="RDFS.java"/>
     <suppress checks="JavaNCSS" files="JrdfExample.java"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl.java"/>
+    <suppress checks="ReturnCount" files="GraphImpl.java"/>
+    <suppress checks="ReturnCount" files="NadicJoinImpl.java"/>
+    <suppress checks="ReturnCount" files="SemiJoinImpl.java"/>
+    <suppress checks="ReturnCount" files="TypeComparatorImpl.java"/>
+    <suppress checks="ReturnCount" files="WhereAnalyserImpl.java"/>
 
     <!-- Spike -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl.java"/>
@@ -45,4 +50,6 @@
     <suppress checks="MagicNumber" files="XmlUtil.java"/>
     <suppress checks="MemberName" files="RdfXmlParser.java"/>
     <suppress checks="MethodLength" files="XmlUtil.java"/>
+    <suppress checks="ReturnCount" files="XmlDatatypeUtil.java"/>
+    <suppress checks="ReturnCount" files="XmlUtil.java"/>
 </suppressions>

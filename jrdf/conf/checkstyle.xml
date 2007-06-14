@@ -80,6 +80,10 @@
         <module name="TypecastParenPad"/>
         <module name="RedundantImport"/>
         <module name="RedundantModifier"/>
+        <module name="ReturnCount">
+            <!-- Idea is that 3 is required for comparators -->
+            <property name="max" value="3"/>
+        </module>
         <module name="RightCurly"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
