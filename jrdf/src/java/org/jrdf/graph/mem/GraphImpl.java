@@ -434,8 +434,7 @@ public class GraphImpl implements Graph, Serializable {
 
     public void add(Iterator<Triple> triples) throws GraphException {
         while (triples.hasNext()) {
-            Triple triple = triples.next();
-            add(triple);
+            add(triples.next());
         }
     }
 
@@ -477,8 +476,7 @@ public class GraphImpl implements Graph, Serializable {
 
     private void globalIteratorRemove(Iterator<Triple> triples) throws GraphException {
         while (triples.hasNext()) {
-            Triple triple = triples.next();
-            remove(triple);
+            remove(triples.next());
         }
     }
 
