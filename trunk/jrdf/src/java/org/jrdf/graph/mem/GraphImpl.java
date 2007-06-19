@@ -432,9 +432,9 @@ public class GraphImpl implements Graph, Serializable {
         return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
-    public void add(Iterator triples) throws GraphException {
+    public void add(Iterator<Triple> triples) throws GraphException {
         while (triples.hasNext()) {
-            Triple triple = (Triple) triples.next();
+            Triple triple = triples.next();
             add(triple);
         }
     }
