@@ -84,13 +84,12 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
     public void testParseFile() throws Exception {
         RDFEventReader eventReader = init();
         try {
-            int counter = 0;
             Set<Triple> actualResults = new HashSet<Triple>();
             while (eventReader.hasNext()) {
                 Triple triple = eventReader.next();
                 actualResults.add(triple);
             }
-            assertEquals(TOTAL_TRIPLES, actualResults.size());
+            assertEquals("Should get 33 triples from file", TOTAL_TRIPLES, actualResults.size());
             Set<Triple> triples = NTriplesParserTestUtil.expectedResults(NEW_GRAPH, BLANK_NODE_FACTORY, TOTAL_TRIPLES);
             for (Triple triple : triples) {
                 assertTrue("Expected: " + triple, actualResults.contains(triple));

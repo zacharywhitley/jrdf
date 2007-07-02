@@ -59,8 +59,6 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -96,16 +94,16 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     private final RegexMatcherFactory regexMatcherFactory;
     private StatementHandler sh;
 
-    public NTriplesParser(SubjectParser subjectParser, PredicateParser predicateParser, ObjectParser objectParser,
-            RegexMatcherFactory regexMatcherFactory) {
-        this.subjectParser = subjectParser;
-        this.predicateParser = predicateParser;
-        this.objectParser = objectParser;
-        this.regexMatcherFactory = regexMatcherFactory;
+    public NTriplesParser(SubjectParser newSubjectParser, PredicateParser newPredicateParser, 
+            ObjectParser newObjectParser, RegexMatcherFactory newRegexFactory) {
+        this.subjectParser = newSubjectParser;
+        this.predicateParser = newPredicateParser;
+        this.objectParser = newObjectParser;
+        this.regexMatcherFactory = newRegexFactory;
     }
 
-    public void setStatementHandler(StatementHandler sh) {
-        this.sh = sh;
+    public void setStatementHandler(StatementHandler statementHandler) {
+        this.sh = statementHandler;
     }
 
     public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {
@@ -121,25 +119,18 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
             if (!commentMatcher.matches()) {
                 tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
                 if (tripleRegexMatcher.matches()) {
-                    try {
-                        parseTriple(tripleRegexMatcher);
-                    } catch (GraphElementFactoryException e) {
-                        new GraphException(e);
-                    }
+                    parseTriple(tripleRegexMatcher);
                 }
             }
         }
     }
 
-    private void parseTriple(RegexMatcher tripleRegexMatcher)
-        throws GraphElementFactoryException, ParseException, StatementHandlerException {
+    private void parseTriple(RegexMatcher tripleRegexMatcher) throws ParseException, StatementHandlerException {
         SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
         PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
         ObjectNode object = objectParser.parseObject(tripleRegexMatcher);
         if (subject != null && predicate != null && object != null) {
             sh.handleStatement(subject, predicate, object);
-        } //else {
-            // This is an error
-        //}
+        }
     }
 }

@@ -98,23 +98,23 @@ public class NTriplesEventReader implements RDFEventReader {
     private final RegexMatcherFactory regexMatcherFactory;
     private Triple nextTriple;
 
-    public NTriplesEventReader(final InputStream in, final URI baseURI, final TripleFactory factory,
-            final SubjectParser subjectParser, final PredicateParser predicateParser,
-            final ObjectParser objectParser, final RegexMatcherFactory regexMatcherFactory) {
-        this(new InputStreamReader(in), baseURI, factory, subjectParser, predicateParser, objectParser,
-                regexMatcherFactory);
+    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final TripleFactory newFactory,
+            final SubjectParser newSubjectParser, final PredicateParser newPredicateParser,
+            final ObjectParser newObjectParser, final RegexMatcherFactory newRegexFactory) {
+        this(new InputStreamReader(in), newBaseURI, newFactory, newSubjectParser, newPredicateParser, newObjectParser,
+                newRegexFactory);
     }
 
-    public NTriplesEventReader(final Reader reader, final URI baseURI, final TripleFactory factory,
-            final SubjectParser subjectParser, final PredicateParser predicateParser, final ObjectParser objectParser,
-            final RegexMatcherFactory regexMatcherFactory) {
+    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final TripleFactory newFactory,
+            final SubjectParser newSubjectParser, final PredicateParser newPredicateParser,
+            final ObjectParser newObjectParser, final RegexMatcherFactory newRegexFactory) {
         this.bufferedReader = new LineNumberReader(reader);
-        this.baseURI = baseURI;
-        this.factory = factory;
-        this.subjectParser = subjectParser;
-        this.predicateParser = predicateParser;
-        this.objectParser = objectParser;
-        this.regexMatcherFactory = regexMatcherFactory;
+        this.baseURI = newBaseURI;
+        this.factory = newFactory;
+        this.subjectParser = newSubjectParser;
+        this.predicateParser = newPredicateParser;
+        this.objectParser = newObjectParser;
+        this.regexMatcherFactory = newRegexFactory;
         parseNext();
     }
 
@@ -140,7 +140,7 @@ public class NTriplesEventReader implements RDFEventReader {
         String line = getLine();
         Triple triple = null;
         while (line != null && triple == null) {
-            triple = parseLine(line, triple);
+            triple = parseLine(line);
             if (triple == null) {
                 line = getLine();
             }
@@ -165,8 +165,9 @@ public class NTriplesEventReader implements RDFEventReader {
         }
     }
 
-    private Triple parseLine(String line, Triple triple) {
+    private Triple parseLine(String line) {
         RegexMatcher tripleRegexMatcher;
+        Triple triple = null;
         if (!COMMENT_REGEX.matcher(line).matches()) {
             tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (tripleRegexMatcher.matches()) {
