@@ -185,7 +185,7 @@ public class NTriplesEventReader implements RDFEventReader {
             if (subject != null && predicate != null && object != null) {
                 return factory.createTriple(subject, predicate, object);
             } else {
-                // This is an error.
+                // This is an error - will become a NoSuchElementException.
                 return null;
             }
         } catch (ParseException e) {
