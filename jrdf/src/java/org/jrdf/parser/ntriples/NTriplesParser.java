@@ -94,7 +94,7 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
     private final RegexMatcherFactory regexMatcherFactory;
     private StatementHandler sh;
 
-    public NTriplesParser(SubjectParser newSubjectParser, PredicateParser newPredicateParser, 
+    public NTriplesParser(SubjectParser newSubjectParser, PredicateParser newPredicateParser,
             ObjectParser newObjectParser, RegexMatcherFactory newRegexFactory) {
         this.subjectParser = newSubjectParser;
         this.predicateParser = newPredicateParser;
