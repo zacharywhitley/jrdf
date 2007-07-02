@@ -93,7 +93,7 @@ public class NTriplesParserTestUtil {
         }
     }
 
-    public static InputStream getSampleData(Class clazz) throws IOException {
+    public static InputStream getSampleData(Class<?> clazz) throws IOException {
         URL source = clazz.getClassLoader().getResource(TEST_DATA);
         return source.openStream();
     }

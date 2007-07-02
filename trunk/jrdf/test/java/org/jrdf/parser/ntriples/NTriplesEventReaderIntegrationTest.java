@@ -60,18 +60,26 @@ package org.jrdf.parser.ntriples;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
+import org.jrdf.parser.Parser;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -94,9 +102,26 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
         }
     }
 
+    // TODO Move this to the RDF/XML package and add it to regression.  Used for the creation of the Pull Parser.
+    // Add the other resources to be loaded in.
+    public void testParseFile2() throws Exception {
+        URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/amp-in-url/test001.nt");
+        URL actualFile = getClass().getClassLoader().getResource("rdf-tests/amp-in-url/test001.rdf");
+        RDFInputFactory factory = newInstance();
+        RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create("foo"),
+            NEW_GRAPH, BLANK_NODE_FACTORY);
+        Triple expected = eventReader.next();
+        Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
+        Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
+        rdfXmlParser.parse(actualFile.openStream(), "foo");
+        ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            ANY_OBJECT_NODE);
+        assertEquals(expected, results.next());
+    }
+
     private RDFEventReader init() throws IOException {
         InputStream in = getSampleData(this.getClass());
-        RDFInputFactory factory = NTriplesRDFInputFactoryImpl.newInstance();
+        RDFInputFactory factory = newInstance();
         return factory.createRDFEventReader(in, URI.create("foo"), NEW_GRAPH, BLANK_NODE_FACTORY);
     }
 }
