@@ -60,27 +60,25 @@
 package org.jrdf.parser.ntriples;
 
 import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.ClosableIterator;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.Graph;
+import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.TestJRDFFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
 public class NTripleParserIntegrationTest extends TestCase {
-    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
-    private static final int TOTAL_TRIPLES = 33;
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
@@ -93,24 +91,15 @@ public class NTripleParserIntegrationTest extends TestCase {
         while (iterator.hasNext()) {
             actualResults.add(iterator.next());
         }
-        assertEquals("Should get 33 triples from file", TOTAL_TRIPLES, actualResults.size());
-        Set<Triple> triples = NTriplesParserTestUtil.expectedResults(NEW_GRAPH, BLANK_NODE_FACTORY, TOTAL_TRIPLES);
-        for (Triple triple : triples) {
-            assertTrue("Expected: " + triple, actualResults.contains(triple));
-        }
+        checkGraph(actualResults, NEW_GRAPH, BLANK_NODE_FACTORY);
     }
 
     private Parser init() throws Exception {
-        InputStream in = getSampleData();
+        InputStream in = getSampleData(this.getClass());
         ParserFactory factory = new ParserFactoryImpl();
         NTriplesParser parser = factory.createParser(NEW_GRAPH.getElementFactory(), BLANK_NODE_FACTORY);
         parser.setStatementHandler(new GraphStatementHandler(NEW_GRAPH));
         parser.parse(in, "foo");
         return parser;
-    }
-
-    public InputStream getSampleData() throws IOException {
-        URL source = getClass().getClassLoader().getResource(TEST_DATA);
-        return source.openStream();
     }
 }

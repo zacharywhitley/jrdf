@@ -59,6 +59,8 @@
 
 package org.jrdf.parser.ntriples;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -67,15 +69,35 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class NTriplesParserTestUtil {
+    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
+    private static final int TOTAL_TRIPLES = 33;
+
     private NTriplesParserTestUtil() {
     }
+
+    public static void checkGraph(Set<Triple> actualResults, Graph graph, ParserBlankNodeFactory factory) throws Exception {
+        assertEquals("Should get 33 triples from file", TOTAL_TRIPLES, actualResults.size());
+        Set<Triple> triples = NTriplesParserTestUtil.expectedResults(graph, factory, TOTAL_TRIPLES);
+        for (Triple triple : triples) {
+            assertTrue("Expected: " + triple, actualResults.contains(triple));
+        }
+    }
+
+    public static InputStream getSampleData(Class clazz) throws IOException {
+        URL source = clazz.getClassLoader().getResource(TEST_DATA);
+        return source.openStream();
+    }
+
 
     public static Set<Triple> expectedResults(Graph newGraph, ParserBlankNodeFactory blankNodeFactory,
         int totalTriples) throws Exception {

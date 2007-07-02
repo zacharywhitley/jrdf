@@ -66,17 +66,16 @@ import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class NTriplesEventReaderIntegrationTest extends TestCase {
-    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
-    private static final int TOTAL_TRIPLES = 33;
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
@@ -89,24 +88,15 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
                 Triple triple = eventReader.next();
                 actualResults.add(triple);
             }
-            assertEquals("Should get 33 triples from file", TOTAL_TRIPLES, actualResults.size());
-            Set<Triple> triples = NTriplesParserTestUtil.expectedResults(NEW_GRAPH, BLANK_NODE_FACTORY, TOTAL_TRIPLES);
-            for (Triple triple : triples) {
-                assertTrue("Expected: " + triple, actualResults.contains(triple));
-            }
+            checkGraph(actualResults, NEW_GRAPH, BLANK_NODE_FACTORY);
         } finally {
             eventReader.close();
         }
     }
 
     private RDFEventReader init() throws IOException {
-        InputStream in = getSampleData();
+        InputStream in = getSampleData(this.getClass());
         RDFInputFactory factory = NTriplesRDFInputFactoryImpl.newInstance();
         return factory.createRDFEventReader(in, URI.create("foo"), NEW_GRAPH, BLANK_NODE_FACTORY);
-    }
-
-    public InputStream getSampleData() throws IOException {
-        URL source = getClass().getClassLoader().getResource(TEST_DATA);
-        return source.openStream();
     }
 }
