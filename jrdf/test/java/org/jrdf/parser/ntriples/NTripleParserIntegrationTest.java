@@ -60,19 +60,18 @@
 package org.jrdf.parser.ntriples;
 
 import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
 import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.parser.Parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.TestJRDFFactory;
 
 import java.io.InputStream;
 import java.util.HashSet;
@@ -84,7 +83,7 @@ public class NTripleParserIntegrationTest extends TestCase {
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
 
     public void testParseFile() throws Exception {
-        Parser parser = init();
+        init();
         Set<Triple> actualResults = new HashSet<Triple>();
         ClosableIterator<Triple> iterator = NEW_GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
             ANY_OBJECT_NODE);
@@ -94,12 +93,11 @@ public class NTripleParserIntegrationTest extends TestCase {
         checkGraph(actualResults, NEW_GRAPH, BLANK_NODE_FACTORY);
     }
 
-    private Parser init() throws Exception {
+    private void init() throws Exception {
         InputStream in = getSampleData(this.getClass());
         ParserFactory factory = new ParserFactoryImpl();
         NTriplesParser parser = factory.createParser(NEW_GRAPH.getElementFactory(), BLANK_NODE_FACTORY);
         parser.setStatementHandler(new GraphStatementHandler(NEW_GRAPH));
         parser.parse(in, "foo");
-        return parser;
     }
 }
