@@ -119,6 +119,21 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
         assertEquals(expected, results.next());
     }
 
+    public void testParseFile3() throws Exception {
+        URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/datatypes/test001.nt");
+        URL actualFile = getClass().getClassLoader().getResource("rdf-tests/datatypes/test001.rdf");
+        RDFInputFactory factory = newInstance();
+        RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create("foo"),
+            NEW_GRAPH, BLANK_NODE_FACTORY);
+        Triple expected = eventReader.next();
+        Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
+        Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
+        rdfXmlParser.parse(actualFile.openStream(), "foo");
+        ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            ANY_OBJECT_NODE);
+        assertEquals(expected, results.next());
+    }
+
     private RDFEventReader init() throws IOException {
         InputStream in = getSampleData(this.getClass());
         RDFInputFactory factory = newInstance();
