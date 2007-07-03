@@ -61,13 +61,19 @@ package org.jrdf.parser.ntriples;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import org.jrdf.TestJRDFFactory;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,6 +86,7 @@ import java.util.Set;
 
 public class NTriplesParserTestUtil {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
+    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
 
     private NTriplesParserTestUtil() {
     }
@@ -89,6 +96,21 @@ public class NTriplesParserTestUtil {
         return source.openStream();
     }
 
+    public static Set<Triple> parseNTriplesFile(InputStream in, Graph graph, ParserBlankNodeFactory factory)
+        throws Exception {
+        ParserFactory parserFactory = new ParserFactoryImpl();
+        NTriplesParser parser = parserFactory.createParser(graph.getElementFactory(), factory);
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+        parser.parse(in, "foo");
+        Set<Triple> actualResults = new HashSet<Triple>();
+        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            ANY_OBJECT_NODE);
+        while (iterator.hasNext()) {
+            actualResults.add(iterator.next());
+        }
+        return actualResults;
+    }
+
     public static void checkGraph(Set<Triple> actualResults, Set<Triple> expectedTriples) throws Exception {
         assertEquals("Wrong number of triples returned", expectedTriples.size(), actualResults.size());
         for (Triple triple : expectedTriples) {
@@ -96,8 +118,7 @@ public class NTriplesParserTestUtil {
         }
     }
 
-
-    public static Set<Triple> expectedResults(Graph newGraph, ParserBlankNodeFactory blankNodeFactory) throws Exception {
+    public static Set<Triple> standardTest(Graph newGraph, ParserBlankNodeFactory blankNodeFactory) throws Exception {
         Set<Triple> answers = new HashSet<Triple>();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         TripleFactory tripleFactory = newGraph.getTripleFactory();
