@@ -68,6 +68,7 @@ import org.jrdf.parser.RDFInputFactory;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.expectedResults;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 
 import java.io.IOException;
@@ -89,7 +90,8 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
                 Triple triple = eventReader.next();
                 actualResults.add(triple);
             }
-            checkGraph(actualResults, NEW_GRAPH, BLANK_NODE_FACTORY);
+            Set<Triple> expectedTriples = expectedResults(NEW_GRAPH, BLANK_NODE_FACTORY);
+            checkGraph(actualResults, expectedTriples);
         } finally {
             eventReader.close();
         }
