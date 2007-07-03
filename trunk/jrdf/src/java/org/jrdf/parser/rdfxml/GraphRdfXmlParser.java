@@ -64,6 +64,7 @@ import org.jrdf.parser.ConfigurableParser;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
+import static org.jrdf.parser.ParserConfiguration.DT_IGNORE;
 import org.jrdf.parser.StatementHandlerException;
 
 import java.io.IOException;
@@ -85,6 +86,7 @@ public class GraphRdfXmlParser implements Parser {
         parser = new RdfXmlParser(graph.getElementFactory());
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.setVerifyData(false);
+        parser.setDatatypeHandling(DT_IGNORE);
     }
 
     public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {

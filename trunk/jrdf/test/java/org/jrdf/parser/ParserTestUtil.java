@@ -93,4 +93,8 @@ public class ParserTestUtil {
         ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertEquals("Invalid result for positive test", expected, results.next());
     }
+
+    public static void checkNegativeNtRdfTest(URL expectedFile) {
+
+    }
 }

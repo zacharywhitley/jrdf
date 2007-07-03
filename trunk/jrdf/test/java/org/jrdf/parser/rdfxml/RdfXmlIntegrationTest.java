@@ -60,44 +60,40 @@
 package org.jrdf.parser.rdfxml;
 
 import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.ParserTestUtil;
-import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.RDFInputFactory;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
-import org.jrdf.parser.ntriples.NTriplesParserTestUtil;
-import org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl;
+import static org.jrdf.parser.ParserTestUtil.checkPositiveNtRdfTest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RdfXmlIntegrationTest extends TestCase {
-    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(
-        NEW_GRAPH.getElementFactory());
+    private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
+        {
+            put("rdf-tests/amp-in-url/test001.nt", "rdf-tests/amp-in-url/test001.rdf");
+            put("rdf-tests/datatypes/test001.nt", "rdf-tests/datatypes/test001.rdf");
+            put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002.rdf");
+        }
+    };
+    private static final Map<String, String> NEGATIVE_TESTS = new HashMap<String, String>() {
+        {
+        }
+    };
 
-    // TODO Move this to the RDF/XML package and add it to regression.  Used for the creation of the Pull Parser.
-    // Add the other resources to be loaded in.
-    public void testParseFile2() throws Exception {
-        URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/amp-in-url/test001.nt");
-        URL actualFile = getClass().getClassLoader().getResource("rdf-tests/amp-in-url/test001.rdf");
-        ParserTestUtil.checkPositiveNtRdfTest(expectedFile, actualFile);
+    public void testPositiveTests() throws Exception {
+        for (String ntriplesFile : POSITIVE_TESTS.keySet()) {
+            final String rdfFile = POSITIVE_TESTS.get(ntriplesFile);
+            final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
+            final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
+            checkPositiveNtRdfTest(expectedFile, actualFile);
+        }
     }
 
-    public void testParseFile3() throws Exception {
-        URL expectedFile = getClass().getClassLoader().getResource("rdf-tests/datatypes/test001.nt");
-        URL actualFile = getClass().getClassLoader().getResource("rdf-tests/datatypes/test001.rdf");
-        ParserTestUtil.checkPositiveNtRdfTest(expectedFile, actualFile);
-    }
-
-    private RDFEventReader init() throws IOException {
-        InputStream in = NTriplesParserTestUtil.getSampleData(this.getClass());
-        RDFInputFactory factory = NTriplesRDFInputFactoryImpl.newInstance();
-        return factory.createRDFEventReader(in, URI.create("foo"), NEW_GRAPH, BLANK_NODE_FACTORY);
-    }
+//    public void testNegativeTests() throws Exception {
+//        for (String ntriplesFile : NEGATIVE_TESTS.keySet()) {
+//            final String rdfFile = NEGATIVE_TESTS.get(ntriplesFile);
+//            final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
+//            final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
+//            checkPositiveNtRdfTest(expectedFile, actualFile);
+//        }
+//    }
 }
