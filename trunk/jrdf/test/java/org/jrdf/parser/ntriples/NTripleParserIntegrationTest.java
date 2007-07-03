@@ -61,45 +61,46 @@ package org.jrdf.parser.ntriples;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
+import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.*;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.parser.ParserBlankNodeFactory;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
 public class NTripleParserIntegrationTest extends TestCase {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-    private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
 
-    public void testParseFile() throws Exception {
+    private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
+        private static final long serialVersionUID = 1;
+        {
+            add("rdf-tests/datatypes-intensional/test001.nt");
+        }
+    };
+
+    public void testStandardTest() throws Exception {
         InputStream in = getSampleData(this.getClass());
         checkPositiveNtNtTest(in);
     }
 
-    private void checkPositiveNtNtTest(InputStream in) throws Exception {
-        ParserFactory factory = new ParserFactoryImpl();
-        NTriplesParser parser = factory.createParser(NEW_GRAPH.getElementFactory(), BLANK_NODE_FACTORY);
-        parser.setStatementHandler(new GraphStatementHandler(NEW_GRAPH));
-        parser.parse(in, "foo");
-        Set<Triple> actualResults = new HashSet<Triple>();
-        ClosableIterator<Triple> iterator = NEW_GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE);
-        while (iterator.hasNext()) {
-            actualResults.add(iterator.next());
+    public void testNegativeTests() {
+        for (String fileName : NEGATIVE_TESTS) {
+            final URL file = getClass().getClassLoader().getResource(fileName);
         }
-        Set<Triple> expectedTriples = expectedResults(NEW_GRAPH, BLANK_NODE_FACTORY);
+    }
+
+    private void checkPositiveNtNtTest(InputStream in) throws Exception {
+        Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
+        ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+        Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
+        Set<Triple> expectedTriples = standardTest(newGraph, factory);
         checkGraph(actualResults, expectedTriples);
     }
 }
