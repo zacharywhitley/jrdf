@@ -73,6 +73,6 @@ public class JavaClassFileFilter implements FileFilter {
     private static final String EXTENSION_JAVA_CLASS = ".class";
 
     public boolean accept(File file) {
-        return file.getName().endsWith(EXTENSION_JAVA_CLASS);
+        return file.getName().endsWith(EXTENSION_JAVA_CLASS) && !(file.getName().contains("Test"));
     }
 }

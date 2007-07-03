@@ -61,8 +61,12 @@ package org.jrdf.graph;
 
 // Java 2 standard
 
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 import org.jrdf.util.EscapeUtil;
+import org.jrdf.graph.datatype.Value;
+import org.jrdf.graph.datatype.StringValue;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -87,7 +91,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * The lexical form of the literal.
      */
-    protected String lexicalForm;
+    protected Value value;
 
     /**
      * The language code of the literal.
@@ -118,7 +122,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        lexicalForm = newLexicalForm;
+        value = new StringValue(newLexicalForm);
         language = "";
         datatypeURI = null;
     }
@@ -145,7 +149,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        lexicalForm = newLexicalForm;
+        value = new StringValue(newLexicalForm);
         language = newLanguage;
         datatypeURI = null;
     }
@@ -171,7 +175,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        lexicalForm = newLexicalForm;
+        value = new StringValue(newLexicalForm);
         language = null;
         datatypeURI = newDatatypeURI;
     }
@@ -182,7 +186,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * @return the text of the literal, never <code>null</code>
      */
     public String getLexicalForm() {
-        return lexicalForm;
+        return value.getLexicalForm();
     }
 
     /**
@@ -227,19 +231,21 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         visitor.visitLiteral(this);
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(Literal.class, obj)) {
+        if (!hasSuperClassOrInterface(Literal.class, obj)) {
             return false;
         }
         return determineEqualityFromFields((Literal) obj);
     }
 
+    @Override
     public int hashCode() {
         int hashCode = getLexicalForm().hashCode();
 
@@ -289,7 +295,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     private boolean determineEqualityFromFields(Literal tmpLiteral) {
         // Ensure that the lexical form is equal character by character.
-        if (lexicalFormsEqual(tmpLiteral)) {
+        if (valuesEqual(tmpLiteral)) {
             return checkLiteralEquality(tmpLiteral);
         }
         return false;
@@ -308,7 +314,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         return returnValue;
     }
 
-    private boolean lexicalFormsEqual(Literal tmpLiteral) {
+    private boolean valuesEqual(Literal tmpLiteral) {
         return getLexicalForm().equals(tmpLiteral.getLexicalForm());
     }
 
