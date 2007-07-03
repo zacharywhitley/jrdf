@@ -176,11 +176,13 @@
         <pathelement location="${out.instr.dir}/classes"/>
         <pathelement location="${prod.classes.dir}"/>
         <pathelement location="${test.classes.dir}"/>
+        <pathelement location="${test.dir}/rdf"/>
     </path>
 
     <path id="unit.test.class.path">
         <path refid="test.class.path"/>
     </path>
+
     <path id="integration.test.class.path">
         <path refid="test.class.path"/>
     </path>
