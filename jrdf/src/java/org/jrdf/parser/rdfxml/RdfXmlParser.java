@@ -414,6 +414,7 @@ public final class RdfXmlParser implements ConfigurableParser {
             }
             throw new ParseException(wrappedExc, e.getLineNumber(), e.getColumnNumber());
         } catch (SAXException e) {
+            e.printStackTrace();
             Exception wrappedExc = e.getException();
             if (null == wrappedExc) {
                 wrappedExc = e;
@@ -963,9 +964,7 @@ public final class RdfXmlParser implements ConfigurableParser {
             if (null != datatype) {
                 if (DT_VERIFY == datatypeHandling) {
                     if (!XmlDatatypeUtil.isValidValue(label, datatype)) {
-                        throw new Exception("'" + label +
-                                "' is not a valid value for datatype " +
-                                datatype);
+                        throw new Exception("'" + label + "' is not a valid value for datatype " + datatype);
                     }
                 } else if (DT_NORMALIZE == datatypeHandling) {
                     label = XmlDatatypeUtil.normalize(label, datatype);
