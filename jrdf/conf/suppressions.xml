@@ -13,6 +13,7 @@
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="RDF.java"/>
     <suppress checks="JavaNCSS" files="RDFS.java"/>
+    <suppress checks="JavaNCSS" files="XSD.java"/>
     <suppress checks="JavaNCSS" files="JrdfExample.java"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl.java"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl.java"/>

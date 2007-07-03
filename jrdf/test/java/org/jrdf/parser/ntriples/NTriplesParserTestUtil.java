@@ -103,8 +103,7 @@ public class NTriplesParserTestUtil {
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.parse(in, "foo");
         Set<Triple> actualResults = new HashSet<Triple>();
-        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         while (iterator.hasNext()) {
             actualResults.add(iterator.next());
         }

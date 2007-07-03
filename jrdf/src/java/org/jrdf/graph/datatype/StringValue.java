@@ -57,59 +57,47 @@
  *
  */
 
-package org.jrdf.parser.ntriples;
+package org.jrdf.graph.datatype;
 
-import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
-import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
+public class StringValue implements Value {
+    private static final long serialVersionUID = 8865131980074326360L;
+    private String value;
 
-public class NTripleParserIntegrationTest extends TestCase {
-    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
-
-    private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
-        {
-            put("rdf-tests/datatypes/test002.nt", "test002b.nt");
-        }
-    };
-    private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
-        {
-        }
-    };
-
-    public void testStandardTest() throws Exception {
-        InputStream in = getSampleData(this.getClass());
-        Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
-        ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
-        Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
-        Set<Triple> expectedTriples = standardTest(newGraph, factory);
-        checkGraph(actualResults, expectedTriples);
+    private StringValue() {
     }
 
-    public void testNegativeTests() throws Exception {
-        for (String fileName : NEGATIVE_TESTS) {
-            final URL file = getClass().getClassLoader().getResource(fileName);
-            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
-            ParserFactory parserFactory = new ParserFactoryImpl();
-            ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(graph.getElementFactory());
-            NTriplesParser parser = parserFactory.createParser(graph.getElementFactory(), factory);
-            parser.setStatementHandler(new GraphStatementHandler(graph));
-            parser.parse(file.openStream(), "foo");
-        }
+    public StringValue(final String newValue) {
+        this.value = newValue;
     }
 
+    public String getLexicalForm() {
+        return value;
+    }
+
+    public boolean isWellFormedXml() {
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (!hasSuperClassOrInterface(StringValue.class, obj)) {
+            return false;
+        }
+        return value.equals(((StringValue) obj).value);
+    }
 }
