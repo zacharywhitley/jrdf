@@ -68,6 +68,7 @@ import java.util.Map;
 
 public class RdfXmlIntegrationTest extends TestCase {
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1;
         {
             put("rdf-tests/amp-in-url/test001.nt", "rdf-tests/amp-in-url/test001.rdf");
             put("rdf-tests/datatypes/test001.nt", "rdf-tests/datatypes/test001.rdf");
@@ -75,6 +76,7 @@ public class RdfXmlIntegrationTest extends TestCase {
         }
     };
     private static final Map<String, String> NEGATIVE_TESTS = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1;
         {
         }
     };

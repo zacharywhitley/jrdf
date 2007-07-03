@@ -80,17 +80,8 @@ import java.util.Set;
 
 public class NTriplesParserTestUtil {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
-    private static final int TOTAL_TRIPLES = 33;
 
     private NTriplesParserTestUtil() {
-    }
-
-    public static void checkGraph(Set<Triple> actualResults, Graph graph, ParserBlankNodeFactory factory) throws Exception {
-        assertEquals("Should get 33 triples from file", TOTAL_TRIPLES, actualResults.size());
-        Set<Triple> triples = NTriplesParserTestUtil.expectedResults(graph, factory, TOTAL_TRIPLES);
-        for (Triple triple : triples) {
-            assertTrue("Expected: " + triple, actualResults.contains(triple));
-        }
     }
 
     public static InputStream getSampleData(Class<?> clazz) throws IOException {
@@ -98,14 +89,20 @@ public class NTriplesParserTestUtil {
         return source.openStream();
     }
 
+    public static void checkGraph(Set<Triple> actualResults, Set<Triple> expectedTriples) throws Exception {
+        assertEquals("Wrong number of triples returned", expectedTriples.size(), actualResults.size());
+        for (Triple triple : expectedTriples) {
+            assertTrue("Expected: " + triple, actualResults.contains(triple));
+        }
+    }
 
-    public static Set<Triple> expectedResults(Graph newGraph, ParserBlankNodeFactory blankNodeFactory,
-        int totalTriples) throws Exception {
+
+    public static Set<Triple> expectedResults(Graph newGraph, ParserBlankNodeFactory blankNodeFactory) throws Exception {
         Set<Triple> answers = new HashSet<Triple>();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         TripleFactory tripleFactory = newGraph.getTripleFactory();
         List<URIReference> refs = new ArrayList<URIReference>();
-        for (int i = 0; i < totalTriples; i++) {
+        for (int i = 0; i < 33; i++) {
             refs.add(graphElementFactory.createResource(URI.create("http://example.org/resource" + i)));
         }
         URIReference p = graphElementFactory.createResource(URI.create("http://example.org/property"));
