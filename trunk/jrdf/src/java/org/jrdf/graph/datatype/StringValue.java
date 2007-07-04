@@ -63,7 +63,7 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-public class StringValue implements Value, Comparable<StringValue> {
+public class StringValue implements Value {
     private static final long serialVersionUID = 8865131980074326360L;
     private String value;
 
@@ -86,7 +86,7 @@ public class StringValue implements Value, Comparable<StringValue> {
         return false;
     }
 
-    public int compareTo(StringValue s) {
+    public int compareTo(Value s) {
         return getLexicalForm().compareTo(s.getLexicalForm());
     }
 
