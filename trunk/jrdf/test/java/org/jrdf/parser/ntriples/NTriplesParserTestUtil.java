@@ -85,14 +85,13 @@ import java.util.List;
 import java.util.Set;
 
 public class NTriplesParserTestUtil {
-    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
 
     private NTriplesParserTestUtil() {
     }
 
-    public static InputStream getSampleData(Class<?> clazz) throws IOException {
-        URL source = clazz.getClassLoader().getResource(TEST_DATA);
+    public static InputStream getSampleData(Class<?> clazz, String fileName) throws IOException {
+        URL source = clazz.getClassLoader().getResource(fileName);
         return source.openStream();
     }
 

@@ -79,11 +79,12 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class NTripleParserIntegrationTest extends TestCase {
+    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
 
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
         {
-            put("rdf-tests/datatypes/test002.nt", "test002b.nt");
+            put("rdf-tests/datatypes/test003a.nt", "rdf-tests/datatypes/test003b.nt");
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
@@ -92,12 +93,27 @@ public class NTripleParserIntegrationTest extends TestCase {
     };
 
     public void testStandardTest() throws Exception {
-        InputStream in = getSampleData(this.getClass());
+        InputStream in = getSampleData(this.getClass(), TEST_DATA);
         Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
         ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
         Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
-        Set<Triple> expectedTriples = standardTest(newGraph, factory);
-        checkGraph(actualResults, expectedTriples);
+        Set<Triple> expectedResults = standardTest(newGraph, factory);
+        checkGraph(actualResults, expectedResults);
+    }
+
+    public void testPositiveTests() throws Exception {
+        for (String fileName : POSITIVE_TESTS.keySet()) {
+            Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
+            ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+            InputStream in = getSampleData(this.getClass(), fileName);
+            Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
+            in.close();
+            newGraph = TEST_JRDF_FACTORY.getNewGraph();
+            in = getSampleData(this.getClass(), POSITIVE_TESTS.get(fileName));
+            Set<Triple> expectedResults = parseNTriplesFile(in, newGraph, factory);
+            in.close();
+            checkGraph(actualResults, expectedResults);
+        }
     }
 
     public void testNegativeTests() throws Exception {
@@ -111,5 +127,4 @@ public class NTripleParserIntegrationTest extends TestCase {
             parser.parse(file.openStream(), "foo");
         }
     }
-
 }
