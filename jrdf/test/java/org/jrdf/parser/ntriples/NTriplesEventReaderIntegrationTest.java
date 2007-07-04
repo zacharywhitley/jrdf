@@ -78,6 +78,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NTriplesEventReaderIntegrationTest extends TestCase {
+    private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
     private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
@@ -98,7 +99,7 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
     }
 
     private RDFEventReader init() throws IOException {
-        InputStream in = getSampleData(this.getClass());
+        InputStream in = getSampleData(this.getClass(), TEST_DATA);
         RDFInputFactory factory = newInstance();
         return factory.createRDFEventReader(in, URI.create("foo"), NEW_GRAPH, BLANK_NODE_FACTORY);
     }

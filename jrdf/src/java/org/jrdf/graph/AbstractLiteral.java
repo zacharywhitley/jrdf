@@ -67,6 +67,7 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 import org.jrdf.util.EscapeUtil;
 import org.jrdf.graph.datatype.Value;
 import org.jrdf.graph.datatype.StringValue;
+import org.jrdf.graph.datatype.DatatypeFactoryImpl;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -175,7 +176,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = new StringValue(newLexicalForm);
+        value = new DatatypeFactoryImpl().createValue(newLexicalForm, newDatatypeURI);
         language = null;
         datatypeURI = newDatatypeURI;
     }

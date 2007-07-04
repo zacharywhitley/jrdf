@@ -57,43 +57,49 @@
  *
  */
 
-package org.jrdf.parser.rdfxml;
+package org.jrdf.graph.datatype;
 
-import junit.framework.TestCase;
-import static org.jrdf.parser.ParserTestUtil.checkPositiveNtRdfTest;
+import org.jrdf.util.EqualsUtil;
 
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+public class IntValue implements Value {
+    private static final long serialVersionUID = -2021208000910314280L;
+    private Integer value;
 
-public class RdfXmlIntegrationTest extends TestCase {
-    private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
-        {
-            put("rdf-tests/amp-in-url/test001.nt", "rdf-tests/amp-in-url/test001.rdf");
-            put("rdf-tests/datatypes/test001.nt", "rdf-tests/datatypes/test001.rdf");
-            //put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002.rdf");
-        }
-    };
-    private static final Map<String, String> NEGATIVE_TESTS = new HashMap<String, String>() {
-        {
-        }
-    };
-
-    public void testPositiveTests() throws Exception {
-        for (String ntriplesFile : POSITIVE_TESTS.keySet()) {
-            final String rdfFile = POSITIVE_TESTS.get(ntriplesFile);
-            final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
-            final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
-            checkPositiveNtRdfTest(expectedFile, actualFile);
-        }
+    public IntValue() {
     }
 
-//    public void testNegativeTests() throws Exception {
-//        for (String ntriplesFile : NEGATIVE_TESTS.keySet()) {
-//            final String rdfFile = NEGATIVE_TESTS.get(ntriplesFile);
-//            final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
-//            final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
-//            checkPositiveNtRdfTest(expectedFile, actualFile);
-//        }
-//    }
+    private IntValue(final String newValue) {
+        this.value = Integer.valueOf(newValue);
+    }
+
+    public Value create(String lexicalForm) {
+        return new IntValue(lexicalForm);
+    }
+
+    public String getLexicalForm() {
+        return value.toString();
+    }
+
+    public boolean isWellFormedXml() {
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
+        }
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
+        }
+        if (!EqualsUtil.hasSuperClassOrInterface(IntValue.class, obj)) {
+            return false;
+        }
+        return value.equals(((IntValue) obj).value);
+    }
 }

@@ -72,6 +72,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
             put(XSD.STRING, new StringValue());
             put(XSD.BOOLEAN, new BooleanValue());
             put(XSD.DECIMAL, new DecimalValue());
+            put(XSD.INTEGER, new IntegerValue());
+            put(XSD.INT, new IntValue());
         }
     };
 

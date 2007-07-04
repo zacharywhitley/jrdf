@@ -178,10 +178,36 @@ public class XSD extends Vocabulary {
      */
     public static final URI NOTATION;
 
+    /**
+     * Integer data type - whole numbers (no factions), no limit in size.
+     */
+    public static final URI INTEGER;
+
+    /**
+     * Long data type.
+     */
+    public static final URI LONG;
+
+    /**
+     * Integer data type.
+     */
+    public static final URI INT;
+
+    /**
+     * Short data type.
+     */
+    public static final URI SHORT;
+
+    /**
+     * Byte data type.
+     */
+    public static final URI BYTE;
+
     static {
         try {
             BASE_URI = new URI("http://www.w3.org/2001/XMLSchema#");
 
+            // Primitive data types.
             STRING = new URI(BASE_URI + "string");
             BOOLEAN = new URI(BASE_URI + "boolean");
             DECIMAL = new URI(BASE_URI + "decimal");
@@ -202,7 +228,14 @@ public class XSD extends Vocabulary {
             Q_NAME = new URI(BASE_URI + "QName");
             NOTATION = new URI(BASE_URI + "NOTATION");
 
-            // Add Classes
+            // Derived data types.
+            INTEGER = new URI(BASE_URI + "integer");
+            LONG = new URI(BASE_URI + "long");
+            INT = new URI(BASE_URI + "int");
+            SHORT = new URI(BASE_URI + "short");
+            BYTE = new URI(BASE_URI + "byte");
+
+            // Add base
             RESOURCES.add(STRING);
             RESOURCES.add(BOOLEAN);
             RESOURCES.add(DECIMAL);
@@ -222,6 +255,13 @@ public class XSD extends Vocabulary {
             RESOURCES.add(ANY_URI);
             RESOURCES.add(Q_NAME);
             RESOURCES.add(NOTATION);
+
+            // Add dervied
+            RESOURCES.add(INTEGER);
+            RESOURCES.add(LONG);
+            RESOURCES.add(INT);
+            RESOURCES.add(SHORT);
+            RESOURCES.add(BYTE);
         } catch (URISyntaxException use) {
 
             // This should never happen.
