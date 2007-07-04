@@ -59,55 +59,8 @@
 
 package org.jrdf.graph.datatype;
 
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
-
 import java.math.BigDecimal;
 
-public class DecimalValue implements Value, XSDDecimal {
-    private static final long serialVersionUID = 8865131980074326360L;
-    private BigDecimal value;
-
-    public DecimalValue() {
-    }
-
-    private DecimalValue(final String newValue) {
-        this.value = new BigDecimal(newValue);
-    }
-
-    public Value create(String lexicalForm) {
-        return new DecimalValue(lexicalForm);
-    }
-
-    public String getLexicalForm() {
-        return value.toPlainString();
-    }
-
-    public boolean isWellFormedXml() {
-        return false;
-    }
-
-    public BigDecimal getAsBigDecimal() {
-        return value;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.intValue();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (isNull(obj)) {
-            return false;
-        }
-        if (sameReference(this, obj)) {
-            return true;
-        }
-        if (!hasSuperClassOrInterface(XSDDecimal.class, obj)) {
-            return false;
-        }
-        return getAsBigDecimal().equals(((XSDDecimal) obj).getAsBigDecimal());
-    }
+public interface XSDDecimal {
+    BigDecimal getAsBigDecimal();
 }
