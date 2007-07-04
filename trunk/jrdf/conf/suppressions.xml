@@ -20,6 +20,7 @@
     <suppress checks="ReturnCount" files="SemiJoinImpl.java"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl.java"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl.java"/>
+    <suppress checks="ReturnCount" files="DatatypeUtilImpl.java"/>
 
     <!-- Spike -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl.java"/>

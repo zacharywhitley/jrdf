@@ -92,6 +92,10 @@ public class DecimalValue implements Value, XSDDecimal {
         return value;
     }
 
+    public int compareTo(XSDDecimal val) {
+        return getAsBigDecimal().compareTo(val.getAsBigDecimal());
+    }
+
     @Override
     public int hashCode() {
         return value.intValue();

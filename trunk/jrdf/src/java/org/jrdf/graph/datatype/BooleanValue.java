@@ -63,7 +63,7 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-public class BooleanValue implements Value {
+public class BooleanValue implements Value, Comparable<BooleanValue> {
     private static final long serialVersionUID = 8865131980074326360L;
     private Boolean value;
 
@@ -84,6 +84,10 @@ public class BooleanValue implements Value {
 
     public boolean isWellFormedXml() {
         return false;
+    }
+
+    public int compareTo(BooleanValue o) {
+        return value.compareTo(o.value);
     }
 
     @Override

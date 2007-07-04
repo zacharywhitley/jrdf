@@ -59,61 +59,59 @@
 
 package org.jrdf.graph.datatype;
 
+import org.jrdf.graph.Literal;
+import static org.jrdf.vocabulary.XSD.BOOLEAN;
+import static org.jrdf.vocabulary.XSD.DECIMALS;
+import static org.jrdf.vocabulary.XSD.STRINGS;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
 
-import java.math.BigInteger;
-import java.math.BigDecimal;
+public class DatatypeUtilImpl implements DatatypeUtil {
 
-public class IntegerValue implements Value, XSDDecimal {
-    private static final long serialVersionUID = 5527716300000508791L;
-    private BigDecimal value;
-
-    public IntegerValue() {
-    }
-
-    private IntegerValue(final String newValue) {
-        // Make sure it parses as an integer but store as a decimal.
-        this.value = new BigDecimal(new BigInteger(newValue));
-    }
-
-    public Value create(String lexicalForm) {
-        return new IntegerValue(lexicalForm);
-    }
-
-    public String getLexicalForm() {
-        return value.toString();
-    }
-
-    public boolean isWellFormedXml() {
-        return false;
-    }
-
-    public BigDecimal getAsBigDecimal() {
-        return value;
-    }
-
-    public int compareTo(XSDDecimal val) {
-        return getAsBigDecimal().compareTo(val.getAsBigDecimal());
-    }
-
-    @Override
-    public int hashCode() {
-        return value.intValue();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (isNull(obj)) {
-            return false;
+    // TODO AN Replace with code by type rather than silly if/then/else.
+    public int compareTo(Literal literal1, Literal literal2) {
+        if (areXSDDecimals(literal1, literal2)) {
+            return equivalentXSDDecimal(literal1, literal2);
+        } else if (areStringLiterals(literal1, literal2)) {
+            return equivalentString(literal1, literal2);
+        } else if (areBooleanLiterals(literal1, literal2)) {
+            return equivalentBoolean(literal1, literal2);
+        } else {
+            return literal1.getDatatypeURI().compareTo(literal2.getDatatypeURI());
         }
-        if (sameReference(this, obj)) {
-            return true;
+    }
+
+    public int equivalentXSDDecimal(Literal literal1, Literal literal2) {
+        if (hasSuperClassOrInterface(XSDDecimal.class, literal1.getValue()) &&
+            hasSuperClassOrInterface(XSDDecimal.class, literal1.getValue())) {
+            XSDDecimal value1 = (XSDDecimal) literal1.getValue();
+            XSDDecimal value2 = (XSDDecimal) literal2.getValue();
+            return value1.getAsBigDecimal().compareTo(value2.getAsBigDecimal());
+        } else {
+            StringValue value1 = (StringValue) literal1.getValue();
+            StringValue value2 = (StringValue) literal2.getValue();
+            return value1.compareTo(value2);
         }
-        if (!hasSuperClassOrInterface(IntegerValue.class, obj)) {
-            return false;
-        }
-        return value.equals(((IntegerValue) obj).value);
+    }
+
+    public int equivalentString(Literal literal1, Literal literal2) {
+        return literal1.getLexicalForm().compareTo(literal2.getLexicalForm());
+    }
+
+    public int equivalentBoolean(Literal literal1, Literal literal2) {
+        BooleanValue value1 = (BooleanValue) literal1.getValue();
+        BooleanValue value2 = (BooleanValue) literal2.getValue();
+        return value1.compareTo(value2);
+    }
+
+    private boolean areXSDDecimals(Literal literal1, Literal literal2) {
+        return DECIMALS.contains(literal1.getDatatypeURI()) && DECIMALS.contains(literal2.getDatatypeURI());
+    }
+
+    private boolean areStringLiterals(Literal literal1, Literal literal2) {
+        return STRINGS.contains(literal1.getDatatypeURI()) && STRINGS.contains(literal2.getDatatypeURI());
+    }
+
+    private boolean areBooleanLiterals(Literal literal1, Literal literal2) {
+        return literal1.getDatatypeURI().equals(BOOLEAN) && literal2.getDatatypeURI().equals(BOOLEAN);
     }
 }
