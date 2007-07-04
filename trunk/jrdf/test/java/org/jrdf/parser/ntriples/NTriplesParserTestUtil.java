@@ -112,7 +112,7 @@ public class NTriplesParserTestUtil {
     public static void checkGraph(Set<Triple> actualResults, Set<Triple> expectedTriples) throws Exception {
         assertEquals("Wrong number of triples returned", expectedTriples.size(), actualResults.size());
         for (Triple triple : expectedTriples) {
-            assertTrue("Expected: " + triple, actualResults.contains(triple));
+            assertTrue("Expected: " + triple + " in graph: " + actualResults, actualResults.contains(triple));
         }
     }
 

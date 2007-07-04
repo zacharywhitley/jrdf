@@ -100,11 +100,6 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     protected String language;
 
     /**
-     * Whether the literal is well formed XML.
-     */
-    protected boolean wellFormedXML;
-
-    /**
      * RDF datatype URI, <code>null</code> for untyped literal.
      */
     protected URI datatypeURI;
@@ -181,24 +176,14 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         datatypeURI = newDatatypeURI;
     }
 
-    /**
-     * Obtain the text of this literal.
-     *
-     * @return the text of the literal, never <code>null</code>
-     */
     public String getLexicalForm() {
         return value.getLexicalForm();
     }
 
-    /**
-     * Returns the language code of the literal.
-     * <p/>
-     * When no language is specified for a plain literal, this field contains a
-     * zero-length {@link String}.  Otherwise, this will be <code>null</code>.
-     *
-     * @return the language code of the literal or <code>null</code> in the case
-     *         of a datatyped literal.
-     */
+    public Value getValue() {
+        return value;
+    }
+
     public String getLanguage() {
         return language;
     }
@@ -206,10 +191,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * Whether the literal is well formed XML.
      *
-     * @return whether the literal is wll formed XML.
+     * @return whether the literal is well formed XML.
      */
     public boolean isWellFormedXML() {
-        return wellFormedXML;
+        return value.isWellFormedXml();
     }
 
     /**
@@ -233,6 +218,20 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     @Override
+    public int hashCode() {
+        int hashCode = getValue().hashCode();
+
+        if (null != getDatatypeURI()) {
+            hashCode ^= getDatatypeURI().hashCode();
+        }
+
+        if (null != getLanguage()) {
+            hashCode ^= getLanguage().hashCode();
+        }
+        return hashCode;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (isNull(obj)) {
             return false;
@@ -244,21 +243,6 @@ public abstract class AbstractLiteral implements Literal, Serializable {
             return false;
         }
         return determineEqualityFromFields((Literal) obj);
-    }
-
-    @Override
-    public int hashCode() {
-        int hashCode = getLexicalForm().hashCode();
-
-        if (null != getDatatypeURI()) {
-            hashCode ^= getDatatypeURI().hashCode();
-        }
-
-        if (null != getLanguage()) {
-            hashCode ^= getLanguage().hashCode();
-        }
-
-        return hashCode;
     }
 
     /**
@@ -308,7 +292,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         // If datatypes are null and languages are equal by value.
         if (dataTypesNull(tmpLiteral) && languagesEqual(tmpLiteral)) {
             returnValue = true;
-            // If datatype URIs are not null and equal by their string values.
+        // If datatype URIs are not null and equal by their string values.
         } else if (dataTypesEqual(tmpLiteral)) {
             returnValue = true;
         }
@@ -316,7 +300,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     private boolean valuesEqual(Literal tmpLiteral) {
-        return getLexicalForm().equals(tmpLiteral.getLexicalForm());
+        return getValue().equals(tmpLiteral.getValue());
     }
 
     private boolean dataTypesNull(Literal tmpLiteral) {

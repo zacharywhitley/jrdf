@@ -84,7 +84,10 @@ public class NTripleParserIntegrationTest extends TestCase {
 
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
         {
+            put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002.nt");
             put("rdf-tests/datatypes/test003a.nt", "rdf-tests/datatypes/test003b.nt");
+            put("rdf-tests/datatypes/test003b.nt", "rdf-tests/datatypes/test003a.nt");
+//            put("rdf-tests/datatypes/test005a.nt", "rdf-tests/datatypes/test005b.nt");
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
@@ -105,13 +108,9 @@ public class NTripleParserIntegrationTest extends TestCase {
         for (String fileName : POSITIVE_TESTS.keySet()) {
             Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
             ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
-            InputStream in = getSampleData(this.getClass(), fileName);
-            Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
-            in.close();
+            Set<Triple> actualResults = getResults(fileName, newGraph, factory);
             newGraph = TEST_JRDF_FACTORY.getNewGraph();
-            in = getSampleData(this.getClass(), POSITIVE_TESTS.get(fileName));
-            Set<Triple> expectedResults = parseNTriplesFile(in, newGraph, factory);
-            in.close();
+            Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName), newGraph, factory);
             checkGraph(actualResults, expectedResults);
         }
     }
@@ -125,6 +124,15 @@ public class NTripleParserIntegrationTest extends TestCase {
             NTriplesParser parser = parserFactory.createParser(graph.getElementFactory(), factory);
             parser.setStatementHandler(new GraphStatementHandler(graph));
             parser.parse(file.openStream(), "foo");
+        }
+    }
+
+    private Set<Triple> getResults(String fileName, Graph newGraph, ParserBlankNodeFactory factory) throws Exception {
+        InputStream in = getSampleData(this.getClass(), fileName);
+        try {
+            return parseNTriplesFile(in, newGraph, factory);
+        } finally {
+            in.close();
         }
     }
 }

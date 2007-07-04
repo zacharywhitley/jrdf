@@ -61,6 +61,8 @@ package org.jrdf.graph;
 
 // Java 2 standard
 
+import org.jrdf.graph.datatype.Value;
+
 import java.net.URI;
 
 /**
@@ -78,6 +80,13 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
      * @return the text of the literal, never <code>null</code>
      */
     String getLexicalForm();
+
+    /**
+     * Obtain the data type representation of this literal.
+     *
+     * @return the value object (data type) of this literal.
+     */
+    Value getValue();
 
     /**
      * Returns the language code of the literal, or <code>null</code> if no

@@ -63,7 +63,9 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-public class IntValue implements Value {
+import java.math.BigDecimal;
+
+public class IntValue implements Value, XSDDecimal {
     private static final long serialVersionUID = -2021208000910314280L;
     private Integer value;
 
@@ -86,9 +88,13 @@ public class IntValue implements Value {
         return false;
     }
 
+    public BigDecimal getAsBigDecimal() {
+        return new BigDecimal(value);
+    }
+
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return value.intValue();
     }
 
     @Override

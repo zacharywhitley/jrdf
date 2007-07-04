@@ -64,16 +64,18 @@ import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.math.BigInteger;
+import java.math.BigDecimal;
 
-public class IntegerValue implements Value {
+public class IntegerValue implements Value, XSDDecimal {
     private static final long serialVersionUID = 5527716300000508791L;
-    private BigInteger value;
+    private BigDecimal value;
 
     public IntegerValue() {
     }
 
     private IntegerValue(final String newValue) {
-        this.value = new BigInteger(newValue);
+        // Make sure it parses as an integer but store as a decimal.
+        this.value = new BigDecimal(new BigInteger(newValue));
     }
 
     public Value create(String lexicalForm) {
@@ -88,9 +90,13 @@ public class IntegerValue implements Value {
         return false;
     }
 
+    public BigDecimal getAsBigDecimal() {
+        return value;
+    }
+
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return value.intValue();
     }
 
     @Override
@@ -101,7 +107,7 @@ public class IntegerValue implements Value {
         if (sameReference(this, obj)) {
             return true;
         }
-        if (!hasSuperClassOrInterface(IntValue.class, obj)) {
+        if (!hasSuperClassOrInterface(IntegerValue.class, obj)) {
             return false;
         }
         return value.equals(((IntegerValue) obj).value);
