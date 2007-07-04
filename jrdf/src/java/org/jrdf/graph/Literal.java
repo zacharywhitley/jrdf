@@ -72,7 +72,7 @@ import java.net.URI;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Literal extends ObjectNode, TypedNodeVisitable {
+public interface Literal extends Comparable<Literal>, ObjectNode, TypedNodeVisitable {
 
     /**
      * Obtain the text of this literal.
@@ -112,6 +112,16 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
      *         for an untyped node.
      */
     URI getDatatypeURI();
+
+    /**
+     * Sorts by the URI of the literal and then value.  Will return 0 if the data type URIs are different but are
+     * comparable types (such as decimal and integer) and the values are the same.  Similar to the semantics of
+     * BigDecimal.
+     *
+     * @param literal the literal to compare.
+     * @return -1, 0, 1 if they are equivalent and the values are less than, equal to or greater than literal.
+     */
+    int compareTo(Literal literal);
 
     /**
      * Indicates whether some other object is "equal to" this one.

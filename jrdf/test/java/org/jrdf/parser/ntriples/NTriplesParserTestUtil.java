@@ -68,12 +68,14 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -109,11 +111,29 @@ public class NTriplesParserTestUtil {
         return actualResults;
     }
 
-    public static void checkGraph(Set<Triple> actualResults, Set<Triple> expectedTriples) throws Exception {
-        assertEquals("Wrong number of triples returned", expectedTriples.size(), actualResults.size());
-        for (Triple triple : expectedTriples) {
-            assertTrue("Expected: " + triple + " in graph: " + actualResults, actualResults.contains(triple));
+    public static void checkGraph(Set<Triple> actualTriples, Set<Triple> expectedTriples) throws Exception {
+        assertEquals("Wrong number of triples returned", expectedTriples.size(), actualTriples.size());
+        int numberFound = 0;
+        for (Triple tripleToFind : expectedTriples) {
+            boolean found = false;
+            for (Triple triple : actualTriples) {
+                if (tripleToFind.getSubject().equals(triple.getSubject()) &&
+                    tripleToFind.getPredicate().equals(triple.getPredicate())) {
+                    if (hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
+                        Literal literal1 = (Literal) tripleToFind.getObject();
+                        Literal literal2 = (Literal) triple.getObject();
+                        found = literal1.compareTo(literal2) == 0;
+                    } else {
+                        found = tripleToFind.getObject().equals(triple.getObject());
+                    }
+                }
+                if (found) {
+                    numberFound++;
+                    break;
+                }
+            }
         }
+        assertTrue(numberFound == expectedTriples.size());
     }
 
     public static Set<Triple> standardTest(Graph newGraph, ParserBlankNodeFactory blankNodeFactory) throws Exception {

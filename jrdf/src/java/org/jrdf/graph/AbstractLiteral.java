@@ -68,6 +68,8 @@ import org.jrdf.util.EscapeUtil;
 import org.jrdf.graph.datatype.Value;
 import org.jrdf.graph.datatype.StringValue;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
+import org.jrdf.graph.datatype.DatatypeUtil;
+import org.jrdf.graph.datatype.DatatypeUtilImpl;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -215,6 +217,31 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     public void accept(TypedNodeVisitor visitor) {
         visitor.visitLiteral(this);
+    }
+
+    public int compareTo(Literal literal) {
+        if (language != null) {
+            if (language.length() == 0 && datatypeURI == null) {
+                return comparePlainLiteral(literal);
+            } else {
+                return compareLanguageLiteral(literal);
+            }
+        } else {
+            return compareDatatypeLiteral(literal);
+        }
+    }
+
+    private int comparePlainLiteral(Literal literal) {
+        return getLexicalForm().compareTo(literal.getLexicalForm());
+    }
+
+    private int compareLanguageLiteral(Literal literal) {
+        return getLanguage().compareTo(literal.getLanguage());
+    }
+
+    private int compareDatatypeLiteral(Literal literal) {
+        DatatypeUtil datatypeUtil = new DatatypeUtilImpl();
+        return datatypeUtil.compareTo(this, literal);
     }
 
     @Override

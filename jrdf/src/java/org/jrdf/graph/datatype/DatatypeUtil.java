@@ -59,61 +59,14 @@
 
 package org.jrdf.graph.datatype;
 
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
+import org.jrdf.graph.Literal;
 
-import java.math.BigInteger;
-import java.math.BigDecimal;
+public interface DatatypeUtil {
+    int equivalentXSDDecimal(Literal literal1, Literal literal2);
 
-public class IntegerValue implements Value, XSDDecimal {
-    private static final long serialVersionUID = 5527716300000508791L;
-    private BigDecimal value;
+    int equivalentString(Literal literal1, Literal literal2);
 
-    public IntegerValue() {
-    }
+    int equivalentBoolean(Literal literal1, Literal literal2);
 
-    private IntegerValue(final String newValue) {
-        // Make sure it parses as an integer but store as a decimal.
-        this.value = new BigDecimal(new BigInteger(newValue));
-    }
-
-    public Value create(String lexicalForm) {
-        return new IntegerValue(lexicalForm);
-    }
-
-    public String getLexicalForm() {
-        return value.toString();
-    }
-
-    public boolean isWellFormedXml() {
-        return false;
-    }
-
-    public BigDecimal getAsBigDecimal() {
-        return value;
-    }
-
-    public int compareTo(XSDDecimal val) {
-        return getAsBigDecimal().compareTo(val.getAsBigDecimal());
-    }
-
-    @Override
-    public int hashCode() {
-        return value.intValue();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (isNull(obj)) {
-            return false;
-        }
-        if (sameReference(this, obj)) {
-            return true;
-        }
-        if (!hasSuperClassOrInterface(IntegerValue.class, obj)) {
-            return false;
-        }
-        return value.equals(((IntegerValue) obj).value);
-    }
+    int compareTo(Literal literal1, Literal literal2);
 }

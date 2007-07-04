@@ -61,6 +61,8 @@ package org.jrdf.vocabulary;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * A set of constants for the standard XSD vocabulary.
@@ -203,6 +205,16 @@ public class XSD extends Vocabulary {
      */
     public static final URI BYTE;
 
+    /**
+     * The set of all decimal and derived data types.
+     */
+    public static final Set<URI> DECIMALS = new HashSet<URI>();
+
+    /**
+     * The set of all string and derived data types.
+     */
+    public static final Set<URI> STRINGS = new HashSet<URI>();
+
     static {
         try {
             BASE_URI = new URI("http://www.w3.org/2001/XMLSchema#");
@@ -262,6 +274,17 @@ public class XSD extends Vocabulary {
             RESOURCES.add(INT);
             RESOURCES.add(SHORT);
             RESOURCES.add(BYTE);
+
+            // Add all decimal types
+            DECIMALS.add(DECIMAL);
+            DECIMALS.add(INTEGER);
+            DECIMALS.add(LONG);
+            DECIMALS.add(INT);
+            DECIMALS.add(SHORT);
+            DECIMALS.add(BYTE);
+
+            // Add all string types
+            STRINGS.add(STRING);
         } catch (URISyntaxException use) {
 
             // This should never happen.
