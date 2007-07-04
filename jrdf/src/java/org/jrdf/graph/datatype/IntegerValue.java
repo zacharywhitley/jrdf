@@ -59,7 +59,9 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.math.BigInteger;
 
@@ -93,13 +95,13 @@ public class IntegerValue implements Value {
 
     @Override
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(IntValue.class, obj)) {
+        if (!hasSuperClassOrInterface(IntValue.class, obj)) {
             return false;
         }
         return value.equals(((IntegerValue) obj).value);
