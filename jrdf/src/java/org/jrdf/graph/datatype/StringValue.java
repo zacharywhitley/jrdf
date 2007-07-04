@@ -67,11 +67,15 @@ public class StringValue implements Value {
     private static final long serialVersionUID = 8865131980074326360L;
     private String value;
 
-    private StringValue() {
+    public StringValue() {
     }
 
     public StringValue(final String newValue) {
         this.value = newValue;
+    }
+
+    public Value create(String lexicalForm) {
+        return new StringValue(lexicalForm);
     }
 
     public String getLexicalForm() {

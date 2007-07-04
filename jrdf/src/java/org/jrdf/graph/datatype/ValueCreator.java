@@ -59,47 +59,6 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.util.EqualsUtil;
-
-public class BooleanValue implements Value {
-    private static final long serialVersionUID = 8865131980074326360L;
-    private Boolean value;
-
-    public BooleanValue() {
-    }
-
-    public BooleanValue(final String newValue) {
-        this.value = Boolean.valueOf(newValue);
-    }
-
-    public Value create(String lexicalForm) {
-        return new BooleanValue(lexicalForm);
-    }
-
-    public String getLexicalForm() {
-        return value.toString();
-    }
-
-    public boolean isWellFormedXml() {
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
-        }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
-        }
-        if (!EqualsUtil.hasSuperClassOrInterface(BooleanValue.class, obj)) {
-            return false;
-        }
-        return value.equals(((BooleanValue) obj).value);
-    }
+public interface ValueCreator {
+    Value create(String lexicalForm);
 }
