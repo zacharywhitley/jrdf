@@ -78,11 +78,18 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
     };
 
     public Value createValue(String newLexicalForm, URI dataTypeURI) {
-        if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
-            ValueCreator value = FACTORY_MAP.get(dataTypeURI);
-            return value.create(newLexicalForm);
-        } else {
-            return new StringValue(newLexicalForm);
+        Value value;
+        // Try and create a typed value - if all else fails create a normal string version.
+        try {
+            if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
+                ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);
+                value = valueCreator.create(newLexicalForm);
+            } else {
+                value = new StringValue(newLexicalForm);
+            }
+        } catch (IllegalArgumentException e) {
+            value = new StringValue(newLexicalForm);
         }
+        return value;
     }
 }

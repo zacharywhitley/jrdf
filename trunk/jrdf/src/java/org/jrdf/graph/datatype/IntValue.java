@@ -59,7 +59,9 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 public class IntValue implements Value {
     private static final long serialVersionUID = -2021208000910314280L;
@@ -91,13 +93,13 @@ public class IntValue implements Value {
 
     @Override
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(IntValue.class, obj)) {
+        if (!hasSuperClassOrInterface(IntValue.class, obj)) {
             return false;
         }
         return value.equals(((IntValue) obj).value);
