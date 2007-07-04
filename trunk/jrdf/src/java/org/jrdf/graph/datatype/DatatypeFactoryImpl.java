@@ -59,47 +59,28 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.util.EqualsUtil;
+import org.jrdf.vocabulary.XSD;
 
-public class BooleanValue implements Value {
-    private static final long serialVersionUID = 8865131980074326360L;
-    private Boolean value;
+import java.net.URI;
+import java.util.Map;
+import java.util.HashMap;
 
-    public BooleanValue() {
-    }
-
-    public BooleanValue(final String newValue) {
-        this.value = Boolean.valueOf(newValue);
-    }
-
-    public Value create(String lexicalForm) {
-        return new BooleanValue(lexicalForm);
-    }
-
-    public String getLexicalForm() {
-        return value.toString();
-    }
-
-    public boolean isWellFormedXml() {
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
-            return false;
+public class DatatypeFactoryImpl implements DatatypeFactory {
+    private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>() {
+        private static final long serialVersionUID = 1L;
+        {
+            put(XSD.STRING, new StringValue());
+            put(XSD.BOOLEAN, new BooleanValue());
+            put(XSD.DECIMAL, new DecimalValue());
         }
-        if (EqualsUtil.sameReference(this, obj)) {
-            return true;
+    };
+
+    public Value createValue(String newLexicalForm, URI dataTypeURI) {
+        if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
+            ValueCreator value = FACTORY_MAP.get(dataTypeURI);
+            return value.create(newLexicalForm);
+        } else {
+            return new StringValue(newLexicalForm);
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(BooleanValue.class, obj)) {
-            return false;
-        }
-        return value.equals(((BooleanValue) obj).value);
     }
 }

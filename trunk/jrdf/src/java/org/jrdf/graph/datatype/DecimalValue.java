@@ -67,11 +67,15 @@ public class DecimalValue implements Value {
     private static final long serialVersionUID = 8865131980074326360L;
     private BigDecimal value;
 
-    private DecimalValue() {
+    public DecimalValue() {
     }
 
-    public DecimalValue(final String newValue) {
+    private DecimalValue(final String newValue) {
         this.value = new BigDecimal(newValue);
+    }
+
+    public Value create(String lexicalForm) {
+        return new DecimalValue(lexicalForm);
     }
 
     public String getLexicalForm() {
