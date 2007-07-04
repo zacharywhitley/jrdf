@@ -59,9 +59,10 @@
 
 package org.jrdf.graph.datatype;
 
-import java.io.Serializable;
-
-public interface Value extends Serializable, ValueCreator, Comparable<Value>, EquivComparable<Value> {
-    String getLexicalForm();
-    boolean isWellFormedXml();
+/**
+ * Indicates a slightly difference comparison operation - one that takes into account the semantics of the data type.
+ * For example, 7.0 and 7 will be considered equal (return 0).  Where the normal equals and compareTo would not.
+ */
+public interface EquivComparable<T>   {
+    int equivCompareTo(T t);
 }

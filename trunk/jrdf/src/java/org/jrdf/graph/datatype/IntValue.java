@@ -93,6 +93,10 @@ public class IntValue implements Value, XSDDecimal {
     }
 
     public int compareTo(Value val) {
+        return value.compareTo(((IntValue) val).value);
+    }
+
+    public int equivCompareTo(Value val) {
         return getAsBigDecimal().compareTo(((XSDDecimal) val).getAsBigDecimal());
     }
 
