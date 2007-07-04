@@ -90,6 +90,11 @@ public class StringValue implements Value {
         return getLexicalForm().compareTo(s.getLexicalForm());
     }
 
+    public int equivCompareTo(Value s) {
+        // Change this if we add more derived string types.
+        return compareTo(s);
+    }
+
     @Override
     public int hashCode() {
         return value.hashCode();

@@ -122,7 +122,7 @@ public class NTriplesParserTestUtil {
                     if (hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
                         Literal literal1 = (Literal) tripleToFind.getObject();
                         Literal literal2 = (Literal) triple.getObject();
-                        found = literal1.compareTo(literal2) == 0;
+                        found = literal1.equivCompareTo(literal2) == 0;
                     } else {
                         found = tripleToFind.getObject().equals(triple.getObject());
                     }

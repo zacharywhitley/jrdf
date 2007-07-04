@@ -93,6 +93,10 @@ public class DecimalValue implements Value, XSDDecimal {
     }
 
     public int compareTo(Value val) {
+        return value.compareTo(((DecimalValue) val).value);
+    }
+
+    public int equivCompareTo(Value val) {
         return getAsBigDecimal().compareTo(((XSDDecimal) val).getAsBigDecimal());
     }
 
@@ -112,6 +116,6 @@ public class DecimalValue implements Value, XSDDecimal {
         if (!hasSuperClassOrInterface(XSDDecimal.class, obj)) {
             return false;
         }
-        return getAsBigDecimal().equals(((XSDDecimal) obj).getAsBigDecimal());
+        return value.equals(((DecimalValue) obj).value);
     }
 }

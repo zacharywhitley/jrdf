@@ -90,6 +90,10 @@ public class BooleanValue implements Value {
         return value.compareTo(((BooleanValue) o).value);
     }
 
+    public int equivCompareTo(Value o) {
+        return compareTo(o);
+    }
+
     @Override
     public int hashCode() {
         return value.hashCode();

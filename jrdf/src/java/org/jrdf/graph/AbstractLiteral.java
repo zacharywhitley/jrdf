@@ -220,26 +220,25 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     public int compareTo(Literal literal) {
         if (language != null) {
             if (language.length() == 0 && datatypeURI == null) {
-                return comparePlainLiteral(literal);
+                return getLexicalForm().compareTo(literal.getLexicalForm());
             } else {
-                return compareLanguageLiteral(literal);
+                return getLanguage().compareTo(literal.getLanguage());
             }
         } else {
-            return compareDatatypeLiteral(literal);
+            return getValue().compareTo(literal.getValue());
         }
     }
 
-    private int comparePlainLiteral(Literal literal) {
-        return getLexicalForm().compareTo(literal.getLexicalForm());
-    }
-
-    private int compareLanguageLiteral(Literal literal) {
-        return getLanguage().compareTo(literal.getLanguage());
-    }
-
-    private int compareDatatypeLiteral(Literal literal) {
-        //return datatypeUtil.compareTo(this, literal);
-        return getValue().compareTo(literal.getValue());
+    public int equivCompareTo(Literal literal) {
+        if (language != null) {
+            if (language.length() == 0 && datatypeURI == null) {
+                return getLexicalForm().compareTo(literal.getLexicalForm());
+            } else {
+                return getLanguage().compareTo(literal.getLanguage());
+            }
+        } else {
+            return getValue().equivCompareTo(literal.getValue());
+        }
     }
 
     @Override
