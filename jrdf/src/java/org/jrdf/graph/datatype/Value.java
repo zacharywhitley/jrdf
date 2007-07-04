@@ -61,7 +61,7 @@ package org.jrdf.graph.datatype;
 
 import java.io.Serializable;
 
-public interface Value extends Serializable, ValueCreator {
+public interface Value extends Serializable, ValueCreator, Comparable<Value> {
     String getLexicalForm();
     boolean isWellFormedXml();
 }

@@ -61,15 +61,13 @@ package org.jrdf.graph;
 
 // Java 2 standard
 
+import org.jrdf.graph.datatype.DatatypeFactoryImpl;
+import org.jrdf.graph.datatype.StringValue;
+import org.jrdf.graph.datatype.Value;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 import org.jrdf.util.EscapeUtil;
-import org.jrdf.graph.datatype.Value;
-import org.jrdf.graph.datatype.StringValue;
-import org.jrdf.graph.datatype.DatatypeFactoryImpl;
-import org.jrdf.graph.datatype.DatatypeUtil;
-import org.jrdf.graph.datatype.DatatypeUtilImpl;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -240,8 +238,8 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     private int compareDatatypeLiteral(Literal literal) {
-        DatatypeUtil datatypeUtil = new DatatypeUtilImpl();
-        return datatypeUtil.compareTo(this, literal);
+        //return datatypeUtil.compareTo(this, literal);
+        return getValue().compareTo(literal.getValue());
     }
 
     @Override
