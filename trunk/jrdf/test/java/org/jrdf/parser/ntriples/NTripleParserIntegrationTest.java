@@ -82,16 +82,23 @@ public class NTripleParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
 
+    // Commented out tests are due to the lack of inferencing for types and blank node equivalence.
+
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
         {
             put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002.nt");
+            //put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002b.nt");
             put("rdf-tests/datatypes/test003a.nt", "rdf-tests/datatypes/test003b.nt");
             put("rdf-tests/datatypes/test003b.nt", "rdf-tests/datatypes/test003a.nt");
             put("rdf-tests/datatypes/test005a.nt", "rdf-tests/datatypes/test005b.nt");
+            //put("rdf-tests/datatypes/test008a.nt", "rdf-tests/datatypes/test008b.nt");
+            //put("rdf-tests/datatypes/test009a.nt", "rdf-tests/datatypes/test009b.nt");
+            //put("rdf-tests/datatypes/test0010a.nt", "rdf-tests/datatypes/test0010b.nt");
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
         {
+            //add("rdf-tests/datatypes/test006.nt");
         }
     };
 
