@@ -59,63 +59,67 @@
 
 package org.jrdf.graph.datatype;
 
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
+import org.jrdf.util.EqualsUtil;
 
-import java.math.BigDecimal;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.Duration;
 
-public class DecimalValue implements Value, XSDDecimal {
-    private static final long serialVersionUID = 6530294494529409549L;
-    private BigDecimal value;
+public class DurationValue implements Value {
+    private static final long serialVersionUID = -7039266563142815725L;
+    private static final javax.xml.datatype.DatatypeFactory FACTORY;
+    private Duration value;
 
-    protected DecimalValue() {
+    static {
+        try {
+            FACTORY = javax.xml.datatype.DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException e) {
+            throw new ExceptionInInitializerError(e);
+        }
     }
 
-    private DecimalValue(final String newValue) {
-        this.value = new BigDecimal(newValue);
+    protected DurationValue() {
+    }
+
+    private DurationValue(final String newValue) {
+        this.value = FACTORY.newDuration(newValue);
     }
 
     public Value create(String lexicalForm) {
-        return new DecimalValue(lexicalForm);
+        return new DurationValue(lexicalForm);
     }
 
     public String getLexicalForm() {
-        return value.toPlainString();
+        return value.toString();
     }
 
     public boolean isWellFormedXml() {
         return false;
     }
 
-    public BigDecimal getAsBigDecimal() {
-        return value;
-    }
-
     public int compareTo(Value val) {
-        return value.compareTo(((DecimalValue) val).value);
+        return value.compare(((DurationValue) val).value);
     }
 
     public int equivCompareTo(Value val) {
-        return getAsBigDecimal().compareTo(((XSDDecimal) val).getAsBigDecimal());
+        return compareTo(val);
     }
 
     @Override
     public int hashCode() {
-        return value.intValue();
+        return value.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (isNull(obj)) {
+        if (EqualsUtil.isNull(obj)) {
             return false;
         }
-        if (sameReference(this, obj)) {
+        if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (!hasSuperClassOrInterface(XSDDecimal.class, obj)) {
+        if (!EqualsUtil.hasSuperClassOrInterface(XSDDecimal.class, obj)) {
             return false;
         }
-        return value.equals(((DecimalValue) obj).value);
+        return value.equals(((DurationValue) obj).value);
     }
 }

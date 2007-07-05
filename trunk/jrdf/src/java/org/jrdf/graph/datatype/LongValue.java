@@ -64,7 +64,7 @@ import org.jrdf.util.EqualsUtil;
 import java.math.BigDecimal;
 
 public class LongValue implements Value, XSDDecimal {
-    private static final long serialVersionUID = -2021208000910314280L;
+    private static final long serialVersionUID = -4224931936316331628L;
     private Long value;
 
     protected LongValue() {
