@@ -80,9 +80,9 @@ public class LiteralParserImplUnitTest extends TestCase {
     private static final Class<LiteralParser> TARGET_INTERFACE = LiteralParser.class;
     private static final Class<LiteralParserImpl> TEST_CLASS = LiteralParserImpl.class;
     private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, RegexMatcherFactory.class,
-        LiteralUtil.class};
+        NTripleUtil.class};
     private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "regexMatcherFactory",
-        "literalUtil"};
+        "nTripleUtil"};
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
             "(" +
             "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
@@ -99,16 +99,16 @@ public class LiteralParserImplUnitTest extends TestCase {
     private RegexMatcherFactory regexMatcherFactory;
     private RegexMatcher matcher;
     private LiteralParser parser;
-    private LiteralUtil literalUtil;
+    private NTripleUtil nTripleUtil;
     private Literal expectedLiteral;
 
     public void setUp() {
         elementFactory = mockFactory.createMock(GraphElementFactory.class);
         regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
         matcher = mockFactory.createMock(RegexMatcher.class);
-        literalUtil = mockFactory.createMock(LiteralUtil.class);
+        nTripleUtil = mockFactory.createMock(NTripleUtil.class);
         expectedLiteral = mockFactory.createMock(Literal.class);
-        parser = new LiteralParserImpl(elementFactory, regexMatcherFactory, literalUtil);
+        parser = new LiteralParserImpl(elementFactory, regexMatcherFactory, nTripleUtil);
     }
 
     public void testClassProperties() {
@@ -205,7 +205,7 @@ public class LiteralParserImplUnitTest extends TestCase {
         expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(line))).andReturn(matcher);
         expect(matcher.matches()).andReturn(true);
         expect(matcher.group(LITERAL_INDEX)).andReturn(literal);
-        expect(literalUtil.unescapeLiteral(literal)).andReturn(unescapedLiteral);
+        expect(nTripleUtil.unescapeLiteral(literal)).andReturn(unescapedLiteral);
         expect(matcher.group(LANGUAGE_INDEX)).andReturn(language);
         expect(matcher.group(DATATYPE_INDEX)).andReturn(datatype);
         return line;
