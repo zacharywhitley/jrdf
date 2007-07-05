@@ -71,6 +71,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.net.URI;
 import java.util.regex.Pattern;
 
+// TODO AN Rename to something a bit more correct - escapes strings.
 public final class LiteralParserImpl implements LiteralParser {
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
             "(" +
@@ -83,12 +84,12 @@ public final class LiteralParserImpl implements LiteralParser {
     private final RegexMatcherFactory regexMatcherFactory;
     private final LiteralUtil literalUtil;
 
-    public LiteralParserImpl(GraphElementFactory graphElementFactory, RegexMatcherFactory regexMatcherFactory,
-            LiteralUtil literalUtil) {
-        checkNotNull(graphElementFactory, regexMatcherFactory, literalUtil);
-        this.graphElementFactory = graphElementFactory;
-        this.regexMatcherFactory = regexMatcherFactory;
-        this.literalUtil = literalUtil;
+    public LiteralParserImpl(GraphElementFactory newGraphElementFactory, RegexMatcherFactory newRegexMatcherFactory,
+            LiteralUtil newLiteralUtil) {
+        checkNotNull(newGraphElementFactory, newRegexMatcherFactory, newLiteralUtil);
+        this.graphElementFactory = newGraphElementFactory;
+        this.regexMatcherFactory = newRegexMatcherFactory;
+        this.literalUtil = newLiteralUtil;
     }
 
     public Literal parseLiteral(String s) throws ParseException {

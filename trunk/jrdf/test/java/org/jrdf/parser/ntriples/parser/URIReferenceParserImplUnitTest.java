@@ -58,6 +58,7 @@
 
 package org.jrdf.parser.ntriples.parser;
 
+import static org.easymock.EasyMock.anyObject;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.GraphElementFactory;
@@ -69,21 +70,26 @@ import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
+import java.net.URI;
+
 public class URIReferenceParserImplUnitTest extends TestCase {
     private static final Class<URIReferenceParser> TARGET_INTERFACE = URIReferenceParser.class;
     private static final Class<URIReferenceParserImpl> TEST_CLASS = URIReferenceParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class,};
-    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory"};
+    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, LiteralUtil.class};
+    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "literalUtil"};
     private static final String LINE = "string" + Math.random();
+    private static final String ESCAPED_LINE = "escaped" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
     private URIReferenceParser uriReferenceParser;
     private GraphElementFactory graphElementFactory;
     private URIReference uriReference;
+    private LiteralUtil literalUtil;
 
     public void setUp() {
         graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
         uriReference = mockFactory.createMock(URIReference.class);
-        uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
+        literalUtil = mockFactory.createMock(LiteralUtil.class);
+        uriReferenceParser = new URIReferenceParserImpl(graphElementFactory, literalUtil);
     }
 
     public void testClassProperties() {
@@ -96,7 +102,8 @@ public class URIReferenceParserImplUnitTest extends TestCase {
     }
 
     public void testCreateURIReference() throws Exception {
-        expect(uriReferenceParser.parseURIReference(LINE)).andReturn(uriReference);
+        expect(literalUtil.unescapeLiteral(LINE)).andReturn(ESCAPED_LINE);
+        expect(graphElementFactory.createResource(URI.create(ESCAPED_LINE))).andReturn(uriReference);
         mockFactory.replay();
         URIReference actualURIReference = uriReferenceParser.parseURIReference(LINE);
         assertTrue(uriReference == actualURIReference);
@@ -104,7 +111,8 @@ public class URIReferenceParserImplUnitTest extends TestCase {
     }
 
     public void testCreateURIReferenceWithException() throws Exception {
-        expect(uriReferenceParser.parseURIReference(LINE)).andThrow(new GraphElementFactoryException(""));
+        expect(literalUtil.unescapeLiteral(LINE)).andReturn(ESCAPED_LINE);
+        expect(graphElementFactory.createResource(URI.create(ESCAPED_LINE))).andThrow(new GraphElementFactoryException(""));
         mockFactory.replay();
         checkThrowsException(LINE);
         mockFactory.verify();
@@ -112,6 +120,8 @@ public class URIReferenceParserImplUnitTest extends TestCase {
     }
 
     public void testBaseURIThrowsException() throws Exception {
+        expect(literalUtil.unescapeLiteral((String) anyObject())).andReturn("asd$#@:%!@#!");
+        mockFactory.replay();
         checkThrowsException("asd$#@:%!@#!");
     }
 
@@ -123,6 +133,7 @@ public class URIReferenceParserImplUnitTest extends TestCase {
             assertEquals("Failed to create URI Reference: " + line, p.getMessage());
             assertEquals(1, p.getColumnNumber());
         } catch (Throwable t) {
+            t.printStackTrace();
             fail("Should not throw exception: " + t.getClass());
         }
     }
