@@ -103,6 +103,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * RDF datatype URI, <code>null</code> for untyped literal.
      */
     protected URI datatypeURI;
+    private static final DatatypeFactoryImpl DATATYPE_FACTORY = new DatatypeFactoryImpl();
 
     /**
      * Construct a plain literal.
@@ -171,7 +172,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = new DatatypeFactoryImpl().createValue(newLexicalForm, newDatatypeURI);
+        value = DATATYPE_FACTORY.createValue(newLexicalForm, newDatatypeURI);
         language = null;
         datatypeURI = newDatatypeURI;
     }
@@ -217,7 +218,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         visitor.visitLiteral(this);
     }
 
-    public int compareTo(Literal literal) {
+    public int compareTo(final Literal literal) {
         if (language != null) {
             return compareLiteralOrLanguage(literal);
         } else {
@@ -225,7 +226,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
     }
 
-    public int equivCompareTo(Literal literal) {
+    public int equivCompareTo(final Literal literal) {
         if (language != null) {
             return compareLiteralOrLanguage(literal);
         } else {
@@ -233,7 +234,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
     }
 
-    private int compareLiteralOrLanguage(Literal literal) {
+    private int compareLiteralOrLanguage(final Literal literal) {
         if (language.length() == 0 && datatypeURI == null) {
             return getLexicalForm().compareTo(literal.getLexicalForm());
         } else {
