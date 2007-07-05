@@ -94,6 +94,7 @@ public class NTripleParserIntegrationTest extends TestCase {
             //put("rdf-tests/datatypes/test008a.nt", "rdf-tests/datatypes/test008b.nt");
             //put("rdf-tests/datatypes/test009a.nt", "rdf-tests/datatypes/test009b.nt");
             //put("rdf-tests/datatypes/test0010a.nt", "rdf-tests/datatypes/test0010b.nt");
+            put("rdf-tests/datatypes/test011a.nt", "rdf-tests/datatypes/test011b.nt");
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
