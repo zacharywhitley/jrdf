@@ -63,4 +63,10 @@ import java.net.URI;
 
 public interface DatatypeFactory {
     Value createValue(String newLexicalForm, URI dataTypeURI);
+
+    boolean hasRegisteredValueCreator(URI datatypeURI);
+
+    void addValueCreator(URI datatypeURI, ValueCreator creator) throws IllegalArgumentException;
+
+    boolean removeValueCreator(URI datatypeURI);
 }

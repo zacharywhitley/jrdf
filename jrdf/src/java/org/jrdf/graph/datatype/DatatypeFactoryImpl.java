@@ -62,46 +62,68 @@ package org.jrdf.graph.datatype;
 import org.jrdf.vocabulary.XSD;
 
 import java.net.URI;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class DatatypeFactoryImpl implements DatatypeFactory {
-    private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>() {
-        private static final long serialVersionUID = 1L;
-        {
-            // Primitive types
-            DateTimeValue dateTimeValue = new DateTimeValue();
-            put(XSD.STRING, new StringValue());
-            put(XSD.BOOLEAN, new BooleanValue());
-            put(XSD.DECIMAL, new DecimalValue());
-            put(XSD.FLOAT, new FloatValue());
-            put(XSD.DOUBLE, new DoubleValue());
-            put(XSD.DURATION, new DurationValue());
-            put(XSD.DATE_TIME, dateTimeValue);
-            put(XSD.TIME, dateTimeValue);
-            put(XSD.DATE, dateTimeValue);
-            put(XSD.G_YEAR_MONTH, dateTimeValue);
-            put(XSD.G_YEAR, dateTimeValue);
-            put(XSD.G_MONTH_DAY, dateTimeValue);
-            put(XSD.G_DAY, dateTimeValue);
-            put(XSD.G_MONTH, dateTimeValue);
-            put(XSD.ANY_URI, new AnyURIValue());
+    private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>();
 
-            // Derived types
-            put(XSD.INTEGER, new IntegerValue());
-            put(XSD.LONG, new LongValue());
-            put(XSD.INT, new IntValue());
-            put(XSD.SHORT, new ShortValue());
-            put(XSD.BYTE, new ByteValue());
+    public DatatypeFactoryImpl() {
+        // Primitive types
+        final DateTimeValue dateTimeValue = new DateTimeValue();
+        addValueCreator(XSD.STRING, new StringValue());
+        addValueCreator(XSD.BOOLEAN, new BooleanValue());
+        addValueCreator(XSD.DECIMAL, new DecimalValue());
+        addValueCreator(XSD.FLOAT, new FloatValue());
+        addValueCreator(XSD.DOUBLE, new DoubleValue());
+        addValueCreator(XSD.DURATION, new DurationValue());
+        addValueCreator(XSD.DATE_TIME, dateTimeValue);
+        addValueCreator(XSD.TIME, dateTimeValue);
+        addValueCreator(XSD.DATE, dateTimeValue);
+        addValueCreator(XSD.G_YEAR_MONTH, dateTimeValue);
+        addValueCreator(XSD.G_YEAR, dateTimeValue);
+        addValueCreator(XSD.G_MONTH_DAY, dateTimeValue);
+        addValueCreator(XSD.G_DAY, dateTimeValue);
+        addValueCreator(XSD.G_MONTH, dateTimeValue);
+        addValueCreator(XSD.ANY_URI, new AnyURIValue());
+
+        // Derived types
+        addValueCreator(XSD.INTEGER, new IntegerValue());
+        addValueCreator(XSD.LONG, new LongValue());
+        addValueCreator(XSD.INT, new IntValue());
+        addValueCreator(XSD.SHORT, new ShortValue());
+        addValueCreator(XSD.BYTE, new ByteValue());
+    }
+
+    public DatatypeFactoryImpl(final Map<URI, ValueCreator> newCreatorMap) {
+        for (final URI datatypeURI : newCreatorMap.keySet()) {
+            final ValueCreator valueCreator = newCreatorMap.get(datatypeURI);
+            addValueCreator(datatypeURI, valueCreator);
         }
-    };
+    }
 
-    public Value createValue(String newLexicalForm, URI dataTypeURI) {
+    public boolean hasRegisteredValueCreator(final URI datatypeURI) {
+        return FACTORY_MAP.containsKey(datatypeURI);
+    }
+
+    public void addValueCreator(final URI datatypeURI, final ValueCreator creator) throws IllegalArgumentException {
+        if (!hasRegisteredValueCreator(datatypeURI)) {
+            FACTORY_MAP.put(datatypeURI, creator);
+        } else {
+            throw new IllegalArgumentException("Value creator already registered for: " + datatypeURI);
+        }
+    }
+
+    public boolean removeValueCreator(final URI datatypeURI) {
+        return FACTORY_MAP.remove(datatypeURI) == null;
+    }
+
+    public Value createValue(final String newLexicalForm, final URI dataTypeURI) {
         Value value;
         // Try and create a typed value - if all else fails create a normal string version.
         try {
             if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
-                ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);
+                final ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);
                 value = valueCreator.create(newLexicalForm);
             } else {
                 value = new StringValue(newLexicalForm);
