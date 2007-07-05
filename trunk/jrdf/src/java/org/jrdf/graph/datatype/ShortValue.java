@@ -59,40 +59,61 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.vocabulary.XSD;
+import org.jrdf.util.EqualsUtil;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.HashMap;
+import java.math.BigDecimal;
 
-public class DatatypeFactoryImpl implements DatatypeFactory {
-    private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>() {
-        private static final long serialVersionUID = 1L;
-        {
-            put(XSD.STRING, new StringValue());
-            put(XSD.BOOLEAN, new BooleanValue());
-            put(XSD.DECIMAL, new DecimalValue());
-            put(XSD.INTEGER, new IntegerValue());
-            put(XSD.LONG, new LongValue());
-            put(XSD.INT, new IntValue());
-            put(XSD.SHORT, new ShortValue());
-            put(XSD.BYTE, new ByteValue());
+public class ShortValue implements Value, XSDDecimal {
+    private static final long serialVersionUID = -2021208000910314280L;
+    private Short value;
+
+    protected ShortValue() {
+    }
+
+    private ShortValue(final String newValue) {
+        this.value = Short.valueOf(newValue);
+    }
+
+    public Value create(String lexicalForm) {
+        return new ShortValue(lexicalForm);
+    }
+
+    public String getLexicalForm() {
+        return value.toString();
+    }
+
+    public boolean isWellFormedXml() {
+        return false;
+    }
+
+    public BigDecimal getAsBigDecimal() {
+        return new BigDecimal(value);
+    }
+
+    public int compareTo(Value val) {
+        return value.compareTo(((ShortValue) val).value);
+    }
+
+    public int equivCompareTo(Value val) {
+        return getAsBigDecimal().compareTo(((XSDDecimal) val).getAsBigDecimal());
+    }
+
+    @Override
+    public int hashCode() {
+        return value.intValue();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
         }
-    };
-
-    public Value createValue(String newLexicalForm, URI dataTypeURI) {
-        Value value;
-        // Try and create a typed value - if all else fails create a normal string version.
-        try {
-            if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
-                ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);
-                value = valueCreator.create(newLexicalForm);
-            } else {
-                value = new StringValue(newLexicalForm);
-            }
-        } catch (IllegalArgumentException e) {
-            value = new StringValue(newLexicalForm);
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
         }
-        return value;
+        if (!EqualsUtil.hasSuperClassOrInterface(ShortValue.class, obj)) {
+            return false;
+        }
+        return value.equals(((ShortValue) obj).value);
     }
 }
