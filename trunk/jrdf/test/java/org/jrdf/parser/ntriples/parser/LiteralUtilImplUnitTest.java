@@ -73,8 +73,8 @@ import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandar
 import java.util.regex.Pattern;
 
 public class LiteralUtilImplUnitTest extends TestCase {
-    private static final Class<?> TARGET_INTERFACE = LiteralUtil.class;
-    private static final Class<?> TEST_CLASS = LiteralUtilImpl.class;
+    private static final Class<?> TARGET_INTERFACE = NTripleUtil.class;
+    private static final Class<?> TEST_CLASS = NTripleUtilImpl.class;
     private static final Class[] PARAM_TYPES = {RegexMatcherFactory.class};
     private static final String[] PARAMETER_NAMES = {"regexMatcherFactory"};
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
@@ -82,13 +82,13 @@ public class LiteralUtilImplUnitTest extends TestCase {
     private MockFactory factory = new MockFactory();
     private RegexMatcherFactory regexMatcherFactory;
     private RegexMatcher matcher;
-    private LiteralUtil util;
+    private NTripleUtil util;
     private static final String LINE = "string" + Math.random();
 
     public void setUp() {
         regexMatcherFactory = factory.createMock(RegexMatcherFactory.class);
         matcher = factory.createMock(RegexMatcher.class);
-        util = new LiteralUtilImpl(regexMatcherFactory);
+        util = new NTripleUtilImpl(regexMatcherFactory);
     }
 
     public void testClassProperties() {

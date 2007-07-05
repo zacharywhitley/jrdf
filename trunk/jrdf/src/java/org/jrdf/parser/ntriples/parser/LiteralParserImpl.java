@@ -81,14 +81,14 @@ public final class LiteralParserImpl implements LiteralParser {
     private static final int DATATYPE_INDEX = 8;
     private final GraphElementFactory graphElementFactory;
     private final RegexMatcherFactory regexMatcherFactory;
-    private final LiteralUtil literalUtil;
+    private final NTripleUtil nTripleUtil;
 
     public LiteralParserImpl(GraphElementFactory newGraphElementFactory, RegexMatcherFactory newRegexMatcherFactory,
-            LiteralUtil newLiteralUtil) {
-        checkNotNull(newGraphElementFactory, newRegexMatcherFactory, newLiteralUtil);
+            NTripleUtil newNTripleUtil) {
+        checkNotNull(newGraphElementFactory, newRegexMatcherFactory, newNTripleUtil);
         this.graphElementFactory = newGraphElementFactory;
         this.regexMatcherFactory = newRegexMatcherFactory;
-        this.literalUtil = newLiteralUtil;
+        this.nTripleUtil = newNTripleUtil;
     }
 
     public Literal parseLiteral(String s) throws ParseException {
@@ -96,7 +96,7 @@ public final class LiteralParserImpl implements LiteralParser {
         RegexMatcher matcher = regexMatcherFactory.createMatcher(LANGUAGE_REGEX, s);
         if (matcher.matches()) {
             String ntriplesLiteral = matcher.group(LITERAL_INDEX);
-            String literal = literalUtil.unescapeLiteral(ntriplesLiteral);
+            String literal = nTripleUtil.unescapeLiteral(ntriplesLiteral);
             String language = matcher.group(LANGUAGE_INDEX);
             String datatype = matcher.group(DATATYPE_INDEX);
             return createLiteral(language, literal, datatype, s);

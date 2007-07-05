@@ -75,8 +75,8 @@ import org.jrdf.parser.ntriples.parser.SubjectParser;
 import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
 import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
-import org.jrdf.parser.ntriples.parser.LiteralUtil;
-import org.jrdf.parser.ntriples.parser.LiteralUtilImpl;
+import org.jrdf.parser.ntriples.parser.NTripleUtil;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 
@@ -122,10 +122,10 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
 
     private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
-        LiteralUtil literalUtil = new LiteralUtilImpl(matcherFactory);
-        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory(), literalUtil);
+        NTripleUtil nTripleUtil = new NTripleUtilImpl(matcherFactory);
+        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory(), nTripleUtil);
         BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
-        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), matcherFactory, literalUtil);
+        LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), matcherFactory, nTripleUtil);
         subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
         predicateParser = new PredicateParserImpl(referenceParser);
         objectParser = new ObjectParserImpl(referenceParser, blankNodeParser, literalParser);

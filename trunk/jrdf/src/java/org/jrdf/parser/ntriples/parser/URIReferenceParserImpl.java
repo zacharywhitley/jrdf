@@ -70,18 +70,18 @@ import java.net.URI;
 
 public final class URIReferenceParserImpl implements URIReferenceParser {
     private final GraphElementFactory graphElementFactory;
-    private final LiteralUtil literalUtil;
+    private final NTripleUtil nTripleUtil;
 
-    public URIReferenceParserImpl(GraphElementFactory newGraphElementFactory, LiteralUtil newLiteralUtil) {
-        checkNotNull(newGraphElementFactory, newLiteralUtil);
+    public URIReferenceParserImpl(GraphElementFactory newGraphElementFactory, NTripleUtil newNTripleUtil) {
+        checkNotNull(newGraphElementFactory, newNTripleUtil);
         this.graphElementFactory = newGraphElementFactory;
-        this.literalUtil = newLiteralUtil;
+        this.nTripleUtil = newNTripleUtil;
     }
 
     public URIReference parseURIReference(String s) throws ParseException {
         checkNotEmptyString("s", s);
         try {
-            String literal = literalUtil.unescapeLiteral(s);
+            String literal = nTripleUtil.unescapeLiteral(s);
             return graphElementFactory.createResource(URI.create(literal));
         } catch (IllegalArgumentException iae) {
             throw new ParseException("Failed to create URI Reference: " + s, 1);
