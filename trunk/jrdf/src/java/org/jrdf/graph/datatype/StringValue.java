@@ -67,7 +67,7 @@ public class StringValue implements Value {
     private static final long serialVersionUID = 8865131980074326360L;
     private String value;
 
-    public StringValue() {
+    protected StringValue() {
     }
 
     public StringValue(final String newValue) {

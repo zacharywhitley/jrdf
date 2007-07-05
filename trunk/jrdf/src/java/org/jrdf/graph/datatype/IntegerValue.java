@@ -70,7 +70,7 @@ public class IntegerValue implements Value, XSDDecimal {
     private static final long serialVersionUID = 5527716300000508791L;
     private BigDecimal value;
 
-    public IntegerValue() {
+    protected IntegerValue() {
     }
 
     private IntegerValue(final String newValue) {

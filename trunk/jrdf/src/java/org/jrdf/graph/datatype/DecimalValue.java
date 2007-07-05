@@ -69,7 +69,7 @@ public class DecimalValue implements Value, XSDDecimal {
     private static final long serialVersionUID = 8865131980074326360L;
     private BigDecimal value;
 
-    public DecimalValue() {
+    protected DecimalValue() {
     }
 
     private DecimalValue(final String newValue) {

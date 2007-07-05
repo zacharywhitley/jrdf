@@ -67,7 +67,7 @@ public class BooleanValue implements Value {
     private static final long serialVersionUID = 8865131980074326360L;
     private Boolean value;
 
-    public BooleanValue() {
+    protected BooleanValue() {
     }
 
     public BooleanValue(final String newValue) {

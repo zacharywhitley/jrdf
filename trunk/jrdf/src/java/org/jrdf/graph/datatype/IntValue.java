@@ -69,7 +69,7 @@ public class IntValue implements Value, XSDDecimal {
     private static final long serialVersionUID = -2021208000910314280L;
     private Integer value;
 
-    public IntValue() {
+    protected IntValue() {
     }
 
     private IntValue(final String newValue) {
