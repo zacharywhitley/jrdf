@@ -64,6 +64,7 @@ package org.jrdf.graph;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
 import org.jrdf.graph.datatype.StringValue;
 import org.jrdf.graph.datatype.Value;
+import org.jrdf.graph.datatype.DatatypeFactory;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -90,6 +91,11 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     private static final long serialVersionUID = 2589574733270452078L;
 
     /**
+     * Allos the creation of data types.
+     */
+    private static final DatatypeFactory DATATYPE_FACTORY = new DatatypeFactoryImpl();
+
+    /**
      * The lexical form of the literal.
      */
     protected Value value;
@@ -98,12 +104,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * The language code of the literal.
      */
     protected String language;
-
     /**
      * RDF datatype URI, <code>null</code> for untyped literal.
      */
     protected URI datatypeURI;
-    private static final DatatypeFactoryImpl DATATYPE_FACTORY = new DatatypeFactoryImpl();
 
     /**
      * Construct a plain literal.
