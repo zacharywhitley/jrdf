@@ -63,21 +63,21 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-import java.math.BigDecimal;
+import java.net.URI;
 
-public class ShortValue implements Value, XSDDecimal {
-    private static final long serialVersionUID = -2451054174062084622L;
-    private Short value;
+public class AnyURIValue implements Value {
+    private static final long serialVersionUID = 5238568787496038240L;
+    private URI value;
 
-    protected ShortValue() {
+    protected AnyURIValue() {
     }
 
-    private ShortValue(final String newValue) {
-        this.value = Short.valueOf(newValue);
+    private AnyURIValue(final String newValue) {
+        this.value = URI.create(newValue);
     }
 
     public Value create(String lexicalForm) {
-        return new ShortValue(lexicalForm);
+        return new AnyURIValue(lexicalForm);
     }
 
     public String getLexicalForm() {
@@ -88,21 +88,17 @@ public class ShortValue implements Value, XSDDecimal {
         return false;
     }
 
-    public BigDecimal getAsBigDecimal() {
-        return new BigDecimal(value);
-    }
-
     public int compareTo(Value val) {
-        return value.compareTo(((ShortValue) val).value);
+        return value.compareTo(((AnyURIValue) val).value);
     }
 
-    public int equivCompareTo(Value val) {
-        return getAsBigDecimal().compareTo(((XSDDecimal) val).getAsBigDecimal());
+    public int equivCompareTo(Value value) {
+        return compareTo(value);
     }
 
     @Override
     public int hashCode() {
-        return value.intValue();
+        return value.hashCode();
     }
 
     @Override
@@ -113,9 +109,9 @@ public class ShortValue implements Value, XSDDecimal {
         if (sameReference(this, obj)) {
             return true;
         }
-        if (!hasSuperClassOrInterface(ShortValue.class, obj)) {
+        if (!hasSuperClassOrInterface(AnyURIValue.class, obj)) {
             return false;
         }
-        return value.equals(((ShortValue) obj).value);
+        return value.equals(((AnyURIValue) obj).value);
     }
 }

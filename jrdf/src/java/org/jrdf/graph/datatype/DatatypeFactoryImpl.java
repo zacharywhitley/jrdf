@@ -85,6 +85,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
             put(XSD.G_MONTH_DAY, dateTimeValue);
             put(XSD.G_DAY, dateTimeValue);
             put(XSD.G_MONTH, dateTimeValue);
+            put(XSD.ANY_URI, new AnyURIValue());
 
             // Derived types
             put(XSD.INTEGER, new IntegerValue());
