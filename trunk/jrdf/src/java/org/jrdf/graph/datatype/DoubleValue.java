@@ -59,55 +59,55 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.vocabulary.XSD;
+import org.jrdf.util.EqualsUtil;
 
-import java.net.URI;
-import java.util.Map;
-import java.util.HashMap;
+public class DoubleValue implements Value {
+    private static final long serialVersionUID = 583640789091274020L;
+    private Double value;
 
-public class DatatypeFactoryImpl implements DatatypeFactory {
-    private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>() {
-        private static final long serialVersionUID = 1L;
-        {
-            // Primitive types
-            DateTimeValue dateTimeValue = new DateTimeValue();
-            put(XSD.STRING, new StringValue());
-            put(XSD.BOOLEAN, new BooleanValue());
-            put(XSD.DECIMAL, new DecimalValue());
-            put(XSD.FLOAT, new FloatValue());
-            put(XSD.DOUBLE, new DoubleValue());
-            put(XSD.DURATION, new DurationValue());
-            put(XSD.DATE_TIME, dateTimeValue);
-            put(XSD.TIME, dateTimeValue);
-            put(XSD.DATE, dateTimeValue);
-            put(XSD.G_YEAR_MONTH, dateTimeValue);
-            put(XSD.G_YEAR, dateTimeValue);
-            put(XSD.G_MONTH_DAY, dateTimeValue);
-            put(XSD.G_DAY, dateTimeValue);
-            put(XSD.G_MONTH, dateTimeValue);
+    protected DoubleValue() {
+    }
 
-            // Derived types
-            put(XSD.INTEGER, new IntegerValue());
-            put(XSD.LONG, new LongValue());
-            put(XSD.INT, new IntValue());
-            put(XSD.SHORT, new ShortValue());
-            put(XSD.BYTE, new ByteValue());
+    public DoubleValue(final String newValue) {
+        this.value = Double.valueOf(newValue);
+    }
+
+    public Value create(String lexicalForm) {
+        return new DoubleValue(lexicalForm);
+    }
+
+    public String getLexicalForm() {
+        return value.toString();
+    }
+
+    public boolean isWellFormedXml() {
+        return false;
+    }
+
+    public int compareTo(Value o) {
+        return value.compareTo(((DoubleValue) o).value);
+    }
+
+    public int equivCompareTo(Value o) {
+        return compareTo(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (EqualsUtil.isNull(obj)) {
+            return false;
         }
-    };
-
-    public Value createValue(String newLexicalForm, URI dataTypeURI) {
-        Value value;
-        // Try and create a typed value - if all else fails create a normal string version.
-        try {
-            if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
-                ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);
-                value = valueCreator.create(newLexicalForm);
-            } else {
-                value = new StringValue(newLexicalForm);
-            }
-        } catch (IllegalArgumentException e) {
-            value = new StringValue(newLexicalForm);
+        if (EqualsUtil.sameReference(this, obj)) {
+            return true;
         }
-        return value;
+        if (!EqualsUtil.hasSuperClassOrInterface(DoubleValue.class, obj)) {
+            return false;
+        }
+        return value.equals(((DoubleValue) obj).value);
     }
 }
