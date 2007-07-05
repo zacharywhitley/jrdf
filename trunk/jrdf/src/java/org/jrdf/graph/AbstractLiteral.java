@@ -219,11 +219,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     public int compareTo(Literal literal) {
         if (language != null) {
-            if (language.length() == 0 && datatypeURI == null) {
-                return getLexicalForm().compareTo(literal.getLexicalForm());
-            } else {
-                return getLanguage().compareTo(literal.getLanguage());
-            }
+            return compareLiteralOrLanguage(literal);
         } else {
             return getValue().compareTo(literal.getValue());
         }
@@ -231,13 +227,17 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     public int equivCompareTo(Literal literal) {
         if (language != null) {
-            if (language.length() == 0 && datatypeURI == null) {
-                return getLexicalForm().compareTo(literal.getLexicalForm());
-            } else {
-                return getLanguage().compareTo(literal.getLanguage());
-            }
+            return compareLiteralOrLanguage(literal);
         } else {
             return getValue().equivCompareTo(literal.getValue());
+        }
+    }
+
+    private int compareLiteralOrLanguage(Literal literal) {
+        if (language.length() == 0 && datatypeURI == null) {
+            return getLexicalForm().compareTo(literal.getLexicalForm());
+        } else {
+            return getLanguage().compareTo(literal.getLanguage());
         }
     }
 
