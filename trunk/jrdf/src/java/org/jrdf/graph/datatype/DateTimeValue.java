@@ -59,7 +59,9 @@
 
 package org.jrdf.graph.datatype;
 
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -111,13 +113,13 @@ public class DateTimeValue implements Value {
 
     @Override
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(XSDDecimal.class, obj)) {
+        if (!hasSuperClassOrInterface(XSDDecimal.class, obj)) {
             return false;
         }
         return value.equals(((DateTimeValue) obj).value);
