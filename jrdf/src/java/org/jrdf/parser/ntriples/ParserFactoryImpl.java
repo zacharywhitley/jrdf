@@ -87,7 +87,7 @@ public class ParserFactoryImpl implements ParserFactory {
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         LiteralUtil literalUtil = new LiteralUtilImpl(matcherFactory);
         LiteralParser literalParser = new LiteralParserImpl(graphElementFactory, matcherFactory, literalUtil);
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory);
+        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory, literalUtil);
         SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
         PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
         ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);

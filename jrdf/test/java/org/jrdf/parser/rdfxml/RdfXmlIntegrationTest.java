@@ -72,6 +72,9 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/amp-in-url/test001.nt", "rdf-tests/amp-in-url/test001.rdf");
             put("rdf-tests/datatypes/test001.nt", "rdf-tests/datatypes/test001.rdf");
             put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002.rdf");
+            // Doesn't do graph equality for blank nodes.
+            //put("rdf-tests/rdf-charmod-literals/test001.nt", "rdf-tests/rdf-charmod-literals/test001.rdf");
+            put("rdf-tests/rdf-charmod-uris/test001.nt", "rdf-tests/rdf-charmod-uris/test001.rdf");
         }
     };
     private static final Map<String, String> NEGATIVE_TESTS = new HashMap<String, String>() {

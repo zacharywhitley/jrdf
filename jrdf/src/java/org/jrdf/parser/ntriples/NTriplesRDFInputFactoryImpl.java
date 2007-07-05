@@ -121,10 +121,10 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     }
 
     private void init(Graph graph, ParserBlankNodeFactory blankNodeFactory) {
-        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory());
-        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         LiteralUtil literalUtil = new LiteralUtilImpl(matcherFactory);
+        URIReferenceParser referenceParser = new URIReferenceParserImpl(graph.getElementFactory(), literalUtil);
+        BlankNodeParser blankNodeParser = new BlankNodeParserImpl(blankNodeFactory);
         LiteralParser literalParser = new LiteralParserImpl(graph.getElementFactory(), matcherFactory, literalUtil);
         subjectParser = new SubjectParserImpl(referenceParser, blankNodeParser);
         predicateParser = new PredicateParserImpl(referenceParser);

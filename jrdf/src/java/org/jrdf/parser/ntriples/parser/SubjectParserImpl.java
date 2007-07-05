@@ -71,10 +71,10 @@ public final class SubjectParserImpl implements SubjectParser {
     private final URIReferenceParser uriReferenceParser;
     private final BlankNodeParser blankNodeParser;
 
-    public SubjectParserImpl(URIReferenceParser uriReferenceParser, BlankNodeParser blankNodeParser) {
-        checkNotNull(uriReferenceParser, blankNodeParser);
-        this.uriReferenceParser = uriReferenceParser;
-        this.blankNodeParser = blankNodeParser;
+    public SubjectParserImpl(URIReferenceParser newURIReferenceParser, BlankNodeParser newBlankNodeParser) {
+        checkNotNull(newURIReferenceParser, newBlankNodeParser);
+        this.uriReferenceParser = newURIReferenceParser;
+        this.blankNodeParser = newBlankNodeParser;
     }
 
     public SubjectNode parseSubject(RegexMatcher matcher) throws ParseException {
