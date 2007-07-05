@@ -71,7 +71,6 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.net.URI;
 import java.util.regex.Pattern;
 
-// TODO AN Rename to something a bit more correct - escapes strings.
 public final class LiteralParserImpl implements LiteralParser {
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
             "(" +

@@ -69,6 +69,7 @@ import java.util.HashMap;
 /**
  * Class description goes here.
  */
+// TODO AN Rename to something a bit more correct - escapes strings.
 public final class LiteralUtilImpl implements LiteralUtil {
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
             "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
