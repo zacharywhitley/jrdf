@@ -59,7 +59,7 @@
 
 package org.jrdf.parser;
 
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -74,6 +74,8 @@ import org.jrdf.util.test.AssertThrows;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
@@ -87,12 +89,18 @@ public class ParserTestUtil {
         RDFInputFactory factory = newInstance();
         RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create(baseURI),
             NEW_GRAPH, BLANK_NODE_FACTORY);
-        Triple expected = eventReader.next();
         Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
         Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
         rdfXmlParser.parse(actualFile.openStream(), baseURI);
         ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        assertEquals("Invalid result for positive test", expected, results.next());
+        Set<Triple> resultTriples = new HashSet<Triple>();
+        while (results.hasNext()) {
+            resultTriples.add(results.next());
+        }
+        while (eventReader.hasNext()) {
+            Triple triple = eventReader.next();
+            assertTrue("Invalid result for positive test.  Should contain: " + triple, resultTriples.contains(triple));
+        }
     }
 
     public static void checkNegativeRdfTestParseException(final URL errorFile) throws Exception {
