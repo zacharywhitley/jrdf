@@ -378,13 +378,11 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
             iter.next();
             counter++;
         }
-        assertTrue("Should have three rdf:first statements, not " + counter, 3 ==
-            counter);
+        assertTrue("Should have three rdf:first statements, not " + counter, 3 == counter);
 
         // Find all three parts of the collection.
         for (ObjectNode aFruit : fruit) {
-            assertTrue("Should contain: " + aFruit, graph.contains(ANY_SUBJECT_NODE,
-                rdfFirst, aFruit));
+            assertTrue("Should contain: " + aFruit, graph.contains(ANY_SUBJECT_NODE, rdfFirst, aFruit));
         }
 
         // Get all rdf:rest statements
@@ -404,8 +402,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
             counter++;
         }
 
-        assertTrue("Should have one rdf:rest with rdf:nil statements", 1 ==
-            counter);
+        assertTrue("Should have one rdf:rest with rdf:nil statements", 1 == counter);
     }
 
     /**
@@ -445,7 +442,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue("Should have statement", graph.contains(s, ANY_PREDICATE_NODE, fruit[3]));
 
         // Check that it doesn't allow duplicates.
-        ClosableIterator iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit[0]);
+        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, fruit[0]);
         int count = 0;
         while (iter.hasNext()) {
             iter.next();
