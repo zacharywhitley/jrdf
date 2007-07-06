@@ -83,16 +83,15 @@ public class ParserTestUtil {
     private ParserTestUtil() {
     }
 
-    public static void checkPositiveNtRdfTest(URL expectedFile, URL actualFile) throws Exception {
+    public static void checkPositiveNtRdfTest(URL expectedFile, URL actualFile, String baseURI) throws Exception {
         RDFInputFactory factory = newInstance();
-        RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create("foo"),
+        RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create(baseURI),
             NEW_GRAPH, BLANK_NODE_FACTORY);
         Triple expected = eventReader.next();
         Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
         Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
-        rdfXmlParser.parse(actualFile.openStream(), "http://example.org/");
+        rdfXmlParser.parse(actualFile.openStream(), baseURI);
         ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        System.err.println("actual graph size " + actualGraph.getNumberOfTriples());
         assertEquals("Invalid result for positive test", expected, results.next());
     }
 
