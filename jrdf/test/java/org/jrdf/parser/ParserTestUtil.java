@@ -69,7 +69,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 
@@ -91,17 +90,18 @@ public class ParserTestUtil {
         Triple expected = eventReader.next();
         Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
         Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
-        rdfXmlParser.parse(actualFile.openStream(), "foo");
+        rdfXmlParser.parse(actualFile.openStream(), "http://example.org/");
         ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        System.err.println("actual graph size " + actualGraph.getNumberOfTriples());
         assertEquals("Invalid result for positive test", expected, results.next());
     }
 
     public static void checkNegativeRdfTestParseException(final URL errorFile) throws Exception {
         Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
         final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
-        AssertThrows.assertThrows(ParserException.class, new AssertThrows.Block() {
+        AssertThrows.assertThrows(ParseException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
-                rdfXmlParser.parse(errorFile.openStream(), "foo");
+                rdfXmlParser.parse(errorFile.openStream(), "http://example.org/");
             }
         });
     }

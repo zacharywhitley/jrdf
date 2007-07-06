@@ -154,6 +154,9 @@ public final class RdfXmlParser implements ConfigurableParser {
      */
     private GraphElementFactory valueFactory;
 
+    /**
+     * A map for looking up blank nodes and returning the same one each time.
+     */
     private ParserBlankNodeFactory bNodeFactory;
 
     /**
@@ -313,12 +316,6 @@ public final class RdfXmlParser implements ConfigurableParser {
         this.datatypeHandling = datatypeHandling;
     }
 
-    /**
-     * Sets the parser in a mode to parse stand-alone RDF documents. In
-     * stand-alone RDF documents, the enclosing <tt>rdf:RDF</tt> root element is
-     * optional if this root element contains just one element (e.g.
-     * <tt>rdf:Description</tt>.
-     */
     public void setParseStandAloneDocuments(boolean standAloneDocs) {
         saxFilter.setParseStandAloneDocuments(standAloneDocs);
     }
@@ -414,7 +411,6 @@ public final class RdfXmlParser implements ConfigurableParser {
             }
             throw new ParseException(wrappedExc, e.getLineNumber(), e.getColumnNumber());
         } catch (SAXException e) {
-            e.printStackTrace();
             Exception wrappedExc = e.getException();
             if (null == wrappedExc) {
                 wrappedExc = e;
@@ -996,10 +992,8 @@ public final class RdfXmlParser implements ConfigurableParser {
      * generated. If the name is not defined in the RDF namespace, but it claims that it
      * is from this namespace, a warning is generated.
      */
-    private void checkNodeEltName(String namespaceURI, String localName,
-            String qName) throws SAXException {
+    private void checkNodeEltName(String namespaceURI, String localName, String qName) throws SAXException {
         if (BASE_URI_STR.equals(namespaceURI)) {
-
             if ("Description".equals(localName) ||
                     "Seq".equals(localName) ||
                     "Bag".equals(localName) ||
@@ -1019,18 +1013,18 @@ public final class RdfXmlParser implements ConfigurableParser {
                 // These are OK
             } else if (
                     "LI".equals(localName) ||
-                            "RDF".equals(localName) ||
-                            "ID".equals(localName) ||
-                            "about".equals(localName) ||
-                            "parseType".equals(localName) ||
-                            "resource".equals(localName) ||
-                            "nodeID".equals(localName) ||
-                            "datatype".equals(localName)) {
+                    "RDF".equals(localName) ||
+                    "ID".equals(localName) ||
+                    "about".equals(localName) ||
+                    "parseType".equals(localName) ||
+                    "resource".equals(localName) ||
+                    "nodeID".equals(localName) ||
+                    "datatype".equals(localName)) {
                 sendError("<" + qName + "> not allowed as node element");
             } else if (
                     "bagID".equals(localName) ||
-                            "aboutEach".equals(localName) ||
-                            "aboutEachPrefix".equals(localName)) {
+                    "aboutEach".equals(localName) ||
+                    "aboutEachPrefix".equals(localName)) {
                 sendError(qName + " is no longer a valid RDF name");
             } else {
                 sendWarning("unknown rdf element <" + qName + ">");
@@ -1068,13 +1062,13 @@ public final class RdfXmlParser implements ConfigurableParser {
                 // These are OK
             } else if (
                     "Description".equals(localName) ||
-                            "RDF".equals(localName) ||
-                            "ID".equals(localName) ||
-                            "about".equals(localName) ||
-                            "parseType".equals(localName) ||
-                            "resource".equals(localName) ||
-                            "nodeID".equals(localName) ||
-                            "datatype".equals(localName)) {
+                    "RDF".equals(localName) ||
+                    "ID".equals(localName) ||
+                    "about".equals(localName) ||
+                    "parseType".equals(localName) ||
+                    "resource".equals(localName) ||
+                    "nodeID".equals(localName) ||
+                    "datatype".equals(localName)) {
                 sendError("<" + qName + "> not allowed as property element");
             } else if (
                     "bagID".equals(localName) ||

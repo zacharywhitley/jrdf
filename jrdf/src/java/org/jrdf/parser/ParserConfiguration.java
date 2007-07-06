@@ -127,6 +127,16 @@ public interface ParserConfiguration extends StatementHandlerConfiguration {
     void setPreserveBNodeIds(boolean preserveBNodeIds);
 
     /**
+     * Sets the parser in a mode to parse stand-alone RDF documents. In
+     * stand-alone RDF documents, the enclosing <tt>rdf:RDF</tt> root element is
+     * optional if this root element contains just one element (e.g.
+     * <tt>rdf:Description</tt>.
+     *
+     * @param standAloneDocs true in standad alone mode.
+     */
+    void setParseStandAloneDocuments(boolean standAloneDocs);
+
+    /**
      * Sets whether the parser should stop immediately if it finds an error
      * in the data (default value is <tt>true</tt>).
      *
