@@ -85,7 +85,8 @@ public class GraphRdfXmlParser implements Parser {
     public GraphRdfXmlParser(Graph graph) throws GraphException {
         parser = new RdfXmlParser(graph.getElementFactory());
         parser.setStatementHandler(new GraphStatementHandler(graph));
-        parser.setVerifyData(false);
+        parser.setParseStandAloneDocuments(true);
+        parser.setVerifyData(true);
         parser.setDatatypeHandling(DT_IGNORE);
     }
 

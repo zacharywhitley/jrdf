@@ -82,13 +82,16 @@ public class RdfXmlIntegrationTest extends TestCase {
             put("rdf-tests/rdf-charmod-uris/test002.nt", "rdf-tests/rdf-charmod-uris/test002.rdf");
             //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf");
             //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf");
-            //put("rdf-tests/rdf-containers-syntax-vs-schema/test008.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test008.rdf");
+            //2 put("rdf-tests/rdf-containers-syntax-vs-schema/test001-8.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test001-8.rdf");
+            //1 put("rdf-tests/rdf-element-not-mandatory/test001.nt", "rdf-tests/rdf-element-not-mandatory/test001.rdf");
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
         {
             //2 add("rdf-tests/rdf-containers-syntax-vs-schema/error001.rdf");
             //2 add("rdf-tests/rdf-containers-syntax-vs-schema/error002.rdf");
+            add("rdf-tests/rdfms-abouteach/error001.rdf");
+            add("rdf-tests/rdfms-abouteach/error002.rdf");
         }
     };
 
