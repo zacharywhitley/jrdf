@@ -96,6 +96,7 @@ public class RdfXmlIntegrationTest extends TestCase {
                 new String[] {
                     "rdf-tests/rdfms-difference-between-ID-and-about/test3.rdf",
                     "http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf"});
+            put("rdf-tests/rdfms-duplicate-member-props/test001.nt", new String[] {"rdf-tests/rdfms-duplicate-member-props/test001.rdf"});
         }
     };
     private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
