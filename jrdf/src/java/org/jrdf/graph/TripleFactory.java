@@ -113,7 +113,7 @@ public interface TripleFactory {
      * @param alternative the alternative to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addAlternative(SubjectNode subjectNode, Alternative<ObjectNode> alternative) throws TripleFactoryException;
+    void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException;
 
     /**
      * Inserts a bag using the given subject.  The subject is also
@@ -123,7 +123,7 @@ public interface TripleFactory {
      * @param bag         the bag to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag) throws TripleFactoryException;
+    void addBag(SubjectNode subjectNode, Bag bag) throws TripleFactoryException;
 
     /**
      * Inserts a sequence using the given subject.  The subject is also
@@ -133,7 +133,7 @@ public interface TripleFactory {
      * @param sequence    the sequence to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addSequence(SubjectNode subjectNode, Sequence<ObjectNode> sequence) throws TripleFactoryException;
+    void addSequence(SubjectNode subjectNode, Sequence sequence) throws TripleFactoryException;
 
     /**
      * Inserts a collection using the given subject.  The subject is also
@@ -143,5 +143,5 @@ public interface TripleFactory {
      * @param collection the collection to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addCollection(SubjectNode firstNode, Collection<ObjectNode> collection) throws TripleFactoryException;
+    void addCollection(SubjectNode firstNode, Collection collection) throws TripleFactoryException;
 }

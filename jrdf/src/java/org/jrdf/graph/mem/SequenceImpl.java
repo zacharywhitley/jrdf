@@ -70,97 +70,17 @@ import java.util.ArrayList;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class SequenceImpl extends ArrayList<ObjectNode> implements Sequence<ObjectNode> {
-
+public final class SequenceImpl extends ArrayList<ObjectNode> implements Sequence {
     /**
      * Allow newer compiled version of the stub to operate when changes
      * have not occurred with the class.
      * NOTE : update this serialVersionUID when a method or a public member is
      * deleted.
      */
-    private static final long serialVersionUID = -8659292687902645229L;
+    private static final long serialVersionUID = -1593168906476123697L;
 
-    public SequenceImpl() {
-    }
-
-    public ObjectNode remove() {
-        return remove(0);
-    }
-
-    /**
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, ObjectNode.
-     */
-    // TODO (AN) Possibly dodgy now due to Generics
-    public boolean contains(Object o) {
-//    if (!(o instanceof ObjectNode)) {
-//      throw new IllegalArgumentException("Can only add object nodes");
-//    }
-
-        return super.contains(o);
-    }
-
-    /**
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, Sequence.
-     */
-    public boolean containsAll(java.util.Collection<?> c) {
-        if (!(c instanceof Sequence)) {
-            throw new IllegalArgumentException("Can only add sequences to other sequences");
-        }
-
-        return super.containsAll(c);
-    }
-
-    /**
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, ObjectNode.
-     */
-    // TODO (AN) Possibly dodgy now due to Generics
-    public int indexOf(Object o) throws IllegalArgumentException {
-//    if (!(o instanceof ObjectNode)) {
-//      throw new IllegalArgumentException("Can only get Object nodes");
-//    }
-
-        return super.indexOf(o);
-    }
-
-    /**
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, ObjectNode.
-     */
-    // TODO Possibly dodgy now due to Generics
-    public int lastIndexOf(Object o) throws IllegalArgumentException {
-//    if (!(o instanceof ObjectNode)) {
-//      throw new IllegalArgumentException("Can only get Object nodes");
-//    }
-
-        return super.lastIndexOf(o);
-    }
-
-    /**
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, Sequence.
-     */
-    public boolean removeAll(java.util.Collection<?> c) throws
-        IllegalArgumentException {
-        if (!(c instanceof Sequence)) {
-            throw new IllegalArgumentException("Can only add bags to other bags");
-        }
-
-        return super.removeAll(c);
-    }
-
-    /**
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, Sequence.
-     */
-    public boolean retainAll(java.util.Collection<?> c) throws
-        IllegalArgumentException {
-        if (!(c instanceof Sequence)) {
-            throw new IllegalArgumentException("Can only add bags to other bags");
-        }
-
-        return super.retainAll(c);
+    @Override
+    public String toString() {
+        return "RDF SEQ: [" + super.toString() + "]";
     }
 }

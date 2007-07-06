@@ -65,8 +65,6 @@ import org.jrdf.graph.Bag;
 import org.jrdf.graph.ObjectNode;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -75,53 +73,15 @@ import java.util.List;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class BagImpl extends AbstractUnorderedContainer<ObjectNode> implements Bag<ObjectNode> {
+public final class BagImpl extends AbstractUnorderedContainer implements Bag {
 
-    public boolean containsAll(Collection<?> c) {
-        return elements.values().containsAll(c);
-    }
-
-    public boolean addAll(Collection<? extends ObjectNode> c) {
-        Iterator<? extends ObjectNode> iter = c.iterator();
-        boolean modified = iter.hasNext();
-        while (iter.hasNext()) {
-            ObjectNode obj = iter.next();
-            elements.put(key++, obj);
-        }
-
-        return modified;
-    }
-
-    public boolean removeAll(Collection<?> c) {
-        Iterator iter = c.iterator();
-        boolean modified = iter.hasNext();
-        while (iter.hasNext()) {
-            remove(iter.next());
-        }
-        return modified;
-    }
-
-    // TODO Removed type checking.
-    public boolean retainAll(Collection<?> c) {
-        boolean modified = false;
-        Iterator<?> iter = iterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (!c.contains(obj)) {
-                modified = true;
-                remove(obj);
-            }
-        }
-
-        return modified;
-    }
-
+    @Override
     public int hashCode() {
         return super.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
-
         // Check equal by reference
         if (this == obj) {
             return true;
@@ -136,10 +96,15 @@ public final class BagImpl extends AbstractUnorderedContainer<ObjectNode> implem
 
         boolean returnValue = false;
         if (size() == bag.size()) {
-            List myValues = Arrays.asList(toArray());
-            List altValues = Arrays.asList(bag.toArray());
+            List<ObjectNode> myValues = Arrays.asList((ObjectNode[]) toArray());
+            List<ObjectNode> altValues = Arrays.asList((ObjectNode[]) bag.toArray());
             returnValue = myValues.equals(altValues);
         }
         return returnValue;
+    }
+
+    @Override
+    public String toString() {
+        return "RDF BAG: [" + super.toString() + "]";
     }
 }

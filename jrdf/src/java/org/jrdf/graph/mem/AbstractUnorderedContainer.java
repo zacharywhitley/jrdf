@@ -60,10 +60,12 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.Container;
+import org.jrdf.graph.ObjectNode;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Collection;
 
 /**
  * The base class for the implementation of Bag and Alternative.
@@ -71,57 +73,31 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision$
  */
-public abstract class AbstractUnorderedContainer<ObjectNode> implements Container<ObjectNode> {
+public abstract class AbstractUnorderedContainer implements Container {
 
     /**
      * The hashmap containing the elements.
      */
-    protected Map<Long, ObjectNode> elements = new HashMap<Long, ObjectNode>();
+    protected final Map<Long, ObjectNode> elements = new HashMap<Long, ObjectNode>();
 
     /**
      * Counter used to generate keys to add to the hashmap.
      */
     protected long key;
 
-    public int size() {
-        return elements.values().size();
-    }
-
-    public boolean isEmpty() {
-        return elements.values().isEmpty();
-    }
-
-    @SuppressWarnings({ "SuspiciousMethodCalls" })
-    public boolean contains(Object o) {
-        return elements.values().contains(o);
-    }
-
-    public Iterator<ObjectNode> iterator() {
-        return elements.values().iterator();
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    public ObjectNode[] toArray() {
-        return (ObjectNode[]) elements.values().toArray();
-    }
-
-    public <ObjectNode>ObjectNode[] toArray(ObjectNode[] a) {
-        return elements.values().toArray(a);
-    }
 
     public boolean add(ObjectNode o) {
         elements.put(key++, o);
         return true;
     }
 
-    @SuppressWarnings({ "SuspiciousMethodCalls" })
     public boolean remove(Object o) {
-        Iterator iter = elements.entrySet().iterator();
+        Iterator<Map.Entry<Long, ObjectNode>> iter = elements.entrySet().iterator();
         boolean found = false;
 
         // Removes the first entry in the map that matches the given object.
         while (!found && iter.hasNext()) {
-            Map.Entry entry = (Map.Entry) iter.next();
+            Map.Entry<Long, ObjectNode> entry = iter.next();
             if (o.equals(entry.getValue())) {
                 elements.remove(o);
                 found = true;
@@ -131,14 +107,76 @@ public abstract class AbstractUnorderedContainer<ObjectNode> implements Containe
         return found;
     }
 
+    public boolean contains(Object o) {
+        return elements.values().contains(o);
+    }
+
+    public boolean containsAll(Collection<?> c) {
+        return elements.values().containsAll(c);
+    }
+
+    public boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException {
+        Iterator<? extends ObjectNode> iter = c.iterator();
+        boolean modified = false;
+        while (iter.hasNext()) {
+            ObjectNode obj = iter.next();
+            boolean added = add(obj);
+            modified = modified || added;
+        }
+        return modified;
+    }
+
+    public boolean removeAll(Collection<?> c) {
+        Iterator<?> iter = c.iterator();
+        boolean modified = false;
+        while (iter.hasNext()) {
+            boolean removed = remove(iter.next());
+            modified = modified || removed;
+        }
+        return modified;
+    }
+
+    public boolean retainAll(Collection<?> c) {
+        boolean modified = false;
+        Iterator<?> iter = iterator();
+        while (iter.hasNext()) {
+            Object obj = iter.next();
+            if (!c.contains(obj)) {
+                modified = true;
+                remove(obj);
+            }
+        }
+        return modified;
+    }
+
+    public Iterator<ObjectNode> iterator() {
+        return elements.values().iterator();
+    }
+
+    public Object[] toArray() {
+        return elements.values().toArray();
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public <T> T[] toArray(T[] a) {
+        return (T[]) elements.values().toArray();
+    }
+
+    public int size() {
+        return elements.values().size();
+    }
+
+    public boolean isEmpty() {
+        return elements.values().isEmpty();
+    }
+
     public void clear() {
         key = 0L;
         elements.clear();
     }
 
+    @Override
     public int hashCode() {
         return elements.hashCode();
     }
-
-    public abstract boolean equals(Object o);
 }

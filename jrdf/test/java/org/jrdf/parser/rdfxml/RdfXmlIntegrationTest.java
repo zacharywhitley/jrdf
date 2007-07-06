@@ -60,26 +60,35 @@
 package org.jrdf.parser.rdfxml;
 
 import junit.framework.TestCase;
+import static org.jrdf.parser.ParserTestUtil.checkNegativeRdfTestParseException;
 import static org.jrdf.parser.ParserTestUtil.checkPositiveNtRdfTest;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+// TODO 1 AN Doesn't do graph equality for blank nodes.
+// TODO 2 AN Doesn't test for correctly created graphs - li's by themselves.
 public class RdfXmlIntegrationTest extends TestCase {
     private static final Map<String, String> POSITIVE_TESTS = new HashMap<String, String>() {
         {
             put("rdf-tests/amp-in-url/test001.nt", "rdf-tests/amp-in-url/test001.rdf");
             put("rdf-tests/datatypes/test001.nt", "rdf-tests/datatypes/test001.rdf");
             put("rdf-tests/datatypes/test002.nt", "rdf-tests/datatypes/test002.rdf");
-            // Doesn't do graph equality for blank nodes.
-            //put("rdf-tests/rdf-charmod-literals/test001.nt", "rdf-tests/rdf-charmod-literals/test001.rdf");
+            //1 put("rdf-tests/rdf-charmod-literals/test001.nt", "rdf-tests/rdf-charmod-literals/test001.rdf");
             put("rdf-tests/rdf-charmod-uris/test001.nt", "rdf-tests/rdf-charmod-uris/test001.rdf");
             put("rdf-tests/rdf-charmod-uris/test002.nt", "rdf-tests/rdf-charmod-uris/test002.rdf");
+            //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test001.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test001.rdf");
+            //1 put("rdf-tests/rdf-containers-syntax-vs-schema/test002.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test002.rdf");
+            //put("rdf-tests/rdf-containers-syntax-vs-schema/test008.nt", "rdf-tests/rdf-containers-syntax-vs-schema/test008.rdf");
         }
     };
-    private static final Map<String, String> NEGATIVE_TESTS = new HashMap<String, String>() {
+    private static final Set<String> NEGATIVE_TESTS = new HashSet<String>() {
         {
+            //2 add("rdf-tests/rdf-containers-syntax-vs-schema/error001.rdf");
+            //2 add("rdf-tests/rdf-containers-syntax-vs-schema/error002.rdf");
         }
     };
 
@@ -92,12 +101,10 @@ public class RdfXmlIntegrationTest extends TestCase {
         }
     }
 
-//    public void testNegativeTests() throws Exception {
-//        for (String ntriplesFile : NEGATIVE_TESTS.keySet()) {
-//            final String rdfFile = NEGATIVE_TESTS.get(ntriplesFile);
-//            final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
-//            final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
-//            checkPositiveNtRdfTest(expectedFile, actualFile);
-//        }
-//    }
+    public void testNegativeTests() throws Exception {
+        for (String rdfFile : NEGATIVE_TESTS) {
+            final URL errorFile = getClass().getClassLoader().getResource(rdfFile);
+            checkNegativeRdfTestParseException(errorFile);
+        }
+    }
 }

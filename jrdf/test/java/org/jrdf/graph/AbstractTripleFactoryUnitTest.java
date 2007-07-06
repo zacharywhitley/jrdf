@@ -196,30 +196,28 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
      *
      * @return the new collection.
      */
-    protected abstract Collection<ObjectNode> createCollection(
-        ObjectNode[] objects);
+    protected abstract Collection createCollection(ObjectNode[] objects);
 
     /**
      * Create a concrete alternative
      *
      * @return the new alternative.
      */
-    protected abstract Alternative<ObjectNode> createAlternative(
-        ObjectNode[] objects);
+    protected abstract Alternative createAlternative(ObjectNode[] objects);
 
     /**
      * Create a concrete bag
      *
      * @return the new bag.
      */
-    protected abstract Bag<ObjectNode> createBag(ObjectNode[] objects);
+    protected abstract Bag createBag(ObjectNode[] objects);
 
     /**
      * Create a concrete sequence
      *
      * @return the new sequence.
      */
-    protected abstract Sequence<ObjectNode> createSequence(ObjectNode[] objects);
+    protected abstract Sequence createSequence(ObjectNode[] objects);
 
     //
     // Test cases
@@ -362,7 +360,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         ObjectNode rdfNil = elementFactory.createResource(RDF.NIL);
 
         // Create collection and add
-        Collection<ObjectNode> collection = createCollection(fruit);
+        Collection collection = createCollection(fruit);
 
         // Add the collection to the graph.
         tripleFactory.addCollection((SubjectNode) o, collection);
@@ -432,7 +430,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         ObjectNode rdfAlternative = elementFactory.createResource(RDF.ALT);
 
         // Create collection and add
-        Alternative<ObjectNode> alt = createAlternative(fruit);
+        Alternative alt = createAlternative(fruit);
 
         // Add the collection to the graph.
         tripleFactory.addAlternative(s, alt);
@@ -479,7 +477,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         ObjectNode rdfBag = elementFactory.createResource(RDF.BAG);
 
         // Create collection and add
-        Bag<ObjectNode> bag = createBag(fruit);
+        Bag bag = createBag(fruit);
 
         // Add the collection to the graph.
         tripleFactory.addBag(s, bag);
@@ -528,7 +526,7 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         ObjectNode rdfSequence = elementFactory.createResource(RDF.SEQ);
 
         // Create collection and add
-        Sequence<ObjectNode> sequence = createSequence(fruit);
+        Sequence sequence = createSequence(fruit);
 
         // Add the collection to the graph.
         tripleFactory.addSequence(s, sequence);

@@ -62,7 +62,6 @@ package org.jrdf.graph;
 // Java 2 standard packages
 
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * A Container is a grouping of statements.  A container can either be a
@@ -81,73 +80,5 @@ import java.util.Iterator;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Container<ObjectNode> extends Collection<ObjectNode> {
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param o Add an ObjectNode.
-     * @return {@inheritDoc}
-     */
-    boolean add(ObjectNode o);
-
-    /**
-     * {@inheritDoc}
-     */
-    boolean addAll(Collection<? extends ObjectNode> c);
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, ObjectNode.
-     */
-    boolean contains(Object o);
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, Sequence.
-     */
-    boolean containsAll(Collection<?> c) throws IllegalArgumentException;
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return {@inheritDoc}
-     */
-    Iterator<ObjectNode> iterator();
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param o {@inheritDoc}
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, ObjectNode.
-     */
-    boolean remove(Object o) throws IllegalArgumentException;
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, Sequence.
-     */
-    boolean removeAll(Collection<?> c) throws IllegalArgumentException;
-
-    /**
-     * {@inheritDoc}
-     *
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, Sequence.
-     */
-    boolean retainAll(Collection<?> c) throws IllegalArgumentException;
-
-    /**
-     * {@inheritDoc}
-     *
-     * @return {@inheritDoc}
-     */
-    <ObjectNode>ObjectNode[] toArray(ObjectNode[] a);
+public interface Container extends Collection<ObjectNode> {
 }

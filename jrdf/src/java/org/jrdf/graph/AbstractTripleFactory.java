@@ -179,7 +179,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         return reificationNode;
     }
 
-    public void addAlternative(SubjectNode subjectNode, Alternative<ObjectNode> alternative) throws
+    public void addAlternative(SubjectNode subjectNode, Alternative alternative) throws
         TripleFactoryException {
         try {
             graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.ALT));
@@ -191,7 +191,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    public void addBag(SubjectNode subjectNode, Bag<ObjectNode> bag) throws TripleFactoryException {
+    public void addBag(SubjectNode subjectNode, Bag bag) throws TripleFactoryException {
         try {
             graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.BAG));
             addContainer(subjectNode, bag);
@@ -202,7 +202,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    public void addSequence(SubjectNode subjectNode, Sequence<ObjectNode> sequence) throws TripleFactoryException {
+    public void addSequence(SubjectNode subjectNode, Sequence sequence) throws TripleFactoryException {
         try {
             graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.SEQ));
             addContainer(subjectNode, sequence);
@@ -222,7 +222,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * @throws AlreadyReifiedException If there was already a triple URI for
      *                                 the given triple.
      */
-    private void addContainer(SubjectNode subjectNode, Container<ObjectNode> container) throws TripleFactoryException {
+    private void addContainer(SubjectNode subjectNode, Container container) throws TripleFactoryException {
 
         // assert that the statement is not already reified
         try {
@@ -242,7 +242,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    public void addCollection(SubjectNode firstNode, Collection<ObjectNode> collection) throws TripleFactoryException {
+    public void addCollection(SubjectNode firstNode, Collection collection) throws TripleFactoryException {
         try {
             // Constants.
             PredicateNode rdfFirst = elementFactory.createResource(RDF.FIRST);
@@ -258,7 +258,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    private void addElementsToCollection(Collection<ObjectNode> collection, SubjectNode subject, PredicateNode rdfFirst,
+    private void addElementsToCollection(Collection collection, SubjectNode subject, PredicateNode rdfFirst,
         PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException, GraphElementFactoryException {
         // Iterate through all elements in the Collection.
         Iterator<ObjectNode> iter = collection.iterator();

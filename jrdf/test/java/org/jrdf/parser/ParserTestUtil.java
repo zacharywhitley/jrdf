@@ -69,7 +69,9 @@ import org.jrdf.graph.Triple;
 import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
+import org.jrdf.sparql.parser.parser.ParserException;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.AssertThrows;
 
 import java.net.URI;
 import java.net.URL;
@@ -94,7 +96,13 @@ public class ParserTestUtil {
         assertEquals("Invalid result for positive test", expected, results.next());
     }
 
-    public static void checkNegativeNtRdfTest(URL expectedFile) {
-
+    public static void checkNegativeRdfTestParseException(final URL errorFile) throws Exception {
+        Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
+        final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
+        AssertThrows.assertThrows(ParserException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                rdfXmlParser.parse(errorFile.openStream(), "foo");
+            }
+        });
     }
 }
