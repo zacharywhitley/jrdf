@@ -65,8 +65,6 @@ import org.jrdf.graph.Alternative;
 import org.jrdf.graph.ObjectNode;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -75,72 +73,25 @@ import java.util.List;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode> implements Alternative<ObjectNode> {
+public final class AlternativeImpl extends AbstractUnorderedContainer implements Alternative {
 
-    public boolean containsAll(Collection<?> c) {
-        return elements.values().containsAll(c);
-    }
-
+    @Override
     public boolean add(ObjectNode o) {
+        boolean modified = false;
         if (!elements.containsValue(o)) {
             elements.put(key++, o);
-        }
-        return true;
-    }
-
-    // TODO This should be test drive - probably wrong.  Shouldn't add existing
-    // elements twice.
-    public boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException {
-//    if (!(c instanceof Alternative)) {
-//      throw new IllegalArgumentException("Can only add alternatives to other " +
-//          "alternatives");
-//    }
-        Iterator<? extends ObjectNode> iter = c.iterator();
-        boolean modified = iter.hasNext();
-        while (iter.hasNext()) {
-            ObjectNode obj = iter.next();
-            elements.put(key++, obj);
-        }
-
-        return modified;
-    }
-
-    // TODO Test allowing any type of Collection through.
-    public boolean removeAll(Collection<?> c) {
-        Iterator<?> iter = c.iterator();
-        boolean modified = iter.hasNext();
-        while (iter.hasNext()) {
-            remove(iter.next());
-        }
-
-        return modified;
-    }
-
-
-    // TODO Turned to use Object - also remove IllegalArgument check.
-    public boolean retainAll(Collection<?> c) throws IllegalArgumentException {
-//    if (!(c instanceof Alternative)) {
-//      throw new IllegalArgumentException("Can only add alternatives to other " +
-//          "alternatives");
-//    }
-        boolean modified = false;
-        Iterator<?> iter = iterator();
-        while (iter.hasNext()) {
-            Object obj = iter.next();
-            if (!c.contains(obj)) {
-                modified = true;
-                remove(obj);
-            }
+            modified = true;
         }
         return modified;
     }
 
+    @Override
     public int hashCode() {
         return super.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj) {
-
         // Check equal by reference
         if (this == obj) {
             return true;
@@ -159,7 +110,11 @@ public final class AlternativeImpl extends AbstractUnorderedContainer<ObjectNode
             List altValues = Arrays.asList(alt.toArray());
             returnValue = myValues.equals(altValues);
         }
-
         return returnValue;
+    }
+
+    @Override
+    public String toString() {
+        return "RDF ALT: [" + super.toString() + "]";
     }
 }

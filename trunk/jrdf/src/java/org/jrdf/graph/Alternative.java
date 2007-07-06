@@ -61,8 +61,6 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 
-import java.util.Collection;
-
 /**
  * An Alt is a list of unordered statements which prevents duplicates.  It
  * represents objects which are semantically the same.  The order in which the
@@ -71,13 +69,5 @@ import java.util.Collection;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Alternative<ObjectNode> extends Container<ObjectNode> {
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param c {@inheritDoc}
-     * @throws IllegalArgumentException if the given object is not the correct type, Alternative.
-     */
-    boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException;
+public interface Alternative extends Container {
 }

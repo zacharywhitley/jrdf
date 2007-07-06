@@ -61,8 +61,6 @@ package org.jrdf.graph;
 
 // Java 2 standard packages
 
-import java.util.Collection;
-
 /**
  * A Bag is a group of statements that are an unorderd list which allow
  * duplicates.  The order in which the objects go in may not be the order
@@ -71,14 +69,5 @@ import java.util.Collection;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Bag<ObjectNode> extends Container<ObjectNode> {
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param c {@inheritDoc}
-     * @throws IllegalArgumentException if the given object is not the correct
-     *                                  type, Bag.
-     */
-    boolean addAll(Collection<? extends ObjectNode> c) throws IllegalArgumentException;
+public interface Bag extends Container {
 }
