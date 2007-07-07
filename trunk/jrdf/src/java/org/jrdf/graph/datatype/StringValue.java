@@ -70,11 +70,11 @@ public class StringValue implements Value {
     protected StringValue() {
     }
 
-    public StringValue(final String newValue) {
+    private StringValue(final String newValue) {
         this.value = newValue;
     }
 
-    public Value create(String lexicalForm) {
+    public Value create(final String lexicalForm) {
         return new StringValue(lexicalForm);
     }
 

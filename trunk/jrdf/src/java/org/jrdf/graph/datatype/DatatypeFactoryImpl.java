@@ -66,12 +66,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DatatypeFactoryImpl implements DatatypeFactory {
+    private static final URI NO_DATATYPE = URI.create("");
     private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>();
 
     public DatatypeFactoryImpl() {
         // Primitive types
         final DateTimeValue dateTimeValue = new DateTimeValue();
-        addValueCreator(XSD.STRING, new StringValue());
+        final StringValue stringValue = new StringValue();
+        addValueCreator(NO_DATATYPE, stringValue);
+        addValueCreator(XSD.STRING, stringValue);
         addValueCreator(XSD.BOOLEAN, new BooleanValue());
         addValueCreator(XSD.DECIMAL, new DecimalValue());
         addValueCreator(XSD.FLOAT, new FloatValue());
@@ -118,6 +121,10 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         return FACTORY_MAP.remove(datatypeURI) == null;
     }
 
+    public Value createValue(final String newLexicalForm) {
+        return FACTORY_MAP.get(NO_DATATYPE).create(newLexicalForm);
+    }
+
     public Value createValue(final String newLexicalForm, final URI dataTypeURI) {
         Value value;
         // Try and create a typed value - if all else fails create a normal string version.
@@ -126,10 +133,10 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
                 final ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);
                 value = valueCreator.create(newLexicalForm);
             } else {
-                value = new StringValue(newLexicalForm);
+                value = createValue(newLexicalForm);
             }
         } catch (IllegalArgumentException e) {
-            value = new StringValue(newLexicalForm);
+            value = createValue(newLexicalForm);
         }
         return value;
     }

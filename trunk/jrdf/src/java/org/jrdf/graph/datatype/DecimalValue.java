@@ -76,7 +76,7 @@ public class DecimalValue implements Value, XSDDecimal {
         this.value = new BigDecimal(newValue);
     }
 
-    public Value create(String lexicalForm) {
+    public Value create(final String lexicalForm) {
         return new DecimalValue(lexicalForm);
     }
 
