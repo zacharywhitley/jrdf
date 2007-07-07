@@ -86,7 +86,7 @@ public class DateTimeValue implements Value {
         this.value = FACTORY.newXMLGregorianCalendar(newValue);
     }
 
-    public Value create(String lexicalForm) {
+    public Value create(final String lexicalForm) {
         return new DateTimeValue(lexicalForm);
     }
 

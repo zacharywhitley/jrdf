@@ -70,7 +70,7 @@ public class BooleanValue implements Value {
     protected BooleanValue() {
     }
 
-    public BooleanValue(final String newValue) {
+    private BooleanValue(final String newValue) {
         this.value = Boolean.valueOf(newValue);
     }
 

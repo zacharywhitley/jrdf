@@ -70,11 +70,11 @@ public class FloatValue implements Value {
     protected FloatValue() {
     }
 
-    public FloatValue(final String newValue) {
+    private FloatValue(final String newValue) {
         this.value = Float.valueOf(newValue);
     }
 
-    public Value create(String lexicalForm) {
+    public Value create(final String lexicalForm) {
         return new FloatValue(lexicalForm);
     }
 

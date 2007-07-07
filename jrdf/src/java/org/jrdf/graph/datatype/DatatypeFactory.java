@@ -69,4 +69,6 @@ public interface DatatypeFactory {
     void addValueCreator(URI datatypeURI, ValueCreator creator) throws IllegalArgumentException;
 
     boolean removeValueCreator(URI datatypeURI);
+
+    Value createValue(String newLexicalForm);
 }

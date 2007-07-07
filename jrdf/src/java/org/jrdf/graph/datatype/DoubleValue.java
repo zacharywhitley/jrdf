@@ -70,11 +70,11 @@ public class DoubleValue implements Value {
     protected DoubleValue() {
     }
 
-    public DoubleValue(final String newValue) {
+    private DoubleValue(final String newValue) {
         this.value = Double.valueOf(newValue);
     }
 
-    public Value create(String lexicalForm) {
+    public Value create(final String lexicalForm) {
         return new DoubleValue(lexicalForm);
     }
 

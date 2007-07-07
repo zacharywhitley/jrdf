@@ -86,7 +86,7 @@ public class DurationValue implements Value {
         this.value = FACTORY.newDuration(newValue);
     }
 
-    public Value create(String lexicalForm) {
+    public Value create(final String lexicalForm) {
         return new DurationValue(lexicalForm);
     }
 

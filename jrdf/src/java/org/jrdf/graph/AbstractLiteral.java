@@ -61,10 +61,9 @@ package org.jrdf.graph;
 
 // Java 2 standard
 
-import org.jrdf.graph.datatype.DatatypeFactoryImpl;
-import org.jrdf.graph.datatype.StringValue;
-import org.jrdf.graph.datatype.Value;
 import org.jrdf.graph.datatype.DatatypeFactory;
+import org.jrdf.graph.datatype.DatatypeFactoryImpl;
+import org.jrdf.graph.datatype.Value;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -123,7 +122,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = new StringValue(newLexicalForm);
+        value = DATATYPE_FACTORY.createValue(newLexicalForm);
         language = "";
         datatypeURI = null;
     }
@@ -150,7 +149,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = new StringValue(newLexicalForm);
+        value = DATATYPE_FACTORY.createValue(newLexicalForm);
         language = newLanguage;
         datatypeURI = null;
     }

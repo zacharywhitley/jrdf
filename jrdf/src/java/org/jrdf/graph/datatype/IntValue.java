@@ -76,7 +76,7 @@ public class IntValue implements Value, XSDDecimal {
         this.value = Integer.valueOf(newValue);
     }
 
-    public Value create(String lexicalForm) {
+    public Value create(final String lexicalForm) {
         return new IntValue(lexicalForm);
     }
 
