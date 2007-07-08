@@ -186,6 +186,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      *
      * @param newObject the object to use to construct the literal from.  Uses a map of registered classes to
      *   creator objects.
+     * @throws IllegalArgumentException if the class is not registered to convert to a datatype.
      */
     protected AbstractLiteral(Object newObject) {
         checkNotNull(newObject);
