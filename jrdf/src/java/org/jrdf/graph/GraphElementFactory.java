@@ -104,13 +104,13 @@ public interface GraphElementFactory {
     /**
      * Converts a known Java class (such as Integer) into an RDF literal (XSD:int).
      *
-     * @param newObject the value object (a Java class) to create the literal from.
+     * @param object the value object (a Java class) to create the literal from.
      * @return the newly created literal value.
      * @throws GraphElementFactoryException If the literal failed to be created.
      * @throws IllegalArgumentException if there is no registered class to value creator mapping in the datatype
      *   factory.
      */
-    Literal convertToLiteral(Object newObject) throws GraphElementFactoryException;
+    Literal convertToLiteral(Object object) throws GraphElementFactoryException;
 
     /**
      * Creates a new literal with the given lexical value, with no language or
