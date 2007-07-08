@@ -76,6 +76,14 @@ public class LongValue implements Value, XSDDecimal {
         this.value = Long.valueOf(newValue);
     }
 
+    public LongValue(final Long newValue) {
+        this.value = newValue;
+    }
+
+    public Value create(Object object) {
+        return new LongValue((Long) object);
+    }
+
     public Value create(final String lexicalForm) {
         return new LongValue(lexicalForm);
     }

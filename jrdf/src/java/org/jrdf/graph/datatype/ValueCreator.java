@@ -60,5 +60,7 @@
 package org.jrdf.graph.datatype;
 
 public interface ValueCreator {
+    Value create(Object object);
+
     Value create(String lexicalForm);
 }

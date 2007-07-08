@@ -82,8 +82,16 @@ public class DurationValue implements Value {
     protected DurationValue() {
     }
 
+    private DurationValue(final Duration newValue) {
+        this.value = newValue;
+    }
+
     private DurationValue(final String newValue) {
         this.value = FACTORY.newDuration(newValue);
+    }
+
+    public Value create(Object object) {
+        return new DurationValue((Duration) object);
     }
 
     public Value create(final String lexicalForm) {

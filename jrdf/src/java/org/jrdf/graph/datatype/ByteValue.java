@@ -72,8 +72,16 @@ public class ByteValue implements Value, XSDDecimal {
     protected ByteValue() {
     }
 
+    private ByteValue(final Byte newValue) {
+        this.value = newValue;
+    }
+
     private ByteValue(final String newValue) {
         this.value = Byte.valueOf(newValue);
+    }
+
+    public Value create(Object object) {
+        return new ByteValue((Byte) object);
     }
 
     public Value create(String lexicalForm) {

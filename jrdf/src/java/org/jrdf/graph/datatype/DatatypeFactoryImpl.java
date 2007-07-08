@@ -160,9 +160,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
     public Value createValue(final Object newObject) {
         if (CLASS_TO_CREATOR.containsKey(newObject.getClass())) {
             final ValueCreator creator = CLASS_TO_CREATOR.get(newObject.getClass());
-            // TODO AN Change this to use object version instead of calling the toString version - removes parsing
-            // overhead.
-            return creator.create(newObject.toString());
+            return creator.create(newObject);
         } else {
             throw new IllegalArgumentException("No value creator registered for: " + newObject.getClass());
         }

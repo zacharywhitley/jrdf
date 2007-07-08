@@ -76,7 +76,15 @@ public class AnyURIValue implements Value {
         this.value = URI.create(newValue);
     }
 
-    public Value create(String lexicalForm) {
+    public AnyURIValue(final URI newValue) {
+        this.value = newValue;
+    }
+
+    public Value create(final Object object) {
+        return new AnyURIValue((URI) object);
+    }
+
+    public Value create(final String lexicalForm) {
         return new AnyURIValue(lexicalForm);
     }
 

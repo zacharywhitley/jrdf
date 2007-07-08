@@ -70,8 +70,16 @@ public class BooleanValue implements Value {
     protected BooleanValue() {
     }
 
+    private BooleanValue(final Boolean newValue) {
+        this.value = newValue;
+    }
+
     private BooleanValue(final String newValue) {
         this.value = Boolean.valueOf(newValue);
+    }
+
+    public Value create(Object object) {
+        return new BooleanValue((Boolean) object);
     }
 
     public Value create(String lexicalForm) {

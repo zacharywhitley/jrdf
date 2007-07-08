@@ -76,6 +76,14 @@ public class ShortValue implements Value, XSDDecimal {
         this.value = Short.valueOf(newValue);
     }
 
+    public ShortValue(final Short newValue) {
+        this.value = newValue;
+    }
+
+    public Value create(final Object object) {
+        return new ShortValue((Short) object);
+    }
+
     public Value create(final String lexicalForm) {
         return new ShortValue(lexicalForm);
     }
