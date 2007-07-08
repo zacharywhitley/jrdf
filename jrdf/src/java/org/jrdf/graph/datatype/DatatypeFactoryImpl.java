@@ -59,28 +59,34 @@
 
 package org.jrdf.graph.datatype;
 
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URI;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DatatypeFactoryImpl implements DatatypeFactory {
     private static final URI NO_DATATYPE = URI.create("");
     private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>();
+    private static final Map<Class, ValueCreator> CLASS_TO_CREATOR = new HashMap<Class, ValueCreator>();
+    private static final Map<Class, URI> CLASS_TO_URI = new HashMap<Class, URI>();
 
     public DatatypeFactoryImpl() {
         // Primitive types
         final DateTimeValue dateTimeValue = new DateTimeValue();
         final StringValue stringValue = new StringValue();
         addValueCreator(NO_DATATYPE, stringValue);
-        addValueCreator(XSD.STRING, stringValue);
-        addValueCreator(XSD.BOOLEAN, new BooleanValue());
-        addValueCreator(XSD.DECIMAL, new DecimalValue());
-        addValueCreator(XSD.FLOAT, new FloatValue());
-        addValueCreator(XSD.DOUBLE, new DoubleValue());
+        addValueCreator(String.class, XSD.STRING, stringValue);
+        addValueCreator(Boolean.class, XSD.BOOLEAN, new BooleanValue());
+        addValueCreator(BigDecimal.class, XSD.DECIMAL, new DecimalValue());
+        addValueCreator(Float.class, XSD.FLOAT, new FloatValue());
+        addValueCreator(Double.class, XSD.DOUBLE, new DoubleValue());
         addValueCreator(XSD.DURATION, new DurationValue());
-        addValueCreator(XSD.DATE_TIME, dateTimeValue);
+        addValueCreator(Date.class, XSD.DATE_TIME, dateTimeValue);
         addValueCreator(XSD.TIME, dateTimeValue);
         addValueCreator(XSD.DATE, dateTimeValue);
         addValueCreator(XSD.G_YEAR_MONTH, dateTimeValue);
@@ -91,11 +97,11 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.ANY_URI, new AnyURIValue());
 
         // Derived types
-        addValueCreator(XSD.INTEGER, new IntegerValue());
-        addValueCreator(XSD.LONG, new LongValue());
-        addValueCreator(XSD.INT, new IntValue());
-        addValueCreator(XSD.SHORT, new ShortValue());
-        addValueCreator(XSD.BYTE, new ByteValue());
+        addValueCreator(BigInteger.class, XSD.INTEGER, new IntegerValue());
+        addValueCreator(Long.class, XSD.LONG, new LongValue());
+        addValueCreator(Integer.class, XSD.INT, new IntValue());
+        addValueCreator(Short.class, XSD.SHORT, new ShortValue());
+        addValueCreator(Byte.class, XSD.BYTE, new ByteValue());
     }
 
     public DatatypeFactoryImpl(final Map<URI, ValueCreator> newCreatorMap) {
@@ -109,6 +115,10 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         return FACTORY_MAP.containsKey(datatypeURI);
     }
 
+    public boolean hasClassRegistered(final Class<?> aClass) {
+        return CLASS_TO_CREATOR.containsKey(aClass);
+    }
+
     public void addValueCreator(final URI datatypeURI, final ValueCreator creator) throws IllegalArgumentException {
         if (!hasRegisteredValueCreator(datatypeURI)) {
             FACTORY_MAP.put(datatypeURI, creator);
@@ -117,12 +127,38 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         }
     }
 
+    public void addValueCreator(final Class<?> aClass, final URI datatypeURI, final ValueCreator creator) {
+        addValueCreator(datatypeURI, creator);
+        CLASS_TO_CREATOR.put(aClass, creator);
+        CLASS_TO_URI.put(aClass, datatypeURI);
+    }
+
     public boolean removeValueCreator(final URI datatypeURI) {
         return FACTORY_MAP.remove(datatypeURI) == null;
     }
 
     public Value createValue(final String newLexicalForm) {
         return FACTORY_MAP.get(NO_DATATYPE).create(newLexicalForm);
+    }
+
+    public Value createValue(final Object newObject) {
+        if (CLASS_TO_CREATOR.containsKey(newObject.getClass())) {
+            final ValueCreator creator = CLASS_TO_CREATOR.get(newObject.getClass());
+            // TODO AN Change this to use object version instead of calling the toString version - removes parsing
+            // overhead.
+            return creator.create(newObject.toString());
+        } else {
+            throw new IllegalArgumentException("No value creator registered for: " + newObject.getClass());
+        }
+     }
+
+    public URI getObjectDatatypeURI(final Object object) {
+        checkNotNull(object);
+        if (CLASS_TO_URI.containsKey(object.getClass())) {
+          return CLASS_TO_URI.get(object.getClass());
+        } else {
+            throw new IllegalArgumentException("No datatype URI registered for: " + object.getClass());
+        }
     }
 
     public Value createValue(final String newLexicalForm, final URI dataTypeURI) {

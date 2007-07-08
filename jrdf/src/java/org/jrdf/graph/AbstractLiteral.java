@@ -68,6 +68,7 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 import org.jrdf.util.EscapeUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -178,6 +179,23 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         value = DATATYPE_FACTORY.createValue(newLexicalForm, newDatatypeURI);
         language = null;
         datatypeURI = newDatatypeURI;
+    }
+
+    /**
+     * Construct a datatype literal based on an existing Java class.
+     *
+     * @param newObject the object to use to construct the literal from.  Uses a map of registered classes to
+     *   creator objects.
+     */
+    protected AbstractLiteral(Object newObject) {
+        checkNotNull(newObject);
+        if (DATATYPE_FACTORY.hasClassRegistered(newObject.getClass())) {
+            value = DATATYPE_FACTORY.createValue(newObject);
+            language = null;
+            datatypeURI = DATATYPE_FACTORY.getObjectDatatypeURI(newObject);
+        } else {
+            throw new IllegalArgumentException("Class not registered with datatype factory: " + newObject.getClass());
+        }
     }
 
     public String getLexicalForm() {
