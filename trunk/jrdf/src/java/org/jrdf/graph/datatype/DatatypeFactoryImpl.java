@@ -137,6 +137,22 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         return FACTORY_MAP.remove(datatypeURI) == null;
     }
 
+    public boolean removeValueCreator(final Class<?> aClass, final URI datatypeURI) {
+        final ValueCreator valueCreatorForDatatypeURI = FACTORY_MAP.get(datatypeURI);
+        if (removeValueCreator(datatypeURI)) {
+            final ValueCreator valueCreator = CLASS_TO_CREATOR.remove(aClass);
+            if (valueCreator != null) {
+                // Should always be true as CLASS_TO maps won't get out of sync.
+                return CLASS_TO_URI.remove(aClass) != null;
+            } else {
+                // Add back because we failed to remove it from class creators.
+                addValueCreator(datatypeURI, valueCreatorForDatatypeURI);
+                return false;
+            }
+        }
+        return false;
+    }
+
     public Value createValue(final String newLexicalForm) {
         return FACTORY_MAP.get(NO_DATATYPE).create(newLexicalForm);
     }
@@ -150,12 +166,12 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         } else {
             throw new IllegalArgumentException("No value creator registered for: " + newObject.getClass());
         }
-     }
+    }
 
     public URI getObjectDatatypeURI(final Object object) {
         checkNotNull(object);
         if (CLASS_TO_URI.containsKey(object.getClass())) {
-          return CLASS_TO_URI.get(object.getClass());
+            return CLASS_TO_URI.get(object.getClass());
         } else {
             throw new IllegalArgumentException("No datatype URI registered for: " + object.getClass());
         }
@@ -163,7 +179,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
 
     public Value createValue(final String newLexicalForm, final URI dataTypeURI) {
         Value value;
-        // Try and create a typed value - if all else fails create a normal string version.
+        // Try and create a correctly typed value. If all else fails create a non-types/string version as RDF does not
+        // require lexical values are correct.
         try {
             if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
                 final ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);

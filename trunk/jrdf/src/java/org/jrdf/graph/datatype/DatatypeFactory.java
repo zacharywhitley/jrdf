@@ -79,4 +79,6 @@ public interface DatatypeFactory {
     URI getObjectDatatypeURI(Object object);
 
     boolean hasClassRegistered(Class<?> aClass);
+
+    boolean removeValueCreator(Class<?> aClass, URI datatypeURI);
 }
