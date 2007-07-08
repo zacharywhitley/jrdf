@@ -91,13 +91,6 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         this.nodePool = nodePool;
     }
 
-
-    /**
-     * Create a blank nodes that is associated with a specific graph.
-     *
-     * @return the newly created blank node value.
-     * @throws GraphElementFactoryException If anonymous resources can't be generated.
-     */
     public BlankNode createResource() throws GraphElementFactoryException {
 
         //get an Unique Identifier
@@ -115,26 +108,10 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return node;
     }
 
-    /**
-     * Create a URI reference.
-     *
-     * @param uri The URI of the resource.
-     * @return the newly created URI reference value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
-     */
     public URIReference createResource(URI uri) throws GraphElementFactoryException {
         return createResource(uri, true);
     }
 
-    /**
-     * Create a URI reference without checking if the URI given is a valid RDF
-     * URI, currently if the URI is absolute.
-     *
-     * @param uri      The URI of the resource.
-     * @param validate true if we disbale checking to see if the URI is valid.
-     * @return The newly created URI reference value.
-     * @throws GraphElementFactoryException
-     */
     public URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException {
         if (null == uri) {
             throw new GraphElementFactoryException("URI may not be null for a URIReference");
@@ -153,44 +130,24 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return node;
     }
 
+    public Literal convertToLiteral(Object newObject) throws GraphElementFactoryException {
+        LiteralMutableId literal = new LiteralImpl(newObject);
+        addNodeId(literal);
+        return literal;
+    }
 
-    /**
-     * Creates a new literal with the given lexical value, with no language or
-     * datatype.
-     *
-     * @param lexicalValue The lexical value for the literal.
-     * @return the newly created literal value.
-     */
     public Literal createLiteral(String lexicalValue) {
         LiteralMutableId literal = new LiteralImpl(lexicalValue);
         addNodeId(literal);
         return literal;
     }
 
-
-    /**
-     * Creates a new literal with the given lexical value, with a given language
-     * but no datatype.
-     *
-     * @param lexicalValue The lexical value for the literal.  Cannot be null.
-     * @param languageType The language of the literal or null if not required.
-     * @return the newly created literal value.
-     */
     public Literal createLiteral(String lexicalValue, String languageType) {
         LiteralMutableId newLiteral = new LiteralImpl(lexicalValue, languageType);
         addNodeId(newLiteral);
         return newLiteral;
     }
 
-
-    /**
-     * Creates a new literal with the given lexical value and given datatype.
-     *
-     * @param lexicalValue The lexical value for the literal.  Cannot be null.
-     * @param datatypeURI  The URI of the datatype of the literal or null if not
-     *                     required.
-     * @return the newly created literal value.
-     */
     public Literal createLiteral(String lexicalValue, URI datatypeURI) {
         // create the node identifier
         LiteralMutableId newLiteral = new LiteralImpl(lexicalValue, datatypeURI);

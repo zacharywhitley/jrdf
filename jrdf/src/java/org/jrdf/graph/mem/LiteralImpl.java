@@ -92,46 +92,25 @@ public class LiteralImpl extends AbstractLiteral implements MemNode, Serializabl
      */
     private String thisString;
 
-    /**
-     * Construct a literal.
-     *
-     * @param newLexicalForm the text part of the literal
-     * @throws IllegalArgumentException if <var>newLexicalForm</var> is <code>null</code>
-     */
     LiteralImpl(String newLexicalForm) {
         super(newLexicalForm);
         thisString = super.toString();
     }
 
-    /**
-     * Construct a fully general literal.
-     *
-     * @param newLexicalForm the text part of the literal
-     * @param newLanguage    the language code, possibly the empty string but not
-     *                       <code>null</code>
-     * @throws IllegalArgumentException if <var>lexicalForm</var> or
-     *                                  <var>lang</var> are <code>null</code>
-     */
     LiteralImpl(String newLexicalForm, String newLanguage) {
         super(newLexicalForm, newLanguage);
         thisString = super.toString();
     }
 
-
-    /**
-     * Construct a fully general literal.
-     *
-     * @param newLexicalForm the text part of the literal
-     * @param datatype       the URI for a datatyped literal, or <code>null</code> for
-     *                       an untyped literal
-     * @throws IllegalArgumentException if <var>newLexicalForm</var> or
-     *                                  <var>lang</var> are <code>null</code>
-     */
     LiteralImpl(String newLexicalForm, URI datatype) {
         super(newLexicalForm, datatype);
         thisString = super.toString();
     }
 
+    LiteralImpl(Object newObject) {
+        super(newObject);
+        thisString = super.toString();
+    }
 
     /**
      * Retrieves an internal identifier for this node.

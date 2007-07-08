@@ -80,7 +80,7 @@ public abstract class AbstractBlankNode implements BlankNode, Serializable {
     public boolean isURIReference() {
         return false;
     }
-    
+
     public void accept(TypedNodeVisitor visitor) {
         visitor.visitBlankNode(this);
     }

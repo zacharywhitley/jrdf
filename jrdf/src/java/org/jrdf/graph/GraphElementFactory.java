@@ -102,12 +102,23 @@ public interface GraphElementFactory {
     URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException;
 
     /**
+     * Converts a known Java class (such as Integer) into an RDF literal (XSD:int).
+     *
+     * @param newObject the value object (a Java class) to create the literal from.
+     * @return the newly created literal value.
+     * @throws GraphElementFactoryException If the literal failed to be created.
+     * @throws IllegalArgumentException if there is no registered class to value creator mapping in the datatype
+     *   factory.
+     */
+    Literal convertToLiteral(Object newObject) throws GraphElementFactoryException;
+
+    /**
      * Creates a new literal with the given lexical value, with no language or
      * datatype.
      *
      * @param lexicalValue The lexical value for the literal.
      * @return the newly created literal value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
+     * @throws GraphElementFactoryException If the literal failed to be created.
      */
     Literal createLiteral(String lexicalValue) throws GraphElementFactoryException;
 
@@ -118,7 +129,7 @@ public interface GraphElementFactory {
      * @param lexicalValue The lexical value for the literal.  Cannot be null.
      * @param languageType The language of the literal or null if not required.
      * @return the newly created literal value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
+     * @throws GraphElementFactoryException If the literal failed to be created.
      */
     Literal createLiteral(String lexicalValue, String languageType) throws GraphElementFactoryException;
 
@@ -129,7 +140,7 @@ public interface GraphElementFactory {
      * @param datatypeURI  The URI of the datatype of the literal or null if not
      *                     required.
      * @return the newly created literal value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
+     * @throws GraphElementFactoryException If the literal failed to be created.
      */
     Literal createLiteral(String lexicalValue, URI datatypeURI) throws GraphElementFactoryException;
 }
