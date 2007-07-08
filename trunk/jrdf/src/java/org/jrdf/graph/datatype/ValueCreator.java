@@ -59,7 +59,16 @@
 
 package org.jrdf.graph.datatype;
 
+/**
+ * Creates value object based on a value type or lexical form (to be parsed and turned into a the appropriate value).
+ */
 public interface ValueCreator {
+    /**
+     * Create a value based on an Java value.  Will fail if there is no mapping registered.
+     *
+     * @param object the Java object to convert to a value.
+     * @return a Value object, usually just wrapping the Java object.
+     */
     Value create(Object object);
 
     Value create(String lexicalForm);
