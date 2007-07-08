@@ -78,6 +78,14 @@ public class IntegerValue implements Value, XSDDecimal {
         this.value = new BigDecimal(new BigInteger(newValue));
     }
 
+    public IntegerValue(final BigDecimal newValue) {
+        this.value = newValue;
+    }
+
+    public Value create(final Object object) {
+        return new IntegerValue((BigDecimal) object);
+    }
+
     public Value create(final String lexicalForm) {
         return new IntegerValue(lexicalForm);
     }

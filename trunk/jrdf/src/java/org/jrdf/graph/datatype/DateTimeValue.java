@@ -65,6 +65,8 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class DateTimeValue implements Value {
     private static final long serialVersionUID = 3135119000595034019L;
@@ -82,8 +84,18 @@ public class DateTimeValue implements Value {
     protected DateTimeValue() {
     }
 
+    private DateTimeValue(final Date value) {
+        final GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(value);
+        this.value = FACTORY.newXMLGregorianCalendar(calendar);
+    }
+
     private DateTimeValue(final String newValue) {
         this.value = FACTORY.newXMLGregorianCalendar(newValue);
+    }
+
+    public Value create(final Object object) {
+        return new DateTimeValue((Date) object);
     }
 
     public Value create(final String lexicalForm) {

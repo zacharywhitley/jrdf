@@ -74,6 +74,10 @@ public class StringValue implements Value {
         this.value = newValue;
     }
 
+    public Value create(final Object object) {
+        return new StringValue((String) object);
+    }
+
     public Value create(final String lexicalForm) {
         return new StringValue(lexicalForm);
     }

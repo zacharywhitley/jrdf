@@ -70,8 +70,16 @@ public class DoubleValue implements Value {
     protected DoubleValue() {
     }
 
+    private DoubleValue(final Double newValue) {
+        this.value = newValue;
+    }
+
     private DoubleValue(final String newValue) {
         this.value = Double.valueOf(newValue);
+    }
+
+    public Value create(Object object) {
+        return new DoubleValue((Double) object);
     }
 
     public Value create(final String lexicalForm) {

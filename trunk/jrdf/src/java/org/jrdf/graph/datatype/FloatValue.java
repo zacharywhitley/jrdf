@@ -70,8 +70,16 @@ public class FloatValue implements Value {
     protected FloatValue() {
     }
 
+    private FloatValue(final Float newValue) {
+        this.value = newValue;
+    }
+
     private FloatValue(final String newValue) {
         this.value = Float.valueOf(newValue);
+    }
+
+    public Value create(final Object object) {
+        return new FloatValue((Float) object);
     }
 
     public Value create(final String lexicalForm) {

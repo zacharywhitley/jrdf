@@ -72,8 +72,16 @@ public class DecimalValue implements Value, XSDDecimal {
     protected DecimalValue() {
     }
 
+    private DecimalValue(final BigDecimal newValue) {
+        this.value = newValue;
+    }
+
     private DecimalValue(final String newValue) {
         this.value = new BigDecimal(newValue);
+    }
+
+    public Value create(final Object object) {
+        return new DecimalValue((BigDecimal) object);
     }
 
     public Value create(final String lexicalForm) {
