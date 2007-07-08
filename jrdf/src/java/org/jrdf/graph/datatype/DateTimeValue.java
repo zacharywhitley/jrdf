@@ -84,6 +84,11 @@ public class DateTimeValue implements Value {
     protected DateTimeValue() {
     }
 
+    /**
+     * Creates a XML Gregorian calendar based on the current locale and time zone.
+     *
+     * @param value the Date to convert.
+     */
     private DateTimeValue(final Date value) {
         final GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(value);
