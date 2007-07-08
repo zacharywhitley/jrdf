@@ -130,8 +130,8 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return node;
     }
 
-    public Literal convertToLiteral(Object newObject) throws GraphElementFactoryException {
-        LiteralMutableId literal = new LiteralImpl(newObject);
+    public Literal convertToLiteral(Object object) throws GraphElementFactoryException {
+        LiteralMutableId literal = new LiteralImpl(object);
         addNodeId(literal);
         return literal;
     }
