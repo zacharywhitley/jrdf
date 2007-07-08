@@ -71,4 +71,12 @@ public interface DatatypeFactory {
     boolean removeValueCreator(URI datatypeURI);
 
     Value createValue(String newLexicalForm);
+
+    Value createValue(Object newObject);
+
+    void addValueCreator(Class<?> aClass, URI datatypeURI, ValueCreator creator);
+
+    URI getObjectDatatypeURI(Object object);
+
+    boolean hasClassRegistered(Class<?> aClass);
 }
