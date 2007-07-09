@@ -104,6 +104,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * The language code of the literal.
      */
     protected String language;
+    
     /**
      * RDF datatype URI, <code>null</code> for untyped literal.
      */
