@@ -60,7 +60,6 @@
 package org.jrdf.graph;
 
 import org.jrdf.graph.datatype.Value;
-import org.jrdf.graph.datatype.EquivComparable;
 
 import java.net.URI;
 
@@ -71,7 +70,7 @@ import java.net.URI;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Literal extends EquivComparable<Literal>, Comparable<Literal>, ObjectNode, TypedNodeVisitable {
+public interface Literal extends ObjectNode, TypedNodeVisitable {
 
     /**
      * Obtain the text of this literal.
@@ -111,25 +110,6 @@ public interface Literal extends EquivComparable<Literal>, Comparable<Literal>, 
      *         for an untyped node.
      */
     URI getDatatypeURI();
-
-    /**
-     * Sorts by the URI of the literal and then value.  Will return 0 only if both the URI are the same and the literal
-     * value are the same.  Use equivCompareTo for semantic comparison.
-     *
-     * @param literal the literal to compare.
-     * @return -1, 0, 1 if they are equivalent and the values are less than, equal to or greater than literal.
-     */
-    int compareTo(Literal literal);
-
-    /**
-     * Sorts by the URI of the literal and then value.  Will return 0 if the data type URIs are different but are
-     * comparable types (such as decimal and integer) and the values are the same.  Similar to the semantics of
-     * BigDecimal's compareTo.
-     *
-     * @param literal the literal to compare.
-     * @return -1, 0, 1 if they are equivalent and the values are less than, equal to or greater than literal.
-     */
-    int equivCompareTo(Literal literal);
 
     /**
      * Indicates whether some other object is "equal to" this one.

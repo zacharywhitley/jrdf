@@ -72,6 +72,10 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.datatype.LexicalComparatorImpl;
+import org.jrdf.graph.datatype.LexicalComparator;
+import org.jrdf.graph.datatype.SemanticComparator;
+import org.jrdf.graph.datatype.SemanticComparatorImpl;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.util.ClosableIterator;
@@ -88,6 +92,8 @@ import java.util.Set;
 
 public class NTriplesParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
+    private static final LexicalComparator lexComparator = new LexicalComparatorImpl();
+    private static final SemanticComparator semComparator = new SemanticComparatorImpl(lexComparator);
 
     private NTriplesParserTestUtil() {
     }
@@ -122,7 +128,7 @@ public class NTriplesParserTestUtil {
                     if (hasSuperClassOrInterface(Literal.class, tripleToFind.getObject())) {
                         Literal literal1 = (Literal) tripleToFind.getObject();
                         Literal literal2 = (Literal) triple.getObject();
-                        found = literal1.equivCompareTo(literal2) == 0;
+                        found = semComparator.compare(literal1, literal2) == 0;
                     } else {
                         found = tripleToFind.getObject().equals(triple.getObject());
                     }

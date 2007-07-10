@@ -104,7 +104,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * The language code of the literal.
      */
     protected String language;
-    
+
     /**
      * RDF datatype URI, <code>null</code> for untyped literal.
      */
@@ -239,30 +239,6 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     public void accept(TypedNodeVisitor visitor) {
         visitor.visitLiteral(this);
-    }
-
-    public int compareTo(final Literal literal) {
-        if (language != null) {
-            return compareLiteralOrLanguage(literal);
-        } else {
-            return getValue().compareTo(literal.getValue());
-        }
-    }
-
-    public int equivCompareTo(final Literal literal) {
-        if (language != null) {
-            return compareLiteralOrLanguage(literal);
-        } else {
-            return getValue().equivCompareTo(literal.getValue());
-        }
-    }
-
-    private int compareLiteralOrLanguage(final Literal literal) {
-        if (language.length() == 0 && datatypeURI == null) {
-            return getLexicalForm().compareTo(literal.getLexicalForm());
-        } else {
-            return getLanguage().compareTo(literal.getLanguage());
-        }
     }
 
     @Override
