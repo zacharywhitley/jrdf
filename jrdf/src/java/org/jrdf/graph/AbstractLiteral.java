@@ -64,6 +64,7 @@ package org.jrdf.graph;
 import org.jrdf.graph.datatype.DatatypeFactory;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
 import org.jrdf.graph.datatype.Value;
+import static org.jrdf.graph.NullURI.*;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -106,7 +107,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     protected String language;
 
     /**
-     * RDF datatype URI, <code>null</code> for untyped literal.
+     * RDF datatype URI, <code>NullURI</code> for untyped literal.
      */
     protected URI datatypeURI;
 
@@ -126,7 +127,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         // Initialize fields
         value = DATATYPE_FACTORY.createValue(newLexicalForm);
         language = "";
-        datatypeURI = null;
+        datatypeURI = NULL_URI;
     }
 
     /**
@@ -153,7 +154,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         // Initialize fields
         value = DATATYPE_FACTORY.createValue(newLexicalForm);
         language = newLanguage;
-        datatypeURI = null;
+        datatypeURI = NULL_URI;
     }
 
     /**
@@ -178,7 +179,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
         // Initialize fields
         value = DATATYPE_FACTORY.createValue(newLexicalForm, newDatatypeURI);
-        language = null;
+        language = "";
         datatypeURI = newDatatypeURI;
     }
 
@@ -193,7 +194,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         checkNotNull(newObject);
         if (DATATYPE_FACTORY.hasClassRegistered(newObject.getClass())) {
             value = DATATYPE_FACTORY.createValue(newObject);
-            language = null;
+            language = "";
             datatypeURI = DATATYPE_FACTORY.getObjectDatatypeURI(newObject);
         } else {
             throw new IllegalArgumentException("Class not registered with datatype factory: " + newObject.getClass());
@@ -212,6 +213,18 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         return language;
     }
 
+    public boolean isDatatypedLiteral() {
+        return datatypeURI != NULL_URI;
+    }
+
+    public boolean isLanguageLiteral() {
+        return language.length() > 0;
+    }
+
+    public boolean isPlainLiteral() {
+        return datatypeURI == NULL_URI && language.length() == 0;
+    }
+
     /**
      * Whether the literal is well formed XML.
      *
@@ -222,10 +235,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     /**
-     * Returns the URI of the RDF datatype of this resource, or <code>null</code>
+     * Returns the URI of the RDF datatype of this resource, or <code>NO_DATATYPE</code>
      * for a plain literal.
      *
-     * @return the URI of the RDF datatype of this resource, or <code>null</code>
+     * @return the URI of the RDF datatype of this resource, or <code>NO_DATATYPE</code>
      *         for a plain literal.
      */
     public URI getDatatypeURI() {
@@ -312,7 +325,6 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     private boolean checkLiteralEquality(Literal tmpLiteral) {
         boolean returnValue = false;
-
         // If datatypes are null and languages are equal by value.
         if (dataTypesNull(tmpLiteral) && languagesEqual(tmpLiteral)) {
             returnValue = true;
@@ -328,7 +340,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     }
 
     private boolean dataTypesNull(Literal tmpLiteral) {
-        return ((null == getDatatypeURI()) && (null == tmpLiteral.getDatatypeURI()));
+        return ((NULL_URI.equals(getDatatypeURI())) && (NULL_URI.equals(tmpLiteral.getDatatypeURI())));
     }
 
     private boolean languagesEqual(Literal tmpLiteral) {
@@ -337,7 +349,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
 
     private boolean dataTypesEqual(Literal tmpLiteral) {
         URI tmpLiteralDatatype = tmpLiteral.getDatatypeURI();
-        return (null != getDatatypeURI()) && (null != tmpLiteralDatatype) &&
+        return (!NULL_URI.equals(getDatatypeURI())) && (!NULL_URI.equals(tmpLiteralDatatype)) &&
             getDatatypeURI().toString().equals(tmpLiteralDatatype.toString());
     }
 
@@ -349,9 +361,9 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     private String appendType() {
         String appendString = "";
-        if (null != getDatatypeURI()) {
+        if (!NULL_URI.equals(getDatatypeURI())) {
             appendString = "^^<" + getDatatypeURI() + '>';
-        } else if (!"".equals(getLanguage())) {
+        } else if (getLanguage().length() > 0) {
             appendString = '@' + getLanguage();
         }
 

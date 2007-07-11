@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.datatype;
 
+import static org.jrdf.graph.NullURI.NULL_URI;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
 
@@ -70,7 +71,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DatatypeFactoryImpl implements DatatypeFactory {
-    private static final URI NO_DATATYPE = URI.create("");
     private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>();
     private static final Map<Class, ValueCreator> CLASS_TO_CREATOR = new HashMap<Class, ValueCreator>();
     private static final Map<Class, URI> CLASS_TO_URI = new HashMap<Class, URI>();
@@ -79,7 +79,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         // Primitive types
         final DateTimeValue dateTimeValue = new DateTimeValue();
         final StringValue stringValue = new StringValue();
-        addValueCreator(NO_DATATYPE, stringValue);
+        addValueCreator(NULL_URI, stringValue);
         addValueCreator(String.class, XSD.STRING, stringValue);
         addValueCreator(Boolean.class, XSD.BOOLEAN, new BooleanValue());
         addValueCreator(BigDecimal.class, XSD.DECIMAL, new DecimalValue());
@@ -154,7 +154,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
     }
 
     public Value createValue(final String newLexicalForm) {
-        return FACTORY_MAP.get(NO_DATATYPE).create(newLexicalForm);
+        return FACTORY_MAP.get(NULL_URI).create(newLexicalForm);
     }
 
     public Value createValue(final Object newObject) {

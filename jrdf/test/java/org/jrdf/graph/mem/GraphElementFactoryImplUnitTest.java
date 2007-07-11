@@ -64,6 +64,7 @@ import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
+import static org.jrdf.graph.NullURI.NULL_URI;
 
 import java.net.URI;
 
@@ -101,7 +102,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
      * @return The default Literal type.
      */
     public URI getDefaultLiteralType() {
-        return null;
+        return NULL_URI;
     }
 
     /**
@@ -110,7 +111,7 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
      * @return The default Literal language.
      */
     public String getDefaultLiteralLanguage() {
-        return null;
+        return "";
     }
 
 }
