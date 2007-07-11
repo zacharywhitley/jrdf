@@ -87,10 +87,10 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
     Value getValue();
 
     /**
-     * Returns the language code of the literal, or <code>null</code> if no
+     * Returns the language code of the literal, or <code>""</code> if no
      * language specified.
      *
-     * @return the language code of the literal, or <code>null</code> if no
+     * @return the language code of the literal, or <code>""</code> if no
      *         language specified.
      */
     String getLanguage();
@@ -103,13 +103,34 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
     boolean isWellFormedXML();
 
     /**
-     * Returns the URI of the RDF datatype of this resource, or <code>null</code>
+     * Returns the URI of the RDF datatype of this resource, or <code>NULL_URI</code>
      * for an untyped node.
      *
-     * @return the URI of the RDF datatype of this resource, or <code>null</code>
+     * @return the URI of the RDF datatype of this resource, or <code>NULL_URI</code>
      *         for an untyped node.
      */
     URI getDatatypeURI();
+
+    /**
+     * Returns true if the literal is a datatype literal.
+     *
+     * @return true if the literal is a datatype literal.
+     */
+    boolean isDatatypedLiteral();
+
+    /**
+     * Returns true if the literal is a language literal.
+     *
+     * @return true if the literal is a language literal.
+     */
+    boolean isLanguageLiteral();
+
+    /**
+     * Returns true if the literal is a untyped/plain literal.
+     *
+     * @return true if the literal is a untyped/plain literal.
+     */
+    boolean isPlainLiteral();
 
     /**
      * Indicates whether some other object is "equal to" this one.

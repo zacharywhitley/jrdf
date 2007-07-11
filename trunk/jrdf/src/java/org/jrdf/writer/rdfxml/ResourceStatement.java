@@ -65,8 +65,8 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.WriteException;
 import org.jrdf.writer.RdfNamespaceMap;
+import org.jrdf.writer.WriteException;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -119,6 +119,7 @@ public class ResourceStatement implements RdfXmlWritable {
     }
 
 
+    // TODO AN Replace with visitor.
     private void write(PredicateNode predicate, ObjectNode object, PrintWriter writer) throws WriteException {
         if (!(predicate instanceof URIReference)) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
@@ -137,47 +138,37 @@ public class ResourceStatement implements RdfXmlWritable {
     private void write(URIReference predicate, URIReference object, PrintWriter writer) throws WriteException {
         String statement = URI_URI;
         // replace predicate
-        String uri = names.replaceNamespace(predicate);
-        statement = statement.replaceAll("\\$\\{pred\\}", uri);
+        statement = statement.replaceAll("\\$\\{pred\\}", names.replaceNamespace(predicate));
         // replace resource
-        String resource = object.getURI().toString();
-        statement = statement.replaceAll("\\$\\{resource\\}", resource);
+        statement = statement.replaceAll("\\$\\{resource\\}", object.getURI().toString());
         //output
         writer.println(statement);
     }
 
-    private void write(URIReference predicate, Literal object, PrintWriter writer) throws WriteException {
+    private void write(URIReference predicate, Literal literal, PrintWriter writer) throws WriteException {
         String statement = URI_LIT;
         // replace predicate
-        String uri = names.replaceNamespace(predicate);
-        statement = statement.replaceAll("\\$\\{pred\\}", uri);
-        // replace literal
-        String literal = object.getEscapedLexicalForm();
-        statement = statement.replaceAll("\\$\\{lit\\}", literal);
+        statement = statement.replaceAll("\\$\\{pred\\}", names.replaceNamespace(predicate));
+        // replace escapedForm
+        statement = statement.replaceAll("\\$\\{lit\\}", literal.getEscapedLexicalForm());
         // replace any language or datatype
-        String lang = getLanguage(object);
-        String type = getDatatype(object);
-        // one or the other - not both
-        statement = statement.replaceAll("\\$\\{lang\\}", lang);
-        statement = statement.replaceAll("\\$\\{type\\}", type);
+        statement = statement.replaceAll("\\$\\{lang\\}", getLanguage(literal));
+        statement = statement.replaceAll("\\$\\{type\\}", getDatatype(literal));
         // output
         writer.println(statement);
     }
 
-    private String getLanguage(Literal object) {
-        String language = object.getLanguage();
-        if (language != null && !"".equals(language)) {
-            String lang = LANGUAGE;
-            return lang.replaceAll("\\$\\{language\\}", language);
+    private String getLanguage(Literal literal) {
+        if (literal.isLanguageLiteral()) {
+            return LANGUAGE.replaceAll("\\$\\{language\\}", literal.getLanguage());
         } else {
             return "";
         }
     }
 
-    private String getDatatype(Literal object) {
-        if (object.getDatatypeURI() != null) {
-            String type = DATATYPE;
-            return type.replaceAll("\\$\\{datatype\\}", object.getDatatypeURI().toString());
+    private String getDatatype(Literal literal) {
+        if (literal.isDatatypedLiteral()) {
+            return DATATYPE.replaceAll("\\$\\{datatype\\}", literal.getDatatypeURI().toString());
         } else {
             return "";
         }
@@ -186,11 +177,9 @@ public class ResourceStatement implements RdfXmlWritable {
     private void write(URIReference predicate, BlankNode object, PrintWriter writer) throws WriteException {
         String statement = URI_BLANK;
         // replace predicate
-        String uri = names.replaceNamespace(predicate);
-        statement = statement.replaceAll("\\$\\{pred\\}", uri);
+        statement = statement.replaceAll("\\$\\{pred\\}", names.replaceNamespace(predicate));
         // replace resource
-        String nodeId = registry.getNodeId(object);
-        statement = statement.replaceAll("\\$\\{blank\\}", nodeId);
+        statement = statement.replaceAll("\\$\\{blank\\}", registry.getNodeId(object));
         //output
         writer.println(statement);
     }

@@ -152,7 +152,8 @@ public final class ComparisonImpl implements Comparison {
     private boolean compareGraphContents(Graph g1, Graph g2) throws GraphException {
         ClosableIterator<Triple> iterator = g1.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         while (iterator.hasNext()) {
-            if (!g2.contains(iterator.next())) {
+            Triple triple = iterator.next();
+            if (!g2.contains(triple)) {
                 return false;
             }
         }
