@@ -23,7 +23,7 @@ public final class SemanticComparatorImpl implements SemanticComparator {
         }
     }
 
-    private int compareSameLiterals(Literal o1, Literal o2) {
+    private int compareSameLiterals(final Literal o1, final Literal o2) {
         if (o1.isLanguageLiteral()) {
             return comparator.compareLanguage(o1, o2, true);
         } else if (o1.isDatatypedLiteral()) {
@@ -33,7 +33,7 @@ public final class SemanticComparatorImpl implements SemanticComparator {
         }
     }
 
-    private int compareDifferentLiterals(Literal o1, Literal o2, int literalTypeComparison) {
+    private int compareDifferentLiterals(final Literal o1, final Literal o2, final int literalTypeComparison) {
         if (isXsdWithPlainLiteral(o1, o2) || isXsdWithPlainLiteral(o2, o1)) {
             return compareDatatypes(o1, o2);
         } else {
@@ -41,7 +41,7 @@ public final class SemanticComparatorImpl implements SemanticComparator {
         }
     }
 
-    private boolean isXsdWithPlainLiteral(Literal o1, Literal o2) {
+    private boolean isXsdWithPlainLiteral(final Literal o1, final Literal o2) {
         return o1.isDatatypedLiteral() && o1.getDatatypeURI().equals(XSD.STRING) && o2.isPlainLiteral();
     }
 
