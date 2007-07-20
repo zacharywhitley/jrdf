@@ -81,6 +81,7 @@ public class BlankNodeRegistryImplUnitTest extends TestCase {
     private static final String[] PARAM_NAMES = {"node"};
     private static final Class[] PARAM_TYPES = {BlankNode.class};
     private static final ParameterDefinition GET_NODEID_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
+    private static final String FIELD_1_NAME = "blankNodeList";
     private List<BlankNode> bNodes;
     private BlankNode blankNode;
     private BlankNodeRegistry nodeRegistry;
@@ -88,8 +89,8 @@ public class BlankNodeRegistryImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(BlankNodeRegistry.class, BlankNodeRegistryImpl.class);
         checkConstructor(BlankNodeRegistryImpl.class, Modifier.PUBLIC);
-        checkFieldIsOfTypePrivateAndFinal(BlankNodeRegistryImpl.class, List.class, "bNodes");
-        assertNotNull(getFieldValue(new BlankNodeRegistryImpl(), "bNodes"));
+        checkFieldIsOfTypePrivateAndFinal(BlankNodeRegistryImpl.class, List.class, FIELD_1_NAME);
+        assertNotNull(getFieldValue(new BlankNodeRegistryImpl(), FIELD_1_NAME));
     }
 
     public void testBadParams() throws Exception {
@@ -128,7 +129,7 @@ public class BlankNodeRegistryImplUnitTest extends TestCase {
     }
 
     private void insertFieldAndCall(int nodeId) {
-        insertFieldValue(nodeRegistry, "bNodes", bNodes);
+        insertFieldValue(nodeRegistry, FIELD_1_NAME, bNodes);
         factory.replay();
         String s = nodeRegistry.getNodeId(blankNode);
         factory.verify();

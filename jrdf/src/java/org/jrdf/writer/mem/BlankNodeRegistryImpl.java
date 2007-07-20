@@ -65,28 +65,32 @@ import org.jrdf.writer.BlankNodeRegistry;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * A registry of BlankNodes that are encountered while writing a Graph.
- *
- * @author TurnerRX
- */
 public final class BlankNodeRegistryImpl implements BlankNodeRegistry {
-    private final List<BlankNode> bNodes = new LinkedList<BlankNode>();
+    private final List<BlankNode> blankNodeList;
+
+    public BlankNodeRegistryImpl() {
+        blankNodeList = new LinkedList<BlankNode>();
+    }
+
+    public BlankNodeRegistryImpl(List<BlankNode> newBlankNodeList) {
+        this.blankNodeList = newBlankNodeList;
+    }
 
     public String getNodeId(BlankNode node) {
         checkNotNull(node);
-        int id = bNodes.indexOf(node);
+        int id = blankNodeList.indexOf(node);
         if (id < 0) {
-            bNodes.add(node);
-            id = bNodes.indexOf(node);
+            blankNodeList.add(node);
+            id = blankNodeList.indexOf(node);
         }
         return "bNode_" + id;
     }
 
-    /**
-     * Reset the associations between blank nodes and node ids.
-     */
-    public void reset() {
-        bNodes.clear();
+    public void clear() {
+        blankNodeList.clear();
+    }
+
+    public void close() {
+        // Nothing.
     }
 }

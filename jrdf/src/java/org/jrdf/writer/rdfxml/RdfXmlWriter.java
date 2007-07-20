@@ -138,7 +138,7 @@ public class RdfXmlWriter implements RdfWriter {
             WriteException {
         try {
             // Initialize values.
-            blankNodeRegistry.reset();
+            blankNodeRegistry.clear();
             names.reset();
             names.load(graph);
 
