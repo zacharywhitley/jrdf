@@ -65,6 +65,8 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -135,6 +137,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
+    private static final String FAILED_TO_ADD_TRIPLE = "Failed to add triple.";
 
     /**
      * Create test instance.
@@ -244,34 +247,34 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(4, graph.getNumberOfTriples());
 
         // Try to add nulls
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.add(null, ref1, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.add(ref1, null, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_ADD_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.add(ref1, ref1, null);
             }
         });
 
         // Try to add any nodes
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.add(ANY_SUBJECT_NODE, ref1, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.add(ref1, ANY_PREDICATE_NODE, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_ADD_ANY_NODE_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.add(ref1, ref1, ANY_OBJECT_NODE);
             }
@@ -379,36 +382,36 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(0, graph.getNumberOfTriples());
 
         // Try to add nulls
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.remove(null, ref1, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.remove(ref1, null, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CANT_REMOVE_NULL_MESSAGE, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.remove(ref1, ref1, null);
             }
         });
 
         // Try to add any nodes
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
+        assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
             new AssertThrows.Block() {
                 public void execute() throws Throwable {
                     graph.remove(ANY_SUBJECT_NODE, ref1, ref1);
                 }
             });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
+        assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
             new AssertThrows.Block() {
                 public void execute() throws Throwable {
                     graph.remove(ref1, ANY_PREDICATE_NODE, ref1);
                 }
             });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
+        assertThrows(IllegalArgumentException.class, CANT_REMOVE_ANY_NODE_MESSAGE,
             new AssertThrows.Block() {
                 public void execute() throws Throwable {
                     graph.remove(ref1, ref1, ANY_OBJECT_NODE);
@@ -495,17 +498,17 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertFalse(newGraph.contains(blank2, ref2, ANY_OBJECT_NODE));
 
         // Try to test for containing nulls
-        AssertThrows.assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.contains(null, ref1, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.contains(ref1, null, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, CONTAIN_CANT_USE_NULLS, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.contains(ref1, ref1, null);
             }
@@ -653,17 +656,17 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         it.close();
 
         // Try to test for finding nulls
-        AssertThrows.assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.find(null, ref1, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.find(ref1, null, ref1);
             }
         });
-        AssertThrows.assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, FIND_CANT_USE_NULLS, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 graph.find(ref1, ref1, null);
             }
@@ -745,6 +748,40 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
         checkFullIteratorRemoval(blank2, ref1, ANY_OBJECT_NODE, 2);
         checkFullIteratorRemoval(ref1, ref2, l2, 1);
+    }
+
+    /**
+     * Test blank node semantics across graphs - throws exception when adding blank node across graphs. Throws
+     * an exception when the node ids exist in the graph but return different blank nodes.
+     */
+    public void testBlankNodesAcrossGraphs() throws Exception {
+        final Graph newGraph = newGraph();
+        GraphElementFactory graphElementFactory = newGraph.getElementFactory();
+        URI newURI = new URI("http://namespace#somevalue");
+        final URIReference newRes = graphElementFactory.createResource(newURI);
+        newGraph.add(newRes, newRes, newRes);
+        assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
+            public void execute() throws Throwable {
+                newGraph.add(blank1, newRes, newRes);
+            }
+        });
+    }
+
+    /**
+     * Test blank node semantics across graphs - throws exception when adding blank node across graphs.  Throws an
+     * exception when the node id does not exist and returns null.
+     */
+    public void testBlankNodesAcrossGraphs2() throws Exception {
+        final Graph newGraph = newGraph();
+        GraphElementFactory graphElementFactory = newGraph.getElementFactory();
+        URI newURI = new URI("http://namespace#somevalue");
+        final URIReference newRes = graphElementFactory.createResource(newURI);
+        newGraph.add(newRes, newRes, newRes);
+        assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
+            public void execute() throws Throwable {
+                newGraph.add(blank2, newRes, newRes);
+            }
+        });
     }
 
     private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,

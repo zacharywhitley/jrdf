@@ -449,10 +449,14 @@ public class GraphImpl implements Graph, Serializable {
 
         // Get local node values also tests that it's a valid subject, predicate
         // and object.
-        Long[] values = nodePool.localize(subject, predicate, object);
-        longIndex012.add(values);
-        longIndex120.add(values[1], values[2], values[0]);
-        longIndex201.add(values[2], values[0], values[1]);
+        try {
+            Long[] values = nodePool.localize(subject, predicate, object);
+            longIndex012.add(values);
+            longIndex120.add(values[1], values[2], values[0]);
+            longIndex201.add(values[2], values[0], values[1]);
+        } catch (GraphException ge) {
+            throw new GraphException("Failed to add triple.", ge);
+        }
     }
 
     @SuppressWarnings({

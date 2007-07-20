@@ -113,7 +113,6 @@ public final class NodePoolMemImpl implements NodePoolMem {
         return nodePool.get(id);
     }
 
-
     public Long getNodeIdByString(String str) {
         return stringPool.get(str);
     }
@@ -174,7 +173,7 @@ public final class NodePoolMemImpl implements NodePoolMem {
         Long subjectValue = null;
         if (ANY_SUBJECT_NODE != first) {
             if (first instanceof BlankNodeImpl) {
-                subjectValue = ((MemNode) first).getId();
+                subjectValue = getBlankNode(first);
             } else {
                 subjectValue = getNodeIdByString(String.valueOf(first));
             }
@@ -205,7 +204,7 @@ public final class NodePoolMemImpl implements NodePoolMem {
         Long objectValue = null;
         if (ANY_OBJECT_NODE != third) {
             if (third instanceof BlankNodeImpl) {
-                objectValue = ((MemNode) third).getId();
+                objectValue = getBlankNode(third);
             } else if (third instanceof LiteralMutableId) {
                 objectValue = getNodeIdByString(((Literal) third).getEscapedForm());
             } else {
@@ -218,5 +217,18 @@ public final class NodePoolMemImpl implements NodePoolMem {
         }
 
         return objectValue;
+    }
+
+    private Long getBlankNode(Node blankNode) throws GraphException {
+        Long nodeId = ((MemNode) blankNode).getId();
+        Node node = nodePool.get(nodeId);
+        if (node == null) {
+            throw new GraphException("The node id was not found in the graph: " + nodeId);
+        }
+        if (!blankNode.equals(node)) {
+            throw new GraphException("The node returned by the nodeId (" + nodeId + ") was not the same blank " +
+                "node.  Got: " + node + ", expected: " + blankNode);
+        }
+        return nodeId;
     }
 }

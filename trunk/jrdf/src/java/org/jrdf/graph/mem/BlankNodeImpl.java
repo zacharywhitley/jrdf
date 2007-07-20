@@ -172,7 +172,6 @@ public class BlankNodeImpl extends AbstractBlankNode implements MemNode, Seriali
      * @return String
      */
     public String toString() {
-
         return uid + "#" + id;
     }
 

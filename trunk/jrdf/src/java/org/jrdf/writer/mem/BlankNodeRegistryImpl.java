@@ -62,8 +62,8 @@ import org.jrdf.graph.BlankNode;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * A registry of BlankNodes that are encountered while writing a Graph.
@@ -71,11 +71,11 @@ import java.util.ArrayList;
  * @author TurnerRX
  */
 public final class BlankNodeRegistryImpl implements BlankNodeRegistry {
-    private final List<BlankNode> bNodes = new ArrayList<BlankNode>();
+    private final List<BlankNode> bNodes = new LinkedList<BlankNode>();
 
     public String getNodeId(BlankNode node) {
         checkNotNull(node);
-        long id = bNodes.indexOf(node);
+        int id = bNodes.indexOf(node);
         if (id < 0) {
             bNodes.add(node);
             id = bNodes.indexOf(node);
