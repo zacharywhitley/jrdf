@@ -62,13 +62,13 @@ package org.jrdf.writer;
 import org.jrdf.graph.BlankNode;
 
 /**
- * A simple interface for turning blank nodes into their String representation.  The oppose of PaserBlankNodeFactory.
+ * A registry of BlankNodes that are encountered while writing a Graph.  Allows the same BlankNode object to return
+ * with the same String value.  This does the converse job of {@see org.jrdf.parser.ParserBlankNodeFactory}
+ * (which maps Strings to BlankNodes).
  *
  * @author Andrew Newman
  * @author TurnerRX
- * @version $Id$
  */
-// TODO (AN) Combine this with parser's PaserBlankNodeFactory
 public interface BlankNodeRegistry {
     /**
      * If the node has already been registered, it's node Id is returned,
@@ -82,5 +82,10 @@ public interface BlankNodeRegistry {
     /**
      * Reset the associations between blank nodes and node ids.
      */
-    void reset();
+    void clear();
+
+    /**
+     * Close any resource used by the blank node factory.
+     */
+    void close();
 }

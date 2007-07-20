@@ -68,10 +68,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A factory for BlankNodes that uses a Map to keep track of the BlankNodes
- * that have been allocated by {@link #createBlankNode(String)} so that the
- * same BlankNode object can be returned for a given <code>nodeID</code>.
+ * A factory for BlankNodes that uses a Map to keep track of the BlankNodes that have been allocated by
+ * {@link #createBlankNode(String)} so that the same BlankNode object can be returned for a given <code>nodeID</code>.
+ * This does the converse job of {@see org.jrdf.writer.BlankNodeRegistry} (which maps BlankNodes to Strings).
  *
+ * @author Andrew Newman
  * @author David Makepeace
  * @version $Revision$
  */
@@ -121,7 +122,6 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
     }
 
     public void close() {
-        // Nothing!
+        // Nothing
     }
-
 }
