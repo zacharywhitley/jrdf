@@ -1,8 +1,8 @@
 package org.jrdf.writer.mem;
 
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnySubjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.PredicateNode;
@@ -37,8 +37,7 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
 
     public void load(Graph graph) throws GraphException {
         // check for blank nodes
-        ClosableIterator<Triple> iter = graph.find(AnySubjectNode.ANY_SUBJECT_NODE, AnyPredicateNode.ANY_PREDICATE_NODE,
-            AnyObjectNode.ANY_OBJECT_NODE);
+        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Triple triple;
         while (iter.hasNext()) {
             triple = iter.next();
