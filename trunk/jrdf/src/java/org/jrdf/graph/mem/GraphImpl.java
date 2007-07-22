@@ -103,6 +103,8 @@ import java.util.Set;
 public class GraphImpl implements Graph, Serializable {
 
     // FIXME TJA: Test-drive toString()
+    // TODO AN: Remove indexes and replace with graphHandlers.  To make different kinds of Graphs - ones that use
+    // localization and others that don't.
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -519,6 +521,15 @@ public class GraphImpl implements Graph, Serializable {
 
     public boolean isEmpty() throws GraphException {
         return longIndex012.getSize() == 0L;
+    }
+
+    public void clear() {
+        // TODO AN: Should this work regardless of failure - or rollback?
+        // TODO AN: Improve GraphHandler API to do clearing of indexes instead of direct clearing.
+        longIndex012.clear();
+        longIndex120.clear();
+        longIndex201.clear();
+        nodePool.clear();
     }
 
     public void close() {

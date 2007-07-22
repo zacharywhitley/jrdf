@@ -145,6 +145,10 @@ public final class LongIndexMem implements LongIndex, Serializable {
         }
     }
 
+    public void clear() {
+        index.clear();
+    }
+
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
         return index.entrySet().iterator();
     }

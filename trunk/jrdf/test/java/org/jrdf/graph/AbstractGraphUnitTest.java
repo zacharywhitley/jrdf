@@ -784,6 +784,15 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         });
     }
 
+    public void testClear() throws Exception {
+        addTriplesToGraph();
+        assertEquals(3, graph.getNumberOfTriples());
+        assertEquals(true, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
+        graph.clear();
+        assertEquals(0, graph.getNumberOfTriples());
+        assertEquals(false, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
+    }
+
     private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
         int expectedFoundTriples)
         throws GraphException, TripleFactoryException {
