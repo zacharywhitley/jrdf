@@ -63,7 +63,6 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.index.graphhandler.AbstractGraphHandler;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 
@@ -77,16 +76,16 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphHandler012 extends AbstractGraphHandler implements GraphHandler {
+public class GraphHandler012 extends AbstractGraphHandler {
     private LongIndex index012;
     private LongIndex index120;
     private LongIndex index201;
 
-    public GraphHandler012(LongIndex[] indexes, NodePool nodePool) {
+    public GraphHandler012(LongIndex[] indexes, NodePool newNodePool) {
         this.index012 = indexes[0];
         this.index120 = indexes[1];
         this.index201 = indexes[2];
-        this.nodePool = nodePool;
+        this.nodePool = newNodePool;
     }
 
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {

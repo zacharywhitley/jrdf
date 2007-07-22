@@ -92,7 +92,14 @@ public interface NodePool {
      * @param first  The first node.
      * @param second The second node.
      * @param third  The last node.
+     * @return an array of longs that match the given first, second and third nodes.
+     *
      * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
      */
     Long[] localize(Node first, Node second, Node third) throws GraphException;
+
+    /**
+     * Removes all entries from the nodepool.
+     */
+    void clear();
 }

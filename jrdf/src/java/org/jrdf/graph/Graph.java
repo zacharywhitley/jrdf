@@ -158,6 +158,11 @@ public interface Graph {
     void add(Iterator<Triple> triples) throws GraphException;
 
     /**
+     * Removes all statements and resource related to those statements from the graph.
+     */
+    void clear();
+
+    /**
      * Closes any resources associated with this graph.
      */
     void close();

@@ -169,6 +169,12 @@ public final class NodePoolMemImpl implements NodePoolMem {
         return localValues;
     }
 
+    public void clear() {
+        nodePool.clear();
+        stringPool.clear();
+        nextNode = 1L;
+    }
+
     private Long convertSubject(Node first) throws GraphException {
         Long subjectValue = null;
         if (ANY_SUBJECT_NODE != first) {

@@ -109,6 +109,11 @@ public interface LongIndex {
     void remove(Long first, Long second, Long third) throws GraphException;
 
     /**
+     * Removes all triples from this index.
+     */
+    void clear();
+
+    /**
      * Returns an iterator which contains all the elements in the graph as a
      * collections of distinct longs, contains a map of longs to other longs.
      * This prevents any duplication.
