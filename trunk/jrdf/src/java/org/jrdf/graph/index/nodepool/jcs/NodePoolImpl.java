@@ -59,32 +59,27 @@
 
 package org.jrdf.graph.index.nodepool.jcs;
 
+import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.engine.control.CompositeCacheManager;
-import org.apache.jcs.JCS;
-import org.apache.jcs.access.exception.CacheException;
-import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.LocalizedNode;
 
-import java.util.Properties;
-import java.util.Collection;
 import java.io.File;
+import java.util.Collection;
+import java.util.Properties;
 
 public class NodePoolImpl implements NodePool {
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
     private static final String REGION = "nodepool";
     private final CompositeCacheManager manager;
-    private JCS cache;
+    private GroupCacheAccess cache;
 
-    public NodePoolImpl(CompositeCacheManager manager) {
-        this.manager = manager;
-        configure(manager);
-        try {
-            cache = JCS.getInstance(REGION);
-        } catch (CacheException e) {
-            throw new RuntimeException("Cannot get cache", e);
-        }
+    public NodePoolImpl(CompositeCacheManager newManager) {
+        this.manager = newManager;
+        configure(newManager);
+        cache = new GroupCacheAccess(manager.getCache(REGION));
     }
 
     private void configure(CompositeCacheManager manager) {
