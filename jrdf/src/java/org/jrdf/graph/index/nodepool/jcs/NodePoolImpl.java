@@ -60,21 +60,32 @@
 package org.jrdf.graph.index.nodepool.jcs;
 
 import org.apache.jcs.access.GroupCacheAccess;
+import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.control.CompositeCacheManager;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Literal;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.LocalizedNode;
+import org.jrdf.graph.mem.BlankNodeImpl;
+import org.jrdf.graph.mem.LiteralMutableId;
 
 import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
 
 public class NodePoolImpl implements NodePool {
+    private static final int TRIPLE = 3;
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
     private static final String REGION = "nodepool";
     private final CompositeCacheManager manager;
     private GroupCacheAccess cache;
+    private long nextNode = 1L;
+
 
     public NodePoolImpl(CompositeCacheManager newManager) {
         this.manager = newManager;
@@ -99,30 +110,133 @@ public class NodePoolImpl implements NodePool {
     }
 
     public Node getNodeById(Long id) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return (Node) cache.get(id);
     }
 
     public Long getNodeIdByString(String str) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public Long[] localize(Node first, Node second, Node third) throws GraphException {
-        return new Long[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public Collection<Node> getNodePoolValues() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return (Long) cache.get(str);
     }
 
     public void registerNode(LocalizedNode node) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        // get the id for this node
+        Long id = node.getId();
+
+        // look the node up to see if it already exists in the graph
+        LocalizedNode existingNode = (LocalizedNode) cache.get(id);
+        if (null != existingNode) {
+            // check that the node is equal to the one that is already in the graph
+            if (existingNode.equals(node)) {
+                return;
+            }
+            // node does not match
+            throw new IllegalArgumentException("Node conflicts with one already in the graph");
+        }
+        // add the node
+        tryAdd(id, node);
+    }
+
+    private void tryAdd(Long id, LocalizedNode node) {
+        try {
+            cache.put(id, node);
+            // check if the node has a string representation
+            if (!(node instanceof BlankNode)) {
+                if (node instanceof Literal) {
+                    cache.put(((Literal) node).getEscapedForm(), node.getId());
+                } else {
+                    cache.put(node.toString(), node.getId());
+                }
+            }
+            // update the nextNode counter to a unique number
+            if (!(id < nextNode)) {
+                nextNode = id + 1L;
+            }
+        } catch (CacheException e) {
+            throw new RuntimeException("Failed to add: " + id);
+        }
+    }
+
+    public Collection<Node> getNodePoolValues() {
+        throw new UnsupportedOperationException();
     }
 
     public Long getNextNodeId() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return nextNode++;
+    }
+
+    public Long[] localize(Node first, Node second, Node third) throws GraphException {
+        Long[] localValues = new Long[TRIPLE];
+
+        // convert the nodes to local memory nodes for convenience
+        localValues[0] = convertSubject(first);
+        localValues[1] = convertPredicate(second);
+        localValues[2] = convertObject(third);
+        return localValues;
     }
 
     public void clear() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        throw new UnsupportedOperationException();
+    }
+
+    private Long convertSubject(Node first) throws GraphException {
+        Long subjectValue = null;
+        if (ANY_SUBJECT_NODE != first) {
+            if (first instanceof BlankNodeImpl) {
+                subjectValue = getBlankNode(first);
+            } else {
+                subjectValue = getNodeIdByString(String.valueOf(first));
+            }
+
+            if (null == subjectValue) {
+                throw new GraphException("Subject does not exist in graph: " + first);
+            }
+        }
+
+        return subjectValue;
+    }
+
+    private Long convertPredicate(Node second) throws GraphException {
+        Long predicateValue = null;
+        if (ANY_PREDICATE_NODE != second) {
+            predicateValue = getNodeIdByString(String.valueOf(second));
+
+            if (null == predicateValue) {
+                throw new GraphException("Predicate does not exist in graph: " + second);
+            }
+        }
+
+        return predicateValue;
+    }
+
+    // TODO (AN) String of instanceof should be changed to calls by type.
+    private Long convertObject(Node third) throws GraphException {
+        Long objectValue = null;
+        if (ANY_OBJECT_NODE != third) {
+            if (third instanceof BlankNodeImpl) {
+                objectValue = getBlankNode(third);
+            } else if (third instanceof LiteralMutableId) {
+                objectValue = getNodeIdByString(((Literal) third).getEscapedForm());
+            } else {
+                objectValue = getNodeIdByString(String.valueOf(third));
+            }
+
+            if (null == objectValue) {
+                throw new GraphException("Object does not exist in graph: " + third);
+            }
+        }
+
+        return objectValue;
+    }
+
+    private Long getBlankNode(Node blankNode) throws GraphException {
+        Long nodeId = ((LocalizedNode) blankNode).getId();
+        Node node = (Node) cache.get(nodeId);
+        if (node == null) {
+            throw new GraphException("The node id was not found in the graph: " + nodeId);
+        }
+        if (!blankNode.equals(node)) {
+            throw new GraphException("The node returned by the nodeId (" + nodeId + ") was not the same blank " +
+                "node.  Got: " + node + ", expected: " + blankNode);
+        }
+        return nodeId;
     }
 }

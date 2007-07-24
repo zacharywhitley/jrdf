@@ -72,6 +72,7 @@ import org.jrdf.graph.mem.LocalizedNode;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collection;
 
 /**
  * Stuff goes in here.
@@ -152,7 +153,7 @@ public final class NodePoolImpl implements NodePool {
     }
 
 
-    public java.util.Collection<Node> getNodePoolValues() {
+    public Collection<Node> getNodePoolValues() {
         return nodePool.values();
     }
 
