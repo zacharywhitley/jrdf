@@ -90,6 +90,28 @@ public interface NodePool {
     Long getNodeIdByString(String str);
 
     /**
+     * Adds a node that was not created by this pool but still uses the MemNode interface.
+     *
+     * @param node The node to add.
+     * @throws IllegalArgumentException The node conflicts with one already in use.
+     */
+    void registerNode(LocalizedNode node);
+
+    /**
+     * Returns all the nodes in the node pool.
+     *
+     * @return The node pool.
+     */
+    Collection<Node> getNodePoolValues();
+
+    /**
+     * Returns the current next node Id increments it by one.
+     *
+     * @return the current next node Id.
+     */
+    Long getNextNodeId();
+
+    /**
      * Converts a globalized set of triple objects to an array of longs.
      *
      * @param first  The first node.
@@ -100,28 +122,6 @@ public interface NodePool {
      * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
      */
     Long[] localize(Node first, Node second, Node third) throws GraphException;
-
-    /**
-     * Returns all the nodes in the node pool.
-     *
-     * @return The node pool.
-     */
-    Collection<Node> getNodePoolValues();
-
-    /**
-     * Adds a node that was not created by this pool but still uses the MemNode interface.
-     *
-     * @param node The node to add.
-     * @throws IllegalArgumentException The node conflicts with one already in use.
-     */
-    void registerNode(LocalizedNode node);
-
-    /**
-     * Returns the current next node Id increments it by one.
-     *
-     * @return the current next node Id.
-     */
-    Long getNextNodeId();
 
     /**
      * Removes all entries from the nodepool.

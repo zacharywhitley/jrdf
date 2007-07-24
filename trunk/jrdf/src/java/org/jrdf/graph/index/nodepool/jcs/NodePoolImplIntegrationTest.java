@@ -64,8 +64,11 @@ import org.jrdf.graph.index.nodepool.NodePool;
 import junit.framework.TestCase;
 
 public class NodePoolImplIntegrationTest extends TestCase {
+    private CompositeCacheManager manager;
+    private NodePool nodePool;
+
     public void testInit() {
-        CompositeCacheManager manager = new CompositeCacheManager();
-        NodePool nodePool = new NodePoolImpl(manager);
+        manager = new CompositeCacheManager();
+        nodePool = new NodePoolImpl(manager);
     }
 }
