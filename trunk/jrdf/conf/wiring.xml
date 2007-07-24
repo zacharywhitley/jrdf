@@ -6,7 +6,7 @@
     <!-- Graph Classes -->
     <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false"/>
 
-    <bean class="org.jrdf.graph.index.nodepool.mem.NodePoolImpl" singleton="false"/>
+    <bean class="org.jrdf.graph.index.nodepool.map.MemNodePoolFactory" singleton="true"/>
 
     <bean id="graphFactory" class="org.jrdf.graph.mem.OrderedGraphFactoryImpl" singleton="false">
         <constructor-arg>
@@ -16,7 +16,7 @@
                 <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
             </list>
         </constructor-arg>
-        <constructor-arg ref="org.jrdf.graph.index.nodepool.mem.NodePoolImpl"/>
+        <constructor-arg ref="org.jrdf.graph.index.nodepool.map.MemNodePoolFactory"/>
         <constructor-arg>
             <ref bean="nodeComparator"/>
         </constructor-arg>

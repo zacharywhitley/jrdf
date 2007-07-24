@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.index.nodepool.mem;
+package org.jrdf.graph.index.nodepool.map;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -65,6 +65,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralMutableId;
@@ -101,12 +102,12 @@ public final class NodePoolImpl implements NodePool {
      */
     private long nextNode = 1L;
 
-    public NodePoolImpl() {
+    NodePoolImpl() {
         nodePool = new HashMap<Long, Node>();
         stringPool = new HashMap<String, Long>();
     }
 
-    public NodePoolImpl(Map<Long, Node> newNodePool, Map<String, Long> newStringPool) {
+    NodePoolImpl(Map<Long, Node> newNodePool, Map<String, Long> newStringPool) {
         nodePool = newNodePool;
         stringPool = newStringPool;
     }
@@ -131,18 +132,18 @@ public final class NodePoolImpl implements NodePool {
                 return;
             }
             // node does not match
-            throw new IllegalArgumentException("Node conflicts with one already in the graph");
+            throw new IllegalArgumentException("Node conflicts with one already in the graph. " +
+                "Existing node: " + existingNode + ", new node: " + node);
         }
         // add the node
         nodePool.put(id, node);
 
         // check if the node has a string representation
         if (!(node instanceof BlankNode)) {
-
             if (node instanceof Literal) {
                 stringPool.put(((Literal) node).getEscapedForm(), node.getId());
             } else {
-                stringPool.put(node.toString(), node.getId());
+                stringPool.put(((URIReference) node).getURI().toString(), node.getId());
             }
         }
 
@@ -183,7 +184,7 @@ public final class NodePoolImpl implements NodePool {
             if (first instanceof BlankNodeImpl) {
                 subjectValue = getBlankNode(first);
             } else {
-                subjectValue = getNodeIdByString(String.valueOf(first));
+                subjectValue = getNodeIdByString(((URIReference) first).getURI().toString());
             }
 
             if (null == subjectValue) {
@@ -197,7 +198,7 @@ public final class NodePoolImpl implements NodePool {
     private Long convertPredicate(Node second) throws GraphException {
         Long predicateValue = null;
         if (ANY_PREDICATE_NODE != second) {
-            predicateValue = getNodeIdByString(String.valueOf(second));
+            predicateValue = getNodeIdByString(((URIReference) second).getURI().toString());
 
             if (null == predicateValue) {
                 throw new GraphException("Predicate does not exist in graph: " + second);
@@ -216,7 +217,7 @@ public final class NodePoolImpl implements NodePool {
             } else if (third instanceof LiteralMutableId) {
                 objectValue = getNodeIdByString(((Literal) third).getEscapedForm());
             } else {
-                objectValue = getNodeIdByString(String.valueOf(third));
+                objectValue = getNodeIdByString(((URIReference) third).getURI().toString());;
             }
 
             if (null == objectValue) {

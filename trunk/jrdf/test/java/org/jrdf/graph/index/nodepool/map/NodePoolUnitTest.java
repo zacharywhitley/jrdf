@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.index.nodepool.mem;
+package org.jrdf.graph.index.nodepool.map;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.index.nodepool.NodePool;
@@ -64,7 +64,6 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import java.lang.reflect.Modifier;
 import java.util.Map;
 
 /**
@@ -76,7 +75,7 @@ import java.util.Map;
 public class NodePoolUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(NodePool.class, NodePoolImpl.class);
-        checkConstructor(NodePoolImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
-        checkConstructor(NodePoolImpl.class, Modifier.PUBLIC, Map.class, Map.class);
+        checkConstructor(NodePoolImpl.class, 0, NO_ARG_CONSTRUCTOR);
+        checkConstructor(NodePoolImpl.class, 0, Map.class, Map.class);
     }
 }

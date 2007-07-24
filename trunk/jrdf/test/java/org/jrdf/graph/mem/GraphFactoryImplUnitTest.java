@@ -61,7 +61,7 @@ package org.jrdf.graph.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -69,6 +69,6 @@ import java.lang.reflect.Modifier;
 public class GraphFactoryImplUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(GraphFactory.class, GraphFactoryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(GraphFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class, NodePool.class);
+        ClassPropertiesTestUtil.checkConstructor(GraphFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class, NodePoolFactory.class);
     }
 }

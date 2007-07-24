@@ -60,13 +60,10 @@
 package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.TestJRDFFactory;
 import org.jrdf.JRDFFactory;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.operation.Comparison;
 
@@ -101,8 +98,7 @@ public class ComparisonImplIntegrationTest extends TestCase {
         assertEquals(areEqual, comparison.groundedGraphsAreEqual(graph1, graph2));
     }
 
-    private void addTriple(Graph graph, URI uri) throws GraphElementFactoryException, TripleFactoryException,
-        GraphException {
+    private void addTriple(Graph graph, URI uri) throws Exception {
         URIReference resource = graph.getElementFactory().createResource(uri);
         Triple triple = graph.getTripleFactory().createTriple(resource, resource, resource);
         graph.add(triple);

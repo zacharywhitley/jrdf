@@ -59,6 +59,8 @@
 
 package org.jrdf.example;
 
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -67,8 +69,6 @@ import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.EscapeURL;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -84,6 +84,14 @@ public final class RdfXmlParserExample {
 
     private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
     private static final String DEFAULT_RDF_URL = "http://rss.slashdot.org/Slashdot/slashdot";
+
+//    LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+//    NodePool nodePool = new JeNodePoolFactory().createNodePool();
+//    NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+//    GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePool, comparator);
+//    Parser parser = new RdfXmlParser(factory.getGraph().getElementFactory());
+//    parser.parse(in, EscapeURL.toEscapedString(url));
+
 
     public static void main(String[] args) throws Exception {
         URL url = getDocumentURL(args);
