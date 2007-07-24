@@ -67,6 +67,7 @@ import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.graph.mem.iterator.OrderedIteratorFactoryImpl;
@@ -79,20 +80,23 @@ import org.jrdf.graph.mem.iterator.OrderedIteratorFactoryImpl;
  */
 public class OrderedGraphFactoryImpl implements GraphFactory {
     private LongIndex[] longIndexes;
-    private NodePool nodePool;
+    private NodePoolFactory nodePoolFactory;
     private GraphElementFactory elementFactory;
     private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;
+    private NodePool nodePool;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePool newNodePool, NodeComparator nodeComparator) {
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
+        NodeComparator nodeComparator) {
         this.longIndexes = newLongIndexes;
-        this.nodePool = newNodePool;
-        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, newNodePool),
-            new GraphHandler120(newLongIndexes, newNodePool), new GraphHandler201(newLongIndexes, newNodePool)};
+        this.nodePoolFactory = newNodePoolFactory;
+        nodePool = nodePoolFactory.createNodePool();
+        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
+            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);
-        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, newNodePool, newLongIndexes[0],
+        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], nodeComparator);
-        this.elementFactory = new GraphElementFactoryImpl(newNodePool);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool);
     }
 
     public Graph getGraph() {

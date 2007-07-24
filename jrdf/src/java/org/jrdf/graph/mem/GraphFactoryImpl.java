@@ -66,6 +66,7 @@ import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 
@@ -77,18 +78,20 @@ import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
  */
 public final class GraphFactoryImpl implements GraphFactory {
     private LongIndex[] longIndexes;
-    private NodePool nodePool;
+    private NodePoolFactory nodePoolFactory;
     private GraphHandler012 handler012;
     private GraphElementFactory elementFactory;
     private IteratorFactory iteratorFactory;
+    private NodePool nodePool;
 
-    public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePool newNodePool) {
+    public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
         this.longIndexes = newLongIndexes;
-        this.nodePool = newNodePool;
-        this.handler012 = new GraphHandler012(newLongIndexes, newNodePool);
+        this.nodePoolFactory = newNodePoolFactory;
+        nodePool = nodePoolFactory.createNodePool();
+        this.handler012 = new GraphHandler012(newLongIndexes, nodePool);
         this.iteratorFactory = new IteratorFactoryImpl(newLongIndexes, new GraphHandler[]{handler012,
-            new GraphHandler120(newLongIndexes, newNodePool), new GraphHandler201(newLongIndexes, newNodePool)});
-        this.elementFactory = new GraphElementFactoryImpl(newNodePool);
+            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)});
+        this.elementFactory = new GraphElementFactoryImpl(nodePool);
     }
 
     public Graph getGraph() {

@@ -77,7 +77,7 @@ import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.index.nodepool.mem.NodePoolImpl;
+import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
@@ -168,12 +168,12 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, GraphElementFactory elementFactory,
+    public GraphImpl(LongIndex[] longIndexes, NodePool nodePool, GraphElementFactory elementFactory,
         GraphHandler012 graphHandler, IteratorFactory newIteratorFactory) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
-        this.nodePool = newNodePool;
+        this.nodePool = nodePool;
         this.elementFactory = elementFactory;
         this.graphHandler012 = graphHandler;
         this.iteratorFactory = newIteratorFactory;
@@ -192,7 +192,7 @@ public class GraphImpl implements Graph, Serializable {
         LongIndex[] indexes = {longIndex012, longIndex120, longIndex201};
 
         if (null == nodePool) {
-            nodePool = new NodePoolImpl();
+            nodePool = new MemNodePoolFactory().createNodePool();
         }
 
         if (null == elementFactory) {

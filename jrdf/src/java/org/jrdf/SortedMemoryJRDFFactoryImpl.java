@@ -4,8 +4,8 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.index.nodepool.mem.NodePoolImpl;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
@@ -44,8 +44,8 @@ import org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine;
 import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
 import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
 import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl;
-import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
 import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
+import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
 import org.jrdf.sparql.SparqlConnection;
@@ -93,9 +93,9 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
 
     public Graph getNewGraph() {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        NodePool nodePool = new NodePoolImpl();
+        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
-        GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePool, comparator);
+        GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();
     }
 
