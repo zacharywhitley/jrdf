@@ -4,8 +4,8 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl;
+import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.nodepool.mem.NodePoolImpl;
 import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
@@ -93,7 +93,7 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
 
     public Graph getNewGraph() {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        NodePoolMem nodePool = new NodePoolMemImpl();
+        NodePool nodePool = new NodePoolImpl();
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
         GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePool, comparator);
         return orderedGraphFactory.getGraph();

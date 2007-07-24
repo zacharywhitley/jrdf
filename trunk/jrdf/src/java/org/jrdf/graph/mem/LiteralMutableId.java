@@ -64,6 +64,6 @@ import org.jrdf.graph.Literal;
 /**
  * Class description goes here.
  */
-public interface LiteralMutableId extends Literal, MemNode {
+public interface LiteralMutableId extends Literal, LocalizedNode {
     void setId(Long newId);
 }

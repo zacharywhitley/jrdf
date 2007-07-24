@@ -56,26 +56,23 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.index.nodepool.mem;
 
-import junit.framework.TestCase;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+package org.jrdf.graph.mem;
 
-import java.lang.reflect.Modifier;
-import java.util.Map;
+import org.jrdf.graph.Node;
 
 /**
- * Checks several implementation details of NodePoolMem implementation of LongIndex.
+ * A localized node i.e. one that has an internal identified and can be accessed by id.
  *
- * @author Andrew Newman
- * @version $Revision$
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @version $Id$
  */
-public class NodePoolMemUnitTest extends TestCase {
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(NodePoolMem.class, NodePoolMemImpl.class);
-        checkConstructor(NodePoolMemImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
-        checkConstructor(NodePoolMemImpl.class, Modifier.PUBLIC, Map.class, Map.class);
-    }
+public interface LocalizedNode extends Node {
+
+    /**
+     * Retrieves an internal identifier for a node.
+     *
+     * @return A numeric identifier for a node.
+     */
+    Long getId();
 }

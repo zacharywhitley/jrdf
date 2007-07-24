@@ -65,9 +65,10 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralMutableId;
-import org.jrdf.graph.mem.MemNode;
+import org.jrdf.graph.mem.LocalizedNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +79,7 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class NodePoolMemImpl implements NodePoolMem {
+public final class NodePoolImpl implements NodePool {
     /**
      * Three being the number, and the number being 3.
      */
@@ -99,12 +100,12 @@ public final class NodePoolMemImpl implements NodePoolMem {
      */
     private long nextNode = 1L;
 
-    public NodePoolMemImpl() {
+    public NodePoolImpl() {
         nodePool = new HashMap<Long, Node>();
         stringPool = new HashMap<String, Long>();
     }
 
-    public NodePoolMemImpl(Map<Long, Node> newNodePool, Map<String, Long> newStringPool) {
+    public NodePoolImpl(Map<Long, Node> newNodePool, Map<String, Long> newStringPool) {
         nodePool = newNodePool;
         stringPool = newStringPool;
     }
@@ -117,12 +118,12 @@ public final class NodePoolMemImpl implements NodePoolMem {
         return stringPool.get(str);
     }
 
-    public void registerNode(MemNode node) {
+    public void registerNode(LocalizedNode node) {
         // get the id for this node
         Long id = node.getId();
 
         // look the node up to see if it already exists in the graph
-        MemNode existingNode = (MemNode) nodePool.get(id);
+        LocalizedNode existingNode = (LocalizedNode) nodePool.get(id);
         if (null != existingNode) {
             // check that the node is equal to the one that is already in the graph
             if (existingNode.equals(node)) {
@@ -226,7 +227,7 @@ public final class NodePoolMemImpl implements NodePoolMem {
     }
 
     private Long getBlankNode(Node blankNode) throws GraphException {
-        Long nodeId = ((MemNode) blankNode).getId();
+        Long nodeId = ((LocalizedNode) blankNode).getId();
         Node node = nodePool.get(nodeId);
         if (node == null) {
             throw new GraphException("The node id was not found in the graph: " + nodeId);

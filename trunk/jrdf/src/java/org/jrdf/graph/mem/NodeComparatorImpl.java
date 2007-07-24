@@ -130,8 +130,8 @@ public final class NodeComparatorImpl implements NodeComparator {
     private int compareBlankNodes(BlankNode blankNode1, BlankNode blankNode2) {
         int result;
 
-        if ((blankNode1 instanceof MemNode) && (blankNode2 instanceof MemNode)) {
-            result = compareByMemNode((MemNode) blankNode1, (MemNode) blankNode2);
+        if ((blankNode1 instanceof LocalizedNode) && (blankNode2 instanceof LocalizedNode)) {
+            result = compareByMemNode((LocalizedNode) blankNode1, (LocalizedNode) blankNode2);
         } else {
             result = compareByString(blankNode1.toString(), blankNode2.toString());
         }
@@ -139,11 +139,11 @@ public final class NodeComparatorImpl implements NodeComparator {
     }
 
     // TODO (AN) Move to different class - BNodeComparator
-    private int compareByMemNode(MemNode memNode1, MemNode memNode2) {
+    private int compareByMemNode(LocalizedNode localizedNode1, LocalizedNode localizedNode2) {
         int result = 0;
-        if (memNode1.getId() > memNode2.getId()) {
+        if (localizedNode1.getId() > localizedNode2.getId()) {
             result = 1;
-        } else if (memNode1.getId() < memNode2.getId()) {
+        } else if (localizedNode1.getId() < localizedNode2.getId()) {
             result = -1;
         }
         return result;

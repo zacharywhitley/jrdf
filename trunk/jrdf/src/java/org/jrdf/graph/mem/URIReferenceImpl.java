@@ -79,7 +79,7 @@ import java.net.URI;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class URIReferenceImpl extends AbstractURIReference implements MemNode, Serializable {
+public class URIReferenceImpl extends AbstractURIReference implements LocalizedNode, Serializable {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

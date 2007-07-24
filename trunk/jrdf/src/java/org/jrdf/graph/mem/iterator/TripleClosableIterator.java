@@ -64,7 +64,7 @@ import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
+import org.jrdf.graph.index.nodepool.NodePool;
 
 import java.util.Iterator;
 
@@ -77,17 +77,17 @@ import java.util.Iterator;
  */
 public class TripleClosableIterator implements ClosableMemIterator<Triple> {
     private Iterator<Triple> iter;
-    private NodePoolMem nodePool;
+    private NodePool nodePool;
     private LongIndex longIndex;
     private GraphHandler handler;
     private Triple triple;
 
-    public TripleClosableIterator(Iterator<Triple> iter, NodePoolMem nodePool, LongIndex longIndex,
-                                  GraphHandler handler) {
-        this.iter = iter;
-        this.nodePool = nodePool;
-        this.longIndex = longIndex;
-        this.handler = handler;
+    public TripleClosableIterator(Iterator<Triple> newIter, NodePool newNodePool, LongIndex newLongIndex,
+        GraphHandler newHandler) {
+        this.iter = newIter;
+        this.nodePool = newNodePool;
+        this.longIndex = newLongIndex;
+        this.handler = newHandler;
     }
 
     public boolean close() {

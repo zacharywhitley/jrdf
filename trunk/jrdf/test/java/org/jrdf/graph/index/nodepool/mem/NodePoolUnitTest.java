@@ -58,36 +58,25 @@
  */
 package org.jrdf.graph.index.nodepool.mem;
 
-import org.jrdf.graph.Node;
+import junit.framework.TestCase;
 import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.mem.MemNode;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+
+import java.lang.reflect.Modifier;
+import java.util.Map;
 
 /**
- * An extension of NodePools that handles in memory nodes.
+ * Checks several implementation details of NodePoolMem implementation of LongIndex.
  *
  * @author Andrew Newman
- * @version $Id$
+ * @version $Revision$
  */
-public interface NodePoolMem extends NodePool {
-    /**
-     * Adds a node that was not created by this pool but still uses the MemNode interface.
-     *
-     * @param node The node to add.
-     * @throws IllegalArgumentException The node conflicts with one already in use.
-     */
-    void registerNode(MemNode node);
-
-    /**
-     * Returns all the nodes in the node pool.
-     *
-     * @return The node pool.
-     */
-    java.util.Collection<Node> getNodePoolValues();
-
-    /**
-     * Returns the current next node Id increments it by one.
-     *
-     * @return the current next node Id.
-     */
-    Long getNextNodeId();
+public class NodePoolUnitTest extends TestCase {
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(NodePool.class, NodePoolImpl.class);
+        checkConstructor(NodePoolImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+        checkConstructor(NodePoolImpl.class, Modifier.PUBLIC, Map.class, Map.class);
+    }
 }
