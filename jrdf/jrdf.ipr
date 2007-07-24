@@ -517,10 +517,9 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="jcs">
+    <library name="je-3.2.23">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/jcs/jcs-1.3.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/jcs/concurrent-1.3.4.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/je/je-3.2.23.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
