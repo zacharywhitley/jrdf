@@ -57,40 +57,51 @@
  *
  */
 
-package org.jrdf.graph.index.nodepool.jcs;
+package org.jrdf.graph.mem;
 
-import junit.framework.TestCase;
+import junit.textui.TestRunner;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.mem.GraphFactory;
-import org.jrdf.graph.mem.GraphFactoryImpl;
+import org.jrdf.graph.index.nodepool.jcs.NodePoolImpl;
 
-import java.net.URI;
-
-public class NodePoolImplIntegrationTest extends TestCase {
+/**
+ * Implementation of {@link AbstractGraphUnitTest} test case.
+ *
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @author Andrew Newman
+ * @version $Revision: 1045 $
+ */
+public class GraphJcsImplUnitTest extends AbstractGraphUnitTest {
     private CompositeCacheManager manager;
-    private NodePool nodePool;
 
-    @Override
-    public void setUp() {
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    public Graph newGraph() throws Exception {
+        LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         manager = new CompositeCacheManager();
-        nodePool = new NodePoolImpl(manager);
+        NodePool nodePool = new NodePoolImpl(manager);
+        nodePool.clear();
+        GraphFactory factory = new GraphFactoryImpl(indexes, nodePool);
+        return factory.getGraph();
     }
 
-    public void testAddNodes() throws Exception {
-        LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        GraphFactory factory = new GraphFactoryImpl(indexes, nodePool);
-        Graph graph = factory.getGraph();
-        GraphElementFactory graphElementFactory = graph.getElementFactory();
-        BlankNode node1 = graphElementFactory.createResource();
-        URIReference node2 = graphElementFactory.createResource(URI.create("urn:foo"));
-        graph.add(node1, node2, node1);
-        graph.add(node2, node2, node2);
+    /**
+     * Default test runner.
+     *
+     * @param args The command line arguments
+     */
+    public static void main(String[] args) throws Exception {
+        TestRunner.run(GraphJcsImplUnitTest.class);
+    }
+
+    public void tearDown() {
+        graph.clear();
     }
 }

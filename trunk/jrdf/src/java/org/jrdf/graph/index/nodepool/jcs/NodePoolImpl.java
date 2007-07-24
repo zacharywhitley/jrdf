@@ -81,40 +81,53 @@ import java.util.Properties;
 public class NodePoolImpl implements NodePool {
     private static final int TRIPLE = 3;
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
-    private static final String REGION = "nodepool";
+    private static final String NODEPOOL_REGION = "nodePool";
+    private static final String STRINGPOOL_REGION = "stringPool";
     private final CompositeCacheManager manager;
-    private GroupCacheAccess cache;
+    private GroupCacheAccess nodePool;
+    private GroupCacheAccess stringPool;
     private long nextNode = 1L;
 
 
     public NodePoolImpl(CompositeCacheManager newManager) {
         this.manager = newManager;
         configure(newManager);
-        cache = new GroupCacheAccess(manager.getCache(REGION));
+        nodePool = new GroupCacheAccess(manager.getCache(NODEPOOL_REGION));
+        stringPool = new GroupCacheAccess(manager.getCache(STRINGPOOL_REGION));
     }
 
     private void configure(CompositeCacheManager manager) {
         Properties props = new Properties();
-        props.put("jcs.default", REGION);
+        props.put("jcs.default", "");
         props.put("jcs.default.cacheattributes", "org.apache.jcs.engine.CompositeCacheAttributes");
-        props.put("jcs.default.cacheattributes.MaxObjects", "1000");
+        props.put("jcs.default.cacheattributes.MaxObjects", "-1");
         props.put("jcs.default.cacheattributes.MemoryCacheName", "org.apache.jcs.engine.memory.lru.LRUMemoryCache");
-        props.put("jcs.auxiliary." + REGION, "org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory");
-        props.put("jcs.auxiliary." + REGION + ".attributes",
-            "org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes");
-        File dir = new File(SYSTEM_TEMP_DIR, "jrdf_" + System.getProperty("user.name"));
-        dir.mkdirs();
-        props.put("jcs.auxiliary." + REGION + ".attributes.DiskPath", dir.getAbsolutePath());
-        props.put("jcs.auxiliary."  + REGION + ".attributes.maxKeySize", "0");
+        props.put("jcs.default.elementattributes", "org.apache.jcs.engine.ElementAttributes");
+        props.put("jcs.default.elementattributes.IsEternal", "true");
+        props.put("jcs.default.elementattributes.IsSpool", "true");
+        configAuxiliary(props, NODEPOOL_REGION);
+        configAuxiliary(props, STRINGPOOL_REGION);
         manager.configure(props);
     }
 
+    private void configAuxiliary(Properties props, String region) {
+        String upperCaseRegion = region.toUpperCase();
+        props.put("jcs.region." + region, upperCaseRegion);
+        props.put("jcs.auxiliary." + upperCaseRegion, "org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheFactory");
+        props.put("jcs.auxiliary." + upperCaseRegion + ".attributes",
+            "org.apache.jcs.auxiliary.disk.indexed.IndexedDiskCacheAttributes");
+        File dir = new File(SYSTEM_TEMP_DIR, "jrdf_" + System.getProperty("user.name") + "_region");
+        dir.mkdirs();
+        props.put("jcs.auxiliary." + upperCaseRegion + ".attributes.DiskPath", dir.getAbsolutePath());
+        props.put("jcs.auxiliary."  + upperCaseRegion + ".attributes.maxKeySize", "-1");
+    }
+
     public Node getNodeById(Long id) {
-        return (Node) cache.get(id);
+        return (Node) nodePool.get(id);
     }
 
     public Long getNodeIdByString(String str) {
-        return (Long) cache.get(str);
+        return (Long) stringPool.get(str);
     }
 
     public void registerNode(LocalizedNode node) {
@@ -122,7 +135,7 @@ public class NodePoolImpl implements NodePool {
         Long id = node.getId();
 
         // look the node up to see if it already exists in the graph
-        LocalizedNode existingNode = (LocalizedNode) cache.get(id);
+        LocalizedNode existingNode = (LocalizedNode) nodePool.get(id);
         if (null != existingNode) {
             // check that the node is equal to the one that is already in the graph
             if (existingNode.equals(node)) {
@@ -137,13 +150,13 @@ public class NodePoolImpl implements NodePool {
 
     private void tryAdd(Long id, LocalizedNode node) {
         try {
-            cache.put(id, node);
+            nodePool.put(id, node);
             // check if the node has a string representation
             if (!(node instanceof BlankNode)) {
                 if (node instanceof Literal) {
-                    cache.put(((Literal) node).getEscapedForm(), node.getId());
+                    stringPool.put(((Literal) node).getEscapedForm(), node.getId());
                 } else {
-                    cache.put(node.toString(), node.getId());
+                    stringPool.put(node.toString(), node.getId());
                 }
             }
             // update the nextNode counter to a unique number
@@ -174,7 +187,18 @@ public class NodePoolImpl implements NodePool {
     }
 
     public void clear() {
-        throw new UnsupportedOperationException();
+        nextNode = 1L;
+        try {
+            nodePool.clear();
+        } catch (CacheException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                stringPool.clear();
+            } catch (CacheException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private Long convertSubject(Node first) throws GraphException {
@@ -190,7 +214,6 @@ public class NodePoolImpl implements NodePool {
                 throw new GraphException("Subject does not exist in graph: " + first);
             }
         }
-
         return subjectValue;
     }
 
@@ -229,7 +252,7 @@ public class NodePoolImpl implements NodePool {
 
     private Long getBlankNode(Node blankNode) throws GraphException {
         Long nodeId = ((LocalizedNode) blankNode).getId();
-        Node node = (Node) cache.get(nodeId);
+        Node node = (Node) nodePool.get(nodeId);
         if (node == null) {
             throw new GraphException("The node id was not found in the graph: " + nodeId);
         }
