@@ -64,7 +64,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
+import org.jrdf.graph.index.nodepool.NodePool;
 
 import java.net.URI;
 import java.util.UUID;
@@ -82,12 +82,12 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * The node pool.
      */
-    private NodePoolMem nodePool;
+    private NodePool nodePool;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePoolMem nodePool) {
+    GraphElementFactoryImpl(NodePool nodePool) {
         this.nodePool = nodePool;
     }
 
@@ -104,7 +104,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         // create the node identifier and add
         Long nodeId = nodePool.getNextNodeId();
         BlankNode node = new BlankNodeImpl(nodeId, uid);
-        nodePool.registerNode((MemNode) node);
+        nodePool.registerNode((LocalizedNode) node);
         return node;
     }
 
@@ -126,7 +126,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         // create the node identifier and add
         nodeId = nodePool.getNextNodeId();
         URIReference node = new URIReferenceImpl(uri, validate, nodeId);
-        nodePool.registerNode((MemNode) node);
+        nodePool.registerNode((LocalizedNode) node);
         return node;
     }
 

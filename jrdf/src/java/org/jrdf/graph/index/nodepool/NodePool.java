@@ -61,6 +61,9 @@ package org.jrdf.graph.index.nodepool;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.mem.LocalizedNode;
+
+import java.util.Collection;
 
 /**
  * Maps between the Long identifier and a Node (globalized value) or from a String to a Long (local value).
@@ -97,6 +100,28 @@ public interface NodePool {
      * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
      */
     Long[] localize(Node first, Node second, Node third) throws GraphException;
+
+    /**
+     * Returns all the nodes in the node pool.
+     *
+     * @return The node pool.
+     */
+    Collection<Node> getNodePoolValues();
+
+    /**
+     * Adds a node that was not created by this pool but still uses the MemNode interface.
+     *
+     * @param node The node to add.
+     * @throws IllegalArgumentException The node conflicts with one already in use.
+     */
+    void registerNode(LocalizedNode node);
+
+    /**
+     * Returns the current next node Id increments it by one.
+     *
+     * @return the current next node Id.
+     */
+    Long getNextNodeId();
 
     /**
      * Removes all entries from the nodepool.

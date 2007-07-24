@@ -76,8 +76,8 @@ import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMemImpl;
+import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.nodepool.mem.NodePoolImpl;
 import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
@@ -141,7 +141,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * The node pool.
      */
-    private transient NodePoolMem nodePool;
+    private transient NodePool nodePool;
 
     /**
      * Triple Element Factory.  This caches the element factory.
@@ -168,15 +168,15 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePoolMem nodePool, GraphElementFactory elementFactory,
-        GraphHandler012 graphHandler, IteratorFactory iteratorFactory) {
+    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, GraphElementFactory elementFactory,
+        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
-        this.nodePool = nodePool;
+        this.nodePool = newNodePool;
         this.elementFactory = elementFactory;
         this.graphHandler012 = graphHandler;
-        this.iteratorFactory = iteratorFactory;
+        this.iteratorFactory = newIteratorFactory;
         init();
     }
 
@@ -192,7 +192,7 @@ public class GraphImpl implements Graph, Serializable {
         LongIndex[] indexes = {longIndex012, longIndex120, longIndex201};
 
         if (null == nodePool) {
-            nodePool = new NodePoolMemImpl();
+            nodePool = new NodePoolImpl();
         }
 
         if (null == elementFactory) {
@@ -587,7 +587,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // populate the node factory with these nodes
         for (Object node : nodes) {
-            nodePool.registerNode((MemNode) node);
+            nodePool.registerNode((LocalizedNode) node);
         }
 
         // fill in the other indexes

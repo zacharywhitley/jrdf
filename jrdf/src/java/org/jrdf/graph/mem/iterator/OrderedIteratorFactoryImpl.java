@@ -63,7 +63,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.nodepool.mem.NodePoolMem;
+import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.TripleComparatorImpl;
 
 import java.util.TreeSet;
@@ -76,18 +76,18 @@ import java.util.TreeSet;
  */
 public class OrderedIteratorFactoryImpl implements IteratorFactory {
     private IteratorFactory iteratorFactory;
-    private NodePoolMem nodePool;
+    private NodePool nodePool;
     private LongIndex longIndex;
     private GraphHandler graphHandler;
     private final NodeComparator nodeComparator;
 
-    public OrderedIteratorFactoryImpl(IteratorFactory iteratorFactory, NodePoolMem nodePool,
-                                      LongIndex longIndex, GraphHandler graphHandlers, NodeComparator nodeComparator) {
-        this.iteratorFactory = iteratorFactory;
-        this.nodePool = nodePool;
-        this.longIndex = longIndex;
+    public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
+            GraphHandler graphHandlers, NodeComparator newNodeComparator) {
+        this.iteratorFactory = newIteratorFactory;
+        this.nodePool = newNodePool;
+        this.longIndex = newLongIndex;
         this.graphHandler = graphHandlers;
-        this.nodeComparator = nodeComparator;
+        this.nodeComparator = newNodeComparator;
     }
 
     public ClosableMemIterator<Triple> newEmptyClosableIterator() {

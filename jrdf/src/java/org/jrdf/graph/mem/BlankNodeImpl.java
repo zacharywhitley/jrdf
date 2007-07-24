@@ -75,7 +75,7 @@ import java.io.Serializable;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class BlankNodeImpl extends AbstractBlankNode implements MemNode, Serializable {
+public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode, Serializable {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
