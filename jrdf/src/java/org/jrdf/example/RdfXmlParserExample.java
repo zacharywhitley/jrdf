@@ -85,6 +85,7 @@ public final class RdfXmlParserExample {
     private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
     private static final String DEFAULT_RDF_URL = "http://rss.slashdot.org/Slashdot/slashdot";
 
+    // file:///temp/java/
 //    LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
 //    NodePool nodePool = new JeNodePoolFactory().createNodePool();
 //    NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
