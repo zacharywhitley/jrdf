@@ -91,6 +91,7 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
         this.longIndexes = newLongIndexes;
         this.nodePoolFactory = newNodePoolFactory;
         nodePool = nodePoolFactory.createNodePool();
+        nodePool.clear();
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);

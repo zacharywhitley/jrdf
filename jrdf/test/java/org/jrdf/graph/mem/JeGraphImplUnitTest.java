@@ -59,16 +59,15 @@
 
 package org.jrdf.graph.mem;
 
+import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.index.nodepool.map.JeNodePoolFactory;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.index.nodepool.map.JeNodePoolFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
-import junit.framework.TestCase;
-import junit.textui.TestRunner;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
@@ -79,11 +78,7 @@ import junit.textui.TestRunner;
  * @author Andrew Newman
  * @version $Revision: 1045 $
  */
-public class JeGraphImplUnitTest extends TestCase {
-
-    public void testKeepJUnitHappy() {
-        assertTrue(true);
-    }
+public class JeGraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Create a graph implementation.
