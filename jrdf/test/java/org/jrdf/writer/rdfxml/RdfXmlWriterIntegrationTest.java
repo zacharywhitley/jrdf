@@ -60,15 +60,10 @@ package org.jrdf.writer.rdfxml;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.ClosableIterator;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.index.operation.mem.ComparisonImpl;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.parser.ParseException;
@@ -125,10 +120,6 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         assertTrue("Output graph should be grounded", comparison.isGrounded(read));
         assertEquals("Output graph and input graph should have the same number of statements.",
             graph.getNumberOfTriples(), read.getNumberOfTriples());
-        ClosableIterator<Triple> closableIterator = read.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        while (closableIterator.hasNext()) {
-            System.err.println("Got: " + closableIterator.next());
-        }
         assertTrue("Output graph is not equal to input graph.", comparison.areIsomorphic(graph, read));
     }
 
