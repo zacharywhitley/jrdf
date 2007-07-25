@@ -68,6 +68,9 @@ import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -77,13 +80,8 @@ import java.io.PrintWriter;
  * @author TurnerRX
  */
 public class ResourceStatement implements RdfXmlWritable {
-
-    private static final String URI_LIT = "\t<${pred}${lang}${type}>${lit}</${pred}>";
-    private static final String URI_URI = "\t<${pred} rdf:resource=\"${resource}\"/>";
-    private static final String URI_BLANK = "\t<${pred} rdf:nodeID=\"${blank}\"/>";
-    private static final String LANGUAGE = " xml:lang=\"${language}\"";
-    private static final String DATATYPE = " rdf:datatype=\"${datatype}\"";
-
+    private XMLOutputFactory factory = XMLOutputFactory.newInstance();
+    private XMLStreamWriter xmlStreamWriter;
     private Triple triple;
     private RdfNamespaceMap names;
     private BlankNodeRegistry registry;
@@ -110,7 +108,12 @@ public class ResourceStatement implements RdfXmlWritable {
     public void write(PrintWriter writer) throws IOException, WriteException {
         PredicateNode predicate = triple.getPredicate();
         ObjectNode object = triple.getObject();
-        write(predicate, object, writer);
+        try {
+            xmlStreamWriter = factory.createXMLStreamWriter(writer);
+            write(predicate, object, writer);
+        } catch (XMLStreamException e) {
+            throw new WriteException(e);
+        }
     }
 
     public void setAndWriteTriple(Triple triple, PrintWriter writer) throws IOException, WriteException {
@@ -120,67 +123,43 @@ public class ResourceStatement implements RdfXmlWritable {
 
 
     // TODO AN Replace with visitor.
-    private void write(PredicateNode predicate, ObjectNode object, PrintWriter writer) throws WriteException {
+    private void write(PredicateNode predicate, ObjectNode object, PrintWriter writer)
+        throws WriteException, XMLStreamException {
         if (!(predicate instanceof URIReference)) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
         }
         if (object instanceof URIReference) {
-            write((URIReference) predicate, (URIReference) object, writer);
+            write((URIReference) predicate, (URIReference) object);
         } else if (object instanceof Literal) {
-            write((URIReference) predicate, (Literal) object, writer);
+            write((URIReference) predicate, (Literal) object);
         } else if (object instanceof BlankNode) {
-            write((URIReference) predicate, (BlankNode) object, writer);
+            write((URIReference) predicate, (BlankNode) object);
         } else {
             throw new WriteException("Unknown object node type: " + object.getClass().getName());
         }
     }
 
-    private void write(URIReference predicate, URIReference object, PrintWriter writer) throws WriteException {
-        String statement = URI_URI;
-        // replace predicate
-        statement = statement.replaceAll("\\$\\{pred\\}", names.replaceNamespace(predicate));
-        // replace resource
-        statement = statement.replaceAll("\\$\\{resource\\}", object.getURI().toString());
-        //output
-        writer.println(statement);
+    private void write(URIReference predicate, URIReference object) throws WriteException, XMLStreamException {
+        xmlStreamWriter.writeStartElement(names.replaceNamespace(predicate));
+        xmlStreamWriter.writeAttribute("rdf:resource", object.getURI().toString());
+        xmlStreamWriter.writeEndElement();
     }
 
-    private void write(URIReference predicate, Literal literal, PrintWriter writer) throws WriteException {
-        String statement = URI_LIT;
-        // replace predicate
-        statement = statement.replaceAll("\\$\\{pred\\}", names.replaceNamespace(predicate));
-        // replace escapedForm
-        statement = statement.replaceAll("\\$\\{lit\\}", literal.getEscapedLexicalForm());
-        // replace any language or datatype
-        statement = statement.replaceAll("\\$\\{lang\\}", getLanguage(literal));
-        statement = statement.replaceAll("\\$\\{type\\}", getDatatype(literal));
-        // output
-        writer.println(statement);
-    }
-
-    private String getLanguage(Literal literal) {
+    private void write(URIReference predicate, Literal literal) throws WriteException, XMLStreamException {
+        xmlStreamWriter.writeStartElement(names.replaceNamespace(predicate));
         if (literal.isLanguageLiteral()) {
-            return LANGUAGE.replaceAll("\\$\\{language\\}", literal.getLanguage());
-        } else {
-            return "";
+            xmlStreamWriter.writeAttribute("xml:lang", literal.getLanguage());
         }
-    }
-
-    private String getDatatype(Literal literal) {
         if (literal.isDatatypedLiteral()) {
-            return DATATYPE.replaceAll("\\$\\{datatype\\}", literal.getDatatypeURI().toString());
-        } else {
-            return "";
+            xmlStreamWriter.writeAttribute("rdf:datatype", literal.getDatatypeURI().toString());
         }
+        xmlStreamWriter.writeCharacters(literal.getLexicalForm());
+        xmlStreamWriter.writeEndElement();
     }
 
-    private void write(URIReference predicate, BlankNode object, PrintWriter writer) throws WriteException {
-        String statement = URI_BLANK;
-        // replace predicate
-        statement = statement.replaceAll("\\$\\{pred\\}", names.replaceNamespace(predicate));
-        // replace resource
-        statement = statement.replaceAll("\\$\\{blank\\}", registry.getNodeId(object));
-        //output
-        writer.println(statement);
+    private void write(URIReference predicate, BlankNode bnode) throws WriteException, XMLStreamException {
+        xmlStreamWriter.writeStartElement(names.replaceNamespace(predicate));
+        xmlStreamWriter.writeAttribute("rdf:nodeID", registry.getNodeId(bnode));
+        xmlStreamWriter.writeEndElement();
     }
 }
