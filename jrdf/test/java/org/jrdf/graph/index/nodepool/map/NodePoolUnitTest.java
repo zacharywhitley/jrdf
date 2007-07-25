@@ -60,7 +60,6 @@ package org.jrdf.graph.index.nodepool.map;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.index.nodepool.NodePool;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
@@ -75,7 +74,6 @@ import java.util.Map;
 public class NodePoolUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(NodePool.class, NodePoolImpl.class);
-        checkConstructor(NodePoolImpl.class, 0, NO_ARG_CONSTRUCTOR);
         checkConstructor(NodePoolImpl.class, 0, Map.class, Map.class);
     }
 }
