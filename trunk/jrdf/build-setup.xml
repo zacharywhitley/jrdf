@@ -33,7 +33,7 @@
     <property name="compile.debuglevel" value="source,lines,vars"/>
     <property name="compile.deprecation" value="false"/>
     <property name="compile.optimize" value="true"/>
-    <property name="java.src.version" value="1.5"/>
+    <property name="java.src.version" value="1.6"/>
     <property name="web.site.url" value="http://jrdf.sourceforge.net/"/>
     <property name="unit.test.src.dir" value="${test.src.dir}"/>
     <property name="unit.test.classes.dir" value="${test.classes.dir}"/>
