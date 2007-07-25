@@ -71,9 +71,8 @@ import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralMutableId;
 import org.jrdf.graph.mem.LocalizedNode;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Stuff goes in here.
@@ -101,11 +100,6 @@ public final class NodePoolImpl implements NodePool {
      * The next available node id.
      */
     private long nextNode = 1L;
-
-    NodePoolImpl() {
-        nodePool = new HashMap<Long, Node>();
-        stringPool = new HashMap<String, Long>();
-    }
 
     NodePoolImpl(Map<Long, Node> newNodePool, Map<String, Long> newStringPool) {
         nodePool = newNodePool;

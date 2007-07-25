@@ -236,8 +236,8 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @param valueFactory           A GraphElementFactory.
      * @param parserBlankNodeFactory A ParserBlankNodeFactory.
      */
-    public RdfXmlParser(GraphElementFactory valueFactory,
-            ParserBlankNodeFactory parserBlankNodeFactory) throws GraphException {
+    public RdfXmlParser(GraphElementFactory valueFactory, ParserBlankNodeFactory parserBlankNodeFactory)
+        throws GraphException {
         try {
             init(valueFactory, parserBlankNodeFactory);
 
