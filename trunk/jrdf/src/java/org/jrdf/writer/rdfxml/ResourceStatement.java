@@ -65,7 +65,5 @@ import org.jrdf.writer.WriteException;
 import java.io.PrintWriter;
 
 public interface ResourceStatement extends RdfXmlWritable {
-    void setAndWriteTriple(Triple newTriple, PrintWriter writer) throws WriteException;
-
-    void setTriple(Triple newTriple);
+    void writeTriple(Triple newTriple, PrintWriter writer) throws WriteException;
 }

@@ -109,19 +109,27 @@ public class RdfXmlWriter implements RdfWriter {
      */
     private RdfNamespaceMap names;
 
-    public RdfXmlWriter(BlankNodeRegistry blankNodeRegistry, RdfNamespaceMap names) {
-        this.blankNodeRegistry = blankNodeRegistry;
-        this.names = names;
+    public RdfXmlWriter(BlankNodeRegistry newBlankNodeRegistry, RdfNamespaceMap newNames) {
+        this.blankNodeRegistry = newBlankNodeRegistry;
+        this.names = newNames;
     }
 
     public void write(Graph graph, OutputStream stream) throws IOException, WriteException, GraphException {
         OutputStreamWriter writer = new OutputStreamWriter(stream);
-        write(graph, writer);
+        try {
+            write(graph, writer);
+        } finally {
+            writer.close();
+        }
     }
 
     public void write(Graph graph, Writer writer) throws IOException, WriteException, GraphException {
         printWriter = new PrintWriter(writer);
-        write(graph, (String) null);
+        try {
+            write(graph, (String) null);
+        } finally {
+            printWriter.close();
+        }
     }
 
     /**
@@ -134,8 +142,7 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws GraphException If the graph cannot be read.
      * @throws WriteException If the contents could not be written
      */
-    private void write(Graph graph, String encoding) throws IOException, GraphException,
-            WriteException {
+    private void write(Graph graph, String encoding) throws GraphException, WriteException {
         try {
             // Initialize values.
             blankNodeRegistry.clear();
@@ -167,7 +174,7 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws IOException    If the statements cannot be written.
      * @throws WriteException If the statements could not be written.
      */
-    private void writeStatements(Graph graph) throws GraphException, IOException, WriteException {
+    private void writeStatements(Graph graph) throws GraphException, WriteException {
         // get all statements
         // TODO - ensure these statements are ordered.
         // write one subject at a time
@@ -189,7 +196,7 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws IOException    If an IOException is encountered while writing the subject.
      * @throws WriteException If the subject could not be written
      */
-    private void writeSubject(IteratorStack<Triple> stack) throws IOException, WriteException {
+    private void writeSubject(IteratorStack<Triple> stack) throws WriteException {
         currentTriple = stack.pop();
         currentSubject = currentTriple.getSubject();
         writeHeader();
@@ -197,15 +204,15 @@ public class RdfXmlWriter implements RdfWriter {
         writeFooter();
     }
 
-    private void writeHeader() throws IOException, WriteException {
+    private void writeHeader() throws WriteException {
         ResourceHeader header = new ResourceHeader(currentSubject, blankNodeRegistry);
         header.write(printWriter);
     }
 
-    private void writeStatements(IteratorStack<Triple> stack) throws IOException, WriteException {
+    private void writeStatements(IteratorStack<Triple> stack) throws WriteException {
         // write statements
         ResourceStatement statement = new ResourceStatementImpl(names, blankNodeRegistry);
-        statement.setAndWriteTriple(currentTriple, printWriter);
+        statement.writeTriple(currentTriple, printWriter);
         while (stack.hasNext()) {
             currentTriple = stack.pop();
             // Have we run out of the same subject - if so push it back on an stop iterating.
@@ -213,11 +220,11 @@ public class RdfXmlWriter implements RdfWriter {
                 stack.push(currentTriple);
                 break;
             }
-            statement.setAndWriteTriple(currentTriple, printWriter);
+            statement.writeTriple(currentTriple, printWriter);
         }
     }
 
-    private void writeFooter() throws IOException, WriteException {
+    private void writeFooter() throws WriteException {
         ResourceFooter footer = new ResourceFooter(currentSubject);
         footer.write(printWriter);
     }
