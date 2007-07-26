@@ -61,4 +61,6 @@ package org.jrdf.graph.index.nodepool;
 
 public interface NodePoolFactory {
     NodePool createNodePool();
+
+    void close();
 }
