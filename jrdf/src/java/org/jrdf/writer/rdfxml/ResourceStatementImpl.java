@@ -92,13 +92,9 @@ public final class ResourceStatementImpl implements ResourceStatement {
         this.registry = newBlankNodeRegistry;
     }
 
-    public void setAndWriteTriple(Triple newTriple, PrintWriter writer) throws WriteException {
-        setTriple(newTriple);
-        write(writer);
-    }
-
-    public void setTriple(Triple newTriple) {
+    public void writeTriple(Triple newTriple, PrintWriter writer) throws WriteException {
         triple = newTriple;
+        write(writer);
     }
 
     public void write(PrintWriter writer) throws WriteException {
