@@ -66,8 +66,15 @@ import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Database;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 
-public class JeBDBHandlerImpl implements JeBDBHandler {
+import java.io.File;
 
+public class JeBDBHandlerImpl implements JeBDBHandler {
+    private static final String USERNAME = System.getProperty("user.name");
+    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+
+    public File getDir() {
+        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
+    }
     public EnvironmentConfig setUpEnvironment() {
         EnvironmentConfig env = new EnvironmentConfig();
         env.setTransactional(true);
@@ -82,10 +89,10 @@ public class JeBDBHandlerImpl implements JeBDBHandler {
         return dbConfig;
     }
 
-    public StoredClassCatalog setupCatalog(Environment env, DatabaseConfig dbConfig, String classCatalogString)
+    public StoredClassCatalog setupCatalog(Environment env, String classCatalogString,  DatabaseConfig dbConfig)
         throws DatabaseException {
-        Database nodePoolCatalogDb = env.openDatabase(null, classCatalogString, dbConfig);
-        StoredClassCatalog storedClsCat = new StoredClassCatalog(nodePoolCatalogDb);
+        Database catalogDb = env.openDatabase(null, classCatalogString, dbConfig);
+        StoredClassCatalog storedClsCat = new StoredClassCatalog(catalogDb);
         return storedClsCat;
     }
 }

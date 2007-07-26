@@ -77,8 +77,6 @@ import java.io.File;
 public class JeNodePoolFactory implements NodePoolFactory {
     private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
     private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
-    private static final String USERNAME = System.getProperty("user.name");
-    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
     private final JeBDBHandler handler;
     private StoredMap nodePool;
     private StoredMap stringPool;
@@ -91,14 +89,10 @@ public class JeNodePoolFactory implements NodePoolFactory {
 
     public NodePool createNodePool() {
         try {
-            File dir = new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
-            dir.mkdirs();
-            EnvironmentConfig envConfig = handler.setUpEnvironment();
-            Environment env = new Environment(dir, envConfig);
+            Environment env = getEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabase(true);
-//            setupCatalogs(env, dbConfig);
-            nodePoolCatalog = handler.setupCatalog(env, dbConfig, CLASS_CATALOG_NODEPOOL);
-            stringPoolCatalog = handler.setupCatalog(env, dbConfig, CLASS_CATALOG_STRINGPOOL);
+            nodePoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_NODEPOOL, dbConfig);
+            stringPoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_STRINGPOOL, dbConfig);
             nodePool = createMap(env, "nodePool", nodePoolCatalog, Long.class, Node.class);
             stringPool = createMap(env, "stringPool", stringPoolCatalog, String.class, Long.class);
             return new NodePoolImpl(nodePool, stringPool);
@@ -107,33 +101,19 @@ public class JeNodePoolFactory implements NodePoolFactory {
         }
     }
 
-//    private EnvironmentConfig setUpEnvironment() {
-//        EnvironmentConfig env = new EnvironmentConfig();
-//        env.setTransactional(true);
-//        env.setAllowCreate(true);
-//        return env;
-//    }
-//
-//    private DatabaseConfig setUpDatabase(boolean transactional) {
-//        DatabaseConfig dbConfig = new DatabaseConfig();
-//        dbConfig.setTransactional(transactional);
-//        dbConfig.setAllowCreate(true);
-//        return dbConfig;
-//    }
-//
-//    private void setupCatalogs(Environment env, DatabaseConfig dbConfig) throws DatabaseException {
-//        Database nodePoolCatalogDb = env.openDatabase(null, CLASS_CATALOG_NODEPOOL, dbConfig);
-//        nodePoolCatalog = new StoredClassCatalog(nodePoolCatalogDb);
-//        Database stringPoolCatalogDb = env.openDatabase(null, CLASS_CATALOG_STRINGPOOL, dbConfig);
-//        stringPoolCatalog = new StoredClassCatalog(stringPoolCatalogDb);
-//    }
+    private Environment getEnvironment() throws DatabaseException {
+        File dir = handler.getDir();
+        dir.mkdirs();
+        EnvironmentConfig envConfig = handler.setUpEnvironment();
+        return new Environment(dir, envConfig);
+    }
 
     private StoredMap createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data
     ) throws DatabaseException {
         DatabaseConfig dbConfig = handler.setUpDatabase(false);
         Database database = env.openDatabase(null, dbName, dbConfig);
         SerialBinding keyBinding = new SerialBinding(catalog, key);
-        SerialBinding dataBinding = new SerialBinding(nodePoolCatalog, data);
+        SerialBinding dataBinding = new SerialBinding(catalog, data);
         return new StoredMap(database, keyBinding, dataBinding, true);
     }
 }

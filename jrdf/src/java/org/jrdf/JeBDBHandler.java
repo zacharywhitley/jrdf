@@ -65,12 +65,16 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 
+import java.io.File;
+
 public interface JeBDBHandler {
+
+    File getDir();
 
     EnvironmentConfig setUpEnvironment();
 
     DatabaseConfig setUpDatabase(boolean transactional);
 
-    StoredClassCatalog setupCatalog(Environment env, DatabaseConfig dbConfig, String classCatalogString)
+    StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
         throws DatabaseException;
 }
