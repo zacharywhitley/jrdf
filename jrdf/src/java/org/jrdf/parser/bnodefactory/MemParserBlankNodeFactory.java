@@ -103,18 +103,16 @@ public class MemParserBlankNodeFactory implements ParserBlankNodeFactory {
     }
 
     public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
-        // Maybe the node ID has been used before:
-        BlankNode result = bNodeIdMap.get(nodeID);
-
-        if (null == result) {
-            // This is a new node ID, create a new BNode object for it
-            result = valueFactory.createResource();
-
+        if (bNodeIdMap.containsKey(nodeID)) {
+            // Maybe the node ID has been used before:
+            return bNodeIdMap.get(nodeID);
+        } else {
+            // Create a new resource
+            BlankNode resource = valueFactory.createResource();
             // Remember it, the nodeID might occur again.
-            bNodeIdMap.put(nodeID, result);
+            bNodeIdMap.put(nodeID, resource);
+            return resource;
         }
-
-        return result;
     }
 
     public void clear() {
