@@ -56,110 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
 package org.jrdf.writer.rdfxml;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.IOException;
 
-/**
- * Represents a statement about a resource.
- *
- * @author TurnerRX
- */
-public class ResourceStatement implements RdfXmlWritable {
-    private XMLOutputFactory factory = XMLOutputFactory.newInstance();
-    private XMLStreamWriter xmlStreamWriter;
-    private Triple triple;
-    private RdfNamespaceMap names;
-    private BlankNodeRegistry registry;
+public interface ResourceStatement extends RdfXmlWritable {
+    void setAndWriteTriple(Triple newTriple, PrintWriter writer) throws IOException, WriteException;
 
-    public ResourceStatement(RdfNamespaceMap names, BlankNodeRegistry registry) {
-        if (names == null) {
-            throw new IllegalArgumentException("RdfNamespaceMap is null.");
-        }
-        if (registry == null) {
-            throw new IllegalArgumentException("BlankNodeRegistryImpl is null.");
-        }
-        this.names = names;
-        this.registry = registry;
-    }
-
-    public Triple getTriple() {
-        return triple;
-    }
-
-    public void setTriple(Triple triple) {
-        this.triple = triple;
-    }
-
-    public void write(PrintWriter writer) throws IOException, WriteException {
-        PredicateNode predicate = triple.getPredicate();
-        ObjectNode object = triple.getObject();
-        try {
-            xmlStreamWriter = factory.createXMLStreamWriter(writer);
-            write(predicate, object, writer);
-        } catch (XMLStreamException e) {
-            throw new WriteException(e);
-        }
-    }
-
-    public void setAndWriteTriple(Triple triple, PrintWriter writer) throws IOException, WriteException {
-        setTriple(triple);
-        write(writer);
-    }
-
-
-    // TODO AN Replace with visitor.
-    private void write(PredicateNode predicate, ObjectNode object, PrintWriter writer)
-        throws WriteException, XMLStreamException {
-        if (!(predicate instanceof URIReference)) {
-            throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
-        }
-        if (object instanceof URIReference) {
-            write((URIReference) predicate, (URIReference) object);
-        } else if (object instanceof Literal) {
-            write((URIReference) predicate, (Literal) object);
-        } else if (object instanceof BlankNode) {
-            write((URIReference) predicate, (BlankNode) object);
-        } else {
-            throw new WriteException("Unknown object node type: " + object.getClass().getName());
-        }
-    }
-
-    private void write(URIReference predicate, URIReference object) throws WriteException, XMLStreamException {
-        xmlStreamWriter.writeStartElement(names.replaceNamespace(predicate));
-        xmlStreamWriter.writeAttribute("rdf:resource", object.getURI().toString());
-        xmlStreamWriter.writeEndElement();
-    }
-
-    private void write(URIReference predicate, Literal literal) throws WriteException, XMLStreamException {
-        xmlStreamWriter.writeStartElement(names.replaceNamespace(predicate));
-        if (literal.isLanguageLiteral()) {
-            xmlStreamWriter.writeAttribute("xml:lang", literal.getLanguage());
-        }
-        if (literal.isDatatypedLiteral()) {
-            xmlStreamWriter.writeAttribute("rdf:datatype", literal.getDatatypeURI().toString());
-        }
-        xmlStreamWriter.writeCharacters(literal.getLexicalForm());
-        xmlStreamWriter.writeEndElement();
-    }
-
-    private void write(URIReference predicate, BlankNode bnode) throws WriteException, XMLStreamException {
-        xmlStreamWriter.writeStartElement(names.replaceNamespace(predicate));
-        xmlStreamWriter.writeAttribute("rdf:nodeID", registry.getNodeId(bnode));
-        xmlStreamWriter.writeEndElement();
-    }
+    void setTriple(Triple newTriple);
 }
