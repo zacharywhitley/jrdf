@@ -62,7 +62,6 @@ package org.jrdf.writer.rdfxml;
 import org.jrdf.writer.WriteException;
 
 import java.io.PrintWriter;
-import java.io.IOException;
 
 /**
  * Class description goes here.
@@ -75,5 +74,5 @@ public interface RdfXmlWritable {
      * @throws java.io.IOException    If an exception occurs while writing output.
      * @throws org.jrdf.writer.WriteException If contents could not be written.
      */
-    void write(PrintWriter writer) throws IOException, WriteException;
+    void write(PrintWriter writer) throws WriteException;
 }

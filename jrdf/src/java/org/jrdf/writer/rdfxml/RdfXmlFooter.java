@@ -60,7 +60,6 @@ package org.jrdf.writer.rdfxml;
 
 import org.jrdf.writer.WriteException;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 
 
@@ -73,7 +72,7 @@ public class RdfXmlFooter implements RdfXmlWritable {
 
     private static final String RDF_FOOTER = "</rdf:RDF>";
 
-    public void write(PrintWriter writer) throws IOException, WriteException {
+    public void write(PrintWriter writer) throws WriteException {
         writer.println(RDF_FOOTER);
     }
 }

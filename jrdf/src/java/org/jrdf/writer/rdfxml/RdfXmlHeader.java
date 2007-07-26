@@ -60,7 +60,6 @@ package org.jrdf.writer.rdfxml;
 
 import org.jrdf.writer.RdfNamespaceMap;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -103,7 +102,7 @@ public class RdfXmlHeader implements RdfXmlWritable {
         this.names = names;
     }
 
-    public void write(PrintWriter writer) throws IOException {
+    public void write(PrintWriter writer) {
         writeXmlHeader(writer);
         writeDocTypeDef(writer);
         writeRdfHeader(writer);
