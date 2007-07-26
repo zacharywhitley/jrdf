@@ -83,10 +83,10 @@ public final class AnswerImpl implements Answer, Serializable {
     private final long timeTaken;
     private boolean hasProjected;
 
-    public AnswerImpl(LinkedHashSet<Attribute> heading, Relation results, long timeTaken, boolean hasProjected) {
-        checkNotNull(heading, results);
-        this.heading = heading;
-        this.results = results;
+    public AnswerImpl(LinkedHashSet<Attribute> newHeading, Relation newResults, long timeTaken, boolean hasProjected) {
+        checkNotNull(newHeading, newResults);
+        this.heading = newHeading;
+        this.results = newResults;
         this.timeTaken = timeTaken;
         this.hasProjected = hasProjected;
     }

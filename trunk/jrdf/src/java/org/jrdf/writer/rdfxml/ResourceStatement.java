@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 1267 $
+ * $Date: 2007-07-26 14:25:03 +1000 (Thu, 26 Jul 2007) $
  *
  * ====================================================================
  *
@@ -63,10 +63,9 @@ import org.jrdf.graph.Triple;
 import org.jrdf.writer.WriteException;
 
 import java.io.PrintWriter;
-import java.io.IOException;
 
 public interface ResourceStatement extends RdfXmlWritable {
-    void setAndWriteTriple(Triple newTriple, PrintWriter writer) throws IOException, WriteException;
+    void setAndWriteTriple(Triple newTriple, PrintWriter writer) throws WriteException;
 
     void setTriple(Triple newTriple);
 }

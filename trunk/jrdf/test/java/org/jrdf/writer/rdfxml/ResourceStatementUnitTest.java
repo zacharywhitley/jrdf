@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -56,29 +56,26 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
 package org.jrdf.writer.rdfxml;
 
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.writer.WriteException;
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.RdfNamespaceMap;
 
-import java.io.PrintWriter;
+import java.lang.reflect.Modifier;
 
-/**
- * Represents a RDF/XML footer for a given resource.
- *
- * @author TurnerRX
- */
-public class ResourceFooter implements RdfXmlWritable {
-
-    private static final String RESOURCE_FOOTER = "</rdf:Description>";
-
-    public ResourceFooter(SubjectNode subject) {
-        if (subject == null) {
-            throw new IllegalArgumentException("Resource is null.");
-        }
-    }
-
-    public void write(PrintWriter writer) throws WriteException {
-        writer.println(RESOURCE_FOOTER);
+public class ResourceStatementUnitTest extends TestCase {
+    private static final Class[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class};
+    private MockFactory factory = new MockFactory();
+    
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(ResourceStatement.class, ResourceStatementImpl.class);
+        checkConstructor(ResourceStatementImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(ResourceStatementImpl.class, PARAM_TYPES);
     }
 }

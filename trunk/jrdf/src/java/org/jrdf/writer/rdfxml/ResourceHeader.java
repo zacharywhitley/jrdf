@@ -64,7 +64,6 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.WriteException;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
 
@@ -90,7 +89,7 @@ public class ResourceHeader implements RdfXmlWritable {
         this.registry = registry;
     }
 
-    public void write(PrintWriter writer) throws IOException, WriteException {
+    public void write(PrintWriter writer) throws WriteException {
         if (subject instanceof URIReference) {
             write((URIReference) subject, writer);
         } else if (subject instanceof BlankNode) {

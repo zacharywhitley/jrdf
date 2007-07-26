@@ -64,14 +64,14 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
 
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.PrintWriter;
 
 /**
@@ -79,25 +79,20 @@ import java.io.PrintWriter;
  *
  * @author TurnerRX
  */
-public class ResourceStatementImpl implements ResourceStatement {
+public final class ResourceStatementImpl implements ResourceStatement {
     private XMLOutputFactory factory = XMLOutputFactory.newInstance();
     private XMLStreamWriter xmlStreamWriter;
     private Triple triple;
     private RdfNamespaceMap names;
     private BlankNodeRegistry registry;
 
-    public ResourceStatementImpl(RdfNamespaceMap names, BlankNodeRegistry registry) {
-        if (names == null) {
-            throw new IllegalArgumentException("RdfNamespaceMap is null.");
-        }
-        if (registry == null) {
-            throw new IllegalArgumentException("BlankNodeRegistryImpl is null.");
-        }
-        this.names = names;
-        this.registry = registry;
+    public ResourceStatementImpl(RdfNamespaceMap newNames, BlankNodeRegistry newBlankNodeRegistry) {
+        checkNotNull(newNames, newBlankNodeRegistry);
+        this.names = newNames;
+        this.registry = newBlankNodeRegistry;
     }
 
-    public void setAndWriteTriple(Triple newTriple, PrintWriter writer) throws IOException, WriteException {
+    public void setAndWriteTriple(Triple newTriple, PrintWriter writer) throws WriteException {
         setTriple(newTriple);
         write(writer);
     }
@@ -106,7 +101,7 @@ public class ResourceStatementImpl implements ResourceStatement {
         triple = newTriple;
     }
 
-    public void write(PrintWriter writer) throws IOException, WriteException {
+    public void write(PrintWriter writer) throws WriteException {
         PredicateNode predicate = triple.getPredicate();
         ObjectNode object = triple.getObject();
         try {
