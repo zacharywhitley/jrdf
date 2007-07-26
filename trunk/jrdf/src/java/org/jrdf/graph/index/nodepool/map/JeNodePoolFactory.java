@@ -86,7 +86,7 @@ public class JeNodePoolFactory implements NodePoolFactory {
         this.handler = newHandler;
     }
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
         try {
             env = getEnvironment();

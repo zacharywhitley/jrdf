@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.parser.bdb;
+package org.jrdf.parser.bnodefactory;
 
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
@@ -75,7 +75,7 @@ import org.jrdf.graph.GraphElementFactoryException;
 
 import java.io.File;
 
-public class JeParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
+public class JeParserBlankNodeFactory implements ParserBlankNodeFactory {
     private static final String DB_NAME = "blank_node_factory_db";
     private static final String CLASS_CATALOG = "java_class_catalog_blank_node";
     private JeBDBHandler handler;
@@ -84,7 +84,7 @@ public class JeParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
     private Environment env;
     private Database database;
 
-    public JeParserBlankNodeFactoryImpl(JeBDBHandler newHandler, GraphElementFactory newValueFactory)
+    public JeParserBlankNodeFactory(JeBDBHandler newHandler, GraphElementFactory newValueFactory)
         throws DatabaseException {
         this.handler = newHandler;
         valueFactory =  newValueFactory;

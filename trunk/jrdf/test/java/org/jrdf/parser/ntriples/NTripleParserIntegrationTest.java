@@ -65,7 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.parseNTriplesFile;
@@ -106,7 +106,7 @@ public class NTripleParserIntegrationTest extends TestCase {
     public void testStandardTest() throws Exception {
         InputStream in = getSampleData(this.getClass(), TEST_DATA);
         Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
-        ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+        ParserBlankNodeFactory factory = new MemParserBlankNodeFactory(newGraph.getElementFactory());
         Set<Triple> actualResults = parseNTriplesFile(in, newGraph, factory);
         Set<Triple> expectedResults = standardTest(newGraph, factory);
         checkGraph(actualResults, expectedResults);
@@ -115,7 +115,7 @@ public class NTripleParserIntegrationTest extends TestCase {
     public void testPositiveTests() throws Exception {
         for (String fileName : POSITIVE_TESTS.keySet()) {
             Graph newGraph = TEST_JRDF_FACTORY.getNewGraph();
-            ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(newGraph.getElementFactory());
+            ParserBlankNodeFactory factory = new MemParserBlankNodeFactory(newGraph.getElementFactory());
             Set<Triple> actualResults = getResults(fileName, newGraph, factory);
             newGraph = TEST_JRDF_FACTORY.getNewGraph();
             Set<Triple> expectedResults = getResults(POSITIVE_TESTS.get(fileName), newGraph, factory);
@@ -128,7 +128,7 @@ public class NTripleParserIntegrationTest extends TestCase {
             final URL file = getClass().getClassLoader().getResource(fileName);
             Graph graph = TEST_JRDF_FACTORY.getNewGraph();
             ParserFactory parserFactory = new ParserFactoryImpl();
-            ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(graph.getElementFactory());
+            ParserBlankNodeFactory factory = new MemParserBlankNodeFactory(graph.getElementFactory());
             NTriplesParser parser = parserFactory.createParser(graph.getElementFactory(), factory);
             parser.setStatementHandler(new GraphStatementHandler(graph));
             parser.parse(file.openStream(), "foo");

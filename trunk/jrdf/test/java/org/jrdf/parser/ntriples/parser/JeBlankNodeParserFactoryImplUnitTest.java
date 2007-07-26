@@ -60,13 +60,8 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
-import org.jrdf.parser.bdb.JeParserBlankNodeFactoryImpl;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.JeBDBHandler;
 import org.jrdf.JeBDBHandlerImpl;
-import org.jrdf.util.test.MockFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.index.nodepool.map.JeNodePoolFactory;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import com.sleepycat.je.DatabaseException;
