@@ -62,6 +62,10 @@ package org.jrdf.parser.rdfxml;
 import junit.framework.TestCase;
 import static org.jrdf.parser.ParserTestUtil.checkNegativeRdfTestParseException;
 import static org.jrdf.parser.ParserTestUtil.checkPositiveNtRdfTest;
+import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.TestJRDFFactory;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -72,6 +76,8 @@ import java.util.Set;
 // TODO 1 AN Doesn't do graph equality for blank nodes.
 // TODO 2 AN Doesn't test for correctly created graphs - li's by themselves.
 public class RdfXmlIntegrationTest extends TestCase {
+    private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
+
     private static final Map<String, String[]> POSITIVE_TESTS = new HashMap<String, String[]>() {
         {
             put("rdf-tests/amp-in-url/test001.nt", new String[] {"rdf-tests/amp-in-url/test001.rdf"});
@@ -115,10 +121,12 @@ public class RdfXmlIntegrationTest extends TestCase {
             final String rdfFile = data[0];
             final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
             final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
+            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
+            ParserBlankNodeFactory nodeFactory = new MemParserBlankNodeFactory(graph.getElementFactory());
             if (data.length == 2) {
-                checkPositiveNtRdfTest(expectedFile, actualFile, data[1]);
+                checkPositiveNtRdfTest(expectedFile, actualFile, data[1], graph, nodeFactory);
             } else {
-                checkPositiveNtRdfTest(expectedFile, actualFile, "http://example.org/");
+                checkPositiveNtRdfTest(expectedFile, actualFile, "http://example.org/", graph, nodeFactory);
             }
         }
     }
@@ -126,7 +134,9 @@ public class RdfXmlIntegrationTest extends TestCase {
     public void testNegativeTests() throws Exception {
         for (String rdfFile : NEGATIVE_TESTS) {
             final URL errorFile = getClass().getClassLoader().getResource(rdfFile);
-            checkNegativeRdfTestParseException(errorFile);
+            Graph graph = TEST_JRDF_FACTORY.getNewGraph();
+            ParserBlankNodeFactory nodeFactory = new MemParserBlankNodeFactory(graph.getElementFactory());
+            checkNegativeRdfTestParseException(errorFile, graph, nodeFactory);
         }
     }
 }
