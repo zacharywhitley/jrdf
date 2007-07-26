@@ -68,6 +68,8 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.JeNodePoolFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.JeBDBHandler;
+import org.jrdf.JeBDBHandlerImpl;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
@@ -80,6 +82,7 @@ import org.jrdf.util.NodeTypeComparatorImpl;
  */
 public class JeGraphImplUnitTest extends AbstractGraphUnitTest {
 
+
     /**
      * Create a graph implementation.
      *
@@ -87,7 +90,8 @@ public class JeGraphImplUnitTest extends AbstractGraphUnitTest {
      */
     public Graph newGraph() throws Exception {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        NodePoolFactory nodePoolFactory = new JeNodePoolFactory();
+        JeBDBHandler handler = new JeBDBHandlerImpl();
+        NodePoolFactory nodePoolFactory = new JeNodePoolFactory(handler);
         NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
         GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return factory.getGraph();

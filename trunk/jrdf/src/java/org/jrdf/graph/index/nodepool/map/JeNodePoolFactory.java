@@ -67,33 +67,38 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
+import org.jrdf.JeBDBHandler;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.AbstractJeBDBHandler;
 
 import java.io.File;
 
-public class JeNodePoolFactory extends AbstractJeBDBHandler implements NodePoolFactory {
+public class JeNodePoolFactory implements NodePoolFactory {
     private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
     private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
     private static final String USERNAME = System.getProperty("user.name");
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+    private final JeBDBHandler handler;
     private StoredMap nodePool;
     private StoredMap stringPool;
     private StoredClassCatalog nodePoolCatalog;
     private StoredClassCatalog stringPoolCatalog;
 
+    public JeNodePoolFactory(JeBDBHandler newHandler) {
+        this.handler = newHandler;
+    }
+
     public NodePool createNodePool() {
         try {
             File dir = new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
             dir.mkdirs();
-            EnvironmentConfig envConfig = setUpEnvironment();
+            EnvironmentConfig envConfig = handler.setUpEnvironment();
             Environment env = new Environment(dir, envConfig);
-            DatabaseConfig dbConfig = setUpDatabase(true);
+            DatabaseConfig dbConfig = handler.setUpDatabase(true);
 //            setupCatalogs(env, dbConfig);
-            nodePoolCatalog = setupCatalog(env, dbConfig, CLASS_CATALOG_NODEPOOL);
-            stringPoolCatalog = setupCatalog(env, dbConfig, CLASS_CATALOG_STRINGPOOL);
+            nodePoolCatalog = handler.setupCatalog(env, dbConfig, CLASS_CATALOG_NODEPOOL);
+            stringPoolCatalog = handler.setupCatalog(env, dbConfig, CLASS_CATALOG_STRINGPOOL);
             nodePool = createMap(env, "nodePool", nodePoolCatalog, Long.class, Node.class);
             stringPool = createMap(env, "stringPool", stringPoolCatalog, String.class, Long.class);
             return new NodePoolImpl(nodePool, stringPool);
@@ -125,7 +130,7 @@ public class JeNodePoolFactory extends AbstractJeBDBHandler implements NodePoolF
 
     private StoredMap createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data
     ) throws DatabaseException {
-        DatabaseConfig dbConfig = setUpDatabase(false);
+        DatabaseConfig dbConfig = handler.setUpDatabase(false);
         Database database = env.openDatabase(null, dbName, dbConfig);
         SerialBinding keyBinding = new SerialBinding(catalog, key);
         SerialBinding dataBinding = new SerialBinding(nodePoolCatalog, data);

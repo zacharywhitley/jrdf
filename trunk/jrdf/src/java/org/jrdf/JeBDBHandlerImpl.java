@@ -66,7 +66,7 @@ import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Database;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 
-public abstract class AbstractJeBDBHandler implements JeBDBHandler {
+public class JeBDBHandlerImpl implements JeBDBHandler {
 
     public EnvironmentConfig setUpEnvironment() {
         EnvironmentConfig env = new EnvironmentConfig();
