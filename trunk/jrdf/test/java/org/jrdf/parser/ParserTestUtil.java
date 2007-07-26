@@ -85,12 +85,12 @@ public class ParserTestUtil {
     private ParserTestUtil() {
     }
 
-    public static void checkPositiveNtRdfTest(URL expectedFile, URL actualFile, String baseURI) throws Exception {
+    public static void checkPositiveNtRdfTest(URL expectedFile, URL actualFile, String baseURI, Graph actualGraph,
+        ParserBlankNodeFactory blankNodeFactory) throws Exception {
         RDFInputFactory factory = newInstance();
         RDFEventReader eventReader = factory.createRDFEventReader(expectedFile.openStream(), URI.create(baseURI),
             NEW_GRAPH, BLANK_NODE_FACTORY);
-        Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
-        Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
+        Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, blankNodeFactory);
         rdfXmlParser.parse(actualFile.openStream(), baseURI);
         ClosableIterator<Triple> results = actualGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Set<Triple> resultTriples = new HashSet<Triple>();
@@ -103,9 +103,9 @@ public class ParserTestUtil {
         }
     }
 
-    public static void checkNegativeRdfTestParseException(final URL errorFile) throws Exception {
-        Graph actualGraph = TEST_JRDF_FACTORY.getNewGraph();
-        final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph);
+    public static void checkNegativeRdfTestParseException(final URL errorFile, Graph actualGraph,
+        ParserBlankNodeFactory blankNodeFactory) throws Exception {
+        final Parser rdfXmlParser = new GraphRdfXmlParser(actualGraph, blankNodeFactory);
         AssertThrows.assertThrows(ParseException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 rdfXmlParser.parse(errorFile.openStream(), "http://example.org/");
