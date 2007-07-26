@@ -65,7 +65,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.RDFEventReader;
 import org.jrdf.parser.RDFInputFactory;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
@@ -81,7 +81,7 @@ public class NTriplesEventReaderIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
+    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new MemParserBlankNodeFactory(NEW_GRAPH.getElementFactory());
 
     public void testParseFile() throws Exception {
         RDFEventReader eventReader = init();

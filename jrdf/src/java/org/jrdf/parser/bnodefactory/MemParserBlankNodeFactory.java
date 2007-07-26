@@ -57,15 +57,15 @@
  *
  */
 
-package org.jrdf.parser.mem;
+package org.jrdf.parser.bnodefactory;
 
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 /**
  * A factory for BlankNodes that uses a Map to keep track of the BlankNodes that have been allocated by
@@ -76,7 +76,7 @@ import java.util.Map;
  * @author David Makepeace
  * @version $Revision$
  */
-public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
+public class MemParserBlankNodeFactory implements ParserBlankNodeFactory {
 
     /**
      * A factory for creating BlankNodes (as well as resources and literals).
@@ -94,7 +94,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
      *
      * @param newValueFactory factory to create nodes with.
      */
-    public ParserBlankNodeFactoryImpl(GraphElementFactory newValueFactory) {
+    public MemParserBlankNodeFactory(GraphElementFactory newValueFactory) {
         valueFactory = newValueFactory;
     }
 

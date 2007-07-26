@@ -36,7 +36,7 @@ import org.jrdf.parser.ParseLocationListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
 import org.jrdf.vocabulary.RDF;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -226,7 +226,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      * @param graphElementFactory A GraphElementFactory.
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory) throws GraphException {
-        this(graphElementFactory, new ParserBlankNodeFactoryImpl(graphElementFactory));
+        this(graphElementFactory, new MemParserBlankNodeFactory(graphElementFactory));
     }
 
     /**

@@ -66,7 +66,7 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.mem.ParserBlankNodeFactoryImpl;
+import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
 import static org.jrdf.parser.ntriples.NTriplesRDFInputFactoryImpl.newInstance;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterator;
@@ -80,7 +80,7 @@ import java.util.Set;
 public class ParserTestUtil {
     private static final TestJRDFFactory TEST_JRDF_FACTORY = TestJRDFFactory.getFactory();
     private static final Graph NEW_GRAPH = TEST_JRDF_FACTORY.getNewGraph();
-    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new ParserBlankNodeFactoryImpl(NEW_GRAPH.getElementFactory());
+    private static final ParserBlankNodeFactory BLANK_NODE_FACTORY = new MemParserBlankNodeFactory(NEW_GRAPH.getElementFactory());
 
     private ParserTestUtil() {
     }
