@@ -57,51 +57,27 @@
  *
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.parser.ntriples.parser;
 
-import junit.textui.TestRunner;
-import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.index.nodepool.map.JeNodePoolFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import junit.framework.TestCase;
+import org.jrdf.parser.bdb.JeParserBlankNodeFactoryImpl;
+import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.JeBDBHandler;
 import org.jrdf.JeBDBHandlerImpl;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.index.nodepool.map.JeNodePoolFactory;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
+import com.sleepycat.je.DatabaseException;
 
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
+public class JeBlankNodeParserFactoryImplUnitTest extends TestCase {
 
-/**
- * Implementation of {@link AbstractGraphUnitTest} test case.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @author Andrew Newman
- * @version $Revision: 1045 $
- */
-public class JeGraphImplUnitTest extends AbstractGraphUnitTest {
+     public void testBlankNodeParserFactoryImpl () throws DatabaseException {
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    public Graph newGraph() throws Exception {
-        LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        JeBDBHandler handler = new JeBDBHandlerImpl();
-        NodePoolFactory nodePoolFactory = new JeNodePoolFactory(handler);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
-        GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
-    }
+         JeBDBHandler handler = new JeBDBHandlerImpl();
+         NodePoolFactory nodePoolFactory = new JeNodePoolFactory(handler);
 
-    /**
-     * Default test runner.
-     *
-     * @param args The command line arguments
-     */
-    public static void main(String[] args) throws Exception {
-        TestRunner.run(JeGraphImplUnitTest.class);
-    }
+//         JeParserBlankNodeFactoryImpl jeParserBlankNodeFactory = new JeParserBlankNodeFactoryImpl(handler, Graph.getElementFactory());
+     }
 }

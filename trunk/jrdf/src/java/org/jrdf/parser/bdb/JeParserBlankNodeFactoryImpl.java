@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.index.nodepool.map;
+package org.jrdf.parser.bdb;
 
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
@@ -68,64 +68,76 @@ import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import org.jrdf.JeBDBHandler;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
+import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 
 import java.io.File;
 
-public class JeNodePoolFactory implements NodePoolFactory {
-    private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
-    private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
-    private final JeBDBHandler handler;
-    private StoredClassCatalog nodePoolCatalog;
-    private StoredClassCatalog stringPoolCatalog;
+public class JeParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
+    private static final String DB_NAME = "blank_node_factory_db";
+    private static final String CLASS_CATALOG = "java_class_catalog_blank_node";
+    private JeBDBHandler handler;
+    private GraphElementFactory valueFactory;
+    private StoredMap bNodeIdMap;
     private Environment env;
+    private Database database;
 
-    public JeNodePoolFactory(JeBDBHandler newHandler) {
+    public JeParserBlankNodeFactoryImpl(JeBDBHandler newHandler, GraphElementFactory newValueFactory)
+        throws DatabaseException {
         this.handler = newHandler;
+        valueFactory =  newValueFactory;
+        bNodeIdMap = createMap();
+        closeDBConnections();
     }
 
-    @SuppressWarnings({"unchecked"})
-    public NodePool createNodePool() {
-        try {
-            env = getEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabase(true);
-            nodePoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_NODEPOOL, dbConfig);
-            stringPoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_STRINGPOOL, dbConfig);
-            StoredMap nodePool = createMap("nodePool", nodePoolCatalog, Long.class, Node.class);
-            StoredMap stringPool = createMap("stringPool", stringPoolCatalog, String.class, Long.class);
-            return new NodePoolImpl(nodePool, stringPool);
-        } catch (DatabaseException dbe) {
-            throw new RuntimeException("Could not create database", dbe);
+    public BlankNode createBlankNode() throws GraphElementFactoryException {
+        return valueFactory.createResource();
+    }
+
+    public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
+        // Maybe the node ID has been used before:
+        BlankNode result = (BlankNode) bNodeIdMap.get(nodeID);
+
+        if (null == result) {
+            // This is a new node ID, create a new BNode object for it
+            result = valueFactory.createResource();
+
+            // Remember it, the nodeID might occur again.
+            bNodeIdMap.put(nodeID, result);
         }
+        return result;
+    }
+
+    public void clear() {
+        bNodeIdMap.clear();
     }
 
     public void close() {
-        try {
-            if (env != null) {
-                env.close();
-            }
-            nodePoolCatalog.close();
-            stringPoolCatalog.close();
-        } catch (DatabaseException e) {
-            new RuntimeException(e);
-        }
+
+    }
+
+    private StoredMap createMap() throws DatabaseException {
+        env = getEnvironment();
+        DatabaseConfig dbConfig = handler.setUpDatabase(false);
+        StoredClassCatalog catalog = handler.setupCatalog(env, CLASS_CATALOG, dbConfig);
+        database = env.openDatabase(null, DB_NAME, dbConfig);
+        SerialBinding keyBinding = new SerialBinding(catalog, String.class);
+        SerialBinding dataBinding = new SerialBinding(catalog, BlankNode.class);
+        return new StoredMap(database, keyBinding, dataBinding, true);
     }
 
     private Environment getEnvironment() throws DatabaseException {
         File dir = handler.getDir();
         dir.mkdirs();
         EnvironmentConfig envConfig = handler.setUpEnvironment();
-        return new Environment(dir, envConfig);
+        Environment env = new Environment(dir, envConfig);
+        return env;
     }
 
-    private StoredMap createMap(String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data)
-        throws DatabaseException {
-        DatabaseConfig dbConfig = handler.setUpDatabase(false);
-        Database database = env.openDatabase(null, dbName, dbConfig);
-        SerialBinding keyBinding = new SerialBinding(catalog, key);
-        SerialBinding dataBinding = new SerialBinding(catalog, data);
-        return new StoredMap(database, keyBinding, dataBinding, true);
+    private void closeDBConnections() throws DatabaseException {
+        env.close();
+        database.close();
     }
 }

@@ -72,4 +72,8 @@ public class MemNodePoolFactory implements NodePoolFactory {
         Map<String, Long> stringPool = new HashMap<String, Long>();
         return new NodePoolImpl(nodePool, stringPool);
     }
+
+    public void close() {
+        // Do nothing - in memory.
+    }
 }
