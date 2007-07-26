@@ -204,7 +204,7 @@ public class RdfXmlWriter implements RdfWriter {
 
     private void writeStatements(IteratorStack<Triple> stack) throws IOException, WriteException {
         // write statements
-        ResourceStatement statement = new ResourceStatement(names, blankNodeRegistry);
+        ResourceStatement statement = new ResourceStatementImpl(names, blankNodeRegistry);
         statement.setAndWriteTriple(currentTriple, printWriter);
         while (stack.hasNext()) {
             currentTriple = stack.pop();
