@@ -68,9 +68,9 @@ import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.IteratorStack;
 import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
-import org.jrdf.writer.RdfNamespaceMap;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -88,16 +88,6 @@ public class RdfXmlWriter implements RdfWriter {
      * PrintWriter output. Caller is responsible for closing stream.
      */
     private PrintWriter printWriter;
-
-    /**
-     * Current triple off the stack.
-     */
-    private Triple currentTriple;
-
-    /**
-     * The current subject node.
-     */
-    private SubjectNode currentSubject;
 
     /**
      * Used to track blank nodes.
@@ -176,43 +166,32 @@ public class RdfXmlWriter implements RdfWriter {
      */
     private void writeStatements(Graph graph) throws GraphException, WriteException {
         // get all statements
-        // TODO - ensure these statements are ordered.
-        // write one subject at a time
         ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
             while (stack.hasNext()) {
-                writeSubject(stack);
+                // write one subject at a time
+                Triple currentTriple = stack.pop();
+                SubjectNode currentSubject = currentTriple.getSubject();
+                writeResourceHeader(currentSubject);
+                writeResourceBody(currentTriple, stack, currentSubject);
+                writeResourceFooter(currentSubject);
             }
         } finally {
             iter.close();
         }
     }
 
-    /**
-     * Writes a Resource with all its statements to the writer.
-     *
-     * @param stack    IteratorStack<Triple>
-     * @throws IOException    If an IOException is encountered while writing the subject.
-     * @throws WriteException If the subject could not be written
-     */
-    private void writeSubject(IteratorStack<Triple> stack) throws WriteException {
-        currentTriple = stack.pop();
-        currentSubject = currentTriple.getSubject();
-        writeHeader();
-        writeStatements(stack);
-        writeFooter();
+    private void writeResourceFooter(SubjectNode currentSubject) throws WriteException {
+        ResourceFooter footer = new ResourceFooter(currentSubject);
+        footer.write(printWriter);
     }
 
-    private void writeHeader() throws WriteException {
-        ResourceHeader header = new ResourceHeader(currentSubject, blankNodeRegistry);
-        header.write(printWriter);
-    }
-
-    private void writeStatements(IteratorStack<Triple> stack) throws WriteException {
+    private void writeResourceBody(Triple currentTriple, IteratorStack<Triple> stack, SubjectNode currentSubject)
+        throws WriteException {
         // write statements
-        ResourceStatement statement = new ResourceStatementImpl(names, blankNodeRegistry, printWriter);
-        statement.writeTriple(currentTriple);
+        PredicateObjectWriter statement = new PredicateObjectWriterImpl(names, blankNodeRegistry, printWriter);
+        statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         while (stack.hasNext()) {
             currentTriple = stack.pop();
             // Have we run out of the same subject - if so push it back on an stop iterating.
@@ -220,12 +199,12 @@ public class RdfXmlWriter implements RdfWriter {
                 stack.push(currentTriple);
                 break;
             }
-            statement.writeTriple(currentTriple);
+            statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         }
     }
 
-    private void writeFooter() throws WriteException {
-        ResourceFooter footer = new ResourceFooter(currentSubject);
-        footer.write(printWriter);
+    private void writeResourceHeader(SubjectNode currentSubject) throws WriteException {
+        ResourceHeader header = new ResourceHeader(currentSubject, blankNodeRegistry);
+        header.write(printWriter);
     }
 }

@@ -63,8 +63,6 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
@@ -80,15 +78,16 @@ import java.io.PrintWriter;
  * Represents a statement about a resource.
  *
  * @author TurnerRX
+ * @author Andrew Newman
  */
-public final class ResourceStatementImpl implements ResourceStatement, TypedNodeVisitor {
+public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     private static final XMLOutputFactory FACTORY = XMLOutputFactory.newInstance();
     private final RdfNamespaceMap names;
     private final BlankNodeRegistry registry;
     private XMLStreamWriter xmlStreamWriter;
-    private XMLStreamException exception;
+    private Exception exception;
 
-    public ResourceStatementImpl(RdfNamespaceMap newNames, BlankNodeRegistry newBlankNodeRegistry,
+    public PredicateObjectWriterImpl(RdfNamespaceMap newNames, BlankNodeRegistry newBlankNodeRegistry,
         PrintWriter newPrintWriter) {
         checkNotNull(newNames, newBlankNodeRegistry, newPrintWriter);
         this.names = newNames;
@@ -100,16 +99,14 @@ public final class ResourceStatementImpl implements ResourceStatement, TypedNode
         }
     }
 
-    public void writeTriple(Triple newTriple) throws WriteException {
+    public void writePredicateObject(PredicateNode predicate, ObjectNode object) throws WriteException {
         try {
-            PredicateNode predicate = newTriple.getPredicate();
-            ObjectNode object = newTriple.getObject();
-            checkPredicate(predicate);
-            xmlStreamWriter.writeStartElement(names.replaceNamespace((URIReference) predicate));
-            writeTriple(object);
+            writePredicate(predicate);
+            writeObject(object);
             xmlStreamWriter.writeEndElement();
             xmlStreamWriter.flush();
-        } catch (XMLStreamException e) {
+        } catch (Exception e) {
+            exception = null;
             throw new WriteException(e);
         }
     }
@@ -145,16 +142,17 @@ public final class ResourceStatementImpl implements ResourceStatement, TypedNode
     }
 
     public void visitNode(Node node) {
-        //throw new WriteException("Unknown object node type: " + node.getClass().getName());
+        exception = new WriteException("Unknown object node type: " + node.getClass().getName());
     }
 
-    private void checkPredicate(PredicateNode predicate) throws WriteException {
+    private void writePredicate(PredicateNode predicate) throws WriteException, XMLStreamException {
         if (!(URIReference.class.isAssignableFrom(predicate.getClass()))) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
         }
+        xmlStreamWriter.writeStartElement(names.replaceNamespace((URIReference) predicate));
     }
 
-    private void writeTriple(ObjectNode object) throws XMLStreamException {
+    private void writeObject(ObjectNode object) throws Exception {
         object.accept(this);
         if (exception != null) {
             throw exception;
