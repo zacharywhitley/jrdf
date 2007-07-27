@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 1267 $
- * $Date: 2007-07-26 14:25:03 +1000 (Thu, 26 Jul 2007) $
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -59,9 +59,25 @@
 
 package org.jrdf.writer.rdfxml;
 
-import org.jrdf.graph.Triple;
-import org.jrdf.writer.WriteException;
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.MockFactory;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.RdfNamespaceMap;
 
-public interface ResourceStatement {
-    void writeTriple(Triple newTriple) throws WriteException;
+import java.lang.reflect.Modifier;
+import java.io.PrintWriter;
+
+public class PredicateObjectWriterImplUnitTest extends TestCase {
+    private static final Class<?>[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class,
+        PrintWriter.class};
+    private MockFactory factory = new MockFactory();
+    
+    public void testClassProperties() {
+        checkImplementationOfInterfaceAndFinal(PredicateObjectWriter.class, PredicateObjectWriterImpl.class);
+        checkConstructor(PredicateObjectWriterImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(PredicateObjectWriterImpl.class, PARAM_TYPES);
+    }
 }
