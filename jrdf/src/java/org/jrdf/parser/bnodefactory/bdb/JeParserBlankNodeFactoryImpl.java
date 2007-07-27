@@ -57,13 +57,10 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory;
+package org.jrdf.parser.bnodefactory.bdb;
 
-import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.collections.StoredMap;
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import org.jrdf.JeBDBHandler;
@@ -72,21 +69,20 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
-public class JeParserBlankNodeFactory implements ParserBlankNodeFactory {
+public class JeParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
     private static final String DB_NAME = "blank_node_factory_db";
     private static final String CLASS_CATALOG = "java_class_catalog_blank_node";
-    private JeBDBHandler handler;
     private GraphElementFactory valueFactory;
     private StoredMap bNodeIdMap;
     private Environment env;
-    private Database database;
     private StoredClassCatalog catalog;
 
-    public JeParserBlankNodeFactory(JeBDBHandler newHandler, GraphElementFactory newValueFactory)
+    public JeParserBlankNodeFactoryImpl(JeBDBHandler newHandler, GraphElementFactory newValueFactory)
         throws DatabaseException {
-        this.handler = newHandler;
-        valueFactory =  newValueFactory;
-        bNodeIdMap = createMap();
+        this.valueFactory = newValueFactory;
+        env = newHandler.setUpEnvironment();
+        catalog = newHandler.setupCatalog(env, CLASS_CATALOG, newHandler.setUpDatabase(true));
+        bNodeIdMap = newHandler.createMap(env, DB_NAME, catalog, String.class, BlankNode.class);
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {
@@ -115,19 +111,8 @@ public class JeParserBlankNodeFactory implements ParserBlankNodeFactory {
         try {
             env.close();
             catalog.close();
-            database.close();
         } catch (DatabaseException e) {
-            System.err.println("Cannot close database connections: " + e);
+            throw new RuntimeException(e);
         }
-    }
-
-    private StoredMap createMap() throws DatabaseException {
-        env = handler.setUpEnvironment();
-        DatabaseConfig dbConfig = handler.setUpDatabase(false);
-        catalog = handler.setupCatalog(env, CLASS_CATALOG, dbConfig);
-        database = env.openDatabase(null, DB_NAME, dbConfig);
-        SerialBinding keyBinding = new SerialBinding(catalog, String.class);
-        SerialBinding dataBinding = new SerialBinding(catalog, BlankNode.class);
-        return new StoredMap(database, keyBinding, dataBinding, true);
     }
 }

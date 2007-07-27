@@ -65,6 +65,8 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Database;
 import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.bind.serial.SerialBinding;
+import com.sleepycat.collections.StoredMap;
 
 import java.io.File;
 
@@ -75,11 +77,14 @@ public class JeBDBHandlerImpl implements JeBDBHandler {
     public File getDir() {
         return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
-    public EnvironmentConfig setUpEnvironment() {
+
+    public Environment setUpEnvironment() throws DatabaseException {
+        File dir = getDir();
+        dir.mkdirs();
         EnvironmentConfig env = new EnvironmentConfig();
         env.setTransactional(true);
         env.setAllowCreate(true);
-        return env;
+        return new Environment(dir, env);
     }
 
     public DatabaseConfig setUpDatabase(boolean transactional) {
@@ -92,7 +97,15 @@ public class JeBDBHandlerImpl implements JeBDBHandler {
     public StoredClassCatalog setupCatalog(Environment env, String classCatalogString,  DatabaseConfig dbConfig)
         throws DatabaseException {
         Database catalogDb = env.openDatabase(null, classCatalogString, dbConfig);
-        StoredClassCatalog storedClsCat = new StoredClassCatalog(catalogDb);
-        return storedClsCat;
+        return new StoredClassCatalog(catalogDb);
+    }
+
+    public StoredMap createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data)
+        throws DatabaseException {
+        DatabaseConfig dbConfig = setUpDatabase(false);
+        Database database = env.openDatabase(null, dbName, dbConfig);
+        SerialBinding keyBinding = new SerialBinding(catalog, key);
+        SerialBinding dataBinding = new SerialBinding(catalog, data);
+        return new StoredMap(database, keyBinding, dataBinding, true);
     }
 }
