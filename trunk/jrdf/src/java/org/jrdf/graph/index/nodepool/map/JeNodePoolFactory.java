@@ -59,20 +59,15 @@
 
 package org.jrdf.graph.index.nodepool.map;
 
-import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.collections.StoredMap;
-import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-import com.sleepycat.je.EnvironmentConfig;
 import org.jrdf.JeBDBHandler;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
-
-import java.io.File;
 
 public class JeNodePoolFactory implements NodePoolFactory {
     private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
@@ -89,12 +84,12 @@ public class JeNodePoolFactory implements NodePoolFactory {
     @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
         try {
-            env = getEnvironment();
+            env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabase(true);
             nodePoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_NODEPOOL, dbConfig);
             stringPoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_STRINGPOOL, dbConfig);
-            StoredMap nodePool = createMap("nodePool", nodePoolCatalog, Long.class, Node.class);
-            StoredMap stringPool = createMap("stringPool", stringPoolCatalog, String.class, Long.class);
+            StoredMap nodePool = handler.createMap(env, "nodePool", nodePoolCatalog, Long.class, Node.class);
+            StoredMap stringPool = handler.createMap(env, "stringPool", stringPoolCatalog, String.class, Long.class);
             return new NodePoolImpl(nodePool, stringPool);
         } catch (DatabaseException dbe) {
             throw new RuntimeException("Could not create database", dbe);
@@ -111,21 +106,5 @@ public class JeNodePoolFactory implements NodePoolFactory {
         } catch (DatabaseException e) {
             new RuntimeException(e);
         }
-    }
-
-    private Environment getEnvironment() throws DatabaseException {
-        File dir = handler.getDir();
-        dir.mkdirs();
-        EnvironmentConfig envConfig = handler.setUpEnvironment();
-        return new Environment(dir, envConfig);
-    }
-
-    private StoredMap createMap(String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data)
-        throws DatabaseException {
-        DatabaseConfig dbConfig = handler.setUpDatabase(false);
-        Database database = env.openDatabase(null, dbName, dbConfig);
-        SerialBinding keyBinding = new SerialBinding(catalog, key);
-        SerialBinding dataBinding = new SerialBinding(catalog, data);
-        return new StoredMap(database, keyBinding, dataBinding, true);
     }
 }

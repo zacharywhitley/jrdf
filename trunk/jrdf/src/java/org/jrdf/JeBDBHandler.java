@@ -59,11 +59,11 @@
 
 package org.jrdf;
 
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.EnvironmentConfig;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.DatabaseException;
 import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.collections.StoredMap;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
 
 import java.io.File;
 
@@ -71,10 +71,13 @@ public interface JeBDBHandler {
 
     File getDir();
 
-    EnvironmentConfig setUpEnvironment();
+    Environment setUpEnvironment() throws DatabaseException;
 
     DatabaseConfig setUpDatabase(boolean transactional);
 
     StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
+        throws DatabaseException;
+
+    StoredMap createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data)
         throws DatabaseException;
 }
