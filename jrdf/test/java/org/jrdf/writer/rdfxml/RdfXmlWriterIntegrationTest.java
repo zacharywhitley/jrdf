@@ -90,7 +90,6 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
 
     private static final String GROUNDED = "org/jrdf/writer/rdfxml/data/rdf/grounded.rdf";
     private static final String UNGROUNDED = "org/jrdf/writer/rdfxml/data/rdf/ungrounded.rdf";
-    private static final String PIZZA = "org/jrdf/writer/rdfxml/data/rdf/pizza.owl";
     private Comparison comparison;
 
     public void setUp() {

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
@@ -59,25 +59,11 @@
 
 package org.jrdf.writer.rdfxml;
 
-import junit.framework.TestCase;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.MockFactory;
-import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfNamespaceMap;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.writer.WriteException;
 
-import javax.xml.stream.XMLStreamWriter;
-import java.lang.reflect.Modifier;
-
-public class PredicateObjectWriterImplUnitTest extends TestCase {
-    private static final Class<?>[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class,
-        XMLStreamWriter.class};
-    private MockFactory factory = new MockFactory();
-    
-    public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(PredicateObjectWriter.class, PredicateObjectWriterImpl.class);
-        checkConstructor(PredicateObjectWriterImpl.class, Modifier.PUBLIC, PARAM_TYPES);
-        checkConstructNullAssertion(PredicateObjectWriterImpl.class, PARAM_TYPES);
-    }
+public interface ResourceWriter extends TypedNodeVisitor {
+    void writeHead(SubjectNode subject) throws WriteException;
+    void writeFooter() throws WriteException;
 }

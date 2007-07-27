@@ -69,10 +69,8 @@ import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.WriteException;
 
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.io.PrintWriter;
 
 /**
  * Represents a statement about a resource.
@@ -81,22 +79,17 @@ import java.io.PrintWriter;
  * @author Andrew Newman
  */
 public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
-    private static final XMLOutputFactory FACTORY = XMLOutputFactory.newInstance();
     private final RdfNamespaceMap names;
     private final BlankNodeRegistry registry;
     private XMLStreamWriter xmlStreamWriter;
     private Exception exception;
 
     public PredicateObjectWriterImpl(RdfNamespaceMap newNames, BlankNodeRegistry newBlankNodeRegistry,
-        PrintWriter newPrintWriter) {
-        checkNotNull(newNames, newBlankNodeRegistry, newPrintWriter);
+        XMLStreamWriter newXmlStreamWriter) {
+        checkNotNull(newNames, newBlankNodeRegistry, newXmlStreamWriter);
         this.names = newNames;
         this.registry = newBlankNodeRegistry;
-        try {
-            xmlStreamWriter = FACTORY.createXMLStreamWriter(newPrintWriter);
-        } catch (XMLStreamException e) {
-            throw new RuntimeException(e);
-        }
+        this.xmlStreamWriter = newXmlStreamWriter;
     }
 
     public void writePredicateObject(PredicateNode predicate, ObjectNode object) throws WriteException {
