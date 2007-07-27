@@ -79,7 +79,7 @@ import java.util.LinkedHashSet;
  * @version $Revision$
  */
 public final class AnswerImplUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE, Boolean.TYPE};
+    private static final Class<?>[] PARAM_TYPES = new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE, Boolean.TYPE};
     private MockFactory factory = new MockFactory();
 
     public void testClassProperties() {

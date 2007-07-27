@@ -60,6 +60,7 @@
 package org.jrdf.query.relation.constants;
 
 import org.jrdf.graph.Node;
+import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
@@ -174,6 +175,10 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
         @Override
         public boolean equals(Object obj) {
             return true;
+        }
+
+        public void accept(TypedNodeVisitor visitor) {
+            // Do nothing.
         }
     }
 }

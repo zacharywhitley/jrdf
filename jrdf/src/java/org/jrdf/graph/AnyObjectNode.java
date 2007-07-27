@@ -88,4 +88,8 @@ public final class AnyObjectNode implements ObjectNode, Serializable {
     private Object readResolve() throws ObjectStreamException {
         return ANY_OBJECT_NODE;
     }
+
+    public void accept(TypedNodeVisitor visitor) {
+        // Does nothing.
+    }
 }
