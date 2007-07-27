@@ -87,4 +87,8 @@ public final class AnyPredicateNode implements PredicateNode, Serializable {
     private Object readResolve() throws ObjectStreamException {
         return ANY_PREDICATE_NODE;
     }
+
+    public void accept(TypedNodeVisitor visitor) {
+        // Does nothing.
+    }
 }

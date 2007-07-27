@@ -66,7 +66,7 @@ package org.jrdf.graph;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Node {
+public interface Node extends TypedNodeVisitable {
 
     // FIXME TJA: Breadcrumb - Removed
     //long serialVersionUID = -9031232254076464056L;

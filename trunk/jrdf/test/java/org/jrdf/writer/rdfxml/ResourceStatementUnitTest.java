@@ -68,9 +68,11 @@ import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 
 import java.lang.reflect.Modifier;
+import java.io.PrintWriter;
 
 public class ResourceStatementUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class};
+    private static final Class<?>[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class,
+        PrintWriter.class};
     private MockFactory factory = new MockFactory();
     
     public void testClassProperties() {

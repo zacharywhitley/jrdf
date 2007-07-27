@@ -62,8 +62,6 @@ package org.jrdf.writer.rdfxml;
 import org.jrdf.graph.Triple;
 import org.jrdf.writer.WriteException;
 
-import java.io.PrintWriter;
-
-public interface ResourceStatement extends RdfXmlWritable {
-    void writeTriple(Triple newTriple, PrintWriter writer) throws WriteException;
+public interface ResourceStatement {
+    void writeTriple(Triple newTriple) throws WriteException;
 }
