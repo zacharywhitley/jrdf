@@ -59,63 +59,82 @@
 package org.jrdf.writer.rdfxml;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.WriteException;
 
-import java.io.PrintWriter;
-import java.net.URI;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * Represents an RDF/XML header for a given resource.
  *
  * @author TurnerRX
+ * @author Andrew Newman
  */
-public class ResourceHeader implements RdfXmlWritable {
-    private static final String RESOURCE_HEADER = "<rdf:Description rdf:about=\"${resource}\">";
-    private static final String BLANK_NODE_HEADER = "<rdf:Description rdf:nodeID=\"${nodeId}\">";
-    private SubjectNode subject;
+public class ResourceWriterImpl implements ResourceWriter {
     private BlankNodeRegistry registry;
+    private XMLStreamWriter xmlStreamWriter;
+    private Exception exception;
 
-    public ResourceHeader(SubjectNode subject, BlankNodeRegistry registry) {
-        if (subject == null) {
-            throw new IllegalArgumentException("SubjectNode is null.");
+    public ResourceWriterImpl(BlankNodeRegistry newRegistry, XMLStreamWriter newXmlStreamWriter) {
+        checkNotNull(newRegistry, newXmlStreamWriter);
+        this.registry = newRegistry;
+        this.xmlStreamWriter = newXmlStreamWriter;
+    }
+
+    public void writeHead(SubjectNode subject) throws WriteException {
+        try {
+            xmlStreamWriter.writeStartElement("rdf:Description");
+            subject.accept(this);
+            xmlStreamWriter.flush();
+            if (exception != null) {
+                throw exception;
+            }
+        } catch (Exception e) {
+            exception = null;
+            throw new WriteException(e);
         }
-        if (registry == null) {
-            throw new IllegalArgumentException("BlankNodeRegistry is null.");
-        }
-        this.subject = subject;
-        this.registry = registry;
     }
 
-    public void write(PrintWriter writer) throws WriteException {
-        if (subject instanceof URIReference) {
-            write((URIReference) subject, writer);
-        } else if (subject instanceof BlankNode) {
-            write((BlankNode) subject, writer);
-        } else {
-            throw new WriteException("Unknown SubjectNode type: " + subject.getClass().getName());
+    public void writeFooter() throws WriteException {
+        try {
+            xmlStreamWriter.writeEndElement();
+            xmlStreamWriter.flush();
+        } catch (XMLStreamException e) {
+            throw new WriteException(e);
         }
     }
 
-    private void write(URIReference resource, PrintWriter writer) {
-        String header = RESOURCE_HEADER;
-        String node = getUri(resource);
-        header = header.replaceAll("\\$\\{resource\\}", node);
-        writer.println(header);
+    public void visitBlankNode(BlankNode blankNode) {
+        try {
+            xmlStreamWriter.writeAttribute("rdf:nodeID", registry.getNodeId(blankNode));
+        } catch (XMLStreamException e) {
+            exception = e;
+        }
     }
 
-    private void write(BlankNode node, PrintWriter writer) {
-        String header = BLANK_NODE_HEADER;
-        String nodeId = this.registry.getNodeId(node);
-        header = header.replaceAll("\\$\\{nodeId\\}", nodeId);
-        writer.println(header);
+    public void visitURIReference(URIReference uriReference) {
+        try {
+            xmlStreamWriter.writeAttribute("rdf:about", uriReference.getURI().toString());
+        } catch (XMLStreamException e) {
+            exception = e;
+        }
     }
 
-    private String getUri(URIReference resource) {
-        URI uri = resource.getURI();
-        return uri.toString();
+    public void visitLiteral(Literal literal) {
+        unknownType(literal);
     }
 
+    public void visitNode(Node node) {
+        unknownType(node);
+    }
+
+    private void unknownType(Node node) {
+        exception = new WriteException("Unknown SubjectNode type: " + node.getClass().getName());
+    }
 }

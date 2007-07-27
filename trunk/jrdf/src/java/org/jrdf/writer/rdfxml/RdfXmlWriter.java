@@ -72,6 +72,9 @@ import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -84,6 +87,8 @@ import java.io.Writer;
  * @author TurnerRX
  */
 public class RdfXmlWriter implements RdfWriter {
+    private static final XMLOutputFactory FACTORY = XMLOutputFactory.newInstance();
+
     /**
      * PrintWriter output. Caller is responsible for closing stream.
      */
@@ -98,6 +103,7 @@ public class RdfXmlWriter implements RdfWriter {
      * Containing mappings between partial URIs and namespaces.
      */
     private RdfNamespaceMap names;
+    private XMLStreamWriter xmlStreamWriter;
 
     public RdfXmlWriter(BlankNodeRegistry newBlankNodeRegistry, RdfNamespaceMap newNames) {
         this.blankNodeRegistry = newBlankNodeRegistry;
@@ -141,6 +147,14 @@ public class RdfXmlWriter implements RdfWriter {
 
             // header
             RdfXmlHeader header = new RdfXmlHeader(encoding, names);
+
+            // TODO AN - Remove this is a hack!!!!
+            try {
+                xmlStreamWriter = FACTORY.createXMLStreamWriter(printWriter);
+            } catch (XMLStreamException e) {
+                new WriteException(e);
+            }
+
             header.write(printWriter);
 
             // body
@@ -173,24 +187,20 @@ public class RdfXmlWriter implements RdfWriter {
                 // write one subject at a time
                 Triple currentTriple = stack.pop();
                 SubjectNode currentSubject = currentTriple.getSubject();
-                writeResourceHeader(currentSubject);
+                ResourceWriter writer = new ResourceWriterImpl(blankNodeRegistry, xmlStreamWriter);
+                writer.writeHead(currentSubject);
                 writeResourceBody(currentTriple, stack, currentSubject);
-                writeResourceFooter(currentSubject);
+                writer.writeFooter();
             }
         } finally {
             iter.close();
         }
     }
 
-    private void writeResourceFooter(SubjectNode currentSubject) throws WriteException {
-        ResourceFooter footer = new ResourceFooter(currentSubject);
-        footer.write(printWriter);
-    }
-
     private void writeResourceBody(Triple currentTriple, IteratorStack<Triple> stack, SubjectNode currentSubject)
         throws WriteException {
         // write statements
-        PredicateObjectWriter statement = new PredicateObjectWriterImpl(names, blankNodeRegistry, printWriter);
+        PredicateObjectWriter statement = new PredicateObjectWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
         statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         while (stack.hasNext()) {
             currentTriple = stack.pop();
@@ -203,8 +213,4 @@ public class RdfXmlWriter implements RdfWriter {
         }
     }
 
-    private void writeResourceHeader(SubjectNode currentSubject) throws WriteException {
-        ResourceHeader header = new ResourceHeader(currentSubject, blankNodeRegistry);
-        header.write(printWriter);
-    }
 }
