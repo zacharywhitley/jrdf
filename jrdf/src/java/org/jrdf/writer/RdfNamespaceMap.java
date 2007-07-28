@@ -32,13 +32,21 @@ public interface RdfNamespaceMap {
     String replaceNamespace(URIReference resource) throws NamespaceException;
 
     /**
-     * Returns the namespace that is mapped to the resource URI (prefix), or
-     * null if the URI is not mapped.
+     * Returns the prefix that is mapped to the resource or null if the URI is not mapped.  Extracts the uri to the
+     * last '#' or '/' character.
      *
-     * @param resource URIReference resource URI to look up.
-     * @return String mapped namespace
+     * @param resource prefix to look up.
+     * @return full namespace.
      */
-    String getNamespace(URIReference resource);
+    String getPrefix(URIReference resource);
+
+    /**
+     * Returns the URI that is mapped to the prefix or null if the prefix is not mapped.
+     *
+     * @param partial prefix to lookup.
+     * @return full namespace.
+     */
+    String getFullUri(String partial);
 
     /**
      * Returns the Names mapping entry set.

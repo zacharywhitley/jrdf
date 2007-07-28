@@ -86,6 +86,7 @@ import java.io.Writer;
  * @author TurnerRX
  */
 public class RdfXmlWriter implements RdfWriter {
+    private static final String ENCODING_DEFAULT = "UTF-8";
     private static final XMLOutputFactory FACTORY = XMLOutputFactory.newInstance();
 
     /**
@@ -133,7 +134,6 @@ public class RdfXmlWriter implements RdfWriter {
      *
      * @param graph    Graph to be written.
      * @param encoding String XML encoding attribute.
-     * @throws IOException    If the graph contents cannot be written to the output.
      * @throws GraphException If the graph cannot be read.
      * @throws WriteException If the contents could not be written
      */
@@ -144,9 +144,6 @@ public class RdfXmlWriter implements RdfWriter {
             names.reset();
             names.load(graph);
 
-            // header
-            final RdfXmlHeader header = new RdfXmlHeader(encoding, names);
-
             // TODO AN - Remove this is a hack!!!!
             try {
                 xmlStreamWriter = FACTORY.createXMLStreamWriter(printWriter);
@@ -154,14 +151,16 @@ public class RdfXmlWriter implements RdfWriter {
                 new WriteException(e);
             }
 
-            header.write(printWriter);
+            // header
+            encoding = (encoding == null) ? ENCODING_DEFAULT : encoding;
+            final RdfXmlDocument header = new RdfXmlDocumentImpl(encoding, names, xmlStreamWriter);
+            header.writeHeader();
 
             // body
             writeStatements(graph);
 
             // footer
-            final RdfXmlFooter footer = new RdfXmlFooter();
-            footer.write(printWriter);
+            header.writeFooter();
         } finally {
             if (printWriter != null) {
                 printWriter.flush();
@@ -174,7 +173,6 @@ public class RdfXmlWriter implements RdfWriter {
      *
      * @param graph  Graph containing statements.
      * @throws GraphException If the graph cannot be read.
-     * @throws IOException    If the statements cannot be written.
      * @throws WriteException If the statements could not be written.
      */
     private void writeStatements(final Graph graph) throws GraphException, WriteException {
@@ -182,10 +180,10 @@ public class RdfXmlWriter implements RdfWriter {
         final ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
+            final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
             while (stack.hasNext()) {
                 // write one subject at a time
                 final Triple currentTriple = stack.pop();
-                final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
                 writer.setTriple(currentTriple);
                 writer.writeStart();
                 writer.writeNestedStatements(stack);

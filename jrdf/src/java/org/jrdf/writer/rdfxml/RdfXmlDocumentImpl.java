@@ -58,9 +58,12 @@
  */
 package org.jrdf.writer.rdfxml;
 
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.RdfNamespaceMap;
+import org.jrdf.writer.WriteException;
 
-import java.io.PrintWriter;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -70,64 +73,73 @@ import java.util.Set;
  *
  * @author TurnerRX
  */
-public class RdfXmlHeader implements RdfXmlWritable {
+public class RdfXmlDocumentImpl implements RdfXmlDocument {
 
     private static final String XML_VERSION = "1.0";
-    private static final String ENCODING_DEFAULT = "UTF-8";
-
-    // XML template snippets
-    private static final String XML_HEADER = "<?xml version=\"${version}\" encoding=\"${encoding}\"?>";
     private static final String DOC_TYPE = "<!DOCTYPE rdf:RDF[\n ${entities} ]>";
     private static final String XML_ENTITY = "\t<!ENTITY ${name} '${uri}'>\n";
-    private static final String RDF_HEADER = "<rdf:RDF ${namespaces} \n>";
-    private static final String XML_NAMESPACE = "\n\txmlns:${name}=\"${uri}\"";
 
     /**
      * Character set to be used when writing header
      */
-    private String encoding = ENCODING_DEFAULT;
+    private final String encoding;
 
     /**
      * Used to map partial URIs to RDF namespaces
      */
-    private RdfNamespaceMap names;
+    private final RdfNamespaceMap names;
+
+    /**
+     * Writer for the XML document.
+     */
+    private final XMLStreamWriter xmlStreamWriter;
 
     /**
      * Constructor. Specifies the character encoding to be used.
      *
      * @param encoding charset
+     * @param names the namespace maps (from prefix to full name and back).
+     * @param xmlStreamWriter the writer to add new elements to.
      */
-    public RdfXmlHeader(String encoding, RdfNamespaceMap names) {
-        this.encoding = (encoding == null) ? ENCODING_DEFAULT : encoding;
+    public RdfXmlDocumentImpl(final String encoding, final RdfNamespaceMap names,
+            final XMLStreamWriter xmlStreamWriter) {
+        checkNotNull(encoding, names, xmlStreamWriter);
+        this.encoding = encoding;
         this.names = names;
+        this.xmlStreamWriter = xmlStreamWriter;
     }
 
-    public void write(PrintWriter writer) {
-        writeXmlHeader(writer);
-        writeDocTypeDef(writer);
-        writeRdfHeader(writer);
+    public void writeHeader() throws WriteException {
+        try {
+            xmlStreamWriter.writeStartDocument(encoding, XML_VERSION);
+            xmlStreamWriter.writeDTD(writeDocTypeDef());
+            xmlStreamWriter.writeStartElement("rdf", "RDF", names.getFullUri("rdf"));
+            for (final Entry<String, String> entry : names.getNameEntries()) {
+                xmlStreamWriter.writeNamespace(entry.getKey(), entry.getValue());
+            }
+        } catch (XMLStreamException e) {
+            throw new WriteException(e);
+        }
     }
 
-    /**
-     * Writes the XML header with encoding information and XML entities.
-     */
-    private void writeXmlHeader(PrintWriter writer) {
-        String header = XML_HEADER;
-        header = header.replaceAll("\\$\\{version\\}", XML_VERSION);
-        header = header.replaceAll("\\$\\{encoding\\}", encoding);
-        writer.println(header);
+    public void writeFooter() throws WriteException {
+        try {
+            xmlStreamWriter.writeEndElement();
+            xmlStreamWriter.writeEndDocument();
+        } catch (XMLStreamException e) {
+            throw new WriteException(e);
+        }
     }
 
     /**
      * Writes the document type definition including entities.
      *
-     * @param writer PrintWriter output
+     * @return the DOCTYPE entities.
      */
-    private void writeDocTypeDef(PrintWriter writer) {
+    private String writeDocTypeDef() {
         String docType = DOC_TYPE;
-        String entities = getEntities();
-        docType = docType.replaceAll("\\$\\{entities\\}", entities);
-        writer.println(docType);
+        docType = docType.replaceAll("\\$\\{entities\\}", getEntities());
+        return docType;
     }
 
     /**
@@ -137,38 +149,10 @@ public class RdfXmlHeader implements RdfXmlWritable {
      * @return String RDF namespaces as xml entities.
      */
     private String getEntities() {
-        StringBuffer buffer = new StringBuffer();
-        Set<Entry<String, String>> entries = this.names.getNameEntries();
-        for (Entry<String, String> entry : entries) {
+        final StringBuffer buffer = new StringBuffer();
+        final Set<Entry<String, String>> entries = names.getNameEntries();
+        for (final Entry<String, String> entry : entries) {
             String entity = XML_ENTITY;
-            entity = entity.replaceAll("\\$\\{name\\}", entry.getKey());
-            entity = entity.replaceAll("\\$\\{uri\\}", entry.getValue());
-            buffer.append(entity);
-        }
-        return buffer.toString();
-    }
-
-    /**
-     * Writes the Rdf header with namespaces.
-     */
-    private void writeRdfHeader(PrintWriter writer) {
-        String header = RDF_HEADER;
-        String names = getNamespaces();
-        header = header.replaceAll("\\$\\{namespaces\\}", names);
-        writer.println(header);
-    }
-
-    /**
-     * Returns a list of XML namespace declarations for the entries in the
-     * namespace map.
-     *
-     * @return String RDF namespaces as XML namespace declarations.
-     */
-    private String getNamespaces() {
-        StringBuffer buffer = new StringBuffer();
-        Set<Entry<String, String>> entries = this.names.getNameEntries();
-        for (Entry<String, String> entry : entries) {
-            String entity = XML_NAMESPACE;
             entity = entity.replaceAll("\\$\\{name\\}", entry.getKey());
             entity = entity.replaceAll("\\$\\{uri\\}", entry.getValue());
             buffer.append(entity);
