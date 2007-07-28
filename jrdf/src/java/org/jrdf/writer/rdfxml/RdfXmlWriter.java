@@ -63,7 +63,6 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.IteratorStack;
@@ -73,8 +72,8 @@ import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
 
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -146,7 +145,7 @@ public class RdfXmlWriter implements RdfWriter {
             names.load(graph);
 
             // header
-            RdfXmlHeader header = new RdfXmlHeader(encoding, names);
+            final RdfXmlHeader header = new RdfXmlHeader(encoding, names);
 
             // TODO AN - Remove this is a hack!!!!
             try {
@@ -161,7 +160,7 @@ public class RdfXmlWriter implements RdfWriter {
             writeStatements(graph);
 
             // footer
-            RdfXmlFooter footer = new RdfXmlFooter();
+            final RdfXmlFooter footer = new RdfXmlFooter();
             footer.write(printWriter);
         } finally {
             if (printWriter != null) {
@@ -178,19 +177,19 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws IOException    If the statements cannot be written.
      * @throws WriteException If the statements could not be written.
      */
-    private void writeStatements(Graph graph) throws GraphException, WriteException {
+    private void writeStatements(final Graph graph) throws GraphException, WriteException {
         // get all statements
-        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        final ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
-            IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
+            final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
             while (stack.hasNext()) {
                 // write one subject at a time
-                Triple currentTriple = stack.pop();
-                SubjectNode currentSubject = currentTriple.getSubject();
-                ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
-                writer.writeHead(currentSubject);
-                writer.writeBody(currentSubject, currentTriple, stack);
-                writer.writeFooter();
+                final Triple currentTriple = stack.pop();
+                final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
+                writer.setTriple(currentTriple);
+                writer.writeStart();
+                writer.writeNestedStatements(stack);
+                writer.writeEnd();
             }
         } finally {
             iter.close();
