@@ -60,10 +60,16 @@
 package org.jrdf.writer.rdfxml;
 
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.expect;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.URIReference;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ParameterDefinition;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 
@@ -74,10 +80,37 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
     private static final Class<?>[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class,
         XMLStreamWriter.class};
     private MockFactory factory = new MockFactory();
-    
+    private RdfNamespaceMap map;
+    private BlankNodeRegistry blankNodeRegistry;
+    private XMLStreamWriter xmlStreamWriter;
+    private PredicateObjectWriter writer;
+    private static final ParameterDefinition WRITE_PREDICATE_OBJECT = new ParameterDefinition(
+            new String[]{"predicate", "object"}, new Class[]{PredicateNode.class, ObjectNode.class});
+
+    public void setUp() {
+        map = factory.createMock(RdfNamespaceMap.class);
+        blankNodeRegistry = factory.createMock(BlankNodeRegistry.class);
+        xmlStreamWriter = factory.createMock(XMLStreamWriter.class);
+        writer = new PredicateObjectWriterImpl(map, blankNodeRegistry, xmlStreamWriter);
+    }
+
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(PredicateObjectWriter.class, PredicateObjectWriterImpl.class);
         checkConstructor(PredicateObjectWriterImpl.class, Modifier.PUBLIC, PARAM_TYPES);
         checkConstructNullAssertion(PredicateObjectWriterImpl.class, PARAM_TYPES);
+        checkMethodNullAssertions(writer, "writePredicateObject", WRITE_PREDICATE_OBJECT);
+    }
+
+    public void testWritePredicateTest() throws Exception {
+        URIReference predicate = factory.createMock(URIReference.class);
+        URIReference object = factory.createMock(URIReference.class);
+        expect(map.replaceNamespace(predicate)).andReturn("foo");
+        xmlStreamWriter.writeStartElement("foo");
+        object.accept(writer);
+        xmlStreamWriter.writeEndElement();
+        xmlStreamWriter.flush();
+        factory.replay();
+        writer.writePredicateObject(predicate, object);
+        factory.verify();
     }
 }
