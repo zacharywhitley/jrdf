@@ -61,7 +61,6 @@ package org.jrdf.writer.rdfxml;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Triple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -80,25 +79,28 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Andrew Newman
  */
 public class ResourceWriterImpl implements ResourceWriter {
-    private final RdfNamespaceMap names;
     private final BlankNodeRegistry registry;
     private final XMLStreamWriter xmlStreamWriter;
     private final PredicateObjectWriter statement;
+    private Triple currentTriple;
     private Exception exception;
 
     public ResourceWriterImpl(final RdfNamespaceMap names, final BlankNodeRegistry newRegistry,
             final XMLStreamWriter newXmlStreamWriter) {
         checkNotNull(names, newRegistry, newXmlStreamWriter);
-        this.names = names;
         this.registry = newRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;
         this.statement = new PredicateObjectWriterImpl(names, registry, xmlStreamWriter);
     }
 
-    public void writeHead(final SubjectNode subject) throws WriteException {
+    public void setTriple(final Triple triple) {
+        this.currentTriple = triple;
+    }
+
+    public void writeStart() throws WriteException {
         try {
             xmlStreamWriter.writeStartElement("rdf:Description");
-            subject.accept(this);
+            currentTriple.getSubject().accept(this);
             xmlStreamWriter.flush();
             if (exception != null) {
                 throw exception;
@@ -109,14 +111,13 @@ public class ResourceWriterImpl implements ResourceWriter {
         }
     }
 
-    public void writeBody(final SubjectNode currentSubject, Triple currentTriple, final IteratorStack<Triple> stack)
-        throws WriteException {
+    public void writeNestedStatements(final IteratorStack<Triple> stack) throws WriteException {
         // write statements
         statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         while (stack.hasNext()) {
             currentTriple = stack.pop();
             // Have we run out of the same subject - if so push it back on an stop iterating.
-            if (!currentSubject.equals(currentTriple.getSubject())) {
+            if (!this.currentTriple.equals(currentTriple.getSubject())) {
                 stack.push(currentTriple);
                 break;
             }
@@ -124,7 +125,7 @@ public class ResourceWriterImpl implements ResourceWriter {
         }
     }
 
-    public void writeFooter() throws WriteException {
+    public void writeEnd() throws WriteException {
         try {
             xmlStreamWriter.writeEndElement();
             xmlStreamWriter.flush();
