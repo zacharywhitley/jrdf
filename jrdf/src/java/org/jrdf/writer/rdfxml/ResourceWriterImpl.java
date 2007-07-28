@@ -63,9 +63,12 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Triple;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.util.IteratorStack;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.WriteException;
+import org.jrdf.writer.RdfNamespaceMap;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -77,17 +80,22 @@ import javax.xml.stream.XMLStreamWriter;
  * @author Andrew Newman
  */
 public class ResourceWriterImpl implements ResourceWriter {
-    private BlankNodeRegistry registry;
-    private XMLStreamWriter xmlStreamWriter;
+    private final RdfNamespaceMap names;
+    private final BlankNodeRegistry registry;
+    private final XMLStreamWriter xmlStreamWriter;
+    private final PredicateObjectWriter statement;
     private Exception exception;
 
-    public ResourceWriterImpl(BlankNodeRegistry newRegistry, XMLStreamWriter newXmlStreamWriter) {
-        checkNotNull(newRegistry, newXmlStreamWriter);
+    public ResourceWriterImpl(final RdfNamespaceMap names, final BlankNodeRegistry newRegistry,
+            final XMLStreamWriter newXmlStreamWriter) {
+        checkNotNull(names, newRegistry, newXmlStreamWriter);
+        this.names = names;
         this.registry = newRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;
+        this.statement = new PredicateObjectWriterImpl(names, registry, xmlStreamWriter);
     }
 
-    public void writeHead(SubjectNode subject) throws WriteException {
+    public void writeHead(final SubjectNode subject) throws WriteException {
         try {
             xmlStreamWriter.writeStartElement("rdf:Description");
             subject.accept(this);
@@ -101,6 +109,21 @@ public class ResourceWriterImpl implements ResourceWriter {
         }
     }
 
+    public void writeBody(final SubjectNode currentSubject, Triple currentTriple, final IteratorStack<Triple> stack)
+        throws WriteException {
+        // write statements
+        statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
+        while (stack.hasNext()) {
+            currentTriple = stack.pop();
+            // Have we run out of the same subject - if so push it back on an stop iterating.
+            if (!currentSubject.equals(currentTriple.getSubject())) {
+                stack.push(currentTriple);
+                break;
+            }
+            statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
+        }
+    }
+
     public void writeFooter() throws WriteException {
         try {
             xmlStreamWriter.writeEndElement();
@@ -110,7 +133,7 @@ public class ResourceWriterImpl implements ResourceWriter {
         }
     }
 
-    public void visitBlankNode(BlankNode blankNode) {
+    public void visitBlankNode(final BlankNode blankNode) {
         try {
             xmlStreamWriter.writeAttribute("rdf:nodeID", registry.getNodeId(blankNode));
         } catch (XMLStreamException e) {
@@ -118,7 +141,7 @@ public class ResourceWriterImpl implements ResourceWriter {
         }
     }
 
-    public void visitURIReference(URIReference uriReference) {
+    public void visitURIReference(final URIReference uriReference) {
         try {
             xmlStreamWriter.writeAttribute("rdf:about", uriReference.getURI().toString());
         } catch (XMLStreamException e) {
@@ -126,15 +149,15 @@ public class ResourceWriterImpl implements ResourceWriter {
         }
     }
 
-    public void visitLiteral(Literal literal) {
+    public void visitLiteral(final Literal literal) {
         unknownType(literal);
     }
 
-    public void visitNode(Node node) {
+    public void visitNode(final Node node) {
         unknownType(node);
     }
 
-    private void unknownType(Node node) {
+    private void unknownType(final Node node) {
         exception = new WriteException("Unknown SubjectNode type: " + node.getClass().getName());
     }
 }

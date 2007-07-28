@@ -187,30 +187,13 @@ public class RdfXmlWriter implements RdfWriter {
                 // write one subject at a time
                 Triple currentTriple = stack.pop();
                 SubjectNode currentSubject = currentTriple.getSubject();
-                ResourceWriter writer = new ResourceWriterImpl(blankNodeRegistry, xmlStreamWriter);
+                ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
                 writer.writeHead(currentSubject);
-                writeResourceBody(currentTriple, stack, currentSubject);
+                writer.writeBody(currentSubject, currentTriple, stack);
                 writer.writeFooter();
             }
         } finally {
             iter.close();
         }
     }
-
-    private void writeResourceBody(Triple currentTriple, IteratorStack<Triple> stack, SubjectNode currentSubject)
-        throws WriteException {
-        // write statements
-        PredicateObjectWriter statement = new PredicateObjectWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
-        statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
-        while (stack.hasNext()) {
-            currentTriple = stack.pop();
-            // Have we run out of the same subject - if so push it back on an stop iterating.
-            if (!currentSubject.equals(currentTriple.getSubject())) {
-                stack.push(currentTriple);
-                break;
-            }
-            statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
-        }
-    }
-
 }

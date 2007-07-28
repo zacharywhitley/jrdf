@@ -61,9 +61,12 @@ package org.jrdf.writer.rdfxml;
 
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.Triple;
 import org.jrdf.writer.WriteException;
+import org.jrdf.util.IteratorStack;
 
 public interface ResourceWriter extends TypedNodeVisitor {
     void writeHead(SubjectNode subject) throws WriteException;
+    void writeBody(SubjectNode currentSubject, Triple currentTriple, IteratorStack<Triple> stack) throws WriteException;
     void writeFooter() throws WriteException;
 }
