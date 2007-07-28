@@ -112,7 +112,6 @@ public class ResourceWriterImpl implements ResourceWriter {
     }
 
     public void writeNestedStatements(final IteratorStack<Triple> stack) throws WriteException {
-        // write statements
         statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         while (stack.hasNext()) {
             currentTriple = stack.pop();

@@ -66,6 +66,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.IteratorStack;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
@@ -103,15 +104,20 @@ public class RdfXmlWriter implements RdfWriter {
      * Containing mappings between partial URIs and namespaces.
      */
     private RdfNamespaceMap names;
+
+    /**
+     * Writer for the XML document.
+     */
     private XMLStreamWriter xmlStreamWriter;
 
     public RdfXmlWriter(BlankNodeRegistry newBlankNodeRegistry, RdfNamespaceMap newNames) {
+        checkNotNull(newBlankNodeRegistry, newNames);
         this.blankNodeRegistry = newBlankNodeRegistry;
         this.names = newNames;
     }
 
     public void write(Graph graph, OutputStream stream) throws IOException, WriteException, GraphException {
-        OutputStreamWriter writer = new OutputStreamWriter(stream);
+        final OutputStreamWriter writer = new OutputStreamWriter(stream);
         try {
             write(graph, writer);
         } finally {
@@ -176,13 +182,11 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws WriteException If the statements could not be written.
      */
     private void writeStatements(final Graph graph) throws GraphException, WriteException {
-        // get all statements
         final ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);
             final ResourceWriter writer = new ResourceWriterImpl(names, blankNodeRegistry, xmlStreamWriter);
             while (stack.hasNext()) {
-                // write one subject at a time
                 final Triple currentTriple = stack.pop();
                 writer.setTriple(currentTriple);
                 writer.writeStart();
