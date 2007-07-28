@@ -56,10 +56,14 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
         return full.replaceFirst(partial, ns + ":");
     }
 
-    public String getNamespace(URIReference resource) {
+    public String getPrefix(URIReference resource) {
         URI uri = resource.getURI();
         String partial = getPartialUri(uri.toString());
         return uris.get(partial);
+    }
+
+    public String getFullUri(String partial) {
+        return names.get(partial);
     }
 
     public Set<Map.Entry<String, String>> getNameEntries() {
