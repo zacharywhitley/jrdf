@@ -84,15 +84,16 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     private XMLStreamWriter xmlStreamWriter;
     private Exception exception;
 
-    public PredicateObjectWriterImpl(RdfNamespaceMap newNames, BlankNodeRegistry newBlankNodeRegistry,
-        XMLStreamWriter newXmlStreamWriter) {
+    public PredicateObjectWriterImpl(final RdfNamespaceMap newNames, final BlankNodeRegistry newBlankNodeRegistry,
+        final XMLStreamWriter newXmlStreamWriter) {
         checkNotNull(newNames, newBlankNodeRegistry, newXmlStreamWriter);
         this.names = newNames;
         this.registry = newBlankNodeRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;
     }
 
-    public void writePredicateObject(PredicateNode predicate, ObjectNode object) throws WriteException {
+    public void writePredicateObject(final PredicateNode predicate, final ObjectNode object) throws WriteException {
+        checkNotNull(predicate, object);
         try {
             writePredicate(predicate);
             writeObject(object);
@@ -142,7 +143,8 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
         if (!(URIReference.class.isAssignableFrom(predicate.getClass()))) {
             throw new WriteException("Unknown predicate node type: " + predicate.getClass().getName());
         }
-        xmlStreamWriter.writeStartElement(names.replaceNamespace((URIReference) predicate));
+        String resourceName = names.replaceNamespace((URIReference) predicate);
+        xmlStreamWriter.writeStartElement(resourceName);
     }
 
     private void writeObject(ObjectNode object) throws Exception {
