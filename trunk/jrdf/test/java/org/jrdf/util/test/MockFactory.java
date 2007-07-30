@@ -100,6 +100,12 @@ public class MockFactory {
         }
     }
 
+    public <T>T createNiceMock(Class<T> clazz) {
+        IMocksControl control = EasyMock.createNiceControl();
+        controls.add(control);
+        return control.createMock(clazz);
+    }
+
     /**
      * Creates mocked implementations of the parameter type given.
      *

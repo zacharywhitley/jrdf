@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory.bdb;
+package org.jrdf.parser.bnodefactory;
 
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.DatabaseException;
@@ -87,14 +87,14 @@ public class JeParserBlankNodeFactoryUnitTest extends TestCase {
     public void setUp() throws DatabaseException {
         handler = mockFactory.createMock(JeBDBHandler.class);
         graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-//        blankNode = new BlankNodeImpl(UNIQUE_ID_1);
+//        blankNode = new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(UNIQUE_ID_1);
         env = mockFactory.createMock(Environment.class);
         catalog = mockFactory.createMock(StoredClassCatalog.class);
     }
 
     public void testCreateMap() throws Exception {
         assertTrue(true);
-        // Create mock and expectation for Environment:
+//        // Create mock and expectation for Environment:
 //        expect(handler.setUpEnvironment()).andReturn(env);
 //        DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
 //        Database database = mockFactory.createNiceMock(Database.class);
@@ -111,19 +111,20 @@ public class JeParserBlankNodeFactoryUnitTest extends TestCase {
 //        nodeFactory = new JeParserBlankNodeFactory(handler, graphElementFactory);
 //        // call the constructor with mock objects - handler and mock GraphElementFactory (no expectations).
 //        mockFactory.verify();
-    }
-
+//    }
+//
 //    public void testCreateBlankNode() throws Exception {
 //        expect(graphElementFactory.createResource()).andReturn(blankNode);
 //        mockFactory.replay();
 //        BlankNode actualBlankNode = nodeFactory.createBlankNode();
 //        assertTrue("Expected the blank node to be the one created in the mock", actualBlankNode == blankNode);
 //        mockFactory.verify();
-//    }
-//
+    }
+
 //    public void testCreateBlankNodeWithId() throws Exception {
 //        expect(graphElementFactory.createResource()).andReturn(blankNode);
-//        expect(graphElementFactory.createResource()).andReturn(new BlankNodeImpl(UNIQUE_ID_2)).anyTimes();
+//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
+//            UNIQUE_ID_2)).anyTimes();
 //        mockFactory.replay();
 //        checkBlankNodeCreationById();
 //        checkBlankNodeCreationById();
@@ -133,9 +134,12 @@ public class JeParserBlankNodeFactoryUnitTest extends TestCase {
 //    }
 //
 //    public void testClear() throws Exception {
-//        expect(graphElementFactory.createResource()).andReturn(new BlankNodeImpl(UNIQUE_ID_1));
-//        expect(graphElementFactory.createResource()).andReturn(new BlankNodeImpl(UNIQUE_ID_2));
-//        expect(graphElementFactory.createResource()).andReturn(new BlankNodeImpl(UNIQUE_ID_3));
+//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
+//            UNIQUE_ID_1));
+//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
+//            UNIQUE_ID_2));
+//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
+//            UNIQUE_ID_3));
 //        mockFactory.replay();
 //        BlankNode firstBlankNode = nodeFactory.createBlankNode();
 //        nodeFactory.clear();
@@ -171,7 +175,7 @@ public class JeParserBlankNodeFactoryUnitTest extends TestCase {
 //        }
 //
 //        public boolean equals(Object obj) {
-//            BlankNodeImpl impl = (BlankNodeImpl) obj;
+//            JeParserBlankNodeFactoryUnitTest.BlankNodeImpl impl = (JeParserBlankNodeFactoryUnitTest.BlankNodeImpl) obj;
 //            return impl.uniqueId.equals(uniqueId);
 //        }
 //
