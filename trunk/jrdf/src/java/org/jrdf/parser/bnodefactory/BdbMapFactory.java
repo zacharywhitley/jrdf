@@ -59,14 +59,13 @@
 
 package org.jrdf.parser.bnodefactory;
 
-import com.sleepycat.collections.StoredMap;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.Database;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
-import org.jrdf.graph.BlankNode;
+import com.sleepycat.collections.StoredMap;
+import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
 import org.jrdf.BdbHandler;
 
 import java.util.Map;
@@ -85,14 +84,14 @@ public class BdbMapFactory implements MapFactory {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public Map<String, BlankNode> createMap() {
+    public <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2) {
         try {
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabase(false);
             catalog = handler.setupCatalog(env, classCatalog, dbConfig);
             Database database = env.openDatabase(null, databaseName, dbConfig);
-            SerialBinding keyBinding = new SerialBinding(catalog, String.class);
-            SerialBinding dataBinding = new SerialBinding(catalog, BlankNode.class);
+            SerialBinding keyBinding = new SerialBinding(catalog, clazz1);
+            SerialBinding dataBinding = new SerialBinding(catalog, clazz2);
             return new StoredMap(database, keyBinding, dataBinding, true);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);

@@ -79,7 +79,7 @@ public class ParserBlankNodeFactoryImplUnitTest extends TestCase {
 
     public void setUp() {
         mapFactory = mockFactory.createMock(MapFactory.class);
-        expect(mapFactory.createMap()).andReturn(new HashMap<String, BlankNode>());
+        expect(mapFactory.createMap(String.class, BlankNode.class)).andReturn(new HashMap<String, BlankNode>());
         graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
         blankNode = mockFactory.createMock(BlankNode.class);
     }

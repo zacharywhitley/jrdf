@@ -80,7 +80,7 @@ import org.jrdf.BdbHandlerImpl;
  * @author Andrew Newman
  * @version $Revision: 1045 $
  */
-public class JeGraphImplUnitTest extends AbstractGraphUnitTest {
+public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Create a graph implementation.
@@ -102,6 +102,6 @@ public class JeGraphImplUnitTest extends AbstractGraphUnitTest {
      * @param args The command line arguments
      */
     public static void main(String[] args) throws Exception {
-        TestRunner.run(JeGraphImplUnitTest.class);
+        TestRunner.run(BdbGraphImplUnitTest.class);
     }
 }

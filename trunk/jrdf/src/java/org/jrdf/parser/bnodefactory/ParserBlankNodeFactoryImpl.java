@@ -74,7 +74,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
     public ParserBlankNodeFactoryImpl(MapFactory newCreator, GraphElementFactory newValueFactory) {
         valueFactory = newValueFactory;
         creator = newCreator;
-        bNodeIdMap = creator.createMap();
+        bNodeIdMap = creator.createMap(String.class, BlankNode.class);
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {
