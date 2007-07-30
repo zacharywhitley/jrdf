@@ -57,54 +57,70 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory.performance;
+package org.jrdf.parser.bnodefactory;
 
-import com.sleepycat.je.DatabaseException;
 import junit.framework.TestCase;
-import org.jrdf.JeBDBHandler;
-import org.jrdf.JeBDBHandlerImpl;
+import static org.easymock.EasyMock.expect;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.RdfXmlParser;
-import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
-import org.jrdf.parser.bnodefactory.JeParserBlankNodeFactory;
 import org.jrdf.util.test.MockFactory;
 
-public class ParserBlankNodeFactoryPerformanceTest extends TestCase {
+import java.util.HashMap;
+
+public class ParserBlankNodeFactoryImplUnitTest extends TestCase {
+    private static final String NODE_ID = "foo" + System.currentTimeMillis();
     private final MockFactory mockFactory = new MockFactory();
-    private ParserBlankNodeFactory memParserBlankNodeFactory;
-    private ParserBlankNodeFactory jeParserBlankNodeFactory;
-    private JeBDBHandler handler;
     private GraphElementFactory graphElementFactory;
-    private Graph jrdfGraph;
+    private BlankNode blankNode;
+    private ParserBlankNodeFactory nodeFactory;
+    private MapFactory mapFactory;
+
     public void setUp() {
-        handler = new JeBDBHandlerImpl();
+        mapFactory = mockFactory.createMock(MapFactory.class);
+        expect(mapFactory.createMap()).andReturn(new HashMap<String, BlankNode>());
         graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-        jrdfGraph = mockFactory.createMock(GraphImpl.class);
-        memParserBlankNodeFactory = new MemParserBlankNodeFactory(graphElementFactory);
-        try {
-            jeParserBlankNodeFactory = new JeParserBlankNodeFactory(handler, graphElementFactory);
-        } catch (DatabaseException ex) {
-            System.err.println("Database error when trying to create JeParserBlankNodeFactory" + ex);
-        }
+        blankNode = mockFactory.createMock(BlankNode.class);
     }
 
-    public void testKeepJUnitHappy() {
-        assertTrue(true);
+    public void testCreateBlankNode() throws Exception {
+        expect(graphElementFactory.createResource()).andReturn(blankNode);
+        mockFactory.replay();
+        nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
+        BlankNode actualBlankNode = nodeFactory.createBlankNode();
+        assertTrue("Expected the blank node to be the one created in the mock", actualBlankNode == blankNode);
+        mockFactory.verify();
     }
 
-    public void comparePerformance() throws DatabaseException, GraphException {
-        long startTime =  System.currentTimeMillis();
-        Parser parser = new RdfXmlParser(jrdfGraph.getElementFactory());
+    public void testCreateBlankNodeWithId() throws Exception {
+        expect(graphElementFactory.createResource()).andReturn(blankNode);
+        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class)).anyTimes();
+        mockFactory.replay();
+        nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
+        checkBlankNodeCreationById();
+        checkBlankNodeCreationById();
+        BlankNode actualBlankNode = nodeFactory.createBlankNode("bar");
+        assertTrue("Expected the blank node to be different with a different id", actualBlankNode != blankNode);
+        mockFactory.verify();
+    }
 
+    public void testClear() throws Exception {
+        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class));
+        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class));
+        mockFactory.replay();
+        nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
+        BlankNode firstBlankNode = nodeFactory.createBlankNode(NODE_ID);
+        nodeFactory.clear();
+        BlankNode secondBlankNode = nodeFactory.createBlankNode(NODE_ID);
+        BlankNode thirdBlankNode = nodeFactory.createBlankNode(NODE_ID);
+        assertTrue(firstBlankNode != secondBlankNode);
+        assertTrue(secondBlankNode == thirdBlankNode);
+        mockFactory.verify();
+    }
 
-        long finishTime = System.currentTimeMillis();
-
-        System.err.println("Start Time: " + startTime);
-        System.err.println("Finish Time: " + finishTime);
+    private void checkBlankNodeCreationById() throws GraphElementFactoryException {
+        BlankNode actualBlankNode = nodeFactory.createBlankNode(NODE_ID);
+        assertTrue("Expected the blank node to be the one created in the mock by id", actualBlankNode == blankNode);
     }
 }

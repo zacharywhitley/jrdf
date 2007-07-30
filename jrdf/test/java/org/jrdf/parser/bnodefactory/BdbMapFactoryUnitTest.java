@@ -63,7 +63,7 @@ import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import junit.framework.TestCase;
-import org.jrdf.JeBDBHandler;
+import org.jrdf.BdbHandler;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
@@ -71,7 +71,7 @@ import org.jrdf.util.test.MockFactory;
 
 import java.util.Random;
 
-public class JeParserBlankNodeFactoryUnitTest extends TestCase {
+public class BdbMapFactoryUnitTest extends TestCase {
     private static final String NODE_ID = "foo" + System.currentTimeMillis();
     private static final long UNIQUE_ID_1 = new Random().nextLong();
     private static final long UNIQUE_ID_2 = new Random().nextLong();
@@ -80,12 +80,12 @@ public class JeParserBlankNodeFactoryUnitTest extends TestCase {
     private GraphElementFactory graphElementFactory;
     private BlankNode blankNode;
     private ParserBlankNodeFactory nodeFactory;
-    private JeBDBHandler handler;
+    private BdbHandler handler;
     private Environment env;
     private StoredClassCatalog catalog;
 
     public void setUp() throws DatabaseException {
-        handler = mockFactory.createMock(JeBDBHandler.class);
+        handler = mockFactory.createMock(BdbHandler.class);
         graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
 //        blankNode = new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(UNIQUE_ID_1);
         env = mockFactory.createMock(Environment.class);

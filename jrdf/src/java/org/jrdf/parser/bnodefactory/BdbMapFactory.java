@@ -59,61 +59,57 @@
 
 package org.jrdf.parser.bnodefactory;
 
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.expect;
+import com.sleepycat.collections.StoredMap;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.Environment;
+import com.sleepycat.je.Database;
+import com.sleepycat.bind.serial.SerialBinding;
+import com.sleepycat.bind.serial.StoredClassCatalog;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.util.test.MockFactory;
+import org.jrdf.BdbHandler;
 
-public class MemParserBlankNodeFactoryUnitTest extends TestCase {
-    private final MockFactory mockFactory = new MockFactory();
-    private GraphElementFactory graphElementFactory;
-    private BlankNode blankNode;
-    private ParserBlankNodeFactory nodeFactory;
-    private static final String NODE_ID = "foo" + System.currentTimeMillis();
+import java.util.Map;
 
-    public void setUp() {
-        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-        blankNode = mockFactory.createMock(BlankNode.class);
-        nodeFactory = new MemParserBlankNodeFactory(graphElementFactory);
+public class BdbMapFactory implements MapFactory {
+    private final BdbHandler handler;
+    private final String classCatalog;
+    private final String databaseName;
+    private Environment env;
+    private StoredClassCatalog catalog;
+
+    public BdbMapFactory(BdbHandler newHandler, String newClassCatalog, String newDatabaseName) {
+        this.handler = newHandler;
+        this.classCatalog = newClassCatalog;
+        this.databaseName = newDatabaseName;
     }
 
-    public void testCreateBlankNode() throws Exception {
-        expect(graphElementFactory.createResource()).andReturn(blankNode);
-        mockFactory.replay();
-        BlankNode actualBlankNode = nodeFactory.createBlankNode();
-        assertTrue("Expected the blank node to be the one created in the mock", actualBlankNode == blankNode);
-        mockFactory.verify();
+    @SuppressWarnings({ "unchecked" })
+    public Map<String, BlankNode> createMap() {
+        try {
+            env = handler.setUpEnvironment();
+            DatabaseConfig dbConfig = handler.setUpDatabase(false);
+            catalog = handler.setupCatalog(env, classCatalog, dbConfig);
+            Database database = env.openDatabase(null, databaseName, dbConfig);
+            SerialBinding keyBinding = new SerialBinding(catalog, String.class);
+            SerialBinding dataBinding = new SerialBinding(catalog, BlankNode.class);
+            return new StoredMap(database, keyBinding, dataBinding, true);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void testCreateBlankNodeWithId() throws Exception {
-        expect(graphElementFactory.createResource()).andReturn(blankNode);
-        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class)).anyTimes();
-        mockFactory.replay();
-        checkBlankNodeCreationById();
-        checkBlankNodeCreationById();
-        BlankNode actualBlankNode = nodeFactory.createBlankNode("bar");
-        assertTrue("Expected the blank node to be different with a different id", actualBlankNode != blankNode);
-        mockFactory.verify();
-    }
-
-    public void testClear() throws Exception {
-        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class));
-        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class));
-        mockFactory.replay();
-        BlankNode firstBlankNode = nodeFactory.createBlankNode(NODE_ID);
-        nodeFactory.clear();
-        BlankNode secondBlankNode = nodeFactory.createBlankNode(NODE_ID);
-        BlankNode thirdBlankNode = nodeFactory.createBlankNode(NODE_ID);
-        assertTrue(firstBlankNode != secondBlankNode);
-        assertTrue(secondBlankNode == thirdBlankNode);
-        mockFactory.verify();
-    }
-
-    private void checkBlankNodeCreationById() throws GraphElementFactoryException {
-        BlankNode actualBlankNode = nodeFactory.createBlankNode(NODE_ID);
-        assertTrue("Expected the blank node to be the one created in the mock by id", actualBlankNode == blankNode);
+    public void close() {
+        try {
+            env.close();
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                catalog.close();
+            } catch (DatabaseException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

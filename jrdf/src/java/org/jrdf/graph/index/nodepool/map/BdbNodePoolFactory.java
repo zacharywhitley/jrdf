@@ -57,62 +57,54 @@
  *
  */
 
-package org.jrdf.parser.bdb;
+package org.jrdf.graph.index.nodepool.map;
 
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.collections.StoredMap;
+import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-import org.jrdf.JeBDBHandler;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.BdbHandler;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
 
-public class JeParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
-    private static final String DB_NAME = "blank_node_factory_db";
-    private static final String CLASS_CATALOG = "java_class_catalog_blank_node";
-    private GraphElementFactory valueFactory;
-    private StoredMap bNodeIdMap;
+public class BdbNodePoolFactory implements NodePoolFactory {
+    private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
+    private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
+    private final BdbHandler handler;
+    private StoredClassCatalog nodePoolCatalog;
+    private StoredClassCatalog stringPoolCatalog;
     private Environment env;
-    private StoredClassCatalog catalog;
 
-    public JeParserBlankNodeFactoryImpl(JeBDBHandler newHandler, GraphElementFactory newValueFactory)
-        throws DatabaseException {
-        this.valueFactory = newValueFactory;
-        env = newHandler.setUpEnvironment();
-        catalog = newHandler.setupCatalog(env, CLASS_CATALOG, newHandler.setUpDatabase(true));
-        bNodeIdMap = newHandler.createMap(env, DB_NAME, catalog, String.class, BlankNode.class);
+    public BdbNodePoolFactory(BdbHandler newHandler) {
+        this.handler = newHandler;
     }
 
-    public BlankNode createBlankNode() throws GraphElementFactoryException {
-        return valueFactory.createResource();
-    }
-
-    public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
-        // Maybe the node ID has been used before:
-        BlankNode result = (BlankNode) bNodeIdMap.get(nodeID);
-
-        if (null == result) {
-            // This is a new node ID, create a new BNode object for it
-            result = valueFactory.createResource();
-
-            // Remember it, the nodeID might occur again.
-            bNodeIdMap.put(nodeID, result);
+    @SuppressWarnings({ "unchecked" })
+    public NodePool createNodePool() {
+        try {
+            env = handler.setUpEnvironment();
+            DatabaseConfig dbConfig = handler.setUpDatabase(true);
+            nodePoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_NODEPOOL, dbConfig);
+            stringPoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_STRINGPOOL, dbConfig);
+            StoredMap nodePool = handler.createMap(env, "nodePool", nodePoolCatalog, Long.class, Node.class);
+            StoredMap stringPool = handler.createMap(env, "stringPool", stringPoolCatalog, String.class, Long.class);
+            return new NodePoolImpl(nodePool, stringPool);
+        } catch (DatabaseException dbe) {
+            throw new RuntimeException("Could not create database", dbe);
         }
-        return result;
-    }
-
-    public void clear() {
-        bNodeIdMap.clear();
     }
 
     public void close() {
         try {
-            env.close();
-            catalog.close();
+            if (env != null) {
+                env.close();
+            }
+            nodePoolCatalog.close();
+            stringPoolCatalog.close();
         } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+            new RuntimeException(e);
         }
     }
 }

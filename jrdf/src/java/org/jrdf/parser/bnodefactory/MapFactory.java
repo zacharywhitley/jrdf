@@ -57,54 +57,14 @@
  *
  */
 
-package org.jrdf.graph.index.nodepool.map;
+package org.jrdf.parser.bnodefactory;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.collections.StoredMap;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import org.jrdf.JeBDBHandler;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.BlankNode;
 
-public class JeNodePoolFactory implements NodePoolFactory {
-    private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
-    private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
-    private final JeBDBHandler handler;
-    private StoredClassCatalog nodePoolCatalog;
-    private StoredClassCatalog stringPoolCatalog;
-    private Environment env;
+import java.util.Map;
 
-    public JeNodePoolFactory(JeBDBHandler newHandler) {
-        this.handler = newHandler;
-    }
+public interface MapFactory {
+    Map<String, BlankNode> createMap();
 
-    @SuppressWarnings({ "unchecked" })
-    public NodePool createNodePool() {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabase(true);
-            nodePoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_NODEPOOL, dbConfig);
-            stringPoolCatalog = handler.setupCatalog(env, CLASS_CATALOG_STRINGPOOL, dbConfig);
-            StoredMap nodePool = handler.createMap(env, "nodePool", nodePoolCatalog, Long.class, Node.class);
-            StoredMap stringPool = handler.createMap(env, "stringPool", stringPoolCatalog, String.class, Long.class);
-            return new NodePoolImpl(nodePool, stringPool);
-        } catch (DatabaseException dbe) {
-            throw new RuntimeException("Could not create database", dbe);
-        }
-    }
-
-    public void close() {
-        try {
-            if (env != null) {
-                env.close();
-            }
-            nodePoolCatalog.close();
-            stringPoolCatalog.close();
-        } catch (DatabaseException e) {
-            new RuntimeException(e);
-        }
-    }
+    void close();
 }

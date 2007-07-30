@@ -60,9 +60,9 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
-import org.jrdf.JeBDBHandler;
-import org.jrdf.JeBDBHandlerImpl;
-import org.jrdf.graph.index.nodepool.map.JeNodePoolFactory;
+import org.jrdf.BdbHandler;
+import org.jrdf.BdbHandlerImpl;
+import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import com.sleepycat.je.DatabaseException;
 
@@ -70,8 +70,8 @@ public class JeBlankNodeParserFactoryImplUnitTest extends TestCase {
 
      public void testBlankNodeParserFactoryImpl () throws DatabaseException {
 
-         JeBDBHandler handler = new JeBDBHandlerImpl();
-         NodePoolFactory nodePoolFactory = new JeNodePoolFactory(handler);
+         BdbHandler handler = new BdbHandlerImpl();
+         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
 
 //         JeParserBlankNodeFactoryImpl jeParserBlankNodeFactory = new JeParserBlankNodeFactoryImpl(handler, Graph.getElementFactory());
      }
