@@ -59,14 +59,12 @@
 
 package org.jrdf.parser.bnodefactory;
 
-import org.jrdf.graph.BlankNode;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class MemMapFactory implements MapFactory {
-    public Map<String, BlankNode> createMap() {
-        return new HashMap<String, BlankNode>();
+    public <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2) {
+        return new HashMap<T, U>();
     }
 
     public void close() {

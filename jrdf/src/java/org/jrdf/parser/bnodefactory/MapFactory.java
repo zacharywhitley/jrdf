@@ -59,12 +59,10 @@
 
 package org.jrdf.parser.bnodefactory;
 
-import org.jrdf.graph.BlankNode;
-
 import java.util.Map;
 
 public interface MapFactory {
-    Map<String, BlankNode> createMap();
+    <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2);
 
     void close();
 }
