@@ -101,6 +101,7 @@ public class BdbHandlerImpl implements BdbHandler {
         return new StoredClassCatalog(catalogDb);
     }
 
+    @SuppressWarnings({ "unchecked" })
     public <T, U> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog,
         Class<T> clazz1, Class<U> clazz2) throws DatabaseException {
         DatabaseConfig dbConfig = setUpDatabase(false);
