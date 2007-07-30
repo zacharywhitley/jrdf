@@ -57,58 +57,16 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory;
+package org.jrdf.map;
 
-import com.sleepycat.bind.serial.SerialBinding;
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.collections.StoredMap;
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import org.jrdf.BdbHandler;
-
+import java.util.HashMap;
 import java.util.Map;
 
-public class BdbMapFactory implements MapFactory {
-    private final BdbHandler handler;
-    private final String classCatalog;
-    private final String databaseName;
-    private Environment env;
-    private StoredClassCatalog catalog;
-
-    public BdbMapFactory(BdbHandler newHandler, String newClassCatalog, String newDatabaseName) {
-        this.handler = newHandler;
-        this.classCatalog = newClassCatalog;
-        this.databaseName = newDatabaseName;
-    }
-
-    @SuppressWarnings({ "unchecked" })
+public class MemMapFactory implements MapFactory {
     public <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabase(false);
-            catalog = handler.setupCatalog(env, classCatalog, dbConfig);
-            Database database = env.openDatabase(null, databaseName, dbConfig);
-            SerialBinding keyBinding = new SerialBinding(catalog, clazz1);
-            SerialBinding dataBinding = new SerialBinding(catalog, clazz2);
-            return new StoredMap(database, keyBinding, dataBinding, true);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+        return new HashMap<T, U>();
     }
 
     public void close() {
-        try {
-            env.close();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                catalog.close();
-            } catch (DatabaseException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }

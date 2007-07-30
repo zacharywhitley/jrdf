@@ -61,7 +61,7 @@ package org.jrdf.parser.bnodefactory;
 
 import com.sleepycat.je.DatabaseException;
 import junit.framework.TestCase;
-import org.jrdf.BdbHandler;
+import org.jrdf.map.BdbHandler;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;

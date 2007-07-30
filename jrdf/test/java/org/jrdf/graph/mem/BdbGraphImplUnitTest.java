@@ -68,8 +68,8 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
-import org.jrdf.BdbHandler;
-import org.jrdf.BdbHandlerImpl;
+import org.jrdf.map.BdbHandler;
+import org.jrdf.map.BdbHandlerImpl;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 

@@ -57,13 +57,12 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory;
+package org.jrdf.map;
 
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import junit.framework.TestCase;
-import org.jrdf.BdbHandler;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
