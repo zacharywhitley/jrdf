@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory.bdb;
+package org.jrdf.parser.bdb;
 
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.collections.StoredMap;
