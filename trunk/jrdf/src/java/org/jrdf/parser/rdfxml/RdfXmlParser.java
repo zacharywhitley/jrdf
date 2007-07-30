@@ -36,7 +36,9 @@ import org.jrdf.parser.ParseLocationListener;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
+import org.jrdf.parser.bnodefactory.MapFactory;
+import org.jrdf.parser.bnodefactory.MemMapFactory;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.vocabulary.RDF;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -220,13 +222,25 @@ public final class RdfXmlParser implements ConfigurableParser {
     boolean stopAtFirstError = true;
 
     /**
-     * Creates a new RdfXmlParser that will use the supplied GraphElementFactory
-     * to create objects for resources, bNodes and literals.
+     * Creates a new RdfXmlParser that will use the supplied GraphElementFactory to create objects for resources,
+     * bNodes and literals.  This create an in memory blank node factory which may exhaust available memory.
      *
      * @param graphElementFactory A GraphElementFactory.
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory) throws GraphException {
-        this(graphElementFactory, new MemParserBlankNodeFactory(graphElementFactory));
+        this(graphElementFactory, new MemMapFactory());
+    }
+
+    /**
+     * Creates a new RdfXmlParser that will use the supplied BlankNodeFactoryCreator and create a new map to be used
+     * by the generic ParserBlankNodeFactoryImpl.
+     *
+     * @param graphElementFactory A GraphElementFactory.
+     * @param creator A BlankNodeFactoryCreator.
+     * @throws GraphException
+     */
+    public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) throws GraphException {
+        this(graphElementFactory, new ParserBlankNodeFactoryImpl(creator, graphElementFactory));
     }
 
     /**

@@ -57,55 +57,49 @@
  *
  */
 
-package org.jrdf;
+package org.jrdf.parser.bnodefactory;
 
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.EnvironmentConfig;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Database;
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.bind.serial.SerialBinding;
-import com.sleepycat.collections.StoredMap;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.parser.ParserBlankNodeFactory;
 
-import java.io.File;
+import java.util.Map;
 
-public class JeBDBHandlerImpl implements JeBDBHandler {
-    private static final String USERNAME = System.getProperty("user.name");
-    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
+    private MapFactory creator;
+    private GraphElementFactory valueFactory;
+    private Map<String, BlankNode> bNodeIdMap;
 
-    public File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
+    public ParserBlankNodeFactoryImpl(MapFactory newCreator, GraphElementFactory newValueFactory) {
+        valueFactory = newValueFactory;
+        creator = newCreator;
+        bNodeIdMap = creator.createMap();
     }
 
-    public Environment setUpEnvironment() throws DatabaseException {
-        File dir = getDir();
-        dir.mkdirs();
-        EnvironmentConfig env = new EnvironmentConfig();
-        env.setTransactional(true);
-        env.setAllowCreate(true);
-        return new Environment(dir, env);
+    public BlankNode createBlankNode() throws GraphElementFactoryException {
+        return valueFactory.createResource();
     }
 
-    public DatabaseConfig setUpDatabase(boolean transactional) {
-        DatabaseConfig dbConfig = new DatabaseConfig();
-        dbConfig.setTransactional(transactional);
-        dbConfig.setAllowCreate(true);
-        return dbConfig;
+    public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
+        // Maybe the node ID has been used before:
+        BlankNode result = (BlankNode) bNodeIdMap.get(nodeID);
+
+        if (null == result) {
+            // This is a new node ID, create a new BNode object for it
+            result = valueFactory.createResource();
+
+            // Remember it, the nodeID might occur again.
+            bNodeIdMap.put(nodeID, result);
+        }
+        return result;
     }
 
-    public StoredClassCatalog setupCatalog(Environment env, String classCatalogString,  DatabaseConfig dbConfig)
-        throws DatabaseException {
-        Database catalogDb = env.openDatabase(null, classCatalogString, dbConfig);
-        return new StoredClassCatalog(catalogDb);
+    public void clear() {
+        bNodeIdMap.clear();
     }
 
-    public StoredMap createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data)
-        throws DatabaseException {
-        DatabaseConfig dbConfig = setUpDatabase(false);
-        Database database = env.openDatabase(null, dbName, dbConfig);
-        SerialBinding keyBinding = new SerialBinding(catalog, key);
-        SerialBinding dataBinding = new SerialBinding(catalog, data);
-        return new StoredMap(database, keyBinding, dataBinding, true);
+    public void close() {
+        creator.close();
     }
 }

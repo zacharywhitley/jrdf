@@ -62,7 +62,9 @@ package org.jrdf.parser.rdfxml;
 import junit.framework.TestCase;
 import static org.jrdf.parser.ParserTestUtil.checkNegativeRdfTestParseException;
 import static org.jrdf.parser.ParserTestUtil.checkPositiveNtRdfTest;
-import org.jrdf.parser.bnodefactory.MemParserBlankNodeFactory;
+import org.jrdf.parser.bnodefactory.MapFactory;
+import org.jrdf.parser.bnodefactory.MemMapFactory;
+import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.TestJRDFFactory;
@@ -122,7 +124,8 @@ public class RdfXmlIntegrationTest extends TestCase {
             final URL expectedFile = getClass().getClassLoader().getResource(ntriplesFile);
             final URL actualFile = getClass().getClassLoader().getResource(rdfFile);
             Graph graph = TEST_JRDF_FACTORY.getNewGraph();
-            ParserBlankNodeFactory nodeFactory = new MemParserBlankNodeFactory(graph.getElementFactory());
+            MapFactory creator = new MemMapFactory();
+            ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
             if (data.length == 2) {
                 checkPositiveNtRdfTest(expectedFile, actualFile, data[1], graph, nodeFactory);
             } else {
@@ -135,7 +138,8 @@ public class RdfXmlIntegrationTest extends TestCase {
         for (String rdfFile : NEGATIVE_TESTS) {
             final URL errorFile = getClass().getClassLoader().getResource(rdfFile);
             Graph graph = TEST_JRDF_FACTORY.getNewGraph();
-            ParserBlankNodeFactory nodeFactory = new MemParserBlankNodeFactory(graph.getElementFactory());
+            MapFactory creator = new MemMapFactory();
+            ParserBlankNodeFactory nodeFactory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
             checkNegativeRdfTestParseException(errorFile, graph, nodeFactory);
         }
     }
