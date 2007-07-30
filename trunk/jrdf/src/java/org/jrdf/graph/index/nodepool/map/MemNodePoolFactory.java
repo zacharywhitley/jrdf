@@ -59,17 +59,20 @@
 
 package org.jrdf.graph.index.nodepool.map;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.Node;
+import org.jrdf.map.MapFactory;
+import org.jrdf.map.MemMapFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class MemNodePoolFactory implements NodePoolFactory {
     public NodePool createNodePool() {
-        Map<Long, Node> nodePool = new HashMap<Long, Node>();
-        Map<String, Long> stringPool = new HashMap<String, Long>();
+        MapFactory factory1 = new MemMapFactory();
+        Map<Long, Node> nodePool = factory1.createMap(Long.class, Node.class);
+        MapFactory factory2 = new MemMapFactory();
+        Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
         return new NodePoolImpl(nodePool, stringPool);
     }
 

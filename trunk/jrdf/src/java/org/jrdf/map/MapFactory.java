@@ -57,27 +57,12 @@
  *
  */
 
-package org.jrdf;
+package org.jrdf.map;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.collections.StoredMap;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
+import java.util.Map;
 
-import java.io.File;
+public interface MapFactory {
+    <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2);
 
-public interface BdbHandler {
-
-    File getDir();
-
-    Environment setUpEnvironment() throws DatabaseException;
-
-    DatabaseConfig setUpDatabase(boolean transactional);
-
-    StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
-        throws DatabaseException;
-
-    StoredMap createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<?> key, Class<?> data)
-        throws DatabaseException;
+    void close();
 }

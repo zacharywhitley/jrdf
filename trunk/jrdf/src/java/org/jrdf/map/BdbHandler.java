@@ -57,16 +57,27 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory;
+package org.jrdf.map;
 
-import java.util.HashMap;
+import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
+
+import java.io.File;
 import java.util.Map;
 
-public class MemMapFactory implements MapFactory {
-    public <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2) {
-        return new HashMap<T, U>();
-    }
+public interface BdbHandler {
 
-    public void close() {
-    }
+    File getDir();
+
+    Environment setUpEnvironment() throws DatabaseException;
+
+    DatabaseConfig setUpDatabase(boolean transactional);
+
+    StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
+        throws DatabaseException;
+
+    <T, U> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<T> clazz1,
+        Class<U> clazz2) throws DatabaseException;
 }
