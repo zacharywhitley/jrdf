@@ -59,48 +59,99 @@
 
 package org.jrdf.parser.bnodefactory;
 
-import com.sleepycat.je.DatabaseException;
 import junit.framework.TestCase;
-import org.jrdf.map.BdbHandler;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
+import org.jrdf.map.BdbHandler;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.MemMapFactory;
+import org.jrdf.map.BdbHandlerImpl;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
+import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
 import org.jrdf.util.test.MockFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 public class ParserBlankNodeFactoryPerformanceTest extends TestCase {
     private final MockFactory mockFactory = new MockFactory();
+    private final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
     private ParserBlankNodeFactory memParserBlankNodeFactory;
     private ParserBlankNodeFactory jeParserBlankNodeFactory;
     private BdbHandler handler;
     private GraphElementFactory graphElementFactory;
     private Graph jrdfGraph;
-//    public void setUp() {
-//        handler = new JeBDBHandlerImpl();
-//        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-//        jrdfGraph = mockFactory.createMock(GraphImpl.class);
-//        memParserBlankNodeFactory = new MemParserBlankNodeFactory(graphElementFactory);
-//        try {
-//            jeParserBlankNodeFactory = new ParserBlankNodeFactoryImpl(handler, graphElementFactory);
-//        } catch (DatabaseException ex) {
-//            System.err.println("Database error when trying to create JeParserBlankNodeFactory" + ex);
-//        }
-//    }
-//
-    public void testKeepJUnitHappy() {
-        assertTrue(true);
+    private JRDFFactory jrdfFactory;
+    private StatementHandler myStatementHandler;
+
+    public void setUp() {
+        handler = new BdbHandlerImpl();
+        jrdfGraph = mockFactory.createMock(Graph.class);
+        myStatementHandler = mockFactory.createMock(StatementHandler.class);
+        jrdfFactory = SortedMemoryJRDFFactoryImpl.getFactory();
+        jrdfGraph = jrdfFactory.getNewGraph();
+        graphElementFactory = jrdfGraph.getElementFactory();
     }
+    public void memoryPerformance() throws Exception {
+        long startTime = 0;
+        long finishTime = 0;
+        InputStream stream = null;
+        try {
+            File rdfXmlFile = new File(PATH);
+            stream = new FileInputStream(rdfXmlFile);
+            Parser parser = getParserWithMemBlankNode();
+            startTime =  System.currentTimeMillis();
+            parser.parse(stream, "http://foo/bar");
+            //myStatementHandler.flush();
+            finishTime = System.currentTimeMillis();
+        } finally {
+            stream.close();
+        }
+        System.err.println("Using MemMapFactory:");
+        System.err.println("Time Length: " + ((finishTime - startTime)) + "ms");
+    }
+    public void bdbPerformance() throws Exception {
+        long startTime = 0;
+        long finishTime = 0;
+        InputStream stream = null;
+        try {
 
-    public void comparePerformance() throws DatabaseException, GraphException {
-        long startTime =  System.currentTimeMillis();
-        Parser parser = new RdfXmlParser(jrdfGraph.getElementFactory());
-
-
-        long finishTime = System.currentTimeMillis();
-
-        System.err.println("Start Time: " + startTime);
-        System.err.println("Finish Time: " + finishTime);
+            File rdfXmlFile = new File(PATH);
+            stream = new FileInputStream(rdfXmlFile);
+            Parser parser = getParserWithBdbBlankNode();
+            startTime =  System.currentTimeMillis();
+            parser.parse(stream, "http://foo/bar");
+            //myStatementHandler.flush();
+            finishTime = System.currentTimeMillis();
+        } finally {
+            stream.close();
+        }
+        System.err.println("\nUsing BDBMapFactory:");
+        System.err.println("Time Length: " + ((finishTime - startTime)) + "ms");
+    }
+    private Parser getParserWithMemBlankNode() throws GraphException {
+        ParserBlankNodeFactory memParserBlankNodeFactory = new ParserBlankNodeFactoryImpl(new MemMapFactory(), graphElementFactory);
+        RdfXmlParser rdfParser = new RdfXmlParser(graphElementFactory, memParserBlankNodeFactory);
+        rdfParser.setStatementHandler(myStatementHandler);
+        rdfParser.setVerifyData(true);
+        rdfParser.setStopAtFirstError(false);
+        Parser parser = rdfParser;
+        return parser;
+    }
+    private Parser getParserWithBdbBlankNode() throws GraphException {
+        ParserBlankNodeFactory bdbParserBlankNodeFactory =
+            new ParserBlankNodeFactoryImpl(new BdbMapFactory(handler, "catalog_name", "database_name"), graphElementFactory);
+        RdfXmlParser rdfParser = new RdfXmlParser(graphElementFactory, bdbParserBlankNodeFactory);
+        rdfParser.setStatementHandler(myStatementHandler);
+        rdfParser.setVerifyData(true);
+        rdfParser.setStopAtFirstError(false);
+        Parser parser = rdfParser;
+        return parser;
     }
 }

@@ -59,40 +59,31 @@
 
 package org.jrdf.map;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
 import junit.framework.TestCase;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.util.test.MockFactory;
-
-import java.util.Random;
 
 public class BdbMapFactoryUnitTest extends TestCase {
-    private static final String NODE_ID = "foo" + System.currentTimeMillis();
-    private static final long UNIQUE_ID_1 = new Random().nextLong();
-    private static final long UNIQUE_ID_2 = new Random().nextLong();
-    private static final long UNIQUE_ID_3 = new Random().nextLong();
-    private final MockFactory mockFactory = new MockFactory();
-    private GraphElementFactory graphElementFactory;
-    private BlankNode blankNode;
-    private ParserBlankNodeFactory nodeFactory;
-    private BdbHandler handler;
-    private Environment env;
-    private StoredClassCatalog catalog;
-
-    public void setUp() throws DatabaseException {
-        handler = mockFactory.createMock(BdbHandler.class);
-        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-//        blankNode = new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(UNIQUE_ID_1);
-        env = mockFactory.createMock(Environment.class);
-        catalog = mockFactory.createMock(StoredClassCatalog.class);
-    }
-
-    public void testCreateMap() throws Exception {
-        assertTrue(true);
+//    private static final String NODE_ID = "foo" + System.currentTimeMillis();
+//    private static final long UNIQUE_ID_1 = new Random().nextLong();
+//    private static final long UNIQUE_ID_2 = new Random().nextLong();
+//    private static final long UNIQUE_ID_3 = new Random().nextLong();
+//    private final MockFactory mockFactory = new MockFactory();
+//    private GraphElementFactory graphElementFactory;
+//    private BlankNode blankNode;
+//    private ParserBlankNodeFactory nodeFactory;
+//    private BdbHandler handler;
+//    private Environment env;
+//    private StoredClassCatalog catalog;
+//
+//    public void setUp() throws DatabaseException {
+//        handler = mockFactory.createMock(BdbHandler.class);
+//        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
+////        blankNode = new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(UNIQUE_ID_1);
+//        env = mockFactory.createMock(Environment.class);
+//        catalog = mockFactory.createMock(StoredClassCatalog.class);
+//    }
+//
+//    public void testCreateMap() throws Exception {
+//        assertTrue(true);
 //        // Create mock and expectation for Environment:
 //        expect(handler.setUpEnvironment()).andReturn(env);
 //        DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
@@ -118,8 +109,8 @@ public class BdbMapFactoryUnitTest extends TestCase {
 //        BlankNode actualBlankNode = nodeFactory.createBlankNode();
 //        assertTrue("Expected the blank node to be the one created in the mock", actualBlankNode == blankNode);
 //        mockFactory.verify();
-    }
-
+//    }
+//
 //    public void testCreateBlankNodeWithId() throws Exception {
 //        expect(graphElementFactory.createResource()).andReturn(blankNode);
 //        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
