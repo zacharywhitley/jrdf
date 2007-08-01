@@ -59,52 +59,123 @@
 
 package org.jrdf.graph.index.longindex.bdb;
 
-import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.map.MapFactory;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.lang.reflect.Array;
 
 public final class LongIndexBdb  implements LongIndex, Serializable {
     private static final long serialVersionUID = 6044200669651883129L;
-    public LongIndexBdb(){
-
+    private Map<Long, LinkedList> index;
+    public LongIndexBdb(MapFactory newCreator){
+        index = newCreator.createMap(Long.class, LinkedList.class);
+    }
+    public LongIndexBdb(Map<Long, LinkedList> newIndex) {
+        index = newIndex;
     }
 
     public void add(Long[] triple) throws GraphException {
+        add(triple[0], triple[1], triple[2]);
     }
 
     public void add(Long first, Long second, Long third) throws GraphException {
-    }
+        // find the sub index
+        LinkedList subIndex = index.get(first);
+        // check that the subindex exists
+        if (null == subIndex) {
+            // no, so create it and add it to the index
+            subIndex = new LinkedList();
+            index.put(first, subIndex);
+        }
+        Object group = Array.newInstance(Long.class, 2);
+        Array.setLong(group, 0, second);
+        Array.setLong(group, 1, third);
+        subIndex.add(group);
+   }
+
 
     public void remove(Long[] triple) throws GraphException {
+        remove(triple[0], triple[1], triple[2]);
     }
 
     public void remove(Long first, Long second, Long third) throws GraphException {
+        // find the sub index
+        LinkedList<Long> subIndex = index.get(first);
+        // check that the subindex exists
+        if (null == subIndex) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        // find the final group
+        for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
+            Array group = (Array) itr.next();
+            if (second == Array.get(group, 0) && third == Array.get(group, 1)) {
+               subIndex.remove(group);
+               if (subIndex.isEmpty()) {
+                   index.remove(first);
+               }
+            }
+        }
     }
 
     public void clear() {
+        index.clear();
     }
 
-    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
-        return null;
+    public  Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
+        Map<Long, Map<Long, Set<Long>>> map = new HashMap<Long, Map<Long, Set<Long>>>();
+        Set<Long> set = index.keySet();
+        for (Iterator itr = set.iterator(); itr.hasNext();) {
+            Long sub = (Long) itr.next();
+            Map<Long, Set<Long>> subIndex = getSubIndex(sub);
+            map.put(sub, subIndex);
+        }
+        return map.entrySet().iterator();
     }
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
-        return null;
+        Set<Long> set = new HashSet<Long>();
+        Map<Long, Set<Long>> map = new HashMap<Long, Set<Long>>();
+        LinkedList subIndex = index.get(first);
+        Long oldPred = null;
+        for(Iterator<Array> itr = subIndex.iterator(); itr.hasNext();) {
+            Array group = itr.next();
+            Long pred = (Long) Array.get(group, 0);
+            if(!pred.equals(oldPred)) {
+                set = new HashSet<Long>();
+                set.add((Long) Array.get(group, 1));
+                map.put(pred, set);
+                oldPred = pred;
+            } else {
+                set.add((Long) Array.get(group, 1));
+            }
+        }
+        return map;
     }
 
     public boolean contains(Long first) {
-        return false;
+        return index.containsKey(first);
     }
 
     public boolean removeSubIndex(Long first) {
-        return false;
+        index.remove(first);
+        return index.containsKey(first);
     }
 
     public long getSize() {
-        return 0;
+        int size = 0;
+        // go over the index map
+        for (LinkedList list : index.values()) {
+            // go over the sub indexes
+            size += list.size();
+        }
+        return size;
     }
 }

@@ -59,7 +59,7 @@
 
 package org.jrdf.graph.index.nodepool.map;
 
-import org.jrdf.map.BdbHandler;
+import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.index.nodepool.NodePool;
@@ -72,11 +72,11 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     private static final String DB_NAME_NODEPOOL = "nodePool";
     private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
     private static final String DB_NAME_STRINGPOOL = "stringPool";
-    private final BdbHandler handler;
+    private final StoredMapHandler handler;
     private BdbMapFactory factory1;
     private BdbMapFactory factory2;
 
-    public BdbNodePoolFactory(BdbHandler newHandler) {
+    public BdbNodePoolFactory(StoredMapHandler newHandler) {
         this.handler = newHandler;
     }
 
