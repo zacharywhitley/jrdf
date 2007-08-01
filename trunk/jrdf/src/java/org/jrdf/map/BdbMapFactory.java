@@ -63,17 +63,18 @@ import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
+import org.jrdf.map.StoredMapHandler;
 
 import java.util.Map;
 
 public class BdbMapFactory implements MapFactory {
-    private final BdbHandler handler;
+    private final StoredMapHandler handler;
     private final String classCatalog;
     private final String databaseName;
     private Environment env;
     private StoredClassCatalog catalog;
 
-    public BdbMapFactory(BdbHandler newHandler, String newClassCatalog, String newDatabaseName) {
+    public BdbMapFactory(StoredMapHandler newHandler, String newClassCatalog, String newDatabaseName) {
         this.handler = newHandler;
         this.classCatalog = newClassCatalog;
         this.databaseName = newDatabaseName;

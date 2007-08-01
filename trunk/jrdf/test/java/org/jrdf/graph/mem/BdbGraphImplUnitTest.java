@@ -68,8 +68,8 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
-import org.jrdf.map.BdbHandler;
-import org.jrdf.map.BdbHandlerImpl;
+import org.jrdf.map.StoredMapHandler;
+import org.jrdf.map.StoredMapHandlerImpl;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
@@ -89,7 +89,7 @@ public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
      */
     public Graph newGraph() throws Exception {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        BdbHandler handler = new BdbHandlerImpl();
+        StoredMapHandler handler = new StoredMapHandlerImpl();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
         NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
         GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);

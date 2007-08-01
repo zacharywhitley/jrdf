@@ -59,55 +59,25 @@
 
 package org.jrdf.map;
 
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.EnvironmentConfig;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Database;
 import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.bind.serial.SerialBinding;
-import com.sleepycat.collections.StoredMap;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
 
 import java.io.File;
 import java.util.Map;
 
-public class BdbHandlerImpl implements BdbHandler {
-    private static final String USERNAME = System.getProperty("user.name");
-    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+public interface StoredMapHandler {
 
-    public File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
-    }
+    File getDir();
 
-    public Environment setUpEnvironment() throws DatabaseException {
-        File dir = getDir();
-        dir.mkdirs();
-        EnvironmentConfig env = new EnvironmentConfig();
-        env.setTransactional(true);
-        env.setAllowCreate(true);
-        return new Environment(dir, env);
-    }
+    Environment setUpEnvironment() throws DatabaseException;
 
-    public DatabaseConfig setUpDatabase(boolean transactional) {
-        DatabaseConfig dbConfig = new DatabaseConfig();
-        dbConfig.setTransactional(transactional);
-        dbConfig.setAllowCreate(true);
-        return dbConfig;
-    }
+    DatabaseConfig setUpDatabase(boolean transactional);
 
-    public StoredClassCatalog setupCatalog(Environment env, String classCatalogString,  DatabaseConfig dbConfig)
-        throws DatabaseException {
-        Database catalogDb = env.openDatabase(null, classCatalogString, dbConfig);
-        return new StoredClassCatalog(catalogDb);
-    }
+    StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
+        throws DatabaseException;
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, U> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog,
-        Class<T> clazz1, Class<U> clazz2) throws DatabaseException {
-        DatabaseConfig dbConfig = setUpDatabase(false);
-        Database database = env.openDatabase(null, dbName, dbConfig);
-        SerialBinding keyBinding = new SerialBinding(catalog, clazz1);
-        SerialBinding dataBinding = new SerialBinding(catalog, clazz2);
-        return new StoredMap(database, keyBinding, dataBinding, true);
-    }
+    <T, U> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<T> clazz1,
+        Class<U> clazz2) throws DatabaseException;
 }

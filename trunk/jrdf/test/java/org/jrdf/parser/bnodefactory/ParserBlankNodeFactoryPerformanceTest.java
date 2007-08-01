@@ -65,10 +65,10 @@ import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
-import org.jrdf.map.BdbHandler;
+import org.jrdf.map.StoredMapHandler;
+import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MemMapFactory;
-import org.jrdf.map.BdbHandlerImpl;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.StatementHandler;
@@ -84,14 +84,14 @@ public class ParserBlankNodeFactoryPerformanceTest extends TestCase {
     private final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
     private ParserBlankNodeFactory memParserBlankNodeFactory;
     private ParserBlankNodeFactory jeParserBlankNodeFactory;
-    private BdbHandler handler;
+    private StoredMapHandler handler;
     private GraphElementFactory graphElementFactory;
     private Graph jrdfGraph;
     private JRDFFactory jrdfFactory;
     private StatementHandler myStatementHandler;
 
     public void setUp() {
-        handler = new BdbHandlerImpl();
+        handler = new StoredMapHandlerImpl();
         jrdfGraph = mockFactory.createMock(Graph.class);
         myStatementHandler = mockFactory.createMock(StatementHandler.class);
         jrdfFactory = SortedMemoryJRDFFactoryImpl.getFactory();
