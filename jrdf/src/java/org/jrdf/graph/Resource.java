@@ -6,6 +6,9 @@ package org.jrdf.graph;
  */
 public interface Resource extends SubjectNode, ObjectNode {
     boolean isURIReference();
+    // Implement an AnyResource which will return all unique predicates in the graph when calling getUniquePredicates.
+    // A given Resource - return all the 
+    //PredicateNode getUniquePredicates();
 //    void addValue(URI uri, String lexicalValue);
 //    void addValue(URI uri, String lexicalValue, String languageType);
 //    void addValue(URI uri, String lexicalValue, URI datatypeURI);
