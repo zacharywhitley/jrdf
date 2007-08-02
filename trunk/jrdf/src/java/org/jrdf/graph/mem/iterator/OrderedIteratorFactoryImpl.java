@@ -61,10 +61,12 @@ package org.jrdf.graph.mem.iterator;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.TripleComparatorImpl;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.TreeSet;
 
@@ -108,6 +110,16 @@ public class OrderedIteratorFactoryImpl implements IteratorFactory {
 
     public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes) {
         return iteratorFactory.newThreeFixedIterator(nodes);
+    }
+
+    // TODO IMRAN Current not sorted
+    public ClosableIterator<PredicateNode> newPredicateIterator() {
+        return iteratorFactory.newPredicateIterator();
+    }
+
+    // TODO IMRAN Current not sorted
+    public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
+        return iteratorFactory.newPredicateIterator(resource);
     }
 
     private ClosableMemIterator<Triple> sortResults(ClosableMemIterator<Triple> closableMemIterator) {

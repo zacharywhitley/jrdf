@@ -58,9 +58,11 @@
  */
 package org.jrdf.graph.mem.iterator;
 
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -96,5 +98,13 @@ public final class IteratorFactoryImpl implements IteratorFactory {
 
     public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
         return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
+    }
+
+    public ClosableIterator<PredicateNode> newPredicateIterator() {
+        return new AnyResourcePredicateIterator(longIndexes[1], graphHandlers[1]);
+    }
+
+    public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
+        return new FixedResourcePredicateIterator(longIndexes[1], graphHandlers[1], resource);
     }
 }

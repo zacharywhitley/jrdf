@@ -87,6 +87,8 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * Package scope constructor.
      */
+    // TODO IMRAN Add IteratorFactory put iterator factory into implementation of Bnode and URIReference and create
+    // iterators on demand when getUniquePredicates is called.
     GraphElementFactoryImpl(NodePool nodePool) {
         this.nodePool = nodePool;
     }
