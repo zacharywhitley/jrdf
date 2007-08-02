@@ -76,6 +76,10 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
 
     public File getDir() {
+        File file = new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
+        if (file.exists()) {
+            file.delete();
+        }
         return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
 

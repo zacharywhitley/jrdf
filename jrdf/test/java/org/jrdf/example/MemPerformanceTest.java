@@ -57,50 +57,64 @@
  *
  */
 
-package org.jrdf.parser.bnodefactory;
+package org.jrdf.example;
 
-import org.jrdf.graph.BlankNode;
+import junit.framework.TestCase;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.map.MapFactory;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
+import org.jrdf.graph.mem.GraphFactory;
+import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
-import java.util.Map;
+import java.net.URI;
 
-public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
-    private MapFactory creator;
-    private GraphElementFactory valueFactory;
-    private Map<String, BlankNode> bNodeIdMap;
+public class MemPerformanceTest extends TestCase {
+    private static final String URI_STRING = "http://foo/bar";
+    private static final URI URI_1 = URI.create(URI_STRING);
+//    private final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
+    private LongIndex[] indexes;
+    private NodePoolFactory nodePoolFactory;
+    private GraphFactory factory;
+//    private Parser parser;
 
-    public ParserBlankNodeFactoryImpl(MapFactory newCreator, GraphElementFactory newValueFactory) {
-        valueFactory = newValueFactory;
-        creator = newCreator;
-        bNodeIdMap = creator.createMap(String.class, BlankNode.class);
+    public void setUp() throws Exception {
+        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
     }
 
-    public BlankNode createBlankNode() throws GraphElementFactoryException {
-        return valueFactory.createResource();
+    public void testAddPerformance() throws Exception {
+        int numberOfNodes = 1000;
+        Graph graph = getOnMemoryGraph();
+        checkGraphPerformance(numberOfNodes, graph);
     }
 
-    public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
-        // Maybe the node ID has been used before:
-        BlankNode result = bNodeIdMap.get(nodeID);
+    private Graph getOnMemoryGraph() {
+        nodePoolFactory = new MemNodePoolFactory();
+        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
+        Graph graph = factory.getGraph();
+        return graph;
+    }
 
-        if (null == result) {
-            // This is a new node ID, create a new BNode object for it
-            result = valueFactory.createResource();
-
-            // Remember it, the nodeID might occur again.
-            bNodeIdMap.put(nodeID, result);
+    private void checkGraphPerformance(int numberOfNodes, Graph graph)
+        throws GraphElementFactoryException, GraphException {
+        GraphElementFactory graphElementFactory = graph.getElementFactory();
+        //Test
+        long startTime =  System.currentTimeMillis();
+        for (int i = 0; i < numberOfNodes; i++) {
+            graph.add(graphElementFactory.createResource(),
+                      graphElementFactory.createResource(URI_1),
+                      graphElementFactory.createResource());
         }
-        return result;
-    }
-
-    public void clear() {
-        bNodeIdMap.clear();
-    }
-
-    public void close() {
-        creator.close();
+        long finishTime = System.currentTimeMillis();
+        System.err.println("Testing Add Performance:");
+        System.err.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime)/1000) + " s");
     }
 }
