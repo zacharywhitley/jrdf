@@ -94,7 +94,6 @@ public class URIReferenceImpl extends AbstractURIReference implements LocalizedN
      */
     private Long id;
 
-
     /**
      * Constructor for use by GraphElementFactory only.
      *
