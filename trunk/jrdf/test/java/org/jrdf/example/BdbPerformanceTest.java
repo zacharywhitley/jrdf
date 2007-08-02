@@ -65,9 +65,6 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
@@ -101,7 +98,7 @@ public class BdbPerformanceTest extends TestCase {
     }
 
     public void testAddPerformance() throws Exception {
-        int numberOfNodes = 10;
+        int numberOfNodes = 1000000;
         Graph graph = getOnDiskGraph();
         checkGraphPerformance(numberOfNodes, graph);
     }
@@ -116,14 +113,13 @@ public class BdbPerformanceTest extends TestCase {
 
     private void checkGraphPerformance(int numberOfNodes, Graph graph)
         throws GraphElementFactoryException, GraphException {
+        GraphElementFactory graphElementFactory = graph.getElementFactory();
         //Test
         long startTime =  System.currentTimeMillis();
         for (int i = 0; i < numberOfNodes; i++) {
-            GraphElementFactory graphElementFactory = graph.getElementFactory();
-            SubjectNode subj = graphElementFactory.createResource();
-            PredicateNode pred = graphElementFactory.createResource(URI_1);
-            ObjectNode obj = graphElementFactory.createResource();
-            graph.add(subj, pred, obj);
+            graph.add(graphElementFactory.createResource(),
+                      graphElementFactory.createResource(URI_1),
+                      graphElementFactory.createResource());
         }
         long finishTime = System.currentTimeMillis();
         System.err.println("Testing Add Performance:");
