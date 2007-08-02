@@ -116,4 +116,6 @@ public interface GraphHandler {
      * @throws GraphException if the nodes do not exist.
      */
     void remove(Long[] currentNodes) throws GraphException;
+
+    Node createNode(Long nodeId);
 }

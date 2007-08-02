@@ -59,6 +59,8 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * Creates the iterators.  Allows different implementations of iterators to be used.
@@ -76,6 +78,9 @@ public interface IteratorFactory {
 
     ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index);
 
-    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes
-    );
+    ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes);
+
+    ClosableIterator<PredicateNode> newPredicateIterator();
+
+    ClosableIterator<PredicateNode> newPredicateIterator(Long resource);
 }
