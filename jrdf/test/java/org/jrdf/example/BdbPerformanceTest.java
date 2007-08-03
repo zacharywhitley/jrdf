@@ -62,8 +62,6 @@ package org.jrdf.example;
 import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
@@ -76,6 +74,7 @@ import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.parser.Parser;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
@@ -88,6 +87,7 @@ public class BdbPerformanceTest extends TestCase {
     private StoredMapHandler handler;
     private NodePoolFactory nodePoolFactory;
     private GraphFactory factory;
+    GraphElementFactory graphElementFactory;
     private Parser parser;
 
     public void setUp() throws Exception {
@@ -97,10 +97,47 @@ public class BdbPerformanceTest extends TestCase {
                                  new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database"))};
     }
 
-    public void testAddPerformance() throws Exception {
-        int numberOfNodes = 1000000;
+    public void testPerformance() throws Exception {
+        int numberOfNodes = 10;
         Graph graph = getOnDiskGraph();
-        checkGraphPerformance(numberOfNodes, graph);
+        graphElementFactory = graph.getElementFactory();
+        addPerformance(numberOfNodes, graph);
+        //findPerformance(numberOfNodes, graph);
+    }
+
+    private void findPerformance (int nodes, Graph graph) throws Exception {
+        long startTime =  System.currentTimeMillis();
+        ClosableIterator itr = graph.find(graphElementFactory.createResource(URI_1),
+                                          graphElementFactory.createResource(URI_1),
+                                          graphElementFactory.createLiteral("Abdul"));
+        long finishTime = System.currentTimeMillis();
+        System.err.println("\nTesting Find BDB Performance:");
+        System.err.println("To find " + itr.next().toString() + " from " +
+                            nodes + " Triples took: " + (finishTime - startTime) +
+                            " ms = " + ((finishTime - startTime)/1000) + " s");
+    }
+
+    private void addPerformance(int numberOfNodes, Graph graph)
+        throws Exception {
+        //Test
+        int rnd = (int) (Math.random() * numberOfNodes);
+        long startTime =  System.currentTimeMillis();
+        for (int i = 0; i < numberOfNodes; i++) {
+            if (i == rnd) {
+               graph.add(graphElementFactory.createResource(URI_1),
+                      graphElementFactory.createResource(URI_1),
+                      graphElementFactory.createLiteral("Abdul") );
+            } else {
+            graph.add(graphElementFactory.createResource(),
+                      graphElementFactory.createResource(URI_1),
+                      graphElementFactory.createResource());
+            }
+        }
+        long finishTime = System.currentTimeMillis();
+        System.err.println("Testing Add Performance:");
+        System.err.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " +
+            ((finishTime - startTime)/1000) + " s");
+         findPerformance(numberOfNodes, graph);
     }
 
     private Graph getOnDiskGraph() {
@@ -109,20 +146,5 @@ public class BdbPerformanceTest extends TestCase {
         factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         Graph graph = factory.getGraph();
         return graph;
-    }
-
-    private void checkGraphPerformance(int numberOfNodes, Graph graph)
-        throws GraphElementFactoryException, GraphException {
-        GraphElementFactory graphElementFactory = graph.getElementFactory();
-        //Test
-        long startTime =  System.currentTimeMillis();
-        for (int i = 0; i < numberOfNodes; i++) {
-            graph.add(graphElementFactory.createResource(),
-                      graphElementFactory.createResource(URI_1),
-                      graphElementFactory.createResource());
-        }
-        long finishTime = System.currentTimeMillis();
-        System.err.println("Testing Add Performance:");
-        System.err.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime)/1000) + " s");
     }
 }

@@ -65,16 +65,16 @@ import org.jrdf.map.MapFactory;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashSet;
 
 public final class LongIndexBdb  implements LongIndex, Serializable {
     private static final long serialVersionUID = 6044200669651883129L;
     private Map<Long, LinkedList> index;
-    public LongIndexBdb(MapFactory newCreator){
+    public LongIndexBdb(MapFactory newCreator) {
         index = newCreator.createMap(Long.class, LinkedList.class);
     }
     public LongIndexBdb(Map<Long, LinkedList> newIndex) {
@@ -90,16 +90,22 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
         LinkedList subIndex = index.get(first);
         // check that the subindex exists
         if (null == subIndex) {
-            // no, so create it and add it to the index
+            // no, so create it
             subIndex = new LinkedList();
+        }
+        boolean found = false;
+        for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
+            Long[] grp = (Long[]) itr.next();
+            if (grp[0].equals(second) && grp[1].equals(third)) {
+                found = true;
+            }
+        }
+        if (!found) {
+            Long[] group = {second, third};
+            subIndex.add(group);
             index.put(first, subIndex);
         }
-        Long[] group = new Long[2];
-        group[0] = second;
-        group[1] = third;
-        subIndex.add(group);
-   }
-
+    }
 
     public void remove(Long[] triple) throws GraphException {
         remove(triple[0], triple[1], triple[2]);
@@ -112,14 +118,14 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-        // find the final group
+        // find the group
         for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
             Long[] group = (Long[]) itr.next();
-            if (second == group[0] && third == group[1]) {
-               subIndex.remove(group);
-               if (subIndex.isEmpty()) {
-                   index.remove(first);
-               }
+            if (second.equals(group[0]) && third.equals(group[1])) {
+                subIndex.remove(group);
+                if (subIndex.isEmpty()) {
+                    index.remove(first);
+                }
             }
         }
     }
@@ -143,18 +149,11 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
         Set<Long> set = new HashSet<Long>();
         Map<Long, Set<Long>> map = new HashMap<Long, Set<Long>>();
         LinkedList subIndex = index.get(first);
-        Long oldPred = null;
-        for(Iterator itr = subIndex.iterator(); itr.hasNext();) {
+//        Long oldPred = null;
+        for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
             Long[] group = (Long[]) itr.next();
-            Long pred = group[0];
-            if(!pred.equals(oldPred)) {
-                set = new HashSet<Long>();
-                set.add(group[1]);
-                map.put(pred, set);
-                oldPred = pred;
-            } else {
-                set.add(group[1]);
-            }
+            set.add(group[1]);
+            map.put(group[0], set);
         }
         return map;
     }
@@ -171,7 +170,8 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
     public long getSize() {
         int size = 0;
         // go over the index map
-        for (LinkedList list : index.values()) {
+        for (Iterator it = index.values().iterator(); it.hasNext();) {
+            LinkedList list = (LinkedList) it.next();
             // go over the sub indexes
             size += list.size();
         }
