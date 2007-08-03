@@ -57,51 +57,31 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.graph.index.longindex.mem;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
+import junit.framework.TestCase;
+import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.StoredMapHandlerImpl;
 
-import java.util.Map;
-
-public class BdbMapFactory implements MapFactory {
-    private final StoredMapHandler handler;
-    private final String classCatalog;
-    private final String databaseName;
-    private Environment env;
-    private StoredClassCatalog catalog;
-
-    public BdbMapFactory(StoredMapHandler newHandler, String newClassCatalog, String newDatabaseName) {
-        this.handler = newHandler;
-        this.classCatalog = newClassCatalog;
-        this.databaseName = newDatabaseName;
+public class LongIndexBdbUnitTest extends TestCase {
+    private LongIndexBdb longIndex;
+    public void setUp() {
+        longIndex = new LongIndexBdb(new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database"));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabase(false);
-            catalog = handler.setupCatalog(env, classCatalog, dbConfig);
-            return handler.createMap(env, databaseName, catalog, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+    public void testAddition() throws Exception {
+        longIndex.add(new Long(1), new Long(2), new Long(3));
+        System.err.println("Number of triples should be 1 we got: " + longIndex.getSize());
+        longIndex.add(new Long(1), new Long(2), new Long(3));
+        System.err.println("Number of triples should be 1 we got: " + longIndex.getSize());
+        longIndex.add(new Long(4), new Long(5), new Long(6));
+        System.err.println("Number of Triples should be 2 we got: " + longIndex.getSize());
     }
 
-    public void close() {
-        try {
-            env.close();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                catalog.close();
-            } catch (DatabaseException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void testRemove() throws Exception {
+        testAddition();
+        longIndex.remove(new Long(4), new Long(5), new Long(6));
+        //System.err.println("Number of Triples should be 1 we got: " + longIndex.getSize());
     }
 }
