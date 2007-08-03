@@ -80,12 +80,10 @@ import java.net.URI;
 public class MemPerformanceTest extends TestCase {
     private static final String URI_STRING = "http://foo/bar";
     private static final URI URI_1 = URI.create(URI_STRING);
-//    private final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
     private LongIndex[] indexes;
     private NodePoolFactory nodePoolFactory;
     private GraphFactory factory;
     GraphElementFactory graphElementFactory;
-//    private Parser parser;
 
     public void setUp() throws Exception {
         indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
@@ -99,35 +97,34 @@ public class MemPerformanceTest extends TestCase {
         findPerformance(numberOfNodes, graph);
     }
 
-    private void findPerformance (int nodes, Graph graph) throws Exception {
-        long startTime =  System.currentTimeMillis();
-        ClosableIterator itr = graph.find(graphElementFactory.createResource(URI_1),
-                    graphElementFactory.createResource(URI_1),
-                    graphElementFactory.createLiteral("Abdul"));
-        long finishTime = System.currentTimeMillis();
-        System.err.println("\nTesting Find MEM Performance:");
-        System.err.println("To find " + itr.next().toString() + " from " + nodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime)/1000) + " s");
-    }
-
-    private void addPerformance(int numberOfNodes, Graph graph)
-        throws GraphElementFactoryException, GraphException {
+    private void addPerformance(int numberOfNodes, Graph graph) throws GraphElementFactoryException, GraphException {
         //Test
         int rnd = (int) (Math.random() * numberOfNodes);
-        long startTime =  System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         for (int i = 0; i < numberOfNodes; i++) {
             if (i == rnd) {
-               graph.add(graphElementFactory.createResource(URI_1),
-                      graphElementFactory.createResource(URI_1),
-                      graphElementFactory.createLiteral("Abdul") );
+                graph.add(graphElementFactory.createResource(URI_1),
+                        graphElementFactory.createResource(URI_1),
+                        graphElementFactory.createLiteral("Abdul"));
             } else {
-            graph.add(graphElementFactory.createResource(),
-                      graphElementFactory.createResource(URI_1),
-                      graphElementFactory.createResource());
+                graph.add(graphElementFactory.createResource(),
+                        graphElementFactory.createResource(URI_1),
+                        graphElementFactory.createResource());
             }
         }
         long finishTime = System.currentTimeMillis();
-        System.err.println("Testing Add Performance:");
-        System.err.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime)/1000) + " s");
+//        System.err.println("Testing Add Performance:");
+//        System.err.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
+    }
+
+    private void findPerformance(int nodes, Graph graph) throws Exception {
+        long startTime = System.currentTimeMillis();
+        ClosableIterator itr = graph.find(graphElementFactory.createResource(URI_1),
+                graphElementFactory.createResource(URI_1),
+                graphElementFactory.createLiteral("Abdul"));
+        long finishTime = System.currentTimeMillis();
+//        System.err.println("\nTesting Find MEM Performance:");
+//        System.err.println("To find " + itr.next().toString() + " from " + nodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
     }
 
     private Graph getOnMemoryGraph() {

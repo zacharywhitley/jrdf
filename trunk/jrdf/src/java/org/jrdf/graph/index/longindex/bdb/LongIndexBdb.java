@@ -71,12 +71,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
+// TODO Abdul How is this Serializable?
 public final class LongIndexBdb  implements LongIndex, Serializable {
     private static final long serialVersionUID = 6044200669651883129L;
     private Map<Long, LinkedList> index;
+
+    private LongIndexBdb() {
+    }
+
     public LongIndexBdb(MapFactory newCreator) {
         index = newCreator.createMap(Long.class, LinkedList.class);
     }
+
     public LongIndexBdb(Map<Long, LinkedList> newIndex) {
         index = newIndex;
     }

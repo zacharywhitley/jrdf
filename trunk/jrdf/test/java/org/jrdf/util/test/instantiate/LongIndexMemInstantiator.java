@@ -68,7 +68,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.graph.index.longindex.mem.LongIndexMem}.
+ * {@link Instantiator} for {@link LongIndexMem}.
  *
  * @author Tom Adams
  * @version $Id$
