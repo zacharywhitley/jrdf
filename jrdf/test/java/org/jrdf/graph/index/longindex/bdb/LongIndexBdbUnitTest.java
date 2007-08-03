@@ -57,10 +57,9 @@
  *
  */
 
-package org.jrdf.graph.index.longindex.mem;
+package org.jrdf.graph.index.longindex.bdb;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.StoredMapHandlerImpl;
 
@@ -68,20 +67,26 @@ public class LongIndexBdbUnitTest extends TestCase {
     private LongIndexBdb longIndex;
     public void setUp() {
         longIndex = new LongIndexBdb(new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database"));
+        longIndex.clear();
     }
 
     public void testAddition() throws Exception {
         longIndex.add(new Long(1), new Long(2), new Long(3));
-        System.err.println("Number of triples should be 1 we got: " + longIndex.getSize());
+        checkNumberOfTriples(1, longIndex.getSize());
         longIndex.add(new Long(1), new Long(2), new Long(3));
-        System.err.println("Number of triples should be 1 we got: " + longIndex.getSize());
+        checkNumberOfTriples(1, longIndex.getSize());
         longIndex.add(new Long(4), new Long(5), new Long(6));
-        System.err.println("Number of Triples should be 2 we got: " + longIndex.getSize());
+        checkNumberOfTriples(2, longIndex.getSize());
     }
 
-    public void testRemove() throws Exception {
-        testAddition();
-        longIndex.remove(new Long(4), new Long(5), new Long(6));
-        //System.err.println("Number of Triples should be 1 we got: " + longIndex.getSize());
+    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
+        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize,
+                expectedNumber, actualSize);
     }
+
+//    public void testRemove() throws Exception {
+//        testAddition();
+//        longIndex.remove(new Long(4), new Long(5), new Long(6));
+//        //System.err.println("Number of Triples should be 1 we got: " + longIndex.getSize());
+//    }
 }
