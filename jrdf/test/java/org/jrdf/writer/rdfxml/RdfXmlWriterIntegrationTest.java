@@ -73,7 +73,7 @@ import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.WriteException;
-import org.jrdf.writer.mem.BlankNodeRegistryImpl;
+import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 
 import java.io.IOException;
@@ -166,7 +166,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         // do write
         StringWriter out = new StringWriter();
         try {
-            BlankNodeRegistry nodeRegistry = new BlankNodeRegistryImpl();
+            BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
             RdfNamespaceMap map = new RdfNamespaceMapImpl();
             RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
             writer.write(graph, out);

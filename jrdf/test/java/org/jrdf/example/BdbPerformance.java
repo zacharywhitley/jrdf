@@ -59,7 +59,6 @@
 
 package org.jrdf.example;
 
-import junit.framework.TestCase;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.NodeComparator;
@@ -78,16 +77,14 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
 
-public class BdbPerformanceTest extends TestCase {
+public class BdbPerformance {
     private static final String URI_STRING = "http://foo/bar";
     private static final URI URI_1 = URI.create(URI_STRING);
     private LongIndex[] indexes;
     private StoredMapHandler handler;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+    private GraphElementFactory graphElementFactory;
 
-    public void setUp() throws Exception {
+    public BdbPerformance() throws Exception {
         handler = new StoredMapHandlerImpl();
         indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
                 new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
@@ -95,7 +92,7 @@ public class BdbPerformanceTest extends TestCase {
     }
 
     public void testPerformance() throws Exception {
-        int numberOfNodes = 10;
+        int numberOfNodes = 100;
         Graph graph = getOnDiskGraph();
         graphElementFactory = graph.getElementFactory();
         addPerformance(numberOfNodes, graph);
@@ -118,9 +115,9 @@ public class BdbPerformanceTest extends TestCase {
             }
         }
         long finishTime = System.currentTimeMillis();
-//        System.err.println("Testing Add Performance:");
-//        System.err.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " +
-//                ((finishTime - startTime) / 1000) + " s");
+        System.out.println("Testing Add Performance:");
+        System.out.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " +
+                ((finishTime - startTime) / 1000) + " s");
         findPerformance(numberOfNodes, graph);
     }
 
@@ -130,16 +127,20 @@ public class BdbPerformanceTest extends TestCase {
                 graphElementFactory.createResource(URI_1),
                 graphElementFactory.createLiteral("Abdul"));
         long finishTime = System.currentTimeMillis();
-//        System.err.println("\nTesting Find BDB Performance:");
-//        System.err.println("To find " + itr.next().toString() + " from " + nodes + " Triples took: " +
-//                (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
+        System.out.println("\nTesting Find BDB Performance:");
+        System.out.println("To find " + itr.next().toString() + " from " + nodes + " Triples took: " +
+                (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
     }
 
     private Graph getOnDiskGraph() {
-        nodePoolFactory = new BdbNodePoolFactory(handler);
+        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
         NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        Graph graph = factory.getGraph();
-        return graph;
+        GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
+        return factory.getGraph();
+    }
+
+    public static void main(String[] args) throws Exception {
+        BdbPerformance bdbPerformance = new BdbPerformance();
+        bdbPerformance.testPerformance();
     }
 }
