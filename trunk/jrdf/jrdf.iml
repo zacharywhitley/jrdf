@@ -20,6 +20,7 @@
     <orderEntry type="library" name="gsbase-2.0.1" level="project" />
     <orderEntry type="library" name="easymock" level="project" />
     <orderEntry type="library" name="je-3.2.23" level="project" />
+    <orderEntry type="library" name="wstx-asl-3.2.1" level="project" />
     <orderEntryProperties />
   </component>
   <component name="copyright">
