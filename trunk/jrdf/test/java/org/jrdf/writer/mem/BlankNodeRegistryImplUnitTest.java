@@ -87,14 +87,14 @@ public class BlankNodeRegistryImplUnitTest extends TestCase {
     private BlankNodeRegistry nodeRegistry;
 
     public void testClassProperties() {
-        checkImplementationOfInterfaceAndFinal(BlankNodeRegistry.class, BlankNodeRegistryImpl.class);
-        checkConstructor(BlankNodeRegistryImpl.class, Modifier.PUBLIC);
-        checkFieldIsOfTypePrivateAndFinal(BlankNodeRegistryImpl.class, List.class, FIELD_1_NAME);
-        assertNotNull(getFieldValue(new BlankNodeRegistryImpl(), FIELD_1_NAME));
+        checkImplementationOfInterfaceAndFinal(BlankNodeRegistry.class, MemBlankNodeRegistryImpl.class);
+        checkConstructor(MemBlankNodeRegistryImpl.class, Modifier.PUBLIC);
+        checkFieldIsOfTypePrivateAndFinal(MemBlankNodeRegistryImpl.class, List.class, FIELD_1_NAME);
+        assertNotNull(getFieldValue(new MemBlankNodeRegistryImpl(), FIELD_1_NAME));
     }
 
     public void testBadParams() throws Exception {
-        checkMethodNullAssertions(new BlankNodeRegistryImpl(), "getNodeId", GET_NODEID_DEFINITION);
+        checkMethodNullAssertions(new MemBlankNodeRegistryImpl(), "getNodeId", GET_NODEID_DEFINITION);
     }
 
     public void testGetSuccessfulyNodeId() {
@@ -123,7 +123,7 @@ public class BlankNodeRegistryImplUnitTest extends TestCase {
 
     private void setUpMocks() {
         factory.reset();
-        nodeRegistry = new BlankNodeRegistryImpl();
+        nodeRegistry = new MemBlankNodeRegistryImpl();
         bNodes = factory.createMock(List.class);
         blankNode = factory.createMock(BlankNode.class);
     }

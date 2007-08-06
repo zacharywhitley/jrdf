@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -56,34 +56,43 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.writer.mem;
+
+package org.jrdf.writer.bdb;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.map.MapFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-public final class BlankNodeRegistryImpl implements BlankNodeRegistry {
-    private final List<BlankNode> blankNodeList;
+public class BdbBlankNodeRegistryImpl  implements BlankNodeRegistry {
+    private MapFactory creator;
+    private final Map<BlankNode, Integer> blankNodeList;
 
-    public BlankNodeRegistryImpl() {
-        blankNodeList = new LinkedList<BlankNode>();
+    public BdbBlankNodeRegistryImpl(MapFactory newCreator) {
+        creator = newCreator;
+        blankNodeList = creator.createMap(BlankNode.class, Integer.class);
     }
 
-    public BlankNodeRegistryImpl(List<BlankNode> newBlankNodeList) {
-        this.blankNodeList = newBlankNodeList;
+    public BdbBlankNodeRegistryImpl(MapFactory newCreator, List<BlankNode> newBlankNodeList) {
+        creator = newCreator;
+        blankNodeList = creator.createMap(BlankNode.class, Integer.class);
+        for (int index = 0; index < newBlankNodeList.size(); index++) {
+            this.blankNodeList.put(newBlankNodeList.get(index), new Integer(index));
+        }
     }
 
     public String getNodeId(BlankNode node) {
         checkNotNull(node);
-        int id = blankNodeList.indexOf(node);
-        if (id < 0) {
-            blankNodeList.add(node);
-            id = blankNodeList.indexOf(node);
+        Integer id = blankNodeList.get(node);
+        int size = 0;
+        if (id == null) {
+            size = blankNodeList.size();
+            blankNodeList.put(node, new Integer(size));
         }
-        return "bNode_" + id;
+        return "bNode_" + size;
     }
 
     public void clear() {
@@ -91,6 +100,6 @@ public final class BlankNodeRegistryImpl implements BlankNodeRegistry {
     }
 
     public void close() {
-        // Nothing.
+        creator.close();
     }
 }

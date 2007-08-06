@@ -125,13 +125,23 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
             throw new GraphException("Unable to remove nonexistent statement");
         }
         // find the group
+        boolean found = false;
+        Long[] groupToRemove = null;
         for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
             Long[] group = (Long[]) itr.next();
             if (second.equals(group[0]) && third.equals(group[1])) {
-                subIndex.remove(group);
-                if (subIndex.isEmpty()) {
-                    index.remove(first);
-                }
+                found = true;
+                groupToRemove = group;
+            }
+        }
+        removeTriple(found, subIndex, groupToRemove, first);
+    }
+
+    private void removeTriple(boolean found, LinkedList subIndex, Long[] groupToRemove, Long first) {
+        if (found) {
+            subIndex.remove(groupToRemove);
+            if (subIndex.isEmpty()) {
+                index.remove(first);
             }
         }
     }
