@@ -66,11 +66,17 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
+import org.jrdf.util.ClosableIterator;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import static java.util.Arrays.asList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
@@ -99,37 +105,38 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         TestRunner.run(GraphImplUnitTest.class);
     }
 
-//    public void testPredicateIterators() throws Exception {
-//        Graph graph = newGraph();
-//
-//        graph.add(blank1, ref1, blank2);
-//        graph.add(blank1, ref2, blank2);
-//        graph.add(blank1, ref1, l1);
-//        graph.add(blank1, ref1, l2);
-//        graph.add(blank2, ref1, blank2);
-//        graph.add(blank2, ref2, blank2);
-//        graph.add(blank2, ref1, l1);
-//        graph.add(blank2, ref1, l2);
-//        graph.add(blank2, ref1, l2);
-//        graph.add(ref1, ref1, ref1);
-//
-//
-//        ClosableIterator<PredicateNode> uniquePredicates = graph.getUniquePredicates();
-//        int counter = 0;
-//        while (uniquePredicates.hasNext()) {
-//            uniquePredicates.next();
-//            counter++;
-//        }
-//        assertEquals(counter, 2);
-//
-//        ClosableIterator<PredicateNode> resourcePredicates = graph.getUniquePredicates(blank2);
-//        counter= 0;
-//        while (resourcePredicates.hasNext()) {
-//            resourcePredicates.next();
-//            counter++;
-//        }
-//        assertEquals(counter, 2);
-//    }
+    public void testPredicateIterators() throws Exception {
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(blank1, ref1, l1);
+        graph.add(blank1, ref1, l2);
+        graph.add(blank2, ref1, blank2);
+        graph.add(blank2, ref2, blank2);
+        graph.add(blank2, ref1, l1);
+        graph.add(blank2, ref1, l2);
+        graph.add(blank2, ref1, l2);
+        graph.add(ref1, ref1, ref1);
+        graph.add(ref1, ref3, ref1);
+
+
+        ClosableIterator<PredicateNode> uniquePredicates = graph.getUniquePredicates();
+        int counter = 0;
+        while (uniquePredicates.hasNext()) {
+            uniquePredicates.next();
+            counter++;
+        }
+        assertEquals(counter, 3);
+
+        Resource resource = graph.getElementFactory().createResource(blank2);
+        ClosableIterator<PredicateNode> resourcePredicates = graph.getUniquePredicates(resource);
+        Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(asList(ref1, ref2));
+        counter = 0;
+        while (resourcePredicates.hasNext()) {
+            assertTrue(expectedPredicates.contains(resourcePredicates.next()));
+            counter++;
+        }
+        assertEquals(counter, 2);
+    }
 
     /**
      * Implementation method for testing serialization of the graph.

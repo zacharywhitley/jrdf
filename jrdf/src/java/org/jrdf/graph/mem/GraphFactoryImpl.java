@@ -83,6 +83,7 @@ public final class GraphFactoryImpl implements GraphFactory {
     private GraphElementFactory elementFactory;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
+    private GraphMutatorImpl graphMutator;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
         this.longIndexes = newLongIndexes;
@@ -91,11 +92,12 @@ public final class GraphFactoryImpl implements GraphFactory {
         this.handler012 = new GraphHandler012(newLongIndexes, nodePool);
         this.iteratorFactory = new IteratorFactoryImpl(newLongIndexes, new GraphHandler[]{handler012,
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)});
-        this.elementFactory = new GraphElementFactoryImpl(nodePool);
+        this.graphMutator = new GraphMutatorImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, elementFactory, handler012, iteratorFactory);
+        return new GraphImpl(longIndexes, nodePool, elementFactory, handler012, iteratorFactory, graphMutator);
     }
 
     public IteratorFactory getIteratorFactory() {
