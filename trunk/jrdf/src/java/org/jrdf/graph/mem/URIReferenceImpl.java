@@ -62,6 +62,9 @@ package org.jrdf.graph.mem;
 // Java 2 standard packages
 
 import org.jrdf.graph.AbstractURIReference;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.GraphException;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
@@ -127,5 +130,9 @@ public class URIReferenceImpl extends AbstractURIReference implements LocalizedN
      */
     public Long getId() {
         return id;
+    }
+
+    public void addProperty(PredicateNode predNode, ObjectNode objNode) throws GraphException {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

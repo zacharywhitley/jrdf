@@ -66,6 +66,7 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import org.jrdf.util.ClosableIterator;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -256,6 +257,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         assertEquals(testRef1, testRef2);
     }
 
+    // TODO Imran - what's the right thing to retunr for getUniquePredicates?
     private static class TestURIReference extends AbstractURIReference {
         private static final long serialVersionUID = -443111126777106029L;
 
@@ -265,6 +267,10 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
         public TestURIReference(URI newUri) throws IllegalArgumentException {
             super(newUri);
+        }
+
+        public ClosableIterator<PredicateNode> getUniquePredicates() {
+            return null;
         }
     }
 
@@ -277,6 +283,10 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
 
         public TestURIReference2(URI newUri) throws IllegalArgumentException {
             super(newUri);
+        }
+
+        public ClosableIterator<PredicateNode> getUniquePredicates() {
+            return null;
         }
     }
 }

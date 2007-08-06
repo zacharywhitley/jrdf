@@ -66,7 +66,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
     public void testKeepJUnitHappy() {
         assertTrue(true);
     }
-    
+
 //    private static final String NODE_ID = "foo" + System.currentTimeMillis();
 //    private static final long UNIQUE_ID_1 = new Random().nextLong();
 //    private static final long UNIQUE_ID_2 = new Random().nextLong();

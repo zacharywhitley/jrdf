@@ -129,6 +129,21 @@ public interface Graph {
     ClosableIterator<Triple> find(Triple triple) throws GraphException;
 
     /**
+     * Return all unique predicates.
+     *
+     * @return all unique predicate.
+     */
+    ClosableIterator<PredicateNode> getUniquePredicates();
+
+    /**
+     * Return predicates that are part of an RDF triple where resource is either a subject or object.
+     *
+     * @param resource the resource that is either a subject or object in a triple.
+     * @return the unique predicates associated with the resource.
+     */
+    ClosableIterator<PredicateNode> getUniquePredicates(Resource resource) throws GraphException;
+
+    /**
      * Adds a triple to the graph.  The nodes must have already been created
      * using {@link GraphElementFactory}.
      *

@@ -80,8 +80,13 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
     private static final QueryBuilder BUILDER = createQueryBuilder();
     private static final QueryEngine QUERY_ENGINE = createQueryEngine();
+    private GraphFactory orderedGraphFactory;
 
     private SortedMemoryJRDFFactoryImpl() {
+        LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
+        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
+        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
     }
 
     public static JRDFFactory getFactory() {
@@ -92,10 +97,6 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     }
 
     public Graph getNewGraph() {
-        LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
-        GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();
     }
 

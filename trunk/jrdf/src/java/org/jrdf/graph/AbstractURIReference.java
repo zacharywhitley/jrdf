@@ -130,10 +130,6 @@ public abstract class AbstractURIReference implements URIReference, Serializable
         uri = newUri;
     }
 
-    public boolean isURIReference() {
-        return true;
-    }
-
     /**
      * The {@link URI} identifiying this resource.
      *

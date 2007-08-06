@@ -69,7 +69,7 @@ package org.jrdf.graph;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface BlankNode extends Resource, TypedNodeVisitable {
+public interface BlankNode extends SubjectNode, ObjectNode, TypedNodeVisitable {
 
     /**
      * Returns a hash-code value for this BlankNode.  While the implementation

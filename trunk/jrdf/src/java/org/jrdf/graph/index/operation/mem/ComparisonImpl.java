@@ -137,7 +137,7 @@ public final class ComparisonImpl implements Comparison {
 
     private boolean tripleContainsBlankNode(Triple triple) {
         return triple.getSubject() instanceof BlankNode || triple.getPredicate() instanceof BlankNode ||
-            triple.getObject() instanceof BlankNode;
+                triple.getObject() instanceof BlankNode;
     }
 
     private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {

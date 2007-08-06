@@ -73,7 +73,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public final class SpringJRDFFactoryImpl implements JRDFFactory {
     private static final String DEFAULT_WIRING_CONFIG = "wiring.xml";
     private static final ClassPathXmlApplicationContext BEAN_FACTORY =
-        new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
+            new ClassPathXmlApplicationContext(DEFAULT_WIRING_CONFIG);
 
     private SpringJRDFFactoryImpl() {
     }

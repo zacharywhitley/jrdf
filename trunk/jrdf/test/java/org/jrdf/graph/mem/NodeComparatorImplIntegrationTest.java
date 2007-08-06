@@ -85,11 +85,11 @@ import java.util.Comparator;
  * @version $Id$
  */
 public class NodeComparatorImplIntegrationTest extends TestCase {
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final int EQUAL = 0;
     private static final int BEFORE = -1;
     private static final int AFTER = 1;
     private NodeComparator nodeComparator;
-
     public static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
     public static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
     public static final BlankNode BNODE_1 = new BlankNodeImpl(1l, "a");
@@ -99,7 +99,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        nodeComparator = TestJRDFFactory.getFactory().getNewNodeComparator();
+        nodeComparator = FACTORY.getNewNodeComparator();
     }
 
     public void testClassProperties() throws Exception {

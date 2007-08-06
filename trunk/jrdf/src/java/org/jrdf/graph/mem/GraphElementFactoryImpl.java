@@ -106,6 +106,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         // create the node identifier and add
         Long nodeId = nodePool.getNextNodeId();
         BlankNode node = new BlankNodeImpl(nodeId, uid);
+
         nodePool.registerNode((LocalizedNode) node);
         return node;
     }
