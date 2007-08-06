@@ -104,4 +104,8 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
         return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
             iteratorFactory);
     }
+
+    public IteratorFactory getIteratorFactory() {
+        return iteratorFactory;
+    }
 }

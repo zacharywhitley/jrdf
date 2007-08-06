@@ -66,6 +66,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.BlankNodeImpl;
 import org.jrdf.graph.mem.LiteralMutableId;
@@ -154,6 +155,10 @@ public final class NodePoolImpl implements NodePool {
 
     public Long getNextNodeId() {
         return nextNode++;
+    }
+
+    public Long localize(Resource node) throws GraphException {
+        return convertSubject(node);
     }
 
     public Long[] localize(Node first, Node second, Node third) throws GraphException {

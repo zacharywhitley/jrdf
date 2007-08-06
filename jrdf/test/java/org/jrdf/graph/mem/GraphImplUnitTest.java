@@ -61,11 +61,14 @@ package org.jrdf.graph.mem;
 
 import junit.textui.TestRunner;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.PredicateNode;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -98,6 +101,38 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
     public static void main(String[] args) throws Exception {
         TestRunner.run(GraphImplUnitTest.class);
     }
+
+//    public void testPredicateIterators() throws Exception {
+//        Graph graph = newGraph();
+//
+//        graph.add(blank1, ref1, blank2);
+//        graph.add(blank1, ref2, blank2);
+//        graph.add(blank1, ref1, l1);
+//        graph.add(blank1, ref1, l2);
+//        graph.add(blank2, ref1, blank2);
+//        graph.add(blank2, ref2, blank2);
+//        graph.add(blank2, ref1, l1);
+//        graph.add(blank2, ref1, l2);
+//        graph.add(blank2, ref1, l2);
+//        graph.add(ref1, ref1, ref1);
+//
+//
+//        ClosableIterator<PredicateNode> uniquePredicates = graph.getUniquePredicates();
+//        int counter = 0;
+//        while (uniquePredicates.hasNext()) {
+//            uniquePredicates.next();
+//            counter++;
+//        }
+//        assertEquals(counter, 2);
+//
+//        ClosableIterator<PredicateNode> resourcePredicates = graph.getUniquePredicates(blank2);
+//        counter= 0;
+//        while (resourcePredicates.hasNext()) {
+//            resourcePredicates.next();
+//            counter++;
+//        }
+//        assertEquals(counter, 2);
+//    }
 
     /**
      * Implementation method for testing serialization of the graph.

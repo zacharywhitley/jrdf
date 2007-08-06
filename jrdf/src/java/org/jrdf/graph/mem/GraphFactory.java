@@ -59,6 +59,7 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.mem.iterator.IteratorFactory;
 
 /**
  * Allows the construction of a graph.
@@ -68,4 +69,6 @@ import org.jrdf.graph.Graph;
  */
 public interface GraphFactory {
     Graph getGraph();
+
+    IteratorFactory getIteratorFactory();
 }

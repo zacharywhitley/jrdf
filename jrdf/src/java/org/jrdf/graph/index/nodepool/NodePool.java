@@ -61,6 +61,7 @@ package org.jrdf.graph.index.nodepool;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.mem.LocalizedNode;
 
 import java.util.Collection;
@@ -127,4 +128,6 @@ public interface NodePool {
      * Removes all entries from the nodepool.
      */
     void clear();
+
+    Long localize(Resource node) throws GraphException;
 }
