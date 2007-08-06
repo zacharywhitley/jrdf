@@ -87,7 +87,7 @@ public final class NodeTestUtil {
 
     public static URIReference createResource(URI uri) {
         try {
-            return getElementFactory().createResource(uri);
+            return getElementFactory().createURIReference(uri);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

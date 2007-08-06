@@ -105,13 +105,13 @@ public class BdbPerformance {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < numberOfNodes; i++) {
             if (i == rnd) {
-                graph.add(graphElementFactory.createResource(URI_1),
-                        graphElementFactory.createResource(URI_1),
+                graph.add(graphElementFactory.createURIReference(URI_1),
+                        graphElementFactory.createURIReference(URI_1),
                         graphElementFactory.createLiteral("Abdul"));
             } else {
-                graph.add(graphElementFactory.createResource(),
-                        graphElementFactory.createResource(URI_1),
-                        graphElementFactory.createResource());
+                graph.add(graphElementFactory.createBlankNode(),
+                        graphElementFactory.createURIReference(URI_1),
+                        graphElementFactory.createBlankNode());
             }
         }
         long finishTime = System.currentTimeMillis();
@@ -123,8 +123,8 @@ public class BdbPerformance {
 
     private void findPerformance(int nodes, Graph graph) throws Exception {
         long startTime = System.currentTimeMillis();
-        ClosableIterator itr = graph.find(graphElementFactory.createResource(URI_1),
-                graphElementFactory.createResource(URI_1),
+        ClosableIterator itr = graph.find(graphElementFactory.createURIReference(URI_1),
+                graphElementFactory.createURIReference(URI_1),
                 graphElementFactory.createLiteral("Abdul"));
         long finishTime = System.currentTimeMillis();
         System.out.println("\nTesting Find BDB Performance:");

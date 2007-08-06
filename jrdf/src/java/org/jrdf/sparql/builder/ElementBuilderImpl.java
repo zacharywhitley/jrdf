@@ -188,7 +188,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
 
     private URIReference createResource(String uri) {
         try {
-            return currentGraph.getElementFactory().createResource(new URI(uri));
+            return currentGraph.getElementFactory().createURIReference(new URI(uri));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

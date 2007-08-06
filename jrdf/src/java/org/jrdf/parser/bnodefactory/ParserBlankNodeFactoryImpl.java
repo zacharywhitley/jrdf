@@ -79,7 +79,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {
-        return valueFactory.createResource();
+        return valueFactory.createBlankNode();
     }
 
     public BlankNode createBlankNode(String nodeID) throws GraphElementFactoryException {
@@ -88,7 +88,7 @@ public class ParserBlankNodeFactoryImpl implements ParserBlankNodeFactory {
 
         if (null == result) {
             // This is a new node ID, create a new BNode object for it
-            result = valueFactory.createResource();
+            result = valueFactory.createBlankNode();
 
             // Remember it, the nodeID might occur again.
             bNodeIdMap.put(nodeID, result);

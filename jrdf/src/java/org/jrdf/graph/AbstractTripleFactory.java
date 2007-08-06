@@ -146,11 +146,11 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         AlreadyReifiedException {
 
         // get the nodes used for reification
-        PredicateNode hasSubject = elementFactory.createResource(RDF.SUBJECT);
-        PredicateNode hasPredicate = elementFactory.createResource(RDF.PREDICATE);
-        PredicateNode hasObject = elementFactory.createResource(RDF.OBJECT);
-        URIReference rdfType = elementFactory.createResource(RDF.TYPE);
-        URIReference rdfStatement = elementFactory.createResource(RDF.STATEMENT);
+        PredicateNode hasSubject = elementFactory.createURIReference(RDF.SUBJECT);
+        PredicateNode hasPredicate = elementFactory.createURIReference(RDF.PREDICATE);
+        PredicateNode hasObject = elementFactory.createURIReference(RDF.OBJECT);
+        URIReference rdfType = elementFactory.createURIReference(RDF.TYPE);
+        URIReference rdfStatement = elementFactory.createURIReference(RDF.STATEMENT);
 
         // assert that the statement is not already reified
         try {
@@ -182,7 +182,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     public void addAlternative(SubjectNode subjectNode, Alternative alternative) throws
         TripleFactoryException {
         try {
-            graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.ALT));
+            graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
+                    elementFactory.createURIReference(RDF.ALT));
             addContainer(subjectNode, alternative);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
@@ -193,7 +194,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     public void addBag(SubjectNode subjectNode, Bag bag) throws TripleFactoryException {
         try {
-            graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.BAG));
+            graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
+                    elementFactory.createURIReference(RDF.BAG));
             addContainer(subjectNode, bag);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
@@ -204,7 +206,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
     public void addSequence(SubjectNode subjectNode, Sequence sequence) throws TripleFactoryException {
         try {
-            graph.add(subjectNode, elementFactory.createResource(RDF.TYPE), elementFactory.createResource(RDF.SEQ));
+            graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
+                    elementFactory.createURIReference(RDF.SEQ));
             addContainer(subjectNode, sequence);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
@@ -231,7 +234,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             long counter = 1L;
 
             for (ObjectNode object : container) {
-                graph.add(subjectNode, elementFactory.createResource(new URI(RDF.BASE_URI + "_" + counter++)), object);
+                graph.add(subjectNode, elementFactory.createURIReference(new URI(RDF.BASE_URI + "_" + counter++)),
+                        object);
             }
         } catch (URISyntaxException e) {
             throw new TripleFactoryException(e);
@@ -245,9 +249,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     public void addCollection(SubjectNode firstNode, Collection collection) throws TripleFactoryException {
         try {
             // Constants.
-            PredicateNode rdfFirst = elementFactory.createResource(RDF.FIRST);
-            PredicateNode rdfRest = elementFactory.createResource(RDF.REST);
-            ObjectNode rdfNil = elementFactory.createResource(RDF.NIL);
+            PredicateNode rdfFirst = elementFactory.createURIReference(RDF.FIRST);
+            PredicateNode rdfRest = elementFactory.createURIReference(RDF.REST);
+            ObjectNode rdfNil = elementFactory.createURIReference(RDF.NIL);
 
             // Insert statements from the Colletion using the first given node.
             addElementsToCollection(collection, firstNode, rdfFirst, rdfRest, rdfNil);
@@ -273,7 +277,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
                 // Create a new blank node, link the existing subject to it using
                 // the REST predicate.
-                ObjectNode newSubject = elementFactory.createResource();
+                ObjectNode newSubject = elementFactory.createBlankNode();
                 graph.add(subject, rdfRest, newSubject);
                 subject = (SubjectNode) newSubject;
             } else {

@@ -472,9 +472,6 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    @SuppressWarnings({
-        "unchecked"
-        })
     public void remove(Iterator<Triple> triples) throws GraphException {
         if (triples instanceof ClosableMemIterator) {
             localIteratorRemove(triples);

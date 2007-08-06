@@ -100,7 +100,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         Graph graph = TestJRDFFactory.getFactory().getNewGraph();
         GraphElementFactory graphElementFactory = graph.getElementFactory();
         URI uri = new URI("http://hello.com/foo");
-        URIReference resource = graphElementFactory.createResource(uri);
+        URIReference resource = graphElementFactory.createURIReference(uri);
         graph.add(resource, resource, resource);
         StringWriter out = writeGraph(graph);
         Graph read = readGraph(new StringReader(out.toString()), "http://www.example.org/");

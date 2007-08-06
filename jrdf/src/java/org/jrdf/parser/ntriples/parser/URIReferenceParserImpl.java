@@ -82,7 +82,7 @@ public final class URIReferenceParserImpl implements URIReferenceParser {
         checkNotEmptyString("s", s);
         try {
             String literal = nTripleUtil.unescapeLiteral(s);
-            return graphElementFactory.createResource(URI.create(literal));
+            return graphElementFactory.createURIReference(URI.create(literal));
         } catch (IllegalArgumentException iae) {
             throw new ParseException("Failed to create URI Reference: " + s, 1);
         } catch (GraphElementFactoryException e) {

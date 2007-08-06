@@ -103,8 +103,8 @@ public final class SparqlConnectionImplIntegrationTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         GraphElementFactory elementFactory = GRAPH.getElementFactory();
-        SubjectNode subject = elementFactory.createResource(URI_BOOK_1);
-        PredicateNode predicate = elementFactory.createResource(URI_DC_TITLE);
+        SubjectNode subject = elementFactory.createURIReference(URI_BOOK_1);
+        PredicateNode predicate = elementFactory.createURIReference(URI_DC_TITLE);
         ObjectNode object = elementFactory.createLiteral(LITERAL_BOOK_TITLE);
         GRAPH.add(subject, predicate, object);
     }

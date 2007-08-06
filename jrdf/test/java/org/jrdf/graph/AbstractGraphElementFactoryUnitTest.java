@@ -195,16 +195,16 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      */
     public void testCreateResources() throws Exception {
         // test blank node creation
-        BlankNode blank1 = elementFactory.createResource();
-        BlankNode blank2 = elementFactory.createResource();
+        BlankNode blank1 = elementFactory.createBlankNode();
+        BlankNode blank2 = elementFactory.createBlankNode();
         assertFalse(blank1.equals(blank2));
 
         // test named node creation
         URI uri1 = new URI("http://namespace#somevalue");
         URI uri2 = new URI("http://namespace#someothervalue");
-        URIReference ref1 = elementFactory.createResource(uri1);
-        URIReference ref2 = elementFactory.createResource(uri2);
-        URIReference ref3 = elementFactory.createResource(uri1);
+        URIReference ref1 = elementFactory.createURIReference(uri1);
+        URIReference ref2 = elementFactory.createURIReference(uri2);
+        URIReference ref3 = elementFactory.createURIReference(uri1);
         assertFalse(ref1.equals(ref2));
         assertEquals(ref1, ref3);
         assertEquals(ref1.getURI(), uri1);
@@ -218,13 +218,13 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      */
     public void testCreateTriples() throws Exception {
 
-        BlankNode blank1 = elementFactory.createResource();
-        BlankNode blank2 = elementFactory.createResource();
+        BlankNode blank1 = elementFactory.createBlankNode();
+        BlankNode blank2 = elementFactory.createBlankNode();
 
         URI uri1 = new URI("http://namespace#somevalue");
         URI uri2 = new URI("http://namespace#someothervalue");
-        URIReference ref1 = elementFactory.createResource(uri1);
-        URIReference ref2 = elementFactory.createResource(uri2);
+        URIReference ref1 = elementFactory.createURIReference(uri1);
+        URIReference ref2 = elementFactory.createURIReference(uri2);
 
         final String TEST_STR1 = "A test string";
         Literal l1 = elementFactory.createLiteral(TEST_STR1);
@@ -254,8 +254,8 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         graph.add(triple);
         graph.add(ref2, ref1, l1);
 
-        URIReference ref4 = elementFactory.createResource(uri1);
-        URIReference ref5 = elementFactory.createResource(uri2);
+        URIReference ref4 = elementFactory.createURIReference(uri1);
+        URIReference ref5 = elementFactory.createURIReference(uri2);
         Literal l3 = elementFactory.createLiteral(TEST_STR1);
         assertEquals(ref4, ref1);
         assertEquals(ref5, ref2);
@@ -295,14 +295,14 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         URI uri3 = new URI("http://namespace#foo");
 
         GraphElementFactory gef1 = g1.getElementFactory();
-        URIReference g1u1 = gef1.createResource(uri1);
-        URIReference g1u2 = gef1.createResource(uri2);
-        URIReference g1u3 = gef1.createResource(uri3);
+        URIReference g1u1 = gef1.createURIReference(uri1);
+        URIReference g1u2 = gef1.createURIReference(uri2);
+        URIReference g1u3 = gef1.createURIReference(uri3);
 
         GraphElementFactory gef2 = g2.getElementFactory();
         Literal g2l1 = gef2.createLiteral(TEST_STR1);
         Literal g2l2 = gef2.createLiteral(TEST_STR2);
-        URIReference g2u1 = gef2.createResource(uri2);
+        URIReference g2u1 = gef2.createURIReference(uri2);
 
         // Test inserting a subject and predicate that do not exist in g2.
         boolean isOkay = false;
@@ -348,7 +348,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
 
         // Test inserting a statements using objects from the correct graph and then
         // using find and contains with the same, by value, object from another.
-        URIReference g2u3 = gef2.createResource(uri3);
+        URIReference g2u3 = gef2.createURIReference(uri3);
         g2.add(g2u3, g2u3, g2u3);
 
         assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));

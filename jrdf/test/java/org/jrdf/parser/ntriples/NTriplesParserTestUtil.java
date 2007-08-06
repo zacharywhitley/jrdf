@@ -148,9 +148,9 @@ public class NTriplesParserTestUtil {
         TripleFactory tripleFactory = newGraph.getTripleFactory();
         List<URIReference> refs = new ArrayList<URIReference>();
         for (int i = 0; i < 33; i++) {
-            refs.add(graphElementFactory.createResource(URI.create("http://example.org/resource" + i)));
+            refs.add(graphElementFactory.createURIReference(URI.create("http://example.org/resource" + i)));
         }
-        URIReference p = graphElementFactory.createResource(URI.create("http://example.org/property"));
+        URIReference p = graphElementFactory.createURIReference(URI.create("http://example.org/property"));
         BlankNode anon = blankNodeFactory.createBlankNode("anon");
         answers.add(tripleFactory.createTriple(refs.get(1), p, refs.get(2)));
         answers.add(tripleFactory.createTriple(anon, p, refs.get(2)));

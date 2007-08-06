@@ -165,15 +165,15 @@ public class JrdfExample {
         TripleFactory tripleFactory = graph.getTripleFactory();
 
         //create resources
-        person = elementFactory.createResource(new URI("http://example.org/staffid#85740"));
-        address = elementFactory.createResource();
+        person = elementFactory.createURIReference(new URI("http://example.org/staffid#85740"));
+        address = elementFactory.createBlankNode();
 
         //create properties
-        hasAddress = elementFactory.createResource(new URI("http://example.org/terms#address"));
-        hasStreet = elementFactory.createResource(new URI("http://example.org/terms#street"));
-        hasCity = elementFactory.createResource(new URI("http://example.org/terms#city"));
-        hasState = elementFactory.createResource(new URI("http://example.org/terms#state"));
-        hasPostCode = elementFactory.createResource(new URI("http://example.org/terms#postalCode"));
+        hasAddress = elementFactory.createURIReference(new URI("http://example.org/terms#address"));
+        hasStreet = elementFactory.createURIReference(new URI("http://example.org/terms#street"));
+        hasCity = elementFactory.createURIReference(new URI("http://example.org/terms#city"));
+        hasState = elementFactory.createURIReference(new URI("http://example.org/terms#state"));
+        hasPostCode = elementFactory.createURIReference(new URI("http://example.org/terms#postalCode"));
 
         //create values
         street = elementFactory.createLiteral("1501 Grant Avenue");
@@ -263,14 +263,14 @@ public class JrdfExample {
         TripleFactory tripleFactory = graph.getTripleFactory();
 
         //create a resource to identify the statement
-        URIReference statement = elementFactory.createResource(new URI("http://example.org/statement#address"));
+        URIReference statement = elementFactory.createURIReference(new URI("http://example.org/statement#address"));
 
         //reify the address statement (person, hasAddress, address)
         tripleFactory.reifyTriple(addressStatement, statement);
 
         //insert a statement about the original statement
-        URIReference manager = elementFactory.createResource(new URI("http://example.org/managerid#65"));
-        URIReference hasConfirmed = elementFactory.createResource(new URI("http://example.org/terms#hasConfirmed"));
+        URIReference manager = elementFactory.createURIReference(new URI("http://example.org/managerid#65"));
+        URIReference hasConfirmed = elementFactory.createURIReference(new URI("http://example.org/terms#hasConfirmed"));
         Triple confirmationStatement = tripleFactory.createTriple(manager, hasConfirmed, statement);
         graph.add(confirmationStatement);
 

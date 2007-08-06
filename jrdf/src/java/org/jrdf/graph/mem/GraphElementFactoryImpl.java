@@ -64,6 +64,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.index.nodepool.NodePool;
 
 import java.net.URI;
@@ -87,14 +88,23 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * Package scope constructor.
      */
-    // TODO IMRAN Add IteratorFactory put iterator factory into implementation of Bnode and URIReference and create
-    // iterators on demand when getUniquePredicates is called.
     GraphElementFactoryImpl(NodePool nodePool) {
         this.nodePool = nodePool;
     }
 
-    public BlankNode createResource() throws GraphElementFactoryException {
+    public Resource createResource() {
+        return null;
+    }
 
+    public Resource createResource(URI uri) throws GraphElementFactoryException {
+        return null;
+    }
+
+    public Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException {
+        return null;
+    }
+
+    public BlankNode createBlankNode() throws GraphElementFactoryException {
         //get an Unique Identifier
         String uid;
         try {
@@ -111,11 +121,11 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return node;
     }
 
-    public URIReference createResource(URI uri) throws GraphElementFactoryException {
-        return createResource(uri, true);
+    public URIReference createURIReference(URI uri) throws GraphElementFactoryException {
+        return createURIReference(uri, true);
     }
 
-    public URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException {
+    public URIReference createURIReference(URI uri, boolean validate) throws GraphElementFactoryException {
         if (null == uri) {
             throw new GraphElementFactoryException("URI may not be null for a URIReference");
         }
