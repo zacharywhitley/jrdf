@@ -3,7 +3,9 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
+    <suppress checks="ParameterNumber" files="GraphImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="TripleBuilderImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl.java"/>
@@ -11,6 +13,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl.java"/>
+    <suppress checks="CyclomaticComplexity" files="NodePoolImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
     <suppress checks="JavaNCSS" files="RDF.java"/>
     <suppress checks="JavaNCSS" files="RDFS.java"/>
@@ -18,6 +21,7 @@
     <suppress checks="JavaNCSS" files="JrdfExample.java"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl.java"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl.java"/>
+    <suppress checks="JavaNCSS" files="NodePoolImpl.java"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl.java"/>
     <suppress checks="ReturnCount" files="SemiJoinImpl.java"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl.java"/>

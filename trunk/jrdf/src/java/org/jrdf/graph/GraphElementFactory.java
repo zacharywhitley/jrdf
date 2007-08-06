@@ -73,9 +73,23 @@ import java.net.URI;
  */
 public interface GraphElementFactory {
 
-    Resource createResource();
-    Resource createResource(URI uri) throws GraphElementFactoryException;
-    Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException;
+    /**
+     * Wrap a blank node in a resource.
+     *
+     * @param node the node to wrap.
+     * @return a new resource.
+     * @throws GraphElementFactoryException if the blank node does not exist.
+     */
+    Resource createResource(BlankNode node) throws GraphElementFactoryException;
+
+    /**
+     * Wrap a URIReference in a resource.
+     *
+     * @param node the node to wrap.
+     * @return a new resource.
+     * @throws GraphElementFactoryException if the URIReference does not exist.
+     */
+    Resource createResource(URIReference node) throws GraphElementFactoryException;
 
     /**
      * Create a blank nodes that is associated with a specific graph.

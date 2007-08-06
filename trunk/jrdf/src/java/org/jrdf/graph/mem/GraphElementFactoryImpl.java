@@ -63,9 +63,12 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.mem.iterator.IteratorFactory;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
 import java.util.UUID;
@@ -79,29 +82,34 @@ import java.util.UUID;
  * @version $Revision$
  */
 public final class GraphElementFactoryImpl implements GraphElementFactory {
-
-    /**
-     * The node pool.
-     */
-    private NodePool nodePool;
+    private final NodePool nodePool;
+    private final IteratorFactory iteratorFactory;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool nodePool) {
+    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory) {
+        checkNotNull(nodePool, iteratorFactory);
         this.nodePool = nodePool;
+        this.iteratorFactory = iteratorFactory;
     }
 
-    public Resource createResource() {
-        return null;
+    public Resource createResource(BlankNode node) throws GraphElementFactoryException {
+        try {
+            nodePool.localize(node);
+            return new BlankNodeResourceImpl(node, iteratorFactory);
+        } catch (GraphException e) {
+            throw new GraphElementFactoryException(e);
+        }
     }
 
-    public Resource createResource(URI uri) throws GraphElementFactoryException {
-        return null;
-    }
-
-    public Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException {
-        return null;
+    public Resource createResource(URIReference node) throws GraphElementFactoryException {
+        try {
+            nodePool.localize(node);
+            return new URIReferenceResourceImpl(node, iteratorFactory);
+        } catch (GraphException e) {
+            throw new GraphElementFactoryException(e);
+        }
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {
@@ -116,7 +124,6 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         // create the node identifier and add
         Long nodeId = nodePool.getNextNodeId();
         BlankNode node = new BlankNodeImpl(nodeId, uid);
-
         nodePool.registerNode((LocalizedNode) node);
         return node;
     }

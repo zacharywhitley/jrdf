@@ -156,10 +156,14 @@ public class GraphImpl implements Graph, Serializable {
     private transient GraphHandler012 graphHandler012;
 
     /**
+     * Handle changes to the graph's underlying node pool and indexes.
+     */
+    private transient GraphMutator graphMutator;
+
+    /**
      * A way to create iterators.
      */
     private transient IteratorFactory iteratorFactory;
-
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
     private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
@@ -170,15 +174,16 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePool nodePool, GraphElementFactory elementFactory,
-        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory) {
+    public GraphImpl(LongIndex[] longIndexes, NodePool nodePool, GraphElementFactory newElementFactory,
+        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, GraphMutator newGraphMutator) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
         this.nodePool = nodePool;
-        this.elementFactory = elementFactory;
+        this.elementFactory = newElementFactory;
         this.graphHandler012 = graphHandler;
         this.iteratorFactory = newIteratorFactory;
+        this.graphMutator = newGraphMutator;
         init();
     }
 
@@ -197,19 +202,23 @@ public class GraphImpl implements Graph, Serializable {
             nodePool = new MemNodePoolFactory().createNodePool();
         }
 
+        if (null == graphHandler012) {
+            graphHandler012 = new GraphHandler012(indexes, nodePool);
+        }
+
+        if (null == graphMutator) {
+            graphMutator = new GraphMutatorImpl(nodePool, longIndex012, longIndex120, longIndex201);
+        }
+
+        initIteratorFactory(indexes);
+
         if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool);
+            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory);
         }
 
         if (null == tripleFactory) {
             tripleFactory = new TripleFactoryImpl(this, elementFactory);
         }
-
-        if (null == graphHandler012) {
-            graphHandler012 = new GraphHandler012(indexes, nodePool);
-        }
-
-        initIteratorFactory(indexes);
     }
 
     private void initIndexes() {
@@ -347,10 +356,8 @@ public class GraphImpl implements Graph, Serializable {
 
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
         GraphException {
-
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
-
         // Get local node values
         Long[] values;
         try {
@@ -366,9 +373,7 @@ public class GraphImpl implements Graph, Serializable {
 
     private ClosableIterator<Triple> findNonEmptyIterator(SubjectNode subject, PredicateNode predicate,
         ObjectNode object, Long[] values) {
-
         ClosableIterator<Triple> result;
-
         if (ANY_SUBJECT_NODE != subject) {
             // {s??} Get fixed subject, fixed or any predicate and object.
             result = fixedSubjectIterator(values, predicate, object);
@@ -387,7 +392,6 @@ public class GraphImpl implements Graph, Serializable {
 
     private ClosableIterator<Triple> fixedSubjectIterator(Long[] values, PredicateNode predicate, ObjectNode object) {
         ClosableIterator<Triple> result;
-
         // test for {s??}
         if (ANY_PREDICATE_NODE != predicate) {
             // test for {sp?}
@@ -414,7 +418,6 @@ public class GraphImpl implements Graph, Serializable {
 
     private ClosableIterator<Triple> anySubjectFixedPredicateIterator(Long[] values, ObjectNode object) {
         ClosableIterator<Triple> result;
-
         // test for {*p?}
         if (ANY_OBJECT_NODE != object) {
             // got {*po}
@@ -456,20 +459,9 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_ADD_NULL_MESSAGE, CANT_ADD_ANY_NODE_MESSAGE);
-
-        // Get local node values also tests that it's a valid subject, predicate
-        // and object.
-        try {
-            Long[] values = nodePool.localize(subject, predicate, object);
-            longIndex012.add(values);
-            longIndex120.add(values[1], values[2], values[0]);
-            longIndex201.add(values[2], values[0], values[1]);
-        } catch (GraphException ge) {
-            throw new GraphException("Failed to add triple.", ge);
-        }
+        graphMutator.localizeAndAdd(subject, predicate, object);
     }
 
     public void remove(Iterator<Triple> triples) throws GraphException {
@@ -499,20 +491,9 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
-
-        // Get local node values also tests that it's a valid subject, predicate and object.
-        Long[] values = nodePool.localize(subject, predicate, object);
-
-        longIndex012.remove(values[0], values[1], values[2]);
-        // if the first one succeeded then try and attempt removal on both of the others
-        try {
-            longIndex120.remove(values[1], values[2], values[0]);
-        } finally {
-            longIndex201.remove(values[2], values[0], values[1]);
-        }
+        graphMutator.localizeAndRemove(subject, predicate, object);
     }
 
     public GraphElementFactory getElementFactory() {

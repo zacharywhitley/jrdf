@@ -61,7 +61,6 @@ package org.jrdf.graph.index.nodepool;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
 import org.jrdf.graph.mem.LocalizedNode;
 
 import java.util.Collection;
@@ -125,9 +124,16 @@ public interface NodePool {
     Long[] localize(Node first, Node second, Node third) throws GraphException;
 
     /**
+     * Converts a node into it's localized version.
+     *
+     * @param node the node to localize.
+     * @return the unique node identifier.
+     * @throws GraphException if the node was not part of this node pool.
+     */
+    Long localize(Node node) throws GraphException;
+
+    /**
      * Removes all entries from the nodepool.
      */
     void clear();
-
-    Long localize(Resource node) throws GraphException;
 }
