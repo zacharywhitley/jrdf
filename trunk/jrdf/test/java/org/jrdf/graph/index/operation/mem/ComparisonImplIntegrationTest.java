@@ -99,7 +99,7 @@ public class ComparisonImplIntegrationTest extends TestCase {
     }
 
     private void addTriple(Graph graph, URI uri) throws Exception {
-        URIReference resource = graph.getElementFactory().createResource(uri);
+        URIReference resource = graph.getElementFactory().createURIReference(uri);
         Triple triple = graph.getTripleFactory().createTriple(resource, resource, resource);
         graph.add(triple);
     }

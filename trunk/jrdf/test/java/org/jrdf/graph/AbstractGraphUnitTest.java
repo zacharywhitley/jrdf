@@ -150,15 +150,15 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         GraphElementFactory elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();
 
-        blank1 = elementFactory.createResource();
-        blank2 = elementFactory.createResource();
+        blank1 = elementFactory.createBlankNode();
+        blank2 = elementFactory.createBlankNode();
 
         URI uri1 = new URI("http://namespace#somevalue");
         URI uri2 = new URI("http://namespace#someothervalue");
         URI uri3 = new URI("http://namespace#yetanothervalue");
-        ref1 = elementFactory.createResource(uri1);
-        ref2 = elementFactory.createResource(uri2);
-        ref3 = elementFactory.createResource(uri3);
+        ref1 = elementFactory.createURIReference(uri1);
+        ref2 = elementFactory.createURIReference(uri2);
+        ref3 = elementFactory.createURIReference(uri3);
 
         l1 = elementFactory.createLiteral(TEST_STR1);
         l2 = elementFactory.createLiteral(TEST_STR2);
@@ -475,9 +475,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
         // Add a statement
         GraphElementFactory newElementFactory = newGraph.getElementFactory();
-        blank1 = newElementFactory.createResource();
-        blank2 = newElementFactory.createResource();
-        ref1 = newElementFactory.createResource(URI.create("http://something/here"));
+        blank1 = newElementFactory.createBlankNode();
+        blank2 = newElementFactory.createBlankNode();
+        ref1 = newElementFactory.createURIReference(URI.create("http://something/here"));
         t1 = tripleFactory.createTriple(blank1, ref1, blank2);
         newGraph.add(t1);
 
@@ -683,10 +683,10 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         GraphElementFactory factory = graph.getElementFactory();
 
         //create nodes
-        BlankNode bNode1 = factory.createResource();
-        BlankNode bNode2 = factory.createResource();
-        URIReference testUri1 = factory.createResource(new URI("http://tucana.org/tucana#testUri1"));
-        URIReference testUri2 = factory.createResource(new URI("http://tucana.org/tucana#testUri2"));
+        BlankNode bNode1 = factory.createBlankNode();
+        BlankNode bNode2 = factory.createBlankNode();
+        URIReference testUri1 = factory.createURIReference(new URI("http://tucana.org/tucana#testUri1"));
+        URIReference testUri2 = factory.createURIReference(new URI("http://tucana.org/tucana#testUri2"));
         Literal literal1 = factory.createLiteral("literal1");
         Literal literal2 = factory.createLiteral("literal2");
 
@@ -758,7 +758,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         final Graph newGraph = newGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         URI newURI = new URI("http://namespace#somevalue");
-        final URIReference newRes = graphElementFactory.createResource(newURI);
+        final URIReference newRes = graphElementFactory.createURIReference(newURI);
         newGraph.add(newRes, newRes, newRes);
         assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
             public void execute() throws Throwable {
@@ -775,7 +775,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         final Graph newGraph = newGraph();
         GraphElementFactory graphElementFactory = newGraph.getElementFactory();
         URI newURI = new URI("http://namespace#somevalue");
-        final URIReference newRes = graphElementFactory.createResource(newURI);
+        final URIReference newRes = graphElementFactory.createURIReference(newURI);
         newGraph.add(newRes, newRes, newRes);
         assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
             public void execute() throws Throwable {

@@ -103,7 +103,7 @@ public class URIReferenceParserImplUnitTest extends TestCase {
 
     public void testCreateURIReference() throws Exception {
         expect(nTripleUtil.unescapeLiteral(LINE)).andReturn(ESCAPED_LINE);
-        expect(graphElementFactory.createResource(URI.create(ESCAPED_LINE))).andReturn(uriReference);
+        expect(graphElementFactory.createURIReference(URI.create(ESCAPED_LINE))).andReturn(uriReference);
         mockFactory.replay();
         URIReference actualURIReference = uriReferenceParser.parseURIReference(LINE);
         assertTrue(uriReference == actualURIReference);
@@ -112,7 +112,7 @@ public class URIReferenceParserImplUnitTest extends TestCase {
 
     public void testCreateURIReferenceWithException() throws Exception {
         expect(nTripleUtil.unescapeLiteral(LINE)).andReturn(ESCAPED_LINE);
-        expect(graphElementFactory.createResource(URI.create(ESCAPED_LINE))).andThrow(new GraphElementFactoryException(""));
+        expect(graphElementFactory.createURIReference(URI.create(ESCAPED_LINE))).andThrow(new GraphElementFactoryException(""));
         mockFactory.replay();
         checkThrowsException(LINE);
         mockFactory.verify();

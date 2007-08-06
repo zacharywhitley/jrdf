@@ -129,7 +129,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     public PredicateNode getReifySubject() throws TripleFactoryException {
         try {
-            return elementFactory.createResource(RDF.SUBJECT);
+            return elementFactory.createURIReference(RDF.SUBJECT);
         }
         catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
@@ -138,7 +138,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     public PredicateNode getReifyPredicate() throws TripleFactoryException {
         try {
-            return elementFactory.createResource(RDF.PREDICATE);
+            return elementFactory.createURIReference(RDF.PREDICATE);
         }
         catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
@@ -147,7 +147,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     public PredicateNode getReifyObject() throws TripleFactoryException {
         try {
-            return elementFactory.createResource(RDF.OBJECT);
+            return elementFactory.createURIReference(RDF.OBJECT);
         }
         catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
@@ -156,7 +156,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     public PredicateNode getRdfType() throws TripleFactoryException {
         try {
-            return elementFactory.createResource(RDF.TYPE);
+            return elementFactory.createURIReference(RDF.TYPE);
         }
         catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
@@ -165,7 +165,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     public ObjectNode getRdfStatement() throws TripleFactoryException {
         try {
-            return elementFactory.createResource(RDF.STATEMENT);
+            return elementFactory.createURIReference(RDF.STATEMENT);
         }
         catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);

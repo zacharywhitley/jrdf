@@ -73,13 +73,17 @@ import java.net.URI;
  */
 public interface GraphElementFactory {
 
+    Resource createResource();
+    Resource createResource(URI uri) throws GraphElementFactoryException;
+    Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException;
+
     /**
      * Create a blank nodes that is associated with a specific graph.
      *
      * @return the newly created blank node value.
      * @throws GraphElementFactoryException if adding a blank node fails.
      */
-    BlankNode createResource() throws GraphElementFactoryException;
+    BlankNode createBlankNode() throws GraphElementFactoryException;
 
     /**
      * Create a URI reference.
@@ -88,18 +92,18 @@ public interface GraphElementFactory {
      * @return the newly created URI reference value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    URIReference createResource(URI uri) throws GraphElementFactoryException;
+    URIReference createURIReference(URI uri) throws GraphElementFactoryException;
 
     /**
      * Create a URI reference without checking if the URI given is a valid RDF
      * URI, currently if the URI is absolute.
      *
-     * @param uri      The URI of the resource.
+     * @param uri The URI of the resource.
      * @param validate true if we disbale checking to see if the URI is valid.
      * @return The newly created URI reference value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException;
+    URIReference createURIReference(URI uri, boolean validate) throws GraphElementFactoryException;
 
     /**
      * Converts a known Java class (such as Integer) into an RDF literal (XSD:int).

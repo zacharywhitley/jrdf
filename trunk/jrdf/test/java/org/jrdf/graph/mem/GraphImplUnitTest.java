@@ -61,14 +61,11 @@ package org.jrdf.graph.mem;
 
 import junit.textui.TestRunner;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.PredicateNode;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -169,7 +166,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         // read the graph
         Graph graph2 = (Graph) is.readObject();
 
-        ref3 = graph2.getElementFactory().createResource(ref1.getURI());
+        ref3 = graph2.getElementFactory().createURIReference(ref1.getURI());
         Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
 
         // test that the graphs are equivalent

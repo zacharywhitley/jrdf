@@ -86,7 +86,7 @@ public class ParserBlankNodeFactoryImplUnitTest extends TestCase {
     }
 
     public void testCreateBlankNode() throws Exception {
-        expect(graphElementFactory.createResource()).andReturn(blankNode);
+        expect(graphElementFactory.createBlankNode()).andReturn(blankNode);
         mockFactory.replay();
         nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
         BlankNode actualBlankNode = nodeFactory.createBlankNode();
@@ -95,8 +95,8 @@ public class ParserBlankNodeFactoryImplUnitTest extends TestCase {
     }
 
     public void testCreateBlankNodeWithId() throws Exception {
-        expect(graphElementFactory.createResource()).andReturn(blankNode);
-        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class)).anyTimes();
+        expect(graphElementFactory.createBlankNode()).andReturn(blankNode);
+        expect(graphElementFactory.createBlankNode()).andReturn(mockFactory.createMock(BlankNode.class)).anyTimes();
         mockFactory.replay();
         nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
         checkBlankNodeCreationById();
@@ -107,8 +107,8 @@ public class ParserBlankNodeFactoryImplUnitTest extends TestCase {
     }
 
     public void testClear() throws Exception {
-        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class));
-        expect(graphElementFactory.createResource()).andReturn(mockFactory.createMock(BlankNode.class));
+        expect(graphElementFactory.createBlankNode()).andReturn(mockFactory.createMock(BlankNode.class));
+        expect(graphElementFactory.createBlankNode()).andReturn(mockFactory.createMock(BlankNode.class));
         mockFactory.replay();
         nodeFactory = new ParserBlankNodeFactoryImpl(mapFactory, graphElementFactory);
         BlankNode firstBlankNode = nodeFactory.createBlankNode(NODE_ID);

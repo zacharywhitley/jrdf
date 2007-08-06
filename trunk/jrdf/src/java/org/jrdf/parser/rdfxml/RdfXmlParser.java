@@ -273,15 +273,15 @@ public final class RdfXmlParser implements ConfigurableParser {
         datatypeHandling = DT_VERIFY;
 
         try {
-            RDF_TYPE = this.valueFactory.createResource(RDF.TYPE);
-            RDF_SUBJECT = this.valueFactory.createResource(RDF.SUBJECT);
-            RDF_PREDICATE = this.valueFactory.createResource(RDF.PREDICATE);
-            RDF_OBJECT = this.valueFactory.createResource(RDF.OBJECT);
-            RDF_STATEMENT = this.valueFactory.createResource(RDF.STATEMENT);
-            RDF_LI = this.valueFactory.createResource(RDF.LI);
-            RDF_FIRST = this.valueFactory.createResource(RDF.FIRST);
-            RDF_REST = this.valueFactory.createResource(RDF.REST);
-            RDF_NIL = this.valueFactory.createResource(RDF.NIL);
+            RDF_TYPE = this.valueFactory.createURIReference(RDF.TYPE);
+            RDF_SUBJECT = this.valueFactory.createURIReference(RDF.SUBJECT);
+            RDF_PREDICATE = this.valueFactory.createURIReference(RDF.PREDICATE);
+            RDF_OBJECT = this.valueFactory.createURIReference(RDF.OBJECT);
+            RDF_STATEMENT = this.valueFactory.createURIReference(RDF.STATEMENT);
+            RDF_LI = this.valueFactory.createURIReference(RDF.LI);
+            RDF_FIRST = this.valueFactory.createURIReference(RDF.FIRST);
+            RDF_REST = this.valueFactory.createURIReference(RDF.REST);
+            RDF_NIL = this.valueFactory.createURIReference(RDF.NIL);
         } catch (GraphElementFactoryException ex) {
             throw new GraphException(ex);
         }
@@ -940,7 +940,7 @@ public final class RdfXmlParser implements ConfigurableParser {
 
     private URIReference createURIReference(URI uri) throws SAXException {
         try {
-            return valueFactory.createResource(uri);
+            return valueFactory.createURIReference(uri);
         } catch (GraphElementFactoryException e) {
             throw new SAXException(e);
         }
