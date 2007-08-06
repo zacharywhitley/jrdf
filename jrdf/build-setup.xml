@@ -33,7 +33,7 @@
     <property name="compile.debuglevel" value="source,lines,vars"/>
     <property name="compile.deprecation" value="false"/>
     <property name="compile.optimize" value="true"/>
-    <property name="java.src.version" value="1.6"/>
+    <property name="java.src.version" value="1.5"/>
     <property name="web.site.url" value="http://jrdf.sourceforge.net/"/>
     <property name="unit.test.src.dir" value="${test.src.dir}"/>
     <property name="unit.test.classes.dir" value="${test.classes.dir}"/>
@@ -101,6 +101,8 @@
         <include name="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.2.23.jar"/>
+        <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
     </patternset>
 
     <patternset id="test.classpath.pattern">
@@ -120,6 +122,8 @@
         <include name="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.2.23.jar"/>
+        <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
+        <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
         <include name="${lib.dir}/emma/emma_ant-2.0.5312.jar"/>
    </patternset>
