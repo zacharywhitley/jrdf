@@ -38,6 +38,7 @@ import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
+import org.jrdf.map.BdbMapFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import org.jrdf.vocabulary.RDF;
 import org.xml.sax.InputSource;
@@ -57,6 +58,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Stack;
+import java.util.Map;
 
 /**
  * A parser for XML-serialized RDF. This parser operates directly
@@ -198,6 +200,11 @@ public final class RdfXmlParser implements ConfigurableParser {
     private Set<URI> usedIDs = new HashSet<URI>();
 
     /**
+     * If Bdb API is used. UserIDs will be stored in a stored map.
+     */
+    private Map<Integer, Set> storedMap;
+
+    /**
      * Flag indicating whether the parser should check the data it parses.
      */
     boolean verifyData = true;
@@ -241,6 +248,11 @@ public final class RdfXmlParser implements ConfigurableParser {
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) throws GraphException {
         this(graphElementFactory, new ParserBlankNodeFactoryImpl(creator, graphElementFactory));
+        if (creator instanceof BdbMapFactory) {
+            usedIDs = new HashSet<URI>();
+            storedMap = creator.createMap(Integer.class, Set.class);
+            storedMap.put(new Integer(1), usedIDs);
+        }
     }
 
     /**
