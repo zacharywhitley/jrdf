@@ -60,7 +60,6 @@
 package org.jrdf.example;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
@@ -73,95 +72,33 @@ import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.MapFactory;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.RdfXmlParser;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URI;
-
-public class BdbPerformance {
-    private static final String URI_STRING = "http://foo/bar";
-    private static final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\cygd_mpact_interactions.owl";
-    private static final String PATH2 = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
-    private static final String PATH3 = "C:\\Documents and Settings\\alabri\\Desktop\\go_daily-termdb.owl";
-    private static final URI URI_1 = URI.create(URI_STRING);
-    private LongIndex[] indexes;
+public class BdbPerformance extends AbstractGraphPerformance {
     private StoredMapHandler handler;
-    private GraphElementFactory graphElementFactory;
+    private LongIndex[] indexes;
 
-    public BdbPerformance() throws Exception {
+    public BdbPerformance() {
         handler = new StoredMapHandlerImpl();
         indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-                new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-                new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database"))};
+            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
+            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database"))};
     }
 
-    public void testPerformance() throws Exception {
-        int numberOfNodes = 100;
-        Graph graph = getOnDiskGraph();
-        graphElementFactory = graph.getElementFactory();
-        addPerformance(numberOfNodes, graph);
-        findPerformance(numberOfNodes, graph);
-    }
-
-    private void addPerformance(int numberOfNodes, Graph graph) throws Exception {
-        //Test
-        int rnd = (int) (Math.random() * numberOfNodes);
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < numberOfNodes; i++) {
-            if (i == rnd) {
-                graph.add(graphElementFactory.createURIReference(URI_1),
-                        graphElementFactory.createURIReference(URI_1),
-                        graphElementFactory.createLiteral("Abdul"));
-            } else {
-                graph.add(graphElementFactory.createBlankNode(),
-                        graphElementFactory.createURIReference(URI_1),
-                        graphElementFactory.createBlankNode());
-            }
-        }
-        long finishTime = System.currentTimeMillis();
-        System.out.println("Testing Add Performance:");
-        System.out.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " +
-                ((finishTime - startTime) / 1000) + " s");
-    }
-
-    private void findPerformance(int nodes, Graph graph) throws Exception {
-        long startTime = System.currentTimeMillis();
-        ClosableIterator itr = graph.find(graphElementFactory.createURIReference(URI_1),
-                graphElementFactory.createURIReference(URI_1),
-                graphElementFactory.createLiteral("Abdul"));
-        long finishTime = System.currentTimeMillis();
-        System.out.println("\nTesting Find BDB Performance:");
-        System.out.println("To find " + itr.next().toString() + " from " + nodes + " Triples took: " +
-                (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
-    }
-
-    private Graph getOnDiskGraph() {
+    protected Graph getGraph() {
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
         NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
         GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return factory.getGraph();
     }
 
-    private void parsePerformance(String path) throws Exception {
-        File rdfXmlFile = new File(path);
-        InputStream stream = new FileInputStream(rdfXmlFile);
-        MapFactory creator = new BdbMapFactory(handler, "catalog", "database");
-        Parser parser = new RdfXmlParser(getOnDiskGraph().getElementFactory(), creator);
-        long startTime = System.currentTimeMillis();
-        parser.parse(stream, URI_STRING);
-        long finishTime = System.currentTimeMillis();
-        System.err.println("Parsing: " + path);
-        System.err.println("Time to parse file: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
+    protected MapFactory getMapFactory() {
+        return new BdbMapFactory(handler, "catalog", "database");
     }
 
     public static void main(String[] args) throws Exception {
         BdbPerformance bdbPerformance = new BdbPerformance();
-//        bdbPerformance.testPerformance();
-        bdbPerformance.parsePerformance(PATH2);
+        bdbPerformance.testPerformance();
+//        bdbPerformance.parsePerformance();
     }
 }
