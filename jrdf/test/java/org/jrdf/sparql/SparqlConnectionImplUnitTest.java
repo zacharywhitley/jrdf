@@ -61,24 +61,23 @@ package org.jrdf.sparql;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
-import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.query.Answer;
-import org.jrdf.query.AnswerImpl;
+import static org.jrdf.query.EmptyAnswer.EMPTY_ANSWER;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
-import org.jrdf.query.EmptyAnswer;
-import static org.jrdf.query.EmptyAnswer.*;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.param.ParameterTestUtil;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.ReflectTestUtil.insertFieldValue;
 
 import java.lang.reflect.Modifier;
 
@@ -153,7 +152,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     public void testGraphExceptionPassthrough() throws Exception {
-        AssertThrows.assertThrows(GraphException.class, new AssertThrows.Block() {
+        assertThrows(GraphException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 QueryBuilder builder = createBuilderThrowsException(GRAPH, QUERY_ITQL, new GraphException(""));
                 final SparqlConnection connection = createConnection(builder);
@@ -165,7 +164,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     public void testInvalidQueryExceptionPassthrough() {
-        AssertThrows.assertThrows(InvalidQuerySyntaxException.class, new AssertThrows.Block() {
+        assertThrows(InvalidQuerySyntaxException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 QueryBuilder builder = createBuilderThrowsException(GRAPH, QUERY_ITQL, INVALID_QUERY_EXCEPTION);
                 SparqlConnection connection = createConnection(builder);
@@ -177,34 +176,31 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     private Graph createEmptyGraph() throws GraphException {
-        IMocksControl control = factory.createControl();
-        Graph graph = control.createMock(Graph.class);
+        Graph graph = factory.createMock(Graph.class);
         graph.isEmpty();
-        control.andReturn(true);
+        expectLastCall().andReturn(true);
         return graph;
     }
 
     private Query createQuery(Graph graph, QueryEngine queryEngine) {
-        IMocksControl control = factory.createControl();
-        Query query = control.createMock(Query.class);
+        Query query = factory.createMock(Query.class);
         query.executeQuery(graph, queryEngine);
-        control.andReturn(ANSWER);
+        expectLastCall().andReturn(ANSWER);
         return query;
     }
 
     private QueryEngine createQueryEngine() {
-        IMocksControl control = factory.createControl();
-        return control.createMock(QueryEngine.class);
+        return factory.createMock(QueryEngine.class);
     }
 
     private SparqlConnection createConnection(QueryBuilder builder) {
         SparqlConnection connection = createSparqlConnection();
-        ReflectTestUtil.insertFieldValue(connection, FIELD_BUILDER, builder);
+        insertFieldValue(connection, FIELD_BUILDER, builder);
         return connection;
     }
 
     private void checkBadParam(final SparqlConnection connection, final String param) throws Exception {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 connection.executeQuery(GRAPH, param);
             }
@@ -212,18 +208,16 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     }
 
     private QueryBuilder createBuilder(Graph graph, String queryString, Query query) throws Exception {
-        IMocksControl control = factory.createControl();
-        QueryBuilder builder = control.createMock(QueryBuilder.class);
+        QueryBuilder builder = factory.createMock(QueryBuilder.class);
         builder.buildQuery(graph, queryString);
-        control.andReturn(query);
+        expectLastCall().andReturn(query);
         return builder;
     }
 
     private QueryBuilder createBuilderThrowsException(Graph graph, String queryText, Exception e) throws Exception {
-        IMocksControl control = factory.createControl();
-        QueryBuilder builder = control.createMock(QueryBuilder.class);
+        QueryBuilder builder = factory.createMock(QueryBuilder.class);
         builder.buildQuery(graph, queryText);
-        control.andThrow(e);
+        expectLastCall().andThrow(e);
         return builder;
     }
 

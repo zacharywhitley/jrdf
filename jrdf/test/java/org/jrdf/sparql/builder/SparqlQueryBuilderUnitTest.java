@@ -60,7 +60,7 @@
 package org.jrdf.sparql.builder;
 
 import junit.framework.TestCase;
-import org.easymock.classextension.IMocksControl;
+import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.Query;
@@ -128,19 +128,17 @@ public class SparqlQueryBuilderUnitTest extends TestCase {
     }
 
     private SparqlParser createParserThrowsException() throws Exception {
-        IMocksControl control = factory.createControl();
-        SparqlParser parser = control.createMock(SparqlParser.class);
+        SparqlParser parser = factory.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);
-        control.andThrow(new InvalidQuerySyntaxException(""));
+        expectLastCall().andThrow(new InvalidQuerySyntaxException(""));
         return parser;
     }
 
     @SuppressWarnings({"unchecked"})
     private SparqlParser createParser() throws Exception {
-        IMocksControl control = factory.createControl();
-        SparqlParser parser = control.createMock(SparqlParser.class);
+        SparqlParser parser = factory.createMock(SparqlParser.class);
         parser.parseQuery(GRAPH, QUERY_GOOD);
-        control.andReturn(factory.createMock(Query.class));
+        expectLastCall().andReturn(factory.createMock(Query.class));
         return parser;
     }
 }

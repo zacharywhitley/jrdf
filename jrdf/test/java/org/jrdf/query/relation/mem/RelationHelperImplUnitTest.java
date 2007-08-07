@@ -60,8 +60,7 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.easymock.classextension.IMocksControl;
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.expect;
 import static org.jrdf.TestJRDFFactory.getFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -83,15 +82,16 @@ import java.util.Set;
 import java.util.SortedSet;
 
 public class RelationHelperImplUnitTest extends TestCase {
-    private static final MockFactory factory = new MockFactory();
     private static final Class[] PARAMETERS = { AttributeComparator.class };
     private static final String[] PARAMETER_NAMES = { "attributeComparator" };
-    private static final AttributeComparator MOCK_ATTRIBUTE_COMPARATOR = factory.createMock(AttributeComparator.class);
-    private static final AttributeComparator REAL_ATTRIBUTE_COMPARATOR = getFactory().getNewAttributeComparator();
-    private MockFactory mockFactory;
+    private MockFactory factory;
+    private AttributeComparator mockAttributeComparator;
+    private AttributeComparator realAttributeComparator;
 
     public void setUp() {
-        mockFactory = new MockFactory();
+        factory = new MockFactory();
+        mockAttributeComparator = factory.createMock(AttributeComparator.class);
+        realAttributeComparator = getFactory().getNewAttributeComparator();
     }
 
     public void testClassProperties() {
@@ -103,25 +103,25 @@ public class RelationHelperImplUnitTest extends TestCase {
     }
 
     public void testGetMockHeading() {
-        RelationHelper relationHelper = new RelationHelperImpl(MOCK_ATTRIBUTE_COMPARATOR);
+        RelationHelper relationHelper = new RelationHelperImpl(mockAttributeComparator);
         Relation relation = createRelation(new HashSet<Attribute>());
-        mockFactory.replay();
+        factory.replay();
         Set<Attribute> headingUnions = relationHelper.getHeadingUnions(relation);
         checkIsSorted(headingUnions);
-        mockFactory.verify();
+        factory.verify();
     }
 
     public void testGetHeading() {
-        RelationHelper relationHelper = new RelationHelperImpl(REAL_ATTRIBUTE_COMPARATOR);
+        RelationHelper relationHelper = new RelationHelperImpl(realAttributeComparator);
         Set<Attribute> set1 = new HashSet<Attribute>();
         set1.add(TEST_ATTRIBUTE_BAR_VAR);
         Set<Attribute> set2 = new HashSet<Attribute>();
         set2.add(TEST_ATTRIBUTE_FOO_POS);
         Relation relation1 = createRelation(set1);
         Relation relation2 = createRelation(set2);
-        mockFactory.replay();
+        factory.replay();
         Set<Attribute> headingUnions = relationHelper.getHeadingUnions(relation1, relation2);
-        mockFactory.verify();
+        factory.verify();
         assertTrue(headingUnions.contains(TEST_ATTRIBUTE_BAR_VAR));
         assertTrue(headingUnions.contains(TEST_ATTRIBUTE_FOO_POS));
     }
@@ -135,10 +135,8 @@ public class RelationHelperImplUnitTest extends TestCase {
 
     @SuppressWarnings({"unchecked"})
     private Relation createRelation(Set<Attribute> set) {
-        IMocksControl control = mockFactory.createControl();
-        Relation relation = control.createMock(Relation.class);
-        EasyMock.expect(relation.getHeading()).andReturn(set);
+        Relation relation = factory.createMock(Relation.class);
+        expect(relation.getHeading()).andReturn(set);
         return relation;
     }
-
 }

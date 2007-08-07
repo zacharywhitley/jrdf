@@ -61,7 +61,6 @@ package org.jrdf.graph.index.operation.mem;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expectLastCall;
-import org.easymock.IMocksControl;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -70,8 +69,10 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import org.jrdf.util.test.MockFactory;
 import static org.jrdf.util.test.TripleTestUtil.TRIPLE_BOOK_1_DC_SUBJECT_LITERAL;
 import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
@@ -108,15 +109,14 @@ public class ComparisonImplUnitTest extends TestCase {
     public void setUp() throws Exception {
         comparison = new ComparisonImpl();
         mockFactory = new MockFactory();
-        IMocksControl control = mockFactory.createControl();
-        mockGraph1 = control.createMock(Graph.class);
-        mockGraph2 = control.createMock(Graph.class);
+        mockGraph1 = mockFactory.createMock(Graph.class);
+        mockGraph2 = mockFactory.createMock(Graph.class);
     }
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkClassFinal(ComparisonImpl.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Comparison.class, ComparisonImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(ComparisonImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
+        checkClassFinal(ComparisonImpl.class);
+        checkImplementationOfInterface(Comparison.class, ComparisonImpl.class);
+        checkConstructor(ComparisonImpl.class, Modifier.PUBLIC, NO_ARG_CONSTRUCTOR);
     }
 
     public void testIsGroundedEmptyGraph() throws Exception {

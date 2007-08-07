@@ -59,20 +59,18 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.easymock.classextension.IMocksControl;
+import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.TypeComparator;
-import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
 import org.jrdf.util.test.MockFactory;
-import org.jrdf.util.test.ComparatorTestUtil;
-import static org.jrdf.util.test.ComparatorTestUtil.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -89,12 +87,10 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     private static final TypeComparator NODE_COMPARATOR = factory.createMock(TypeComparator.class);
     private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR
             = factory.createMock(AttributeNameComparator.class);
-    private MockFactory mockFactory;
     private static final int BEFORE = 1;
     private static final int AFTER = -1;
 
     public void setUp() {
-        mockFactory = new MockFactory();
     }
 
     // TODO (AN) Ensure that it's Serializable - as the set won't be if the Comparator isn't.
@@ -135,28 +131,26 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         Attribute attribute2 = createAttribute(t2);
         TypeComparator typeComparator = createTypeComparator(t1, t2, expectedResult);
         AttributeComparator comparator = createComparator(typeComparator, ATTRIBUTE_NAME_COMPARATOR);
-        mockFactory.replay();
+        factory.replay();
         int result = comparator.compare(attribute1, attribute2);
-        mockFactory.verify();
-        mockFactory.reset();
+        factory.verify();
+        factory.reset();
         assertEquals(expectedResult, result);
     }
 
     @SuppressWarnings({"unchecked"})
     private Attribute createAttribute(NodeType type) {
-        IMocksControl control = mockFactory.createControl();
-        Attribute att = control.createMock(Attribute.class);
+        Attribute att = factory.createMock(Attribute.class);
         att.getType();
-        control.andReturn(type);
+        expectLastCall().andReturn(type);
         return att;
     }
 
     @SuppressWarnings({"unchecked"})
     private TypeComparator createTypeComparator(NodeType t1, NodeType t2, int expectedResult) {
-        IMocksControl control = mockFactory.createControl();
-        TypeComparator typeComparator = control.createMock(TypeComparator.class);
+        TypeComparator typeComparator = factory.createMock(TypeComparator.class);
         typeComparator.compare(t1, t2);
-        control.andReturn(expectedResult);
+        expectLastCall().andReturn(expectedResult);
         return typeComparator;
     }
 
