@@ -162,6 +162,6 @@ public class BdbPerformance {
     public static void main(String[] args) throws Exception {
         BdbPerformance bdbPerformance = new BdbPerformance();
 //        bdbPerformance.testPerformance();
-        bdbPerformance.parsePerformance(PATH);
+        bdbPerformance.parsePerformance(PATH2);
     }
 }
