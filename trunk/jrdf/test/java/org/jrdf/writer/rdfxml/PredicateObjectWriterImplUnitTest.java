@@ -88,8 +88,6 @@ import java.net.URI;
 public class PredicateObjectWriterImplUnitTest extends TestCase {
     private static final Class<?>[] PARAM_TYPES = new Class[]{RdfNamespaceMap.class, BlankNodeRegistry.class,
         XMLStreamWriter.class};
-    private static final ParameterDefinition WRITE_PREDICATE_OBJECT = new ParameterDefinition(
-        new String[]{"predicate", "object"}, new Class[]{PredicateNode.class, ObjectNode.class});
     private static final String NODE_ID = "foo";
     private static final XMLStreamException EXPECTED_EXCEPTION = new XMLStreamException();
     private MockFactory factory = new MockFactory();
@@ -112,7 +110,8 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(PredicateObjectWriter.class, PredicateObjectWriterImpl.class);
         checkConstructor(PredicateObjectWriterImpl.class, Modifier.PUBLIC, PARAM_TYPES);
         checkConstructNullAssertion(PredicateObjectWriterImpl.class, PARAM_TYPES);
-        checkMethodNullAssertions(writer, "writePredicateObject", WRITE_PREDICATE_OBJECT);
+        checkMethodNullAssertions(writer, "writePredicateObject", new ParameterDefinition(
+            new String[]{"predicate", "object"}, new Class[]{PredicateNode.class, ObjectNode.class}));
         checkMethodNullAssertions(writer, "visitBlankNode", new ParameterDefinition(new String[]{"blankNode"},
             new Class[]{BlankNode.class}));
         checkMethodNullAssertions(writer, "visitURIReference", new ParameterDefinition(new String[]{"uriReference"},
@@ -187,7 +186,7 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
         assertEquals(WriteException.class, obj.getClass());
         assertTrue(((WriteException) obj).getMessage().startsWith("Unknown object node type:"));
     }
-    
+
     public void testVisitBlankNodeWithException() throws Exception {
         final BlankNode node = createNodeExpectations();
         expectLastCall().andThrow(EXPECTED_EXCEPTION);
