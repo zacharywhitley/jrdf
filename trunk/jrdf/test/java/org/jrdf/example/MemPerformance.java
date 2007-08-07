@@ -61,8 +61,6 @@ package org.jrdf.example;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
@@ -71,22 +69,11 @@ import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.map.MapFactory;
+import org.jrdf.map.MemMapFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.RdfXmlParser;
 
-import java.net.URI;
-import java.io.File;
-import java.io.InputStream;
-import java.io.FileInputStream;
-
-public class MemPerformance{
-    private static final String URI_STRING = "http://foo/bar";
-    private static final URI URI_1 = URI.create(URI_STRING);
-    private static final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\cygd_mpact_interactions.owl";
-    private static final String PATH2 = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
-    private static final String PATH3 = "C:\\Documents and Settings\\alabri\\Desktop\\go_daily-termdb.owl";
+public class MemPerformance extends AbstractGraphPerformance {
     private LongIndex[] indexes;
     private NodePoolFactory nodePoolFactory;
     private GraphFactory factory;
@@ -96,64 +83,20 @@ public class MemPerformance{
         indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
     }
 
-    public void testPerformance() throws Exception {
-        int numberOfNodes = 10000;
-        Graph graph = getOnMemoryGraph();
-        graphElementFactory = graph.getElementFactory();
-        addPerformance(numberOfNodes, graph);
-        findPerformance(numberOfNodes, graph);
-    }
-
-    private void addPerformance(int numberOfNodes, Graph graph) throws GraphElementFactoryException, GraphException {
-        //Test
-        int rnd = (int) (Math.random() * numberOfNodes);
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < numberOfNodes; i++) {
-            if (i == rnd) {
-                graph.add(graphElementFactory.createURIReference(URI_1),
-                        graphElementFactory.createURIReference(URI_1),
-                        graphElementFactory.createLiteral("Abdul"));
-            } else {
-                graph.add(graphElementFactory.createBlankNode(),
-                        graphElementFactory.createURIReference(URI_1),
-                        graphElementFactory.createBlankNode());
-            }
-        }
-        long finishTime = System.currentTimeMillis();
-//        System.err.println("Testing Add Performance:");
-//        System.err.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
-    }
-
-    private void findPerformance(int nodes, Graph graph) throws Exception {
-        long startTime = System.currentTimeMillis();
-        ClosableIterator itr = graph.find(graphElementFactory.createURIReference(URI_1),
-                graphElementFactory.createURIReference(URI_1),
-                graphElementFactory.createLiteral("Abdul"));
-        long finishTime = System.currentTimeMillis();
-//        System.err.println("\nTesting Find MEM Performance:");
-//        System.err.println("To find " + itr.next().toString() + " from " + nodes + " Triples took: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
-    }
-
-    private Graph getOnMemoryGraph() {
+    protected Graph getGraph() {
         nodePoolFactory = new MemNodePoolFactory();
         NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
         factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        Graph graph = factory.getGraph();
-        return graph;
+        return factory.getGraph();
     }
-        private void parsePerformance(String path) throws Exception {
-        File rdfXmlFile = new File(path);
-        InputStream stream = new FileInputStream(rdfXmlFile);
-        Parser parser = new RdfXmlParser(getOnMemoryGraph().getElementFactory());
-        long startTime = System.currentTimeMillis();
-        parser.parse(stream, URI_STRING);
-        long finishTime = System.currentTimeMillis();
-        System.err.println("Parsing: " + path);
-        System.err.println("Time to parse file: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
+
+    protected MapFactory getMapFactory() {
+        return new MemMapFactory();
     }
+
     public static void main(String[] args) throws Exception {
         MemPerformance memPerformance = new MemPerformance();
-//        memPerformance.testPerformance();
-        memPerformance.parsePerformance(PATH2);
+        memPerformance.testPerformance();
+//        memPerformance.parsePerformance();
     }
 }
