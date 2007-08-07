@@ -123,12 +123,12 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
 
     public void visitLiteral(Literal object) {
         try {
-            if ((object).isLanguageLiteral()) {
+            if (object.isLanguageLiteral()) {
                 xmlStreamWriter.writeAttribute("xml:lang", object.getLanguage());
-            } else if ((object).isDatatypedLiteral()) {
+            } else if (object.isDatatypedLiteral()) {
                 xmlStreamWriter.writeAttribute("rdf:datatype", object.getDatatypeURI().toString());
             }
-            xmlStreamWriter.writeCharacters((object).getLexicalForm());
+            xmlStreamWriter.writeCharacters(object.getLexicalForm());
         } catch (XMLStreamException e) {
             exception = e;
         }
