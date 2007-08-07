@@ -73,12 +73,20 @@ import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.rdfxml.RdfXmlParser;
 
 import java.net.URI;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
 
 public class MemPerformance{
     private static final String URI_STRING = "http://foo/bar";
     private static final URI URI_1 = URI.create(URI_STRING);
+    private static final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\cygd_mpact_interactions.owl";
+    private static final String PATH2 = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
+    private static final String PATH3 = "C:\\Documents and Settings\\alabri\\Desktop\\go_daily-termdb.owl";
     private LongIndex[] indexes;
     private NodePoolFactory nodePoolFactory;
     private GraphFactory factory;
@@ -133,9 +141,19 @@ public class MemPerformance{
         Graph graph = factory.getGraph();
         return graph;
     }
-
+        private void parsePerformance(String path) throws Exception {
+        File rdfXmlFile = new File(path);
+        InputStream stream = new FileInputStream(rdfXmlFile);
+        Parser parser = new RdfXmlParser(getOnMemoryGraph().getElementFactory());
+        long startTime = System.currentTimeMillis();
+        parser.parse(stream, URI_STRING);
+        long finishTime = System.currentTimeMillis();
+        System.err.println("Parsing: " + path);
+        System.err.println("Time to parse file: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
+    }
     public static void main(String[] args) throws Exception {
-        MemPerformance bdbPerformance = new MemPerformance();
-        bdbPerformance.testPerformance();
+        MemPerformance memPerformance = new MemPerformance();
+//        memPerformance.testPerformance();
+        memPerformance.parsePerformance(PATH2);
     }
 }
