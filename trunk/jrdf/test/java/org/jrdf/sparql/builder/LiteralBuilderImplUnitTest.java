@@ -60,21 +60,21 @@
 package org.jrdf.sparql.builder;
 
 import junit.framework.TestCase;
-import org.easymock.classextension.IMocksControl;
+import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
+import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
+import org.jrdf.sparql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AQuotedLiteralLiteral;
 import org.jrdf.sparql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.sparql.parser.node.PDbQuotedStrand;
 import org.jrdf.sparql.parser.node.PQuotedStrand;
+import org.jrdf.sparql.parser.node.TDbqtext;
+import org.jrdf.sparql.parser.node.TDbquote;
 import org.jrdf.sparql.parser.node.TQtext;
 import org.jrdf.sparql.parser.node.TQuote;
-import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
-import org.jrdf.sparql.parser.node.TDbquote;
-import org.jrdf.sparql.parser.node.PDbQuotedStrand;
-import org.jrdf.sparql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
-import org.jrdf.sparql.parser.node.TDbqtext;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAssertions;
@@ -119,10 +119,8 @@ public class LiteralBuilderImplUnitTest extends TestCase {
 
     public void testCreateLiteralWithException() throws Exception {
         factory.reset();
-        IMocksControl mocksControl = factory.createControl();
-        final LiteralBuilder builder = createBuilder(mocksControl);
-        mocksControl.andThrow(new GraphElementFactoryException("foo"));
-
+        final LiteralBuilder builder = createBuilder();
+        expectLastCall().andThrow(new GraphElementFactoryException("foo"));
         factory.replay();
         checkThrowsException(builder);
         factory.verify();
@@ -131,9 +129,8 @@ public class LiteralBuilderImplUnitTest extends TestCase {
     private void checkLiteralCreation(ALiteralObjectTripleElement element) throws GraphElementFactoryException {
         factory.reset();
         Literal literal = factory.createMock(Literal.class);
-        IMocksControl mocksControl = factory.createControl();
-        LiteralBuilder builder = createBuilder(mocksControl);
-        mocksControl.andReturn(literal);
+        LiteralBuilder builder = createBuilder();
+        expectLastCall().andReturn(literal);
 
         factory.replay();
         checkReturnsLiteral(builder, element, literal);
@@ -154,8 +151,8 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         });
     }
 
-    private LiteralBuilder createBuilder(IMocksControl mocksControl) throws GraphElementFactoryException {
-        GraphElementFactory graphFactory = mocksControl.createMock(GraphElementFactory.class);
+    private LiteralBuilder createBuilder() throws GraphElementFactoryException {
+        GraphElementFactory graphFactory = factory.createMock(GraphElementFactory.class);
         graphFactory.createLiteral("hello");
         return new LiteralBuilderImpl(graphFactory);
     }

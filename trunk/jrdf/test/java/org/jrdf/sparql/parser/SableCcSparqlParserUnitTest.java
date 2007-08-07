@@ -60,7 +60,7 @@
 package org.jrdf.sparql.parser;
 
 import junit.framework.TestCase;
-import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.expectLastCall;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.InvalidQuerySyntaxException;
 import org.jrdf.query.relation.mem.AttributeValuePairHelper;
@@ -154,28 +154,25 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
 
     @SuppressWarnings({ "unchecked" })
     private Parser createParser(Start start) throws Exception {
-        IMocksControl control = mockFactory.createControl();
-        Parser parser = control.createMock(Parser.class);
+        Parser parser = mockFactory.createMock(Parser.class);
         parser.parse();
-        control.andReturn(start);
+        expectLastCall().andReturn(start);
         return parser;
     }
 
     private Parser createParser(Exception exception) throws Exception {
-        IMocksControl control = mockFactory.createControl();
-        Parser parser = control.createMock(Parser.class);
+        Parser parser = mockFactory.createMock(Parser.class);
         parser.parse();
-        control.andThrow(exception);
+        expectLastCall().andThrow(exception);
         return parser;
     }
 
 
     @SuppressWarnings({ "unchecked" })
     private ParserFactory createParserFactory(Parser parser) {
-        IMocksControl control = mockFactory.createControl();
-        ParserFactory parserFactory = control.createMock(ParserFactory.class);
+        ParserFactory parserFactory = mockFactory.createMock(ParserFactory.class);
         parserFactory.getParser(QUERY_BOOK_1_DC_TITLE);
-        control.andReturn(parser);
+        expectLastCall().andReturn(parser);
         return parserFactory;
     }
 
