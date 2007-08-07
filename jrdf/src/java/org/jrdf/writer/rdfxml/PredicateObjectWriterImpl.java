@@ -106,6 +106,7 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     }
 
     public void visitBlankNode(BlankNode blankNode) {
+        checkNotNull(blankNode);
         try {
             xmlStreamWriter.writeAttribute("rdf:nodeID", registry.getNodeId(blankNode));
         } catch (XMLStreamException e) {
@@ -113,28 +114,31 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
         }
     }
 
-    public void visitURIReference(URIReference object) {
+    public void visitURIReference(URIReference uriReference) {
+        checkNotNull(uriReference);
         try {
-            xmlStreamWriter.writeAttribute("rdf:resource", object.getURI().toString());
+            xmlStreamWriter.writeAttribute("rdf:resource", uriReference.getURI().toString());
         } catch (XMLStreamException e) {
             exception = e;
         }
     }
 
-    public void visitLiteral(Literal object) {
+    public void visitLiteral(Literal literal) {
+        checkNotNull(literal);
         try {
-            if (object.isLanguageLiteral()) {
-                xmlStreamWriter.writeAttribute("xml:lang", object.getLanguage());
-            } else if (object.isDatatypedLiteral()) {
-                xmlStreamWriter.writeAttribute("rdf:datatype", object.getDatatypeURI().toString());
+            if (literal.isLanguageLiteral()) {
+                xmlStreamWriter.writeAttribute("xml:lang", literal.getLanguage());
+            } else if (literal.isDatatypedLiteral()) {
+                xmlStreamWriter.writeAttribute("rdf:datatype", literal.getDatatypeURI().toString());
             }
-            xmlStreamWriter.writeCharacters(object.getLexicalForm());
+            xmlStreamWriter.writeCharacters(literal.getLexicalForm());
         } catch (XMLStreamException e) {
             exception = e;
         }
     }
 
     public void visitNode(Node node) {
+        checkNotNull(node);
         exception = new WriteException("Unknown object node type: " + node.getClass().getName());
     }
 

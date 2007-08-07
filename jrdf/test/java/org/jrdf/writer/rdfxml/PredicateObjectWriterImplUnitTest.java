@@ -113,6 +113,14 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
         checkConstructor(PredicateObjectWriterImpl.class, Modifier.PUBLIC, PARAM_TYPES);
         checkConstructNullAssertion(PredicateObjectWriterImpl.class, PARAM_TYPES);
         checkMethodNullAssertions(writer, "writePredicateObject", WRITE_PREDICATE_OBJECT);
+        checkMethodNullAssertions(writer, "visitBlankNode", new ParameterDefinition(new String[]{"blankNode"},
+            new Class[]{BlankNode.class}));
+        checkMethodNullAssertions(writer, "visitURIReference", new ParameterDefinition(new String[]{"uriReference"},
+            new Class[]{URIReference.class}));
+        checkMethodNullAssertions(writer, "visitLiteral", new ParameterDefinition(new String[]{"literal"},
+            new Class[]{Literal.class}));
+        checkMethodNullAssertions(writer, "visitNode", new ParameterDefinition(new String[]{"node"},
+            new Class[]{Node.class}));
     }
 
     public void testWritePredicateObjectTest() throws Exception {
