@@ -72,13 +72,22 @@ import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.map.MapFactory;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.rdfxml.RdfXmlParser;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URI;
 
 public class BdbPerformance {
     private static final String URI_STRING = "http://foo/bar";
+    private static final String PATH = "C:\\Documents and Settings\\alabri\\Desktop\\cygd_mpact_interactions.owl";
+    private static final String PATH2 = "C:\\Documents and Settings\\alabri\\Desktop\\pizza.owl";
+    private static final String PATH3 = "C:\\Documents and Settings\\alabri\\Desktop\\go_daily-termdb.owl";
     private static final URI URI_1 = URI.create(URI_STRING);
     private LongIndex[] indexes;
     private StoredMapHandler handler;
@@ -96,7 +105,7 @@ public class BdbPerformance {
         Graph graph = getOnDiskGraph();
         graphElementFactory = graph.getElementFactory();
         addPerformance(numberOfNodes, graph);
-        //findPerformance(numberOfNodes, graph);
+        findPerformance(numberOfNodes, graph);
     }
 
     private void addPerformance(int numberOfNodes, Graph graph) throws Exception {
@@ -118,7 +127,6 @@ public class BdbPerformance {
         System.out.println("Testing Add Performance:");
         System.out.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " +
                 ((finishTime - startTime) / 1000) + " s");
-        findPerformance(numberOfNodes, graph);
     }
 
     private void findPerformance(int nodes, Graph graph) throws Exception {
@@ -139,8 +147,21 @@ public class BdbPerformance {
         return factory.getGraph();
     }
 
+    private void parsePerformance(String path) throws Exception {
+        File rdfXmlFile = new File(path);
+        InputStream stream = new FileInputStream(rdfXmlFile);
+        MapFactory creator = new BdbMapFactory(handler, "catalog", "database");
+        Parser parser = new RdfXmlParser(getOnDiskGraph().getElementFactory(), creator);
+        long startTime = System.currentTimeMillis();
+        parser.parse(stream, URI_STRING);
+        long finishTime = System.currentTimeMillis();
+        System.err.println("Parsing: " + path);
+        System.err.println("Time to parse file: " + (finishTime - startTime) + " ms = " + ((finishTime - startTime) / 1000) + " s");
+    }
+
     public static void main(String[] args) throws Exception {
         BdbPerformance bdbPerformance = new BdbPerformance();
-        bdbPerformance.testPerformance();
+//        bdbPerformance.testPerformance();
+        bdbPerformance.parsePerformance(PATH);
     }
 }
