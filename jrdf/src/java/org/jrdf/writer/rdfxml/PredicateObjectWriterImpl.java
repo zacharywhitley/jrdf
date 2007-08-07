@@ -115,7 +115,7 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
 
     public void visitURIReference(URIReference object) {
         try {
-            xmlStreamWriter.writeAttribute("rdf:resource", (object).getURI().toString());
+            xmlStreamWriter.writeAttribute("rdf:resource", object.getURI().toString());
         } catch (XMLStreamException e) {
             exception = e;
         }
@@ -124,10 +124,9 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     public void visitLiteral(Literal object) {
         try {
             if ((object).isLanguageLiteral()) {
-                xmlStreamWriter.writeAttribute("xml:lang", (object).getLanguage());
-            }
-            if ((object).isDatatypedLiteral()) {
-                xmlStreamWriter.writeAttribute("rdf:datatype", (object).getDatatypeURI().toString());
+                xmlStreamWriter.writeAttribute("xml:lang", object.getLanguage());
+            } else if ((object).isDatatypedLiteral()) {
+                xmlStreamWriter.writeAttribute("rdf:datatype", object.getDatatypeURI().toString());
             }
             xmlStreamWriter.writeCharacters((object).getLexicalForm());
         } catch (XMLStreamException e) {
