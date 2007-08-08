@@ -61,6 +61,9 @@ package org.jrdf.example;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.map.MapFactory;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
@@ -73,15 +76,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractGraphPerformance {
-    private static final int NUMBER_OF_NODES = 100;
+    private static final int NUMBER_OF_NODES = 1000;
     private static final int NO_PREDICATES = 10;
     private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
-    private static final String SUBJECT_PREFIX = "urn:foo";
-    private static final String PREDICATE_PREFIX = "urn:bar";
-    private static final String OBJECT_PREFIX = "urn:baz";
+    private static final String SUBJECT_PREFIX = "http://foo";
+    private static final String PREDICATE_PREFIX = "http://bar";
+    private static final String OBJECT_PREFIX = "http://foo";
     private static final String URI_STRING = "http://foo/bar";
     private static final String PATH = "org/jrdf/example/pizza.rdf";
-    private static final URI URI_1 = URI.create(URI_STRING);
     private List<URI> predicates = new ArrayList<URI>();
     private GraphElementFactory graphElementFactory;
 
@@ -96,7 +98,7 @@ public abstract class AbstractGraphPerformance {
         Graph graph = getGraph();
         graphElementFactory = graph.getElementFactory();
         addPerformance(NUMBER_OF_NODES, graph);
-        //findPerformance(numberOfNodes, graph);
+//        findPerformance(NUMBER_OF_NODES, graph);
     }
 
     public void parsePerformance() throws Exception {
@@ -134,13 +136,45 @@ public abstract class AbstractGraphPerformance {
     }
 
     private void findPerformance(int nodes, Graph graph) throws Exception {
+        long cnt = 0;
         long startTime = System.currentTimeMillis();
-        ClosableIterator itr = graph.find(graphElementFactory.createURIReference(URI_1),
-            graphElementFactory.createURIReference(URI_1),
-            graphElementFactory.createLiteral("Abdul"));
+        for(int index = 0; index < 1000; index++) {
+            URI subjectURI = URI.create(SUBJECT_PREFIX + index);
+            ClosableIterator itr = graph.find(graphElementFactory.createURIReference(subjectURI),
+                graphElementFactory.createURIReference(predicates.get((int) Math.random() * NO_PREDICATES)),
+                graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + (int) Math.random() * 10)));
+            while (itr.hasNext()) {
+                Triple triple_1 = (Triple) itr.next();
+                ObjectNode object1 = triple_1.getObject();
+                if (! (object1 instanceof SubjectNode)) continue;
+                cnt++;
+                ClosableIterator itr2 = graph.find((SubjectNode) object1,
+                    graphElementFactory.createURIReference(predicates.get((int) Math.random() * NO_PREDICATES)),
+                    graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + (int) Math.random() * 10)));
+                while (itr2.hasNext()) {
+                    Triple triple_2 = (Triple) itr2.next();
+                    ObjectNode object2 = triple_2.getObject();
+                    if (! (object2 instanceof SubjectNode)) continue;
+                    cnt++;
+                    ClosableIterator itr3 = graph.find((SubjectNode) object2,
+                    graphElementFactory.createURIReference(predicates.get((int) Math.random() * NO_PREDICATES)),
+                    graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + (int) Math.random() * 10)));
+                    while (itr3.hasNext()) {
+                        Triple triple_3 = (Triple) itr3.next();
+                        ObjectNode object3 = triple_3.getObject();
+                        if (! (object3 instanceof SubjectNode)) continue;
+                        cnt++;
+                    }
+                    
+                }
+                
+            }
+            
+        }
+
         long finishTime = System.currentTimeMillis();
         System.out.println("\nTesting Find BDB Performance:");
-        System.out.println("To find " + itr.next().toString() + " from " + nodes + " Triples took: " +
+        System.out.println("To find a random triple from " + nodes + " Triples took: " +
             (finishTime - startTime) + " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
     }
 }

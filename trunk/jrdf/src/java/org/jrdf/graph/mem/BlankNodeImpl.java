@@ -63,9 +63,6 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
 
 import java.io.Serializable;
 
@@ -200,10 +197,5 @@ public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode, S
         }
 
         return new BlankNodeImpl(Long.valueOf(split[1]), split[0]);
-    }
-
-
-    public void addProperty(PredicateNode predNode, ObjectNode objNode) throws GraphException {
-        //graph.add(this, predNode, objNode);
     }
 }
