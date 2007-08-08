@@ -348,11 +348,11 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public long getNumberOfTriples() throws GraphException {
-        return longIndex012.getSize();
+        return immutableGraph.getSize();
     }
 
     public boolean isEmpty() throws GraphException {
-        return longIndex012.getSize() == 0L;
+        return immutableGraph.getSize() == 0L;
     }
 
     public void clear() {

@@ -120,7 +120,7 @@ public class ImmutableGraphImpl implements ImmutableGraph {
     }
 
     public long getSize() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return longIndex012.getSize();
     }
 
     private boolean containsValues(Long[] values, SubjectNode subject, PredicateNode predicate, ObjectNode object) {
