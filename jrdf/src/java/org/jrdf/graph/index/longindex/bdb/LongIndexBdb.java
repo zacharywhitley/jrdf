@@ -74,6 +74,7 @@ import java.util.HashSet;
 // TODO Abdul How is this Serializable?
 public final class LongIndexBdb  implements LongIndex, Serializable {
     private static final long serialVersionUID = 6044200669651883129L;
+    // LinkedList<Long[]>
     private Map<Long, LinkedList> index;
 
     private LongIndexBdb() {
@@ -162,16 +163,23 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
     }
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
-        Set<Long> set = new HashSet<Long>();
-        Map<Long, Set<Long>> map = new HashMap<Long, Set<Long>>();
-        LinkedList subIndex = index.get(first);
-//        Long oldPred = null;
-        for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
-            Long[] group = (Long[]) itr.next();
-            set.add(group[1]);
-            map.put(group[0], set);
+        if (index.containsKey(first)) {
+            Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
+            for (Object o : index.get(first)) {
+                Long[] elements = (Long[]) o;
+                Set<Long> longs;
+                if (resultMap.containsKey(elements[0])) {
+                    longs = resultMap.remove(elements[0]);
+                } else {
+                    longs = new HashSet<Long>();
+                }
+                longs.add(elements[1]);
+                resultMap.put(elements[0], longs);
+            }
+            return resultMap;
+        } else {
+            return null;
         }
-        return map;
     }
 
     public boolean contains(Long first) {
