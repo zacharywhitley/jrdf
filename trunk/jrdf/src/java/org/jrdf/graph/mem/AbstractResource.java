@@ -76,7 +76,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     protected AbstractResource() {
     }
 
-    public AbstractResource(Long resource, IteratorFactory iteratorFactory) {
+    public AbstractResource(Long resource, IteratorFactory iteratorFactory, GraphMutator mutator) {
         checkNotNull(resource, iteratorFactory);
         this.resource = resource;
         this.iteratorFactory = iteratorFactory;

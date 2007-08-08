@@ -98,8 +98,8 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], nodeComparator);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory);
         this.graphMutator = new GraphMutatorImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator);
     }
 
     public Graph getGraph() {
