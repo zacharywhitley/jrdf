@@ -72,8 +72,8 @@ public class BlankNodeResourceImpl extends AbstractResource {
     private BlankNodeResourceImpl() {
     }
 
-    public BlankNodeResourceImpl(BlankNode newNode, IteratorFactory newIteratorFactory) {
-        super(((LocalizedNode) newNode).getId(), newIteratorFactory);
+    public BlankNodeResourceImpl(BlankNode newNode, IteratorFactory newIteratorFactory, GraphMutator newGraphMutator) {
+        super(((LocalizedNode) newNode).getId(), newIteratorFactory, newGraphMutator);
         this.node = newNode;
     }
 

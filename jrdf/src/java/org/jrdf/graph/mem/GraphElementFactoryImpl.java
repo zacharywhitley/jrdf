@@ -84,20 +84,22 @@ import java.util.UUID;
 public final class GraphElementFactoryImpl implements GraphElementFactory {
     private final NodePool nodePool;
     private final IteratorFactory iteratorFactory;
+    private final GraphMutator graphMutator;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory) {
-        checkNotNull(nodePool, iteratorFactory);
+    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory, GraphMutator graphMutator) {
+        checkNotNull(nodePool, iteratorFactory, graphMutator);
         this.nodePool = nodePool;
         this.iteratorFactory = iteratorFactory;
+        this.graphMutator = graphMutator;
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new BlankNodeResourceImpl(node, iteratorFactory);
+            return new BlankNodeResourceImpl(node, iteratorFactory, graphMutator);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
@@ -106,7 +108,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new URIReferenceResourceImpl(node, iteratorFactory);
+            return new URIReferenceResourceImpl(node, iteratorFactory, graphMutator);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }

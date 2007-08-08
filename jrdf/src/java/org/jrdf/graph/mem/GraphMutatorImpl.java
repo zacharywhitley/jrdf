@@ -106,4 +106,11 @@ public class GraphMutatorImpl implements GraphMutator {
             throw new GraphException("Failed to add triple.", ge);
         }
     }
+
+    public void clear() {
+        longIndex012.clear();
+        longIndex120.clear();
+        longIndex201.clear();
+        nodePool.clear();
+    }
 }

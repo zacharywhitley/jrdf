@@ -213,7 +213,7 @@ public class GraphImpl implements Graph, Serializable {
         initIteratorFactory(indexes);
 
         if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory);
+            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator);
         }
 
         if (null == tripleFactory) {
@@ -515,10 +515,7 @@ public class GraphImpl implements Graph, Serializable {
     public void clear() {
         // TODO AN: Should this work regardless of failure - or rollback?
         // TODO AN: Improve GraphHandler API to do clearing of indexes instead of direct clearing.
-        longIndex012.clear();
-        longIndex120.clear();
-        longIndex201.clear();
-        nodePool.clear();
+        graphMutator.clear();
     }
 
     public void close() {
