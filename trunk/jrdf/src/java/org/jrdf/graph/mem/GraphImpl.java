@@ -80,11 +80,10 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.iterator.ClosableMemIterator;
-import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -161,6 +160,11 @@ public class GraphImpl implements Graph, Serializable {
     private transient GraphMutator graphMutator;
 
     /**
+     * Handle read only operations to the graph's underlying node pool and indexes.
+     */
+    private transient ImmutableGraphImpl immutableGraph;
+
+    /**
      * A way to create iterators.
      */
     private transient IteratorFactory iteratorFactory;
@@ -174,16 +178,18 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePool nodePool, GraphElementFactory newElementFactory,
+    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, GraphElementFactory newElementFactory,
         GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, GraphMutator newGraphMutator) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
-        this.nodePool = nodePool;
+        this.nodePool = newNodePool;
         this.elementFactory = newElementFactory;
         this.graphHandler012 = graphHandler;
         this.iteratorFactory = newIteratorFactory;
         this.graphMutator = newGraphMutator;
+        this.immutableGraph =
+            new ImmutableGraphImpl(nodePool, longIndex012, longIndex120, longIndex201, iteratorFactory);
         init();
     }
 
@@ -191,7 +197,6 @@ public class GraphImpl implements Graph, Serializable {
      * Initialization method used by the constructor and the deserializer.
      */
     private void init() {
-
         // TODO AN Replace these with IOC!
         // protect each field allocation with a test for null
         initIndexes();
@@ -206,11 +211,20 @@ public class GraphImpl implements Graph, Serializable {
             graphHandler012 = new GraphHandler012(indexes, nodePool);
         }
 
+        initIteratorFactory(indexes);
+
+        initOthers();
+    }
+
+    private void initOthers() {
         if (null == graphMutator) {
             graphMutator = new GraphMutatorImpl(nodePool, longIndex012, longIndex120, longIndex201);
         }
 
-        initIteratorFactory(indexes);
+        if (null == immutableGraph) {
+            immutableGraph =
+                new ImmutableGraphImpl(nodePool, longIndex012, longIndex120, longIndex201, iteratorFactory);
+        }
 
         if (null == elementFactory) {
             elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator);
@@ -249,108 +263,11 @@ public class GraphImpl implements Graph, Serializable {
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, CONTAIN_CANT_USE_NULLS);
-        boolean returnValue;
         if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
             // Return true if all are any AnyNodes and size is greater than zero.
-            returnValue = 0L < longIndex012.getSize();
+            return (0L < longIndex012.getSize());
         } else {
-            try {
-                // Get local node values
-                Long[] values = nodePool.localize(subject, predicate, object);
-                returnValue = containsValues(values, subject, predicate, object);
-            } catch (GraphException ge) {
-                // Graph exception on localize implies that the subject, predicate or
-                // object did not exist in the graph.
-                returnValue = false;
-            }
-        }
-        return returnValue;
-    }
-
-    private boolean containsValues(Long[] values, SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        if (ANY_SUBJECT_NODE != subject) {
-            // subj, *, *
-            return containsFixedSubject(values, predicate, object);
-        } else {
-            // AnySubjectNode, *, *
-            return containsAnySubject(values, predicate, object);
-        }
-    }
-
-    private boolean containsFixedSubject(Long[] values, PredicateNode predicate, ObjectNode object) {
-        if (longIndex012.contains(values[0])) {
-            if (ANY_PREDICATE_NODE != predicate) {
-                // subj, pred, AnyObjectNode or subj, pred, obj
-                return containsFixedSubjectFixedPredicate(values, object);
-            } else {
-                // subj, AnyPredicateNode, AnyObjectNode or subj, AnyPredicateNode, obj.
-                return containsFixedSubjectAnyPredicate(values, object);
-            }
-        } else {
-            // If subject not found return false.
-            return false;
-        }
-    }
-
-    private boolean containsFixedSubjectFixedPredicate(Long[] values, ObjectNode object) {
-        Map<Long, Set<Long>> subjIndex = longIndex012.getSubIndex(values[0]);
-        Set<Long> subjPredIndex = subjIndex.get(values[1]);
-        if (null != subjPredIndex) {
-            if (ANY_OBJECT_NODE != object) {
-                // Must be subj, pred, obj.
-                return subjPredIndex.contains(values[2]);
-            } else {
-                // Was subj, pred, AnyObjectNode - must be true if we get this far.
-                return true;
-            }
-        } else {
-            // subj, pred not found.
-            return false;
-        }
-    }
-
-    private boolean containsFixedSubjectAnyPredicate(Long[] values, ObjectNode object) {
-        if (ANY_OBJECT_NODE != object) {
-            // Was subj, AnyPredicateNode, obj
-            // Use 201 index to find object and then subject.
-            Map<Long, Set<Long>> objIndex = longIndex201.getSubIndex(values[2]);
-            if (null != objIndex) {
-                // Find object.
-                return null != objIndex.get(values[0]);
-            } else {
-                // Didn't find subject.
-                return false;
-            }
-        } else {
-            // Was subj, AnyPredicate, AnyObject
-            // If its AnyObjectNode then we've found all we need to find.
-            return true;
-        }
-    }
-
-    private boolean containsAnySubject(Long[] values, PredicateNode predicate, ObjectNode object) {
-        if (ANY_PREDICATE_NODE != predicate) {
-            return containsAnySubjectAnyPredicate(values, object);
-        } else {
-            // AnySubjectNode, AnyPredicateNode, obj.
-            return longIndex201.contains(values[2]);
-        }
-    }
-
-    private boolean containsAnySubjectAnyPredicate(Long[] values, ObjectNode object) {
-        // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
-        Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
-        if (null != predIndex) {
-            if (ANY_OBJECT_NODE != object) {
-                // Was AnySubjectNode, pred, obj
-                return null != predIndex.get(values[2]);
-            } else {
-                // If the object is any object node and we found the predicate return true.
-                return true;
-            }
-        } else {
-            // If predicate not found return false.
-            return false;
+            return immutableGraph.contains(subject, predicate, object);
         }
     }
 
@@ -358,81 +275,7 @@ public class GraphImpl implements Graph, Serializable {
         GraphException {
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
-        // Get local node values
-        Long[] values;
-        try {
-            values = nodePool.localize(subject, predicate, object);
-        } catch (GraphException ge) {
-            // A graph exception implies that the subject, predicate or object does
-            // not exist in the graph.
-            return new EmptyClosableIterator();
-        }
-
-        return findNonEmptyIterator(subject, predicate, object, values);
-    }
-
-    private ClosableIterator<Triple> findNonEmptyIterator(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object, Long[] values) {
-        ClosableIterator<Triple> result;
-        if (ANY_SUBJECT_NODE != subject) {
-            // {s??} Get fixed subject, fixed or any predicate and object.
-            result = fixedSubjectIterator(values, predicate, object);
-        } else if (ANY_PREDICATE_NODE != predicate) {
-            // {*p?} Get any subject, fixed predicate, fixed or any object.
-            result = anySubjectFixedPredicateIterator(values, object);
-        } else if (ANY_OBJECT_NODE != object) {
-            // {**o} Get any subject and predicate, fixed object.
-            result = anySubjectAndPredicateFixedObjectIterator(values);
-        } else {
-            // {***} Get all.
-            result = iteratorFactory.newGraphIterator();
-        }
-        return result;
-    }
-
-    private ClosableIterator<Triple> fixedSubjectIterator(Long[] values, PredicateNode predicate, ObjectNode object) {
-        ClosableIterator<Triple> result;
-        // test for {s??}
-        if (ANY_PREDICATE_NODE != predicate) {
-            // test for {sp?}
-            if (ANY_OBJECT_NODE != object) {
-                // got {spo}
-                result = iteratorFactory.newThreeFixedIterator(values);
-            } else {
-                // got {sp*}
-                result = iteratorFactory.newTwoFixedIterator(values[0], values[1], 0);
-            }
-        } else {
-            // test for {s*?}
-            if (ANY_OBJECT_NODE != object) {
-                // got s*o {}
-                result = iteratorFactory.newTwoFixedIterator(values[2], values[0], 2);
-            } else {
-                // got {s**}
-                result = iteratorFactory.newOneFixedIterator(values[0], 0);
-            }
-        }
-
-        return result;
-    }
-
-    private ClosableIterator<Triple> anySubjectFixedPredicateIterator(Long[] values, ObjectNode object) {
-        ClosableIterator<Triple> result;
-        // test for {*p?}
-        if (ANY_OBJECT_NODE != object) {
-            // got {*po}
-            result = iteratorFactory.newTwoFixedIterator(values[1], values[2], 1);
-        } else {
-            // got {*p*}.
-            result = iteratorFactory.newOneFixedIterator(values[1], 1);
-        }
-
-        return result;
-    }
-
-    private ClosableIterator<Triple> anySubjectAndPredicateFixedObjectIterator(Long[] values) {
-        // got {**o}
-        return iteratorFactory.newOneFixedIterator(values[2], 2);
+        return immutableGraph.find(subject, predicate, object);
     }
 
     public ClosableIterator<Triple> find(Triple triple) throws GraphException {
