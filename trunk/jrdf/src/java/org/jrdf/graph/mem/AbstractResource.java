@@ -77,14 +77,14 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     private static final long serialVersionUID = 3641740111800858628L;
     private IteratorFactory iteratorFactory;
     private GraphMutator graphMutator;
-    private ImmutableGraphImpl immutableGraph;
+    private ImmutableGraph immutableGraph;
     private Long resource;
 
     protected AbstractResource() {
     }
 
     public AbstractResource(Long resource, IteratorFactory iteratorFactory, GraphMutator mutator,
-        ImmutableGraphImpl newImmutableGraph) {
+        ImmutableGraph newImmutableGraph) {
         checkNotNull(resource, iteratorFactory);
         this.resource = resource;
         this.iteratorFactory = iteratorFactory;

@@ -85,21 +85,24 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     private final NodePool nodePool;
     private final IteratorFactory iteratorFactory;
     private final GraphMutator graphMutator;
+    private final ImmutableGraph immutableGraph;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory, GraphMutator graphMutator) {
+    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory, GraphMutator graphMutator,
+        ImmutableGraph newImmutableGraph) {
         checkNotNull(nodePool, iteratorFactory, graphMutator);
         this.nodePool = nodePool;
         this.iteratorFactory = iteratorFactory;
         this.graphMutator = graphMutator;
+        this.immutableGraph = newImmutableGraph;
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new BlankNodeResourceImpl(node, iteratorFactory, graphMutator);
+            return new BlankNodeResourceImpl(node, iteratorFactory, graphMutator, immutableGraph);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
@@ -108,7 +111,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new URIReferenceResourceImpl(node, iteratorFactory, graphMutator);
+            return new URIReferenceResourceImpl(node, iteratorFactory, graphMutator, immutableGraph);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
