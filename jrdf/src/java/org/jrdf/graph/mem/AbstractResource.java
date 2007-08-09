@@ -101,8 +101,10 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void setValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        removeValue(predicate, object);
-        mutableGraph.localizeAndAdd(this, predicate, object);
+        while (immutableGraph.contains(this, predicate, ANY_OBJECT_NODE)) {
+            mutableGraph.localizeAndRemove(this, predicate, object);
+        }
+        addValue(predicate, object);
     }
 
     public void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException {

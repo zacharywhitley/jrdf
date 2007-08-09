@@ -67,41 +67,52 @@ import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
-import org.jrdf.graph.mem.AbstractResource;
+import org.jrdf.graph.mem.BlankNodeResourceImpl;
+import org.jrdf.graph.mem.GraphFactoryImpl;
 import org.jrdf.graph.mem.ImmutableGraph;
 import org.jrdf.graph.mem.ImmutableGraphImpl;
 import org.jrdf.graph.mem.MutableGraph;
 import org.jrdf.graph.mem.MutableGraphImpl;
 import org.jrdf.graph.mem.URIReferenceResourceImpl;
-import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.map.MapFactory;
 import org.jrdf.util.test.MockFactory;
 
 import java.net.URI;
 
 public class AbstractResourceUnitTest extends TestCase {
-    private AbstractResource uriReference;
     private IteratorFactory iteratorFactory;
     private MutableGraph mutableGraph;
     private ImmutableGraph immutableGraph;
-    private GraphElementFactory elementFactory;
     private MockFactory mockFactory = new MockFactory();
     private NodePool nodePool;
+    private GraphElementFactory graphElementFactory;
+    private MapFactory mapFactory;
+    private Graph graph;
+    private GraphElementFactory elementFactory;
+    private Resource blankNodeResource;
+    private Resource uriReferenceResource;
+    private URI uri;
 
     public void setUp() throws Exception {
-
+        uri = new URI("http://namespace#somevalue");
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        this.nodePool = new MemNodePoolFactory().createNodePool();
+        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
+        this.nodePool = nodePoolFactory.createNodePool();
         GraphHandler[] graphHandler = getLongIndexes(longIndexes);
-        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandler);
-        this.mutableGraph = new MutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
-        this.immutableGraph = new ImmutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2],
+        iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandler);
+        mutableGraph = new MutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
+        immutableGraph = new ImmutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2],
             iteratorFactory);
-        Graph graph = new GraphImpl(longIndexes, nodePool, mockFactory.createMock(GraphElementFactory.class),
-            (GraphHandler012) graphHandler[0], iteratorFactory, mutableGraph, immutableGraph);
-        this.elementFactory = graph.getElementFactory();
+        graph = new GraphFactoryImpl(longIndexes, nodePoolFactory).getGraph();
+        elementFactory = graph.getElementFactory();
+        blankNodeResource = new BlankNodeResourceImpl(elementFactory.createBlankNode(), iteratorFactory, mutableGraph,
+            immutableGraph);
+        uriReferenceResource = new URIReferenceResourceImpl(elementFactory.createURIReference(uri), iteratorFactory,
+            mutableGraph, immutableGraph);
     }
 
     private GraphHandler[] getLongIndexes(LongIndex[] longIndexes) {
@@ -111,10 +122,13 @@ public class AbstractResourceUnitTest extends TestCase {
         return new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
     }
 
-    public void testCreateResourceAsURIReference() throws Exception {
-        URI uri = new URI("http://namespace#somevalue");
-        this.uriReference = new URIReferenceResourceImpl(elementFactory.createURIReference(uri), iteratorFactory, mutableGraph,
-            immutableGraph);
-        assertEquals(uriReference, null);
+    public void testCreateResource() throws Exception {
+        assertFalse("I did not get a BlankNode :( ", blankNodeResource.isURIReference());
+        assertTrue("I did not get URIReference :( ", uriReferenceResource.isURIReference());
+    }
+    public void testAddValue() throws Exception {
+//        blankNodeResource.addValue(elementFactory.createURIReference(uri), elementFactory.createLiteral("SomeValue"));
+//        assertTrue("I cannot find the triple", immutableGraph.contains(blankNodeResource,
+//            elementFactory.createURIReference(uri), elementFactory.createLiteral("SomeValue")));
     }
 }
