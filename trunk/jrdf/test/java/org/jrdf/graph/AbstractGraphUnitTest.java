@@ -107,6 +107,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     protected URIReference ref1;
     protected URIReference ref2;
     protected URIReference ref3;
+    protected URIReference ref4;
 
     /**
      * Used to create literal.
@@ -157,9 +158,11 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         URI uri1 = new URI("http://namespace#somevalue");
         URI uri2 = new URI("http://namespace#someothervalue");
         URI uri3 = new URI("http://namespace#yetanothervalue");
+        URI uri4 = new URI("http://namespace#yetanotheranothervalue");
         ref1 = elementFactory.createURIReference(uri1);
         ref2 = elementFactory.createURIReference(uri2);
         ref3 = elementFactory.createURIReference(uri3);
+        ref4 = elementFactory.createURIReference(uri4);
 
         l1 = elementFactory.createLiteral(TEST_STR1);
         l2 = elementFactory.createLiteral(TEST_STR2);
@@ -783,6 +786,30 @@ public abstract class AbstractGraphUnitTest extends TestCase {
                 newGraph.add(blank2, newRes, newRes);
             }
         });
+    }
+
+    public void testResourceIterators() throws Exception {
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(blank1, ref1, l1);
+        graph.add(blank1, ref1, l2);
+        graph.add(blank2, ref1, blank2);
+        graph.add(blank2, ref2, blank2);
+        graph.add(blank2, ref1, l1);
+        graph.add(blank2, ref1, l2);
+        graph.add(blank2, ref1, l2);
+        graph.add(ref1, ref1, ref1);
+        graph.add(ref1, ref3, ref1);
+        graph.add(ref4, ref3, ref1);
+
+        ClosableIterator<Resource> resources = graph.getResources();
+        int counter = 0;
+        while (resources.hasNext()) {
+            Resource r = resources.next();
+            counter++;
+        }
+
+        assertEquals(counter, 4);
     }
 
     public void testPredicateIterators() throws Exception {

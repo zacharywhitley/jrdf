@@ -59,23 +59,23 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
+import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 public class ImmutableGraphImpl implements ImmutableGraph {
     private NodePool nodePool;
@@ -84,8 +84,8 @@ public class ImmutableGraphImpl implements ImmutableGraph {
     private LongIndex longIndex201;
     private IteratorFactory iteratorFactory;
 
-    public ImmutableGraphImpl(NodePool nodePool, LongIndex longIndex012, LongIndex longIndex120,
-                              LongIndex longIndex201, IteratorFactory newIteratorFactory) {
+    public ImmutableGraphImpl(LongIndex longIndex012, LongIndex longIndex120, LongIndex longIndex201, NodePool nodePool,
+                              IteratorFactory newIteratorFactory) {
         checkNotNull(nodePool, longIndex012, longIndex120, longIndex201, newIteratorFactory);
         this.nodePool = nodePool;
         this.longIndex012 = longIndex012;

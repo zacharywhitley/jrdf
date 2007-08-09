@@ -61,7 +61,6 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.TypedNodeVisitor;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
 
 import java.net.URI;
 
@@ -72,9 +71,8 @@ public class BlankNodeResourceImpl extends AbstractResource {
     private BlankNodeResourceImpl() {
     }
 
-    public BlankNodeResourceImpl(BlankNode newNode, IteratorFactory newIteratorFactory, MutableGraph newMutableGraph,
-        ImmutableGraph newImmutableGraph) {
-        super(((LocalizedNode) newNode).getId(), newIteratorFactory, newMutableGraph, newImmutableGraph);
+    public BlankNodeResourceImpl(BlankNode newNode, MutableGraph newMutableGraph, ImmutableGraph newImmutableGraph) {
+        super(((LocalizedNode) newNode).getId(), newMutableGraph, newImmutableGraph);
         this.node = newNode;
     }
 
@@ -96,5 +94,9 @@ public class BlankNodeResourceImpl extends AbstractResource {
 
     public void accept(TypedNodeVisitor visitor) {
         node.accept(visitor);
+    }
+
+    public String toString() {
+        return node.toString();
     }
 }

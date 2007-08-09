@@ -59,7 +59,6 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
@@ -80,8 +79,6 @@ import org.jrdf.graph.mem.iterator.OrderedIteratorFactoryImpl;
  */
 public class OrderedGraphFactoryImpl implements GraphFactory {
     private LongIndex[] longIndexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphElementFactory elementFactory;
     private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
@@ -91,23 +88,21 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
         NodeComparator nodeComparator) {
         this.longIndexes = newLongIndexes;
-        this.nodePoolFactory = newNodePoolFactory;
-        nodePool = nodePoolFactory.createNodePool();
-        nodePool.clear();
+        nodePool = newNodePoolFactory.createNodePool();
+        this.nodePool.clear();
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], nodeComparator);
-        this.mutableGraph = new MutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
-        this.immutableGraph = new ImmutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2],
-            iteratorFactory);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, mutableGraph, immutableGraph);
+        this.mutableGraph = new MutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool);
+        this.immutableGraph = new ImmutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool,
+                iteratorFactory);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
-            iteratorFactory, mutableGraph, immutableGraph);
+        return new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandlers[0],
+                (GraphHandler201) graphHandlers[2], iteratorFactory, mutableGraph, immutableGraph);
     }
 
     public IteratorFactory getIteratorFactory() {

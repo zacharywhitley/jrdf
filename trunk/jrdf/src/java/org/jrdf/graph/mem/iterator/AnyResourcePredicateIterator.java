@@ -59,16 +59,16 @@
 
 package org.jrdf.graph.mem.iterator;
 
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.Set;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class AnyResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final GraphHandler graphHandler;

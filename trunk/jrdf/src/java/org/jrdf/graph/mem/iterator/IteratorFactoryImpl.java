@@ -71,10 +71,10 @@ import org.jrdf.util.ClosableIterator;
  * @version $Id$
  */
 public final class IteratorFactoryImpl implements IteratorFactory {
-    private LongIndex[] longIndexes;
-    private GraphHandler[] graphHandlers;
+    private final LongIndex[] longIndexes;
+    private final GraphHandler[] graphHandlers;
 
-    public IteratorFactoryImpl(LongIndex[] longIndexes, GraphHandler[] graphHandlers) {
+    public IteratorFactoryImpl(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers) {
         this.longIndexes = longIndexes;
         this.graphHandlers = graphHandlers;
     }

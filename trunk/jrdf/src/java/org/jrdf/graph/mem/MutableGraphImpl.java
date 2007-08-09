@@ -59,13 +59,13 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.index.longindex.LongIndex;
-import static org.jrdf.util.param.ParameterUtil.*;
+import org.jrdf.graph.index.nodepool.NodePool;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class MutableGraphImpl implements MutableGraph {
     private NodePool nodePool;
@@ -73,7 +73,7 @@ public class MutableGraphImpl implements MutableGraph {
     private LongIndex longIndex120;
     private LongIndex longIndex201;
 
-    public MutableGraphImpl(NodePool nodePool, LongIndex longIndex012, LongIndex longIndex120, LongIndex longIndex201) {
+    public MutableGraphImpl(LongIndex longIndex012, LongIndex longIndex120, LongIndex longIndex201, NodePool nodePool) {
         checkNotNull(nodePool, longIndex012, longIndex120, longIndex201);
         this.nodePool = nodePool;
         this.longIndex012 = longIndex012;

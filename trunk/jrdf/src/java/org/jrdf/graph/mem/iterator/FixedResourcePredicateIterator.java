@@ -66,8 +66,8 @@ import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final Long resource;
