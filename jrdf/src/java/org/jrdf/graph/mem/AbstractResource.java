@@ -76,19 +76,19 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 public abstract class AbstractResource implements Resource, LocalizedNode {
     private static final long serialVersionUID = 3641740111800858628L;
     private IteratorFactory iteratorFactory;
-    private GraphMutator graphMutator;
+    private MutableGraph mutableGraph;
     private ImmutableGraph immutableGraph;
     private Long resource;
 
     protected AbstractResource() {
     }
 
-    public AbstractResource(Long resource, IteratorFactory iteratorFactory, GraphMutator mutator,
+    public AbstractResource(Long resource, IteratorFactory iteratorFactory, MutableGraph mutabletGraph,
         ImmutableGraph newImmutableGraph) {
-        checkNotNull(resource, iteratorFactory);
+        checkNotNull(resource, iteratorFactory, mutabletGraph, newImmutableGraph);
         this.resource = resource;
         this.iteratorFactory = iteratorFactory;
-        this.graphMutator = mutator;
+        this.mutableGraph = mutabletGraph;
         this.immutableGraph = newImmutableGraph;
     }
 
@@ -97,16 +97,16 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void addValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        graphMutator.localizeAndAdd(this, predicate, object);
+        mutableGraph.localizeAndAdd(this, predicate, object);
     }
 
     public void setValue(PredicateNode predicate, ObjectNode object) throws GraphException {
         removeValue(predicate, object);
-        graphMutator.localizeAndAdd(this, predicate, object);
+        mutableGraph.localizeAndAdd(this, predicate, object);
     }
 
     public void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        graphMutator.localizeAndRemove(this, predicate, object);
+        mutableGraph.localizeAndRemove(this, predicate, object);
     }
 
     public void removeValues(PredicateNode predicate) throws GraphException {
@@ -117,7 +117,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
 
     public void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException {
         while (immutableGraph.contains(subject, predicate, this)) {
-            graphMutator.localizeAndRemove(subject, predicate, this);
+            mutableGraph.localizeAndRemove(subject, predicate, this);
         }
     }
 

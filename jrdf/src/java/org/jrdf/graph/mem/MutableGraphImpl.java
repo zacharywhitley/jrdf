@@ -67,13 +67,13 @@ import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.longindex.LongIndex;
 import static org.jrdf.util.param.ParameterUtil.*;
 
-public class GraphMutatorImpl implements GraphMutator {
+public class MutableGraphImpl implements MutableGraph {
     private NodePool nodePool;
     private LongIndex longIndex012;
     private LongIndex longIndex120;
     private LongIndex longIndex201;
 
-    public GraphMutatorImpl(NodePool nodePool, LongIndex longIndex012, LongIndex longIndex120, LongIndex longIndex201) {
+    public MutableGraphImpl(NodePool nodePool, LongIndex longIndex012, LongIndex longIndex120, LongIndex longIndex201) {
         checkNotNull(nodePool, longIndex012, longIndex120, longIndex201);
         this.nodePool = nodePool;
         this.longIndex012 = longIndex012;

@@ -84,25 +84,25 @@ import java.util.UUID;
 public final class GraphElementFactoryImpl implements GraphElementFactory {
     private final NodePool nodePool;
     private final IteratorFactory iteratorFactory;
-    private final GraphMutator graphMutator;
+    private final MutableGraph mutableGraph;
     private final ImmutableGraph immutableGraph;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory, GraphMutator graphMutator,
+    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory, MutableGraph mutableGraph,
         ImmutableGraph newImmutableGraph) {
-        checkNotNull(nodePool, iteratorFactory, graphMutator);
+        checkNotNull(nodePool, iteratorFactory, mutableGraph);
         this.nodePool = nodePool;
         this.iteratorFactory = iteratorFactory;
-        this.graphMutator = graphMutator;
+        this.mutableGraph = mutableGraph;
         this.immutableGraph = newImmutableGraph;
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new BlankNodeResourceImpl(node, iteratorFactory, graphMutator, immutableGraph);
+            return new BlankNodeResourceImpl(node, iteratorFactory, mutableGraph, immutableGraph);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
@@ -111,7 +111,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new URIReferenceResourceImpl(node, iteratorFactory, graphMutator, immutableGraph);
+            return new URIReferenceResourceImpl(node, iteratorFactory, mutableGraph, immutableGraph);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
