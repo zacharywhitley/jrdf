@@ -157,7 +157,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Handle changes to the graph's underlying node pool and indexes.
      */
-    private transient GraphMutator graphMutator;
+    private transient MutableGraph mutableGraph;
 
     /**
      * Handle read only operations to the graph's underlying node pool and indexes.
@@ -179,7 +179,7 @@ public class GraphImpl implements Graph, Serializable {
      * Default constructor.
      */
     public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, GraphElementFactory newElementFactory,
-        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, GraphMutator newGraphMutator,
+        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, MutableGraph newMutableGraph,
         ImmutableGraph newImmutableGraph) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
@@ -188,7 +188,7 @@ public class GraphImpl implements Graph, Serializable {
         this.elementFactory = newElementFactory;
         this.graphHandler012 = graphHandler;
         this.iteratorFactory = newIteratorFactory;
-        this.graphMutator = newGraphMutator;
+        this.mutableGraph = newMutableGraph;
         this.immutableGraph = newImmutableGraph;
         init();
     }
@@ -217,8 +217,8 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private void initOthers() {
-        if (null == graphMutator) {
-            graphMutator = new GraphMutatorImpl(nodePool, longIndex012, longIndex120, longIndex201);
+        if (null == mutableGraph) {
+            mutableGraph = new MutableGraphImpl(nodePool, longIndex012, longIndex120, longIndex201);
         }
 
         if (null == immutableGraph) {
@@ -227,7 +227,7 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator, immutableGraph);
+            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, mutableGraph, immutableGraph);
         }
 
         if (null == tripleFactory) {
@@ -304,7 +304,7 @@ public class GraphImpl implements Graph, Serializable {
     public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_ADD_NULL_MESSAGE, CANT_ADD_ANY_NODE_MESSAGE);
-        graphMutator.localizeAndAdd(subject, predicate, object);
+        mutableGraph.localizeAndAdd(subject, predicate, object);
     }
 
     public void remove(Iterator<Triple> triples) throws GraphException {
@@ -336,7 +336,7 @@ public class GraphImpl implements Graph, Serializable {
     public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
-        graphMutator.localizeAndRemove(subject, predicate, object);
+        mutableGraph.localizeAndRemove(subject, predicate, object);
     }
 
     public GraphElementFactory getElementFactory() {
@@ -358,7 +358,7 @@ public class GraphImpl implements Graph, Serializable {
     public void clear() {
         // TODO AN: Should this work regardless of failure - or rollback?
         // TODO AN: Improve GraphHandler API to do clearing of indexes instead of direct clearing.
-        graphMutator.clear();
+        mutableGraph.clear();
     }
 
     public void close() {

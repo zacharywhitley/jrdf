@@ -85,7 +85,7 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
     private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
-    private GraphMutator graphMutator;
+    private MutableGraph mutableGraph;
     private ImmutableGraph immutableGraph;
 
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
@@ -99,15 +99,15 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], nodeComparator);
-        this.graphMutator = new GraphMutatorImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
+        this.mutableGraph = new MutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
         this.immutableGraph = new ImmutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2],
             iteratorFactory);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator, immutableGraph);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, mutableGraph, immutableGraph);
     }
 
     public Graph getGraph() {
         return new GraphImpl(longIndexes, nodePool, elementFactory, (GraphHandler012) graphHandlers[0],
-            iteratorFactory, graphMutator, immutableGraph);
+            iteratorFactory, mutableGraph, immutableGraph);
     }
 
     public IteratorFactory getIteratorFactory() {

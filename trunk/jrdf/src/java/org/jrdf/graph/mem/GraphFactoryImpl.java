@@ -83,7 +83,7 @@ public final class GraphFactoryImpl implements GraphFactory {
     private GraphElementFactory elementFactory;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
-    private GraphMutator graphMutator;
+    private MutableGraph mutableGraph;
     private ImmutableGraph immutableGraph;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
@@ -93,14 +93,14 @@ public final class GraphFactoryImpl implements GraphFactory {
         this.handler012 = new GraphHandler012(newLongIndexes, nodePool);
         this.iteratorFactory = new IteratorFactoryImpl(newLongIndexes, new GraphHandler[]{handler012,
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)});
-        this.graphMutator = new GraphMutatorImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
+        this.mutableGraph = new MutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
         this.immutableGraph = new ImmutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2],
             iteratorFactory);
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator, immutableGraph);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, mutableGraph, immutableGraph);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, elementFactory, handler012, iteratorFactory, graphMutator,
+        return new GraphImpl(longIndexes, nodePool, elementFactory, handler012, iteratorFactory, mutableGraph,
             immutableGraph);
     }
 

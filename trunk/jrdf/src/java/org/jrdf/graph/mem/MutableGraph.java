@@ -64,7 +64,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.GraphException;
 
-public interface GraphMutator {
+public interface MutableGraph {
     void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
     void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
     void clear();
