@@ -59,27 +59,37 @@
 
 package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
+import org.jrdf.graph.mem.iterator.ObjectNodeIterator;
+import org.jrdf.graph.mem.iterator.SubjectNodeIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public abstract class AbstractResource implements Resource, LocalizedNode {
     private static final long serialVersionUID = 3641740111800858628L;
     private IteratorFactory iteratorFactory;
+    private GraphMutator graphMutator;
+    private ImmutableGraphImpl immutableGraph;
     private Long resource;
 
     protected AbstractResource() {
     }
 
-    public AbstractResource(Long resource, IteratorFactory iteratorFactory, GraphMutator mutator) {
+    public AbstractResource(Long resource, IteratorFactory iteratorFactory, GraphMutator mutator,
+        ImmutableGraphImpl newImmutableGraph) {
         checkNotNull(resource, iteratorFactory);
         this.resource = resource;
         this.iteratorFactory = iteratorFactory;
+        this.graphMutator = mutator;
+        this.immutableGraph = newImmutableGraph;
     }
 
     public Long getId() {
@@ -87,26 +97,38 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void addValue(PredicateNode predicate, ObjectNode object) throws GraphException {
+        graphMutator.localizeAndAdd(this, predicate, object);
     }
 
     public void setValue(PredicateNode predicate, ObjectNode object) throws GraphException {
+        removeValue(predicate, object);
+        graphMutator.localizeAndAdd(this, predicate, object);
     }
 
     public void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException {
+        graphMutator.localizeAndRemove(this, predicate, object);
     }
 
     public void removeValues(PredicateNode predicate) throws GraphException {
+        while (immutableGraph.contains(this, predicate, ANY_OBJECT_NODE)) {
+            removeValue(predicate, ANY_OBJECT_NODE);
+        }
     }
 
     public void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException {
+        while (immutableGraph.contains(subject, predicate, this)) {
+            graphMutator.localizeAndRemove(subject, predicate, this);
+        }
     }
 
     public ClosableIterator<ObjectNode> getObjects(PredicateNode predicate) throws GraphException {
-        return null;
+        ClosableIterator<Triple> closableIterator = immutableGraph.find(this, predicate, ANY_OBJECT_NODE);
+        return new ObjectNodeIterator(closableIterator);
     }
 
     public ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException {
-        return null;
+        ClosableIterator<Triple> closableIterator = immutableGraph.find(ANY_SUBJECT_NODE, predicate, this);
+        return new SubjectNodeIterator(closableIterator);
     }
 
     public ClosableIterator<PredicateNode> getUniquePredicates() throws GraphException {

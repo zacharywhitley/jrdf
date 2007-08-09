@@ -179,7 +179,8 @@ public class GraphImpl implements Graph, Serializable {
      * Default constructor.
      */
     public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, GraphElementFactory newElementFactory,
-        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, GraphMutator newGraphMutator) {
+        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, GraphMutator newGraphMutator,
+        ImmutableGraphImpl newImmutableGraphImpl) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
@@ -188,8 +189,7 @@ public class GraphImpl implements Graph, Serializable {
         this.graphHandler012 = graphHandler;
         this.iteratorFactory = newIteratorFactory;
         this.graphMutator = newGraphMutator;
-        this.immutableGraph =
-            new ImmutableGraphImpl(nodePool, longIndex012, longIndex120, longIndex201, iteratorFactory);
+        this.immutableGraph = newImmutableGraphImpl;
         init();
     }
 

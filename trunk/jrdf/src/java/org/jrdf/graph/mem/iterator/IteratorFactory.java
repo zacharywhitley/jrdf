@@ -58,8 +58,8 @@
  */
 package org.jrdf.graph.mem.iterator;
 
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
 /**
