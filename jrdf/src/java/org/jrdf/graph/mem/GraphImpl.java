@@ -162,7 +162,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Handle read only operations to the graph's underlying node pool and indexes.
      */
-    private transient ImmutableGraphImpl immutableGraph;
+    private transient ImmutableGraph immutableGraph;
 
     /**
      * A way to create iterators.
@@ -180,7 +180,7 @@ public class GraphImpl implements Graph, Serializable {
      */
     public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, GraphElementFactory newElementFactory,
         GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, GraphMutator newGraphMutator,
-        ImmutableGraphImpl newImmutableGraphImpl) {
+        ImmutableGraph newImmutableGraph) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
@@ -189,7 +189,7 @@ public class GraphImpl implements Graph, Serializable {
         this.graphHandler012 = graphHandler;
         this.iteratorFactory = newIteratorFactory;
         this.graphMutator = newGraphMutator;
-        this.immutableGraph = newImmutableGraphImpl;
+        this.immutableGraph = newImmutableGraph;
         init();
     }
 
@@ -227,7 +227,7 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator);
+            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, graphMutator, immutableGraph);
         }
 
         if (null == tripleFactory) {
