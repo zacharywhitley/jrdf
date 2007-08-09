@@ -86,7 +86,7 @@ public class ImmutableGraphImpl implements ImmutableGraph {
 
     public ImmutableGraphImpl(NodePool nodePool, LongIndex longIndex012, LongIndex longIndex120,
                               LongIndex longIndex201, IteratorFactory newIteratorFactory) {
-        checkNotNull(nodePool, longIndex012, longIndex120, longIndex201);
+        checkNotNull(nodePool, longIndex012, longIndex120, longIndex201, newIteratorFactory);
         this.nodePool = nodePool;
         this.longIndex012 = longIndex012;
         this.longIndex120 = longIndex120;
