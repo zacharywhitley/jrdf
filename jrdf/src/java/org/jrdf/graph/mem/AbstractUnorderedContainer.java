@@ -62,10 +62,10 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.Container;
 import org.jrdf.graph.ObjectNode;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Collection;
 
 /**
  * The base class for the implementation of Bag and Alternative.

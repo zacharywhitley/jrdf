@@ -65,9 +65,7 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
@@ -83,38 +81,23 @@ import java.util.UUID;
  */
 public final class GraphElementFactoryImpl implements GraphElementFactory {
     private final NodePool nodePool;
-    private final IteratorFactory iteratorFactory;
-    private final MutableGraph mutableGraph;
-    private final ImmutableGraph immutableGraph;
+    private final ResourceFactory resourceFactory;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool nodePool, IteratorFactory iteratorFactory, MutableGraph mutableGraph,
-        ImmutableGraph newImmutableGraph) {
-        checkNotNull(nodePool, iteratorFactory, mutableGraph);
+    GraphElementFactoryImpl(NodePool nodePool, ResourceFactory resourceFactory) {
+        checkNotNull(nodePool);
         this.nodePool = nodePool;
-        this.iteratorFactory = iteratorFactory;
-        this.mutableGraph = mutableGraph;
-        this.immutableGraph = newImmutableGraph;
+        this.resourceFactory = resourceFactory;
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
-        try {
-            nodePool.localize(node);
-            return new BlankNodeResourceImpl(node, iteratorFactory, mutableGraph, immutableGraph);
-        } catch (GraphException e) {
-            throw new GraphElementFactoryException(e);
-        }
+        return resourceFactory.createResource(node);
     }
 
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
-        try {
-            nodePool.localize(node);
-            return new URIReferenceResourceImpl(node, iteratorFactory, mutableGraph, immutableGraph);
-        } catch (GraphException e) {
-            throw new GraphElementFactoryException(e);
-        }
+        return resourceFactory.createResource(node);
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {

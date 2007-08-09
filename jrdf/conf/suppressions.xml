@@ -32,6 +32,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl.java"/>
     <suppress checks="ParameterNumber" files="NTriplesEventReader.java"/>
     <suppress checks="CyclomaticComplexity" files="NTriplesEventReader.java"/>
+    <suppress checks="ParameterNumber" files="AnyResourceIterator.java" />
 
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>

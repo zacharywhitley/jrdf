@@ -61,7 +61,6 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
 
 import java.net.URI;
 
@@ -72,9 +71,9 @@ public class URIReferenceResourceImpl extends AbstractResource {
     private URIReferenceResourceImpl() {
     }
 
-    public URIReferenceResourceImpl(URIReference newNode, IteratorFactory newIteratorFactory,
-        MutableGraph newMutableGraph, ImmutableGraph newImmutableGraph) {
-        super(((LocalizedNode) newNode).getId(), newIteratorFactory, newMutableGraph, newImmutableGraph);
+    public URIReferenceResourceImpl(URIReference newNode, MutableGraph newMutableGraph,
+            ImmutableGraph newImmutableGraph) {
+        super(((LocalizedNode) newNode).getId(), newMutableGraph, newImmutableGraph);
         this.node = newNode;
     }
 
@@ -96,5 +95,9 @@ public class URIReferenceResourceImpl extends AbstractResource {
 
     public void accept(TypedNodeVisitor visitor) {
         node.accept(visitor);
+    }
+
+    public String toString() {
+        return node.getURI().toString();
     }
 }

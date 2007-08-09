@@ -69,17 +69,19 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
-import org.jrdf.graph.mem.BlankNodeResourceImpl;
-import org.jrdf.graph.mem.GraphFactoryImpl;
+import org.jrdf.graph.mem.AbstractResource;
 import org.jrdf.graph.mem.ImmutableGraph;
 import org.jrdf.graph.mem.ImmutableGraphImpl;
 import org.jrdf.graph.mem.MutableGraph;
 import org.jrdf.graph.mem.MutableGraphImpl;
 import org.jrdf.graph.mem.URIReferenceResourceImpl;
+import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.mem.GraphFactoryImpl;
+import org.jrdf.graph.mem.BlankNodeResourceImpl;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
-import org.jrdf.map.MapFactory;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.map.MapFactory;
 
 import java.net.URI;
 
@@ -104,14 +106,14 @@ public class AbstractResourceUnitTest extends TestCase {
         this.nodePool = nodePoolFactory.createNodePool();
         GraphHandler[] graphHandler = getLongIndexes(longIndexes);
         iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandler);
-        mutableGraph = new MutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2]);
-        immutableGraph = new ImmutableGraphImpl(nodePool, longIndexes[0], longIndexes[1], longIndexes[2],
+        mutableGraph = new MutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool);
+        immutableGraph = new ImmutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool,
             iteratorFactory);
         graph = new GraphFactoryImpl(longIndexes, nodePoolFactory).getGraph();
         elementFactory = graph.getElementFactory();
-        blankNodeResource = new BlankNodeResourceImpl(elementFactory.createBlankNode(), iteratorFactory, mutableGraph,
+        blankNodeResource = new BlankNodeResourceImpl(elementFactory.createBlankNode(), mutableGraph,
             immutableGraph);
-        uriReferenceResource = new URIReferenceResourceImpl(elementFactory.createURIReference(uri), iteratorFactory,
+        uriReferenceResource = new URIReferenceResourceImpl(elementFactory.createURIReference(uri),
             mutableGraph, immutableGraph);
     }
 

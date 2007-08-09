@@ -79,6 +79,7 @@ import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
+import org.jrdf.graph.mem.iterator.AnyResourceIterator;
 import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
@@ -135,9 +136,14 @@ public class GraphImpl implements Graph, Serializable {
     private transient LongIndex longIndex201;
 
     /**
-     * Graph Element Factory.  This caches the node factory.
+     * Graph Element Factory.
      */
     private transient GraphElementFactory elementFactory;
+
+    /**
+     * Resource factory.
+     */
+    private transient ResourceFactory resourceFactory;
 
     /**
      * The node pool.
@@ -155,6 +161,11 @@ public class GraphImpl implements Graph, Serializable {
     private transient GraphHandler012 graphHandler012;
 
     /**
+     * Graph handler for the 201 index.
+     */
+    private transient GraphHandler201 graphHandler201;
+
+    /**
      * Handle changes to the graph's underlying node pool and indexes.
      */
     private transient MutableGraph mutableGraph;
@@ -168,6 +179,7 @@ public class GraphImpl implements Graph, Serializable {
      * A way to create iterators.
      */
     private transient IteratorFactory iteratorFactory;
+
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
     private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
@@ -175,21 +187,25 @@ public class GraphImpl implements Graph, Serializable {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
 
+
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, GraphElementFactory newElementFactory,
-        GraphHandler012 graphHandler, IteratorFactory newIteratorFactory, MutableGraph newMutableGraph,
-        ImmutableGraph newImmutableGraph) {
+    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool,
+                     GraphHandler012 graphHandler012, GraphHandler201 graphHandler201,
+                     IteratorFactory newIteratorFactory, MutableGraph newMutableGraph,
+                     ImmutableGraph newImmutableGraph) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
         this.nodePool = newNodePool;
-        this.elementFactory = newElementFactory;
-        this.graphHandler012 = graphHandler;
+        this.graphHandler012 = graphHandler012;
+        this.graphHandler201 = graphHandler201;
         this.iteratorFactory = newIteratorFactory;
         this.mutableGraph = newMutableGraph;
         this.immutableGraph = newImmutableGraph;
+        this.resourceFactory = new ResourceFactoryImpl(nodePool, immutableGraph, mutableGraph);
+        this.elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
         init();
     }
 
@@ -217,17 +233,21 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private void initOthers() {
-        if (null == mutableGraph) {
-            mutableGraph = new MutableGraphImpl(nodePool, longIndex012, longIndex120, longIndex201);
-        }
-
         if (null == immutableGraph) {
             immutableGraph =
-                new ImmutableGraphImpl(nodePool, longIndex012, longIndex120, longIndex201, iteratorFactory);
+                    new ImmutableGraphImpl(longIndex012, longIndex120, longIndex201, nodePool, iteratorFactory);
+        }
+
+        if (null == mutableGraph) {
+            mutableGraph = new MutableGraphImpl(longIndex012, longIndex120, longIndex201, nodePool);
+        }
+
+        if (null == resourceFactory) {
+            resourceFactory = new ResourceFactoryImpl(nodePool, immutableGraph, mutableGraph);
         }
 
         if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool, iteratorFactory, mutableGraph, immutableGraph);
+            elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
         }
 
         if (null == tripleFactory) {
@@ -249,10 +269,9 @@ public class GraphImpl implements Graph, Serializable {
 
     private void initIteratorFactory(LongIndex[] indexes) {
         if (null == iteratorFactory) {
-            GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
             GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
-            iteratorFactory = new IteratorFactoryImpl(indexes,
-                new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201});
+            GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
+            iteratorFactory = new IteratorFactoryImpl(indexes, handlers);
         }
     }
 
@@ -272,7 +291,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-        GraphException {
+            GraphException {
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
         return immutableGraph.find(subject, predicate, object);
@@ -284,6 +303,11 @@ public class GraphImpl implements Graph, Serializable {
 
     public ClosableIterator<PredicateNode> getUniquePredicates() {
         return iteratorFactory.newPredicateIterator();
+    }
+
+    public ClosableIterator<Resource> getResources() {
+        return new AnyResourceIterator(longIndex012, longIndex201, graphHandler012, graphHandler201,
+                immutableGraph, mutableGraph);
     }
 
     public ClosableIterator<PredicateNode> getUniquePredicates(Resource resource) throws GraphException {
@@ -367,7 +391,7 @@ public class GraphImpl implements Graph, Serializable {
 
     // TODO AN Move this to a helper utility perhaps.
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
-        String nullMessage, String anyNodeMessage) {
+                                          String nullMessage, String anyNodeMessage) {
         checkForNulls(subject, predicate, object, nullMessage);
         checkForAnyNodes(subject, predicate, object, anyNodeMessage);
     }

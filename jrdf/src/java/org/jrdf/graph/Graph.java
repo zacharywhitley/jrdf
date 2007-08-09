@@ -135,6 +135,14 @@ public interface Graph {
      */
     ClosableIterator<PredicateNode> getUniquePredicates();
 
+
+    /**
+     * Return all unique resources (Subjects and Objects).
+     *
+     * @return all unique resources.
+     */
+    ClosableIterator<Resource> getResources();
+
     /**
      * Return predicates that are part of an RDF triple where resource is either a subject or object.
      *

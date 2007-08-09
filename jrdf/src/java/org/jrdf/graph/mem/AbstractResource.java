@@ -67,7 +67,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.ObjectNodeIterator;
 import org.jrdf.graph.mem.iterator.SubjectNodeIterator;
 import org.jrdf.util.ClosableIterator;
@@ -75,7 +74,6 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public abstract class AbstractResource implements Resource, LocalizedNode {
     private static final long serialVersionUID = 3641740111800858628L;
-    private IteratorFactory iteratorFactory;
     private MutableGraph mutableGraph;
     private ImmutableGraph immutableGraph;
     private Long resource;
@@ -83,12 +81,10 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     protected AbstractResource() {
     }
 
-    public AbstractResource(Long resource, IteratorFactory iteratorFactory, MutableGraph mutabletGraph,
-        ImmutableGraph newImmutableGraph) {
-        checkNotNull(resource, iteratorFactory, mutabletGraph, newImmutableGraph);
-        this.resource = resource;
-        this.iteratorFactory = iteratorFactory;
-        this.mutableGraph = mutabletGraph;
+    public AbstractResource(Long newResource, MutableGraph newMutator, ImmutableGraph newImmutableGraph) {
+        checkNotNull(newResource, newMutator, newImmutableGraph);
+        this.resource = newResource;
+        this.mutableGraph = newMutator;
         this.immutableGraph = newImmutableGraph;
     }
 
@@ -131,9 +127,5 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     public ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException {
         ClosableIterator<Triple> closableIterator = immutableGraph.find(ANY_SUBJECT_NODE, predicate, this);
         return new SubjectNodeIterator(closableIterator);
-    }
-
-    public ClosableIterator<PredicateNode> getUniquePredicates() throws GraphException {
-        return iteratorFactory.newPredicateIterator(resource);
     }
 }
