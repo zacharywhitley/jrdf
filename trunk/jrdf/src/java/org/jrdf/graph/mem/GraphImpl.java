@@ -80,7 +80,6 @@ import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.iterator.AnyResourceIterator;
-import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
@@ -332,25 +331,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public void remove(Iterator<Triple> triples) throws GraphException {
-        if (triples instanceof ClosableMemIterator) {
-            localIteratorRemove(triples);
-        } else {
-            globalIteratorRemove(triples);
-        }
-    }
-
-    private void localIteratorRemove(Iterator<Triple> triples) {
-        ClosableMemIterator<Triple> memIterator = (ClosableMemIterator<Triple>) triples;
-        while (memIterator.hasNext()) {
-            memIterator.next();
-            memIterator.remove();
-        }
-    }
-
-    private void globalIteratorRemove(Iterator<Triple> triples) throws GraphException {
-        while (triples.hasNext()) {
-            remove(triples.next());
-        }
+        mutableGraph.removeIterator(triples);
     }
 
     public void remove(Triple triple) throws GraphException {

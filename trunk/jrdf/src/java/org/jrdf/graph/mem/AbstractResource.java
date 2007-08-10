@@ -97,9 +97,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void setValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        while (immutableGraph.contains(this, predicate, ANY_OBJECT_NODE)) {
-            mutableGraph.localizeAndRemove(this, predicate, object);
-        }
+        removeValues(predicate);
         addValue(predicate, object);
     }
 
@@ -108,9 +106,8 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void removeValues(PredicateNode predicate) throws GraphException {
-        while (immutableGraph.contains(this, predicate, ANY_OBJECT_NODE)) {
-            removeValue(predicate, ANY_OBJECT_NODE);
-        }
+        ClosableIterator<Triple> iterator = immutableGraph.find(this, predicate, ANY_OBJECT_NODE);
+        mutableGraph.removeIterator(iterator);
     }
 
     public void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException {
