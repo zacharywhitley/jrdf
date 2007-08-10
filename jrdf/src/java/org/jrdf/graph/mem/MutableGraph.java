@@ -63,9 +63,14 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+
+import java.util.Iterator;
 
 public interface MutableGraph {
     void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
     void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
     void clear();
+
+    void removeIterator(Iterator<Triple> triples) throws GraphException;
 }

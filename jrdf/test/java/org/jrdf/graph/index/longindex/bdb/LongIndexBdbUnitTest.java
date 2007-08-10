@@ -83,10 +83,4 @@ public class LongIndexBdbUnitTest extends TestCase {
         assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize,
                 expectedNumber, actualSize);
     }
-
-//    public void testRemove() throws Exception {
-//        testAddition();
-//        longIndex.remove(new Long(4), new Long(5), new Long(6));
-//        //System.err.println("Number of Triples should be 1 we got: " + longIndex.getSize());
-//    }
 }

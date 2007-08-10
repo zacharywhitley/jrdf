@@ -63,9 +63,13 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
+import java.util.Iterator;
 
 public class MutableGraphImpl implements MutableGraph {
     private NodePool nodePool;
@@ -91,6 +95,29 @@ public class MutableGraphImpl implements MutableGraph {
             longIndex120.remove(values[1], values[2], values[0]);
         } finally {
             longIndex201.remove(values[2], values[0], values[1]);
+        }
+    }
+
+    public void removeIterator(Iterator<Triple> triples) throws GraphException {
+        if (triples instanceof ClosableMemIterator) {
+            localIteratorRemove(triples);
+        } else {
+            globalIteratorRemove(triples);
+        }
+    }
+
+    private void localIteratorRemove(Iterator<Triple> triples) {
+        ClosableMemIterator<Triple> memIterator = (ClosableMemIterator<Triple>) triples;
+        while (memIterator.hasNext()) {
+            memIterator.next();
+            memIterator.remove();
+        }
+    }
+
+    private void globalIteratorRemove(Iterator<Triple> triples) throws GraphException {
+        while (triples.hasNext()) {
+            Triple triple = triples.next();
+            localizeAndRemove(triple.getSubject(), triple.getPredicate(), triple.getObject());
         }
     }
 
