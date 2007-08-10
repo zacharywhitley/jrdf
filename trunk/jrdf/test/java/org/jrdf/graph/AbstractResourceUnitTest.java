@@ -80,8 +80,12 @@ import org.jrdf.graph.mem.URIReferenceResourceImpl;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.NoSuchElementException;
 
 public class AbstractResourceUnitTest extends TestCase {
     private ImmutableGraph immutableGraph;
@@ -97,9 +101,7 @@ public class AbstractResourceUnitTest extends TestCase {
     private Resource uriRef1;
 
     public void setUp() throws Exception {
-        URI uri1 = new URI("http://namespace#pred1");
-        URI uri2 = new URI("http://namespace#pred2");
-        URI uri3 = new URI("http://namespace#pred3");
+
         LongIndex[] longIndexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
         NodePool nodePool = nodePoolFactory.createNodePool();
@@ -111,7 +113,13 @@ public class AbstractResourceUnitTest extends TestCase {
         Graph graph = new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandler[0],
             (GraphHandler201) graphHandler[2], iteratorFactory, mutableGraph, immutableGraph);
         elementFactory = graph.getElementFactory();
+        createNodes();
+    }
 
+    private void createNodes() throws URISyntaxException, GraphElementFactoryException {
+        URI uri1 = new URI("http://namespace#pred1");
+        URI uri2 = new URI("http://namespace#pred2");
+        URI uri3 = new URI("http://namespace#pred3");
         predicate1 = elementFactory.createURIReference(uri1);
         predicate2 = elementFactory.createURIReference(uri2);
         predicate3 = elementFactory.createURIReference(uri3);
@@ -189,33 +197,27 @@ public class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testRemoveValues() throws Exception {
-        blankNode1.addValue(predicate1, object1);
-        blankNode1.addValue(predicate1, object2);
-        blankNode1.addValue(predicate1, object3);
-        assertTrue(immutableGraph.contains(blankNode1, predicate1, object1));
-        assertTrue(immutableGraph.contains(blankNode1, predicate1, object2));
-        assertTrue(immutableGraph.contains(blankNode1, predicate1, object3));
-        assertEquals("Size should be 3 but I got " + immutableGraph.getSize(), 3, immutableGraph.getSize());
-        blankNode1.addValue(predicate2, object1);
-        blankNode1.addValue(predicate2, object2);
-        blankNode1.addValue(predicate2, object3);
-        assertTrue(immutableGraph.contains(blankNode1, predicate2, object1));
-        assertTrue(immutableGraph.contains(blankNode1, predicate2, object2));
-        assertTrue(immutableGraph.contains(blankNode1, predicate2, object3));
-        assertEquals("Size should be 6 but I got " + immutableGraph.getSize(), 6, immutableGraph.getSize());
-        blankNode1.addValue(predicate3, object1);
-        blankNode1.addValue(predicate3, object2);
-        blankNode1.addValue(predicate3, object3);
-        assertTrue(immutableGraph.contains(blankNode1, predicate3, object1));
-        assertTrue(immutableGraph.contains(blankNode1, predicate3, object2));
-        assertTrue(immutableGraph.contains(blankNode1, predicate3, object3));
-        assertEquals("Size should be 9 but I got " + immutableGraph.getSize(), 9, immutableGraph.getSize());
-        blankNode1.removeValues(predicate1);
-        assertEquals("Size should be 6 but I got " + immutableGraph.getSize(), 6, immutableGraph.getSize());
-        blankNode1.removeValues(predicate3);
-        assertEquals("Size should be 6 but I got " + immutableGraph.getSize(), 3, immutableGraph.getSize());
-        blankNode1.removeValues(predicate2);
-        assertEquals("Size should be 6 but I got " + immutableGraph.getSize(), 0, immutableGraph.getSize());
+        addThreeDifferentObjects(predicate1, 3);
+        addThreeDifferentObjects(predicate2, 6);
+        addThreeDifferentObjects(predicate3, 9);
+        checkRemoveAllFromPredicate(6, predicate1);
+        checkRemoveAllFromPredicate(3, predicate3);
+        checkRemoveAllFromPredicate(0, predicate2);
+    }
+
+    private void addThreeDifferentObjects(PredicateNode predicate, int expectedSize) throws GraphException {
+        blankNode1.addValue(predicate, object1);
+        blankNode1.addValue(predicate, object2);
+        blankNode1.addValue(predicate, object3);
+        assertTrue(immutableGraph.contains(blankNode1, predicate, object1));
+        assertTrue(immutableGraph.contains(blankNode1, predicate, object2));
+        assertTrue(immutableGraph.contains(blankNode1, predicate, object3));
+        assertEquals("Size should be " + expectedSize + " but I got " + immutableGraph.getSize(), expectedSize, immutableGraph.getSize());
+    }
+
+    private void checkRemoveAllFromPredicate(int expectedValue, PredicateNode predicate) throws GraphException {
+        blankNode1.removeValues(predicate);
+        assertEquals("Size should be " + expectedValue + "  but I got " + immutableGraph.getSize(), expectedValue, immutableGraph.getSize());
     }
 
     public void testRemoveSubject() throws Exception {
@@ -262,11 +264,15 @@ public class AbstractResourceUnitTest extends TestCase {
             itr.next();
             objects++;
         }
+        final ClosableIterator<SubjectNode> itr2 = object.getSubjects(predicate1);
         assertEquals("There should be 4 subjects in the iterator", 4, objects);
-        ClosableIterator<SubjectNode> itr2 = object.getSubjects(predicate1);
-        assertTrue(immutableGraph.contains(itr2.next(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
-        assertTrue(immutableGraph.contains(itr2.next(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
-        assertTrue(immutableGraph.contains(itr2.next(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
-        assertTrue(immutableGraph.contains(itr2.next(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+        for (int i = 0; i < 4; i++) {
+            assertTrue(immutableGraph.contains(itr2.next(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
+        }
+        assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                immutableGraph.contains(itr2.next(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            }
+        });
     }
 }
