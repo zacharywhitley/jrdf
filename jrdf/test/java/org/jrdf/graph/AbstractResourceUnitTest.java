@@ -212,12 +212,14 @@ public class AbstractResourceUnitTest extends TestCase {
         assertTrue(immutableGraph.contains(blankNode1, predicate, object1));
         assertTrue(immutableGraph.contains(blankNode1, predicate, object2));
         assertTrue(immutableGraph.contains(blankNode1, predicate, object3));
-        assertEquals("Size should be " + expectedSize + " but I got " + immutableGraph.getSize(), expectedSize, immutableGraph.getSize());
+        assertEquals("Size should be " + expectedSize + " but I got " + immutableGraph.getSize(), expectedSize,
+            immutableGraph.getSize());
     }
 
     private void checkRemoveAllFromPredicate(int expectedValue, PredicateNode predicate) throws GraphException {
         blankNode1.removeValues(predicate);
-        assertEquals("Size should be " + expectedValue + "  but I got " + immutableGraph.getSize(), expectedValue, immutableGraph.getSize());
+        assertEquals("Size should be " + expectedValue + "  but I got " + immutableGraph.getSize(), expectedValue,
+            immutableGraph.getSize());
     }
 
     public void testRemoveSubject() throws Exception {
