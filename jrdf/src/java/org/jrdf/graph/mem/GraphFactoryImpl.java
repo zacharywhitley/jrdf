@@ -104,6 +104,14 @@ public final class GraphFactoryImpl implements GraphFactory {
                 mutableGraph, immutableGraph);
     }
 
+    public ImmutableGraph getImmutableGraph() {
+        return immutableGraph;
+    }
+
+    public MutableGraph getMutableGraph() {
+        return mutableGraph;
+    }
+
     public IteratorFactory getIteratorFactory() {
         return iteratorFactory;
     }
