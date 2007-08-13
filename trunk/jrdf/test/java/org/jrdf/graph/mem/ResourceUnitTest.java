@@ -61,6 +61,9 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.AbstractResourceUnitTest;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
@@ -71,15 +74,28 @@ public class ResourceUnitTest extends AbstractResourceUnitTest {
     private static final NodePoolFactory NODE_POOL_FACTORY = new MemNodePoolFactory();
     private static final GraphFactory FACTORY = new GraphFactoryImpl(LONG_INDEXES, NODE_POOL_FACTORY);
 
+    @Override
     public ImmutableGraph getImmutableGraph() {
         return FACTORY.getImmutableGraph();
     }
 
+    @Override
     public MutableGraph getMutableGraph() {
         return FACTORY.getMutableGraph();
     }
 
+    @Override
     public GraphElementFactory getElementFactory() {
         return FACTORY.getGraph().getElementFactory();
+    }
+
+    @Override
+    public Resource createBlankNodeResource(BlankNode node, MutableGraph mutableGraph, ImmutableGraph immutableGraph) {
+        return new BlankNodeResourceImpl(node, mutableGraph, immutableGraph);
+    }
+
+    @Override
+    public Resource createURIReferenceResource(URIReference node, MutableGraph mutableGraph, ImmutableGraph immutableGraph) {
+        return new URIReferenceResourceImpl(node, mutableGraph, immutableGraph);
     }
 }
