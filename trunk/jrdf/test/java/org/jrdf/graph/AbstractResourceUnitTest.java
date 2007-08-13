@@ -62,7 +62,6 @@ package org.jrdf.graph;
 import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import org.jrdf.graph.mem.BlankNodeResourceImpl;
 import org.jrdf.graph.mem.ImmutableGraph;
 import org.jrdf.graph.mem.MutableGraph;
 import org.jrdf.util.ClosableIterator;
@@ -83,6 +82,9 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     private ObjectNode object2;
     private ObjectNode object3;
     private Resource blankNode1;
+    private Resource blankNode2;
+    private Resource blankNode3;
+    private Resource blankNode4;
     private Resource uriRef1;
 
     public abstract ImmutableGraph getImmutableGraph();
@@ -108,6 +110,9 @@ public abstract class AbstractResourceUnitTest extends TestCase {
         object2 = elementFactory.createLiteral("SomeValue2");
         object3 = elementFactory.createLiteral("SomeValue3");
         blankNode1 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
+        blankNode2 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
+        blankNode3 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
+        blankNode4 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
         uriRef1 = createURIReferenceResource(elementFactory.createURIReference(uri1), mutableGraph, immutableGraph);
     }
 
@@ -141,9 +146,6 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testAddValue() throws Exception {
-        Resource blankNode2 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
-        Resource blankNode3 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
-        Resource blankNode4 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
         blankNode1.addValue(predicate1, object2);
         blankNode2.addValue(predicate1, object2);
         blankNode3.addValue(predicate2, object3);
@@ -172,36 +174,31 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     public void testRemoveValue() throws Exception {
         blankNode1.addValue(predicate1, object1);
         blankNode1.addValue(predicate2, object2);
-        assertTrue(immutableGraph.contains(blankNode1, predicate1, object1));
-        assertTrue(immutableGraph.contains(blankNode1, predicate2, object2));
-        assertEquals("Size should be 2 but I got " + immutableGraph.getSize(), 2, immutableGraph.getSize());
+        checkRemovedSuccessfully(blankNode1, predicate1, object1, 1);
+        checkRemovedSuccessfully(blankNode1, predicate2, object2, 0);
+    }
 
-        blankNode1.removeValue(predicate1, object1);
-        assertFalse(immutableGraph.contains(blankNode1, predicate1, object1));
-        assertEquals("Size should be 1 but I got " + immutableGraph.getSize(), 1, immutableGraph.getSize());
-        blankNode1.removeValue(predicate2, object2);
-        assertFalse(immutableGraph.contains(blankNode1, predicate2, object2));
-        assertEquals("Size should be 0 but I got " + immutableGraph.getSize(), 0, immutableGraph.getSize());
+    private void checkRemovedSuccessfully(Resource node, PredicateNode predicate, ObjectNode object,
+        int expectedSize) throws GraphException {
+        node.removeValue(predicate, object);
+        assertFalse(immutableGraph.contains(node, predicate, object));
+        assertEquals("Size should be " + expectedSize + " but I got " + immutableGraph.getSize(), expectedSize,
+            immutableGraph.getSize());
     }
 
     public void testRemoveValues() throws Exception {
-        addThreeDifferentObjects(predicate1, 3);
-        addThreeDifferentObjects(predicate2, 6);
-        addThreeDifferentObjects(predicate3, 9);
+        addThreeDifferentObjectsToPredicate(predicate1);
+        addThreeDifferentObjectsToPredicate(predicate2);
+        addThreeDifferentObjectsToPredicate(predicate3);
         checkRemoveAllFromPredicate(6, predicate1);
         checkRemoveAllFromPredicate(3, predicate3);
         checkRemoveAllFromPredicate(0, predicate2);
     }
 
-    private void addThreeDifferentObjects(PredicateNode predicate, int expectedSize) throws GraphException {
+    private void addThreeDifferentObjectsToPredicate(PredicateNode predicate) throws GraphException {
         blankNode1.addValue(predicate, object1);
         blankNode1.addValue(predicate, object2);
         blankNode1.addValue(predicate, object3);
-        assertTrue(immutableGraph.contains(blankNode1, predicate, object1));
-        assertTrue(immutableGraph.contains(blankNode1, predicate, object2));
-        assertTrue(immutableGraph.contains(blankNode1, predicate, object3));
-        assertEquals("Size should be " + expectedSize + " but I got " + immutableGraph.getSize(), expectedSize,
-            immutableGraph.getSize());
     }
 
     private void checkRemoveAllFromPredicate(int expectedValue, PredicateNode predicate) throws GraphException {
@@ -211,11 +208,8 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testRemoveSubject() throws Exception {
-        Resource blankNode2 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
         blankNode1.addValue(predicate1, uriRef1);
         blankNode1.addValue(predicate1, blankNode2);
-        assertTrue(immutableGraph.contains(blankNode1, predicate1, uriRef1));
-        assertTrue(immutableGraph.contains(blankNode1, predicate1, blankNode2));
         blankNode2.removeSubject(blankNode1, predicate1);
         assertFalse(immutableGraph.contains(blankNode1, predicate1, blankNode2));
         uriRef1.removeSubject(blankNode1, predicate1);
@@ -223,11 +217,8 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testGetObjects() throws Exception {
-        blankNode1.addValue(predicate1, object1);
-        blankNode1.addValue(predicate1, object2);
-        blankNode1.addValue(predicate1, object3);
-        blankNode1.addValue(predicate2, object1);
-        blankNode1.addValue(predicate2, object2);
+        addThreeDifferentObjectsToPredicate(predicate1);
+        addThreeDifferentObjectsToPredicate(predicate2);
         ClosableIterator<ObjectNode> itr = blankNode1.getObjects(predicate1);
         int objects = 0;
         while (itr.hasNext()) {
@@ -238,12 +229,13 @@ public abstract class AbstractResourceUnitTest extends TestCase {
         ClosableIterator<ObjectNode> itr2 = blankNode1.getObjects(predicate2);
         assertTrue(immutableGraph.contains(blankNode1, predicate2, itr2.next()));
         assertTrue(immutableGraph.contains(blankNode1, predicate2, itr2.next()));
+        assertTrue(immutableGraph.contains(blankNode1, predicate2, itr2.next()));
+        assertFalse("There should only be 3 items in the graph with the given blank node and predicate", 
+            itr2.hasNext());
     }
 
-    public void testGetSubjects () throws Exception {
-        Resource blankNode2 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
-        Resource blankNode3 = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
-        Resource object = new BlankNodeResourceImpl(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
+    public void testGetSubjects() throws Exception {
+        Resource object = createBlankNodeResource(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
         blankNode1.addValue(predicate1, object);
         blankNode2.addValue(predicate1, object);
         blankNode3.addValue(predicate1, object);
