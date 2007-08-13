@@ -59,38 +59,24 @@
 
 package org.jrdf.graph;
 
+import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import junit.framework.TestCase;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.BlankNodeResourceImpl;
-import org.jrdf.graph.mem.GraphImpl;
 import org.jrdf.graph.mem.ImmutableGraph;
-import org.jrdf.graph.mem.ImmutableGraphImpl;
-import org.jrdf.graph.mem.MutableGraphImpl;
+import org.jrdf.graph.mem.MutableGraph;
 import org.jrdf.graph.mem.URIReferenceResourceImpl;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
-import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.*;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.NoSuchElementException;
 
-public class AbstractResourceUnitTest extends TestCase {
+public abstract class AbstractResourceUnitTest extends TestCase {
     private ImmutableGraph immutableGraph;
     private GraphElementFactory elementFactory;
-    private MutableGraphImpl mutableGraph;
+    private MutableGraph mutableGraph;
     private PredicateNode predicate1;
     private PredicateNode predicate2;
     private PredicateNode predicate3;
@@ -101,22 +87,10 @@ public class AbstractResourceUnitTest extends TestCase {
     private Resource uriRef1;
 
     public void setUp() throws Exception {
-
-        LongIndex[] longIndexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        NodePool nodePool = nodePoolFactory.createNodePool();
-        GraphHandler[] graphHandler = getLongIndexes(longIndexes, nodePool);
-        IteratorFactory iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandler);
-        mutableGraph = new MutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool);
-        immutableGraph = new ImmutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool,
-            iteratorFactory);
-        Graph graph = new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandler[0],
-            (GraphHandler201) graphHandler[2], iteratorFactory, mutableGraph, immutableGraph);
-        elementFactory = graph.getElementFactory();
-        createNodes();
-    }
-
-    private void createNodes() throws URISyntaxException, GraphElementFactoryException {
+        immutableGraph = getImmutableGraph();
+        elementFactory = getElementFactory();
+        mutableGraph = getMutableGraph();
+        mutableGraph.clear();
         URI uri1 = new URI("http://namespace#pred1");
         URI uri2 = new URI("http://namespace#pred2");
         URI uri3 = new URI("http://namespace#pred3");
@@ -126,17 +100,13 @@ public class AbstractResourceUnitTest extends TestCase {
         object1 = elementFactory.createLiteral("SomeValue1");
         object2 = elementFactory.createLiteral("SomeValue2");
         object3 = elementFactory.createLiteral("SomeValue3");
-
         blankNode1 = new BlankNodeResourceImpl(elementFactory.createBlankNode(), mutableGraph, immutableGraph);
         uriRef1 = new URIReferenceResourceImpl(elementFactory.createURIReference(uri1), mutableGraph, immutableGraph);
     }
 
-    private GraphHandler[] getLongIndexes(LongIndex[] longIndexes, NodePool nodePool) {
-        GraphHandler012 graphHandler012 = new GraphHandler012(longIndexes, nodePool);
-        GraphHandler120 graphHandler120 = new GraphHandler120(longIndexes, nodePool);
-        GraphHandler201 graphHandler201 = new GraphHandler201(longIndexes, nodePool);
-        return new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
-    }
+    public abstract ImmutableGraph getImmutableGraph();
+    public abstract MutableGraph getMutableGraph();
+    public abstract GraphElementFactory getElementFactory();
 
     public void testCreateResource() throws Exception {
         assertFalse("I did not get a BlankNode :( ", blankNode1.isURIReference());

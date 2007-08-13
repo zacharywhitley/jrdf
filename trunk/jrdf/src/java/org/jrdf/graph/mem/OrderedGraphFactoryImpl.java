@@ -105,6 +105,14 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
                 (GraphHandler201) graphHandlers[2], iteratorFactory, mutableGraph, immutableGraph);
     }
 
+    public ImmutableGraph getImmutableGraph() {
+        return immutableGraph;
+    }
+
+    public MutableGraph getMutableGraph() {
+        return mutableGraph;
+    }
+
     public IteratorFactory getIteratorFactory() {
         return iteratorFactory;
     }
