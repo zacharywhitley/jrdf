@@ -102,10 +102,6 @@ import java.util.Set;
  */
 public class GraphImpl implements Graph, Serializable {
 
-    // FIXME TJA: Test-drive toString()
-    // TODO AN: Remove indexes and replace with graphHandlers.  To make different kinds of Graphs - ones that use
-    // localization and others that don't.
-
     /**
      * Allow newer compiled version of the stub to operate when changes
      * have not occurred with the class.
@@ -178,14 +174,12 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool,
-            GraphHandler012 graphHandler012,
-            IteratorFactory newIteratorFactory, ReadWriteGraph newWritableGraph, ResourceFactory newResourceFactory) {
+    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory,
+            ReadWriteGraph newWritableGraph, ResourceFactory newResourceFactory) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
         this.nodePool = newNodePool;
-        this.graphHandler012 = graphHandler012;
         this.iteratorFactory = newIteratorFactory;
         this.readWriteGraph = newWritableGraph;
         this.resourceFactory = newResourceFactory;
@@ -207,10 +201,7 @@ public class GraphImpl implements Graph, Serializable {
             nodePool = new MemNodePoolFactory().createNodePool();
         }
 
-        if (null == graphHandler012) {
-            graphHandler012 = new GraphHandler012(indexes, nodePool);
-        }
-
+        graphHandler012 = new GraphHandler012(indexes, nodePool);
         GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
         GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
         GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
@@ -240,9 +231,7 @@ public class GraphImpl implements Graph, Serializable {
 
     private void initOthers(LongIndex[] indexes, GraphHandler[] handlers) {
         if (null == readWriteGraph) {
-            ReadableGraph readableGraph = new ReadableGraphImpl(indexes, nodePool, iteratorFactory);
-            WritableGraph writableGraph = new WritableGraphImpl(indexes, nodePool);
-            readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
+            readWriteGraph = new ReadWriteGraphImpl(indexes, nodePool, iteratorFactory);
         }
 
         if (null == resourceFactory) {
@@ -275,7 +264,6 @@ public class GraphImpl implements Graph, Serializable {
 
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
             GraphException {
-        // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
         return readWriteGraph.find(subject, predicate, object);
     }
@@ -284,12 +272,12 @@ public class GraphImpl implements Graph, Serializable {
         return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
-    public ClosableIterator<PredicateNode> getUniquePredicates() {
-        return iteratorFactory.newPredicateIterator();
-    }
-
     public ClosableIterator<Resource> getResources() {
         return resourceFactory.getResources();
+    }
+
+    public ClosableIterator<PredicateNode> getUniquePredicates() {
+        return iteratorFactory.newPredicateIterator();
     }
 
     public ClosableIterator<PredicateNode> getUniquePredicates(Resource resource) throws GraphException {
@@ -308,7 +296,6 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-        // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_ADD_NULL_MESSAGE, CANT_ADD_ANY_NODE_MESSAGE);
         readWriteGraph.localizeAndAdd(subject, predicate, object);
     }
@@ -322,7 +309,6 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
-        // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
         readWriteGraph.localizeAndRemove(subject, predicate, object);
     }
@@ -344,7 +330,6 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public void clear() {
-        // TODO AN: Should this work regardless of failure - or rollback?
         readWriteGraph.clear();
     }
 
@@ -408,8 +393,7 @@ public class GraphImpl implements Graph, Serializable {
 
         // fill in the other indexes
         try {
-            GraphHandler012 graphHandler012 = this.graphHandler012;
-            graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
+            this.graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
         } catch (GraphException e) {
             throw new ClassNotFoundException("Unable to add to a graph index", e);
         }

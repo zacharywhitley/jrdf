@@ -3,7 +3,6 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <suppress checks="ParameterNumber" files="GraphImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl.java"/>

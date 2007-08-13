@@ -5,6 +5,9 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.mem.iterator.IteratorFactory;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -14,10 +17,10 @@ public class ReadWriteGraphImpl implements ReadWriteGraph {
     private final ReadableGraph readableGraph;
     private final WritableGraph writableGraph;
 
-    public ReadWriteGraphImpl(ReadableGraph newReadableGraph, WritableGraph newWritableGraph) {
-        checkNotNull(newReadableGraph, newWritableGraph);
-        this.readableGraph = newReadableGraph;
-        this.writableGraph = newWritableGraph;
+    public ReadWriteGraphImpl(LongIndex[] newIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
+        checkNotNull(newIndexes, newNodePool, newIteratorFactory);
+        this.readableGraph = new ReadableGraphImpl(newIndexes, newNodePool, newIteratorFactory);
+        this.writableGraph = new WritableGraphImpl(newIndexes, newNodePool);
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {

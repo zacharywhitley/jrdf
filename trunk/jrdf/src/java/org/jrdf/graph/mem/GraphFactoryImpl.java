@@ -90,15 +90,12 @@ public final class GraphFactoryImpl implements GraphFactory {
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
-        ReadableGraph readableGraph = new ReadableGraphImpl(longIndexes, nodePool, iteratorFactory);
-        WritableGraph writableGraph = new WritableGraphImpl(longIndexes, nodePool);
-        this.readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
+        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandlers[0],
-                iteratorFactory, readWriteGraph, resourceFactory);
+        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph, resourceFactory);
     }
 
     public ReadWriteGraph getReadWriteGraph() {
