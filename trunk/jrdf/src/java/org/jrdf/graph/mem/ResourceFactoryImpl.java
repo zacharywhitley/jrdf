@@ -65,16 +65,18 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.nodepool.NodePool;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class ResourceFactoryImpl implements ResourceFactory {
     private NodePool nodePool;
     private ImmutableGraph immutableGraph;
     private MutableGraph mutableGraph;
 
-    public ResourceFactoryImpl(NodePool nodePool, ImmutableGraph immutableGraph, MutableGraph mutableGraph) {
-        this.nodePool = nodePool;
-        this.immutableGraph = immutableGraph;
-        this.mutableGraph = mutableGraph;
+    public ResourceFactoryImpl(NodePool newNodePool, ImmutableGraph newImmutableGraph, MutableGraph newMutableGraph) {
+        checkNotNull(newNodePool, newImmutableGraph, newMutableGraph);
+        this.nodePool = newNodePool;
+        this.immutableGraph = newImmutableGraph;
+        this.mutableGraph = newMutableGraph;
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {

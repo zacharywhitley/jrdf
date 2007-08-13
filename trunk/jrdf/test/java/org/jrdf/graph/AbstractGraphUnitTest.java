@@ -805,7 +805,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         ClosableIterator<Resource> resources = graph.getResources();
         int counter = 0;
         while (resources.hasNext()) {
-            Resource r = resources.next();
+            resources.next();
             counter++;
         }
 

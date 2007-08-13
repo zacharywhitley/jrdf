@@ -60,44 +60,42 @@
 package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.mem.BlankNodeResourceImpl;
-import org.jrdf.graph.mem.ImmutableGraph;
-import org.jrdf.graph.mem.MutableGraph;
-import org.jrdf.graph.mem.URIReferenceResourceImpl;
+import org.jrdf.graph.mem.ResourceFactory;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class AnyResourceIterator implements ClosableIterator {
+public class AnyResourceIterator implements ClosableIterator<Resource> {
     private final LongIndex longIndex012;
     private final LongIndex longIndex201;
     private final GraphHandler graphHandler012;
-    private final ImmutableGraph immutableGraph;
-    private final MutableGraph mutableGraph;
+    private final ResourceFactory resourceFactory;
     private final GraphHandler graphHandler201;
     private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
     private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
 
-    public AnyResourceIterator(final LongIndex longIndex012, final LongIndex longIndex201,
-        final GraphHandler graphHandler012, final GraphHandler graphHandler201, ImmutableGraph immutableGraph,
-        final MutableGraph mutableGraph) {
-        this.longIndex012 = longIndex012;
-        this.graphHandler012 = graphHandler012;
-        this.immutableGraph = immutableGraph;
-        this.mutableGraph = mutableGraph;
-        this.iterator012 = longIndex012.iterator();
-        this.longIndex201 = longIndex201;
-        this.graphHandler201 = graphHandler201;
-        this.iterator201 = longIndex201.iterator();
+    public AnyResourceIterator(final LongIndex newLongIndex012, final LongIndex newLongIndex201,
+        final GraphHandler newGraphHandler012,
+        ResourceFactory newResourceFactory) {
+        checkNotNull(newLongIndex012, newGraphHandler201, newGraphHandler012, newGraphHandler201);
+        this.resourceFactory = newResourceFactory;
+        this.longIndex012 = newLongIndex012;
+        this.graphHandler012 = newGraphHandler012;
+        this.iterator012 = newLongIndex012.iterator();
+        this.longIndex201 = newLongIndex201;
+        this.graphHandler201 = newGraphHandler201;
+        this.iterator201 = newLongIndex201.iterator();
     }
 
     public boolean close() {
@@ -111,16 +109,18 @@ public class AnyResourceIterator implements ClosableIterator {
     public Resource next() {
         Resource resource = null;
 
-        if (iterator201.hasNext()) {
-            resource = getNextOSPElement();
-        }
-
-        if (iterator012.hasNext() || resource == null) {
-            resource = getNextSPOElement();
-        } else {
+        try {
+            if (iterator201.hasNext()) {
+                resource = getNextOSPElement();
+            }
+            if (iterator012.hasNext() || resource == null) {
+                resource = getNextSPOElement();
+            } else {
+                throw new NoSuchElementException();
+            }
+        } catch (GraphElementFactoryException e) {
             throw new NoSuchElementException();
         }
-
         return resource;
     }
 
@@ -130,7 +130,7 @@ public class AnyResourceIterator implements ClosableIterator {
      *
      * @return next element in the SPO index.
      */
-    private Resource getNextSPOElement() {
+    private Resource getNextSPOElement() throws GraphElementFactoryException {
         Resource resource = null;
         Node node = graphHandler012.createNode(iterator012.next().getKey());
         resource = toResource(node);
@@ -143,7 +143,7 @@ public class AnyResourceIterator implements ClosableIterator {
      *
      * @return next object in the osp index.
      */
-    private Resource getNextOSPElement() {
+    private Resource getNextOSPElement() throws GraphElementFactoryException {
         Resource resource = null;
         //move through the
         while (iterator201.hasNext()) {
@@ -172,12 +172,12 @@ public class AnyResourceIterator implements ClosableIterator {
      * @param node to be converted.
      * @return passed node as a resource.
      */
-    private Resource toResource(Node node) {
+    private Resource toResource(Node node) throws GraphElementFactoryException {
         Resource resource = null;
         if (node instanceof BlankNode) {
-            return new BlankNodeResourceImpl((BlankNode) node, mutableGraph, immutableGraph);
+            return resourceFactory.createResource((BlankNode) node);
         } else if (node instanceof URIReference) {
-            return new URIReferenceResourceImpl((URIReference) node, mutableGraph, immutableGraph);
+            return resourceFactory.createResource((URIReference) node);
         } else if (node instanceof Literal) {
             throw new UnsupportedOperationException("Cannot convert Literals to Resources");
         }
