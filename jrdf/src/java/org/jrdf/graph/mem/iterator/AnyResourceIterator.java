@@ -84,16 +84,15 @@ public class AnyResourceIterator implements ClosableIterator<Resource> {
     private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
     private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
 
-    public AnyResourceIterator(final LongIndex newLongIndex012, final LongIndex newLongIndex201,
-        final GraphHandler newGraphHandler012, final GraphHandler newGraphHandler201,
+    public AnyResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
         final ResourceFactory newResourceFactory) {
-        checkNotNull(newLongIndex012, newLongIndex201, newGraphHandler012, newGraphHandler201, newResourceFactory);
+        checkNotNull(newLongIndexes, newGraphHandlers, newResourceFactory);
         this.resourceFactory = newResourceFactory;
-        this.longIndex012 = newLongIndex012;
-        this.graphHandler012 = newGraphHandler012;
-        this.iterator012 = newLongIndex012.iterator();
-        this.graphHandler201 = newGraphHandler201;
-        this.iterator201 = newLongIndex201.iterator();
+        this.longIndex012 = newLongIndexes[0];
+        this.graphHandler012 = newGraphHandlers[0];
+        this.iterator012 = newLongIndexes[0].iterator();
+        this.graphHandler201 = newGraphHandlers[2];
+        this.iterator201 = newLongIndexes[2].iterator();
     }
 
     public boolean close() {

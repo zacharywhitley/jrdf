@@ -63,9 +63,12 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.util.ClosableIterator;
 
 public interface ResourceFactory {
     Resource createResource(BlankNode node) throws GraphElementFactoryException;
 
     Resource createResource(URIReference node) throws GraphElementFactoryException;
+
+    ClosableIterator<Resource> getResources();
 }
