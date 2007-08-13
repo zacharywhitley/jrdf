@@ -105,6 +105,8 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         TestRunner.run(GraphImplUnitTest.class);
     }
 
+    //TODO: Create a disk based serialization test.
+    
     /**
      * Implementation method for testing serialization of the graph.
      *
