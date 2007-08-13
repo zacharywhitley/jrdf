@@ -77,9 +77,7 @@ import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
  */
 public final class GraphFactoryImpl implements GraphFactory {
     private LongIndex[] longIndexes;
-    private GraphHandler012 handler012;
-    private GraphHandler120 handler120;
-    private GraphHandler201 handler201;
+    private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
@@ -88,18 +86,17 @@ public final class GraphFactoryImpl implements GraphFactory {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
-        this.handler012 = new GraphHandler012(longIndexes, nodePool);
-        this.handler120 = new GraphHandler120(longIndexes, nodePool);
-        this.handler201 = new GraphHandler201(longIndexes, nodePool);
-        GraphHandler[] handlers = new GraphHandler[]{handler012, handler120, handler201};
-        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, handlers);
+        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
+            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
+        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers);
         ReadableGraph readableGraph = new ReadableGraphImpl(longIndexes, nodePool, iteratorFactory);
         WritableGraph writableGraph = new WritableGraphImpl(longIndexes, nodePool);
         this.readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, handler012, handler201, iteratorFactory, readWriteGraph);
+        return new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandlers[0],
+                (GraphHandler201) graphHandlers[2], iteratorFactory, readWriteGraph);
     }
 
     public ReadWriteGraph getReadWriteGraph() {
