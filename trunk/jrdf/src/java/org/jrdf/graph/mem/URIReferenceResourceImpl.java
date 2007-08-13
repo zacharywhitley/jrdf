@@ -71,9 +71,8 @@ public class URIReferenceResourceImpl extends AbstractResource {
     private URIReferenceResourceImpl() {
     }
 
-    URIReferenceResourceImpl(URIReference newNode, MutableGraph newMutableGraph,
-            ImmutableGraph newImmutableGraph) {
-        super(((LocalizedNode) newNode).getId(), newMutableGraph, newImmutableGraph);
+    URIReferenceResourceImpl(URIReference newNode, ReadWriteGraph newReadWriteGraph) {
+        super(((LocalizedNode) newNode).getId(), newReadWriteGraph);
         this.node = newNode;
     }
 

@@ -70,9 +70,7 @@ import org.jrdf.graph.mem.iterator.IteratorFactory;
 public interface GraphFactory {
     Graph getGraph();
 
-    MutableGraph getMutableGraph();
-
-    ImmutableGraph getImmutableGraph();
+    ReadWriteGraph getReadWriteGraph();
 
     IteratorFactory getIteratorFactory();
 }

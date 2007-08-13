@@ -67,7 +67,7 @@ import org.jrdf.graph.Triple;
 
 import java.util.Iterator;
 
-public interface MutableGraph {
+public interface WritableGraph {
     void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
 
     void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;

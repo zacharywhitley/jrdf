@@ -167,12 +167,7 @@ public class GraphImpl implements Graph, Serializable {
     /**
      * Handle changes to the graph's underlying node pool and indexes.
      */
-    private transient MutableGraph mutableGraph;
-
-    /**
-     * Handle read only operations to the graph's underlying node pool and indexes.
-     */
-    private transient ImmutableGraph immutableGraph;
+    private transient ReadWriteGraph readWriteGraph;
 
     /**
      * A way to create iterators.
@@ -192,8 +187,7 @@ public class GraphImpl implements Graph, Serializable {
      */
     public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool,
                      GraphHandler012 graphHandler012, GraphHandler201 graphHandler201,
-                     IteratorFactory newIteratorFactory, MutableGraph newMutableGraph,
-                     ImmutableGraph newImmutableGraph) {
+                     IteratorFactory newIteratorFactory, ReadWriteGraph newWritableGraph) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
@@ -201,9 +195,8 @@ public class GraphImpl implements Graph, Serializable {
         this.graphHandler012 = graphHandler012;
         this.graphHandler201 = graphHandler201;
         this.iteratorFactory = newIteratorFactory;
-        this.mutableGraph = newMutableGraph;
-        this.immutableGraph = newImmutableGraph;
-        this.resourceFactory = new ResourceFactoryImpl(nodePool, immutableGraph, mutableGraph);
+        this.readWriteGraph = newWritableGraph;
+        this.resourceFactory = new ResourceFactoryImpl(nodePool, readWriteGraph);
         this.elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
         init();
     }
@@ -232,16 +225,14 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     private void initOthers(LongIndex[] indexes) {
-        if (null == immutableGraph) {
-            immutableGraph = new ImmutableGraphImpl(indexes, nodePool, iteratorFactory);
-        }
-
-        if (null == mutableGraph) {
-            mutableGraph = new MutableGraphImpl(indexes, nodePool);
+        if (null == readWriteGraph) {
+            ReadableGraph readableGraph = new ReadableGraphImpl(indexes, nodePool, iteratorFactory);
+            WritableGraph writableGraph = new WritableGraphImpl(indexes, nodePool);
+            readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
         }
 
         if (null == resourceFactory) {
-            resourceFactory = new ResourceFactoryImpl(nodePool, immutableGraph, mutableGraph);
+            resourceFactory = new ResourceFactoryImpl(nodePool, readWriteGraph);
         }
 
         if (null == elementFactory) {
@@ -282,9 +273,9 @@ public class GraphImpl implements Graph, Serializable {
         checkForNulls(subject, predicate, object, CONTAIN_CANT_USE_NULLS);
         if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
             // Return true if all are any AnyNodes and size is greater than zero.
-            return (0L < immutableGraph.getSize());
+            return (0L < readWriteGraph.getSize());
         } else {
-            return immutableGraph.contains(subject, predicate, object);
+            return readWriteGraph.contains(subject, predicate, object);
         }
     }
 
@@ -292,7 +283,7 @@ public class GraphImpl implements Graph, Serializable {
             GraphException {
         // Check that the parameters are not nulls
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
-        return immutableGraph.find(subject, predicate, object);
+        return readWriteGraph.find(subject, predicate, object);
     }
 
     public ClosableIterator<Triple> find(Triple triple) throws GraphException {
@@ -325,11 +316,11 @@ public class GraphImpl implements Graph, Serializable {
     public void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_ADD_NULL_MESSAGE, CANT_ADD_ANY_NODE_MESSAGE);
-        mutableGraph.localizeAndAdd(subject, predicate, object);
+        readWriteGraph.localizeAndAdd(subject, predicate, object);
     }
 
     public void remove(Iterator<Triple> triples) throws GraphException {
-        mutableGraph.removeIterator(triples);
+        readWriteGraph.removeIterator(triples);
     }
 
     public void remove(Triple triple) throws GraphException {
@@ -339,7 +330,7 @@ public class GraphImpl implements Graph, Serializable {
     public void remove(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {
         // Check that the parameters are not nulls or any nodes
         checkForNullsAndAnyNodes(subject, predicate, object, CANT_REMOVE_NULL_MESSAGE, CANT_REMOVE_ANY_NODE_MESSAGE);
-        mutableGraph.localizeAndRemove(subject, predicate, object);
+        readWriteGraph.localizeAndRemove(subject, predicate, object);
     }
 
     public GraphElementFactory getElementFactory() {
@@ -351,17 +342,16 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public long getNumberOfTriples() throws GraphException {
-        return immutableGraph.getSize();
+        return readWriteGraph.getSize();
     }
 
     public boolean isEmpty() throws GraphException {
-        return immutableGraph.getSize() == 0L;
+        return readWriteGraph.getSize() == 0L;
     }
 
     public void clear() {
         // TODO AN: Should this work regardless of failure - or rollback?
-        // TODO AN: Improve GraphHandler API to do clearing of indexes instead of direct clearing.
-        mutableGraph.clear();
+        readWriteGraph.clear();
     }
 
     public void close() {

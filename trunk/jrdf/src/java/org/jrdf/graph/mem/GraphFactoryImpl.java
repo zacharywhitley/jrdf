@@ -82,8 +82,7 @@ public final class GraphFactoryImpl implements GraphFactory {
     private GraphHandler201 handler201;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
-    private MutableGraph mutableGraph;
-    private ImmutableGraph immutableGraph;
+    private ReadWriteGraph readWriteGraph;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
         this.longIndexes = newLongIndexes;
@@ -94,21 +93,17 @@ public final class GraphFactoryImpl implements GraphFactory {
         this.handler201 = new GraphHandler201(longIndexes, nodePool);
         GraphHandler[] handlers = new GraphHandler[]{handler012, handler120, handler201};
         this.iteratorFactory = new IteratorFactoryImpl(longIndexes, handlers);
-        this.immutableGraph = new ImmutableGraphImpl(longIndexes, nodePool, iteratorFactory);
-        this.mutableGraph = new MutableGraphImpl(longIndexes, nodePool);
+        ReadableGraph readableGraph = new ReadableGraphImpl(longIndexes, nodePool, iteratorFactory);
+        WritableGraph writableGraph = new WritableGraphImpl(longIndexes, nodePool);
+        this.readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, handler012, handler201, iteratorFactory, mutableGraph,
-            immutableGraph);
+        return new GraphImpl(longIndexes, nodePool, handler012, handler201, iteratorFactory, readWriteGraph);
     }
 
-    public ImmutableGraph getImmutableGraph() {
-        return immutableGraph;
-    }
-
-    public MutableGraph getMutableGraph() {
-        return mutableGraph;
+    public ReadWriteGraph getReadWriteGraph() {
+        return readWriteGraph;
     }
 
     public IteratorFactory getIteratorFactory() {

@@ -71,11 +71,11 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
 
-public class MutableGraphImpl implements MutableGraph {
+public class WritableGraphImpl implements WritableGraph {
     private NodePool nodePool;
     private LongIndex[] longIndexes;
 
-    public MutableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool) {
+    public WritableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool) {
         checkNotNull(newLongIndexes, newNodePool);
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePool;

@@ -69,20 +69,18 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class ResourceFactoryImpl implements ResourceFactory {
     private NodePool nodePool;
-    private ImmutableGraph immutableGraph;
-    private MutableGraph mutableGraph;
+    private ReadWriteGraph readWriteGraph;
 
-    public ResourceFactoryImpl(NodePool newNodePool, ImmutableGraph newImmutableGraph, MutableGraph newMutableGraph) {
-        checkNotNull(newNodePool, newImmutableGraph, newMutableGraph);
+    public ResourceFactoryImpl(NodePool newNodePool, ReadWriteGraph newReadWriteGraph) {
+        checkNotNull(newNodePool, newReadWriteGraph);
         this.nodePool = newNodePool;
-        this.immutableGraph = newImmutableGraph;
-        this.mutableGraph = newMutableGraph;
+        this.readWriteGraph = newReadWriteGraph;
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new BlankNodeResourceImpl(node, mutableGraph, immutableGraph);
+            return new BlankNodeResourceImpl(node, readWriteGraph);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
@@ -91,7 +89,7 @@ public class ResourceFactoryImpl implements ResourceFactory {
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new URIReferenceResourceImpl(node, mutableGraph, immutableGraph);
+            return new URIReferenceResourceImpl(node, readWriteGraph);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
