@@ -65,15 +65,16 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.*;
+import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 
 import java.net.URI;
 import java.util.ArrayList;
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
-import static java.util.Arrays.asList;
 
 /**
  * Abstract test case for graph implementations.
@@ -784,6 +785,17 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
             public void execute() throws Throwable {
                 newGraph.add(blank2, newRes, newRes);
+            }
+        });
+    }
+
+    public void testResourceIteratorSimple() throws Exception {
+        final ClosableIterator<Resource> resources = graph.getResources();
+        boolean b = resources.hasNext();
+        assertFalse("Should be no resources for empty graph", b);
+        assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                resources.next();
             }
         });
     }
