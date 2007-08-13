@@ -305,7 +305,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public ClosableIterator<Resource> getResources() {
-        return new AnyResourceIterator(longIndex012, longIndex201, graphHandler012, resourceFactory);
+        return new AnyResourceIterator(longIndex012, longIndex201, graphHandler012, graphHandler201, resourceFactory);
     }
 
     public ClosableIterator<PredicateNode> getUniquePredicates(Resource resource) throws GraphException {
