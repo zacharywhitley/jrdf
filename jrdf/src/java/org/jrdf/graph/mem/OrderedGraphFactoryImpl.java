@@ -95,15 +95,12 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], nodeComparator);
-        ReadableGraph readableGraph = new ReadableGraphImpl(longIndexes, nodePool, iteratorFactory);
-        WritableGraph writableGraph = new WritableGraphImpl(longIndexes, nodePool);
-        this.readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
+        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandlers[0],
-                iteratorFactory, readWriteGraph, resourceFactory);
+        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph, resourceFactory);
     }
 
     public ReadWriteGraph getReadWriteGraph() {
