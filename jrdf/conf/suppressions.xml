@@ -4,6 +4,7 @@
 
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
+    <!-- Only off by one class - maybe ResourceFactory - move to GraphImpl? -->
     <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="TripleBuilderImpl.java"/>
