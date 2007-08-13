@@ -78,7 +78,6 @@ import java.util.Set;
 
 public class AnyResourceIterator implements ClosableIterator<Resource> {
     private final LongIndex longIndex012;
-    private final LongIndex longIndex201;
     private final GraphHandler graphHandler012;
     private final ResourceFactory resourceFactory;
     private final GraphHandler graphHandler201;
@@ -86,14 +85,13 @@ public class AnyResourceIterator implements ClosableIterator<Resource> {
     private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
 
     public AnyResourceIterator(final LongIndex newLongIndex012, final LongIndex newLongIndex201,
-        final GraphHandler newGraphHandler012,
-        ResourceFactory newResourceFactory) {
-        checkNotNull(newLongIndex012, newGraphHandler201, newGraphHandler012, newGraphHandler201);
+        final GraphHandler newGraphHandler012, final GraphHandler newGraphHandler201,
+        final ResourceFactory newResourceFactory) {
+        checkNotNull(newLongIndex012, newLongIndex201, newGraphHandler012, newGraphHandler201, newResourceFactory);
         this.resourceFactory = newResourceFactory;
         this.longIndex012 = newLongIndex012;
         this.graphHandler012 = newGraphHandler012;
         this.iterator012 = newLongIndex012.iterator();
-        this.longIndex201 = newLongIndex201;
         this.graphHandler201 = newGraphHandler201;
         this.iterator201 = newLongIndex201.iterator();
     }
