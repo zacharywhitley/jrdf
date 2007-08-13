@@ -67,6 +67,8 @@ import org.jrdf.util.ClosableIterator;
 
 public interface ImmutableGraph {
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+
     ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+
     long getSize();
 }

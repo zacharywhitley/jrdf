@@ -64,37 +64,33 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.mem.iterator.ClosableMemIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
 
 public class MutableGraphImpl implements MutableGraph {
     private NodePool nodePool;
-    private LongIndex longIndex012;
-    private LongIndex longIndex120;
-    private LongIndex longIndex201;
+    private LongIndex[] longIndexes;
 
-    public MutableGraphImpl(LongIndex longIndex012, LongIndex longIndex120, LongIndex longIndex201, NodePool nodePool) {
-        checkNotNull(nodePool, longIndex012, longIndex120, longIndex201);
-        this.nodePool = nodePool;
-        this.longIndex012 = longIndex012;
-        this.longIndex120 = longIndex120;
-        this.longIndex201 = longIndex201;
+    public MutableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool) {
+        checkNotNull(newLongIndexes, newNodePool);
+        this.longIndexes = newLongIndexes;
+        this.nodePool = newNodePool;
     }
 
     public void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
         throws GraphException {
         // Get local node values also tests that it's a valid subject, predicate and object.
         Long[] values = nodePool.localize(subject, predicate, object);
-        longIndex012.remove(values[0], values[1], values[2]);
-        // if the first one succeeded then try and attempt removal on both of the others
+        longIndexes[0].remove(values[0], values[1], values[2]);
         try {
-            longIndex120.remove(values[1], values[2], values[0]);
+            // if the first one succeeded then try and attempt removal on both of the others
+            longIndexes[1].remove(values[1], values[2], values[0]);
         } finally {
-            longIndex201.remove(values[2], values[0], values[1]);
+            longIndexes[2].remove(values[2], values[0], values[1]);
         }
     }
 
@@ -126,18 +122,18 @@ public class MutableGraphImpl implements MutableGraph {
         // and object.
         try {
             Long[] values = nodePool.localize(subject, predicate, object);
-            longIndex012.add(values);
-            longIndex120.add(values[1], values[2], values[0]);
-            longIndex201.add(values[2], values[0], values[1]);
+            longIndexes[0].add(values);
+            longIndexes[1].add(values[1], values[2], values[0]);
+            longIndexes[2].add(values[2], values[0], values[1]);
         } catch (GraphException ge) {
             throw new GraphException("Failed to add triple.", ge);
         }
     }
 
     public void clear() {
-        longIndex012.clear();
-        longIndex120.clear();
-        longIndex201.clear();
+        longIndexes[0].clear();
+        longIndexes[1].clear();
+        longIndexes[2].clear();
         nodePool.clear();
     }
 }

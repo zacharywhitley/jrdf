@@ -228,17 +228,16 @@ public class GraphImpl implements Graph, Serializable {
 
         initIteratorFactory(indexes);
 
-        initOthers();
+        initOthers(indexes);
     }
 
-    private void initOthers() {
+    private void initOthers(LongIndex[] indexes) {
         if (null == immutableGraph) {
-            immutableGraph =
-                    new ImmutableGraphImpl(longIndex012, longIndex120, longIndex201, nodePool, iteratorFactory);
+            immutableGraph = new ImmutableGraphImpl(indexes, nodePool, iteratorFactory);
         }
 
         if (null == mutableGraph) {
-            mutableGraph = new MutableGraphImpl(longIndex012, longIndex120, longIndex201, nodePool);
+            mutableGraph = new MutableGraphImpl(indexes, nodePool);
         }
 
         if (null == resourceFactory) {
@@ -283,7 +282,7 @@ public class GraphImpl implements Graph, Serializable {
         checkForNulls(subject, predicate, object, CONTAIN_CANT_USE_NULLS);
         if (ANY_SUBJECT_NODE == subject && ANY_PREDICATE_NODE == predicate && ANY_OBJECT_NODE == object) {
             // Return true if all are any AnyNodes and size is greater than zero.
-            return (0L < longIndex012.getSize());
+            return (0L < immutableGraph.getSize());
         } else {
             return immutableGraph.contains(subject, predicate, object);
         }

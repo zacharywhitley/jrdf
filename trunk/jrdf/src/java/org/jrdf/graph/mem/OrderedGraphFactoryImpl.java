@@ -95,9 +95,8 @@ public class OrderedGraphFactoryImpl implements GraphFactory {
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], nodeComparator);
-        this.mutableGraph = new MutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool);
-        this.immutableGraph = new ImmutableGraphImpl(longIndexes[0], longIndexes[1], longIndexes[2], nodePool,
-                iteratorFactory);
+        this.immutableGraph = new ImmutableGraphImpl(longIndexes, nodePool, iteratorFactory);
+        this.mutableGraph = new MutableGraphImpl(longIndexes, nodePool);
     }
 
     public Graph getGraph() {

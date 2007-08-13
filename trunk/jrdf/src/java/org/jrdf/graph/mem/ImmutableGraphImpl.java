@@ -79,18 +79,13 @@ import java.util.Set;
 
 public class ImmutableGraphImpl implements ImmutableGraph {
     private NodePool nodePool;
-    private LongIndex longIndex012;
-    private LongIndex longIndex120;
-    private LongIndex longIndex201;
+    private LongIndex[] longIndexes;
     private IteratorFactory iteratorFactory;
 
-    public ImmutableGraphImpl(LongIndex longIndex012, LongIndex longIndex120, LongIndex longIndex201, NodePool nodePool,
-                              IteratorFactory newIteratorFactory) {
-        checkNotNull(nodePool, longIndex012, longIndex120, longIndex201, newIteratorFactory);
-        this.nodePool = nodePool;
-        this.longIndex012 = longIndex012;
-        this.longIndex120 = longIndex120;
-        this.longIndex201 = longIndex201;
+    public ImmutableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
+        checkNotNull(newLongIndexes, newNodePool, newIteratorFactory);
+        this.longIndexes = newLongIndexes;
+        this.nodePool = newNodePool;
         this.iteratorFactory = newIteratorFactory;
     }
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
@@ -120,7 +115,7 @@ public class ImmutableGraphImpl implements ImmutableGraph {
     }
 
     public long getSize() {
-        return longIndex012.getSize();
+        return longIndexes[0].getSize();
     }
 
     private boolean containsValues(Long[] values, SubjectNode subject, PredicateNode predicate, ObjectNode object) {
@@ -134,7 +129,7 @@ public class ImmutableGraphImpl implements ImmutableGraph {
     }
 
     private boolean containsFixedSubject(Long[] values, PredicateNode predicate, ObjectNode object) {
-        if (longIndex012.contains(values[0])) {
+        if (longIndexes[0].contains(values[0])) {
             if (ANY_PREDICATE_NODE != predicate) {
                 // subj, pred, AnyObjectNode or subj, pred, obj
                 return containsFixedSubjectFixedPredicate(values, object);
@@ -149,7 +144,7 @@ public class ImmutableGraphImpl implements ImmutableGraph {
     }
 
     private boolean containsFixedSubjectFixedPredicate(Long[] values, ObjectNode object) {
-        Map<Long, Set<Long>> subjIndex = longIndex012.getSubIndex(values[0]);
+        Map<Long, Set<Long>> subjIndex = longIndexes[0].getSubIndex(values[0]);
         Set<Long> subjPredIndex = subjIndex.get(values[1]);
         if (null != subjPredIndex) {
             if (ANY_OBJECT_NODE != object) {
@@ -169,7 +164,7 @@ public class ImmutableGraphImpl implements ImmutableGraph {
         if (ANY_OBJECT_NODE != object) {
             // Was subj, AnyPredicateNode, obj
             // Use 201 index to find object and then subject.
-            Map<Long, Set<Long>> objIndex = longIndex201.getSubIndex(values[2]);
+            Map<Long, Set<Long>> objIndex = longIndexes[2].getSubIndex(values[2]);
             if (null != objIndex) {
                 // Find object.
                 return null != objIndex.get(values[0]);
@@ -189,13 +184,13 @@ public class ImmutableGraphImpl implements ImmutableGraph {
             return containsAnySubjectAnyPredicate(values, object);
         } else {
             // AnySubjectNode, AnyPredicateNode, obj.
-            return longIndex201.contains(values[2]);
+            return longIndexes[2].contains(values[2]);
         }
     }
 
     private boolean containsAnySubjectAnyPredicate(Long[] values, ObjectNode object) {
         // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
-        Map<Long, Set<Long>> predIndex = longIndex120.getSubIndex(values[1]);
+        Map<Long, Set<Long>> predIndex = longIndexes[1].getSubIndex(values[1]);
         if (null != predIndex) {
             if (ANY_OBJECT_NODE != object) {
                 // Was AnySubjectNode, pred, obj
