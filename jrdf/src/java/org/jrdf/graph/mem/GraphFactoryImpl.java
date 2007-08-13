@@ -98,7 +98,7 @@ public final class GraphFactoryImpl implements GraphFactory {
 
     public Graph getGraph() {
         return new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandlers[0],
-                (GraphHandler201) graphHandlers[2], iteratorFactory, readWriteGraph, resourceFactory);
+                iteratorFactory, readWriteGraph, resourceFactory);
     }
 
     public ReadWriteGraph getReadWriteGraph() {

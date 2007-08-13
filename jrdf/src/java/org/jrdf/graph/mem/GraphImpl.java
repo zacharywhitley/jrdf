@@ -159,11 +159,6 @@ public class GraphImpl implements Graph, Serializable {
     private transient GraphHandler012 graphHandler012;
 
     /**
-     * Graph handler for the 201 index.
-     */
-    private transient GraphHandler201 graphHandler201;
-
-    /**
      * Handle changes to the graph's underlying node pool and indexes.
      */
     private transient ReadWriteGraph readWriteGraph;
@@ -184,14 +179,13 @@ public class GraphImpl implements Graph, Serializable {
      * Default constructor.
      */
     public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool,
-            GraphHandler012 graphHandler012, GraphHandler201 graphHandler201,
+            GraphHandler012 graphHandler012,
             IteratorFactory newIteratorFactory, ReadWriteGraph newWritableGraph, ResourceFactory newResourceFactory) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
         this.nodePool = newNodePool;
         this.graphHandler012 = graphHandler012;
-        this.graphHandler201 = graphHandler201;
         this.iteratorFactory = newIteratorFactory;
         this.readWriteGraph = newWritableGraph;
         this.resourceFactory = newResourceFactory;
@@ -217,9 +211,13 @@ public class GraphImpl implements Graph, Serializable {
             graphHandler012 = new GraphHandler012(indexes, nodePool);
         }
 
-        initIteratorFactory(indexes);
+        GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
+        GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
+        GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
 
-        initOthers(indexes);
+        initIteratorFactory(indexes, handlers);
+
+        initOthers(indexes, handlers);
     }
 
     private void initIndexes() {
@@ -234,15 +232,13 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    private void initIteratorFactory(LongIndex[] indexes) {
+    private void initIteratorFactory(LongIndex[] indexes, GraphHandler[] handlers) {
         if (null == iteratorFactory) {
-            GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
-            GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
             iteratorFactory = new IteratorFactoryImpl(indexes, handlers);
         }
     }
 
-    private void initOthers(LongIndex[] indexes) {
+    private void initOthers(LongIndex[] indexes, GraphHandler[] handlers) {
         if (null == readWriteGraph) {
             ReadableGraph readableGraph = new ReadableGraphImpl(indexes, nodePool, iteratorFactory);
             WritableGraph writableGraph = new WritableGraphImpl(indexes, nodePool);
@@ -250,8 +246,6 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (null == resourceFactory) {
-            GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
-            GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
             resourceFactory = new ResourceFactoryImpl(nodePool, indexes, handlers, readWriteGraph);
         }
 
