@@ -79,7 +79,6 @@ import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
-import org.jrdf.graph.mem.iterator.AnyResourceIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
@@ -181,13 +180,12 @@ public class GraphImpl implements Graph, Serializable {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
 
-
     /**
      * Default constructor.
      */
     public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool,
-                     GraphHandler012 graphHandler012, GraphHandler201 graphHandler201,
-                     IteratorFactory newIteratorFactory, ReadWriteGraph newWritableGraph) {
+            GraphHandler012 graphHandler012, GraphHandler201 graphHandler201,
+            IteratorFactory newIteratorFactory, ReadWriteGraph newWritableGraph, ResourceFactory newResourceFactory) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
@@ -196,7 +194,7 @@ public class GraphImpl implements Graph, Serializable {
         this.graphHandler201 = graphHandler201;
         this.iteratorFactory = newIteratorFactory;
         this.readWriteGraph = newWritableGraph;
-        this.resourceFactory = new ResourceFactoryImpl(nodePool, readWriteGraph);
+        this.resourceFactory = newResourceFactory;
         this.elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
         init();
     }
@@ -224,26 +222,6 @@ public class GraphImpl implements Graph, Serializable {
         initOthers(indexes);
     }
 
-    private void initOthers(LongIndex[] indexes) {
-        if (null == readWriteGraph) {
-            ReadableGraph readableGraph = new ReadableGraphImpl(indexes, nodePool, iteratorFactory);
-            WritableGraph writableGraph = new WritableGraphImpl(indexes, nodePool);
-            readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
-        }
-
-        if (null == resourceFactory) {
-            resourceFactory = new ResourceFactoryImpl(nodePool, readWriteGraph);
-        }
-
-        if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
-        }
-
-        if (null == tripleFactory) {
-            tripleFactory = new TripleFactoryImpl(this, elementFactory);
-        }
-    }
-
     private void initIndexes() {
         if (null == longIndex012) {
             longIndex012 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
@@ -261,6 +239,28 @@ public class GraphImpl implements Graph, Serializable {
             GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
             GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
             iteratorFactory = new IteratorFactoryImpl(indexes, handlers);
+        }
+    }
+
+    private void initOthers(LongIndex[] indexes) {
+        if (null == readWriteGraph) {
+            ReadableGraph readableGraph = new ReadableGraphImpl(indexes, nodePool, iteratorFactory);
+            WritableGraph writableGraph = new WritableGraphImpl(indexes, nodePool);
+            readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
+        }
+
+        if (null == resourceFactory) {
+            GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
+            GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
+            resourceFactory = new ResourceFactoryImpl(nodePool, indexes, handlers, readWriteGraph);
+        }
+
+        if (null == elementFactory) {
+            elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
+        }
+
+        if (null == tripleFactory) {
+            tripleFactory = new TripleFactoryImpl(this, elementFactory);
         }
     }
 
@@ -295,7 +295,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public ClosableIterator<Resource> getResources() {
-        return new AnyResourceIterator(longIndex012, longIndex201, graphHandler012, graphHandler201, resourceFactory);
+        return resourceFactory.getResources();
     }
 
     public ClosableIterator<PredicateNode> getUniquePredicates(Resource resource) throws GraphException {

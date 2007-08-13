@@ -81,6 +81,7 @@ public final class GraphFactoryImpl implements GraphFactory {
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
+    private ResourceFactory resourceFactory;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
         this.longIndexes = newLongIndexes;
@@ -92,11 +93,12 @@ public final class GraphFactoryImpl implements GraphFactory {
         ReadableGraph readableGraph = new ReadableGraphImpl(longIndexes, nodePool, iteratorFactory);
         WritableGraph writableGraph = new WritableGraphImpl(longIndexes, nodePool);
         this.readWriteGraph = new ReadWriteGraphImpl(readableGraph, writableGraph);
+        this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
     }
 
     public Graph getGraph() {
         return new GraphImpl(longIndexes, nodePool, (GraphHandler012) graphHandlers[0],
-                (GraphHandler201) graphHandlers[2], iteratorFactory, readWriteGraph);
+                (GraphHandler201) graphHandlers[2], iteratorFactory, readWriteGraph, resourceFactory);
     }
 
     public ReadWriteGraph getReadWriteGraph() {

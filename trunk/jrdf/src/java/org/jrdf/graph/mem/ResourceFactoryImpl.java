@@ -64,16 +64,25 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.mem.iterator.AnyResourceIterator;
 import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.longindex.LongIndex;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.util.ClosableIterator;
 
 public class ResourceFactoryImpl implements ResourceFactory {
     private NodePool nodePool;
+    private LongIndex[] longIndexes;
+    private GraphHandler[] graphHandlers;
     private ReadWriteGraph readWriteGraph;
 
-    public ResourceFactoryImpl(NodePool newNodePool, ReadWriteGraph newReadWriteGraph) {
-        checkNotNull(newNodePool, newReadWriteGraph);
+    public ResourceFactoryImpl(NodePool newNodePool, LongIndex[] newLongIndexes, GraphHandler[] newGraphHandlers,
+            ReadWriteGraph newReadWriteGraph) {
+        checkNotNull(newNodePool, newLongIndexes, newGraphHandlers, newReadWriteGraph);
         this.nodePool = newNodePool;
+        this.longIndexes = newLongIndexes;
+        this.graphHandlers = newGraphHandlers;
         this.readWriteGraph = newReadWriteGraph;
     }
 
@@ -93,5 +102,9 @@ public class ResourceFactoryImpl implements ResourceFactory {
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
+    }
+
+    public ClosableIterator<Resource> getResources() {
+        return new AnyResourceIterator(longIndexes, graphHandlers, this);
     }
 }
