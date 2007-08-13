@@ -75,13 +75,8 @@ public class ResourceUnitTest extends AbstractResourceUnitTest {
     private static final GraphFactory FACTORY = new GraphFactoryImpl(LONG_INDEXES, NODE_POOL_FACTORY);
 
     @Override
-    public ImmutableGraph getImmutableGraph() {
-        return FACTORY.getImmutableGraph();
-    }
-
-    @Override
-    public MutableGraph getMutableGraph() {
-        return FACTORY.getMutableGraph();
+    public ReadWriteGraph getReadWriteGraph() {
+        return FACTORY.getReadWriteGraph();
     }
 
     @Override
@@ -90,12 +85,12 @@ public class ResourceUnitTest extends AbstractResourceUnitTest {
     }
 
     @Override
-    public Resource createBlankNodeResource(BlankNode node, MutableGraph mutableGraph, ImmutableGraph immutableGraph) {
-        return new BlankNodeResourceImpl(node, mutableGraph, immutableGraph);
+    public Resource createBlankNodeResource(BlankNode node, ReadWriteGraph readWriteGraph) {
+        return new BlankNodeResourceImpl(node, readWriteGraph);
     }
 
     @Override
-    public Resource createURIReferenceResource(URIReference node, MutableGraph mutableGraph, ImmutableGraph immutableGraph) {
-        return new URIReferenceResourceImpl(node, mutableGraph, immutableGraph);
+    public Resource createURIReferenceResource(URIReference node, ReadWriteGraph readWriteGraph) {
+        return new URIReferenceResourceImpl(node, readWriteGraph);
     }
 }

@@ -77,17 +77,18 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.util.Map;
 import java.util.Set;
 
-public class ImmutableGraphImpl implements ImmutableGraph {
+public class ReadableGraphImpl implements ReadableGraph {
     private NodePool nodePool;
     private LongIndex[] longIndexes;
     private IteratorFactory iteratorFactory;
 
-    public ImmutableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
+    public ReadableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
         checkNotNull(newLongIndexes, newNodePool, newIteratorFactory);
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePool;
         this.iteratorFactory = newIteratorFactory;
     }
+
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
             // Get local node values
