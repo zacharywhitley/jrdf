@@ -106,7 +106,6 @@ public class AnyResourceIterator implements ClosableIterator<Resource> {
 
     public Resource next() {
         Resource resource = null;
-
         try {
             if (iterator201.hasNext()) {
                 resource = getNextOSPElement();
@@ -124,40 +123,35 @@ public class AnyResourceIterator implements ClosableIterator<Resource> {
 
 
     /**
-     * Get the next subject elemtn in the SPO index.
-     *
-     * @return next element in the SPO index.
-     */
-    private Resource getNextSPOElement() throws GraphElementFactoryException {
-        Resource resource = null;
-        Node node = graphHandler012.createNode(iterator012.next().getKey());
-        resource = toResource(node);
-
-        return resource;
-    }
-
-    /**
      * Get the next object element from the OSP index.
      *
      * @return next object in the osp index.
+     * @throws GraphElementFactoryException if the resource cannot be created.
      */
     private Resource getNextOSPElement() throws GraphElementFactoryException {
-        Resource resource = null;
-        //move through the
         while (iterator201.hasNext()) {
             Long index = iterator201.next().getKey();
-
             //check the SPO does not contain the given index
             if (!longIndex012.contains(index)) {
                 Node node = graphHandler201.createNode(index);
                 //check node is not a literal
                 if (!(node instanceof Literal)) {
-                    resource = toResource(node);
-                    break;
+                    return toResource(node);
                 }
             }
         }
-        return resource;
+        return null;
+    }
+
+    /**
+     * Get the next subject elemtn in the SPO index.
+     *
+     * @return next element in the SPO index.
+     * @throws GraphElementFactoryException if the resource cannot be created.
+     */
+    private Resource getNextSPOElement() throws GraphElementFactoryException {
+        Node node = graphHandler012.createNode(iterator012.next().getKey());
+        return toResource(node);
     }
 
     public void remove() {
