@@ -64,12 +64,12 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.iterator.AnyResourceIterator;
-import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.graph.index.nodepool.NodePool;
+import org.jrdf.graph.mem.iterator.AnyResourceIterator;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class ResourceFactoryImpl implements ResourceFactory {
     private NodePool nodePool;
@@ -107,4 +107,13 @@ public class ResourceFactoryImpl implements ResourceFactory {
     public ClosableIterator<Resource> getResources() {
         return new AnyResourceIterator(longIndexes, graphHandlers, this);
     }
+
+    public ClosableIterator<Resource> getBlankNodes() {
+        return null;
+    }
+
+    public ClosableIterator<Resource> getURIReferences() {
+        return null;
+    }
+
 }

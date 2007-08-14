@@ -144,6 +144,20 @@ public interface Graph {
     ClosableIterator<Resource> getResources();
 
     /**
+     * Returns all unique blank nodes.
+     *
+     * @return all unique blank nodes.
+     */
+    ClosableIterator<Resource> getBlankNodes();
+
+    /**
+     * Returns all unique URIReferences (Subject and Object).
+     *
+     * @return all unique URIReference nodes.
+     */
+    ClosableIterator<Resource> getURIReferences();
+
+    /**
      * Return predicates that are part of an RDF triple where resource is either a subject or object.
      *
      * @param resource the resource that is either a subject or object in a triple.

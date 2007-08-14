@@ -60,6 +60,7 @@
 package org.jrdf.graph.mem;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.TypedNodeVisitor;
 
 import java.net.URI;
@@ -78,6 +79,10 @@ public class BlankNodeResourceImpl extends AbstractResource {
 
     public boolean isURIReference() {
         return false;
+    }
+
+    public Node getUnderlyingNode() {
+        return node;
     }
 
     public URI getURI() {

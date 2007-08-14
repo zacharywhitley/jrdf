@@ -80,4 +80,7 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      * @throws GraphException if the subject or predicate do not exist in the graph.
      */
     ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException;
+
+
+    Node getUnderlyingNode();
 }

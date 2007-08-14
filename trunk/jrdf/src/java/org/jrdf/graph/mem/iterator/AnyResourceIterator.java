@@ -59,119 +59,30 @@
 
 package org.jrdf.graph.mem.iterator;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.mem.ResourceFactory;
-import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
-public class AnyResourceIterator implements ClosableIterator<Resource> {
-    private final LongIndex longIndex012;
-    private final GraphHandler graphHandler012;
-    private final ResourceFactory resourceFactory;
-    private final GraphHandler graphHandler201;
-    private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
-    private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
+public class AnyResourceIterator extends ResourceIterator {
 
     public AnyResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
         final ResourceFactory newResourceFactory) {
-        checkNotNull(newLongIndexes, newGraphHandlers, newResourceFactory);
-        this.resourceFactory = newResourceFactory;
-        this.longIndex012 = newLongIndexes[0];
-        this.graphHandler012 = newGraphHandlers[0];
-        this.iterator012 = newLongIndexes[0].iterator();
-        this.graphHandler201 = newGraphHandlers[2];
-        this.iterator201 = newLongIndexes[2].iterator();
-    }
-
-    public boolean close() {
-        return true;
-    }
-
-    public boolean hasNext() {
-        return iterator012.hasNext();
-    }
-
-    public Resource next() {
-        Resource resource = null;
-        try {
-            if (iterator201.hasNext()) {
-                resource = getNextOSPElement();
-            }
-            if (iterator012.hasNext() || resource == null) {
-                resource = getNextSPOElement();
-            } else {
-                throw new NoSuchElementException();
-            }
-        } catch (GraphElementFactoryException e) {
-            throw new NoSuchElementException();
-        }
-        return resource;
+        super(newLongIndexes, newGraphHandlers, newResourceFactory);
     }
 
 
     /**
-     * Get the next object element from the OSP index.
+     * Provides a customizable way in which to filter out resource nodes
+     * based on type.
      *
-     * @return next object in the osp index.
-     * @throws GraphElementFactoryException if the resource cannot be created.
+     * @param iterator
+     * @return
      */
-    private Resource getNextOSPElement() throws GraphElementFactoryException {
-        while (iterator201.hasNext()) {
-            Long index = iterator201.next().getKey();
-            //check the SPO does not contain the given index
-            if (!longIndex012.contains(index)) {
-                Node node = graphHandler201.createNode(index);
-                //check node is not a literal
-                if (!(node instanceof Literal)) {
-                    return toResource(node);
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get the next subject elemtn in the SPO index.
-     *
-     * @return next element in the SPO index.
-     * @throws GraphElementFactoryException if the resource cannot be created.
-     */
-    private Resource getNextSPOElement() throws GraphElementFactoryException {
-        Node node = graphHandler012.createNode(iterator012.next().getKey());
-        return toResource(node);
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Converts the given node into a Resource.
-     *
-     * @param node to be converted.
-     * @return passed node as a resource.
-     */
-    private Resource toResource(Node node) throws GraphElementFactoryException {
-        Resource resource = null;
-        if (node instanceof BlankNode) {
-            return resourceFactory.createResource((BlankNode) node);
-        } else if (node instanceof URIReference) {
-            return resourceFactory.createResource((URIReference) node);
-        } else if (node instanceof Literal) {
-            throw new UnsupportedOperationException("Cannot convert Literals to Resources");
-        }
-        return resource;
+    protected long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator, GraphHandler graphHandler) {
+        return iterator.next().getKey();
     }
 }

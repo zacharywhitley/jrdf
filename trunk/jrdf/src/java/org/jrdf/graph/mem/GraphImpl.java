@@ -79,8 +79,10 @@ import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
+import org.jrdf.graph.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.mem.iterator.URIReferenceResourceIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -129,6 +131,12 @@ public class GraphImpl implements Graph, Serializable {
      */
     private transient LongIndex longIndex201;
 
+
+    /**
+     * Collection of all indexes.
+     */
+    private transient LongIndex[] indexes;
+
     /**
      * Graph Element Factory.
      */
@@ -155,6 +163,11 @@ public class GraphImpl implements Graph, Serializable {
     private transient GraphHandler012 graphHandler012;
 
     /**
+     * Graph Handler container for all 3 graph handlers.
+     */
+    private transient GraphHandler[] handlers;
+
+    /**
      * Handle changes to the graph's underlying node pool and indexes.
      */
     private transient ReadWriteGraph readWriteGraph;
@@ -170,6 +183,7 @@ public class GraphImpl implements Graph, Serializable {
     private static final String CANT_REMOVE_ANY_NODE_MESSAGE = "Cannot remove any node values into the graph";
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
+
 
     /**
      * Default constructor.
@@ -195,7 +209,7 @@ public class GraphImpl implements Graph, Serializable {
         // protect each field allocation with a test for null
         initIndexes();
 
-        LongIndex[] indexes = {longIndex012, longIndex120, longIndex201};
+        indexes = new LongIndex[]{longIndex012, longIndex120, longIndex201};
 
         if (null == nodePool) {
             nodePool = new MemNodePoolFactory().createNodePool();
@@ -204,7 +218,7 @@ public class GraphImpl implements Graph, Serializable {
         graphHandler012 = new GraphHandler012(indexes, nodePool);
         GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
         GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
-        GraphHandler[] handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
+        handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
 
         initIteratorFactory(indexes, handlers);
 
@@ -274,6 +288,14 @@ public class GraphImpl implements Graph, Serializable {
 
     public ClosableIterator<Resource> getResources() {
         return resourceFactory.getResources();
+    }
+
+    public ClosableIterator<Resource> getBlankNodes() {
+        return new BlankNodeResourceIterator(indexes, handlers, resourceFactory);
+    }
+
+    public ClosableIterator<Resource> getURIReferences() {
+        return new URIReferenceResourceIterator(indexes, handlers, resourceFactory);
     }
 
     public ClosableIterator<PredicateNode> getUniquePredicates() {

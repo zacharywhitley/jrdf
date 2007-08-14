@@ -57,22 +57,34 @@
  *
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.param.ParameterUtil;
 
-public interface ResourceFactory {
-    Resource createResource(BlankNode node) throws GraphElementFactoryException;
+import java.util.Comparator;
 
-    Resource createResource(URIReference node) throws GraphElementFactoryException;
+/**
+ * Created by IntelliJ IDEA.
+ * User: imrank
+ * Date: 14/08/2007
+ * Time: 11:10:36
+ * To change this template use File | Settings | File Templates.
+ */
+public class ResourceComparator implements Comparator<Resource> {
 
-    ClosableIterator<Resource> getResources();
+    public int compare(Resource resource1, Resource resource2) {
+        ParameterUtil.checkNotNull(resource1, resource2);
+        int res = -1;
 
-    ClosableIterator<Resource> getBlankNodes();
+        Node node1 = resource1.getUnderlyingNode();
+        Node node2 = resource2.getUnderlyingNode();
 
-    ClosableIterator<Resource> getURIReferences();
+        if (node1.getClass() == node2.getClass()) {
+            if (node1.equals(node2)) {
+                res = 0;
+            }
+        }
+
+        return res;
+    }
 }
