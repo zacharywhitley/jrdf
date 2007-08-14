@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.mem;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
 
@@ -78,6 +79,10 @@ public class URIReferenceResourceImpl extends AbstractResource {
 
     public boolean isURIReference() {
         return true;
+    }
+
+    public Node getUnderlyingNode() {
+        return node;
     }
 
     public URI getURI() {

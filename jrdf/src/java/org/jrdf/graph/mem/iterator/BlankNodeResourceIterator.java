@@ -57,22 +57,41 @@
  *
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.index.graphhandler.GraphHandler;
+import org.jrdf.graph.index.longindex.LongIndex;
+import org.jrdf.graph.mem.ResourceFactory;
 
-public interface ResourceFactory {
-    Resource createResource(BlankNode node) throws GraphElementFactoryException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-    Resource createResource(URIReference node) throws GraphElementFactoryException;
+/**
+ * Created by IntelliJ IDEA.
+ * User: imrank
+ * Date: 14/08/2007
+ * Time: 12:02:47
+ * To change this template use File | Settings | File Templates.
+ */
+public class BlankNodeResourceIterator extends ResourceIterator {
 
-    ClosableIterator<Resource> getResources();
+    public BlankNodeResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
+        final ResourceFactory newResourceFactory) {
+        super(newLongIndexes, newGraphHandlers, newResourceFactory);
+    }
 
-    ClosableIterator<Resource> getBlankNodes();
+    protected long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator, GraphHandler graphHandler) {
+        while (iterator.hasNext()) {
+            long id = iterator.next().getKey();
 
-    ClosableIterator<Resource> getURIReferences();
+            Node n = graphHandler.createNode(id);
+            if (n != null && n instanceof BlankNode) {
+                return id;
+            }
+        }
+        return -1;
+    }
 }
