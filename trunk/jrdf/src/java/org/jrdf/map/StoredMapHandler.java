@@ -78,6 +78,6 @@ public interface StoredMapHandler {
     StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
         throws DatabaseException;
 
-    <T, U> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<T> clazz1,
-        Class<U> clazz2) throws DatabaseException;
+    <T, A, U extends A> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<T> clazz1,
+        Class<A> clazz2) throws DatabaseException;
 }
