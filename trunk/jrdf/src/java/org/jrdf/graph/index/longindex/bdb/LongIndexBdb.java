@@ -83,7 +83,7 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         index = newCreator.createMap(Long.class, LinkedList.class);
     }
 
-    public void add(Long[] triple) throws GraphException {
+    public void add(Long[] triple) {
         add(triple[0], triple[1], triple[2]);
     }
 
@@ -93,7 +93,7 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         // check that the subindex exists
         if (null == subIndex) {
             // no, so create it
-            subIndex = new LinkedList();
+            subIndex = new LinkedList<Long[]>();
         }
         boolean found = false;
         for (Long[] grp : subIndex) {
@@ -131,7 +131,7 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         removeTriple(found, subIndex, groupToRemove, first);
     }
 
-    private void removeTriple(boolean found, LinkedList subIndex, Long[] groupToRemove, Long first) {
+    private void removeTriple(boolean found, LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {
         if (found) {
             subIndex.remove(groupToRemove);
             if (subIndex.isEmpty()) {
