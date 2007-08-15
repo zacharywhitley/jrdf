@@ -106,8 +106,8 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public <T, U> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog,
-        Class<T> clazz1, Class<U> clazz2) throws DatabaseException {
+    public <T, A, U extends A> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog,
+            Class<T> clazz1, Class<A> clazz2) throws DatabaseException {
         DatabaseConfig dbConfig = setUpDatabase(false);
         Database database = env.openDatabase(null, dbName, dbConfig);
         SerialBinding keyBinding = new SerialBinding(catalog, clazz1);

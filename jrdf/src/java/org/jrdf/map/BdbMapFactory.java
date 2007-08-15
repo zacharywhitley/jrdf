@@ -80,7 +80,7 @@ public class BdbMapFactory implements MapFactory {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2) {
+    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
         try {
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabase(false);

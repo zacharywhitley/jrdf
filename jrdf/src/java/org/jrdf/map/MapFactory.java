@@ -62,7 +62,7 @@ package org.jrdf.map;
 import java.util.Map;
 
 public interface MapFactory {
-    <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2);
+    <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2);
 
     void close();
 }

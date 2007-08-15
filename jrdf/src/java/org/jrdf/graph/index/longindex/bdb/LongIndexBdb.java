@@ -65,17 +65,16 @@ import org.jrdf.map.MapFactory;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 // TODO Abdul How is this Serializable?
-public final class LongIndexBdb  implements LongIndex, Serializable {
+public final class LongIndexBdb implements LongIndex, Serializable {
     private static final long serialVersionUID = 6044200669651883129L;
-    // LinkedList<Long[]>
-    private Map<Long, LinkedList> index;
+    private Map<Long, LinkedList<Long[]>> index;
 
     private LongIndexBdb() {
     }
@@ -84,25 +83,20 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
         index = newCreator.createMap(Long.class, LinkedList.class);
     }
 
-    public LongIndexBdb(Map<Long, LinkedList> newIndex) {
-        index = newIndex;
-    }
-
     public void add(Long[] triple) throws GraphException {
         add(triple[0], triple[1], triple[2]);
     }
 
     public void add(Long first, Long second, Long third) throws GraphException {
         // find the sub index
-        LinkedList subIndex = index.get(first);
+        LinkedList<Long[]> subIndex = index.get(first);
         // check that the subindex exists
         if (null == subIndex) {
             // no, so create it
             subIndex = new LinkedList();
         }
         boolean found = false;
-        for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
-            Long[] grp = (Long[]) itr.next();
+        for (Long[] grp : subIndex) {
             if (grp[0].equals(second) && grp[1].equals(third)) {
                 found = true;
             }
@@ -120,7 +114,7 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
 
     public void remove(Long first, Long second, Long third) throws GraphException {
         // find the sub index
-        LinkedList subIndex = index.get(first);
+        LinkedList<Long[]> subIndex = index.get(first);
         // check that the subindex exists
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
@@ -128,8 +122,7 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
         // find the group
         boolean found = false;
         Long[] groupToRemove = null;
-        for (Iterator itr = subIndex.iterator(); itr.hasNext();) {
-            Long[] group = (Long[]) itr.next();
+        for (Long[] group : subIndex) {
             if (second.equals(group[0]) && third.equals(group[1])) {
                 found = true;
                 groupToRemove = group;
@@ -151,11 +144,10 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
         index.clear();
     }
 
-    public  Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
+    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
         Map<Long, Map<Long, Set<Long>>> map = new HashMap<Long, Map<Long, Set<Long>>>();
         Set<Long> set = index.keySet();
-        for (Iterator itr = set.iterator(); itr.hasNext();) {
-            Long indx = (Long) itr.next();
+        for (Long indx : set) {
             Map<Long, Set<Long>> subIndex = getSubIndex(indx);
             map.put(indx, subIndex);
         }
@@ -165,8 +157,7 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
     public Map<Long, Set<Long>> getSubIndex(Long first) {
         if (index.containsKey(first)) {
             Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-            for (Object o : index.get(first)) {
-                Long[] elements = (Long[]) o;
+            for (Long[] elements : index.get(first)) {
                 Set<Long> longs;
                 if (resultMap.containsKey(elements[0])) {
                     longs = resultMap.remove(elements[0]);
@@ -194,8 +185,7 @@ public final class LongIndexBdb  implements LongIndex, Serializable {
     public long getSize() {
         int size = 0;
         // go over the index map
-        for (Iterator it = index.values().iterator(); it.hasNext();) {
-            LinkedList list = (LinkedList) it.next();
+        for (LinkedList<Long[]> list : index.values()) {
             // go over the sub indexes
             size += list.size();
         }
