@@ -73,13 +73,6 @@ import org.jrdf.map.StoredMapHandlerImpl;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
-/**
- * Implementation of {@link AbstractGraphUnitTest} test case.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @author Andrew Newman
- * @version $Revision: 1045 $
- */
 public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
