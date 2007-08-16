@@ -85,11 +85,17 @@ import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.graph.mem.iterator.URIReferenceResourceIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.RdfNamespaceMap;
+import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
+import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -176,6 +182,16 @@ public class GraphImpl implements Graph, Serializable {
      * A way to create iterators.
      */
     private transient IteratorFactory iteratorFactory;
+
+    /**
+     * Registry used for the toString method.
+     */
+    protected transient BlankNodeRegistry bNodeRegistry = new MemBlankNodeRegistryImpl();
+
+    /**
+     * Namespace map used for toString method.
+     */
+    protected transient RdfNamespaceMap nameSpace = new RdfNamespaceMapImpl();
 
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
@@ -420,4 +436,16 @@ public class GraphImpl implements Graph, Serializable {
             throw new ClassNotFoundException("Unable to add to a graph index", e);
         }
     }
+
+    public String toString() {
+        RdfXmlWriter writer = new RdfXmlWriter(bNodeRegistry, nameSpace);
+        StringWriter sw = new StringWriter();
+        try {
+            writer.write(this, sw);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to get String representation of graph", e);
+        }
+        return sw.toString();
+    }
+
 }
