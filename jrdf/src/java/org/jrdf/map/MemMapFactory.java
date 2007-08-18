@@ -63,7 +63,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MemMapFactory implements MapFactory {
-    public <T, U> Map<T, U> createMap(Class<T> clazz1, Class<U> clazz2) {
+    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
         return new HashMap<T, U>();
     }
 
