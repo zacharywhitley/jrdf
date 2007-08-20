@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.mem;
 
-import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
@@ -67,9 +66,9 @@ import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
@@ -87,14 +86,5 @@ public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
         NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
         GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return factory.getGraph();
-    }
-
-    /**
-     * Default test runner.
-     *
-     * @param args The command line arguments
-     */
-    public static void main(String[] args) throws Exception {
-        TestRunner.run(BdbGraphImplUnitTest.class);
     }
 }
