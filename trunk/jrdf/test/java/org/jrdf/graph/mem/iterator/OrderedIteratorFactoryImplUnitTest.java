@@ -86,8 +86,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     }
 
     private IteratorFactory createOrderedIteratorFactory(NodeComparator comparator) {
-        return new OrderedIteratorFactoryImpl(iteratorFactory, nodePool, longIndex, graphHandler,
-                comparator);
+        return new OrderedIteratorFactoryImpl(iteratorFactory, nodePool, longIndex, graphHandler, comparator);
     }
 
     private PredicateClosableIterator createPredicateIterator() {
