@@ -33,6 +33,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private static final PredicateNode BAR = new TestURIReference(URI.create("urn:bar"));
     private static final PredicateNode BAZ = new TestURIReference(URI.create("urn:baz"));
     private static final List<PredicateNode> ORDER_VALUES = asList(BAR, BAZ, FOO, IMRAN);
+    private static final Long RESOURCE_ID = System.currentTimeMillis();
     private final MockFactory mockFactory = new MockFactory();
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
@@ -65,19 +66,33 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     }
 
     public void testSortedNewPredicateIterator() {
-        Iterator<PredicateNode> iterator = createTestNodes().iterator();
-        PredicateClosableIterator predicateIterator = new PredicateClosableIterator(iterator);
-        expect(iteratorFactory.newPredicateIterator()).andReturn(predicateIterator);
+        expect(iteratorFactory.newPredicateIterator()).andReturn(createPredicateIterator());
         NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
         IteratorFactory factory = createOrderedIteratorFactory(comparator);
         mockFactory.replay();
-        checkValuesAreSorted(factory, ORDER_VALUES);
+        ClosableIterator<PredicateNode> actualIterator = factory.newPredicateIterator();
+        checkValuesAreSorted(actualIterator, ORDER_VALUES);
+        mockFactory.verify();
+    }
+
+    public void testSortedNewPredicateIteratorWithResource() {
+        expect(iteratorFactory.newPredicateIterator(RESOURCE_ID)).andReturn(createPredicateIterator());
+        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        IteratorFactory factory = createOrderedIteratorFactory(comparator);
+        mockFactory.replay();
+        ClosableIterator<PredicateNode> actualIterator = factory.newPredicateIterator(RESOURCE_ID);
+        checkValuesAreSorted(actualIterator, ORDER_VALUES);
         mockFactory.verify();
     }
 
     private IteratorFactory createOrderedIteratorFactory(NodeComparator comparator) {
         return new OrderedIteratorFactoryImpl(iteratorFactory, nodePool, longIndex, graphHandler,
                 comparator);
+    }
+
+    private PredicateClosableIterator createPredicateIterator() {
+        Iterator<PredicateNode> iterator = createTestNodes().iterator();
+        return new PredicateClosableIterator(iterator);
     }
 
     private Set<PredicateNode> createTestNodes() {
@@ -89,8 +104,8 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
         return nodes;
     }
 
-    private void checkValuesAreSorted(IteratorFactory factory, List<PredicateNode> expectedValues) {
-        ClosableIterator<PredicateNode> actualIterator = factory.newPredicateIterator();
+    private void checkValuesAreSorted(ClosableIterator<PredicateNode> actualIterator,
+            List<PredicateNode> expectedValues) {
         int index = 0;
         while (actualIterator.hasNext()) {
             assertEquals(expectedValues.get(index), actualIterator.next());
