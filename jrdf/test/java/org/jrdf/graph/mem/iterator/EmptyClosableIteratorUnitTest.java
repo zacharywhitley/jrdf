@@ -59,21 +59,15 @@
 package org.jrdf.graph.mem.iterator;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
 import java.lang.reflect.Modifier;
 
-/**
- * Test the low level properties of EmptyClosableIterator.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class EmptyClosableIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
-                EmptyClosableIterator.class);
-        ClassPropertiesTestUtil.checkConstructor(EmptyClosableIterator.class, Modifier.PUBLIC);
+        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, EmptyClosableIterator.class);
+        checkConstructor(EmptyClosableIterator.class, Modifier.PUBLIC);
     }
 }

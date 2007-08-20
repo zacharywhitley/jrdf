@@ -67,10 +67,11 @@ import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.TripleComparatorImpl;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.TreeSet;
 
-public class OrderedIteratorFactoryImpl implements IteratorFactory {
+public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final NodeComparator nodeComparator;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
@@ -78,11 +79,12 @@ public class OrderedIteratorFactoryImpl implements IteratorFactory {
     private GraphHandler graphHandler;
 
     public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
-            GraphHandler graphHandlers, NodeComparator newNodeComparator) {
+            GraphHandler newGraphHandler, NodeComparator newNodeComparator) {
+        checkNotNull(newIteratorFactory, newNodePool, newLongIndex, newGraphHandler, newNodeComparator);
         this.iteratorFactory = newIteratorFactory;
         this.nodePool = newNodePool;
         this.longIndex = newLongIndex;
-        this.graphHandler = graphHandlers;
+        this.graphHandler = newGraphHandler;
         this.nodeComparator = newNodeComparator;
     }
 

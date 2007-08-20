@@ -61,21 +61,13 @@ package org.jrdf.graph.mem.iterator;
 import junit.framework.TestCase;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-/**
- * Test the low level properties of ThreeFixedIterator.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class ThreeFixedIteratorUnitTest extends TestCase {
-
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
-                ThreeFixedIterator.class);
-        ClassPropertiesTestUtil.checkConstructor(ThreeFixedIterator.class, NO_MODIFIER, Long[].class,
-                LongIndex.class, GraphHandler.class);
+        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, ThreeFixedIterator.class);
+        checkConstructor(ThreeFixedIterator.class, NO_MODIFIER, Long[].class, LongIndex.class, GraphHandler.class);
     }
 }

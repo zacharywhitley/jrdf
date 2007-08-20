@@ -61,22 +61,15 @@ package org.jrdf.graph.mem.iterator;
 import junit.framework.TestCase;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
 import java.lang.reflect.Modifier;
 
-/**
- * Test the low level properties of OneFixedIterator.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class IteratorFactoryImplUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(IteratorFactory.class,
-                IteratorFactoryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(IteratorFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class,
-                GraphHandler[].class);
+        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, IteratorFactoryImpl.class);
+        checkConstructor(IteratorFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class, GraphHandler[].class);
     }
 }
