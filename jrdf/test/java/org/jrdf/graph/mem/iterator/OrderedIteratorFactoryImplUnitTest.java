@@ -28,10 +28,11 @@ import java.util.Iterator;
 public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private static final Class[] PARAM_TYPES = { IteratorFactory.class, NodePool.class, LongIndex.class,
             GraphHandler.class, NodeComparator.class};
+    private static final PredicateNode IMRAN = new TestURIReference(URI.create("urn:imran"));
     private static final PredicateNode FOO = new TestURIReference(URI.create("urn:foo"));
     private static final PredicateNode BAR = new TestURIReference(URI.create("urn:bar"));
     private static final PredicateNode BAZ = new TestURIReference(URI.create("urn:baz"));
-    private static final List<PredicateNode> ORDER_VALUES = asList(BAR, BAZ, FOO);
+    private static final List<PredicateNode> ORDER_VALUES = asList(BAR, BAZ, FOO, IMRAN);
     private final MockFactory mockFactory = new MockFactory();
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
@@ -84,6 +85,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
         nodes.add(FOO);
         nodes.add(BAR);
         nodes.add(BAZ);
+        nodes.add(IMRAN);
         return nodes;
     }
 
