@@ -65,17 +65,10 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-/**
- * Test the low level properties of OneFixedIterator.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class OneFixedIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class,
-                OneFixedIterator.class);
+        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, OneFixedIterator.class);
         checkConstructor(OneFixedIterator.class, NO_MODIFIER, Long.class, LongIndex.class, GraphHandler.class);
     }
 }
