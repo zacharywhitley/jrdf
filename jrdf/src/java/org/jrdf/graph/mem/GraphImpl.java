@@ -110,6 +110,13 @@ import java.util.Set;
  */
 public class GraphImpl implements Graph, Serializable {
 
+    private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
+    private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
+    private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
+    private static final String CANT_REMOVE_ANY_NODE_MESSAGE = "Cannot remove any node values into the graph";
+    private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
+    private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
+
     /**
      * Allow newer compiled version of the stub to operate when changes
      * have not occurred with the class.
@@ -193,14 +200,6 @@ public class GraphImpl implements Graph, Serializable {
      */
     protected transient RdfNamespaceMap nameSpace = new RdfNamespaceMapImpl();
 
-    private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
-    private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
-    private static final String CANT_REMOVE_NULL_MESSAGE = "Cannot remove null values into the graph";
-    private static final String CANT_REMOVE_ANY_NODE_MESSAGE = "Cannot remove any node values into the graph";
-    private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
-    private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
-
-
     /**
      * Default constructor.
      */
@@ -225,20 +224,9 @@ public class GraphImpl implements Graph, Serializable {
         // protect each field allocation with a test for null
         initIndexes();
 
-        indexes = new LongIndex[]{longIndex012, longIndex120, longIndex201};
+        initHandlers();
 
-        if (null == nodePool) {
-            nodePool = new MemNodePoolFactory().createNodePool();
-        }
-
-        graphHandler012 = new GraphHandler012(indexes, nodePool);
-        GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
-        GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
-        handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
-
-        initIteratorFactory(indexes, handlers);
-
-        initOthers(indexes, handlers);
+        initFactoriesAndGraph(indexes, handlers);
     }
 
     private void initIndexes() {
@@ -251,15 +239,26 @@ public class GraphImpl implements Graph, Serializable {
         if (null == longIndex201) {
             longIndex201 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
         }
-    }
 
-    private void initIteratorFactory(LongIndex[] indexes, GraphHandler[] handlers) {
-        if (null == iteratorFactory) {
-            iteratorFactory = new IteratorFactoryImpl(indexes, handlers);
+        indexes = new LongIndex[]{longIndex012, longIndex120, longIndex201};
+
+        if (null == nodePool) {
+            nodePool = new MemNodePoolFactory().createNodePool();
         }
     }
 
-    private void initOthers(LongIndex[] indexes, GraphHandler[] handlers) {
+    private void initHandlers() {
+        graphHandler012 = new GraphHandler012(indexes, nodePool);
+        GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
+        GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
+        handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
+    }
+
+    private void initFactoriesAndGraph(LongIndex[] indexes, GraphHandler[] handlers) {
+        if (null == iteratorFactory) {
+            iteratorFactory = new IteratorFactoryImpl(indexes, handlers);
+        }
+
         if (null == readWriteGraph) {
             readWriteGraph = new ReadWriteGraphImpl(indexes, nodePool, iteratorFactory);
         }
@@ -292,14 +291,19 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
+    public ClosableIterator<Triple> find(Triple triple) throws GraphException {
+        return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    }
+
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
             GraphException {
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
         return readWriteGraph.find(subject, predicate, object);
     }
 
-    public ClosableIterator<Triple> find(Triple triple) throws GraphException {
-        return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
+        checkNotNull(resource);
+        return iteratorFactory.newPredicateIterator(nodePool.localize(resource));
     }
 
     public ClosableIterator<Resource> getResources() {
@@ -316,11 +320,6 @@ public class GraphImpl implements Graph, Serializable {
 
     public ClosableIterator<PredicateNode> getUniquePredicates() {
         return iteratorFactory.newPredicateIterator();
-    }
-
-    public ClosableIterator<PredicateNode> getUniquePredicates(Resource resource) throws GraphException {
-        checkNotNull(resource);
-        return iteratorFactory.newPredicateIterator(nodePool.localize(resource));
     }
 
     public void add(Iterator<Triple> triples) throws GraphException {

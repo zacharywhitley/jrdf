@@ -139,7 +139,6 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
      *                                  the memory package.
      */
     GraphIterator(GraphHandler newHandler) {
-
         // store the node factory
         handler = newHandler;
         iterator = handler.getEntries();
@@ -167,7 +166,6 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
     private boolean itemIteratorHasNext() {
         return (null != itemIterator && itemIterator.hasNext());
     }
-
 
     /**
      * Returns the next element in the iteration.

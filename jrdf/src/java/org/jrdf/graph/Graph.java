@@ -77,6 +77,17 @@ import java.util.Iterator;
 public interface Graph {
 
     /**
+     * Test the graph for the occurrence of the triple.  An AnyNode value for any
+     * of the parts of a triple are treated as unconstrained, any values will be
+     * returned.
+     *
+     * @param triple The triple to find.
+     * @return True if the triple is found in the graph, otherwise false.
+     * @throws GraphException If there was an error accessing the graph.
+     */
+    boolean contains(Triple triple) throws GraphException;
+
+    /**
      * Test the graph for the occurrence of a statement.  An AnyNode value for any
      * of the parts of a triple are treated as unconstrained, any values will be
      * returned.
@@ -87,19 +98,19 @@ public interface Graph {
      * @return True if the statement is found in the model, otherwise false.
      * @throws GraphException If there was an error accessing the graph.
      */
-    boolean contains(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws GraphException;
+    boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
 
     /**
-     * Test the graph for the occurrence of the triple.  An AnyNode value for any
-     * of the parts of a triple are treated as unconstrained, any values will be
+     * Returns an iterator of {@link Triple}s to a set of statements that
+     * match a given subject, predicate and object.  An AnyNode value for any of
+     * the parts of a triple are treated as unconstrained, any values will be
      * returned.
      *
      * @param triple The triple to find.
-     * @return True if the triple is found in the graph, otherwise false.
+     * @return an iterator containing the matching statements.
      * @throws GraphException If there was an error accessing the graph.
      */
-    boolean contains(Triple triple) throws GraphException;
+    ClosableIterator<Triple> find(Triple triple) throws GraphException;
 
     /**
      * Returns an iterator of {@link Triple}s to a set of statements that
@@ -117,16 +128,13 @@ public interface Graph {
         GraphException;
 
     /**
-     * Returns an iterator of {@link Triple}s to a set of statements that
-     * match a given subject, predicate and object.  An AnyNode value for any of
-     * the parts of a triple are treated as unconstrained, any values will be
-     * returned.
+     * Return predicates that are part of an RDF triple where resource is either a subject or object.
      *
-     * @param triple The triple to find.
-     * @return an iterator containing the matching statements.
+     * @param resource the resource that is either a subject or object in a triple.
+     * @return the unique predicates associated with the resource.
      * @throws GraphException If there was an error accessing the graph.
      */
-    ClosableIterator<Triple> find(Triple triple) throws GraphException;
+    ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException;
 
     /**
      * Return all unique predicates.
@@ -134,7 +142,6 @@ public interface Graph {
      * @return all unique predicate.
      */
     ClosableIterator<PredicateNode> getUniquePredicates();
-
 
     /**
      * Return all unique resources (Subjects and Objects).
@@ -156,14 +163,6 @@ public interface Graph {
      * @return all unique URIReference nodes.
      */
     ClosableIterator<Resource> getURIReferences();
-
-    /**
-     * Return predicates that are part of an RDF triple where resource is either a subject or object.
-     *
-     * @param resource the resource that is either a subject or object in a triple.
-     * @return the unique predicates associated with the resource.
-     */
-    ClosableIterator<PredicateNode> getUniquePredicates(Resource resource) throws GraphException;
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created
