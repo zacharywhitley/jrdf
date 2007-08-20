@@ -5,9 +5,6 @@ import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 
-/**
- * Class description goes here.
- */
 public class PredicateClosableIterator implements ClosableIterator<PredicateNode> {
     private final Iterator<PredicateNode> iterator;
 
