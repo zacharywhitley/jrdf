@@ -106,14 +106,12 @@ public class OrderedIteratorFactoryImpl implements IteratorFactory {
         return iteratorFactory.newThreeFixedIterator(nodes);
     }
 
-    // TODO IMRAN Current not sorted
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return iteratorFactory.newPredicateIterator();
+        return sortResults(iteratorFactory.newPredicateIterator());
     }
 
-    // TODO IMRAN Current not sorted
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return iteratorFactory.newPredicateIterator(resource);
+        return sortResults(iteratorFactory.newPredicateIterator(resource));
     }
 
     private ClosableMemIterator<Triple> sortResults(ClosableMemIterator<Triple> closableMemIterator) {
@@ -122,6 +120,16 @@ public class OrderedIteratorFactoryImpl implements IteratorFactory {
         while (closableMemIterator.hasNext()) {
             orderedSet.add(closableMemIterator.next());
         }
+        closableMemIterator.close();
         return new TripleClosableIterator(orderedSet.iterator(), nodePool, longIndex, graphHandler);
+    }
+
+    private ClosableIterator<PredicateNode> sortResults(ClosableIterator<PredicateNode> closableIterator) {
+        TreeSet<PredicateNode> orderedSet = new TreeSet<PredicateNode>(nodeComparator);
+        while (closableIterator.hasNext()) {
+            orderedSet.add(closableIterator.next());
+        }
+        closableIterator.close();
+        return new PredicateClosableIterator(orderedSet.iterator());
     }
 }
