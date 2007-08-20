@@ -100,7 +100,7 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-0.2.1.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.2.23.jar"/>
+        <include name="${lib.dir}/je/je-3.2.42.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
     </patternset>
@@ -121,7 +121,7 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-0.2.1.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.2.23.jar"/>
+        <include name="${lib.dir}/je/je-3.2.42.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>
