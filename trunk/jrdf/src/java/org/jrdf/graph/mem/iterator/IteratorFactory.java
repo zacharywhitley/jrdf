@@ -69,18 +69,59 @@ import org.jrdf.util.ClosableIterator;
  * @version $Id$
  */
 public interface IteratorFactory {
-    // TODO (AN) Comeback and javadoc.
+    /**
+     * Return an new EmptyClosableIterator - indicates no results found.
+     *
+     * @return an empty closable iterator - always hasNext false and next throws exception.
+     */
     ClosableMemIterator<Triple> newEmptyClosableIterator();
 
+    /**
+     * Return an new GraphIterator - result of an unconstrained find.
+     *
+     * @return a graph iterator - goes through all triples in the graph.
+     */
     ClosableMemIterator<Triple> newGraphIterator();
 
+    /**
+     * Return a new FixedIterator - bound by one node.
+     *
+     * @param fixedFirstNode the node to find.
+     * @param index which index (from the three) to use.
+     * @return a new FixedIterator - goes through the graph and returns all given triples with the given node.
+     */
     ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index);
 
+    /**
+     * Return a new FixedItereator - bound by two nodes.
+     *
+     * @param fixedFirstNode the first node to find.
+     * @param fixedSecondNode the second node to find.
+     * @param index which index (from the three) to use.
+     * @return a new FixedIterator - goes through the graph and returns all given triples with the two given nodes.
+     */
     ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index);
 
+    /**
+     * Return a new FixedIterator - bound by three nodes.
+     *
+     * @param nodes the triple to find.
+     * @return a new FixedIterator - either one or none triples.
+     */
     ClosableMemIterator<Triple> newThreeFixedIterator(Long[] nodes);
 
+    /**
+     * Return a new PredicateIterator - all unique predicates.
+     *
+     * @return a new PredicateIterator - all unique predicates.
+     */
     ClosableIterator<PredicateNode> newPredicateIterator();
 
+    /**
+     * Return a new PredicateIterator - all unique predicates for a given resource (subject and object).
+     *
+     * @param resource all unique predicate for a given resource.
+     * @return a new PredicateIterator - all unique predicate for a given resource (subject and object).
+     */
     ClosableIterator<PredicateNode> newPredicateIterator(Long resource);
 }

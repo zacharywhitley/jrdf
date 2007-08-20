@@ -257,7 +257,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         assertEquals(testRef1, testRef2);
     }
 
-    // TODO Imran - what's the right thing to retunr for getUniquePredicates?
+    // TODO Imran - what's the right thing to retunr for findUniquePredicates?
     private static class TestURIReference extends AbstractURIReference {
         private static final long serialVersionUID = -443111126777106029L;
 

@@ -894,7 +894,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(counter, 3);
 
         Resource resource = graph.getElementFactory().createResource(blank2);
-        ClosableIterator<PredicateNode> resourcePredicates = graph.getUniquePredicates(resource);
+        ClosableIterator<PredicateNode> resourcePredicates = graph.findUniquePredicates(resource);
         Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(asList(ref1, ref2));
         counter = 0;
         while (resourcePredicates.hasNext()) {
@@ -903,7 +903,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         }
         assertEquals(counter, 2);
     }
-    
+
     public void testClear() throws Exception {
         addTriplesToGraph();
         assertEquals(3, graph.getNumberOfTriples());

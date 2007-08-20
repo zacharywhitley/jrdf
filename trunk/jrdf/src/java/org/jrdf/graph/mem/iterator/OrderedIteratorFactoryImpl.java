@@ -70,18 +70,12 @@ import org.jrdf.util.ClosableIterator;
 
 import java.util.TreeSet;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class OrderedIteratorFactoryImpl implements IteratorFactory {
+    private final NodeComparator nodeComparator;
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private LongIndex longIndex;
     private GraphHandler graphHandler;
-    private final NodeComparator nodeComparator;
 
     public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
             GraphHandler graphHandlers, NodeComparator newNodeComparator) {
