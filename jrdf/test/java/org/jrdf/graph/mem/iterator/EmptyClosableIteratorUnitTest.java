@@ -61,13 +61,12 @@ package org.jrdf.graph.mem.iterator;
 import junit.framework.TestCase;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-
-import java.lang.reflect.Modifier;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 
 public class EmptyClosableIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, EmptyClosableIterator.class);
-        checkConstructor(EmptyClosableIterator.class, Modifier.PUBLIC);
+        checkConstructor(EmptyClosableIterator.class, NO_MODIFIER);
     }
 }

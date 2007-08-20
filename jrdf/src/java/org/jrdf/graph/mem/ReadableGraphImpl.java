@@ -69,7 +69,6 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.mem.iterator.EmptyClosableIterator;
 import org.jrdf.graph.mem.iterator.IteratorFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -109,7 +108,7 @@ public class ReadableGraphImpl implements ReadableGraph {
         } catch (GraphException ge) {
             // A graph exception implies that the subject, predicate or object does
             // not exist in the graph.
-            return new EmptyClosableIterator();
+            return iteratorFactory.newEmptyClosableIterator();
         }
 
         return findNonEmptyIterator(subject, predicate, object, values);
