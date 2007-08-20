@@ -1,12 +1,8 @@
 package org.jrdf.writer.mem;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.vocabulary.RDF;
@@ -25,23 +21,25 @@ import java.util.Set;
  * @author TurnerRX
  */
 public class RdfNamespaceMapImpl implements RdfNamespaceMap {
-
     private static final String NS_PREFIX = "ns";
     private Map<String, String> names = new HashMap<String, String>();
     private Map<String, String> uris = new HashMap<String, String>();
 
     public RdfNamespaceMapImpl() {
         // add some well known namespaces
-        initCommonNamespaces();
+        initNamespaces();
     }
 
     public void load(Graph graph) throws GraphException {
         // check for blank nodes
-        ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        Triple triple;
-        while (iter.hasNext()) {
-            triple = iter.next();
-            evaluate(triple.getPredicate());
+        ClosableIterator<PredicateNode> predicateIterator = graph.getUniquePredicates();
+        while (predicateIterator.hasNext()) {
+            URIReference uriReference = (URIReference) predicateIterator.next();
+            String partial = getPartialUri(uriReference.getURI().toString());
+            if (!uris.containsKey(partial)) {
+                String ns = NS_PREFIX + names.size();
+                add(ns, partial);
+            }
         }
     }
 
@@ -73,53 +71,19 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
     public void reset() {
         names.clear();
         uris.clear();
-        initCommonNamespaces();
+        initNamespaces();
+    }
+
+    private void initNamespaces() {
+        add("rdf", getPartialUri(RDF.BASE_URI.toString()));
+        add("rdfs", getPartialUri(RDFS.BASE_URI.toString()));
+        add("owl", "http://www.w3.org/2002/07/owl#");
+        add("dc", "http://purl.org/dc/elements/1.1/");
+        add("dcterms", "http://purl.org/dc/terms/");
     }
 
     public String toString() {
         return names.toString();
-    }
-
-    private void initCommonNamespaces() {
-        String rdf = getPartialUri(RDF.BASE_URI.toString());
-        String rdfs = getPartialUri(RDFS.BASE_URI.toString());
-        String owl = "http://www.w3.org/2002/07/owl#";
-        String dc = "http://purl.org/dc/elements/1.1/";
-        String dcterms = "http://purl.org/dc/terms/";
-
-        add("rdf", rdf);
-        add("rdfs", rdfs);
-        add("owl", owl);
-        add("dc", dc);
-        add("dcterms", dcterms);
-    }
-
-    /**
-     * Creates mappings for a given predicate.
-     *
-     * @param predicate PredicateNode
-     */
-    private void evaluate(PredicateNode predicate) {
-        if (predicate == null || !(predicate instanceof URIReference)) {
-            return;
-        }
-        // this should always pass
-        evaluate(((URIReference) predicate).getURI());
-    }
-
-    /**
-     * Adds a namespace for the partial resource URI if one does not already
-     * exist.
-     *
-     * @param resource
-     */
-    private void evaluate(URI resource) {
-        String partial = getPartialUri(resource.toString());
-        if (!uris.containsKey(partial)) {
-            String ns = NS_PREFIX + names.size();
-            // map bi-directionally
-            add(ns, partial);
-        }
     }
 
     /**
