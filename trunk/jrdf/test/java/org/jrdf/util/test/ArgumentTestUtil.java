@@ -60,6 +60,8 @@
 package org.jrdf.util.test;
 
 import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypeAndPrivate;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
 import static org.jrdf.util.test.ReflectTestUtil.callMethod;
 import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 import static org.jrdf.util.test.ReflectTestUtil.createInstanceUsingConstructor;
@@ -91,7 +93,13 @@ public class ArgumentTestUtil {
         ParamSpec spec = new ParamSpec(paramTypes, args);
         Object obj = createInstanceUsingConstructor(clazz, spec);
         for (int index = 0; index < parameterNames.length; index++) {
-            checkFieldValue(obj, parameterNames[index], args[index]);
+            String finalString;
+            if (parameterNames[index].startsWith("new")) {
+                finalString = removeNewPrefix(parameterNames[index]);
+            } else {
+                finalString = parameterNames[index];
+            }
+            checkFieldValue(obj, finalString, args[index]);
         }
     }
 
@@ -180,13 +188,28 @@ public class ArgumentTestUtil {
 
     private static void verifyFieldsPrivateAndFinal(Class<?> clazz, Class[] fieldTypes, String[] fieldNames) {
         for (int i = 0; i < fieldNames.length; i++) {
-            FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal(clazz, fieldTypes[i], fieldNames[i]);
+            String finalString;
+            if (fieldNames[i].startsWith("new")) {
+                finalString = removeNewPrefix(fieldNames[i]);
+                checkFieldIsOfTypePrivateAndFinal(clazz, fieldTypes[i], finalString);
+            } else {
+                finalString = fieldNames[i];
+            }
+            checkFieldIsOfTypePrivateAndFinal(clazz, fieldTypes[i], finalString);
         }
+    }
+
+    private static String removeNewPrefix(String fieldName) {
+        String finalString;
+        String name = fieldName.substring(3, fieldName.length());
+        String lowCaseFirstChar = new String(name.substring(0, 1)).toLowerCase();
+        finalString = lowCaseFirstChar + name.substring(1, name.length());
+        return finalString;
     }
 
     private static void verifyFieldsPrivate(Class<?> clazz, Class[] fieldTypes, String[] fieldNames) {
         for (int i = 0; i < fieldNames.length; i++) {
-            FieldPropertiesTestUtil.checkFieldIsOfTypeAndPrivate(clazz, fieldTypes[i], fieldNames[i]);
+            checkFieldIsOfTypeAndPrivate(clazz, fieldTypes[i], fieldNames[i]);
         }
     }
 }
