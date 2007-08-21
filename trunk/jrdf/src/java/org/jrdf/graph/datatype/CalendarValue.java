@@ -59,17 +59,14 @@
 
 package org.jrdf.graph.datatype;
 
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
+import org.jrdf.util.EqualsUtil;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DateTimeValue implements Value {
-    private static final long serialVersionUID = 3135119000595034019L;
+public class CalendarValue implements Value {
+    private static final long serialVersionUID = -7988880953802613273L;
     private static final javax.xml.datatype.DatatypeFactory FACTORY;
     private XMLGregorianCalendar value;
 
@@ -81,30 +78,28 @@ public class DateTimeValue implements Value {
         }
     }
 
-    protected DateTimeValue() {
+    protected CalendarValue() {
     }
 
     /**
-     * Creates a XML Gregorian calendar based on the current locale and time zone.
+     * Creates a XML Gregorian calendar based on the calendar's locale and time zone.
      *
-     * @param value the Date to convert.
+     * @param calendar the Calendar to use.
      */
-    private DateTimeValue(final Date value) {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
+    private CalendarValue(final GregorianCalendar calendar) {
         this.value = FACTORY.newXMLGregorianCalendar(calendar);
     }
 
-    private DateTimeValue(final String newValue) {
+    private CalendarValue(final String newValue) {
         this.value = FACTORY.newXMLGregorianCalendar(newValue);
     }
 
     public Value create(final Object object) {
-        return new DateTimeValue((Date) object);
+        return new CalendarValue((GregorianCalendar) object);
     }
 
     public Value create(final String lexicalForm) {
-        return new DateTimeValue(lexicalForm);
+        return new CalendarValue(lexicalForm);
     }
 
     public String getLexicalForm() {
@@ -116,7 +111,7 @@ public class DateTimeValue implements Value {
     }
 
     public int compareTo(Value val) {
-        return value.compare(((DateTimeValue) val).value);
+        return value.compare(((CalendarValue) val).value);
     }
 
     public int equivCompareTo(Value val) {
@@ -130,15 +125,15 @@ public class DateTimeValue implements Value {
 
     @Override
     public boolean equals(Object obj) {
-        if (isNull(obj)) {
+        if (EqualsUtil.isNull(obj)) {
             return false;
         }
-        if (sameReference(this, obj)) {
+        if (EqualsUtil.sameReference(this, obj)) {
             return true;
         }
-        if (!hasSuperClassOrInterface(DateTimeValue.class, obj)) {
+        if (!EqualsUtil.hasSuperClassOrInterface(CalendarValue.class, obj)) {
             return false;
         }
-        return value.equals(((DateTimeValue) obj).value);
+        return value.equals(((CalendarValue) obj).value);
     }
 }

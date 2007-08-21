@@ -94,7 +94,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * Allos the creation of data types.
      */
-    private static final DatatypeFactory DATATYPE_FACTORY = new DatatypeFactoryImpl();
+    private final transient DatatypeFactory datatypeFactory = DatatypeFactoryImpl.getInstance();
 
     /**
      * The lexical form of the literal.
@@ -125,7 +125,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = DATATYPE_FACTORY.createValue(newLexicalForm);
+        value = datatypeFactory.createValue(newLexicalForm);
         language = "";
         datatypeURI = NULL_URI;
     }
@@ -152,7 +152,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = DATATYPE_FACTORY.createValue(newLexicalForm);
+        value = datatypeFactory.createValue(newLexicalForm);
         language = newLanguage;
         datatypeURI = NULL_URI;
     }
@@ -178,7 +178,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = DATATYPE_FACTORY.createValue(newLexicalForm, newDatatypeURI);
+        value = datatypeFactory.createValue(newLexicalForm, newDatatypeURI);
         language = "";
         datatypeURI = newDatatypeURI;
     }
@@ -192,10 +192,10 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     protected AbstractLiteral(Object newObject) {
         checkNotNull(newObject);
-        if (DATATYPE_FACTORY.hasClassRegistered(newObject.getClass())) {
-            value = DATATYPE_FACTORY.createValue(newObject);
+        if (datatypeFactory.hasClassRegistered(newObject.getClass())) {
+            value = datatypeFactory.createValue(newObject);
             language = "";
-            datatypeURI = DATATYPE_FACTORY.getObjectDatatypeURI(newObject);
+            datatypeURI = datatypeFactory.getObjectDatatypeURI(newObject);
         } else {
             throw new IllegalArgumentException("Class not registered with datatype factory: " + newObject.getClass());
         }

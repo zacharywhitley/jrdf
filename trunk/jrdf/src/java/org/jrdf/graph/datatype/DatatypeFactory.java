@@ -81,4 +81,6 @@ public interface DatatypeFactory {
     boolean hasClassRegistered(Class<?> aClass);
 
     boolean removeValueCreator(Class<?> aClass, URI datatypeURI);
+
+    void addSecondaryValueCreator(Class<?> aClass, URI datatypeURI, ValueCreator creator);
 }

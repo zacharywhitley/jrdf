@@ -127,7 +127,7 @@ public class DurationValue implements Value {
         if (sameReference(this, obj)) {
             return true;
         }
-        if (!hasSuperClassOrInterface(XSDDecimal.class, obj)) {
+        if (!hasSuperClassOrInterface(DurationValue.class, obj)) {
             return false;
         }
         return value.equals(((DurationValue) obj).value);

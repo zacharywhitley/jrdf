@@ -59,86 +59,44 @@
 
 package org.jrdf.graph.datatype;
 
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
-import static org.jrdf.util.EqualsUtil.isNull;
-import static org.jrdf.util.EqualsUtil.sameReference;
+import junit.framework.TestCase;
+import org.jrdf.vocabulary.XSD;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.net.URI;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.GregorianCalendar;
+import java.util.Calendar;
 
-public class DateTimeValue implements Value {
-    private static final long serialVersionUID = 3135119000595034019L;
-    private static final javax.xml.datatype.DatatypeFactory FACTORY;
-    private XMLGregorianCalendar value;
+public class DatatypeFactoryImplUnitTest extends TestCase {
+    private static final int TEN_SECONDS = 10000;
+    private static final Date TEN_SECONDS_AFTER_UNIX_EPOCH = new Date(TEN_SECONDS);
+    private static final String TEN_SECOND_AFTER_UNIX_EPOCH_STRING = "1970-01-01T10:00:10.000+10:00";
+    private static final String HAPPY_NEW_YEAR = "2000-01-01T00:00:00.000+10:00";
+    private static final String JAN_21ST = "01-21";
+    private DatatypeFactory datatypeFactory = DatatypeFactoryImpl.getInstance();
 
-    static {
-        try {
-            FACTORY = javax.xml.datatype.DatatypeFactory.newInstance();
-        } catch (DatatypeConfigurationException e) {
-            throw new ExceptionInInitializerError(e);
-        }
+    public void setUp() {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT+10:00"));
     }
 
-    protected DateTimeValue() {
+    public void testCreatingDateTimeValue() {
+        Value value = datatypeFactory.createValue(TEN_SECONDS_AFTER_UNIX_EPOCH);
+        assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
+        URI uri = datatypeFactory.getObjectDatatypeURI(TEN_SECONDS_AFTER_UNIX_EPOCH);
+        assertEquals(XSD.DATE_TIME, uri);
     }
 
-    /**
-     * Creates a XML Gregorian calendar based on the current locale and time zone.
-     *
-     * @param value the Date to convert.
-     */
-    private DateTimeValue(final Date value) {
-        final GregorianCalendar calendar = new GregorianCalendar();
-        calendar.setTime(value);
-        this.value = FACTORY.newXMLGregorianCalendar(calendar);
+    public void testCreatingCalendar() {
+        Calendar year2000 = new GregorianCalendar(2000, 0, 1);
+        Value value = datatypeFactory.createValue(year2000);
+        assertEquals(HAPPY_NEW_YEAR, value.getLexicalForm());
+        URI uri = datatypeFactory.getObjectDatatypeURI(year2000);
+        assertEquals(XSD.DATE_TIME, uri);
     }
 
-    private DateTimeValue(final String newValue) {
-        this.value = FACTORY.newXMLGregorianCalendar(newValue);
-    }
-
-    public Value create(final Object object) {
-        return new DateTimeValue((Date) object);
-    }
-
-    public Value create(final String lexicalForm) {
-        return new DateTimeValue(lexicalForm);
-    }
-
-    public String getLexicalForm() {
-        return value.toString();
-    }
-
-    public boolean isWellFormedXml() {
-        return false;
-    }
-
-    public int compareTo(Value val) {
-        return value.compare(((DateTimeValue) val).value);
-    }
-
-    public int equivCompareTo(Value val) {
-        return compareTo(val);
-    }
-
-    @Override
-    public int hashCode() {
-        return value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (isNull(obj)) {
-            return false;
-        }
-        if (sameReference(this, obj)) {
-            return true;
-        }
-        if (!hasSuperClassOrInterface(DateTimeValue.class, obj)) {
-            return false;
-        }
-        return value.equals(((DateTimeValue) obj).value);
+    public void testStringToGMonthDay() {
+        Value value = datatypeFactory.createValue(JAN_21ST, XSD.G_MONTH_DAY);
+        assertEquals(JAN_21ST, value.getLexicalForm());
     }
 }
