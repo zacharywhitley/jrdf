@@ -801,18 +801,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     public void testBlankNodeResourceIterator() throws Exception {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(blank1, ref1, l1);
-        graph.add(blank1, ref1, l2);
-        graph.add(blank2, ref1, blank2);
-        graph.add(blank2, ref2, blank2);
-        graph.add(blank2, ref1, l1);
-        graph.add(blank2, ref1, l2);
-        graph.add(blank2, ref1, l2);
-        graph.add(ref1, ref1, ref1);
-        graph.add(ref1, ref3, ref1);
-        graph.add(ref4, ref3, ref1);
+        addTestNodes();
 
         ClosableIterator<Resource> blankNodes = graph.getBlankNodes();
         int counter = 0;
@@ -825,18 +814,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     public void testURIReferenceResourceIterator() throws Exception {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(blank1, ref1, l1);
-        graph.add(blank1, ref1, l2);
-        graph.add(blank2, ref1, blank2);
-        graph.add(blank2, ref2, blank2);
-        graph.add(blank2, ref1, l1);
-        graph.add(blank2, ref1, l2);
-        graph.add(blank2, ref1, l2);
-        graph.add(ref1, ref1, ref1);
-        graph.add(ref1, ref3, ref1);
-        graph.add(ref4, ref3, ref1);
+        addTestNodes();
 
         ClosableIterator<Resource> iterator = graph.getURIReferences();
         int counter = 0;
@@ -849,18 +827,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     public void testResourceIterators() throws Exception {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(blank1, ref1, l1);
-        graph.add(blank1, ref1, l2);
-        graph.add(blank2, ref1, blank2);
-        graph.add(blank2, ref2, blank2);
-        graph.add(blank2, ref1, l1);
-        graph.add(blank2, ref1, l2);
-        graph.add(blank2, ref1, l2);
-        graph.add(ref1, ref1, ref1);
-        graph.add(ref1, ref3, ref1);
-        graph.add(ref4, ref3, ref1);
+        addTestNodes();
 
         ClosableIterator<Resource> resources = graph.getResources();
         int counter = 0;
@@ -873,18 +840,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     public void testPredicateIterators() throws Exception {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(blank1, ref1, l1);
-        graph.add(blank1, ref1, l2);
-        graph.add(blank2, ref1, blank2);
-        graph.add(blank2, ref2, blank2);
-        graph.add(blank2, ref1, l1);
-        graph.add(blank2, ref1, l2);
-        graph.add(blank2, ref1, l2);
-        graph.add(ref1, ref1, ref1);
-        graph.add(ref1, ref3, ref1);
-
+        addTestNodes();
         ClosableIterator<PredicateNode> uniquePredicates = graph.getUniquePredicates();
         int counter = 0;
         while (uniquePredicates.hasNext()) {
@@ -902,6 +858,21 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             counter++;
         }
         assertEquals(counter, 2);
+    }
+
+    private void addTestNodes() throws GraphException {
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(blank1, ref1, l1);
+        graph.add(blank1, ref1, l2);
+        graph.add(blank2, ref1, blank2);
+        graph.add(blank2, ref2, blank2);
+        graph.add(blank2, ref1, l1);
+        graph.add(blank2, ref1, l2);
+        graph.add(blank2, ref1, l2);
+        graph.add(ref1, ref1, ref1);
+        graph.add(ref1, ref3, ref1);
+        graph.add(ref4, ref3, ref1);
     }
 
     public void testClear() throws Exception {
