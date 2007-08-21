@@ -59,17 +59,37 @@
 
 package org.jrdf.map;
 
+import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.test.MockFactory;
 
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BdbMapFactoryUnitTest extends TestCase {
     private static final Class[] PARAM_TYPES = {StoredMapHandler.class, String.class, String.class};
     private static final String[] PARAMETER_NAMES = {"newHandler", "newClassCatalog", "newDatabaseName"};
+    private MockFactory mockFactory = new MockFactory();
+    private StoredMapHandler storedMapHandler;
+    private String classCatalog = "catalog" + System.currentTimeMillis();
+    private String databaseName = "dbName" + System.currentTimeMillis();
+    private Environment environment;
+    private StoredClassCatalog storedClassCatalog;
+
+    public void setUp() {
+        storedMapHandler = mockFactory.createMock(StoredMapHandler.class);
+    }
 
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(MapFactory.class, BdbMapFactory.class);
@@ -78,118 +98,85 @@ public class BdbMapFactoryUnitTest extends TestCase {
         checkConstructorSetsFieldsAndFieldsPrivateFinal(BdbMapFactory.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 
-//    private static final String NODE_ID = "foo" + System.currentTimeMillis();
-//    private static final long UNIQUE_ID_1 = new Random().nextLong();
-//    private static final long UNIQUE_ID_2 = new Random().nextLong();
-//    private static final long UNIQUE_ID_3 = new Random().nextLong();
-//    private final MockFactory mockFactory = new MockFactory();
-//    private GraphElementFactory graphElementFactory;
-//    private BlankNode blankNode;
-//    private ParserBlankNodeFactory nodeFactory;
-//    private BdbHandler handler;
-//    private Environment env;
-//    private StoredClassCatalog catalog;
-//
-//    public void setUp() throws DatabaseException {
-//        handler = mockFactory.createMock(BdbHandler.class);
-//        graphElementFactory = mockFactory.createMock(GraphElementFactory.class);
-////        blankNode = new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(UNIQUE_ID_1);
-//        env = mockFactory.createMock(Environment.class);
-//        catalog = mockFactory.createMock(StoredClassCatalog.class);
-//    }
-//
-//    public void testCreateMap() throws Exception {
-//        assertTrue(true);
-//        // Create mock and expectation for Environment:
-//        expect(handler.setUpEnvironment()).andReturn(env);
-//        DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
-//        Database database = mockFactory.createNiceMock(Database.class);
-//        expect(handler.setUpDatabase(false)).andReturn(databaseConfig);
-//        expect(handler.setupCatalog(env, "java_class_catalog_blank_node", databaseConfig)).andReturn(catalog);
-//        expect(env.openDatabase(null, "blank_node_factory_db", databaseConfig)).andReturn(database);
-//        // * openDatabase
-//        // Create mock for DatabaseConfig
-//        // Create mock and expections for Handler:
-//        // * setUpEnvironement - and returns mock environment.
-//        // * setUpDatabase
-//        // * setUpCatalog
-//        mockFactory.replay();
-//        nodeFactory = new JeParserBlankNodeFactory(handler, graphElementFactory);
-//        // call the constructor with mock objects - handler and mock GraphElementFactory (no expectations).
-//        mockFactory.verify();
-//    }
-//
-//    public void testCreateBlankNode() throws Exception {
-//        expect(graphElementFactory.createResource()).andReturn(blankNode);
-//        mockFactory.replay();
-//        BlankNode actualBlankNode = nodeFactory.createBlankNode();
-//        assertTrue("Expected the blank node to be the one created in the mock", actualBlankNode == blankNode);
-//        mockFactory.verify();
-//    }
-//
-//    public void testCreateBlankNodeWithId() throws Exception {
-//        expect(graphElementFactory.createResource()).andReturn(blankNode);
-//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
-//            UNIQUE_ID_2)).anyTimes();
-//        mockFactory.replay();
-//        checkBlankNodeCreationById();
-//        checkBlankNodeCreationById();
-//        BlankNode actualBlankNode = nodeFactory.createBlankNode("bar");
-//        assertFalse("Expected the blank node to be different with a different id", actualBlankNode.equals(blankNode));
-//        mockFactory.verify();
-//    }
-//
-//    public void testClear() throws Exception {
-//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
-//            UNIQUE_ID_1));
-//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
-//            UNIQUE_ID_2));
-//        expect(graphElementFactory.createResource()).andReturn(new JeParserBlankNodeFactoryUnitTest.BlankNodeImpl(
-//            UNIQUE_ID_3));
-//        mockFactory.replay();
-//        BlankNode firstBlankNode = nodeFactory.createBlankNode();
-//        nodeFactory.clear();
-//        BlankNode secondBlankNode = nodeFactory.createBlankNode(NODE_ID);
-//        BlankNode thirdBlankNode = nodeFactory.createBlankNode(NODE_ID);
-//        BlankNode fourthBlankNode = nodeFactory.createBlankNode();
-//        nodeFactory.clear();
-//        assertTrue(!firstBlankNode.equals(secondBlankNode));
-//        assertTrue(secondBlankNode.equals(thirdBlankNode));
-//        assertTrue(!fourthBlankNode.equals(firstBlankNode));
-//        mockFactory.verify();
-//    }
-//
-//    private void checkBlankNodeCreationById() throws GraphElementFactoryException {
-//        BlankNode actualBlankNode = nodeFactory.createBlankNode(NODE_ID);
-//        assertTrue("Expected the blank node to be the one created in the mock by id expected: " + blankNode + " Got: " +
-//            actualBlankNode, actualBlankNode.equals(blankNode));
-//    }
-//
-//    private static class BlankNodeImpl implements BlankNode, Serializable {
-//        private final Long uniqueId;
-//
-//        public BlankNodeImpl(Long uniqueId) {
-//            this.uniqueId = uniqueId;
-//        }
-//
-//        public boolean isURIReference() {
-//            return false;
-//        }
-//
-//        public int hashCode() {
-//            return uniqueId.hashCode();
-//        }
-//
-//        public boolean equals(Object obj) {
-//            JeParserBlankNodeFactoryUnitTest.BlankNodeImpl impl = (JeParserBlankNodeFactoryUnitTest.BlankNodeImpl) obj;
-//            return impl.uniqueId.equals(uniqueId);
-//        }
-//
-//        public String toString() {
-//            return "Internal Blank node: " + uniqueId;
-//        }
-//
-//        public void accept(TypedNodeVisitor visitor) {
-//        }
-//    }
+    public void testCreateMap() throws Exception {
+        HashMap<String, String> expectedMap = creatMapExpectations();
+        mockFactory.replay();
+        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+        Map<String,String> actualMap = factory.createMap(String.class, String.class);
+        assertTrue(expectedMap == actualMap);
+        mockFactory.verify();
+    }
+
+    public void testHandleException() throws Exception {
+        expect(storedMapHandler.setUpEnvironment()).andThrow(new DatabaseException());
+        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                mockFactory.replay();
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+                factory.createMap(String.class, String.class);
+                mockFactory.verify();
+            }
+        });
+    }
+
+    public void testClose() throws Exception {
+        creatMapExpectations();
+        environment.close();
+        expectLastCall();
+        storedClassCatalog.close();
+        expectLastCall();
+        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+        mockFactory.replay();
+        factory.createMap(String.class, String.class);
+        factory.close();
+        mockFactory.verify();
+    }
+
+    public void testCloseCatalogEvenWithExceptionInEnvironment() throws Exception {
+        creatMapExpectations();
+        environment.close();
+        expectLastCall().andThrow(new DatabaseException());
+        storedClassCatalog.close();
+        expectLastCall();
+        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                mockFactory.replay();
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+                factory.createMap(String.class, String.class);
+                factory.close();
+                mockFactory.verify();
+            }
+        });
+    }
+
+    public void testCloseBothExceptions() throws Exception {
+        creatMapExpectations();
+        environment.close();
+        expectLastCall().andThrow(new DatabaseException());
+        storedClassCatalog.close();
+        expectLastCall().andThrow(new DatabaseException());
+        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                mockFactory.replay();
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+                factory.createMap(String.class, String.class);
+                factory.close();
+                mockFactory.verify();
+            }
+        });
+    }
+
+    private HashMap<String, String> creatMapExpectations() throws Exception {
+        HashMap<String, String> expectedMap = new HashMap<String, String>();
+        environment = mockFactory.createMock(Environment.class);
+        expect(storedMapHandler.setUpEnvironment()).andReturn(environment);
+        DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
+        expect(storedMapHandler.setUpDatabase(false)).andReturn(databaseConfig);
+        storedClassCatalog = mockFactory.createMock(StoredClassCatalog.class);
+        expect(storedMapHandler.setupCatalog(environment, classCatalog, databaseConfig)).
+                andReturn(storedClassCatalog);
+        expect(storedMapHandler.createMap(environment, databaseName, storedClassCatalog, String.class, String.class)).
+                andReturn(expectedMap);
+        return expectedMap;
+    }
 }
