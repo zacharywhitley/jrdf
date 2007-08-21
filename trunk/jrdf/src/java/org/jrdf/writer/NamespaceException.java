@@ -64,11 +64,9 @@ package org.jrdf.writer;
  * @author TurnerRX
  */
 public final class NamespaceException extends WriteException {
+    private static final long serialVersionUID = -8872295650275746473L;
 
-    private static final long serialVersionUID = 1203480737664217791L;
-
-    private NamespaceException() {
-
+    public NamespaceException() {
     }
 
     public NamespaceException(String message) {

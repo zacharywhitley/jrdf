@@ -60,8 +60,11 @@
 package org.jrdf.writer;
 
 import junit.framework.TestCase;
-import org.jrdf.util.test.ExceptionTestUtil;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import static org.jrdf.util.test.ExceptionTestUtil.testFinalClassProperties;
+import static org.jrdf.util.test.ExceptionTestUtil.testMessageAndThrowableConstructor;
+import static org.jrdf.util.test.ExceptionTestUtil.testMessageConstructor;
+import static org.jrdf.util.test.ExceptionTestUtil.testThrowableConstructor;
 
 /**
  * Test properties of an exception.
@@ -73,13 +76,13 @@ public class NamespaceExceptionUnitTest extends TestCase {
     private static final Class<NamespaceException> CLASS = NamespaceException.class;
 
     public void testClassProperties() {
-        ExceptionTestUtil.testFinalClassProperties(CLASS);
-        ClassPropertiesTestUtil.checkExtensionOf(WriteException.class, CLASS);        
+        testFinalClassProperties(CLASS);
+        checkExtensionOf(WriteException.class, CLASS);
     }
 
     public void testConstructors() {
-        ExceptionTestUtil.testMessageConstructor(CLASS);
-        ExceptionTestUtil.testThrowableConstructor(CLASS);
-        ExceptionTestUtil.testMessageAndThrowableConstructor(CLASS);
+        testMessageConstructor(CLASS);
+        testThrowableConstructor(CLASS);
+        testMessageAndThrowableConstructor(CLASS);
     }
 }
