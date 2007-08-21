@@ -65,6 +65,7 @@ import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.test.AssertThrows;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 import org.jrdf.util.test.SerializationTestUtil;
+import static org.jrdf.util.test.AssertThrows.*;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -89,7 +90,7 @@ public final class QueryImplUnitTest extends TestCase {
     }
 
     public void testNullsInConstructorThrowException() {
-        AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
+        assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 new QueryImpl(null, null);
             }

@@ -119,6 +119,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
                 PARAMETER_NAMES);
     }
 
+    @SuppressWarnings({"unchecked"})
     public void testEmptyClosableIterator() {
         ClosableMemIterator<Triple> returnIterator = mockFactory.createMock(ClosableMemIterator.class);
         expect(iteratorFactory.newEmptyClosableIterator()).andReturn(returnIterator);
