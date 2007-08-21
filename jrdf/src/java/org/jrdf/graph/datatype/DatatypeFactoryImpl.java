@@ -67,17 +67,19 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DatatypeFactoryImpl implements DatatypeFactory {
-    private static final Map<URI, ValueCreator> FACTORY_MAP = new HashMap<URI, ValueCreator>();
-    private static final Map<Class, ValueCreator> CLASS_TO_CREATOR = new HashMap<Class, ValueCreator>();
-    private static final Map<Class, URI> CLASS_TO_URI = new HashMap<Class, URI>();
+    private static final DatatypeFactory FACTORY_INSTANCE = new DatatypeFactoryImpl();
+    private final Map<URI, ValueCreator> factoryMap = new HashMap<URI, ValueCreator>();
+    private final Map<Class<?>, ValueCreator> classToCreator = new HashMap<Class<?>, ValueCreator>();
+    private final Map<Class<?>, URI> classToURI = new HashMap<Class<?>, URI>();
 
-    public DatatypeFactoryImpl() {
+    private DatatypeFactoryImpl() {
         // Primitive types
-        final DateTimeValue dateTimeValue = new DateTimeValue();
+        final CalendarValue calendarValue = new CalendarValue();
         final StringValue stringValue = new StringValue();
         addValueCreator(NULL_URI, stringValue);
         addValueCreator(String.class, XSD.STRING, stringValue);
@@ -86,14 +88,15 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(Float.class, XSD.FLOAT, new FloatValue());
         addValueCreator(Double.class, XSD.DOUBLE, new DoubleValue());
         addValueCreator(XSD.DURATION, new DurationValue());
-        addValueCreator(Date.class, XSD.DATE_TIME, dateTimeValue);
-        addValueCreator(XSD.TIME, dateTimeValue);
-        addValueCreator(XSD.DATE, dateTimeValue);
-        addValueCreator(XSD.G_YEAR_MONTH, dateTimeValue);
-        addValueCreator(XSD.G_YEAR, dateTimeValue);
-        addValueCreator(XSD.G_MONTH_DAY, dateTimeValue);
-        addValueCreator(XSD.G_DAY, dateTimeValue);
-        addValueCreator(XSD.G_MONTH, dateTimeValue);
+        addValueCreator(GregorianCalendar.class, XSD.DATE_TIME, calendarValue);
+        addSecondaryValueCreator(Date.class, XSD.DATE_TIME, new DateTimeValue());
+        addValueCreator(XSD.TIME, calendarValue);
+        addValueCreator(XSD.DATE, calendarValue);
+        addValueCreator(XSD.G_YEAR_MONTH, calendarValue);
+        addValueCreator(XSD.G_YEAR, calendarValue);
+        addValueCreator(XSD.G_MONTH_DAY, calendarValue);
+        addValueCreator(XSD.G_DAY, calendarValue);
+        addValueCreator(XSD.G_MONTH, calendarValue);
         addValueCreator(XSD.ANY_URI, new AnyURIValue());
 
         // Derived types
@@ -104,6 +107,10 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(Byte.class, XSD.BYTE, new ByteValue());
     }
 
+    public static DatatypeFactory getInstance() {
+        return FACTORY_INSTANCE;
+    }
+
     public DatatypeFactoryImpl(final Map<URI, ValueCreator> newCreatorMap) {
         for (final URI datatypeURI : newCreatorMap.keySet()) {
             final ValueCreator valueCreator = newCreatorMap.get(datatypeURI);
@@ -112,16 +119,16 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
     }
 
     public boolean hasRegisteredValueCreator(final URI datatypeURI) {
-        return FACTORY_MAP.containsKey(datatypeURI);
+        return factoryMap.containsKey(datatypeURI);
     }
 
     public boolean hasClassRegistered(final Class<?> aClass) {
-        return CLASS_TO_CREATOR.containsKey(aClass);
+        return classToCreator.containsKey(aClass);
     }
 
     public void addValueCreator(final URI datatypeURI, final ValueCreator creator) throws IllegalArgumentException {
         if (!hasRegisteredValueCreator(datatypeURI)) {
-            FACTORY_MAP.put(datatypeURI, creator);
+            factoryMap.put(datatypeURI, creator);
         } else {
             throw new IllegalArgumentException("Value creator already registered for: " + datatypeURI);
         }
@@ -129,21 +136,25 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
 
     public void addValueCreator(final Class<?> aClass, final URI datatypeURI, final ValueCreator creator) {
         addValueCreator(datatypeURI, creator);
-        CLASS_TO_CREATOR.put(aClass, creator);
-        CLASS_TO_URI.put(aClass, datatypeURI);
+        addSecondaryValueCreator(aClass, datatypeURI, creator);
+    }
+
+    public void addSecondaryValueCreator(Class<?> aClass, final URI datatypeURI, final ValueCreator creator) {
+        classToCreator.put(aClass, creator);
+        classToURI.put(aClass, datatypeURI);
     }
 
     public boolean removeValueCreator(final URI datatypeURI) {
-        return FACTORY_MAP.remove(datatypeURI) == null;
+        return factoryMap.remove(datatypeURI) == null;
     }
 
     public boolean removeValueCreator(final Class<?> aClass, final URI datatypeURI) {
-        final ValueCreator valueCreatorForDatatypeURI = FACTORY_MAP.get(datatypeURI);
+        final ValueCreator valueCreatorForDatatypeURI = factoryMap.get(datatypeURI);
         if (removeValueCreator(datatypeURI)) {
-            final ValueCreator valueCreator = CLASS_TO_CREATOR.remove(aClass);
+            final ValueCreator valueCreator = classToCreator.remove(aClass);
             if (valueCreator != null) {
                 // Should always be true as CLASS_TO maps won't get out of sync.
-                return CLASS_TO_URI.remove(aClass) != null;
+                return classToURI.remove(aClass) != null;
             } else {
                 // Add back because we failed to remove it from class creators.
                 addValueCreator(datatypeURI, valueCreatorForDatatypeURI);
@@ -154,12 +165,12 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
     }
 
     public Value createValue(final String newLexicalForm) {
-        return FACTORY_MAP.get(NULL_URI).create(newLexicalForm);
+        return factoryMap.get(NULL_URI).create(newLexicalForm);
     }
 
     public Value createValue(final Object newObject) {
-        if (CLASS_TO_CREATOR.containsKey(newObject.getClass())) {
-            final ValueCreator creator = CLASS_TO_CREATOR.get(newObject.getClass());
+        if (classToCreator.containsKey(newObject.getClass())) {
+            final ValueCreator creator = classToCreator.get(newObject.getClass());
             return creator.create(newObject);
         } else {
             throw new IllegalArgumentException("No value creator registered for: " + newObject.getClass());
@@ -168,8 +179,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
 
     public URI getObjectDatatypeURI(final Object object) {
         checkNotNull(object);
-        if (CLASS_TO_URI.containsKey(object.getClass())) {
-            return CLASS_TO_URI.get(object.getClass());
+        if (classToURI.containsKey(object.getClass())) {
+            return classToURI.get(object.getClass());
         } else {
             throw new IllegalArgumentException("No datatype URI registered for: " + object.getClass());
         }
@@ -180,8 +191,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         // Try and create a correctly typed value. If all else fails create a non-types/string version as RDF does not
         // require lexical values are correct.
         try {
-            if (FACTORY_MAP.keySet().contains(dataTypeURI)) {
-                final ValueCreator valueCreator = FACTORY_MAP.get(dataTypeURI);
+            if (factoryMap.keySet().contains(dataTypeURI)) {
+                final ValueCreator valueCreator = factoryMap.get(dataTypeURI);
                 value = valueCreator.create(newLexicalForm);
             } else {
                 value = createValue(newLexicalForm);
