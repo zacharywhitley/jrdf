@@ -71,6 +71,9 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.TreeSet;
 
+/**
+ * An ordered version of the iterator factory that sorts all results first.
+ */
 public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final NodeComparator nodeComparator;
     private final IteratorFactory iteratorFactory;

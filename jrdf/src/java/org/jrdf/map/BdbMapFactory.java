@@ -63,10 +63,11 @@ import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Map;
 
-public class BdbMapFactory implements MapFactory {
+public final class BdbMapFactory implements MapFactory {
     private final StoredMapHandler handler;
     private final String classCatalog;
     private final String databaseName;
@@ -74,6 +75,7 @@ public class BdbMapFactory implements MapFactory {
     private StoredClassCatalog catalog;
 
     public BdbMapFactory(StoredMapHandler newHandler, String newClassCatalog, String newDatabaseName) {
+        checkNotNull(newHandler, newClassCatalog, newDatabaseName);
         this.handler = newHandler;
         this.classCatalog = newClassCatalog;
         this.databaseName = newDatabaseName;

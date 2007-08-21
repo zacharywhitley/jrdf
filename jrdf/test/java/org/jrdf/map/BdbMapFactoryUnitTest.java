@@ -60,11 +60,22 @@
 package org.jrdf.map;
 
 import junit.framework.TestCase;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+
+import java.lang.reflect.Modifier;
 
 public class BdbMapFactoryUnitTest extends TestCase {
+    private static final Class[] PARAM_TYPES = {StoredMapHandler.class, String.class, String.class};
+    private static final String[] PARAMETER_NAMES = {"newHandler", "newClassCatalog", "newDatabaseName"};
 
-    public void testKeepJUnitHappy() {
-        assertTrue(true);
+    public void testClassProperties() throws Exception {
+        checkImplementationOfInterfaceAndFinal(MapFactory.class, BdbMapFactory.class);
+        checkConstructor(BdbMapFactory.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(BdbMapFactory.class, PARAM_TYPES);
+        checkConstructorSetsFieldsAndFieldsPrivateFinal(BdbMapFactory.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 
 //    private static final String NODE_ID = "foo" + System.currentTimeMillis();
