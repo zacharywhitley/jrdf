@@ -73,10 +73,10 @@ import java.util.TreeSet;
 
 public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final NodeComparator nodeComparator;
-    private IteratorFactory iteratorFactory;
-    private NodePool nodePool;
-    private LongIndex longIndex;
-    private GraphHandler graphHandler;
+    private final IteratorFactory iteratorFactory;
+    private final NodePool nodePool;
+    private final LongIndex longIndex;
+    private final GraphHandler graphHandler;
 
     public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
             GraphHandler newGraphHandler, NodeComparator newNodeComparator) {
