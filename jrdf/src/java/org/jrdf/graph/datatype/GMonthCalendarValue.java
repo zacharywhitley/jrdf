@@ -68,6 +68,8 @@ import java.util.GregorianCalendar;
 public class GMonthCalendarValue implements Value {
     private static final long serialVersionUID = -7988880953802613273L;
     private static final javax.xml.datatype.DatatypeFactory FACTORY;
+    private static final int END_OF_CORRECT_DATE = 4;
+    private static final int START_OF_TIME_ZONE = 6;
     private XMLGregorianCalendar value;
 
     static {
@@ -92,7 +94,7 @@ public class GMonthCalendarValue implements Value {
 
     private GMonthCalendarValue(final String newValue) {
         if (isBuggyJava()) {
-            this.value = FACTORY.newXMLGregorianCalendar(newValue + "--");
+            this.value = FACTORY.newXMLGregorianCalendar(convertToBuggyFormat(newValue));
         } else {
             this.value = FACTORY.newXMLGregorianCalendar(newValue);
         }
@@ -107,11 +109,10 @@ public class GMonthCalendarValue implements Value {
     }
 
     public String getLexicalForm() {
-        String stringValue = value.toString();
         if (isBuggyJava()) {
-            return stringValue.substring(0, stringValue.length() - 2);
+            return convertToCorrectFormat(value.toString());
         } else {
-            return stringValue;
+            return value.toString();
         }
     }
 
@@ -150,5 +151,23 @@ public class GMonthCalendarValue implements Value {
         // Overcome bug in Sun's JDK 1.5 Bug ID 6360782.  Fixed in Java 6.
         return System.getProperty("java.vendor").toUpperCase().contains("SUN") &&
             System.getProperty("java.version").contains("1.5.0");
+    }
+
+    private String convertToBuggyFormat(String newValue) {
+        // From add another -- on the other side of the date i.e. from --10 to --10--
+        if (newValue.length() >= END_OF_CORRECT_DATE) {
+            String mungedValue = newValue.substring(0, END_OF_CORRECT_DATE) + "--";
+            if (newValue.length() > END_OF_CORRECT_DATE) {
+                mungedValue += newValue.substring(END_OF_CORRECT_DATE, newValue.length());
+            }
+            return mungedValue;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    private String convertToCorrectFormat(String s) {
+        // Remove the extra -- from the date i.e. from --10-- to --10
+        return s.substring(0, END_OF_CORRECT_DATE) + s.substring(START_OF_TIME_ZONE, s.length());
     }
 }
