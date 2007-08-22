@@ -127,6 +127,16 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
         testCreatingValue(G_MONTH_STR, XSD.G_MONTH);
     }
 
+    public void testDate() {
+        Value value = datatypeFactory.createValue(new Date(TEN_SECONDS));
+        assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
+    }
+
+    public void testSQLDate() {
+        Value value = datatypeFactory.createValue(new java.sql.Date(TEN_SECONDS));
+        assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
+    }
+
     public void testAnyURI() throws Exception {
         Value value = datatypeFactory.createValue(URI_STR, XSD.ANY_URI);
         assertEquals(URI_STR, value.getLexicalForm());
