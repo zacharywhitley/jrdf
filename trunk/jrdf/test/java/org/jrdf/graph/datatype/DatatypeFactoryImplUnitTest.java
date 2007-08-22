@@ -79,7 +79,9 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final String G_YEAR_MONTH_STR = "1999-06";
     private static final String G_YEAR_STR = "2007";
     private static final String G_DAY_STR = "---28";
-    private static final String G_MONTH_STR = "--12";
+    private static final String G_MONTH_STR_1 = "--12";
+    private static final String G_MONTH_STR_2 = "--12+10:00";
+    private static final String G_MONTH_STR_3 = "--08-04:00";
     private static final String URI_STR = "http://foo/bar#Litral";
     private DatatypeFactory datatypeFactory = DatatypeFactoryImpl.getInstance();
 
@@ -124,7 +126,9 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     public void testGMonth() {
-        testCreatingValue(G_MONTH_STR, XSD.G_MONTH);
+        testCreatingValue(G_MONTH_STR_1, XSD.G_MONTH);
+        testCreatingValue(G_MONTH_STR_2, XSD.G_MONTH);
+        testCreatingValue(G_MONTH_STR_3, XSD.G_MONTH);
     }
 
     public void testDate() {
