@@ -81,6 +81,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         // Primitive types
         final CalendarValue calendarValue = new CalendarValue();
         final StringValue stringValue = new StringValue();
+        final DateTimeValue dateTimeValue = new DateTimeValue();
         addValueCreator(NULL_URI, stringValue);
         addValueCreator(String.class, XSD.STRING, stringValue);
         addValueCreator(Boolean.class, XSD.BOOLEAN, new BooleanValue());
@@ -89,14 +90,15 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(Double.class, XSD.DOUBLE, new DoubleValue());
         addValueCreator(XSD.DURATION, new DurationValue());
         addValueCreator(GregorianCalendar.class, XSD.DATE_TIME, calendarValue);
-        addSecondaryValueCreator(Date.class, XSD.DATE_TIME, new DateTimeValue());
+        addSecondaryValueCreator(java.sql.Date.class, XSD.DATE_TIME, dateTimeValue);
+        addSecondaryValueCreator(Date.class, XSD.DATE_TIME, dateTimeValue);
         addValueCreator(XSD.TIME, calendarValue);
         addValueCreator(XSD.DATE, calendarValue);
         addValueCreator(XSD.G_YEAR_MONTH, calendarValue);
         addValueCreator(XSD.G_YEAR, calendarValue);
         addValueCreator(XSD.G_MONTH_DAY, calendarValue);
         addValueCreator(XSD.G_DAY, calendarValue);
-        addValueCreator(XSD.G_MONTH, calendarValue);
+        addValueCreator(XSD.G_MONTH, new GMonthCalendarValue());
         addValueCreator(XSD.ANY_URI, new AnyURIValue());
 
         // Derived types
@@ -120,6 +122,15 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
 
     public boolean hasRegisteredValueCreator(final URI datatypeURI) {
         return factoryMap.containsKey(datatypeURI);
+    }
+
+    public boolean correctValueType(final Value value, final URI datatypeURI) {
+        if (factoryMap.containsKey(datatypeURI)) {
+            ValueCreator valueCreator = factoryMap.get(datatypeURI);
+            return value.getClass().equals(valueCreator.getClass());
+        } else {
+            return false;
+        }
     }
 
     public boolean hasClassRegistered(final Class<?> aClass) {
@@ -177,15 +188,6 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         }
     }
 
-    public URI getObjectDatatypeURI(final Object object) {
-        checkNotNull(object);
-        if (classToURI.containsKey(object.getClass())) {
-            return classToURI.get(object.getClass());
-        } else {
-            throw new IllegalArgumentException("No datatype URI registered for: " + object.getClass());
-        }
-    }
-
     public Value createValue(final String newLexicalForm, final URI dataTypeURI) {
         Value value;
         // Try and create a correctly typed value. If all else fails create a non-types/string version as RDF does not
@@ -201,5 +203,14 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
             value = createValue(newLexicalForm);
         }
         return value;
+    }
+
+    public URI getObjectDatatypeURI(final Object object) {
+        checkNotNull(object);
+        if (classToURI.containsKey(object.getClass())) {
+            return classToURI.get(object.getClass());
+        } else {
+            throw new IllegalArgumentException("No datatype URI registered for: " + object.getClass());
+        }
     }
 }

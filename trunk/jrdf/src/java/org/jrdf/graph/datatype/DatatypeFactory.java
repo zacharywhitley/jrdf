@@ -82,5 +82,27 @@ public interface DatatypeFactory {
 
     boolean removeValueCreator(Class<?> aClass, URI datatypeURI);
 
+    /**
+     * If you want to bind more than one Java type to a given URI use this for alternative bindings.  For example,
+     * XSD Date can be bound to java.util.GregorianCalendar, java.util.Date or java.sql.Date.  The secondary types are
+     * java.util.Date and java.sql.Date.
+     *
+     * @param aClass the concrete Java class to bind to a given URI and ValueCreator.
+     * @param datatypeURI the URI to bind.
+     * @param creator the creator to use to convert the class to a Value.
+     */
     void addSecondaryValueCreator(Class<?> aClass, URI datatypeURI, ValueCreator creator);
+
+    /**
+     * Allows the user to verify that the Value created is the correct type for the given URI.
+     *
+     * The default behaviour of the factory is to create untyped strings if there is an error parsing the string.  For
+     * example, trying to parse and XSD.Date with the string "abc" will result in a Value with the lexical form "abc"
+     * but be a StringValue.  This allows you to check that the Value returned is what is expected.
+     *
+     * @param value the value to check.
+     * @param datatypeURI the URI to use to see if the value is the expected type.
+     * @return true if the value is the correctly bound type of the given URI.
+     */
+    boolean correctValueType(Value value, URI datatypeURI);
 }

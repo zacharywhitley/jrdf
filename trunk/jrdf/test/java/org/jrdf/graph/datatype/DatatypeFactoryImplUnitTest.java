@@ -63,28 +63,28 @@ import junit.framework.TestCase;
 import org.jrdf.vocabulary.XSD;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.GregorianCalendar;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final int TEN_SECONDS = 10000;
     private static final Date TEN_SECONDS_AFTER_UNIX_EPOCH = new Date(TEN_SECONDS);
+    private static final String STR = "This is a normal string";
     private static final String TEN_SECOND_AFTER_UNIX_EPOCH_STRING = "1970-01-01T10:00:10.000+10:00";
     private static final String HAPPY_NEW_YEAR = "2000-01-01T00:00:00.000+10:00";
-    private static final String JAN_21ST = "01-21";
+    private static final String COFFEE_TIME = "09:30:00.000+10:00";
+    private static final String G_MONTH_DAY_STR = "--01-21";
+    private static final String G_YEAR_MONTH_STR = "1999-06";
+    private static final String G_YEAR_STR = "2007";
+    private static final String G_DAY_STR = "---28";
+    private static final String G_MONTH_STR = "--12";
+    private static final String URI_STR = "http://foo/bar#Litral";
     private DatatypeFactory datatypeFactory = DatatypeFactoryImpl.getInstance();
 
     public void setUp() {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+10:00"));
-    }
-
-    public void testCreatingDateTimeValue() {
-        Value value = datatypeFactory.createValue(TEN_SECONDS_AFTER_UNIX_EPOCH);
-        assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
-        URI uri = datatypeFactory.getObjectDatatypeURI(TEN_SECONDS_AFTER_UNIX_EPOCH);
-        assertEquals(XSD.DATE_TIME, uri);
     }
 
     public void testCreatingCalendar() {
@@ -95,8 +95,52 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
         assertEquals(XSD.DATE_TIME, uri);
     }
 
+    public void testCreatingDateTimeValue() {
+        Value value = datatypeFactory.createValue(TEN_SECONDS_AFTER_UNIX_EPOCH);
+        assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
+        URI uri = datatypeFactory.getObjectDatatypeURI(TEN_SECONDS_AFTER_UNIX_EPOCH);
+        assertEquals(XSD.DATE_TIME, uri);
+    }
+
+    public void testStringToTime() {
+        Value value = datatypeFactory.createValue(COFFEE_TIME, XSD.TIME);
+        assertEquals(COFFEE_TIME, value.getLexicalForm());
+    }
+
+    public void testStringToGYearMonth() {
+        testCreatingValue(G_YEAR_MONTH_STR, XSD.G_YEAR_MONTH);
+    }
+
+    public void testStringToGYear() {
+        testCreatingValue(G_YEAR_STR, XSD.G_YEAR);
+    }
+
     public void testStringToGMonthDay() {
-        Value value = datatypeFactory.createValue(JAN_21ST, XSD.G_MONTH_DAY);
-        assertEquals(JAN_21ST, value.getLexicalForm());
+        testCreatingValue(G_MONTH_DAY_STR, XSD.G_MONTH_DAY);
+    }
+
+    public void testGDay() {
+        testCreatingValue(G_DAY_STR, XSD.G_DAY);
+    }
+
+    public void testGMonth() {
+        testCreatingValue(G_MONTH_STR, XSD.G_MONTH);
+    }
+
+    public void testAnyURI() throws Exception {
+        Value value = datatypeFactory.createValue(URI_STR, XSD.ANY_URI);
+        assertEquals(URI_STR, value.getLexicalForm());
+        final URI uri = new URI(URI_STR);
+        AnyURIValue anyUriValue1 = new AnyURIValue(uri);
+        assertTrue(value.equals(anyUriValue1));
+    }
+
+    private void testCreatingValue(String strToParse, URI uri) {
+        Value value = datatypeFactory.createValue(STR, uri);
+        assertFalse("Should fall back to XSD String but isn't what we expected to be created",
+            datatypeFactory.correctValueType(value, uri));
+        value = datatypeFactory.createValue(strToParse, uri);
+        assertTrue("Should parse correctly with expected value", datatypeFactory.correctValueType(value, uri));
+        assertEquals(strToParse, value.getLexicalForm());
     }
 }
