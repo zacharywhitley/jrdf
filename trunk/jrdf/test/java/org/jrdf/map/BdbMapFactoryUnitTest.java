@@ -149,6 +149,23 @@ public class BdbMapFactoryUnitTest extends TestCase {
         });
     }
 
+    public void testCloseCatalogExceptions() throws Exception {
+        creatMapExpectations();
+        environment.close();
+        expectLastCall();
+        storedClassCatalog.close();
+        expectLastCall().andThrow(new DatabaseException());
+        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                mockFactory.replay();
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+                factory.createMap(String.class, String.class);
+                factory.close();
+                mockFactory.verify();
+            }
+        });
+    }
+
     public void testCloseBothExceptions() throws Exception {
         creatMapExpectations();
         environment.close();

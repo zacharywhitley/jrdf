@@ -63,40 +63,33 @@ import java.math.BigInteger;
 import java.math.BigDecimal;
 
 public class NonPositiveIntegerValue implements Value,  XSDDecimal {
-
     private static final long serialVersionUID = 21516359310292990L;
     private BigInteger value;
+    private boolean isNegative;
+    private boolean isZero;
     private boolean isNegativeZero;
     private boolean isPositiveZero;
-    private static final String ZERO = "0";
     private static final String POSITIVE_ZERO = "+0";
     private static final String NEGATIVE_ZERO = "-0";
+
+    protected NonPositiveIntegerValue() {
+    }
 
     public NonPositiveIntegerValue(final BigInteger newValue) {
         this.value = newValue;
     }
 
-    protected NonPositiveIntegerValue() {
-
-    }
-
     private NonPositiveIntegerValue(final String newValue) {
-        if (!newValue.startsWith("-")) {
-            if (ZERO.equals(newValue)) {
-                this.value = new BigInteger("0");
-            } else if (POSITIVE_ZERO.equals(newValue)) {
-                this.isPositiveZero = true;
-                this.value = new BigInteger("0");
-            } else {
-                throw new NumberFormatException();
-            }
+        this.isNegative = newValue.startsWith("-");
+        this.isZero = newValue.matches("[+-]?0");
+        if (isZero) {
+            this.isPositiveZero = POSITIVE_ZERO.equals(newValue);
+            this.isNegativeZero = NEGATIVE_ZERO.equals(newValue);
+            this.value = new BigInteger("0");
+        } else if (isNegative) {
+            this.value = new BigInteger(newValue);
         } else {
-            if (NEGATIVE_ZERO.equals(newValue)) {
-                this.isNegativeZero = true;
-                this.value = new BigInteger("0");
-            } else {
-                this.value = new BigInteger(newValue);
-            }
+            throw new NumberFormatException();
         }
     }
 
@@ -109,17 +102,15 @@ public class NonPositiveIntegerValue implements Value,  XSDDecimal {
     }
 
     public String getLexicalForm() {
-        if (value.compareTo(BigInteger.ZERO) == 0) {
+        final StringBuilder newValue = new StringBuilder(value.toString());
+        if (isZero) {
             if (isPositiveZero) {
-                return "+" + value.toString();
+                newValue.insert(0, "+");
             } else if (isNegativeZero) {
-                return "-" + value.toString();
-            } else {
-                return value.toString();
+                newValue.insert(0, "-");
             }
-        } else {
-            return value.toString();
         }
+        return newValue.toString();
     }
 
     public boolean isWellFormedXml() {

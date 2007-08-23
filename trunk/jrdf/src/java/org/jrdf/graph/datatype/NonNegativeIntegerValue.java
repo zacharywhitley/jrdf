@@ -68,22 +68,21 @@ public class NonNegativeIntegerValue implements Value, XSDDecimal {
     private boolean isPositive;
     private boolean isNegativeZero;
 
+    protected NonNegativeIntegerValue() {
+    }
+
     public NonNegativeIntegerValue(final BigInteger newValue) {
         this.value = newValue;
     }
 
-    protected NonNegativeIntegerValue() {
-
-    }
-
     private NonNegativeIntegerValue(final String newValue) {
-        if (newValue.startsWith("+")) {
+        this.isPositive = isPositive(newValue);
+        this.isNegativeZero = isNegativeZero(newValue);
+        if (isPositive) {
             this.value = new BigInteger(newValue.substring(1));
-            this.isPositive = true;
         } else if (newValue.startsWith("-")) {
-            if ("-0".equals(newValue)) {
+            if (isNegativeZero) {
                 this.value = new BigInteger("0");
-                this.isNegativeZero = true;
             } else {
                 throw new NumberFormatException();
             }
@@ -103,7 +102,7 @@ public class NonNegativeIntegerValue implements Value, XSDDecimal {
     public String getLexicalForm() {
         if (isPositive) {
             return "+" + value.toString();
-        } else if (isNegativeZero){
+        } else if (isNegativeZero) {
             return "-" + value.toString();
         } else {
             return value.toString();
@@ -124,5 +123,13 @@ public class NonNegativeIntegerValue implements Value, XSDDecimal {
 
     public int equivCompareTo(Value value) {
         return getAsBigDecimal().compareTo(((XSDDecimal) value).getAsBigDecimal());
+    }
+
+    private boolean isPositive(String newValue) {
+        return newValue.startsWith("+");
+    }
+
+    private boolean isNegativeZero(String newValue) {
+        return "-0".equals(newValue);
     }
 }
