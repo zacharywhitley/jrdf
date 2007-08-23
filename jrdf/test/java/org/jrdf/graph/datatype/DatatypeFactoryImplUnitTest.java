@@ -186,8 +186,8 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
         String nameSpaceUri = "foo/bar";
         String localPartName = "pirces";
         QName qname = new QName(nameSpaceUri, localPartName, prefix);
-        System.err.println("String Value: " + qname.toString());
     }
+
     private void testWrongFormat(String wrongFormatedString, URI correctURIFormat) {
         Value value = datatypeFactory.createValue(wrongFormatedString, correctURIFormat);
         assertFalse("Should fail for having wrong format", datatypeFactory.correctValueType(value, correctURIFormat));
