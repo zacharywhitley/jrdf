@@ -59,70 +59,37 @@
 
 package org.jrdf.graph.datatype;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
+import org.w3c.dom.Notation;
 
-public class NonNegativeIntegerValue implements Value, XSDDecimal {
-    private static final long serialVersionUID = 4550600026432326665L;
-    private BigInteger value;
-    private boolean isPositive;
-    private boolean isNegativeZero;
+public class NotationValue implements Value {
+    private static final long serialVersionUID = -4591170063432497281L;
+    private Notation value;
 
-    public NonNegativeIntegerValue(final BigInteger newValue) {
-        this.value = newValue;
-    }
+    protected NotationValue() {
 
-    protected NonNegativeIntegerValue() {
-
-    }
-
-    private NonNegativeIntegerValue(final String newValue) {
-        if (newValue.startsWith("+")) {
-            this.value = new BigInteger(newValue.substring(1));
-            this.isPositive = true;
-        } else if (newValue.startsWith("-")) {
-            if ("-0".equals(newValue)) {
-                this.value = new BigInteger("0");
-                this.isNegativeZero = true;
-            } else {
-                throw new NumberFormatException();
-            }
-        } else {
-            this.value = new BigInteger(newValue);
-        }
-    }
-
-    public Value create(Object object) {
-        return new NonNegativeIntegerValue((BigInteger) object);
-    }
-
-    public Value create(String lexicalForm) {
-        return new NonNegativeIntegerValue(lexicalForm);
     }
 
     public String getLexicalForm() {
-        if (isPositive) {
-            return "+" + value.toString();
-        } else if (isNegativeZero){
-            return "-" + value.toString();
-        } else {
-            return value.toString();
-        }
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public boolean isWellFormedXml() {
-        return false;
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public BigDecimal getAsBigDecimal() {
-        return new BigDecimal(value);
+    public Value create(Object object) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public int compareTo(Value val) {
-        return value.compareTo(((NonNegativeIntegerValue) val).value);
+    public Value create(String lexicalForm) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public int compareTo(Value o) {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public int equivCompareTo(Value value) {
-        return getAsBigDecimal().compareTo(((XSDDecimal) value).getAsBigDecimal());
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
