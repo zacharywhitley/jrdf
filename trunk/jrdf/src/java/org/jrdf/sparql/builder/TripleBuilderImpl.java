@@ -75,6 +75,7 @@ import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.parser.ParserException;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -97,6 +98,7 @@ public final class TripleBuilderImpl extends DepthFirstAdapter implements Triple
 
     public TripleBuilderImpl(Graph graph, AttributeValuePairHelper avpHelper,
             SortedAttributeFactory sortedAttributeFactory) {
+        checkNotNull(graph, avpHelper, sortedAttributeFactory);
         this.avpHelper = avpHelper;
         this.graph = graph;
         this.sortedAttributeFactory = sortedAttributeFactory;

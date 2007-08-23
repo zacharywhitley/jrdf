@@ -64,27 +64,19 @@ import org.jrdf.map.MapFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 
-import java.util.List;
 import java.util.Map;
 
-public class BdbBlankNodeRegistryImpl  implements BlankNodeRegistry {
-    private MapFactory creator;
+public final class BdbBlankNodeRegistryImpl implements BlankNodeRegistry {
+    private final MapFactory mapFactory;
     private final Map<BlankNode, Integer> blankNodeList;
 
-    public BdbBlankNodeRegistryImpl(MapFactory newCreator) {
-        creator = newCreator;
-        blankNodeList = creator.createMap(BlankNode.class, Integer.class);
+    public BdbBlankNodeRegistryImpl(final MapFactory newMapFactory) {
+        checkNotNull(newMapFactory);
+        this.mapFactory = newMapFactory;
+        this.blankNodeList = mapFactory.createMap(BlankNode.class, Integer.class);
     }
 
-    public BdbBlankNodeRegistryImpl(MapFactory newCreator, List<BlankNode> newBlankNodeList) {
-        creator = newCreator;
-        blankNodeList = creator.createMap(BlankNode.class, Integer.class);
-        for (int index = 0; index < newBlankNodeList.size(); index++) {
-            this.blankNodeList.put(newBlankNodeList.get(index), new Integer(index));
-        }
-    }
-
-    public String getNodeId(BlankNode node) {
+    public String getNodeId(final BlankNode node) {
         checkNotNull(node);
         Integer id = blankNodeList.get(node);
         int size = 0;
@@ -100,6 +92,6 @@ public class BdbBlankNodeRegistryImpl  implements BlankNodeRegistry {
     }
 
     public void close() {
-        creator.close();
+        mapFactory.close();
     }
 }

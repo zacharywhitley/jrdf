@@ -69,7 +69,10 @@ import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.sparql.parser.node.ATriple;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_SUBJECT;
 import static org.jrdf.util.test.SparqlQueryTestUtil.VARIABLE_NAME_TITLE;
 import static org.jrdf.util.test.TripleTestUtil.LITERAL_BOOK_TITLE;
@@ -100,6 +103,9 @@ public final class TripleBuilderImplUnitTest extends TestCase {
             new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
     private static final TripleSpec VARIABLE_VARIABLE_BOOK_TITLE =
             new VariableResourceTripleSpec(VARIABLE_NAME_SUBJECT, VARIABLE_NAME_TITLE, URI_DC_SUBJECT);
+    private static final Class[] PARAM_TYPES = {Graph.class, AttributeValuePairHelper.class,
+            SortedAttributeFactory.class};
+    private static final String[] PARAMETER_NAMES = {"graph", "avpHelper", "sortedAttributeFactory"};
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
     private TripleBuilder tripleBuilder;
@@ -114,9 +120,10 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     }
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilderImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC, Graph.class,
-                AttributeValuePairHelper.class, SortedAttributeFactory.class);
+        checkImplementationOfInterfaceAndFinal(TripleBuilder.class, TripleBuilderImpl.class);
+        checkConstructor(TripleBuilderImpl.class, Modifier.PUBLIC, PARAM_TYPES);
+        checkConstructNullAssertion(TripleBuilderImpl.class, PARAM_TYPES);
+        checkConstructorSetsFieldsAndFieldsPrivateFinal(TripleBuilderImpl.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 
     public void testBuildTripleFromParserNode() throws Exception {

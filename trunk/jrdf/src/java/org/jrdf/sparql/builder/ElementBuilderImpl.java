@@ -87,7 +87,6 @@ import java.util.Map;
 
 // TODO (AN) Too much coupling still!!
 
-@SuppressWarnings({ "MethodParameterOfConcreteClass", "CastToConcreteClass", "LocalVariableOfConcreteClass" })
 public final class ElementBuilderImpl extends DepthFirstAdapter implements ElementBuilder {
     private AttributeValuePair avp;
     private final NodeType nodeType;
