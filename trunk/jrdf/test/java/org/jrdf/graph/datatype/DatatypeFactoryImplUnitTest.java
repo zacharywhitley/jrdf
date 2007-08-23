@@ -62,6 +62,7 @@ package org.jrdf.graph.datatype;
 import junit.framework.TestCase;
 import org.jrdf.vocabulary.XSD;
 
+import javax.xml.namespace.QName;
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,7 +72,7 @@ import java.util.TimeZone;
 public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final int TEN_SECONDS = 10000;
     private static final Date TEN_SECONDS_AFTER_UNIX_EPOCH = new Date(TEN_SECONDS);
-    private static final String STR = "This is a normal string";
+    private static final String NORMAL_STRING = "This is a normal string";
     private static final String TEN_SECOND_AFTER_UNIX_EPOCH_STRING = "1970-01-01T10:00:10.000+10:00";
     private static final String HAPPY_NEW_YEAR = "2000-01-01T00:00:00.000+10:00";
     private static final String COFFEE_TIME = "09:30:00.000+10:00";
@@ -83,6 +84,13 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final String G_MONTH_STR_2 = "--12+10:00";
     private static final String G_MONTH_STR_3 = "--08-04:00";
     private static final String URI_STR = "http://foo/bar#Litral";
+    private static final String ZERO = "0";
+    private static final String POSITIVE_ZERO = "+0";
+    private static final String NEGATIVE_ZERO = "-0";
+    private static final String ONE = "1";
+    private static final String POSITIVE_ONE = "+1";
+    private static final String NEGATIVE_ONE = "-1";
+
     private DatatypeFactory datatypeFactory = DatatypeFactoryImpl.getInstance();
 
     public void setUp() {
@@ -149,11 +157,45 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
         assertTrue(value.equals(anyUriValue1));
     }
 
+    public void testNonNegativeIntegerValue() {
+        //test different correct format
+        testCreatingValue(ZERO, XSD.NONNAGATIVEINTEGER);
+        testCreatingValue(POSITIVE_ZERO, XSD.NONNAGATIVEINTEGER);
+        testCreatingValue(NEGATIVE_ZERO, XSD.NONNAGATIVEINTEGER);
+        testCreatingValue(ONE, XSD.NONNAGATIVEINTEGER);
+        testCreatingValue(POSITIVE_ONE, XSD.NONNAGATIVEINTEGER);
+        //test wrong format
+        testWrongFormat(NEGATIVE_ONE, XSD.NONNAGATIVEINTEGER);
+    }
+
+    public void testNonPositiveIntegerValue() {
+        //test different correct format
+        testCreatingValue(ZERO, XSD.NONPOSITIVEINTEGER);
+        testCreatingValue(POSITIVE_ZERO, XSD.NONPOSITIVEINTEGER);
+        testCreatingValue(NEGATIVE_ZERO, XSD.NONPOSITIVEINTEGER);
+        testCreatingValue(NEGATIVE_ONE, XSD.NONPOSITIVEINTEGER);
+        testCreatingValue("-2164654654", XSD.NONPOSITIVEINTEGER);
+
+        //test wrong format
+        testWrongFormat(POSITIVE_ONE, XSD.NONPOSITIVEINTEGER);
+        testWrongFormat(ONE, XSD.NONPOSITIVEINTEGER);
+    }
+
+    public void testQName() {
+        String prefix = "urn";
+        String nameSpaceUri = "foo/bar";
+        String localPartName = "pirces";
+        QName qname = new QName(nameSpaceUri, localPartName, prefix);
+        System.err.println("String Value: " + qname.toString());
+    }
+    private void testWrongFormat(String wrongFormatedString, URI correctURIFormat) {
+        Value value = datatypeFactory.createValue(wrongFormatedString, correctURIFormat);
+        assertFalse("Should fail for having wrong format", datatypeFactory.correctValueType(value, correctURIFormat));
+    }
+
     private void testCreatingValue(String strToParse, URI uri) {
-        Value value = datatypeFactory.createValue(STR, uri);
-        assertFalse("Should fall back to XSD String but isn't what we expected to be created",
-            datatypeFactory.correctValueType(value, uri));
-        value = datatypeFactory.createValue(strToParse, uri);
+        testWrongFormat(NORMAL_STRING, uri);
+        Value value = datatypeFactory.createValue(strToParse, uri);
         assertTrue("Should parse correctly with expected value", datatypeFactory.correctValueType(value, uri));
         assertEquals(strToParse, value.getLexicalForm());
     }

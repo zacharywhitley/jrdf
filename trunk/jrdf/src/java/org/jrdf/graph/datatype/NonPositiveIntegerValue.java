@@ -66,6 +66,11 @@ public class NonPositiveIntegerValue implements Value,  XSDDecimal {
 
     private static final long serialVersionUID = 21516359310292990L;
     private BigInteger value;
+    private boolean isNegativeZero;
+    private boolean isPositiveZero;
+    private static final String ZERO = "0";
+    private static final String POSITIVE_ZERO = "+0";
+    private static final String NEGATIVE_ZERO = "-0";
 
     public NonPositiveIntegerValue(final BigInteger newValue) {
         this.value = newValue;
@@ -76,7 +81,23 @@ public class NonPositiveIntegerValue implements Value,  XSDDecimal {
     }
 
     private NonPositiveIntegerValue(final String newValue) {
-        this.value = new BigInteger(newValue);
+        if (!newValue.startsWith("-")) {
+            if (ZERO.equals(newValue)) {
+                this.value = new BigInteger("0");
+            } else if (POSITIVE_ZERO.equals(newValue)) {
+                this.isPositiveZero = true;
+                this.value = new BigInteger("0");
+            } else {
+                throw new NumberFormatException();
+            }
+        } else {
+            if (NEGATIVE_ZERO.equals(newValue)) {
+                this.isNegativeZero = true;
+                this.value = new BigInteger("0");
+            } else {
+                this.value = new BigInteger(newValue);
+            }
+        }
     }
 
     public Value create(Object object) {
@@ -89,9 +110,15 @@ public class NonPositiveIntegerValue implements Value,  XSDDecimal {
 
     public String getLexicalForm() {
         if (value.compareTo(BigInteger.ZERO) == 0) {
-            return value.toString();
+            if (isPositiveZero) {
+                return "+" + value.toString();
+            } else if (isNegativeZero) {
+                return "-" + value.toString();
+            } else {
+                return value.toString();
+            }
         } else {
-            return "-" + value.toString();
+            return value.toString();
         }
     }
 
