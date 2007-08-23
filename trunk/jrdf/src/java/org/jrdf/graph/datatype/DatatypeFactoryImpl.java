@@ -63,6 +63,7 @@ import static org.jrdf.graph.NullURI.NULL_URI;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.vocabulary.XSD;
 
+import javax.xml.namespace.QName;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -98,7 +99,14 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.G_YEAR, calendarValue);
         addValueCreator(XSD.G_MONTH_DAY, calendarValue);
         addValueCreator(XSD.G_DAY, calendarValue);
-        addValueCreator(XSD.G_MONTH, new GMonthCalendarValue());
+        addValueCreator(BigInteger.class, XSD.NONPOSITIVEINTEGER, new NonPositiveIntegerValue());
+        addValueCreator(BigInteger.class, XSD.NONNAGATIVEINTEGER, new NonNegativeIntegerValue());
+        addValueCreator(QName.class, XSD.Q_NAME, new QNameValue());
+        if (isBuggyJava()) {
+            addValueCreator(XSD.G_MONTH, new GMonthCalendarValue());
+        } else {
+            addValueCreator(XSD.G_MONTH, calendarValue);
+        }
         addValueCreator(XSD.ANY_URI, new AnyURIValue());
 
         // Derived types
@@ -212,5 +220,11 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         } else {
             throw new IllegalArgumentException("No datatype URI registered for: " + object.getClass());
         }
+    }
+
+    private boolean isBuggyJava() {
+        // Overcome bug in Sun's JDK 1.5 Bug ID 6360782.  Fixed in Java 6.
+        return System.getProperty("java.vendor").toUpperCase().contains("SUN") &&
+            System.getProperty("java.version").contains("1.5.0");
     }
 }

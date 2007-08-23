@@ -93,11 +93,7 @@ public class GMonthCalendarValue implements Value {
     }
 
     private GMonthCalendarValue(final String newValue) {
-        if (isBuggyJava()) {
-            this.value = FACTORY.newXMLGregorianCalendar(convertToBuggyFormat(newValue));
-        } else {
-            this.value = FACTORY.newXMLGregorianCalendar(newValue);
-        }
+        this.value = FACTORY.newXMLGregorianCalendar(convertToBuggyFormat(newValue));
     }
 
     public Value create(final Object object) {
@@ -109,11 +105,7 @@ public class GMonthCalendarValue implements Value {
     }
 
     public String getLexicalForm() {
-        if (isBuggyJava()) {
-            return convertToCorrectFormat(value.toString());
-        } else {
-            return value.toString();
-        }
+        return convertToCorrectFormat(value.toString());
     }
 
     public boolean isWellFormedXml() {
@@ -145,12 +137,6 @@ public class GMonthCalendarValue implements Value {
             return false;
         }
         return value.equals(((GMonthCalendarValue) obj).value);
-    }
-
-    private boolean isBuggyJava() {
-        // Overcome bug in Sun's JDK 1.5 Bug ID 6360782.  Fixed in Java 6.
-        return System.getProperty("java.vendor").toUpperCase().contains("SUN") &&
-            System.getProperty("java.version").contains("1.5.0");
     }
 
     private String convertToBuggyFormat(String newValue) {
