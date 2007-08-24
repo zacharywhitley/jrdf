@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.datatype;
 
+import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+
 import javax.xml.namespace.QName;
 
 public class QNameValue implements Value {
@@ -66,15 +68,15 @@ public class QNameValue implements Value {
     private static final long serialVersionUID = 6173641727680094649L;
     private QName value;
 
+    protected QNameValue() {
+    }
+
     public QNameValue(final QName newValue) {
         this.value = newValue;
     }
 
-    protected QNameValue() {
-
-    }
-
     private QNameValue(final String newValue) {
+        checkNotEmptyString("newValue", newValue);
         this.value = QName.valueOf(newValue);
     }
 
@@ -87,7 +89,11 @@ public class QNameValue implements Value {
     }
 
     public String getLexicalForm() {
-        return value.toString();
+        StringBuilder builder = new StringBuilder(value.getLocalPart());
+        if (value.getPrefix().length() > 0) {
+            builder.insert(0, value.getPrefix() + ":");
+        }
+        return builder.toString();
     }
 
     public boolean isWellFormedXml() {
