@@ -62,7 +62,6 @@ package org.jrdf.graph.datatype;
 import junit.framework.TestCase;
 import org.jrdf.vocabulary.XSD;
 
-import javax.xml.namespace.QName;
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
@@ -118,25 +117,25 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     public void testStringToGYearMonth() {
-        testCreatingValue(G_YEAR_MONTH_STR, XSD.G_YEAR_MONTH);
+        checkWrongStringValueAndCreate(G_YEAR_MONTH_STR, XSD.G_YEAR_MONTH);
     }
 
     public void testStringToGYear() {
-        testCreatingValue(G_YEAR_STR, XSD.G_YEAR);
+        checkWrongStringValueAndCreate(G_YEAR_STR, XSD.G_YEAR);
     }
 
     public void testStringToGMonthDay() {
-        testCreatingValue(G_MONTH_DAY_STR, XSD.G_MONTH_DAY);
+        checkWrongStringValueAndCreate(G_MONTH_DAY_STR, XSD.G_MONTH_DAY);
     }
 
     public void testGDay() {
-        testCreatingValue(G_DAY_STR, XSD.G_DAY);
+        checkWrongStringValueAndCreate(G_DAY_STR, XSD.G_DAY);
     }
 
     public void testGMonth() {
-        testCreatingValue(G_MONTH_STR_1, XSD.G_MONTH);
-        testCreatingValue(G_MONTH_STR_2, XSD.G_MONTH);
-        testCreatingValue(G_MONTH_STR_3, XSD.G_MONTH);
+        checkWrongStringValueAndCreate(G_MONTH_STR_1, XSD.G_MONTH);
+        checkWrongStringValueAndCreate(G_MONTH_STR_2, XSD.G_MONTH);
+        checkWrongStringValueAndCreate(G_MONTH_STR_3, XSD.G_MONTH);
     }
 
     public void testDate() {
@@ -159,44 +158,53 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
 
     public void testNonNegativeIntegerValue() {
         //test different correct format
-        testCreatingValue(ZERO, XSD.NONNAGATIVEINTEGER);
-        testCreatingValue(POSITIVE_ZERO, XSD.NONNAGATIVEINTEGER);
-        testCreatingValue(NEGATIVE_ZERO, XSD.NONNAGATIVEINTEGER);
-        testCreatingValue(ONE, XSD.NONNAGATIVEINTEGER);
-        testCreatingValue(POSITIVE_ONE, XSD.NONNAGATIVEINTEGER);
+        checkWrongStringValueAndCreate(ZERO, XSD.NONNAGATIVEINTEGER);
+        checkWrongStringValueAndCreate(POSITIVE_ZERO, XSD.NONNAGATIVEINTEGER);
+        checkWrongStringValueAndCreate(NEGATIVE_ZERO, XSD.NONNAGATIVEINTEGER);
+        checkWrongStringValueAndCreate(ONE, XSD.NONNAGATIVEINTEGER);
+        checkWrongStringValueAndCreate(POSITIVE_ONE, XSD.NONNAGATIVEINTEGER);
         //test wrong format
-        testWrongFormat(NEGATIVE_ONE, XSD.NONNAGATIVEINTEGER);
+        checkStringIsWrongFormat(NEGATIVE_ONE, XSD.NONNAGATIVEINTEGER);
     }
 
     public void testNonPositiveIntegerValue() {
         //test different correct format
-        testCreatingValue(ZERO, XSD.NONPOSITIVEINTEGER);
-        testCreatingValue(POSITIVE_ZERO, XSD.NONPOSITIVEINTEGER);
-        testCreatingValue(NEGATIVE_ZERO, XSD.NONPOSITIVEINTEGER);
-        testCreatingValue(NEGATIVE_ONE, XSD.NONPOSITIVEINTEGER);
-        testCreatingValue("-2164654654", XSD.NONPOSITIVEINTEGER);
+        checkWrongStringValueAndCreate(ZERO, XSD.NONPOSITIVEINTEGER);
+        checkWrongStringValueAndCreate(POSITIVE_ZERO, XSD.NONPOSITIVEINTEGER);
+        checkWrongStringValueAndCreate(NEGATIVE_ZERO, XSD.NONPOSITIVEINTEGER);
+        checkWrongStringValueAndCreate(NEGATIVE_ONE, XSD.NONPOSITIVEINTEGER);
+        checkWrongStringValueAndCreate("-2164654654", XSD.NONPOSITIVEINTEGER);
 
         //test wrong format
-        testWrongFormat(POSITIVE_ONE, XSD.NONPOSITIVEINTEGER);
-        testWrongFormat(ONE, XSD.NONPOSITIVEINTEGER);
+        checkStringIsWrongFormat(POSITIVE_ONE, XSD.NONPOSITIVEINTEGER);
+        checkStringIsWrongFormat(ONE, XSD.NONPOSITIVEINTEGER);
     }
 
     public void testQName() {
-        String prefix = "urn";
-        String nameSpaceUri = "foo/bar";
-        String localPartName = "pirces";
-        QName qname = new QName(nameSpaceUri, localPartName, prefix);
+        checkCreatingValue("bar", XSD.Q_NAME);
+        checkCreatingValue("foo:bar", XSD.Q_NAME);
+        checkEmptyString(XSD.Q_NAME);
     }
 
-    private void testWrongFormat(String wrongFormatedString, URI correctURIFormat) {
+    private void checkWrongStringValueAndCreate(String strToParse, URI uri) {
+        checkStringIsWrongFormat(NORMAL_STRING, uri);
+        checkEmptyString(uri);
+        checkCreatingValue(strToParse, uri);
+    }
+
+    private void checkStringIsWrongFormat(String wrongFormatedString, URI correctURIFormat) {
         Value value = datatypeFactory.createValue(wrongFormatedString, correctURIFormat);
         assertFalse("Should fail for having wrong format", datatypeFactory.correctValueType(value, correctURIFormat));
     }
 
-    private void testCreatingValue(String strToParse, URI uri) {
-        testWrongFormat(NORMAL_STRING, uri);
+    private void checkEmptyString(URI uri) {
+        checkStringIsWrongFormat("", uri);
+    }
+
+    private void checkCreatingValue(String strToParse, URI uri) {
         Value value = datatypeFactory.createValue(strToParse, uri);
-        assertTrue("Should parse correctly with expected value", datatypeFactory.correctValueType(value, uri));
+        assertTrue("Should parse correctly with expected value, got: " + value.getClass(),
+            datatypeFactory.correctValueType(value, uri));
         assertEquals(strToParse, value.getLexicalForm());
     }
 }
