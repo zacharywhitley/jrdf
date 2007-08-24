@@ -76,8 +76,8 @@ public class NonNegativeIntegerValue implements Value, XSDDecimal {
     }
 
     private NonNegativeIntegerValue(final String newValue) {
-        this.isPositive = isPositive(newValue);
-        this.isNegativeZero = isNegativeZero(newValue);
+        this.isPositive = newValue.startsWith("+");
+        this.isNegativeZero = "-0".equals(newValue);
         if (isPositive) {
             this.value = new BigInteger(newValue.substring(1));
         } else if (newValue.startsWith("-")) {
@@ -125,11 +125,4 @@ public class NonNegativeIntegerValue implements Value, XSDDecimal {
         return getAsBigDecimal().compareTo(((XSDDecimal) value).getAsBigDecimal());
     }
 
-    private boolean isPositive(String newValue) {
-        return newValue.startsWith("+");
-    }
-
-    private boolean isNegativeZero(String newValue) {
-        return "-0".equals(newValue);
-    }
 }
