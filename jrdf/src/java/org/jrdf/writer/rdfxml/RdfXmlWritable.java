@@ -63,9 +63,6 @@ import org.jrdf.writer.WriteException;
 
 import java.io.PrintWriter;
 
-/**
- * Class description goes here.
- */
 public interface RdfXmlWritable {
     /**
      * Writes contents to the writer in RDF/XML format.

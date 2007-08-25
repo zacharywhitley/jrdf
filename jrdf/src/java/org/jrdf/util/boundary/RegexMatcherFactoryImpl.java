@@ -61,9 +61,6 @@ package org.jrdf.util.boundary;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-/**
- * Class description goes here.
- */
 public class RegexMatcherFactoryImpl implements RegexMatcherFactory {
     public RegexMatcher createMatcher(Pattern pattern, CharSequence input) {
         Matcher matcher = pattern.matcher(input);

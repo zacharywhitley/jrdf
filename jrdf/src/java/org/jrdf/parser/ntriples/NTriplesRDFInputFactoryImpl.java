@@ -84,9 +84,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 
-/**
- * Class description goes here.
- */
 public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private static final RDFInputFactory FACTORY = new NTriplesRDFInputFactoryImpl();
     private static final RegexMatcherFactory REGEX_MATCHER_FACTORY = new RegexMatcherFactoryImpl();

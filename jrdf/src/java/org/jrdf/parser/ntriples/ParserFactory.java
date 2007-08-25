@@ -61,9 +61,6 @@ package org.jrdf.parser.ntriples;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
-/**
- * Class description goes here.
- */
 public interface ParserFactory {
     NTriplesParser createParser(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory);
 }

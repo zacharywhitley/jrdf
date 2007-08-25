@@ -60,9 +60,6 @@ package org.jrdf.util.boundary;
 
 import java.util.regex.MatchResult;
 
-/**
- * Class description goes here.
- */
 public interface RegexMatcher extends MatchResult {
     boolean find();
     boolean matches();

@@ -63,9 +63,6 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.TVariableprefix;
 
-/**
- * Class description goes here.
- */
 public interface TripleSpec {
     public static final TVariableprefix VARIABLE_PREFIX = new TVariableprefix("?");
 
