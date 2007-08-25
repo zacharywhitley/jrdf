@@ -61,37 +61,112 @@ package org.jrdf.graph.datatype;
 
 import java.net.URI;
 
+/**
+ * Creates data types.  Maps URIs to creators - which can take either a string or native object.  For a given URI
+ * there is a signle string parser object and one or more native objects.
+ */
 public interface DatatypeFactory {
-    DatatypeValue createValue(String newLexicalForm, URI dataTypeURI);
 
-    boolean hasRegisteredValueCreator(URI datatypeURI);
-
+    /**
+     * Add a value create for a given URI.  Enforces one value creator per data type - check with
+     * hasRegisteredValueCreator.
+     *
+     * @param datatypeURI unique datatype uri.
+     * @param creator creates datatypes based on string.
+     * @throws IllegalArgumentException if datatype uri already registered with another creator.
+     */
     void addValueCreator(URI datatypeURI, ValueCreator creator) throws IllegalArgumentException;
 
-    boolean removeValueCreator(URI datatypeURI);
-
-    DatatypeValue createValue(String newLexicalForm);
-
-    DatatypeValue createValue(Object newObject);
-
-    void addValueCreator(Class<?> aClass, URI datatypeURI, ValueCreator creator);
-
-    URI getObjectDatatypeURI(Object object);
-
-    boolean hasClassRegistered(Class<?> aClass);
-
-    boolean removeValueCreator(Class<?> aClass, URI datatypeURI);
+    /**
+     * Add a value create for a given URI.  Enforces one value creator per data type - check with
+     * hasRegisteredValueCreator.
+     *
+     * @param datatypeURI unique datatype uri.
+     * @param aClass the Java class.
+     * @param creator creates datatypes based on string.
+     * @throws IllegalArgumentException if datatype uri already registered with another creator.
+     */
+    void addValueCreator(URI datatypeURI, Class<?> aClass, ValueCreator creator) throws IllegalArgumentException;
 
     /**
      * If you want to bind more than one Java type to a given URI use this for alternative bindings.  For example,
      * XSD Date can be bound to java.util.GregorianCalendar, java.util.Date or java.sql.Date.  The secondary types are
      * java.util.Date and java.sql.Date.
      *
-     * @param aClass the concrete Java class to bind to a given URI and ValueCreator.
+     * @param aClass the Java class to bind to a given URI and ValueCreator.
      * @param datatypeURI the URI to bind.
      * @param creator the creator to use to convert the class to a Value.
      */
     void addSecondaryValueCreator(Class<?> aClass, URI datatypeURI, ValueCreator creator);
+
+    /**
+     * Returns true if a value creator has been registered for a given URI.
+     *
+     * @param datatypeURI the URI to check.
+     * @return true if a value creator has been registered for a given URI.
+     */
+    boolean hasRegisteredValueCreator(URI datatypeURI);
+
+    /**
+     * Remove creator for a given URI.
+     *
+     * @param datatypeURI the URI to check.
+     * @return true if the item was removed or no value creator was found.
+     */
+    boolean removeValueCreator(URI datatypeURI);
+
+    /**
+     * Remove creator for a given class and URI.
+     *
+     * @param aClass the class that's registered.
+     * @param datatypeURI the URI to check.
+     * @return true if the item was removed or no value creator was found.
+     */
+    boolean removeValueCreator(Class<?> aClass, URI datatypeURI);
+
+    /**
+     * Create an untyped/plain datatype from the lexical form.
+     *
+     * @param lexicalForm lexical form to use.
+     * @return new datatype value.
+     */
+    DatatypeValue createValue(String lexicalForm);
+
+    /**
+     * Create a datatyped literal from a Java class.
+     *
+     * @param object Java class to use.
+     * @return new datatype value.
+     * @throws IllegalArgumentException if to creator is registered for the Java class.
+     */
+    DatatypeValue createValue(Object object) throws IllegalArgumentException;
+
+    /**
+     * Create a new datatype value based on a given lexical form and datatype.  Returns a string datatype if no creator
+     * is registered for the given URI.
+     *
+     * @param dataTypeURI datatype to use.
+     * @param lexicalForm lexical form to use.
+     * @return new datatype value.
+     */
+    DatatypeValue createValue(URI dataTypeURI, String lexicalForm);
+
+    /**
+     * Returns the URI bound to a given Java class.
+     *
+     * @param object the object to use.
+     * @return the URI.
+     * @throws IllegalArgumentException if there is no creator bound for the Java class.
+     */
+    URI getObjectDatatypeURI(Object object);
+
+    /**
+     * Returns true if the class is registered.
+     *
+     * @param aClass the class to check.
+     * @return true if the class is registered.
+     */
+    boolean hasClassRegistered(Class<?> aClass);
 
     /**
      * Allows the user to verify that the Value created is the correct type for the given URI.

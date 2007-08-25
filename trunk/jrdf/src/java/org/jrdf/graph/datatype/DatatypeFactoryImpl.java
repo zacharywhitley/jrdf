@@ -84,13 +84,13 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         final StringValue stringValue = new StringValue();
         final DateTimeValue dateTimeValue = new DateTimeValue();
         addValueCreator(NULL_URI, stringValue);
-        addValueCreator(String.class, XSD.STRING, stringValue);
-        addValueCreator(Boolean.class, XSD.BOOLEAN, new BooleanValue());
-        addValueCreator(BigDecimal.class, XSD.DECIMAL, new DecimalValue());
-        addValueCreator(Float.class, XSD.FLOAT, new FloatValue());
-        addValueCreator(Double.class, XSD.DOUBLE, new DoubleValue());
+        addValueCreator(XSD.STRING, String.class, stringValue);
+        addValueCreator(XSD.BOOLEAN, Boolean.class, new BooleanValue());
+        addValueCreator(XSD.DECIMAL, BigDecimal.class, new DecimalValue());
+        addValueCreator(XSD.FLOAT, Float.class, new FloatValue());
+        addValueCreator(XSD.DOUBLE, Double.class, new DoubleValue());
         addValueCreator(XSD.DURATION, new DurationValue());
-        addValueCreator(GregorianCalendar.class, XSD.DATE_TIME, calendarValue);
+        addValueCreator(XSD.DATE_TIME, GregorianCalendar.class, calendarValue);
         addSecondaryValueCreator(java.sql.Date.class, XSD.DATE_TIME, dateTimeValue);
         addSecondaryValueCreator(Date.class, XSD.DATE_TIME, dateTimeValue);
         addValueCreator(XSD.TIME, calendarValue);
@@ -99,9 +99,9 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.G_YEAR, calendarValue);
         addValueCreator(XSD.G_MONTH_DAY, calendarValue);
         addValueCreator(XSD.G_DAY, calendarValue);
-        addValueCreator(BigInteger.class, XSD.NON_POSITIVE_INTEGER, new NonPositiveIntegerValue());
-        addValueCreator(BigInteger.class, XSD.NON_NEGATIVE_INTEGER, new NonNegativeIntegerValue());
-        addValueCreator(QName.class, XSD.Q_NAME, new QNameValue());
+        addValueCreator(XSD.NON_POSITIVE_INTEGER, BigInteger.class, new NonPositiveIntegerValue());
+        addValueCreator(XSD.NON_NEGATIVE_INTEGER, BigInteger.class, new NonNegativeIntegerValue());
+        addValueCreator(XSD.Q_NAME, QName.class, new QNameValue());
         if (isBuggyJava()) {
             addValueCreator(XSD.G_MONTH, new GMonthCalendarValue());
         } else {
@@ -110,11 +110,11 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.ANY_URI, new AnyURIValue());
 
         // Derived types
-        addValueCreator(BigInteger.class, XSD.INTEGER, new IntegerValue());
-        addValueCreator(Long.class, XSD.LONG, new LongValue());
-        addValueCreator(Integer.class, XSD.INT, new IntValue());
-        addValueCreator(Short.class, XSD.SHORT, new ShortValue());
-        addValueCreator(Byte.class, XSD.BYTE, new ByteValue());
+        addValueCreator(XSD.INTEGER, BigInteger.class, new IntegerValue());
+        addValueCreator(XSD.LONG, Long.class, new LongValue());
+        addValueCreator(XSD.INT, Integer.class, new IntValue());
+        addValueCreator(XSD.SHORT, Short.class, new ShortValue());
+        addValueCreator(XSD.BYTE, Byte.class, new ByteValue());
     }
 
     public static DatatypeFactory getInstance() {
@@ -153,7 +153,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         }
     }
 
-    public void addValueCreator(final Class<?> aClass, final URI datatypeURI, final ValueCreator creator) {
+    public void addValueCreator(final URI datatypeURI, final Class<?> aClass, final ValueCreator creator) {
         addValueCreator(datatypeURI, creator);
         addSecondaryValueCreator(aClass, datatypeURI, creator);
     }
@@ -196,7 +196,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         }
     }
 
-    public DatatypeValue createValue(final String newLexicalForm, final URI dataTypeURI) {
+    public DatatypeValue createValue(final URI dataTypeURI, final String newLexicalForm) {
         DatatypeValue value;
         // Try and create a correctly typed value. If all else fails create a non-types/string version as RDF does not
         // require lexical values are correct.
