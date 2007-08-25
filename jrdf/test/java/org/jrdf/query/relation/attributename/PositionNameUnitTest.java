@@ -68,12 +68,6 @@ import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class PositionNameUnitTest extends TestCase {
     private static final String POSITION_FIELD_NAME = "positionName";
     private static final String POSITION_NAME_1 = "foo";

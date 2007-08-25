@@ -67,12 +67,6 @@ import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfType;
 
 import java.lang.reflect.Modifier;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class VariableNameUnitTest extends TestCase {
     private static final String VARIABLE_FIELD_NAME = "variableName";
     private static final String VARIABLE_NAME_1 = "foo";

@@ -67,12 +67,6 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class RelationComparatorImplUnitTest extends TestCase {
     private static final String ATTRIBUTE_COMPARATOR = "attributeComparator";
     private static final String TUPLE_COMPARATOR = "tupleComparator";

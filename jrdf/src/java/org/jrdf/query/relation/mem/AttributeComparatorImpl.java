@@ -63,12 +63,6 @@ import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.type.TypeComparator;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public final class AttributeComparatorImpl implements AttributeComparator {
     private static final long serialVersionUID = 525733919495463710L;
     private static final int EQUAL = 0;
