@@ -60,9 +60,9 @@ package org.jrdf.graph.mem.iterator;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler012;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler120;
-import org.jrdf.graph.index.graphhandler.mem.GraphHandler201;
+import org.jrdf.graph.index.graphhandler.GraphHandler012;
+import org.jrdf.graph.index.graphhandler.GraphHandler201;
+import org.jrdf.graph.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 

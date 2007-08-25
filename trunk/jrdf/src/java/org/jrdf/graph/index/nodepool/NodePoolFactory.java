@@ -59,8 +59,19 @@
 
 package org.jrdf.graph.index.nodepool;
 
+/**
+ * One level of indirection for node pools - used to create either in memory or on disk node pools.
+ */
 public interface NodePoolFactory {
+    /**
+     * Create a new node pool.
+     *
+     * @return a new node pool.
+     */
     NodePool createNodePool();
 
+    /**
+     * Close any resources related to creating node pools.
+     */
     void close();
 }

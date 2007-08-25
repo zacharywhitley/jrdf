@@ -57,13 +57,11 @@
  *
  */
 
-package org.jrdf.graph.index.graphhandler.mem;
+package org.jrdf.graph.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.index.graphhandler.AbstractGraphHandler;
-import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 

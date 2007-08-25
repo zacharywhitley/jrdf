@@ -73,27 +73,27 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
     private static final String DB_NAME_STRINGPOOL = "stringPool";
     private final StoredMapHandler handler;
-    private BdbMapFactory factory1;
-    private BdbMapFactory factory2;
+    private BdbMapFactory longNodeFactory;
+    private BdbMapFactory stringLongFactory;
 
-    public BdbNodePoolFactory(StoredMapHandler newHandler) {
+    public BdbNodePoolFactory(final StoredMapHandler newHandler) {
         this.handler = newHandler;
     }
 
     @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
-        factory1 = new BdbMapFactory(handler, CLASS_CATALOG_NODEPOOL, DB_NAME_NODEPOOL);
-        Map<Long, Node> nodePool = factory1.createMap(Long.class, Node.class);
-        factory2 = new BdbMapFactory(handler, CLASS_CATALOG_STRINGPOOL, DB_NAME_STRINGPOOL);
-        Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
+        longNodeFactory = new BdbMapFactory(handler, CLASS_CATALOG_NODEPOOL, DB_NAME_NODEPOOL);
+        final Map<Long, Node> nodePool = longNodeFactory.createMap(Long.class, Node.class);
+        stringLongFactory = new BdbMapFactory(handler, CLASS_CATALOG_STRINGPOOL, DB_NAME_STRINGPOOL);
+        final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
         return new NodePoolImpl(nodePool, stringPool);
     }
 
     public void close() {
         try {
-            factory1.close();
+            longNodeFactory.close();
         } finally {
-            factory2.close();
+            stringLongFactory.close();
         }
     }
 }
