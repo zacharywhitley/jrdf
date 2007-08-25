@@ -68,21 +68,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class AnyResourceIterator extends ResourceIterator {
-
     public AnyResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
         final ResourceFactory newResourceFactory) {
         super(newLongIndexes, newGraphHandlers, newResourceFactory);
     }
 
-
-    /**
-     * Provides a customizable way in which to filter out resource nodes
-     * based on type.
-     *
-     * @param iterator
-     * @return
-     */
-    protected long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator, GraphHandler graphHandler) {
+    protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
+            final GraphHandler graphHandler) {
         return iterator.next().getKey();
     }
 }

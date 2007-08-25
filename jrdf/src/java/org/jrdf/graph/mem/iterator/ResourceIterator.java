@@ -76,13 +76,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 14/08/2007
- * Time: 11:58:43
- * To change this template use File | Settings | File Templates.
- */
 abstract class ResourceIterator implements ClosableIterator<Resource> {
     protected final LongIndex longIndex012;
     protected final GraphHandler graphHandler012;
@@ -90,7 +83,6 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
     protected final GraphHandler graphHandler201;
     protected Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
     protected Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
-
     protected Resource nextResource;
     protected boolean firstTime = true;
 
@@ -112,40 +104,22 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
 
     public boolean hasNext() {
         return nextResource != null;
-        //return iterator012.hasNext();
     }
 
     public Resource next() {
-        Resource resource = null;
         //for the first time retrieve the current one as well as the next one
-
+        final Resource resource;
         if (nextResource == null) {
             throw new NoSuchElementException();
         } else {
             resource = nextResource;
             nextResource = getNextNode();
         }
-
         return resource;
-//        Resource resource = null;
-//        try {
-//            if (iterator201.hasNext()) {
-//                resource = getNextOSPElement();
-//            }
-//            if (iterator012.hasNext() || resource == null) {
-//                resource = getNextSPOElement();
-//            } else {
-//                throw new NoSuchElementException();
-//            }
-//        } catch (GraphElementFactoryException e) {
-//            throw new NoSuchElementException();
-//        }
-//        return resource;
     }
 
-    protected Resource getNextNode() {
+    private Resource getNextNode() {
         Resource resource = null;
-
         try {
             if (iterator201.hasNext()) {
                 resource = getNextOSPElement();
@@ -159,7 +133,6 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
         } catch (GraphElementFactoryException e) {
             throw new NoSuchElementException();
         }
-
         return resource;
     }
 
@@ -173,11 +146,11 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
     private Resource getNextOSPElement() throws GraphElementFactoryException {
         while (iterator201.hasNext()) {
             //Long index = iterator201.next().getKey();
-            Long index = getNextNodeID(iterator201, graphHandler201);
+            final Long index = getNextNodeID(iterator201, graphHandler201);
 
             //check the SPO does not contain the given index and that we haven't reached the end of iterator
             if (index != -1 && !longIndex012.contains(index)) {
-                Node node = graphHandler201.createNode(index);
+                final Node node = graphHandler201.createNode(index);
                 //check node is not a literal
                 if (!(node instanceof Literal)) {
                     return toResource(node);
@@ -194,10 +167,9 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
      * @throws org.jrdf.graph.GraphElementFactoryException if the resource cannot be created.
      */
     private Resource getNextSPOElement() throws GraphElementFactoryException {
-        Long index = getNextNodeID(iterator012, graphHandler012);
-
+        final Long index = getNextNodeID(iterator012, graphHandler012);
         if (index != -1) {
-            Node node = graphHandler012.createNode(index);
+            final Node node = graphHandler012.createNode(index);
             return toResource(node);
         }
         return null;
@@ -212,9 +184,10 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
      *
      * @param node to be converted.
      * @return passed node as a resource.
+     * @throws GraphElementFactoryException if the resource is failed to be created.
      */
-    private Resource toResource(Node node) throws GraphElementFactoryException {
-        Resource resource = null;
+    private Resource toResource(final Node node) throws GraphElementFactoryException {
+        final Resource resource = null;
         if (node instanceof BlankNode) {
             return resourceFactory.createResource((BlankNode) node);
         } else if (node instanceof URIReference) {
@@ -225,5 +198,14 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
         return resource;
     }
 
-    abstract long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator, GraphHandler graphHandler);
+    /**
+     * Provides a customizable way in which to filter out resource nodes based on type.
+     *
+     * @param iterator iterators over the index.
+     * @param graphHandler used to create the nodes from the iterator.
+     *
+     * @return the next node identifier.
+     */
+    protected abstract long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
+            GraphHandler graphHandler);
 }

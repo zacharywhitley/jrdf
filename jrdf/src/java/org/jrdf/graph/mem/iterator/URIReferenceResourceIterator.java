@@ -69,13 +69,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 14/08/2007
- * Time: 12:10:12
- * To change this template use File | Settings | File Templates.
- */
 public class URIReferenceResourceIterator extends ResourceIterator {
 
     public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
@@ -83,12 +76,12 @@ public class URIReferenceResourceIterator extends ResourceIterator {
         super(newLongIndexes, newGraphHandlers, newResourceFactory);
     }
 
-    protected long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator, GraphHandler graphHandler) {
+    protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
+            final GraphHandler graphHandler) {
         while (iterator.hasNext()) {
-            long id = iterator.next().getKey();
-
-            Node n = graphHandler.createNode(id);
-            if (n != null && n instanceof URIReference) {
+            final long id = iterator.next().getKey();
+            final Node node = graphHandler.createNode(id);
+            if (node != null && node instanceof URIReference) {
                 return id;
             }
         }
