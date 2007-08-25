@@ -65,7 +65,7 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.math.BigDecimal;
 
-public class DecimalValue implements Value, XSDDecimal {
+public class DecimalValue implements DatatypeValue, XSDDecimal {
     private static final long serialVersionUID = 6530294494529409549L;
     private BigDecimal value;
 
@@ -80,11 +80,11 @@ public class DecimalValue implements Value, XSDDecimal {
         this.value = new BigDecimal(newValue);
     }
 
-    public Value create(final Object object) {
+    public DatatypeValue create(final Object object) {
         return new DecimalValue((BigDecimal) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new DecimalValue(lexicalForm);
     }
 
@@ -92,7 +92,7 @@ public class DecimalValue implements Value, XSDDecimal {
         return value.toPlainString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
@@ -100,11 +100,11 @@ public class DecimalValue implements Value, XSDDecimal {
         return value;
     }
 
-    public int compareTo(Value val) {
+    public int compareTo(DatatypeValue val) {
         return value.compareTo(((DecimalValue) val).value);
     }
 
-    public int equivCompareTo(Value val) {
+    public int equivCompareTo(DatatypeValue val) {
         return getAsBigDecimal().compareTo(((XSDDecimal) val).getAsBigDecimal());
     }
 

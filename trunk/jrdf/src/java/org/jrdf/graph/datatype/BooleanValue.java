@@ -63,7 +63,7 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-public class BooleanValue implements Value {
+public class BooleanValue implements DatatypeValue {
     private static final long serialVersionUID = 8865131980074326360L;
     private Boolean value;
 
@@ -78,11 +78,11 @@ public class BooleanValue implements Value {
         this.value = Boolean.valueOf(newValue);
     }
 
-    public Value create(Object object) {
+    public DatatypeValue create(Object object) {
         return new BooleanValue((Boolean) object);
     }
 
-    public Value create(String lexicalForm) {
+    public DatatypeValue create(String lexicalForm) {
         return new BooleanValue(lexicalForm);
     }
 
@@ -90,15 +90,15 @@ public class BooleanValue implements Value {
         return value.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value o) {
+    public int compareTo(DatatypeValue o) {
         return value.compareTo(((BooleanValue) o).value);
     }
 
-    public int equivCompareTo(Value o) {
+    public int equivCompareTo(DatatypeValue o) {
         return compareTo(o);
     }
 

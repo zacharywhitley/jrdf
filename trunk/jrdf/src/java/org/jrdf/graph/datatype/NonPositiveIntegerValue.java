@@ -59,10 +59,10 @@
 
 package org.jrdf.graph.datatype;
 
-import java.math.BigInteger;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
-public class NonPositiveIntegerValue implements Value,  XSDDecimal {
+public class NonPositiveIntegerValue implements DatatypeValue,  XSDDecimal {
     private static final long serialVersionUID = 21516359310292990L;
     private BigInteger value;
     private boolean isNegative;
@@ -93,11 +93,11 @@ public class NonPositiveIntegerValue implements Value,  XSDDecimal {
         }
     }
 
-    public Value create(Object object) {
+    public DatatypeValue create(Object object) {
         return new NonPositiveIntegerValue((BigInteger) object);
     }
 
-    public Value create(String lexicalForm) {
+    public DatatypeValue create(String lexicalForm) {
         return new NonPositiveIntegerValue(lexicalForm);
     }
 
@@ -113,7 +113,7 @@ public class NonPositiveIntegerValue implements Value,  XSDDecimal {
         return newValue.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
@@ -121,11 +121,11 @@ public class NonPositiveIntegerValue implements Value,  XSDDecimal {
         return new BigDecimal(value);
     }
 
-    public int compareTo(Value val) {
+    public int compareTo(DatatypeValue val) {
         return value.compareTo(((NonPositiveIntegerValue) val).value);
     }
 
-    public int equivCompareTo(Value value) {
+    public int equivCompareTo(DatatypeValue value) {
         return getAsBigDecimal().compareTo(((XSDDecimal) value).getAsBigDecimal());
     }
 

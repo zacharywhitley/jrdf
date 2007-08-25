@@ -63,7 +63,7 @@ package org.jrdf.graph;
 
 import org.jrdf.graph.datatype.DatatypeFactory;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
-import org.jrdf.graph.datatype.Value;
+import org.jrdf.graph.datatype.DatatypeValue;
 import static org.jrdf.graph.NullURI.*;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
@@ -99,7 +99,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
     /**
      * The lexical form of the literal.
      */
-    protected Value value;
+    protected DatatypeValue value;
 
     /**
      * The language code of the literal.
@@ -205,7 +205,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         return value.getLexicalForm();
     }
 
-    public Value getValue() {
+    public DatatypeValue getValue() {
         return value;
     }
 
@@ -231,15 +231,13 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      * @return whether the literal is well formed XML.
      */
     public boolean isWellFormedXML() {
-        return value.isWellFormedXml();
+        return value.isWellFormedXML();
     }
 
     /**
-     * Returns the URI of the RDF datatype of this resource, or <code>NO_DATATYPE</code>
-     * for a plain literal.
+     * Returns the URI of the RDF datatype of this resource, or <code>NO_DATATYPE</code> for a plain literal.
      *
-     * @return the URI of the RDF datatype of this resource, or <code>NO_DATATYPE</code>
-     *         for a plain literal.
+     * @return the URI of the RDF datatype of this resource, or <code>NO_DATATYPE</code> for a plain literal.
      */
     public URI getDatatypeURI() {
         return datatypeURI;

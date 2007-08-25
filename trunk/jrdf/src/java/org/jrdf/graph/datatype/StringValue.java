@@ -63,7 +63,7 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-public class StringValue implements Value {
+public class StringValue implements DatatypeValue {
     private static final long serialVersionUID = 8865131980074326360L;
     private String value;
 
@@ -74,11 +74,11 @@ public class StringValue implements Value {
         this.value = newValue;
     }
 
-    public Value create(final Object object) {
+    public DatatypeValue create(final Object object) {
         return new StringValue((String) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new StringValue(lexicalForm);
     }
 
@@ -86,15 +86,15 @@ public class StringValue implements Value {
         return value;
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value s) {
+    public int compareTo(DatatypeValue s) {
         return getLexicalForm().compareTo(s.getLexicalForm());
     }
 
-    public int equivCompareTo(Value s) {
+    public int equivCompareTo(DatatypeValue s) {
         // Change this if we add more derived string types.
         return compareTo(s);
     }

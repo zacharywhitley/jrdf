@@ -63,8 +63,7 @@ import org.jrdf.graph.BlankNode;
 
 /**
  * A registry of BlankNodes that are encountered while writing a Graph.  Allows the same BlankNode object to return
- * with the same String value.  This does the converse job of {@see org.jrdf.parser.ParserBlankNodeFactory}
- * (which maps Strings to BlankNodes).
+ * with the same String value.  This does the converse job of ParserBlankNodeFactory (which maps Strings to BlankNodes).
  *
  * @author Andrew Newman
  * @author TurnerRX

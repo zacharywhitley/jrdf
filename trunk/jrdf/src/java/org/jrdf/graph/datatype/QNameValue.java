@@ -63,7 +63,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 
 import javax.xml.namespace.QName;
 
-public class QNameValue implements Value {
+public class QNameValue implements DatatypeValue {
 
     private static final long serialVersionUID = 6173641727680094649L;
     private QName value;
@@ -80,11 +80,11 @@ public class QNameValue implements Value {
         this.value = QName.valueOf(newValue);
     }
 
-    public Value create(Object object) {
+    public DatatypeValue create(Object object) {
         return new QNameValue((QName) object);
     }
 
-    public Value create(String lexicalForm) {
+    public DatatypeValue create(String lexicalForm) {
         return new QNameValue(lexicalForm);
     }
 
@@ -96,15 +96,15 @@ public class QNameValue implements Value {
         return builder.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value value) {
+    public int compareTo(DatatypeValue value) {
         return getLexicalForm().compareTo(value.getLexicalForm());
     }
 
-    public int equivCompareTo(Value value) {
+    public int equivCompareTo(DatatypeValue value) {
         return compareTo(value);
     }
 }

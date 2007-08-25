@@ -62,7 +62,7 @@ package org.jrdf.graph.datatype;
 import java.net.URI;
 
 public interface DatatypeFactory {
-    Value createValue(String newLexicalForm, URI dataTypeURI);
+    DatatypeValue createValue(String newLexicalForm, URI dataTypeURI);
 
     boolean hasRegisteredValueCreator(URI datatypeURI);
 
@@ -70,9 +70,9 @@ public interface DatatypeFactory {
 
     boolean removeValueCreator(URI datatypeURI);
 
-    Value createValue(String newLexicalForm);
+    DatatypeValue createValue(String newLexicalForm);
 
-    Value createValue(Object newObject);
+    DatatypeValue createValue(Object newObject);
 
     void addValueCreator(Class<?> aClass, URI datatypeURI, ValueCreator creator);
 
@@ -104,5 +104,5 @@ public interface DatatypeFactory {
      * @param datatypeURI the URI to use to see if the value is the expected type.
      * @return true if the value is the correctly bound type of the given URI.
      */
-    boolean correctValueType(Value value, URI datatypeURI);
+    boolean correctValueType(DatatypeValue value, URI datatypeURI);
 }

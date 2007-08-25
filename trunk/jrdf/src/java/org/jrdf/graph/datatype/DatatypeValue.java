@@ -59,9 +59,13 @@
 
 package org.jrdf.graph.datatype;
 
+import org.jrdf.graph.Value;
+
 import java.io.Serializable;
 
-public interface Value extends Serializable, ValueCreator, Comparable<Value>, EquivComparable<Value> {
-    String getLexicalForm();
-    boolean isWellFormedXml();
+/**
+ * Datatypes are values and create themselves.
+ */
+public interface DatatypeValue extends Serializable, Value, ValueCreator, Comparable<DatatypeValue>,
+        EquivComparable<DatatypeValue> {
 }

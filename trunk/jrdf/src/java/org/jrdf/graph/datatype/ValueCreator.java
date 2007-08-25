@@ -69,7 +69,7 @@ public interface ValueCreator {
      * @param object the Java object to convert to a value.
      * @return a Value object, usually just wrapping the Java object.
      */
-    Value create(Object object);
+    DatatypeValue create(Object object);
 
-    Value create(String lexicalForm);
+    DatatypeValue create(String lexicalForm);
 }

@@ -65,6 +65,6 @@ import java.math.BigDecimal;
  * An interface to allow all of the data types derived from XSD decimal to be treated in the same way.  So that
  * XSD integers can be compared with XSD long, decimal, etc.
  */
-public interface XSDDecimal extends Value {
+public interface XSDDecimal extends DatatypeValue {
     BigDecimal getAsBigDecimal();
 }

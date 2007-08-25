@@ -63,7 +63,7 @@ import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
-public class FloatValue implements Value {
+public class FloatValue implements DatatypeValue {
     private static final long serialVersionUID = 5076217684791463335L;
     private Float value;
 
@@ -78,11 +78,11 @@ public class FloatValue implements Value {
         this.value = Float.valueOf(newValue);
     }
 
-    public Value create(final Object object) {
+    public DatatypeValue create(final Object object) {
         return new FloatValue((Float) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new FloatValue(lexicalForm);
     }
 
@@ -90,15 +90,15 @@ public class FloatValue implements Value {
         return value.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value o) {
+    public int compareTo(DatatypeValue o) {
         return value.compareTo(((FloatValue) o).value);
     }
 
-    public int equivCompareTo(Value o) {
+    public int equivCompareTo(DatatypeValue o) {
         return compareTo(o);
     }
 
