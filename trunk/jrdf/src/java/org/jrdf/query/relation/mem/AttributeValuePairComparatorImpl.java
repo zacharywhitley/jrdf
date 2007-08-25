@@ -64,12 +64,6 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.constants.NullaryAttributeValuePair;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public final class AttributeValuePairComparatorImpl implements AttributeValuePairComparator {
     private static final long serialVersionUID = -1770166629461241873L;
     private AttributeComparator attributeComparator;

@@ -68,12 +68,6 @@ import org.jrdf.query.relation.TupleComparator;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public final class RelationComparatorImpl implements RelationComparator {
     private static final long serialVersionUID = 9186461012818411817L;
 

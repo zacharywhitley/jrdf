@@ -60,12 +60,6 @@ package org.jrdf.query.relation.attributename;
 
 import java.io.Serializable;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public interface AttributeName extends Serializable {
     String getLiteral();
 }

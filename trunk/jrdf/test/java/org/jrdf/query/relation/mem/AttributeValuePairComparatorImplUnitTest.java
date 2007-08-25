@@ -69,12 +69,6 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import java.lang.reflect.Modifier;
 import java.io.Serializable;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public class AttributeValuePairComparatorImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeValuePairComparator.class,

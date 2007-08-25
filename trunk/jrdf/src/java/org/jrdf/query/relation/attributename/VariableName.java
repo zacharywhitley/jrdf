@@ -60,12 +60,6 @@ package org.jrdf.query.relation.attributename;
 
 import org.jrdf.util.EqualsUtil;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public final class VariableName implements AttributeName {
     private static final long serialVersionUID = 504817351812142680L;
     private String variableName;
