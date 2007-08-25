@@ -63,13 +63,6 @@ import org.jrdf.util.param.ParameterUtil;
 
 import java.util.Comparator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 14/08/2007
- * Time: 11:10:36
- * To change this template use File | Settings | File Templates.
- */
 public class ResourceComparator implements Comparator<Resource> {
 
     public int compare(Resource resource1, Resource resource2) {
