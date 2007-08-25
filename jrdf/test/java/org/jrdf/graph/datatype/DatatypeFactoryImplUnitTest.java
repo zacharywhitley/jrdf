@@ -113,7 +113,7 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     public void testStringToTime() {
-        DatatypeValue value = datatypeFactory.createValue(COFFEE_TIME, XSD.TIME);
+        DatatypeValue value = datatypeFactory.createValue(XSD.TIME, COFFEE_TIME);
         assertEquals(COFFEE_TIME, value.getLexicalForm());
     }
 
@@ -150,7 +150,7 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     public void testAnyURI() throws Exception {
-        DatatypeValue value = datatypeFactory.createValue(URI_STR, XSD.ANY_URI);
+        DatatypeValue value = datatypeFactory.createValue(XSD.ANY_URI, URI_STR);
         assertEquals(URI_STR, value.getLexicalForm());
         final URI uri = new URI(URI_STR);
         AnyURIValue anyUriValue1 = new AnyURIValue(uri);
@@ -194,7 +194,7 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     private void checkStringIsWrongFormat(String wrongFormatedString, URI correctURIFormat) {
-        DatatypeValue value = datatypeFactory.createValue(wrongFormatedString, correctURIFormat);
+        DatatypeValue value = datatypeFactory.createValue(correctURIFormat, wrongFormatedString);
         assertFalse("Should fail for having wrong format", datatypeFactory.correctValueType(value, correctURIFormat));
     }
 
@@ -203,7 +203,7 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     private void checkCreatingValue(String strToParse, URI uri) {
-        DatatypeValue value = datatypeFactory.createValue(strToParse, uri);
+        DatatypeValue value = datatypeFactory.createValue(uri, strToParse);
         assertTrue("Should parse correctly with expected value, got: " + value.getClass(),
             datatypeFactory.correctValueType(value, uri));
         assertEquals(strToParse, value.getLexicalForm());

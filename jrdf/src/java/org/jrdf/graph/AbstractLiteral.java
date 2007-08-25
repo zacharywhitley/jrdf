@@ -178,7 +178,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         }
 
         // Initialize fields
-        value = datatypeFactory.createValue(newLexicalForm, newDatatypeURI);
+        value = datatypeFactory.createValue(newDatatypeURI, newLexicalForm);
         language = "";
         datatypeURI = newDatatypeURI;
     }
