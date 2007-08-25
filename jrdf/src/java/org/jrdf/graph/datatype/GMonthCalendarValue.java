@@ -65,7 +65,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.GregorianCalendar;
 
-public class GMonthCalendarValue implements Value {
+public class GMonthCalendarValue implements DatatypeValue {
     private static final long serialVersionUID = -7988880953802613273L;
     private static final javax.xml.datatype.DatatypeFactory FACTORY;
     private static final int END_OF_CORRECT_DATE = 4;
@@ -96,11 +96,11 @@ public class GMonthCalendarValue implements Value {
         this.value = FACTORY.newXMLGregorianCalendar(convertToBuggyFormat(newValue));
     }
 
-    public Value create(final Object object) {
+    public DatatypeValue create(final Object object) {
         return new GMonthCalendarValue((GregorianCalendar) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new GMonthCalendarValue(lexicalForm);
     }
 
@@ -108,15 +108,15 @@ public class GMonthCalendarValue implements Value {
         return convertToCorrectFormat(value.toString());
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value val) {
+    public int compareTo(DatatypeValue val) {
         return value.compare(((GMonthCalendarValue) val).value);
     }
 
-    public int equivCompareTo(Value val) {
+    public int equivCompareTo(DatatypeValue val) {
         return compareTo(val);
     }
 

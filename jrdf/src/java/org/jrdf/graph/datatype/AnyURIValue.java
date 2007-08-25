@@ -65,7 +65,7 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.net.URI;
 
-public class AnyURIValue implements Value {
+public class AnyURIValue implements DatatypeValue {
     private static final long serialVersionUID = 5238568787496038240L;
     private URI value;
 
@@ -80,11 +80,11 @@ public class AnyURIValue implements Value {
         this.value = newValue;
     }
 
-    public Value create(final Object object) {
+    public DatatypeValue create(final Object object) {
         return new AnyURIValue((URI) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new AnyURIValue(lexicalForm);
     }
 
@@ -92,15 +92,15 @@ public class AnyURIValue implements Value {
         return value.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value val) {
+    public int compareTo(DatatypeValue val) {
         return value.compareTo(((AnyURIValue) val).value);
     }
 
-    public int equivCompareTo(Value value) {
+    public int equivCompareTo(DatatypeValue value) {
         return compareTo(value);
     }
 

@@ -68,7 +68,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DateTimeValue implements Value {
+public class DateTimeValue implements DatatypeValue {
     private static final long serialVersionUID = 3135119000595034019L;
     private static final javax.xml.datatype.DatatypeFactory FACTORY;
     private XMLGregorianCalendar value;
@@ -99,11 +99,11 @@ public class DateTimeValue implements Value {
         this.value = FACTORY.newXMLGregorianCalendar(newValue);
     }
 
-    public Value create(final Object object) {
+    public DatatypeValue create(final Object object) {
         return new DateTimeValue((Date) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new DateTimeValue(lexicalForm);
     }
 
@@ -111,15 +111,15 @@ public class DateTimeValue implements Value {
         return value.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value val) {
+    public int compareTo(DatatypeValue val) {
         return value.compare(((DateTimeValue) val).value);
     }
 
-    public int equivCompareTo(Value val) {
+    public int equivCompareTo(DatatypeValue val) {
         return compareTo(val);
     }
 

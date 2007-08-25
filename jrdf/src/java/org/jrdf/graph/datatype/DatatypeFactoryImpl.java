@@ -132,7 +132,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         return factoryMap.containsKey(datatypeURI);
     }
 
-    public boolean correctValueType(final Value value, final URI datatypeURI) {
+    public boolean correctValueType(final DatatypeValue value, final URI datatypeURI) {
         if (factoryMap.containsKey(datatypeURI)) {
             ValueCreator valueCreator = factoryMap.get(datatypeURI);
             return value.getClass().equals(valueCreator.getClass());
@@ -183,11 +183,11 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         return false;
     }
 
-    public Value createValue(final String newLexicalForm) {
+    public DatatypeValue createValue(final String newLexicalForm) {
         return factoryMap.get(NULL_URI).create(newLexicalForm);
     }
 
-    public Value createValue(final Object newObject) {
+    public DatatypeValue createValue(final Object newObject) {
         if (classToCreator.containsKey(newObject.getClass())) {
             final ValueCreator creator = classToCreator.get(newObject.getClass());
             return creator.create(newObject);
@@ -196,8 +196,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         }
     }
 
-    public Value createValue(final String newLexicalForm, final URI dataTypeURI) {
-        Value value;
+    public DatatypeValue createValue(final String newLexicalForm, final URI dataTypeURI) {
+        DatatypeValue value;
         // Try and create a correctly typed value. If all else fails create a non-types/string version as RDF does not
         // require lexical values are correct.
         try {

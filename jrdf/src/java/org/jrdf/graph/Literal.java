@@ -59,7 +59,7 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.datatype.Value;
+import org.jrdf.graph.datatype.DatatypeValue;
 
 import java.net.URI;
 
@@ -70,44 +70,26 @@ import java.net.URI;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Literal extends ObjectNode, TypedNodeVisitable {
-
-    /**
-     * Obtain the text of this literal.
-     *
-     * @return the text of the literal, never <code>null</code>
-     */
-    String getLexicalForm();
+public interface Literal extends ObjectNode, TypedNodeVisitable, Value {
 
     /**
      * Obtain the data type representation of this literal.
      *
      * @return the value object (data type) of this literal.
      */
-    Value getValue();
+    DatatypeValue getValue();
 
     /**
-     * Returns the language code of the literal, or <code>""</code> if no
-     * language specified.
+     * Returns the language code of the literal, or <code>""</code> if no language specified.
      *
-     * @return the language code of the literal, or <code>""</code> if no
-     *         language specified.
+     * @return the language code of the literal, or <code>""</code> if no language specified.
      */
     String getLanguage();
 
     /**
-     * Whether the literal is well formed XML.
+     * Returns the URI of the RDF datatype of this resource, or <code>NULL_URI</code> for an untyped node.
      *
-     * @return whether the literal is wll formed XML.
-     */
-    boolean isWellFormedXML();
-
-    /**
-     * Returns the URI of the RDF datatype of this resource, or <code>NULL_URI</code>
-     * for an untyped node.
-     *
-     * @return the URI of the RDF datatype of this resource, or <code>NULL_URI</code>
-     *         for an untyped node.
+     * @return the URI of the RDF datatype of this resource, or <code>NULL_URI</code> for an untyped node.
      */
     URI getDatatypeURI();
 
@@ -151,34 +133,29 @@ public interface Literal extends ObjectNode, TypedNodeVisitable {
     boolean equals(Object obj);
 
     /**
-     * Returns a hash-code value for this literal. The hash code is based upon
-     * XORing all of the literal's components hash codes including the
-     * lexical form, datatype, and language.
+     * Returns a hash-code value for this literal. The hash code is based upon XORing all of the literal's components
+     * hash codes including the lexical form, datatype, and language.
      *
      * @return a hash-code value for this literal.
      */
     int hashCode();
 
     /**
-     * Provide a legible representation of a literal, following the N-Triples
-     * format defined in
+     * Provide a legible representation of a literal, following the N-Triples format defined in
      * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210/#ntrip_strings">&sect;3.2</a>
-     * of the <a href="http://www.w3.org/">
-     * <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
-     * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test
-     * Cases</a> Recommendation.
+     * of the <a href="http://www.w3.org/"> <acronym title="World Wide Web Consortium">W3C</acronym></a>'s
+     * <a href="http://www.w3.org/TR/2004/REC-rdf-testcases-20040210">RDF Test Cases</a> Recommendation.
      * <p/>
-     * Well-formed Unicode surrogate pairs in the lexical form are escaped as a
-     * single 8-digit hexadecimal <code>\U</code> escape sequence rather than a
-     * pair of 4-digit <code>&x5C;u</code> sequences representing the surrogates.
+     * Well-formed Unicode surrogate pairs in the lexical form are escaped as a single 8-digit hexadecimal
+     * <code>\U</code> escape sequence rather than a pair of 4-digit <code>&x5C;u</code> sequences representing 4
+     * the surrogates.
      *
      * @return this instance in N-Triples format
      */
     String getEscapedForm();
 
     /**
-     * Returns an escaped lexical form where double quotes and backslashes are
-     * escaped.
+     * Returns an escaped lexical form where double quotes and backslashes are escaped.
      *
      * @return String the lexical form.
      */

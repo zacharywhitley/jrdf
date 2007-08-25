@@ -66,7 +66,7 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.Duration;
 
-public class DurationValue implements Value {
+public class DurationValue implements DatatypeValue {
     private static final long serialVersionUID = -7039266563142815725L;
     private static final javax.xml.datatype.DatatypeFactory FACTORY;
     private Duration value;
@@ -90,11 +90,11 @@ public class DurationValue implements Value {
         this.value = FACTORY.newDuration(newValue);
     }
 
-    public Value create(Object object) {
+    public DatatypeValue create(Object object) {
         return new DurationValue((Duration) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new DurationValue(lexicalForm);
     }
 
@@ -102,15 +102,15 @@ public class DurationValue implements Value {
         return value.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value val) {
+    public int compareTo(DatatypeValue val) {
         return value.compare(((DurationValue) val).value);
     }
 
-    public int equivCompareTo(Value val) {
+    public int equivCompareTo(DatatypeValue val) {
         return compareTo(val);
     }
 

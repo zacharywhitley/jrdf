@@ -65,7 +65,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.GregorianCalendar;
 
-public class CalendarValue implements Value {
+public class CalendarValue implements DatatypeValue {
     private static final long serialVersionUID = -7988880953802613273L;
     private static final javax.xml.datatype.DatatypeFactory FACTORY;
     private XMLGregorianCalendar value;
@@ -94,11 +94,11 @@ public class CalendarValue implements Value {
         this.value = FACTORY.newXMLGregorianCalendar(newValue);
     }
 
-    public Value create(final Object object) {
+    public DatatypeValue create(final Object object) {
         return new CalendarValue((GregorianCalendar) object);
     }
 
-    public Value create(final String lexicalForm) {
+    public DatatypeValue create(final String lexicalForm) {
         return new CalendarValue(lexicalForm);
     }
 
@@ -106,15 +106,15 @@ public class CalendarValue implements Value {
         return value.toString();
     }
 
-    public boolean isWellFormedXml() {
+    public boolean isWellFormedXML() {
         return false;
     }
 
-    public int compareTo(Value val) {
+    public int compareTo(DatatypeValue val) {
         return value.compare(((CalendarValue) val).value);
     }
 
-    public int equivCompareTo(Value val) {
+    public int equivCompareTo(DatatypeValue val) {
         return compareTo(val);
     }
 

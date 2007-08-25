@@ -61,6 +61,7 @@ package org.jrdf.graph.datatype;
 
 import junit.framework.TestCase;
 import org.jrdf.vocabulary.XSD;
+import org.jrdf.graph.datatype.DatatypeValue;
 
 import java.net.URI;
 import java.util.Calendar;
@@ -98,21 +99,21 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
 
     public void testCreatingCalendar() {
         Calendar year2000 = new GregorianCalendar(2000, 0, 1);
-        Value value = datatypeFactory.createValue(year2000);
+        DatatypeValue value = datatypeFactory.createValue(year2000);
         assertEquals(HAPPY_NEW_YEAR, value.getLexicalForm());
         URI uri = datatypeFactory.getObjectDatatypeURI(year2000);
         assertEquals(XSD.DATE_TIME, uri);
     }
 
     public void testCreatingDateTimeValue() {
-        Value value = datatypeFactory.createValue(TEN_SECONDS_AFTER_UNIX_EPOCH);
+        DatatypeValue value = datatypeFactory.createValue(TEN_SECONDS_AFTER_UNIX_EPOCH);
         assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
         URI uri = datatypeFactory.getObjectDatatypeURI(TEN_SECONDS_AFTER_UNIX_EPOCH);
         assertEquals(XSD.DATE_TIME, uri);
     }
 
     public void testStringToTime() {
-        Value value = datatypeFactory.createValue(COFFEE_TIME, XSD.TIME);
+        DatatypeValue value = datatypeFactory.createValue(COFFEE_TIME, XSD.TIME);
         assertEquals(COFFEE_TIME, value.getLexicalForm());
     }
 
@@ -139,17 +140,17 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     public void testDate() {
-        Value value = datatypeFactory.createValue(new Date(TEN_SECONDS));
+        DatatypeValue value = datatypeFactory.createValue(new Date(TEN_SECONDS));
         assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
     }
 
     public void testSQLDate() {
-        Value value = datatypeFactory.createValue(new java.sql.Date(TEN_SECONDS));
+        DatatypeValue value = datatypeFactory.createValue(new java.sql.Date(TEN_SECONDS));
         assertEquals(TEN_SECOND_AFTER_UNIX_EPOCH_STRING, value.getLexicalForm());
     }
 
     public void testAnyURI() throws Exception {
-        Value value = datatypeFactory.createValue(URI_STR, XSD.ANY_URI);
+        DatatypeValue value = datatypeFactory.createValue(URI_STR, XSD.ANY_URI);
         assertEquals(URI_STR, value.getLexicalForm());
         final URI uri = new URI(URI_STR);
         AnyURIValue anyUriValue1 = new AnyURIValue(uri);
@@ -193,7 +194,7 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     private void checkStringIsWrongFormat(String wrongFormatedString, URI correctURIFormat) {
-        Value value = datatypeFactory.createValue(wrongFormatedString, correctURIFormat);
+        DatatypeValue value = datatypeFactory.createValue(wrongFormatedString, correctURIFormat);
         assertFalse("Should fail for having wrong format", datatypeFactory.correctValueType(value, correctURIFormat));
     }
 
@@ -202,7 +203,7 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     }
 
     private void checkCreatingValue(String strToParse, URI uri) {
-        Value value = datatypeFactory.createValue(strToParse, uri);
+        DatatypeValue value = datatypeFactory.createValue(strToParse, uri);
         assertTrue("Should parse correctly with expected value, got: " + value.getClass(),
             datatypeFactory.correctValueType(value, uri));
         assertEquals(strToParse, value.getLexicalForm());
