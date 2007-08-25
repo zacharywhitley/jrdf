@@ -73,12 +73,6 @@ import org.jrdf.graph.mem.LocalizedNode;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * Stuff goes in here.
- *
- * @author Andrew Newman
- * @version $Id$
- */
 public final class NodePoolImpl implements NodePool {
     /**
      * Three being the number, and the number being 3.
