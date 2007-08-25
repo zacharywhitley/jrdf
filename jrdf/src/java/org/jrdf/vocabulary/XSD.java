@@ -198,12 +198,12 @@ public class XSD extends Vocabulary {
     /**
      * NonPositiveInteger data type.
      */
-    public static final URI NONPOSITIVEINTEGER;
+    public static final URI NON_POSITIVE_INTEGER;
 
     /**
      * NonNegativeInteger data type.
      */
-    public static final URI NONNAGATIVEINTEGER;
+    public static final URI NON_NEGATIVE_INTEGER;
     /**
 
      * Short data type.
@@ -249,8 +249,8 @@ public class XSD extends Vocabulary {
             ANY_URI = new URI(BASE_URI + "anyURI");
             Q_NAME = new URI(BASE_URI + "QName");
             NOTATION = new URI(BASE_URI + "NOTATION");
-            NONPOSITIVEINTEGER = new URI(BASE_URI + "nonPositiveInteger");
-            NONNAGATIVEINTEGER = new URI(BASE_URI + "nonNegativeInteger");
+            NON_POSITIVE_INTEGER = new URI(BASE_URI + "nonPositiveInteger");
+            NON_NEGATIVE_INTEGER = new URI(BASE_URI + "nonNegativeInteger");
 
             // Derived data types.
             INTEGER = new URI(BASE_URI + "integer");
@@ -286,8 +286,8 @@ public class XSD extends Vocabulary {
             RESOURCES.add(INT);
             RESOURCES.add(SHORT);
             RESOURCES.add(BYTE);
-            RESOURCES.add(NONPOSITIVEINTEGER);
-            RESOURCES.add(NONNAGATIVEINTEGER);
+            RESOURCES.add(NON_POSITIVE_INTEGER);
+            RESOURCES.add(NON_NEGATIVE_INTEGER);
 
             // Add all decimal types
             DECIMALS.add(DECIMAL);
@@ -296,8 +296,8 @@ public class XSD extends Vocabulary {
             DECIMALS.add(INT);
             DECIMALS.add(SHORT);
             DECIMALS.add(BYTE);
-            DECIMALS.add(NONPOSITIVEINTEGER);
-            DECIMALS.add(NONNAGATIVEINTEGER);
+            DECIMALS.add(NON_POSITIVE_INTEGER);
+            DECIMALS.add(NON_NEGATIVE_INTEGER);
 
             // Add all string types
             STRINGS.add(STRING);
