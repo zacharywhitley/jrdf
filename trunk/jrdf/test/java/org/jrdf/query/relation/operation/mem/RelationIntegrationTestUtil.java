@@ -93,12 +93,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-/**
- * Class description goes here.
- *
- * @author Andrew Newman
- * @version $Revision:$
- */
 public class RelationIntegrationTestUtil {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final RelationFactory RELATION_FACTORY = FACTORY.getNewRelationFactory();
@@ -255,5 +249,5 @@ public class RelationIntegrationTestUtil {
         return tuples;
     }
 
-    
+
 }

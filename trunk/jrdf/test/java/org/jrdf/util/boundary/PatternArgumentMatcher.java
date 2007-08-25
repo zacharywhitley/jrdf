@@ -63,9 +63,6 @@ import org.easymock.EasyMock;
 
 import java.util.regex.Pattern;
 
-/**
- * Class description goes here.
- */
 public class PatternArgumentMatcher implements IArgumentMatcher {
     private final Pattern expectedPattern;
 

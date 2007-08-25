@@ -66,9 +66,6 @@ import java.util.regex.Pattern;
 import java.util.Map;
 import java.util.HashMap;
 
-/**
- * Class description goes here.
- */
 // TODO AN Rename to something a bit more correct - escapes strings.
 public final class NTripleUtilImpl implements NTripleUtil {
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(

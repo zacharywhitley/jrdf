@@ -77,9 +77,6 @@ import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 
-/**
- * Class description goes here.
- */
 public class ParserFactoryImpl implements ParserFactory {
     public NTriplesParser createParser(GraphElementFactory graphElementFactory,
             ParserBlankNodeFactory parserBlankNodeFactory) {
