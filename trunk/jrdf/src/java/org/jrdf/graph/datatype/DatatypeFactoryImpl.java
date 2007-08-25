@@ -99,8 +99,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.G_YEAR, calendarValue);
         addValueCreator(XSD.G_MONTH_DAY, calendarValue);
         addValueCreator(XSD.G_DAY, calendarValue);
-        addValueCreator(BigInteger.class, XSD.NONPOSITIVEINTEGER, new NonPositiveIntegerValue());
-        addValueCreator(BigInteger.class, XSD.NONNAGATIVEINTEGER, new NonNegativeIntegerValue());
+        addValueCreator(BigInteger.class, XSD.NON_POSITIVE_INTEGER, new NonPositiveIntegerValue());
+        addValueCreator(BigInteger.class, XSD.NON_NEGATIVE_INTEGER, new NonNegativeIntegerValue());
         addValueCreator(QName.class, XSD.Q_NAME, new QNameValue());
         if (isBuggyJava()) {
             addValueCreator(XSD.G_MONTH, new GMonthCalendarValue());

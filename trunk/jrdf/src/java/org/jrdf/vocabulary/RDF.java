@@ -70,7 +70,7 @@ import java.net.URISyntaxException;
  * @author Andrew Newman
  * @version $Revision$
  */
-public abstract class RDF extends Vocabulary {
+public class RDF extends Vocabulary {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

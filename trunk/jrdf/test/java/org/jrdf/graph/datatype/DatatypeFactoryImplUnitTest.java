@@ -158,26 +158,26 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
 
     public void testNonNegativeIntegerValue() {
         //test different correct format
-        checkWrongStringValueAndCreate(ZERO, XSD.NONNAGATIVEINTEGER);
-        checkWrongStringValueAndCreate(POSITIVE_ZERO, XSD.NONNAGATIVEINTEGER);
-        checkWrongStringValueAndCreate(NEGATIVE_ZERO, XSD.NONNAGATIVEINTEGER);
-        checkWrongStringValueAndCreate(ONE, XSD.NONNAGATIVEINTEGER);
-        checkWrongStringValueAndCreate(POSITIVE_ONE, XSD.NONNAGATIVEINTEGER);
+        checkWrongStringValueAndCreate(ZERO, XSD.NON_NEGATIVE_INTEGER);
+        checkWrongStringValueAndCreate(POSITIVE_ZERO, XSD.NON_NEGATIVE_INTEGER);
+        checkWrongStringValueAndCreate(NEGATIVE_ZERO, XSD.NON_NEGATIVE_INTEGER);
+        checkWrongStringValueAndCreate(ONE, XSD.NON_NEGATIVE_INTEGER);
+        checkWrongStringValueAndCreate(POSITIVE_ONE, XSD.NON_NEGATIVE_INTEGER);
         //test wrong format
-        checkStringIsWrongFormat(NEGATIVE_ONE, XSD.NONNAGATIVEINTEGER);
+        checkStringIsWrongFormat(NEGATIVE_ONE, XSD.NON_NEGATIVE_INTEGER);
     }
 
     public void testNonPositiveIntegerValue() {
         //test different correct format
-        checkWrongStringValueAndCreate(ZERO, XSD.NONPOSITIVEINTEGER);
-        checkWrongStringValueAndCreate(POSITIVE_ZERO, XSD.NONPOSITIVEINTEGER);
-        checkWrongStringValueAndCreate(NEGATIVE_ZERO, XSD.NONPOSITIVEINTEGER);
-        checkWrongStringValueAndCreate(NEGATIVE_ONE, XSD.NONPOSITIVEINTEGER);
-        checkWrongStringValueAndCreate("-2164654654", XSD.NONPOSITIVEINTEGER);
+        checkWrongStringValueAndCreate(ZERO, XSD.NON_POSITIVE_INTEGER);
+        checkWrongStringValueAndCreate(POSITIVE_ZERO, XSD.NON_POSITIVE_INTEGER);
+        checkWrongStringValueAndCreate(NEGATIVE_ZERO, XSD.NON_POSITIVE_INTEGER);
+        checkWrongStringValueAndCreate(NEGATIVE_ONE, XSD.NON_POSITIVE_INTEGER);
+        checkWrongStringValueAndCreate("-2164654654", XSD.NON_POSITIVE_INTEGER);
 
         //test wrong format
-        checkStringIsWrongFormat(POSITIVE_ONE, XSD.NONPOSITIVEINTEGER);
-        checkStringIsWrongFormat(ONE, XSD.NONPOSITIVEINTEGER);
+        checkStringIsWrongFormat(POSITIVE_ONE, XSD.NON_POSITIVE_INTEGER);
+        checkStringIsWrongFormat(ONE, XSD.NON_POSITIVE_INTEGER);
     }
 
     public void testQName() {

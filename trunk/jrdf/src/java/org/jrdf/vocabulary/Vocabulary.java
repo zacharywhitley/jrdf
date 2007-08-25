@@ -72,7 +72,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public abstract class Vocabulary implements Serializable {
+public class Vocabulary implements Serializable {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
