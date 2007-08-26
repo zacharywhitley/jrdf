@@ -2,7 +2,7 @@ JRDF Release 0.5.0
 ==================
 * First support for Java 6.  Will run under Java 5 but requires StAX library
   for RDF/XML writer.
-* Datatype support Currently supports all XSD builtin datatypes except for
+* Datatype support with support for all XSD builtin datatypes except
   base64Binary, hexBinary, and NOTATION and derived types nonPositiveInteger,
   nonNegativeInteger, integer, long, int, short and byte (Feature 1748820).
 * Resource interface - allows nodes to be treated as both Subject and
@@ -13,7 +13,7 @@ JRDF Release 0.5.0
   resources, blank nodes and uri references (Feature 1778255).
 * Modifications to Literal interface.  Includes isXXX for which type of
   literal it is and use of datatypes and value interface (Feature 1751594).
-* Add clear method to maps (Feature 1758597).
+* Add clear and close method to maps (Feature 1758597).
 * Corrected escaping of RDF/XML writer (Bug 1762434).
 * Removed use of null in AbstractLitearl (Bug 1751593).
 
