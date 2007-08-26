@@ -1,11 +1,16 @@
+JRDF Release 0.5.0
+==================
+* First support for Java 6.  Will run under Java 5, requires StAX library for RDF/XML writer.
+* Added Datatype support (Feature 1748820).
+
 JRDF Release 0.4.1.1
 ====================
 * Fixed JRDFModelImpl re-wires components (Bug 1731097).
-* Fixed error in SortedMemoryJRDFFactoryImpl (Bug 1731094). 
+* Fixed error in SortedMemoryJRDFFactoryImpl (Bug 1731094).
 
 JRDF Release 0.4.1
 ==================
-* Initial SPARQL: PREFIX, SELECT, WHERE, OPTIONAL, . (JOIN) and UNION 
+* Initial SPARQL: PREFIX, SELECT, WHERE, OPTIONAL, . (JOIN) and UNION
   supported (Feature 1236476).
 * User interface for SPARQL Querying (Feature 1505272).
 * Allows sorted results from the Graph API's find() method (Feature 1475502).
@@ -13,9 +18,9 @@ JRDF Release 0.4.1
 * Push and Pull NTriples parser (Feature 1669796).
 * Added visit(Node) (Feature 1624471).
 * Fixed lazy implementation of Hashcode and Equals (Bug 1564442).
-* Now displays the line number when creating a URI from an RDF/XML file 
+* Now displays the line number when creating a URI from an RDF/XML file
   fails (Bug 1564355).
-* Changed to use Java 1.5 UUID generator instead of own implementation 
+* Changed to use Java 1.5 UUID generator instead of own implementation
   (Bug 1560109).
 * Fixed JrdfExample (Bug 1467546).
 * Fixed AbstractTriple.equals handling null nodes (Bug 1273310).
