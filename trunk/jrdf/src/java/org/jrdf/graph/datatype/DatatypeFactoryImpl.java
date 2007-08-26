@@ -99,8 +99,6 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.G_YEAR, calendarValue);
         addValueCreator(XSD.G_MONTH_DAY, calendarValue);
         addValueCreator(XSD.G_DAY, calendarValue);
-        addValueCreator(XSD.NON_POSITIVE_INTEGER, BigInteger.class, new NonPositiveIntegerValue());
-        addValueCreator(XSD.NON_NEGATIVE_INTEGER, BigInteger.class, new NonNegativeIntegerValue());
         addValueCreator(XSD.Q_NAME, QName.class, new QNameValue());
         if (isBuggyJava()) {
             addValueCreator(XSD.G_MONTH, new GMonthCalendarValue());
@@ -110,6 +108,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addValueCreator(XSD.ANY_URI, new AnyURIValue());
 
         // Derived types
+        addValueCreator(XSD.NON_POSITIVE_INTEGER, BigInteger.class, new NonPositiveIntegerValue());
+        addValueCreator(XSD.NON_NEGATIVE_INTEGER, BigInteger.class, new NonNegativeIntegerValue());
         addValueCreator(XSD.INTEGER, BigInteger.class, new IntegerValue());
         addValueCreator(XSD.LONG, Long.class, new LongValue());
         addValueCreator(XSD.INT, Integer.class, new IntValue());
@@ -158,7 +158,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
         addSecondaryValueCreator(aClass, datatypeURI, creator);
     }
 
-    public void addSecondaryValueCreator(Class<?> aClass, final URI datatypeURI, final ValueCreator creator) {
+    public void addSecondaryValueCreator(final Class<?> aClass, final URI datatypeURI, final ValueCreator creator) {
         classToCreator.put(aClass, creator);
         classToURI.put(aClass, datatypeURI);
     }
