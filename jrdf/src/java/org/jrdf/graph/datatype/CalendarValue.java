@@ -63,11 +63,12 @@ import org.jrdf.util.EqualsUtil;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.datatype.DatatypeFactory;
 import java.util.GregorianCalendar;
 
 public class CalendarValue implements DatatypeValue {
     private static final long serialVersionUID = -7988880953802613273L;
-    private static final javax.xml.datatype.DatatypeFactory FACTORY;
+    private static final DatatypeFactory FACTORY;
     private XMLGregorianCalendar value;
 
     static {

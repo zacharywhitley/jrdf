@@ -65,10 +65,11 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.Duration;
+import javax.xml.datatype.DatatypeFactory;
 
 public class DurationValue implements DatatypeValue {
     private static final long serialVersionUID = -7039266563142815725L;
-    private static final javax.xml.datatype.DatatypeFactory FACTORY;
+    private static final DatatypeFactory FACTORY;
     private Duration value;
 
     static {
