@@ -63,11 +63,12 @@ import org.jrdf.util.EqualsUtil;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.datatype.DatatypeFactory;
 import java.util.GregorianCalendar;
 
 public class GMonthCalendarValue implements DatatypeValue {
     private static final long serialVersionUID = -7988880953802613273L;
-    private static final javax.xml.datatype.DatatypeFactory FACTORY;
+    private static final DatatypeFactory FACTORY;
     private static final int END_OF_CORRECT_DATE = 4;
     private static final int START_OF_TIME_ZONE = 6;
     private XMLGregorianCalendar value;
