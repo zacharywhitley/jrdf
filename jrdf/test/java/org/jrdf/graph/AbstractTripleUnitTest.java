@@ -64,6 +64,8 @@ import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR;
 import org.jrdf.util.test.SerializationTestUtil;
 import org.jrdf.util.test.TripleTestUtil;
+import org.jrdf.util.test.Triple1;
+import org.jrdf.util.test.Triple2;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -252,36 +254,8 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     }
 
     private void checkDifferentImplementationsAreEqual() {
-        Triple t1 = new TestTriple(uriUrnFoo, uriUrnFoo, uriUrnFoo);
-        Triple t2 = new TestTriple2(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple t1 = new Triple1(uriUrnFoo, uriUrnFoo, uriUrnFoo);
+        Triple t2 = new Triple2(uriUrnFoo, uriUrnFoo, uriUrnFoo);
         assertEquals(t1, t2);
-    }
-
-    private static class TestTriple extends AbstractTriple {
-
-        private static final long serialVersionUID = -2638294178260916848L;
-
-        private TestTriple() {
-        }
-
-        public TestTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-            this.subjectNode = subject;
-            this.predicateNode = predicate;
-            this.objectNode = object;
-        }
-    }
-
-    private static class TestTriple2 extends AbstractTriple {
-
-        private static final long serialVersionUID = 4936449745021045497L;
-
-        private TestTriple2() {
-        }
-
-        public TestTriple2(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-            this.subjectNode = subject;
-            this.predicateNode = predicate;
-            this.objectNode = object;
-        }
     }
 }
