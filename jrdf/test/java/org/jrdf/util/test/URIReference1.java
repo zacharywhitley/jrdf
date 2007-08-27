@@ -69,7 +69,6 @@ public class URIReference1 extends AbstractURIReference {
     private static final long serialVersionUID = -443111126777106029L;
 
     private URIReference1() {
-
     }
 
     public URIReference1(URI newUri) throws IllegalArgumentException {
