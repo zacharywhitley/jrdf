@@ -64,6 +64,8 @@ import org.jrdf.graph.AbstractLiteral;
 import java.net.URI;
 
 public class Literal1 extends AbstractLiteral {
+    private static final long serialVersionUID = 6739274181215439209L;
+
     public Literal1(String newLexicalForm, URI newDatatypeURI) {
         super(newLexicalForm, newDatatypeURI);
     }

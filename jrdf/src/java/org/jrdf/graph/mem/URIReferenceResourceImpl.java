@@ -94,7 +94,10 @@ public class URIReferenceResourceImpl extends AbstractResource {
     }
 
     public boolean equals(Object obj) {
-        return node.equals((URIReference) obj);
+        if (obj instanceof URIReference) {
+            return node.equals((URIReference) obj);
+        }
+        return false;
     }
 
     public void accept(TypedNodeVisitor visitor) {
