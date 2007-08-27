@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.biomanta.comparison;
+package org.jrdf.graph.molecule;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -32,52 +32,36 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 3/08/2007
- * Time: 15:10:18
- * To change this template use File | Settings | File Templates.
+ * A Collection all the statements of a particular group.
+ *
+ * @author Imran Khan
+ * @version $Revision: 1226 $
  */
 public class NaiveGraphDecomposerImpl implements GraphDecomposer {
-
-
     public Set<Molecule> decompose(Graph graph) throws GraphException {
         ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        Set<Molecule> molecules = new HashSet();          //set of molecules created by decompose process
-        Set<Triple> triplesChecked = new HashSet();       //set of triples which have been added to a molecule)
+        Set<Molecule> molecules = new HashSet<Molecule>();          //set of molecules created by decompose process
+        Set<Triple> triplesChecked = new HashSet<Triple>();       //set of triples which have been added to a molecule)
 
         //move through triples
         while (iterator.hasNext()) {
             Triple triple = iterator.next();
-            //iterator.remove();
-
             //check triple has not already been added to molecule
             if (!triplesChecked.contains(triple)) {
                 Molecule molecule = null;
-
                 if (!(triple.getObject() instanceof BlankNode) && !(triple.getSubject() instanceof BlankNode)) {
                     molecule = new MoleculeImpl(graph, triple);
                 } else if (!(triple.getObject() instanceof BlankNode) || !(triple.getSubject() instanceof BlankNode)) {
                     molecule = new MoleculeImpl(graph, triple);
-                    Set hangingTripleSet = getHangingTriples(triple, graph);
+                    Set<Triple> hangingTripleSet = getHangingTriples(triple, graph);
                     molecule.addTriples(hangingTripleSet);
                 }
-
                 if (molecule != null) {
-//                    Iterator<Triple> tripleIterator = molecule.getTripleIterator();
-//                    while (tripleIterator.hasNext()) {
-//                        Triple t = tripleIterator.next();
-//                        if (!t.equals(triple)) {
-//                            graph.remove(t);
-//                        }
-//                    }
-
                     triplesChecked.addAll(molecule.getTriples());
                     molecules.add(molecule);
                 }
             }
         }
-
         return molecules;
     }
 
@@ -148,6 +132,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
      * Given the specified graph, this method will iterate through for the pattern of
      * the given subject node and object node and add any triples matching this pattern
      * to the hangingTriples set.
+     *
      * @param graph
      * @param triple
      * @param hangingTriples
@@ -156,7 +141,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
      * @throws GraphException
      */
     private void findHangingStatements(Graph graph, Triple triple, Set<Triple> hangingTriples, SubjectNode subjNode,
-        ObjectNode objNode) throws GraphException {
+            ObjectNode objNode) throws GraphException {
 
         //find where blankNode object occurs as the subject in the graph
         ClosableIterator<Triple> blankNodeAsSubjectIterator = graph.find(subjNode, ANY_PREDICATE_NODE, objNode);

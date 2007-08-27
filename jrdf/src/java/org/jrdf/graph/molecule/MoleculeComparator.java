@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.biomanta.comparison;
+package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.GraphException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 8/08/2007
- * Time: 17:47:35
- * To change this template use File | Settings | File Templates.
+ * Compares two molecules.
+ *
+ * @author Imran Khan
+ * @version $Revision: 1226 $
  */
 public interface MoleculeComparator {
 

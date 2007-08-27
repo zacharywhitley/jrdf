@@ -34,6 +34,12 @@
     <suppress checks="CyclomaticComplexity" files="NTriplesEventReader.java"/>
     <suppress checks="ParameterNumber" files="AnyResourceIterator.java" />
 
+    <suppress checks="CyclomaticComplexity" files="MoleculeComparatorImpl.java" />
+    <suppress checks="JavaNCSS" files="MoleculeComparatorImpl.java" />
+    <suppress checks="ReturnCount" files="MoleculeComparatorImpl.java" />
+    <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl.java" />
+    <suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl.java" />
+
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>
     <suppress checks="BooleanExpressionComplexity" files="SAXFilter.java"/>

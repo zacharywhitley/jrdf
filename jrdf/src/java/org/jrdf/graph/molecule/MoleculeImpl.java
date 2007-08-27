@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.biomanta.comparison;
+package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
@@ -28,18 +28,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 3/08/2007
- * Time: 15:03:52
- * To change this template use File | Settings | File Templates.
- */
 public class MoleculeImpl implements Molecule {
-    //private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
     private Set<Triple> triples;
     private Graph graph;
-
 
     public MoleculeImpl(Graph graph) {
         triples = new HashSet<Triple>();
@@ -81,21 +72,19 @@ public class MoleculeImpl implements Molecule {
     }
 
     public String toString() {
-        String res = "";
-        try {
-            Iterator<Triple> allTriples = getTripleIterator();
-            res += "{\n";
+        final StringBuilder res = new StringBuilder();
+        final Iterator<Triple> allTriples = getTripleIterator();
+        res.append("{\n");
+        if (allTriples.hasNext()) {
             while (allTriples.hasNext()) {
-                Triple t = allTriples.next();
-                res += t.toString() + '\n';
+                final Triple t = allTriples.next();
+                res.append(t.toString());
+                res.append('\n');
             }
-            res += "}";
-        } catch (Exception e) {
-            e.printStackTrace();
-            res = "EMPTY";
+        } else {
+            res.append("EMPTY");
         }
-        return res;
+        res.append("}");
+        return res.toString();
     }
-
-
 }
