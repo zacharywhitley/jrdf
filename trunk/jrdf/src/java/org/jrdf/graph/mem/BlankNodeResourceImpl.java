@@ -94,7 +94,10 @@ public class BlankNodeResourceImpl extends AbstractResource {
     }
 
     public boolean equals(Object obj) {
-        return node.equals((BlankNode) obj);
+        if (obj instanceof BlankNode) {
+            return node.equals((BlankNode) obj);
+        }
+        return false;
     }
 
     public void accept(TypedNodeVisitor visitor) {
