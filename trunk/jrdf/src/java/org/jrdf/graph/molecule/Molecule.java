@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-package org.biomanta.comparison;
+package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 3/08/2007
- * Time: 15:01:36
- * To change this template use File | Settings | File Templates.
+ * A Collection all the statements of a particular group.
+ *
+ * @author Imran Khan
+ * @version $Revision: 1226 $
  */
 public interface Molecule {
+
+    ClosableIterator<Triple> find(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode)
+        throws GraphException;
 
     Iterator<Triple> getTripleIterator();
 
     Set<Triple> getTriples();
-
-    ClosableIterator<Triple> find(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode)
-        throws GraphException;
 
     void addTriple(Triple triple);
 
