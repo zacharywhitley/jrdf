@@ -77,6 +77,9 @@ public abstract class AbstractBlankNode implements BlankNode, Serializable {
      */
     private static final long serialVersionUID = 3481053689307839406L;
 
+    protected AbstractBlankNode() {
+    }
+
     public void accept(TypedNodeVisitor visitor) {
         visitor.visitBlankNode(this);
     }

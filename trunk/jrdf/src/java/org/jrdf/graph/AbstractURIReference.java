@@ -88,7 +88,6 @@ public abstract class AbstractURIReference implements URIReference, Serializable
     protected URI uri;
 
     protected AbstractURIReference() {
-
     }
 
     /**

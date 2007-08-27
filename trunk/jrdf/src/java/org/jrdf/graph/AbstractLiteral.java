@@ -111,6 +111,9 @@ public abstract class AbstractLiteral implements Literal, Serializable {
      */
     protected URI datatypeURI;
 
+    protected AbstractLiteral() {
+    }
+
     /**
      * Construct a plain literal.
      *
