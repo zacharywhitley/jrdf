@@ -62,11 +62,12 @@ package org.jrdf.graph;
 import junit.framework.TestCase;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import org.jrdf.util.test.AssertThrows;
+import org.jrdf.util.test.URIReference1;
+import org.jrdf.util.test.URIReference2;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
-import org.jrdf.util.ClosableIterator;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -84,9 +85,9 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     private URI uri2 = URI.create("http://bar/baz");
     private URI uri3 = URI.create("ftp://bar/baz");
     private URI notAbsURI = URI.create("hello/there");
-    private URIReference ref1;
-    private URIReference ref2;
-    private URIReference ref3;
+    private org.jrdf.graph.URIReference ref1;
+    private org.jrdf.graph.URIReference ref2;
+    private org.jrdf.graph.URIReference ref3;
 
     /**
      * Constructs a new test with the given name.
@@ -103,21 +104,21 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         ref3 = createResource(uri3);
     }
 
-    public abstract URIReference createResource(URI uri) throws Exception;
+    public abstract org.jrdf.graph.URIReference createResource(URI uri) throws Exception;
 
-    public abstract URIReference createResource(URI uri, boolean check) throws Exception;
+    public abstract org.jrdf.graph.URIReference createResource(URI uri, boolean check) throws Exception;
 
     public abstract void testClassProperties();
 
     protected void checkClassProperties(Class newClass, Class[] paramTypes) {
-        checkImplementationOfInterface(URIReference.class, newClass);
+        checkImplementationOfInterface(org.jrdf.graph.URIReference.class, newClass);
         checkImplementationOfInterface(Serializable.class, newClass);
         checkExtensionOf(AbstractURIReference.class, newClass);
         checkConstructNullAssertion(newClass, paramTypes);
     }
 
     protected void checkAbstractClassProperties() {
-        checkImplementationOfInterface(URIReference.class, AbstractURIReference.class);
+        checkImplementationOfInterface(org.jrdf.graph.URIReference.class, AbstractURIReference.class);
         checkImplementationOfInterface(Serializable.class, AbstractURIReference.class);
         checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class);
         checkConstructor(AbstractURIReference.class, Modifier.PROTECTED, URI.class, boolean.class);
@@ -150,7 +151,7 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
         checkConsistentHashCode(ref2);
     }
 
-    private void checkConsistentHashCode(URIReference ref) {
+    private void checkConsistentHashCode(org.jrdf.graph.URIReference ref) {
         int hashCode1 = ref.hashCode();
         int hashCode2 = ref.hashCode();
         assertEquals(hashCode1, hashCode2);
@@ -166,24 +167,24 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkSymmetric() throws Exception {
-        URIReference x = createResource(uri1);
-        URIReference y = createResource(uri1);
+        org.jrdf.graph.URIReference x = createResource(uri1);
+        org.jrdf.graph.URIReference y = createResource(uri1);
         checkEquals(x, y);
         checkEquals(y, y);
     }
 
     private void checkTransitive() throws Exception {
-        URIReference x = createResource(uri2);
-        URIReference y = createResource(uri2);
-        URIReference z = createResource(uri2);
+        org.jrdf.graph.URIReference x = createResource(uri2);
+        org.jrdf.graph.URIReference y = createResource(uri2);
+        org.jrdf.graph.URIReference z = createResource(uri2);
         checkEquals(x, y);
         checkEquals(y, z);
         checkEquals(x, z);
     }
 
     private void checkConsistentEquals() throws Exception {
-        URIReference x = createResource(uri1);
-        URIReference y = createResource(uri1);
+        org.jrdf.graph.URIReference x = createResource(uri1);
+        org.jrdf.graph.URIReference y = createResource(uri1);
         checkEquals(x, y);
         checkEquals(x, y);
     }
@@ -194,14 +195,14 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkSameValueSameReference() {
-        URIReference x = ref1;
-        URIReference y = x;
+        org.jrdf.graph.URIReference x = ref1;
+        org.jrdf.graph.URIReference y = x;
         checkEquals(x, y);
     }
 
     private void checkSameValueDifferentReference() throws Exception {
-        URIReference x = createResource(uri1);
-        URIReference y = createResource(uri1);
+        org.jrdf.graph.URIReference x = createResource(uri1);
+        org.jrdf.graph.URIReference y = createResource(uri1);
         checkEquals(x, y);
     }
 
@@ -237,13 +238,13 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkEqualObjectsReturnSameHashCode() {
-        URIReference x = ref1;
-        URIReference y = ref1;
+        org.jrdf.graph.URIReference x = ref1;
+        org.jrdf.graph.URIReference y = ref1;
         checkEquals(x, y);
         assertEquals(x.hashCode(), y.hashCode());
     }
 
-    private void checkEquals(URIReference x, URIReference y) {
+    private void checkEquals(org.jrdf.graph.URIReference x, org.jrdf.graph.URIReference y) {
         assertEquals(x, y);
     }
 
@@ -252,40 +253,9 @@ public abstract class AbstractURIReferenceUnitTest extends TestCase {
     }
 
     private void checkDifferentImplementationsAreEqual() {
-        URIReference testRef1 = new TestURIReference(uri1);
-        URIReference testRef2 = new TestURIReference2(uri1);
+        org.jrdf.graph.URIReference testRef1 = new URIReference1(uri1);
+        org.jrdf.graph.URIReference testRef2 = new URIReference2(uri1);
         assertEquals(testRef1, testRef2);
     }
 
-    private static class TestURIReference extends AbstractURIReference {
-        private static final long serialVersionUID = -443111126777106029L;
-
-        private TestURIReference() {
-
-        }
-
-        public TestURIReference(URI newUri) throws IllegalArgumentException {
-            super(newUri);
-        }
-
-        public ClosableIterator<PredicateNode> getUniquePredicates() {
-            return null;
-        }
-    }
-
-    private static class TestURIReference2 extends AbstractURIReference {
-        private static final long serialVersionUID = 8196131420240571434L;
-
-        private TestURIReference2() {
-
-        }
-
-        public TestURIReference2(URI newUri) throws IllegalArgumentException {
-            super(newUri);
-        }
-
-        public ClosableIterator<PredicateNode> getUniquePredicates() {
-            return null;
-        }
-    }
 }

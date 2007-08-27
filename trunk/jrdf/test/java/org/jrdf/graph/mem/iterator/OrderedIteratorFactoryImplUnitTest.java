@@ -61,7 +61,6 @@ package org.jrdf.graph.mem.iterator;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
-import org.jrdf.graph.AbstractURIReference;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
@@ -76,6 +75,7 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndF
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.URIReference1;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -90,10 +90,10 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
             GraphHandler.class, NodeComparator.class};
     private static final String[] PARAMETER_NAMES = new String[] {"newIteratorFactory", "newNodePool",
             "newLongIndex", "newGraphHandler", "newNodeComparator"};
-    private static final PredicateNode IMRAN = new TestURIReference(URI.create("urn:imran"));
-    private static final PredicateNode FOO = new TestURIReference(URI.create("urn:foo"));
-    private static final PredicateNode BAR = new TestURIReference(URI.create("urn:bar"));
-    private static final PredicateNode BAZ = new TestURIReference(URI.create("urn:baz"));
+    private static final PredicateNode IMRAN = new URIReference1(URI.create("urn:imran"));
+    private static final PredicateNode FOO = new URIReference1(URI.create("urn:foo"));
+    private static final PredicateNode BAR = new URIReference1(URI.create("urn:bar"));
+    private static final PredicateNode BAZ = new URIReference1(URI.create("urn:baz"));
     private static final List<PredicateNode> ORDER_VALUES = asList(BAR, BAZ, FOO, IMRAN);
     private static final Long RESOURCE_ID = System.currentTimeMillis();
     private final MockFactory mockFactory = new MockFactory();
@@ -174,16 +174,6 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
         while (actualIterator.hasNext()) {
             assertEquals(expectedValues.get(index), actualIterator.next());
             index++;
-        }
-    }
-
-    private static class TestURIReference extends AbstractURIReference {
-        public TestURIReference(URI newUri) throws IllegalArgumentException {
-            super(newUri);
-        }
-
-        public ClosableIterator<PredicateNode> getUniquePredicates() {
-            return null;
         }
     }
 }
