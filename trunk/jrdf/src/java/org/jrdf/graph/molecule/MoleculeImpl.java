@@ -16,34 +16,45 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class MoleculeImpl implements Molecule {
-    private Set<Triple> triples;
-    private Graph graph;
+    private SortedSet<Triple> triples;
+    private Map<PredicateNode, SubjectNode> predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
+    private Map<PredicateNode, ObjectNode> predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
 
-    public MoleculeImpl(Graph graph) {
-        triples = new HashSet<Triple>();
-        this.graph = graph;
+    public MoleculeImpl(TripleComparator tripleComparator) {
+        this.triples = new TreeSet<Triple>(tripleComparator);
     }
 
-    public MoleculeImpl(Graph graph, Triple triple) {
-        this(graph);
-        addTriple(triple);
-    }
-
-    public boolean contains(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode)
-        throws GraphException {
-        return graph.contains(subjNode, predNode, objNode);
+    public boolean containsTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        if (isBlankNode(subject)) {
+            if (isBlankNode(object)) {
+                return predicateSubjectMap.containsKey(predicate);
+            } else {
+                return predicateSubjectMap.containsKey(predicate) && predicateObjectMap.containsValue(object);
+            }
+        } else {
+            if (isBlankNode(object)) {
+                return predicateSubjectMap.containsValue(subject) && predicateObjectMap.containsKey(predicate);
+            } else {
+                return predicateSubjectMap.containsKey(predicate) && predicateSubjectMap.containsValue(subject) &&
+                    predicateObjectMap.containsValue(object);
+            }
+        }
     }
 
     public Iterator<Triple> getTripleIterator() {
@@ -83,5 +94,9 @@ public class MoleculeImpl implements Molecule {
         }
         res.append("}");
         return res.toString();
+    }
+
+    private boolean isBlankNode(Node node) {
+        return node.getClass().isAssignableFrom(BlankNode.class);
     }
 }
