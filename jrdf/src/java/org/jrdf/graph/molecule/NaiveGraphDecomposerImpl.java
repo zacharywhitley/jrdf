@@ -26,7 +26,11 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.mem.TripleComparatorImpl;
+import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +42,9 @@ import java.util.Set;
  * @version $Revision: 1226 $
  */
 public class NaiveGraphDecomposerImpl implements GraphDecomposer {
+    private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
+        new NodeTypeComparatorImpl()));
+
     public Set<Molecule> decompose(Graph graph) throws GraphException {
         ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Set<Molecule> molecules = new HashSet<Molecule>();          //set of molecules created by decompose process
@@ -50,9 +57,11 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
             if (!triplesChecked.contains(triple)) {
                 Molecule molecule = null;
                 if (!(triple.getObject() instanceof BlankNode) && !(triple.getSubject() instanceof BlankNode)) {
-                    molecule = new MoleculeImpl(graph, triple);
+                    molecule = new MoleculeImpl(comparator);
+                    molecule.addTriple(triple);
                 } else if (!(triple.getObject() instanceof BlankNode) || !(triple.getSubject() instanceof BlankNode)) {
-                    molecule = new MoleculeImpl(graph, triple);
+                    molecule = new MoleculeImpl(comparator);
+                    molecule.addTriple(triple);
                     Set<Triple> hangingTripleSet = getHangingTriples(triple, graph);
                     molecule.addTriples(hangingTripleSet);
                 }

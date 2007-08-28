@@ -16,9 +16,6 @@
 
 package org.jrdf.graph.molecule;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 
@@ -38,23 +35,25 @@ public class MoleculeComparatorImpl implements MoleculeComparator {
         Iterator<Triple> tripleIterator = m1.getTripleIterator();
         while (tripleIterator.hasNext()) {
             Triple triple = tripleIterator.next();
-            if (triple.getSubject() instanceof BlankNode && triple.getObject() instanceof BlankNode) {
-                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), ANY_OBJECT_NODE)) {
-                    return false;
-                }
-            } else if (triple.getSubject() instanceof BlankNode) {
-                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), triple.getObject())) {
-                    return false;
-                }
-            } else if (triple.getObject() instanceof BlankNode) {
-                if (!m2.contains(triple.getSubject(), triple.getPredicate(), ANY_OBJECT_NODE)) {
-                    return false;
-                }
-            } else if (!(triple.getSubject() instanceof BlankNode) && !(triple.getObject() instanceof BlankNode)) {
-                if (!m2.contains(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
-                    return false;
-                }
+            if (!m2.containsTriple(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
+                return false;
             }
+//                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), ANY_OBJECT_NODE)) {
+//                    return false;
+//                }
+//            } else if (triple.getSubject() instanceof BlankNode) {
+//                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), triple.getObject())) {
+//                    return false;
+//                }
+//            } else if (triple.getObject() instanceof BlankNode) {
+//                if (!m2.contains(triple.getSubject(), triple.getPredicate(), ANY_OBJECT_NODE)) {
+//                    return false;
+//                }
+//            } else if (!(triple.getSubject() instanceof BlankNode) && !(triple.getObject() instanceof BlankNode)) {
+//                if (!m2.contains(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
+//                    return false;
+//                }
+//            }
         }
         return true;
     }
