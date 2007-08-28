@@ -35,6 +35,8 @@
     <suppress checks="ParameterNumber" files="AnyResourceIterator.java" />
 
     <suppress checks="CyclomaticComplexity" files="MoleculeComparatorImpl.java" />
+    <suppress checks="CyclomaticComplexity" files="MoleculeImpl.java" />
+    <suppress checks="ReturnCount" files="MoleculeImpl.java" />
     <suppress checks="JavaNCSS" files="MoleculeComparatorImpl.java" />
     <suppress checks="ReturnCount" files="MoleculeComparatorImpl.java" />
     <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl.java" />
