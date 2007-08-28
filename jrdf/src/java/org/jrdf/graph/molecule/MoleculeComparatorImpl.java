@@ -31,29 +31,13 @@ public class MoleculeComparatorImpl implements MoleculeComparator {
         }
     }
 
-    private boolean compareSameSizeMolecules(Molecule m1, Molecule m2) throws GraphException {
+    private boolean compareSameSizeMolecules(Molecule m1, Molecule m2) {
         Iterator<Triple> tripleIterator = m1.getTripleIterator();
         while (tripleIterator.hasNext()) {
             Triple triple = tripleIterator.next();
             if (!m2.containsTriple(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
                 return false;
             }
-//                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), ANY_OBJECT_NODE)) {
-//                    return false;
-//                }
-//            } else if (triple.getSubject() instanceof BlankNode) {
-//                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), triple.getObject())) {
-//                    return false;
-//                }
-//            } else if (triple.getObject() instanceof BlankNode) {
-//                if (!m2.contains(triple.getSubject(), triple.getPredicate(), ANY_OBJECT_NODE)) {
-//                    return false;
-//                }
-//            } else if (!(triple.getSubject() instanceof BlankNode) && !(triple.getObject() instanceof BlankNode)) {
-//                if (!m2.contains(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
-//                    return false;
-//                }
-//            }
         }
         return true;
     }

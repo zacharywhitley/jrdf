@@ -66,6 +66,8 @@ public class MoleculeImpl implements Molecule {
     }
 
     public void addTriple(Triple triple) {
+        predicateSubjectMap.put(triple.getPredicate(), triple.getSubject());
+        predicateObjectMap.put(triple.getPredicate(), triple.getObject());
         triples.add(triple);
     }
 
@@ -97,6 +99,6 @@ public class MoleculeImpl implements Molecule {
     }
 
     private boolean isBlankNode(Node node) {
-        return node.getClass().isAssignableFrom(BlankNode.class);
+        return BlankNode.class.isAssignableFrom(node.getClass());
     }
 }
