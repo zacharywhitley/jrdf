@@ -26,7 +26,7 @@ public class MoleculeComparatorImplUnitTest extends TestCase {
         URIReference ref1 = elementFactory1.createURIReference(uri1);
         URIReference ref2 = elementFactory2.createURIReference(uri1);
         Triple triple1 = tripleFactory1.createTriple(ref1, ref1, elementFactory1.createBlankNode());
-        Triple triple2 = tripleFactory1.createTriple(ref2, ref2, elementFactory2.createBlankNode());
+        Triple triple2 = tripleFactory2.createTriple(ref2, ref2, elementFactory2.createBlankNode());
         newGraph1.add(triple1);
         newGraph2.add(triple2);
         Molecule molecule1 = new MoleculeImpl(newGraph1, triple1);
