@@ -21,7 +21,6 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 
@@ -40,22 +39,19 @@ public class MoleculeComparatorImpl implements MoleculeComparator {
         while (tripleIterator.hasNext()) {
             Triple triple = tripleIterator.next();
             if (triple.getSubject() instanceof BlankNode && triple.getObject() instanceof BlankNode) {
-                ClosableIterator<Triple> it = m2.find(ANY_SUBJECT_NODE, triple.getPredicate(), ANY_OBJECT_NODE);
-                if (!it.hasNext()) {
+                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), ANY_OBJECT_NODE)) {
                     return false;
                 }
             } else if (triple.getSubject() instanceof BlankNode) {
-                ClosableIterator<Triple> it = m2.find(ANY_SUBJECT_NODE, triple.getPredicate(), triple.getObject());
-                if (!it.hasNext()) {
+                if (!m2.contains(ANY_SUBJECT_NODE, triple.getPredicate(), triple.getObject())) {
                     return false;
                 }
             } else if (triple.getObject() instanceof BlankNode) {
-                ClosableIterator<Triple> it = m2.find(triple.getSubject(), triple.getPredicate(), ANY_OBJECT_NODE);
-                if (!it.hasNext()) {
+                if (!m2.contains(triple.getSubject(), triple.getPredicate(), ANY_OBJECT_NODE)) {
                     return false;
                 }
             } else if (!(triple.getSubject() instanceof BlankNode) && !(triple.getObject() instanceof BlankNode)) {
-                if (!m2.contains(triple)) {
+                if (!m2.contains(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
                     return false;
                 }
             }

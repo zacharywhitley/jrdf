@@ -21,7 +21,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -34,7 +33,7 @@ import java.util.Set;
  */
 public interface Molecule {
 
-    ClosableIterator<Triple> find(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode)
+    boolean contains(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode)
         throws GraphException;
 
     Iterator<Triple> getTripleIterator();
@@ -44,8 +43,6 @@ public interface Molecule {
     void addTriple(Triple triple);
 
     void addTriples(Set<Triple> triples);
-
-    boolean contains(Triple triple);
 
     int size();
 }
