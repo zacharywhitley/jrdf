@@ -41,7 +41,7 @@ public class MoleculeImpl implements Molecule {
     }
 
     public Triple getHeadTriple() {
-        return triples.first();
+        return triples.last();
     }
 
     public boolean containsTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
