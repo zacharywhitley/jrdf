@@ -194,6 +194,14 @@ public interface Graph {
     void add(Iterator<Triple> triples) throws GraphException;
 
     /**
+     * Adds all the triples into the graph.  The nodes must have already been created using {@link GraphElementFactory}.
+     *
+     * @param triples the triples to add.
+     * @throws GraphException If the statements can't be made.
+     */
+    void add(Triple... triples) throws GraphException;
+
+    /**
      * Removes all statements and resource related to those statements from the graph.
      */
     void clear();
@@ -232,6 +240,15 @@ public interface Graph {
      * @throws GraphException If the statements can't be revoked.
      */
     void remove(Iterator<Triple> triples) throws GraphException;
+
+    /**
+     * Removes all the triples into the graph.  The nodes must have already been created using
+     * {@link GraphElementFactory}.
+     *
+     * @param triples the triples to remove.
+     * @throws GraphException If the statements can't be revoked.
+     */
+    void remove(Triple... triples) throws GraphException;
 
     /**
      * Returns the node factory for the graph, or creates one.

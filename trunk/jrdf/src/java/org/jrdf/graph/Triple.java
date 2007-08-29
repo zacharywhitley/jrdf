@@ -101,6 +101,13 @@ public interface Triple extends Serializable {
     ObjectNode getObject();
 
     /**
+     * Returns true if the subject and object nodes are not blank nodes.
+     *
+     * @return true if the subject and object nodes are not blank nodes.
+     */
+    boolean isGrounded();
+
+    /**
      * Indicates whether some other object is "equal to" this one.
      * <p/>
      * A triple is equal to another triple if the subject, predicate and object

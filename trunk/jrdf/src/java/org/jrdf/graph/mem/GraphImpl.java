@@ -96,6 +96,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.StringWriter;
+import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -328,6 +329,12 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
+    public void add(Triple... triples) throws GraphException {
+        for (Triple triple : triples) {
+            add(triple);
+        }
+    }
+
     public void add(Triple triple) throws GraphException {
         add(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
@@ -339,6 +346,10 @@ public class GraphImpl implements Graph, Serializable {
 
     public void remove(Iterator<Triple> triples) throws GraphException {
         readWriteGraph.removeIterator(triples);
+    }
+
+    public void remove(Triple... triples) throws GraphException {
+        remove(asList(triples).iterator());
     }
 
     public void remove(Triple triple) throws GraphException {

@@ -70,10 +70,8 @@ import java.io.Serializable;
  * @version $Revision$
  */
 public class AbstractTriple implements Triple, Serializable {
-
     private static final long serialVersionUID = 8737092494833012690L;
     private static final int DEFAULT_HASH_VALUE = 0;
-    // FIXME TJA: See if these protected variables can be removed
 
     /**
      * The internal representation of the triple - subject node.
@@ -90,32 +88,20 @@ public class AbstractTriple implements Triple, Serializable {
      */
     protected ObjectNode objectNode;
 
-    /**
-     * Obtains the subject of this statement.
-     *
-     * @return an {@link SubjectNode} which is either a {@link BlankNode} or
-     *         {@link URIReference}
-     */
     public SubjectNode getSubject() {
         return subjectNode;
     }
 
-    /**
-     * Obtains the predicate of this statement.
-     *
-     * @return a {@link PredicateNode} which is a {@link URIReference}
-     */
     public PredicateNode getPredicate() {
         return predicateNode;
     }
 
-    /**
-     * Obtains the object of this statement.
-     *
-     * @return a {@link ObjectNode} which is either a {@link BlankNode}, {@link URIReference} or {@link Literal}
-     */
     public ObjectNode getObject() {
         return objectNode;
+    }
+
+    public boolean isGrounded() {
+        return !isBlankNode(subjectNode) && !isBlankNode(objectNode);
     }
 
     /**
@@ -182,5 +168,9 @@ public class AbstractTriple implements Triple, Serializable {
             return DEFAULT_HASH_VALUE;
         }
         return node.hashCode();
+    }
+
+    private boolean isBlankNode(Node node) {
+        return BlankNode.class.isAssignableFrom(node.getClass());
     }
 }

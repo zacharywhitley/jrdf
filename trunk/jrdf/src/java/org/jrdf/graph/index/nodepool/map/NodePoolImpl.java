@@ -209,7 +209,7 @@ public final class NodePoolImpl implements NodePool {
                 } else if (Literal.class.isAssignableFrom(third.getClass())) {
                     objectValue = getNodeIdByString(((Literal) third).getEscapedForm());
                 } else if (URIReference.class.isAssignableFrom(third.getClass())) {
-                    objectValue = getNodeIdByString(((URIReference) third).getURI().toString());;
+                    objectValue = getNodeIdByString(((URIReference) third).getURI().toString());
                 }
             }
             if (null == objectValue) {
@@ -222,7 +222,7 @@ public final class NodePoolImpl implements NodePool {
     private Long getResource(Node third) throws GraphException {
         Long objectValue;
         if (((Resource) third).isURIReference()) {
-            objectValue = getNodeIdByString(((URIReference) third).getURI().toString());;
+            objectValue = getNodeIdByString(((URIReference) third).getURI().toString());
         } else {
             objectValue = getBlankNode(third);
         }
