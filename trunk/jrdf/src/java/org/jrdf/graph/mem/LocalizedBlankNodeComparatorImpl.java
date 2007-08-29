@@ -57,54 +57,34 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
-import org.jrdf.graph.mem.GraphFactory;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.mem.LocalizedNodeComparator;
-import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.StoredMapHandlerImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.BlankNode;
 
-public class BdbPerformance extends AbstractGraphPerformance {
-    private StoredMapHandler handler;
-    private LongIndex[] indexes;
+public class LocalizedBlankNodeComparatorImpl implements BlankNodeComparator {
+    private final LocalizedNodeComparator localizedNodeComparator;
 
-    public BdbPerformance() {
-        handler = new StoredMapHandlerImpl();
-        indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database"))};
+    public LocalizedBlankNodeComparatorImpl(LocalizedNodeComparator localizedNodeComparator) {
+        this.localizedNodeComparator = localizedNodeComparator;
     }
 
-    protected Graph getGraph() {
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
+    public int compare(BlankNode blankNode1, BlankNode blankNode2) {
+        int result;
+        if ((blankNode1 instanceof LocalizedNode) && (blankNode2 instanceof LocalizedNode)) {
+            result = localizedNodeComparator.compare((LocalizedNode) blankNode1, (LocalizedNode) blankNode2);
+        } else {
+            result = compareByString(blankNode1.toString(), blankNode2.toString());
+        }
+        return result;
     }
 
-    protected MapFactory getMapFactory() {
-        return new BdbMapFactory(handler, "catalog", "database");
-    }
-
-    public static void main(String[] args) throws Exception {
-        BdbPerformance bdbPerformance = new BdbPerformance();
-        bdbPerformance.testPerformance();
-//        bdbPerformance.parsePerformance();
+    private int compareByString(String str1, String str2) {
+        int result = str1.compareTo(str2);
+        if (result > 0) {
+            result = 1;
+        } else if (result < 0) {
+            result = -1;
+        }
+        return result;
     }
 }

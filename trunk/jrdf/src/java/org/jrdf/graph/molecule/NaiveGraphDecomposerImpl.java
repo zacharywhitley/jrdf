@@ -29,6 +29,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.mem.TripleComparatorImpl;
 import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
@@ -42,8 +44,9 @@ import java.util.Set;
  * @version $Revision: 1226 $
  */
 public class NaiveGraphDecomposerImpl implements GraphDecomposer {
+    // TODO Fix Change blank node comparator
     private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
-        new NodeTypeComparatorImpl()));
+        new NodeTypeComparatorImpl(), new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl())));
 
     public Set<Molecule> decompose(Graph graph) throws GraphException {
         ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);

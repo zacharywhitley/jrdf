@@ -27,7 +27,8 @@
     <suppress checks="ReturnCount" files="TypeComparatorImpl.java"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl.java"/>
 
-    <!-- Spike -->
+    <!-- Spikes -->
+    <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl.java"/>
     <suppress checks="ParameterNumber" files="NTriplesEventReader.java"/>

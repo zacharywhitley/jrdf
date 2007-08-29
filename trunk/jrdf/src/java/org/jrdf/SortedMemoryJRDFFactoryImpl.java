@@ -9,6 +9,10 @@ import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
+import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.mem.LocalizedNodeComparator;
+import org.jrdf.graph.mem.BlankNodeComparator;
 import org.jrdf.query.execute.NaiveQueryEngineImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
@@ -73,7 +77,11 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
         ATTRIBUTE_NAME_COMPARATOR);
     private static final SortedAttributeFactory ATTRIBUTE_FACTORY = new SortedAttributeFactoryImpl(
         ATTRIBUTE_COMPARATOR, 0L);
-    private static final NodeComparator NODE_COMPARATOR = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
+    private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
+    private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
+        LOCALIZED_NODE_COMPARATOR);
+    private static final NodeComparator NODE_COMPARATOR = new NodeComparatorImpl(NODE_TYPE_COMPARATOR,
+        BLANK_NODE_COMPARATOR);
     private static final AttributeValuePairComparator ATTRIBUTE_VALUE_PAIR_COMPARATOR =
         new AttributeValuePairComparatorImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
@@ -85,7 +93,7 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     private SortedMemoryJRDFFactoryImpl() {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR);
+        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
     }
 

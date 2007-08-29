@@ -57,54 +57,62 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.molecule;
 
+import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
-import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
+import org.jrdf.graph.mem.TripleComparatorImpl;
 import org.jrdf.graph.mem.LocalizedNodeComparator;
 import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.mem.BlankNodeComparator;
 import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.StoredMapHandlerImpl;
-import org.jrdf.map.MapFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
-public class BdbPerformance extends AbstractGraphPerformance {
-    private StoredMapHandler handler;
-    private LongIndex[] indexes;
+import java.net.URI;
 
-    public BdbPerformance() {
-        handler = new StoredMapHandlerImpl();
-        indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database"))};
+public class MoleculeImplUnitTest extends TestCase {
+    private JRDFFactory factory1 = SortedMemoryJRDFFactoryImpl.getFactory();
+    private JRDFFactory factory2 = SortedMemoryJRDFFactoryImpl.getFactory();
+    private Graph newGraph1 = factory1.getNewGraph();
+    private Graph newGraph2 = factory2.getNewGraph();
+    private GraphElementFactory elementFactory1 = newGraph1.getElementFactory();
+    private GraphElementFactory elementFactory2 = newGraph2.getElementFactory();
+    private TripleFactory tripleFactory1 = newGraph1.getTripleFactory();
+    private TripleFactory tripleFactory2 = newGraph2.getTripleFactory();
+    private LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
+    private BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
+    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
+    private TripleComparator comparator = new TripleComparatorImpl(nodeComparator);
+    private URIReference ref1;
+    private URIReference ref2;
+
+    public void testMoleculeOrderURIReference() throws Exception {
+        Molecule molecule = new MoleculeImpl(comparator);
+        ref1 = elementFactory1.createURIReference(URI.create("urn:foo"));
+        ref2 = elementFactory1.createURIReference(URI.create("urn:bar"));
+        molecule.addTriple(tripleFactory1.createTriple(ref1, ref1, ref1));
+        Triple triple = tripleFactory1.createTriple(ref1, ref1, ref2);
+        molecule.addTriple(triple);
+        assertEquals(triple, molecule.getHeadTriple());
     }
 
-    protected Graph getGraph() {
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
-    }
-
-    protected MapFactory getMapFactory() {
-        return new BdbMapFactory(handler, "catalog", "database");
-    }
-
-    public static void main(String[] args) throws Exception {
-        BdbPerformance bdbPerformance = new BdbPerformance();
-        bdbPerformance.testPerformance();
-//        bdbPerformance.parsePerformance();
-    }
+//    public void testMoleculeOrderBlankNodes() throws Exception {
+//        Molecule molecule = new MoleculeImpl(comparator);
+//        ref1 = elementFactory1.createURIReference(URI.create("urn:foo"));
+//        ref2 = elementFactory1.createURIReference(URI.create("urn:bar"));
+//        molecule.addTriple(tripleFactory1.createTriple(elementFactory1.createBlankNode(), ref1, ref1));
+//        Triple triple = tripleFactory1.createTriple(elementFactory1.createBlankNode(), ref1, ref2);
+//        molecule.addTriple(triple);
+//        molecule.addTriple(tripleFactory1.createTriple(elementFactory1.createBlankNode(), ref1, elementFactory1.createBlankNode()));
+//        assertEquals(triple, molecule.getHeadTriple());
+//    }
 }

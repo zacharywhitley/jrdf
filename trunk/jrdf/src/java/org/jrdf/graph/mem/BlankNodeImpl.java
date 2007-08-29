@@ -64,8 +64,6 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.BlankNode;
 
-import java.io.Serializable;
-
 /**
  * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying
  * attributes.
@@ -75,7 +73,7 @@ import java.io.Serializable;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode, Serializable {
+public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

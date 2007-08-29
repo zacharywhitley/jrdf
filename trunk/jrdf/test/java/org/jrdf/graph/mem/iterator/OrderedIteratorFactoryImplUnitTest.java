@@ -68,6 +68,10 @@ import org.jrdf.graph.index.graphhandler.GraphHandler;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.graph.mem.LocalizedNodeComparator;
+import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.mem.BlankNodeComparator;
+import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
@@ -132,7 +136,9 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
 
     public void testSortedNewPredicateIterator() {
         expect(iteratorFactory.newPredicateIterator()).andReturn(createPredicateIterator());
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
+        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
+        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
         IteratorFactory factory = createOrderedIteratorFactory(comparator);
         mockFactory.replay();
         ClosableIterator<PredicateNode> actualIterator = factory.newPredicateIterator();
@@ -142,7 +148,9 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
 
     public void testSortedNewPredicateIteratorWithResource() {
         expect(iteratorFactory.newPredicateIterator(RESOURCE_ID)).andReturn(createPredicateIterator());
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
+        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
+        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
         IteratorFactory factory = createOrderedIteratorFactory(comparator);
         mockFactory.replay();
         ClosableIterator<PredicateNode> actualIterator = factory.newPredicateIterator(RESOURCE_ID);
