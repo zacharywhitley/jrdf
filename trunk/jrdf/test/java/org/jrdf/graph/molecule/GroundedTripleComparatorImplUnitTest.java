@@ -76,7 +76,7 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
 
-public class MoleculeImplUnitTest extends TestCase {
+public class GroundedTripleComparatorImplUnitTest extends TestCase {
     private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
     private Graph newGraph = factory.getNewGraph();
     private GraphElementFactory elementFactory = newGraph.getElementFactory();
@@ -87,25 +87,16 @@ public class MoleculeImplUnitTest extends TestCase {
     private URIReference ref1;
     private URIReference ref2;
 
-    public void testMoleculeOrderURIReference() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
+    public void testComparison() throws Exception {
         ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
         ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(ref1, ref1, ref1);
-        molecule.addTriple(triple);
-        molecule.addTriple(tripleFactory.createTriple(ref1, ref1, ref2));
-        assertEquals(triple, molecule.getHeadTriple());
-    }
-
-    public void testMoleculeOrderBlankNodes() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
-        molecule.addTriple(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2));
-        molecule.addTriple(triple);
-        molecule.addTriple(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
-            elementFactory.createBlankNode()));
-        assertEquals(triple, molecule.getHeadTriple());
+        Triple triple1 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
+        Triple triple2 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, elementFactory.createBlankNode());
+        Triple triple3 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2);
+        Triple triple4 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
+        assertEquals(0, comparator.compare(triple1, triple4));
+        assertEquals(-1, comparator.compare(triple2, triple4));
+        assertEquals(1, comparator.compare(triple1, triple2));
+        assertEquals(-1, comparator.compare(triple3, triple1));
     }
 }

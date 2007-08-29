@@ -59,53 +59,71 @@
 
 package org.jrdf.graph.molecule;
 
-import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
-import java.net.URI;
+public class GroundedTripleComparatorImpl implements TripleComparator {
+    private static final long serialVersionUID = 678535114447666636L;
+    private static final int MAXIMUM_NUMBER_OF_GROUNDED_NODES = 3;
+    private NodeComparator nodeComparator;
 
-public class MoleculeImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph newGraph = factory.getNewGraph();
-    private GraphElementFactory elementFactory = newGraph.getElementFactory();
-    private TripleFactory tripleFactory = newGraph.getTripleFactory();
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
-    private URIReference ref1;
-    private URIReference ref2;
-
-    public void testMoleculeOrderURIReference() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(ref1, ref1, ref1);
-        molecule.addTriple(triple);
-        molecule.addTriple(tripleFactory.createTriple(ref1, ref1, ref2));
-        assertEquals(triple, molecule.getHeadTriple());
+    private GroundedTripleComparatorImpl() {
     }
 
-    public void testMoleculeOrderBlankNodes() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
-        molecule.addTriple(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2));
-        molecule.addTriple(triple);
-        molecule.addTriple(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
-            elementFactory.createBlankNode()));
-        assertEquals(triple, molecule.getHeadTriple());
+    public GroundedTripleComparatorImpl(NodeComparator nodeComparator) {
+        this.nodeComparator = nodeComparator;
+    }
+
+    public int compare(Triple o1, Triple o2) {
+        int result = compareTriples(o1, o2);
+        if (result == 0) {
+            result = compareGroundedTriples(o1, o2);
+        }
+        return result;
+    }
+
+    private int compareTriples(Triple o1, Triple o2) {
+        int numberOfGroundedNodes1 = countGroundNodes(o1);
+        int numberOfGroundedNodes2 = countGroundNodes(o2);
+        if (numberOfGroundedNodes1 == numberOfGroundedNodes2) {
+            return 0;
+        } else if (numberOfGroundedNodes1 > numberOfGroundedNodes2) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    private int countGroundNodes(Triple o1) {
+        int grounded = MAXIMUM_NUMBER_OF_GROUNDED_NODES;
+        if (BlankNode.class.isAssignableFrom(o1.getSubject().getClass())) {
+            grounded--;
+        }
+        if (BlankNode.class.isAssignableFrom(o1.getObject().getClass())) {
+            grounded--;
+        }
+        return grounded;
+    }
+
+    private int compareGroundedTriples(Triple o1, Triple o2) {
+        int subjectComparison = nodeComparator.compare(o1.getSubject(), o2.getSubject());
+        if (subjectComparison == 0) {
+            return comparePredicates(o1, o2);
+        }
+        return subjectComparison;
+    }
+
+    private int comparePredicates(Triple o1, Triple o2) {
+        int predicateComparison = nodeComparator.compare(o1.getPredicate(), o2.getPredicate());
+        if (predicateComparison == 0) {
+            return compareObjects(o1, o2);
+        }
+        return predicateComparison;
+    }
+
+    private int compareObjects(Triple o1, Triple o2) {
+        return nodeComparator.compare(o1.getObject(), o2.getObject());
     }
 }
