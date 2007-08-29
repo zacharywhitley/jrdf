@@ -57,55 +57,15 @@
  *
  */
 
-package org.jrdf.graph.molecule;
+package org.jrdf.graph.mem;
 
-import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.graph.mem.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.BlankNode;
 
-import java.net.URI;
-
-public class MoleculeImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph newGraph = factory.getNewGraph();
-    private GraphElementFactory elementFactory = newGraph.getElementFactory();
-    private TripleFactory tripleFactory = newGraph.getTripleFactory();
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new TripleComparatorImpl(nodeComparator);
-    private URIReference ref1;
-    private URIReference ref2;
-
-    public void testMoleculeOrderURIReference() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        molecule.addTriple(tripleFactory.createTriple(ref1, ref1, ref1));
-        Triple triple = tripleFactory.createTriple(ref1, ref1, ref2);
-        molecule.addTriple(triple);
-        assertEquals(triple, molecule.getHeadTriple());
+/**
+ * Without any context or localization you can't tell the difference between blank nodes.
+ */
+public class GlobalizedBlankNodeComparatorImpl implements BlankNodeComparator {
+    public int compare(BlankNode blankNode1, BlankNode blankNode2) {
+        return 0;
     }
-
-//    public void testMoleculeOrderBlankNodes() throws Exception {
-//        Molecule molecule = new MoleculeImpl(comparator);
-//        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-//        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-//        molecule.addTriple(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1));
-//        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2);
-//        molecule.addTriple(triple);
-//        molecule.addTriple(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, elementFactory.createBlankNode()));
-//        assertEquals(triple, molecule.getHeadTriple());
-//    }
 }
