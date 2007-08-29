@@ -40,6 +40,10 @@ public class MoleculeImpl implements Molecule {
         this.triples = new TreeSet<Triple>(tripleComparator);
     }
 
+    public Triple getHeadTriple() {
+        return triples.first();
+    }
+
     public boolean containsTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         if (isBlankNode(subject)) {
             if (isBlankNode(object)) {

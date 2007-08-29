@@ -76,28 +76,26 @@ import org.jrdf.util.NodeTypeEnum;
 public final class NodeComparatorImpl implements NodeComparator {
     private static final long serialVersionUID = 1941872400257968398L;
     private NodeTypeComparator nodeTypeComparator;
+    private BlankNodeComparator blankNodeComparator;
 
     private NodeComparatorImpl() {
     }
 
-    public NodeComparatorImpl(NodeTypeComparator nodeTypeComparator) {
+    public NodeComparatorImpl(NodeTypeComparator nodeTypeComparator, BlankNodeComparator blankNodeComparator) {
         this.nodeTypeComparator = nodeTypeComparator;
+        this.blankNodeComparator = blankNodeComparator;
     }
 
     public int compare(Node o1, Node o2) {
-
-        if (o1.equals(o2)) {
-            return 0;
-        }
-
-        int result;
-        NodeTypeEnum nodeType1Enum = getNodeType(o1.getClass());
-        NodeTypeEnum nodeType2Enum = getNodeType(o2.getClass());
-
-        if (areNodesDifferentType(nodeType1Enum, nodeType2Enum)) {
-            result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
-        } else {
-            result = compareSameNodeType(o1, o2, nodeType1Enum);
+        int result = 0;
+        if (!o1.equals(o2)) {
+            NodeTypeEnum nodeType1Enum = getNodeType(o1.getClass());
+            NodeTypeEnum nodeType2Enum = getNodeType(o2.getClass());
+            if (areNodesDifferentType(nodeType1Enum, nodeType2Enum)) {
+                result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
+            } else {
+                result = compareSameNodeType(o1, o2, nodeType1Enum);
+            }
         }
         return result;
     }
@@ -115,47 +113,13 @@ public final class NodeComparatorImpl implements NodeComparator {
     private int compareSameNodeTypes(Node n1, Node n2, NodeTypeEnum nodeTypeEnum) {
         int result;
         if (nodeTypeEnum.isBlankNode()) {
-            result = compareBlankNodes((BlankNode) n1, (BlankNode) n2);
+            result = blankNodeComparator.compare((BlankNode) n1, (BlankNode) n2);
         } else if (nodeTypeEnum.isURIReferenceNode()) {
             result = compareByString(n1.toString(), n2.toString());
         } else if (nodeTypeEnum.isLiteralNode()) {
             result = compareByString(n1.toString(), n2.toString());
         } else {
             throw new IllegalArgumentException("Could not compare: " + n1.getClass() + " and " + n2.getClass());
-        }
-        return result;
-    }
-
-    // TODO (AN) Move to different class - BNodeComparator
-    private int compareBlankNodes(BlankNode blankNode1, BlankNode blankNode2) {
-        int result;
-
-        if ((blankNode1 instanceof LocalizedNode) && (blankNode2 instanceof LocalizedNode)) {
-            result = compareByMemNode((LocalizedNode) blankNode1, (LocalizedNode) blankNode2);
-        } else {
-            result = compareByString(blankNode1.toString(), blankNode2.toString());
-        }
-        return result;
-    }
-
-    // TODO (AN) Move to different class - BNodeComparator
-    private int compareByMemNode(LocalizedNode localizedNode1, LocalizedNode localizedNode2) {
-        int result = 0;
-        if (localizedNode1.getId() > localizedNode2.getId()) {
-            result = 1;
-        } else if (localizedNode1.getId() < localizedNode2.getId()) {
-            result = -1;
-        }
-        return result;
-    }
-
-    // TODO (AN) Move to different class - StringComparator
-    private int compareByString(String str1, String str2) {
-        int result = str1.compareTo(str2);
-        if (result > 0) {
-            result = 1;
-        } else if (result < 0) {
-            result = -1;
         }
         return result;
     }
@@ -176,5 +140,15 @@ public final class NodeComparatorImpl implements NodeComparator {
         } else {
             throw new IllegalArgumentException("Illegal node: " + nodeClass);
         }
+    }
+
+    private int compareByString(String str1, String str2) {
+        int result = str1.compareTo(str2);
+        if (result > 0) {
+            result = 1;
+        } else if (result < 0) {
+            result = -1;
+        }
+        return result;
     }
 }

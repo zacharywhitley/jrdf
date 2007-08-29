@@ -71,11 +71,9 @@ import org.jrdf.graph.TripleComparator;
  */
 public final class TripleComparatorImpl implements TripleComparator {
     private static final long serialVersionUID = -1495143472207557345L;
-
     private NodeComparator nodeComparator;
 
     private TripleComparatorImpl() {
-
     }
 
     public TripleComparatorImpl(NodeComparator nodeComparator) {
@@ -85,6 +83,7 @@ public final class TripleComparatorImpl implements TripleComparator {
     public int compare(Triple o1, Triple o2) {
         int subjectComparison = nodeComparator.compare(o1.getSubject(), o2.getSubject());
         if (subjectComparison == 0) {
+            System.err.println("Equal subjects!");
             return comparePredicates(o1, o2);
         }
         return subjectComparison;

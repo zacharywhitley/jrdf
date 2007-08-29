@@ -83,7 +83,9 @@ public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
         LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         StoredMapHandler handler = new StoredMapHandlerImpl();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
+        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
+        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
         GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return factory.getGraph();
     }

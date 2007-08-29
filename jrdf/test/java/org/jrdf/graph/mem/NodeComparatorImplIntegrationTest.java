@@ -63,16 +63,13 @@ import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ComparatorTestUtil;
-import static org.jrdf.util.test.ComparatorTestUtil.*;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
 import org.jrdf.vocabulary.RDF;
 
 import java.lang.reflect.Modifier;
@@ -85,17 +82,17 @@ import java.util.Comparator;
  * @version $Id$
  */
 public class NodeComparatorImplIntegrationTest extends TestCase {
-    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
-    private static final int EQUAL = 0;
-    private static final int BEFORE = -1;
-    private static final int AFTER = 1;
-    private NodeComparator nodeComparator;
     public static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
     public static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
     public static final BlankNode BNODE_1 = new BlankNodeImpl(1l, "a");
     public static final BlankNode BNODE_2 = new BlankNodeImpl(2l, "b");
     public static final Literal LITERAL_1 = new LiteralImpl("bar");
     public static final Literal LITERAL_2 = new LiteralImpl("foo");
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
+    private static final int EQUAL = 0;
+    private static final int BEFORE = -1;
+    private static final int AFTER = 1;
+    private NodeComparator nodeComparator;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -105,7 +102,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
         checkExtensionOf(Comparator.class, NodeComparator.class);
-        checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
+        checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class, BlankNodeComparator.class);
     }
 
     public void testNullPointerException() {

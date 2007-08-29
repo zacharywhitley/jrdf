@@ -24,6 +24,12 @@
 
     <!-- Relational Classes -->
     <bean id="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl"/>
+    <bean id="localizedNodeComparator" class="org.jrdf.graph.mem.LocalizedNodeComparatorImpl"/>
+    <bean id="blankNodeComparator" class="org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl">
+        <constructor-arg>
+            <ref bean="localizedNodeComparator"/>
+        </constructor-arg>
+    </bean>
 
     <bean id="typeComparator" class="org.jrdf.query.relation.type.TypeComparatorImpl">
         <constructor-arg>
@@ -45,6 +51,9 @@
     <bean id="nodeComparator" class="org.jrdf.graph.mem.NodeComparatorImpl">
         <constructor-arg>
             <ref bean="nodeTypeComparator"/>
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="blankNodeComparator"/>
         </constructor-arg>
     </bean>
 

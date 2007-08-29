@@ -61,7 +61,10 @@ package org.jrdf.graph.mem;
 import junit.framework.TestCase;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkExtensionOf;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
@@ -75,10 +78,11 @@ import java.util.Comparator;
  */
 public class NodeComparatorImplUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, NodeComparator.class);        
-        ClassPropertiesTestUtil.checkExtensionOf(Comparator.class, NodeComparator.class);
-        ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PRIVATE);
-        ClassPropertiesTestUtil.checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class);
+        checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
+        checkImplementationOfInterface(Serializable.class, NodeComparator.class);
+        checkExtensionOf(Comparator.class, NodeComparator.class);
+        checkConstructor(NodeComparatorImpl.class, Modifier.PRIVATE);
+        checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class,
+            BlankNodeComparator.class);
     }
 }

@@ -69,6 +69,10 @@ import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
+import org.jrdf.graph.mem.LocalizedNodeComparator;
+import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.mem.BlankNodeComparator;
+import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
@@ -85,7 +89,9 @@ public class MemPerformance extends AbstractGraphPerformance {
 
     protected Graph getGraph() {
         nodePoolFactory = new MemNodePoolFactory();
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl());
+        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
+        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
+        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
         factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return factory.getGraph();
     }

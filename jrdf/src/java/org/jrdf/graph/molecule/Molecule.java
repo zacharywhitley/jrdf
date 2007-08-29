@@ -43,4 +43,6 @@ public interface Molecule {
     void addTriples(Set<Triple> triples);
 
     int size();
+
+    Triple getHeadTriple();
 }
