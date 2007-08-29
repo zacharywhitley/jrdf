@@ -87,22 +87,26 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
         BlankNode blankNode1 = elementFactory.createBlankNode();
         BlankNode blankNode2 = elementFactory.createBlankNode();
+        Triple triple0 = tripleFactory.createTriple(ref2, ref1, ref2);
         Triple triple1 = tripleFactory.createTriple(ref1, ref1, blankNode1);
         Triple triple2 = tripleFactory.createTriple(blankNode1, ref1, ref1);
         Triple triple3 = tripleFactory.createTriple(blankNode2, ref1, blankNode1);
         Triple triple4 = tripleFactory.createTriple(blankNode2, ref1, ref1);
         Triple triple5 = tripleFactory.createTriple(ref2, ref1, ref1);
-        newGraph.add(triple1, triple2, triple3, triple4, triple5);
+        newGraph.add(triple0, triple1, triple2, triple3, triple4, triple5);
         Set<Triple> expectedResults1 = new HashSet<Triple>(asList(triple1, triple2, triple3, triple4));
         Set<Triple> expectedResults2 = new HashSet<Triple>(asList(triple5));
+        Set<Triple> expectedResults3 = new HashSet<Triple>(asList(triple0));
         GraphDecomposer decomposer = new NaiveGraphDecomposerImpl();
         Set<Molecule> molecules = decomposer.decompose(newGraph);
-        assertTrue(molecules.size() == 2);
+        assertEquals(3, molecules.size());
         for (Molecule molecule : molecules) {
             if (molecule.getHeadTriple().equals(triple1)) {
                 compareTriples(molecule, expectedResults1);
             } else if (molecule.getHeadTriple().equals(triple5)) {
                 compareTriples(molecule, expectedResults2);
+            } else if (molecule.getHeadTriple().equals(triple0)) {
+                compareTriples(molecule, expectedResults3);
             }
         }
     }
