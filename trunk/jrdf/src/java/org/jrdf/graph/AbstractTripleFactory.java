@@ -94,16 +94,13 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * @param objectNode      the object of the triple.
      * @param reificationNode a node denoting the reified triple.
      * @throws TripleFactoryException  If the resource failed to be created.
-     * @throws AlreadyReifiedException If there was already a triple URI for
-     *                                 the given triple.
      */
     public void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException {
+        SubjectNode reificationNode) throws TripleFactoryException {
 
         // create the reification node
         try {
-            reallyReifyTriple(subjectNode, predicateNode, objectNode,
-                reificationNode);
+            reallyReifyTriple(subjectNode, predicateNode, objectNode, reificationNode);
         } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
@@ -116,16 +113,12 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * @param triple          the triple to be reified.
      * @param reificationNode a node denoting the reified triple.
      * @throws TripleFactoryException  If the resource failed to be created.
-     * @throws AlreadyReifiedException If there was already a triple URI for
-     *                                 the given triple.
      */
-    public void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException,
-        AlreadyReifiedException {
+    public void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException {
 
         try {
             reallyReifyTriple(triple.getSubject(), triple.getPredicate(),
-                triple.getObject(), reificationNode);
-        } catch (GraphElementFactoryException gefe) {
+                triple.getObject(), reificationNode); } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -142,8 +135,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * @throws AlreadyReifiedException      If there was already a triple URI for  the given triple.
      */
     private SubjectNode reallyReifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        SubjectNode reificationNode) throws GraphElementFactoryException,
-        AlreadyReifiedException {
+        SubjectNode reificationNode) throws GraphElementFactoryException, AlreadyReifiedException {
 
         // get the nodes used for reification
         PredicateNode hasSubject = elementFactory.createURIReference(RDF.SUBJECT);
@@ -160,10 +152,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
                 !(graph.contains(reificationNode, hasSubject, (ObjectNode) subjectNode) &&
                     graph.contains(reificationNode, hasPredicate, (ObjectNode) predicateNode) &&
                     graph.contains(reificationNode, hasObject, objectNode))) {
-
-                throw new AlreadyReifiedException("SkipListNode: " + reificationNode +
-                    " already used in " +
-                    "reification");
+                throw new AlreadyReifiedException("Node: " + reificationNode + " already used in reification");
             }
 
             // insert the reification statements
@@ -232,7 +221,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
             // Insert statements from colletion.
             long counter = 1L;
-
             for (ObjectNode object : container) {
                 graph.add(subjectNode, elementFactory.createURIReference(new URI(RDF.BASE_URI + "_" + counter++)),
                         object);

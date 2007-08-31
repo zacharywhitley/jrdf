@@ -92,7 +92,7 @@ public interface GraphElementFactory {
     Resource createResource(URIReference node) throws GraphElementFactoryException;
 
     /**
-     * Create a blank nodes that is associated with a specific graph.
+     * Create a blank node that is associated with a specific graph.
      *
      * @return the newly created blank node value.
      * @throws GraphElementFactoryException if adding a blank node fails.

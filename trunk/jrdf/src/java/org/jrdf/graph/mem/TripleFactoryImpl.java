@@ -91,5 +91,4 @@ class TripleFactoryImpl extends AbstractTripleFactory {
             TripleFactoryException {
         return new TripleImpl(subject, predicate, object);
     }
-
 }
