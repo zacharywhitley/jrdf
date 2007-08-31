@@ -103,7 +103,7 @@ public interface TripleFactory {
      * @throws AlreadyReifiedException If there was already a triple URI for
      *                                 the given triple.
      */
-    void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException, AlreadyReifiedException;
+    void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException;
 
     /**
      * Inserts a alternative using the given subject.  The subject is also the object of a proceeding statement that
