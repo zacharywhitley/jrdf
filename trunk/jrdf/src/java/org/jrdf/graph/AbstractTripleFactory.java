@@ -93,10 +93,10 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * @param predicateNode   the predicate of the triple.
      * @param objectNode      the object of the triple.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException  If the resource failed to be created.
+     * @throws TripleFactoryException If the resource failed to be created.
      */
     public void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        SubjectNode reificationNode) throws TripleFactoryException {
+            SubjectNode reificationNode) throws TripleFactoryException {
 
         // create the reification node
         try {
@@ -112,13 +112,12 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      *
      * @param triple          the triple to be reified.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException  If the resource failed to be created.
+     * @throws TripleFactoryException If the resource failed to be created.
      */
     public void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException {
-
         try {
-            reallyReifyTriple(triple.getSubject(), triple.getPredicate(),
-                triple.getObject(), reificationNode); } catch (GraphElementFactoryException gefe) {
+            reallyReifyTriple(triple.getSubject(), triple.getPredicate(), triple.getObject(), reificationNode);
+        } catch (GraphElementFactoryException gefe) {
             throw new TripleFactoryException(gefe);
         }
     }
@@ -135,7 +134,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      * @throws AlreadyReifiedException      If there was already a triple URI for  the given triple.
      */
     private SubjectNode reallyReifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        SubjectNode reificationNode) throws GraphElementFactoryException, AlreadyReifiedException {
+            SubjectNode reificationNode) throws GraphElementFactoryException, AlreadyReifiedException {
 
         // get the nodes used for reification
         PredicateNode hasSubject = elementFactory.createURIReference(RDF.SUBJECT);
@@ -149,9 +148,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
             // An error if ru already reifies anything but the given s, p, o.
             if (graph.contains(reificationNode, rdfType, rdfStatement) &&
-                !(graph.contains(reificationNode, hasSubject, (ObjectNode) subjectNode) &&
-                    graph.contains(reificationNode, hasPredicate, (ObjectNode) predicateNode) &&
-                    graph.contains(reificationNode, hasObject, objectNode))) {
+                    !(graph.contains(reificationNode, hasSubject, (ObjectNode) subjectNode) &&
+                            graph.contains(reificationNode, hasPredicate, (ObjectNode) predicateNode) &&
+                            graph.contains(reificationNode, hasObject, objectNode))) {
                 throw new AlreadyReifiedException("Node: " + reificationNode + " already used in reification");
             }
 
@@ -169,7 +168,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     public void addAlternative(SubjectNode subjectNode, Alternative alternative) throws
-        TripleFactoryException {
+            TripleFactoryException {
         try {
             graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
                     elementFactory.createURIReference(RDF.ALT));
@@ -251,7 +250,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     private void addElementsToCollection(Collection collection, SubjectNode subject, PredicateNode rdfFirst,
-        PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException, GraphElementFactoryException {
+            PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException, GraphElementFactoryException {
         // Iterate through all elements in the Collection.
         Iterator<ObjectNode> iter = collection.iterator();
         while (iter.hasNext()) {
