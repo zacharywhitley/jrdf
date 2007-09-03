@@ -59,6 +59,8 @@
 
 package org.jrdf.graph;
 
+import java.net.URI;
+
 /**
  * A Triple Factory is a class which defines the creation of triples and certain sets of triples.  This includes
  * generating triples for reification, containers and collections.
@@ -144,4 +146,15 @@ public interface TripleFactory {
      * @throws TripleFactoryException If the resources were failed to be added.
      */
     void addCollection(SubjectNode firstNode, Collection collection) throws TripleFactoryException;
+
+    Triple createTriple(URI subject, URI predicate, URI object)
+        throws TripleFactoryException, GraphElementFactoryException;
+
+    Triple createTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException;
+
+    Triple createTriple(URI subject, URI predicate, String object, String language)
+        throws GraphElementFactoryException;
+
+    Triple createTriple(URI subject, URI predicate, String object, URI dataType)
+        throws GraphElementFactoryException;
 }

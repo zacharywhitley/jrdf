@@ -62,6 +62,7 @@ package org.jrdf.util.test;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -70,7 +71,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.GraphElementFactoryException;
 
 import java.net.URI;
 
@@ -122,6 +122,40 @@ public final class NodeTestUtil {
         try {
             return getTripleFactory().createTriple(subject, predicate, object);
         } catch (TripleFactoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Triple createTriple(URI subject, URI predicate, URI object) {
+        try {
+            return getTripleFactory().createTriple(subject, predicate, object);
+        } catch (TripleFactoryException e) {
+            throw new RuntimeException(e);
+        } catch (GraphElementFactoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Triple createTriple(URI subject, URI predicate, String object) {
+        try {
+            return getTripleFactory().createTriple(subject, predicate, object);
+        } catch (GraphElementFactoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Triple createTriple(URI subject, URI predicate, String object, String language) {
+        try {
+            return getTripleFactory().createTriple(subject, predicate, object, language);
+        } catch (GraphElementFactoryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Triple createTriple(URI subject, URI predicate, String object, URI datatype) {
+        try {
+            return getTripleFactory().createTriple(subject, predicate, object, datatype);
+        } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
     }
