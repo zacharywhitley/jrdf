@@ -62,11 +62,16 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.AbstractTripleFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactoryException;
+import org.jrdf.graph.URIReference;
+
+import java.net.URI;
 
 /**
  * A Triple Factory which is tied to a specific instance of GraphImpl.
@@ -91,4 +96,43 @@ class TripleFactoryImpl extends AbstractTripleFactory {
             TripleFactoryException {
         return new TripleImpl(subject, predicate, object);
     }
+
+    public Triple createTriple(URI subject, URI predicate, URI object)
+        throws TripleFactoryException, GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        URIReference objectNode = elementFactory.createURIReference(object);
+
+        return new TripleImpl(subjectNode, predicateNode, objectNode);
+    }
+
+    public Triple createTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        Literal literal = elementFactory.createLiteral(object);
+
+        return new TripleImpl(subjectNode, predicateNode, literal);
+    }
+
+
+    public Triple createTriple(URI subject, URI predicate, String object, String language)
+        throws GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        Literal literal = elementFactory.createLiteral(object, language);
+
+        return new TripleImpl(subjectNode, predicateNode, literal);
+    }
+
+    public Triple createTriple(URI subject, URI predicate, String object, URI dataType)
+        throws GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        Literal literal = elementFactory.createLiteral(object, dataType);
+
+        return new TripleImpl(subjectNode, predicateNode, literal);
+    }
+
+
 }
+
