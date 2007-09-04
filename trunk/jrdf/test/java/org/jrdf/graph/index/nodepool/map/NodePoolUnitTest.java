@@ -74,6 +74,6 @@ import java.util.Map;
 public class NodePoolUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(NodePool.class, NodePoolImpl.class);
-        checkConstructor(NodePoolImpl.class, 0, Map.class, Map.class);
+        checkConstructor(NodePoolImpl.class, 0, NodeTypePool.class, Map.class);
     }
 }

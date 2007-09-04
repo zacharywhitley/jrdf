@@ -60,23 +60,34 @@
 package org.jrdf.graph.index.nodepool.map;
 
 import org.jrdf.graph.Node;
-import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.graph.mem.LocalizedNode;
 
 import java.util.Map;
+import java.util.Collection;
 
-public class MemNodePoolFactory implements NodePoolFactory {
-    public NodePool createNodePool() {
-        MapFactory factory1 = new MemMapFactory();
-        MapFactory factory2 = new MemMapFactory();
-        Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
-        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(factory1.createMap(Long.class, Node.class));
-        return new NodePoolImpl(nodeTypePool, stringPool);
+public class NodeTypePoolImpl implements NodeTypePool {
+    /**
+     * The pool of all nodes, mapped from their ids.
+     */
+    private Map<Long, Node> nodePool;
+
+    public NodeTypePoolImpl(Map<Long, Node> newNodePool) {
+        this.nodePool = newNodePool;
     }
 
-    public void close() {
-        // Do nothing - in memory.
+    public Node get(Long nodeId) {
+        return nodePool.get(nodeId);
+    }
+
+    public void put(Long id, LocalizedNode node) {
+        nodePool.put(id, node);
+    }
+
+    public Collection<Node> values() {
+        return nodePool.values();
+    }
+
+    public void clear() {
+        nodePool.clear();
     }
 }

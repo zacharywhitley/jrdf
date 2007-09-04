@@ -80,27 +80,26 @@ public final class NodePoolImpl implements NodePool {
     private static final int TRIPLE = 3;
 
     /**
-     * The pool of all nodes, mapped from their ids.
+     * Maps nodes to node types.
      */
-    private Map<Long, Node> nodePool;
+    private NodeTypePool nodeTypePool;
 
     /**
      * A reverse mapping of all ids, mapped from their string.
      */
     private Map<String, Long> stringPool;
-
     /**
      * The next available node id.
      */
     private long nextNode = 1L;
 
-    NodePoolImpl(Map<Long, Node> newNodePool, Map<String, Long> newStringPool) {
-        nodePool = newNodePool;
+    NodePoolImpl(NodeTypePool newNodeTypePool, Map<String, Long> newStringPool) {
+        nodeTypePool = newNodeTypePool;
         stringPool = newStringPool;
     }
 
     public Node getNodeById(Long id) {
-        return nodePool.get(id);
+        return nodeTypePool.get(id);
     }
 
     public Long getNodeIdByString(String str) {
@@ -112,7 +111,7 @@ public final class NodePoolImpl implements NodePool {
         Long id = node.getId();
 
         // look the node up to see if it already exists in the graph
-        LocalizedNode existingNode = (LocalizedNode) nodePool.get(id);
+        LocalizedNode existingNode = (LocalizedNode) nodeTypePool.get(id);
         if (null != existingNode) {
             // check that the node is equal to the one that is already in the graph
             if (existingNode.equals(node)) {
@@ -123,7 +122,7 @@ public final class NodePoolImpl implements NodePool {
                 "Existing node: " + existingNode + ", new node: " + node);
         }
         // add the node
-        nodePool.put(id, node);
+        nodeTypePool.put(id, node);
 
         // check if the node has a string representation
         if (!(node instanceof BlankNode)) {
@@ -142,7 +141,7 @@ public final class NodePoolImpl implements NodePool {
 
 
     public Collection<Node> getNodePoolValues() {
-        return nodePool.values();
+        return nodeTypePool.values();
     }
 
     public Long getNextNodeId() {
@@ -164,7 +163,7 @@ public final class NodePoolImpl implements NodePool {
     }
 
     public void clear() {
-        nodePool.clear();
+        nodeTypePool.clear();
         stringPool.clear();
         nextNode = 1L;
     }
@@ -231,7 +230,7 @@ public final class NodePoolImpl implements NodePool {
 
     private Long getBlankNode(Node blankNode) throws GraphException {
         Long nodeId = ((LocalizedNode) blankNode).getId();
-        Node node = nodePool.get(nodeId);
+        Node node = nodeTypePool.get(nodeId);
         if (node == null) {
             throw new GraphException("The node id was not found in the graph: " + nodeId);
         }
