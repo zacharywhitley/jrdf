@@ -60,23 +60,16 @@
 package org.jrdf.graph.index.nodepool.map;
 
 import org.jrdf.graph.Node;
-import org.jrdf.graph.index.nodepool.NodePool;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
+import org.jrdf.graph.mem.LocalizedNode;
 
-import java.util.Map;
+import java.util.Collection;
 
-public class MemNodePoolFactory implements NodePoolFactory {
-    public NodePool createNodePool() {
-        MapFactory factory1 = new MemMapFactory();
-        MapFactory factory2 = new MemMapFactory();
-        Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
-        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(factory1.createMap(Long.class, Node.class));
-        return new NodePoolImpl(nodeTypePool, stringPool);
-    }
+public interface NodeTypePool {
+    Node get(Long nodeId);
 
-    public void close() {
-        // Do nothing - in memory.
-    }
+    void put(Long id, LocalizedNode node);
+
+    Collection<Node> values();
+
+    void clear();
 }
