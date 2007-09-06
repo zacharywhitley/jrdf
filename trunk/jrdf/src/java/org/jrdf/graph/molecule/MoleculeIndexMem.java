@@ -64,7 +64,9 @@ import org.jrdf.graph.Triple;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -113,10 +115,9 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
 
         Set<Triple> tailGroup = group.get(third);
         if (null == tailGroup) {
-            tailGroup = tail;
-            addTailTriples(tailGroup);
+            addTailTriples(tail);
         }
-        group.put(third, tailGroup);
+        group.put(third, tail);
     }
 
     public void remove(Node first, Node second, Node third) {
@@ -152,16 +153,47 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     }
 
     public long numberOfMolecules() {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        long tailTriples = numberOfTailTriples();
+        long triples = numberOfTriples();
+
+        return triples - tailTriples;
     }
 
-    private void addTailTriples(Set<Triple> tailGroup) {
+    private long numberOfTailTriples() {
+        long size = 0;
+
+        Collection<Map<Node, Map<Node, Set<Triple>>>> spoMap = index.values();
+        for (Iterator<Map<Node, Map<Node, Set<Triple>>>> spoIterator = spoMap.iterator(); spoIterator.hasNext();) {
+            Map<Node, Map<Node, Set<Triple>>> poMap = spoIterator.next();
+
+            Iterator<Map<Node, Set<Triple>>> poIterator = poMap.values().iterator();
+            while (poIterator.hasNext()) {
+                Map<Node, Set<Triple>> oMap = poIterator.next();
+                Collection<Set<Triple>> sets = oMap.values();
+                Iterator<Set<Triple>> tailSetIterator = sets.iterator();
+                while (tailSetIterator.hasNext()) {
+                    Set<Triple> triples = tailSetIterator.next();
+                    if (triples != null) {
+                        size += triples.size();
+                    }
+                }
+            }
+        }
+        return size;
+    }
+
+    private Set<Triple> addTailTriples(Set<Triple> tailGroup) {
+        Set<Triple> res = new HashSet<Triple>();
+
         if (tailGroup != null) {
             Iterator<Triple> iterator = tailGroup.iterator();
             while (iterator.hasNext()) {
                 Triple triple = iterator.next();
-                add(triple.getSubject(), triple.getPredicate(), triple.getObject(), null);
+                add(triple.getSubject(), triple.getPredicate(), triple.getObject(), Collections.EMPTY_SET);
+                res.add(triple);
             }
         }
+
+        return res;
     }
 }

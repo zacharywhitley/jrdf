@@ -63,9 +63,9 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Triple;
 
 import java.net.URI;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Created by IntelliJ IDEA.
@@ -90,7 +90,7 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
         addMolecule();
     }
 
-    public void testGetSize() throws Exception {
+    public void testGetTripleSize() throws Exception {
         addMolecule();
 
         long numTriples = moleculeIndex.numberOfTriples();
@@ -98,21 +98,35 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
         assertEquals(expected, numTriples);
     }
 
+    public void testGetMoleculeSize() throws Exception {
+        addMolecule();
+
+        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        int expected = 1;
+        assertEquals(expected, numberOfMolecules);
+    }
+
+
     private void addMolecule() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(comparator);
+
         //create some triples
-        Triple triple = tripleFactory.createTriple(URI.create(URL1), URI.create(URL2), LITERAL1);
-        Triple triple2 = tripleFactory.createTriple(URI.create(URL1), URI.create(URL2), LITERAL2);
+        double random = Math.random();
+        Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
+        random = Math.random();
+        Triple triple2 = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL2);
         m.add(triple);
         m.add(triple2);
 
         //add molecule to the index
         Triple headTriple = m.getHeadTriple();
         Iterator<Triple> iterator = m.iterator();
-        Set<Triple> s = new HashSet<Triple>();
+        SortedSet<Triple> s = new TreeSet<Triple>(comparator);
         while (iterator.hasNext()) {
             Triple triple1 = iterator.next();
-            s.add(triple1);
+            if (iterator.hasNext()) {
+                s.add(triple1);
+            }
         }
         moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), s);
     }
