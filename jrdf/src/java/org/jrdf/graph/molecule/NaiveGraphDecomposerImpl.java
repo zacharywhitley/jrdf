@@ -35,6 +35,7 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -64,12 +65,16 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
                 boolean blankObject = isBlankNode(triple.getObject());
                 if (!blankSubject || !blankObject) {
                     Molecule molecule = new MoleculeImpl(comparator);
-                    molecule.addTriple(triple);
+                    molecule.add(triple);
                     if (blankSubject || blankObject) {
                         Set<Triple> hangingTripleSet = getHangingTriples(triple);
-                        molecule.addTriples(hangingTripleSet);
+                        molecule.add(hangingTripleSet);
                     }
-                    triplesChecked.addAll(molecule.getTriples());
+                    Iterator<Triple> tripleIterator = molecule.iterator();
+                    while (tripleIterator.hasNext()) {
+                        Triple t = tripleIterator.next();
+                        triplesChecked.add(t);
+                    }
                     molecules.add(molecule);
                 }
             }

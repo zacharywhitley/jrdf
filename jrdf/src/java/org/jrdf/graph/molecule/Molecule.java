@@ -32,17 +32,53 @@ import java.util.Set;
  */
 public interface Molecule {
 
-    boolean containsTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+    /**
+     * Returns an iterator for any triples matching the given
+     * triple.
+     * @param triple
+     * @return
+     */
+    Iterator<Triple> find(Triple triple);
 
-    Iterator<Triple> getTripleIterator();
+    /**
+     * Checks to see if the given triple exists within the
+     * molecule.
+     * @param triple
+     * @return
+     */
+    boolean contains(Triple triple);
 
-    Set<Triple> getTriples();
+    /**
+     * Returns an iterator for the set of triples which make up this
+     * molecule.
+     * @return
+     */
+    Iterator<Triple> iterator();
 
-    void addTriple(Triple triple);
+    /**
+     * Adds the given triple to the molecule.
+     * @param triple
+     */
+    void add(Triple triple);
 
-    void addTriples(Set<Triple> triples);
+    /**
+     * Adds a set of triples to this molecule.
+     * @param triples
+     */
+    void add(Set<Triple> triples);
 
+    /**
+     * Number of triples contained in the molecule.
+     *
+     * @return
+     */
     int size();
 
+    /**
+     * Returns the head triple of the molecule.
+     * @return
+     */
     Triple getHeadTriple();
+
+    boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 }

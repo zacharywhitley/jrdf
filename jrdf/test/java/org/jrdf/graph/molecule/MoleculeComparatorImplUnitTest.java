@@ -6,17 +6,17 @@ import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.mem.BlankNodeComparator;
+import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.mem.LocalizedNodeComparator;
+import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.TripleComparatorImpl;
-import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.LocalizedNodeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
@@ -91,18 +91,18 @@ public class MoleculeComparatorImplUnitTest extends TestCase {
 
     private void checkMoleculesAreEqual(Set<Triple> triple1, Set<Triple> triple2) throws GraphException {
         Molecule molecule1 = new MoleculeImpl(comparator);
-        molecule1.addTriples(triple1);
+        molecule1.add(triple1);
         Molecule molecule2 = new MoleculeImpl(comparator);
-        molecule2.addTriples(triple2);
+        molecule2.add(triple2);
         MoleculeComparator moleculeComparator = new MoleculeComparatorImpl();
         assertTrue(moleculeComparator.compare(molecule1, molecule2));
     }
 
     private void checkMoleculesAreUnequal(Set<Triple> triple1, Set<Triple> triple2) throws GraphException {
         Molecule molecule1 = new MoleculeImpl(comparator);
-        molecule1.addTriples(triple1);
+        molecule1.add(triple1);
         Molecule molecule2 = new MoleculeImpl(comparator);
-        molecule2.addTriples(triple2);
+        molecule2.add(triple2);
         MoleculeComparator moleculeComparator = new MoleculeComparatorImpl();
         assertFalse(moleculeComparator.compare(molecule1, molecule2));
     }
