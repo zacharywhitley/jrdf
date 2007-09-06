@@ -59,73 +59,61 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.Node;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Triple;
 
+import java.net.URI;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
  * User: imrank
  * Date: 6/09/2007
- * Time: 12:02:06
+ * Time: 14:33:24
  * To change this template use File | Settings | File Templates.
  */
-public interface MoleculeIndex {
-    /**
-     * Adds the given nodes and set to the index.
-     * @param nodes
-     * @param tail
-     */
-    void add(Node[] nodes, Set<Triple> tail);
+public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {    
+    private final String BASE_URL = "http://example.org/";
+    private final String URL1 = BASE_URL + "1";
+    private final String URL2 = BASE_URL + "2";
+    private final String URL3 = BASE_URL + "3";
+    private final String LITERAL1 = "xyz";
+    private final String LITERAL2 = "abc";
 
-    /**
-     * Adds the given nodes and set to the index.
-     * @param first
-     * @param second
-     * @param third
-     * @param tail
-     */
-    void add(Node first, Node second, Node third, Set<Triple> tail);
+    public void setUp() throws Exception {
+        moleculeIndex = new MoleculeIndexMem();
+    }
 
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param first
-     * @param second
-     * @param third
-     */
-    void remove(Node first, Node second, Node third);
+    public void testAdd() throws Exception {
+        addMolecule();
+    }
 
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param triple
-     */
-    void remove(Node[] triple);
+    public void testGetSize() throws Exception {
+        addMolecule();
 
+        long numTriples = moleculeIndex.numberOfTriples();
+        int expected = 2;
+        assertEquals(expected, numTriples);
+    }
 
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
+    private void addMolecule() throws GraphElementFactoryException {
+        Molecule m = new MoleculeImpl(comparator);
+        //create some triples
+        Triple triple = tripleFactory.createTriple(URI.create(URL1), URI.create(URL2), LITERAL1);
+        Triple triple2 = tripleFactory.createTriple(URI.create(URL1), URI.create(URL2), LITERAL2);
+        m.add(triple);
+        m.add(triple2);
 
-
-    boolean contains(Node node);
-
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long numberOfTriples();
-
-
-    /**
-     * Returns the number of molecules contained in the graph.
-     * @return
-     */
-    long numberOfMolecules();
+        //add molecule to the index
+        Triple headTriple = m.getHeadTriple();
+        Iterator<Triple> iterator = m.iterator();
+        Set<Triple> s = new HashSet<Triple>();
+        while (iterator.hasNext()) {
+            Triple triple1 = iterator.next();
+            s.add(triple1);
+        }
+        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), s);
+    }
 }
