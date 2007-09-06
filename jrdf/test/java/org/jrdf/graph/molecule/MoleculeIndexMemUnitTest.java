@@ -106,8 +106,75 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
         assertEquals(expected, numberOfMolecules);
     }
 
+    public void testClean() throws Exception {
+        addMolecule();
+        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        int expected = 1;
+        assertEquals(expected, numberOfMolecules);
 
-    private void addMolecule() throws GraphElementFactoryException {
+        moleculeIndex.clear();
+
+        numberOfMolecules = moleculeIndex.numberOfMolecules();
+        expected = 0;
+        assertEquals(expected, numberOfMolecules);
+    }
+
+    public void testRemove() throws Exception {
+        Molecule m1 = addMolecule();
+        Molecule m2 = addMolecule();
+
+        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        int expected = 2;
+        assertEquals(expected, numberOfMolecules);
+
+        //remove the molecule
+        Triple headTriple = m1.getHeadTriple();
+        moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
+
+        //check remaining size
+        numberOfMolecules = moleculeIndex.numberOfMolecules();
+        expected = 1;
+        assertEquals(expected, numberOfMolecules);
+
+        long numberOfTriples = moleculeIndex.numberOfTriples();
+        expected = 2;
+        assertEquals(expected, numberOfTriples);
+
+        //TODO check remaing molecule is m2
+    }
+
+    /**
+     * This tests the removal where one of the molecules
+     * has no tail triples.
+     *
+     * @throws Exception
+     */
+    public void testRemoveMoleculeWithNoTail() throws Exception {
+        Molecule m1 = addMolecule();
+        Molecule m2 = addMoleculeWithNoTail();
+
+        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        int expected = 2;
+        assertEquals(expected, numberOfMolecules);
+
+        //remove the molecule
+        Triple headTriple = m1.getHeadTriple();
+        moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
+
+        //check remaining size
+        numberOfMolecules = moleculeIndex.numberOfMolecules();
+        expected = 1;
+        assertEquals(expected, numberOfMolecules);
+
+        long numberOfTriples = moleculeIndex.numberOfTriples();
+        expected = 1;
+        assertEquals(expected, numberOfTriples);
+
+        //TODO check remaing molecule is m2
+    }
+
+
+    private Molecule addMolecule() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(comparator);
 
         //create some triples
@@ -129,5 +196,24 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
             }
         }
         moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), s);
+
+        return m;
+    }
+
+
+    private Molecule addMoleculeWithNoTail() throws GraphElementFactoryException {
+        Molecule m = new MoleculeImpl(comparator);
+
+        //create some triples
+        double random = Math.random();
+        Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
+        m.add(triple);
+
+        //add molecule to the index
+        Triple headTriple = m.getHeadTriple();
+        SortedSet<Triple> s = new TreeSet<Triple>(comparator);
+        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), s);
+
+        return m;
     }
 }
