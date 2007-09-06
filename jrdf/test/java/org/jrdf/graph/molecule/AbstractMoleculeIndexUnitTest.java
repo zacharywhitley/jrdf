@@ -59,73 +59,43 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
-
-import java.util.Set;
+import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.mem.BlankNodeComparator;
+import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.mem.LocalizedNodeComparator;
+import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.mem.NodeComparatorImpl;
+import org.jrdf.graph.mem.TripleComparatorImpl;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 /**
  * Created by IntelliJ IDEA.
  * User: imrank
  * Date: 6/09/2007
- * Time: 12:02:06
+ * Time: 14:29:03
  * To change this template use File | Settings | File Templates.
  */
-public interface MoleculeIndex {
-    /**
-     * Adds the given nodes and set to the index.
-     * @param nodes
-     * @param tail
-     */
-    void add(Node[] nodes, Set<Triple> tail);
+public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
+    JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
 
-    /**
-     * Adds the given nodes and set to the index.
-     * @param first
-     * @param second
-     * @param third
-     * @param tail
-     */
-    void add(Node first, Node second, Node third, Set<Triple> tail);
+    LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
+    BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
+    NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
+    TripleComparator comparator = new TripleComparatorImpl(nodeComparator);
 
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param first
-     * @param second
-     * @param third
-     */
-    void remove(Node first, Node second, Node third);
+    protected MoleculeIndex moleculeIndex;
+    private final Graph graph = factory.getNewGraph();
+    protected final TripleFactory tripleFactory = graph.getTripleFactory();
 
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param triple
-     */
-    void remove(Node[] triple);
+    public abstract void testAdd() throws Exception;
 
 
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
+    public abstract void testGetSize() throws Exception;
 
-
-    boolean contains(Node node);
-
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long numberOfTriples();
-
-
-    /**
-     * Returns the number of molecules contained in the graph.
-     * @return
-     */
-    long numberOfMolecules();
 }
