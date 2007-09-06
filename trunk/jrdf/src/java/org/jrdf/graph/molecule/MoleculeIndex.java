@@ -59,53 +59,73 @@
 
 package org.jrdf.graph.molecule;
 
-import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
-import java.net.URI;
+import java.util.Set;
 
-public class MoleculeImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph newGraph = factory.getNewGraph();
-    private GraphElementFactory elementFactory = newGraph.getElementFactory();
-    private TripleFactory tripleFactory = newGraph.getTripleFactory();
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
-    private URIReference ref1;
-    private URIReference ref2;
+/**
+ * Created by IntelliJ IDEA.
+ * User: imrank
+ * Date: 6/09/2007
+ * Time: 12:02:06
+ * To change this template use File | Settings | File Templates.
+ */
+public interface MoleculeIndex {
+    /**
+     * Adds the given nodes and set to the index.
+     * @param triple
+     * @param tail
+     */
+    void add(Node[] triple, Set<Triple> tail);
 
-    public void testMoleculeOrderURIReference() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(ref1, ref1, ref1);
-        molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(ref1, ref1, ref2));
-        assertEquals(triple, molecule.getHeadTriple());
-    }
+    /**
+     * Adds the given nodes and set to the index.
+     * @param first
+     * @param second
+     * @param third
+     * @param tail
+     */
+    void add(Node first, Node second, Node third, Set<Triple> tail);
 
-    public void testMoleculeOrderBlankNodes() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2));
-        molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
-            elementFactory.createBlankNode()));
-        assertEquals(triple, molecule.getHeadTriple());
-    }
+    /**
+     * Given the specified nodes, this will located the
+     * molecule with the specified nodes and remove it
+     * and the tail triples from the graph.
+     * @param first
+     * @param second
+     * @param third
+     */
+    void remove(Node first, Node second, Node third);
+
+    /**
+     * Given the specified nodes, this will located the
+     * molecule with the specified nodes and remove it
+     * and the tail triples from the graph.
+     * @param triple
+     */
+    void remove(Node[] triple);
+
+
+    /**
+     * Clear the index's contents.
+     */
+    void clear();
+
+
+    boolean contains(Node node);
+
+    /**
+     * Returns the number of triples.
+     *
+     * @return
+     */
+    long numberOfTriples();
+
+
+    /**
+     * Returns the number of molecules contained in the graph.
+     * @return
+     */
+    long numberOfMolecules();
 }

@@ -59,53 +59,52 @@
 
 package org.jrdf.graph.molecule;
 
-import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.util.ClosableIterator;
 
-import java.net.URI;
+/**
+ * Created by IntelliJ IDEA.
+ * User: imrank
+ * Date: 6/09/2007
+ * Time: 13:28:06
+ * To change this template use File | Settings | File Templates.
+ */
+public interface MoleculeIteratorFactory {
 
-public class MoleculeImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph newGraph = factory.getNewGraph();
-    private GraphElementFactory elementFactory = newGraph.getElementFactory();
-    private TripleFactory tripleFactory = newGraph.getTripleFactory();
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
-    private URIReference ref1;
-    private URIReference ref2;
+    /**
+     * Returns the predicates associated with the given resource.
+     * @param resource
+     * @return
+     */
+    ClosableIterator<PredicateNode> findUniquePredicates(Resource resource);
 
-    public void testMoleculeOrderURIReference() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(ref1, ref1, ref1);
-        molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(ref1, ref1, ref2));
-        assertEquals(triple, molecule.getHeadTriple());
-    }
 
-    public void testMoleculeOrderBlankNodes() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2));
-        molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
-            elementFactory.createBlankNode()));
-        assertEquals(triple, molecule.getHeadTriple());
-    }
+    /**
+     * Returns all of the unique predicates contained within the graph.
+     * @return
+     */
+    ClosableIterator<PredicateNode> getUniquePredicates();
+
+
+    /**
+     * Returns all resources within the graph.
+     * @return
+     */
+    ClosableIterator<Resource> getResources();
+
+    /**
+     * Returns an iterator over all of the URIReferences contained in the graph.
+     * @return
+     */
+    ClosableIterator<URIReference> getURIReferences();
+
+    /**
+     * Returns an iterator over all of the BlankNodes contained within the graph.
+     * @return
+     */
+    ClosableIterator<BlankNode> getBlankNodes();
+
 }

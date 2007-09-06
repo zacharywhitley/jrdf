@@ -72,6 +72,7 @@ import org.jrdf.graph.URIReference;
 import java.net.URI;
 import static java.util.Arrays.asList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class NaiveGraphDecomposerImplUnitTest extends TestCase {
@@ -112,9 +113,13 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     }
 
     private void compareTriples(Molecule molecule, Set<Triple> expectedResults1) {
-        Set<Triple> actualTriples = molecule.getTriples();
-        assertEquals(expectedResults1.size(), actualTriples.size());
-        for (Triple triple : actualTriples) {
+        //Set<Triple> actualTriples = molecule.getTriples();
+        assertEquals(expectedResults1.size(), molecule.size());
+        //for (Triple triple : actualTriples) {
+        Iterator<Triple> iterator = molecule.iterator();
+
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
             assertTrue(expectedResults1.contains(triple));
         }
     }

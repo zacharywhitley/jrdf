@@ -59,53 +59,89 @@
 
 package org.jrdf.graph.molecule;
 
-import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.util.ClosableIterator;
 
-import java.net.URI;
+/**
+ * Represents a globalized grpah, which maintains molecules. This allows
+ * us to better handle blank nodes
+ *
+ */
+public interface GlobalizedGraph {
 
-public class MoleculeImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph newGraph = factory.getNewGraph();
-    private GraphElementFactory elementFactory = newGraph.getElementFactory();
-    private TripleFactory tripleFactory = newGraph.getTripleFactory();
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
-    private URIReference ref1;
-    private URIReference ref2;
+    /**
+     * Given the specified triple, this method will return
+     * any molecules matching the given triples pattern.
+     * @param triple
+     * @return
+     */
+    ClosableIterator<Molecule> find(Triple triple);
 
-    public void testMoleculeOrderURIReference() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(ref1, ref1, ref1);
-        molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(ref1, ref1, ref2));
-        assertEquals(triple, molecule.getHeadTriple());
-    }
+    /**
+     * Check to see if given molecule exists.
+     * @param molecule
+     * @return
+     */
+    boolean contains(Molecule molecule);
 
-    public void testMoleculeOrderBlankNodes() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2));
-        molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
-            elementFactory.createBlankNode()));
-        assertEquals(triple, molecule.getHeadTriple());
-    }
+    /**
+     * Check to see if the given triple exists within
+     * the graph.
+     *
+     * @param triple
+     * @return
+     */
+    boolean contains(Triple triple);
+
+    /**
+     * Adds the given molecule and its associated triples
+     * to the graph.
+     * @param molecule
+     */
+    void add(Molecule molecule);
+
+    /**
+     * Given the specified molecule, this will find
+     * the given molecule and remove it. It will first search
+     * for the molecules head triple, and then progressively remove
+     * the tail triples from the main index.
+     *
+     * @param molecule
+     */
+    void remove(Molecule molecule);
+
+
+    /**
+     * Closes any open resources.
+     */
+    void close();
+
+    /**
+     * Remove all molecules from the graph.
+     *
+     */
+    void clear();
+
+    /**
+     * Checks to see if given graph is empty.
+     *
+     * @return
+     */
+    boolean isEmpty();
+
+    /**
+     * Returns number of molecules in the graph.
+     *
+     * @return
+     */
+    long size();
+
+
+    /**
+     * Returns a iterator factory for generating the various
+     * types of iterators required.
+     * @return
+     */
+    MoleculeIteratorFactory getMoleculeIteratorFactory();
 }
+

@@ -23,6 +23,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,7 +45,19 @@ public class MoleculeImpl implements Molecule {
         return triples.last();
     }
 
-    public boolean containsTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+    public void remove(Triple triple) {
+        predicateSubjectMap.remove(triple.getPredicate());
+        predicateObjectMap.remove(triple.getPredicate());
+        triples.remove(triple);
+    }
+
+    public void clear() {
+        predicateSubjectMap.clear();
+        predicateObjectMap.clear();
+        triples.clear();
+    }
+
+    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         if (isBlankNode(subject)) {
             if (isBlankNode(object)) {
                 return predicateSubjectMap.containsKey(predicate);
@@ -61,23 +74,27 @@ public class MoleculeImpl implements Molecule {
         }
     }
 
-    public Iterator<Triple> getTripleIterator() {
+    public ClosableIterator<Triple> find(Triple triple) {
+        throw new UnsupportedOperationException("Method not yet implemented");
+    }
+
+    public boolean contains(Triple triple) {
+        return contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    }
+
+    public Iterator<Triple> iterator() {
         return triples.iterator();
     }
 
-    public Set<Triple> getTriples() {
-        return triples;
-    }
-
-    public void addTriple(Triple triple) {
+    public void add(Triple triple) {
         predicateSubjectMap.put(triple.getPredicate(), triple.getSubject());
         predicateObjectMap.put(triple.getPredicate(), triple.getObject());
         triples.add(triple);
     }
 
-    public void addTriples(Set<Triple> triples) {
+    public void add(Set<Triple> triples) {
         for (Triple triple : triples) {
-            addTriple(triple);
+            add(triple);
         }
     }
 
@@ -87,7 +104,7 @@ public class MoleculeImpl implements Molecule {
 
     public String toString() {
         final StringBuilder res = new StringBuilder();
-        final Iterator<Triple> allTriples = getTripleIterator();
+        final Iterator<Triple> allTriples = iterator();
         res.append("{\n");
         if (allTriples.hasNext()) {
             while (allTriples.hasNext()) {

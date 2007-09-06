@@ -32,10 +32,10 @@ public class MoleculeComparatorImpl implements MoleculeComparator {
     }
 
     private boolean compareSameSizeMolecules(Molecule m1, Molecule m2) {
-        Iterator<Triple> tripleIterator = m1.getTripleIterator();
+        Iterator<Triple> tripleIterator = m1.iterator();
         while (tripleIterator.hasNext()) {
             Triple triple = tripleIterator.next();
-            if (!m2.containsTriple(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
+            if (!m2.contains(triple.getSubject(), triple.getPredicate(), triple.getObject())) {
                 return false;
             }
         }
