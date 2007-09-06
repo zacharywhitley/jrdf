@@ -95,9 +95,13 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
 
     public abstract void testAdd() throws Exception;
 
-
     public abstract void testGetTripleSize() throws Exception;
 
-
     public abstract void testGetMoleculeSize() throws Exception;
+
+    public abstract void testClean() throws Exception;
+
+    public abstract void testRemove() throws Exception;
+
+    public abstract void testRemoveMoleculeWithNoTail() throws Exception;
 }

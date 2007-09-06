@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.molecule;
 
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 
@@ -96,7 +97,7 @@ public interface MoleculeIndex {
      * @param second
      * @param third
      */
-    void remove(Node first, Node second, Node third);
+    void remove(Node first, Node second, Node third) throws GraphException;
 
     /**
      * Given the specified nodes, this will located the
@@ -104,7 +105,7 @@ public interface MoleculeIndex {
      * and the tail triples from the graph.
      * @param triple
      */
-    void remove(Node[] triple);
+    void remove(Node[] triple) throws GraphException;
 
 
     /**

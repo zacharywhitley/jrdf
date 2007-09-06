@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.molecule;
 
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 
@@ -82,7 +83,6 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 7410378771227279041L;
 
     private Map<Node, Map<Node, Map<Node, Set<Triple>>>> index;
-
 
     public MoleculeIndexMem() {
         index = new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>();
@@ -120,12 +120,44 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         group.put(third, tail);
     }
 
-    public void remove(Node first, Node second, Node third) {
-        throw new UnsupportedOperationException("Method not yet implemented");
+    public void remove(Node first, Node second, Node third) throws GraphException {
+        Map<Node, Map<Node, Set<Triple>>> subIndex = index.get(first);
+        if (null == subIndex) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+
+        Map<Node, Set<Triple>> group = subIndex.get(second);
+        if (null == group) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+
+        Set<Triple> tailGroup = group.get(third);
+
+        //remove the main index value
+        if (group.remove(third) == null) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+
+        if (group.isEmpty()) {
+            subIndex.remove(second);
+            if (subIndex.isEmpty()) {
+                index.remove(first);
+            }
+        }
+        removeTailTriples(tailGroup);
     }
 
-    public void remove(Node[] triple) {
-        throw new UnsupportedOperationException("Method not yet implemented");
+    private void removeTailTriples(Set<Triple> tailGroup) throws GraphException {
+        //remove all other tail triples
+        Iterator<Triple> tailGroupIterator = tailGroup.iterator();
+        while (tailGroupIterator.hasNext()) {
+            Triple triple = tailGroupIterator.next();
+            remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        }
+    }
+
+    public void remove(Node[] nodes) throws GraphException {
+        remove(nodes[0], nodes[1], nodes[2]);
     }
 
     public void clear() {
@@ -133,7 +165,7 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     }
 
     public boolean contains(Node node) {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        return index.containsKey(node);
     }
 
     public long numberOfTriples() {
