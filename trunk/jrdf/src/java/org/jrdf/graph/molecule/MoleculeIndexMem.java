@@ -68,7 +68,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -149,9 +148,7 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
 
     private void removeTailTriples(Set<Triple> tailGroup) throws GraphException {
         //remove all other tail triples
-        Iterator<Triple> tailGroupIterator = tailGroup.iterator();
-        while (tailGroupIterator.hasNext()) {
-            Triple triple = tailGroupIterator.next();
+        for (Triple triple : tailGroup) {
             remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
         }
     }
@@ -172,12 +169,8 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         long size = 0;
 
         Collection<Map<Node, Map<Node, Set<Triple>>>> spoMap = index.values();
-        for (Iterator<Map<Node, Map<Node, Set<Triple>>>> spoIterator = spoMap.iterator(); spoIterator.hasNext();) {
-            Map<Node, Map<Node, Set<Triple>>> poMap = spoIterator.next();
-
-            Iterator<Map<Node, Set<Triple>>> poIterator = poMap.values().iterator();
-            while (poIterator.hasNext()) {
-                Map<Node, Set<Triple>> oMap = poIterator.next();
+        for (Map<Node, Map<Node, Set<Triple>>> poMap : spoMap) {
+            for (Map<Node, Set<Triple>> oMap : poMap.values()) {
                 size += oMap.size();
             }
         }
@@ -195,16 +188,10 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         long size = 0;
 
         Collection<Map<Node, Map<Node, Set<Triple>>>> spoMap = index.values();
-        for (Iterator<Map<Node, Map<Node, Set<Triple>>>> spoIterator = spoMap.iterator(); spoIterator.hasNext();) {
-            Map<Node, Map<Node, Set<Triple>>> poMap = spoIterator.next();
-
-            Iterator<Map<Node, Set<Triple>>> poIterator = poMap.values().iterator();
-            while (poIterator.hasNext()) {
-                Map<Node, Set<Triple>> oMap = poIterator.next();
+        for (Map<Node, Map<Node, Set<Triple>>> poMap : spoMap) {
+            for (Map<Node, Set<Triple>> oMap : poMap.values()) {
                 Collection<Set<Triple>> sets = oMap.values();
-                Iterator<Set<Triple>> tailSetIterator = sets.iterator();
-                while (tailSetIterator.hasNext()) {
-                    Set<Triple> triples = tailSetIterator.next();
+                for (Set<Triple> triples : sets) {
                     if (triples != null) {
                         size += triples.size();
                     }
@@ -218,9 +205,7 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         Set<Triple> res = new HashSet<Triple>();
 
         if (tailGroup != null) {
-            Iterator<Triple> iterator = tailGroup.iterator();
-            while (iterator.hasNext()) {
-                Triple triple = iterator.next();
+            for (Triple triple : tailGroup) {
                 add(triple.getSubject(), triple.getPredicate(), triple.getObject(), Collections.EMPTY_SET);
                 res.add(triple);
             }
