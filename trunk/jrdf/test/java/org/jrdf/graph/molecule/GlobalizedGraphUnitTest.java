@@ -129,12 +129,14 @@ public class GlobalizedGraphUnitTest extends TestCase {
     public void testAdd() throws Exception {
         Molecule molecule = getMolecule();
 
+        assertTrue(globalizedGraph.isEmpty());
         long expected = 0;
         long value = globalizedGraph.numberOfMolecules();
         assertEquals(expected, value);
 
         globalizedGraph.add(molecule);
 
+        assertFalse(globalizedGraph.isEmpty());
         expected = 1;
         value = globalizedGraph.numberOfMolecules();
         assertEquals(expected, value);
