@@ -60,6 +60,9 @@
 package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
@@ -148,7 +151,15 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
     }
 
     public void add(Molecule molecule) {
-        
+        Triple headTriple = molecule.getHeadTriple();
+        SubjectNode subj = headTriple.getSubject();
+        PredicateNode pred = headTriple.getPredicate();
+        ObjectNode obj = headTriple.getObject();
+        Set<Triple> tailTriples = molecule.getTailTriples();
+
+        indexes[0].add(subj, pred, obj, tailTriples);
+        indexes[1].add(pred, obj, subj, tailTriples);
+        indexes[2].add(obj, subj, pred, tailTriples);
     }
 
     public void remove(Molecule molecule) {
@@ -160,15 +171,17 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
     }
 
     public void clear() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        indexes[0].clear();
+        indexes[1].clear();
+        indexes[2].clear();
     }
 
     public boolean isEmpty() {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public long size() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    public long numberOfMolecules() {
+        return indexes[0].numberOfMolecules();
     }
 
     public MoleculeIteratorFactory getMoleculeIteratorFactory() {

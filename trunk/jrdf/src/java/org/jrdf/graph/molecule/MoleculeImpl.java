@@ -88,6 +88,10 @@ public class MoleculeImpl implements Molecule {
     }
 
     public Iterator<Triple> tailTriples() {
+        return getTailTriples().iterator();
+    }
+
+    public Set<Triple> getTailTriples() {
         Set<Triple> set = new HashSet<Triple>();
         Iterator<Triple> iterator = triples.iterator();
 
@@ -98,7 +102,7 @@ public class MoleculeImpl implements Molecule {
                 set.add(triple);
             }
         }
-        return set.iterator();
+        return set;
     }
 
     public void add(Triple triple) {

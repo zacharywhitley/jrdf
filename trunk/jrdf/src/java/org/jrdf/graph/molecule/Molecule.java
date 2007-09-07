@@ -87,4 +87,6 @@ public interface Molecule {
      * @return
      */
     Iterator<Triple> tailTriples();
+
+    Set<Triple> getTailTriples();
 }
