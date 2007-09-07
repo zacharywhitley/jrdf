@@ -59,9 +59,9 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.AnySubjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -134,7 +134,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
 
     protected boolean containsValue(Triple triple) {
         boolean res;
-        if (AnySubjectNode.ANY_SUBJECT_NODE != triple.getSubject()) {
+        if (ANY_SUBJECT_NODE != triple.getSubject()) {
             res = containsFixedSubject(triple);
         } else {
             res = containsAnySubject(triple);
@@ -144,7 +144,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
 
     private boolean containsAnySubject(Triple triple) {
         boolean res;
-        if (AnyPredicateNode.ANY_PREDICATE_NODE != triple.getPredicate()) {
+        if (ANY_PREDICATE_NODE != triple.getPredicate()) {
             res = containsAnySubjectAnyPredicate(triple);
         } else {
             res = indexes[OBJECT_INDEX].contains(triple.getObject());
@@ -158,7 +158,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         ObjectNode object = triple.getObject();
         Map<Node, Map<Node, Set<Triple>>> predIndex = indexes[PREDICATE_INDEX].getSubIndex(predicate);
         if (null != predIndex) {
-            if (AnyObjectNode.ANY_OBJECT_NODE != object) {
+            if (ANY_OBJECT_NODE != object) {
                 res = (null != predIndex.get(object));
             } else {
                 res = true;
@@ -170,7 +170,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     private boolean containsFixedSubject(Triple triple) {
         boolean res = false;
         if (indexes[SUBJECT_INDEX].contains(triple.getSubject())) {
-            if (AnyPredicateNode.ANY_PREDICATE_NODE != triple.getPredicate()) {
+            if (ANY_PREDICATE_NODE != triple.getPredicate()) {
                 res = containsFixedSubjectFixedPredicate(triple);
             } else {
                 res = containsFixedSubjectAnyPredicate(triple);
@@ -184,7 +184,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         ObjectNode object = triple.getObject();
         SubjectNode subject = triple.getSubject();
 
-        if (AnyObjectNode.ANY_OBJECT_NODE != object) {
+        if (ANY_OBJECT_NODE != object) {
             Map<Node, Map<Node, Set<Triple>>> objIndex = indexes[OBJECT_INDEX].getSubIndex(object);
             if (null != objIndex) {
                 res = (null != objIndex.get(subject));
@@ -206,7 +206,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         Map<Node, Set<Triple>> subjPredIndex = subjIndex.get(predicate);
 
         if (null != subjPredIndex) {
-            if (AnyObjectNode.ANY_OBJECT_NODE != object) {
+            if (ANY_OBJECT_NODE != object) {
                 res = subjPredIndex.containsKey(object);
             } else {
                 res = true;

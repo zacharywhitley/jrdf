@@ -70,6 +70,7 @@ import org.jrdf.util.param.ParameterUtil;
 import java.util.Set;
 
 /**
+ * In memory implementation of Globalized Graph.
  * User: imrank
  * Date: 6/09/2007
  * Time: 13:29:44
