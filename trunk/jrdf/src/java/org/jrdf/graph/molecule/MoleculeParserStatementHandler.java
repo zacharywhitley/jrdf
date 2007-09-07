@@ -59,43 +59,39 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.StatementHandlerException;
 
 /**
- * Created by IntelliJ IDEA.
+ * A simple StatementHandler which simply adds triples to a graph
+ * and allows you then to acces the graph at the end of the parsing.
+ *
  * User: imrank
  * Date: 7/09/2007
- * Time: 10:23:43
- * To change this template use File | Settings | File Templates.
+ * Time: 17:01:22
  */
-public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
+public class MoleculeParserStatementHandler implements StatementHandler {
+    private Graph graph;
 
-
-    public ClosableIterator<Molecule> globalizedGraphIterator() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public MoleculeParserStatementHandler(Graph newGraph) {
+        this.graph = newGraph;
     }
 
-    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws StatementHandlerException {
+        try {
+            graph.add(subject, predicate, object);
+        } catch (GraphException e) {
+            throw new StatementHandlerException("Error loading triple.", e);
+        }
     }
 
-    public ClosableIterator<PredicateNode> getUniquePredicates() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<Resource> getResources() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<URIReference> getURIReferences() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<BlankNode> getBlankNodes() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public Graph getGraph() {
+        return graph;
     }
 }

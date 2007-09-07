@@ -140,6 +140,10 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         return indexes[0].numberOfMolecules();
     }
 
+    public long numberOfTriples() {
+        return indexes[0].numberOfTriples();
+    }
+
     public MoleculeIteratorFactory getMoleculeIteratorFactory() {
         return iteratorFactory;
     }

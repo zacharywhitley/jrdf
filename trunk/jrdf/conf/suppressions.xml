@@ -12,6 +12,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="NodePoolImpl.java"/>
     <suppress checks="JavaNCSS" files="GraphImpl.java"/>
