@@ -59,8 +59,13 @@
 
 package org.jrdf.graph.molecule;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -110,25 +115,24 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
 
     private void init() {
         initIndexes();
+        if (iteratorFactory == null) {
+            iteratorFactory = new MoleculeIteratorFactoryImpl();
+        }
     }
 
 
     private void initIndexes() {
-//        if (null == moleculeIndexSPO) {
-//            moleculeIndexSPO = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
-//        }
-//        if (null == longIndex120) {
-//            longIndex120 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
-//        }
-//        if (null == longIndex201) {
-//            longIndex201 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
-//        }
-//
-//        indexes = new LongIndex[]{moleculeIndexSPO, longIndex120, longIndex201};
-//
-//        if (null == nodePool) {
-//            nodePool = new MemNodePoolFactory().createNodePool();
-//        }
+        if (null == moleculeIndexSPO) {
+            moleculeIndexSPO = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+        }
+        if (null == moleculeIndexPOS) {
+            moleculeIndexPOS = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+        }
+        if (null == moleculeIndexOSP) {
+            moleculeIndexOSP = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+        }
+
+        indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};
     }
 
     public ClosableIterator<Molecule> find(Triple triple) {
@@ -144,7 +148,7 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
     }
 
     public void add(Molecule molecule) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        
     }
 
     public void remove(Molecule molecule) {
