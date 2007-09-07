@@ -139,6 +139,12 @@ public interface GlobalizedGraph {
 
 
     /**
+     * Returns number of triples contained within the graph.
+     * @return
+     */
+    long numberOfTriples();
+
+    /**
      * Returns a iterator factory for generating the various
      * types of iterators required.
      * @return

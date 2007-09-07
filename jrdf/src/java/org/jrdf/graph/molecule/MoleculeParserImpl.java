@@ -59,43 +59,76 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.Triple;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParseException;
+import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.rdfxml.RdfXmlParser;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
+ * Implementation of MoleculeParser.
  * User: imrank
  * Date: 7/09/2007
- * Time: 10:23:43
- * To change this template use File | Settings | File Templates.
+ * Time: 16:55:56
  */
-public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
+public class MoleculeParserImpl implements MoleculeParser {
+    private RdfXmlParser parser;
+    private Graph graph;
 
+    public MoleculeParserImpl(Graph newGraph) {
+        graph = newGraph;
+        try {
+            parser = new RdfXmlParser(graph.getElementFactory());
+        } catch (GraphException e) {
+            throw new IllegalStateException("Error creating MoleculeParserImple", e);
+        }
 
-    public ClosableIterator<Molecule> globalizedGraphIterator() {
-        throw new UnsupportedOperationException("Method not implemented yet");
     }
 
-    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+        parser.parse(in, baseURI);
     }
 
-    public ClosableIterator<PredicateNode> getUniquePredicates() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+        parser.parse(reader, baseURI);
     }
 
-    public ClosableIterator<Resource> getResources() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public GlobalizedGraph getGlobalizedGraph() throws GraphException {
+        GlobalizedGraph globalizedGraph = getNewGlobalizedGraph();
+        GraphDecomposer decomposer = new NaiveGraphDecomposerImpl();
+
+        if (null != globalizedGraph) {
+            Set<Molecule> molecules = decomposer.decompose(graph);
+            for (Molecule molecule : molecules) {
+                globalizedGraph.add(molecule);
+            }
+        }
+        return globalizedGraph;
     }
 
-    public ClosableIterator<URIReference> getURIReferences() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
+    /**
+     * TODO SHOULD BE REPLACED WITH GLOBLIZEDGRAPHFACTORY
+     * @return
+     */
+    protected GlobalizedGraph getNewGlobalizedGraph() {
+        MoleculeIndex spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+        MoleculeIndex posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+        MoleculeIndex ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
 
-    public ClosableIterator<BlankNode> getBlankNodes() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+        MoleculeIndex[] indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
+        MoleculeIteratorFactoryImpl iteratorFactory = new MoleculeIteratorFactoryImpl();
+        return new GlobalizedGraphImpl(indexes, iteratorFactory);
     }
 }

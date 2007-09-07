@@ -66,13 +66,19 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 
 /**
- * Created by IntelliJ IDEA.
+ * Iterator factory for the molecules contained within a GlobalizedGraph.
  * User: imrank
  * Date: 6/09/2007
  * Time: 13:28:06
- * To change this template use File | Settings | File Templates.
  */
 public interface MoleculeIteratorFactory {
+
+    /**
+     * This returns an iterator over the globalizedGraph using
+     * a molecule head triple to match.
+     * @return
+     */
+    ClosableIterator<Molecule> globalizedGraphIterator();
 
     /**
      * Returns the predicates associated with the given resource.

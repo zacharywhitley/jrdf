@@ -59,43 +59,53 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.graph.Graph;
+
+import java.net.URL;
 
 /**
- * Created by IntelliJ IDEA.
  * User: imrank
  * Date: 7/09/2007
- * Time: 10:23:43
- * To change this template use File | Settings | File Templates.
+ * Time: 17:18:14
  */
-public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
+public class MoleculeParserUnitTest extends TestCase {
+    private static JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
+    private MoleculeParser moleculeParser;
+    private static final String baseURI = "http://example.org";
+    private final int NUMBER_OF_MOLECULES_IN_PIZZA = 1345;
+    private final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
+    private final Graph jrdfGraph = factory.getNewGraph();
 
-
-    public ClosableIterator<Molecule> globalizedGraphIterator() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public void setUp() throws Exception {
+        moleculeParser = new MoleculeParserImpl(jrdfGraph);
     }
 
-    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public void testParse() throws Exception {
+        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
+        moleculeParser.parse(resource.openStream(), baseURI);
     }
 
-    public ClosableIterator<PredicateNode> getUniquePredicates() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
+// TODO NUMBER OF MOLECULES FLUCTUATES DEPNDING ON WHICH TESTS ARE RUN
+//    public void testGetGlobalizedGraph() throws Exception {
+//        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
+//        System.err.println("RESOURCE LOCATION: " + resource.toString());
+//        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
+//
+//        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
+//
+//        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.numberOfMolecules());
+//        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.numberOfTriples());
+//
+//
+//        Triple triple = jrdfGraph.getTripleFactory()
+//            .createTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
+//                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
+//
+//        boolean result = globalizedGraph.contains(triple);
+//        assertTrue(result);
+//    }
 
-    public ClosableIterator<Resource> getResources() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<URIReference> getURIReferences() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<BlankNode> getBlankNodes() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
 }

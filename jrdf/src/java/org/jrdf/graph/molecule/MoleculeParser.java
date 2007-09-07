@@ -59,43 +59,17 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.GraphException;
+import org.jrdf.parser.Parser;
 
 /**
- * Created by IntelliJ IDEA.
+ * Parser for parsing RDF/XML which then allows you to load
+ * a GlobalizedGraph.
  * User: imrank
  * Date: 7/09/2007
- * Time: 10:23:43
- * To change this template use File | Settings | File Templates.
+ * Time: 16:47:41
  */
-public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
+public interface MoleculeParser extends Parser {
 
-
-    public ClosableIterator<Molecule> globalizedGraphIterator() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<PredicateNode> getUniquePredicates() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<Resource> getResources() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<URIReference> getURIReferences() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
-
-    public ClosableIterator<BlankNode> getBlankNodes() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
+    GlobalizedGraph getGlobalizedGraph() throws GraphException;
 }
