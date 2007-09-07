@@ -177,7 +177,7 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
     }
 
     public boolean isEmpty() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return indexes[0].numberOfMolecules() == 0L;
     }
 
     public long numberOfMolecules() {
