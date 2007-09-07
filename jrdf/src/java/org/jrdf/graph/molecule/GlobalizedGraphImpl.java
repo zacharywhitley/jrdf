@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.molecule;
 
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -162,12 +163,19 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
         indexes[2].add(obj, subj, pred, tailTriples);
     }
 
-    public void remove(Molecule molecule) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void remove(Molecule molecule) throws GraphException {
+        Triple headTriple = molecule.getHeadTriple();
+        SubjectNode subj = headTriple.getSubject();
+        PredicateNode pred = headTriple.getPredicate();
+        ObjectNode obj = headTriple.getObject();
+
+        indexes[0].remove(subj, pred, obj);
+        indexes[1].remove(pred, obj, subj);
+        indexes[2].remove(obj, subj, pred);
     }
 
     public void close() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //do nothing
     }
 
     public void clear() {
@@ -185,6 +193,6 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
     }
 
     public MoleculeIteratorFactory getMoleculeIteratorFactory() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return iteratorFactory;
     }
 }
