@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -129,4 +130,11 @@ public interface MoleculeIndex {
      * @return
      */
     long numberOfMolecules();
+
+
+
+    Map<Node, Map<Node, Set<Triple>>> getSubIndex(Node first);
+
+
+    boolean removeSubIndex(Node first);
 }
