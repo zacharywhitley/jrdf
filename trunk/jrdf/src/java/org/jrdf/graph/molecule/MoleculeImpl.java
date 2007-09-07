@@ -26,6 +26,7 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -84,6 +85,20 @@ public class MoleculeImpl implements Molecule {
 
     public Iterator<Triple> iterator() {
         return triples.iterator();
+    }
+
+    public Iterator<Triple> tailTriples() {
+        Set<Triple> set = new HashSet<Triple>();
+        Iterator<Triple> iterator = triples.iterator();
+
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
+
+            if (iterator.hasNext()) {
+                set.add(triple);
+            }
+        }
+        return set.iterator();
     }
 
     public void add(Triple triple) {

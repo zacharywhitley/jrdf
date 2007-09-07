@@ -81,4 +81,10 @@ public interface Molecule {
     Triple getHeadTriple();
 
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+
+    /**
+     * Iterate through the tail triples.
+     * @return
+     */
+    Iterator<Triple> tailTriples();
 }
