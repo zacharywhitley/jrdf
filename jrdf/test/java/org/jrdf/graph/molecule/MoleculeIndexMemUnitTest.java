@@ -78,7 +78,6 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
     private final String BASE_URL = "http://example.org/";
     private final String URL1 = BASE_URL + "1";
     private final String URL2 = BASE_URL + "2";
-    private final String URL3 = BASE_URL + "3";
     private final String LITERAL1 = "xyz";
     private final String LITERAL2 = "abc";
 

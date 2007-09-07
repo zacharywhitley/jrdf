@@ -134,7 +134,7 @@ public interface GlobalizedGraph {
      *
      * @return
      */
-    long size();
+    long numberOfMolecules();
 
 
     /**
