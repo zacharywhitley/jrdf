@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.molecule;
 
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
@@ -108,7 +109,7 @@ public interface GlobalizedGraph {
      *
      * @param molecule
      */
-    void remove(Molecule molecule);
+    void remove(Molecule molecule) throws GraphException;
 
 
     /**
