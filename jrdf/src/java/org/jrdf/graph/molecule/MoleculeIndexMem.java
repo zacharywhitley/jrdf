@@ -65,7 +65,6 @@ import org.jrdf.graph.Triple;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -80,6 +79,8 @@ import java.util.Set;
  */
 public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 7410378771227279041L;
+
+    private static final Set EMPTY_SET = new HashSet();
 
     private Map<Node, Map<Node, Map<Node, Set<Triple>>>> index;
 
@@ -184,6 +185,15 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         return triples - tailTriples;
     }
 
+    public Map<Node, Map<Node, Set<Triple>>> getSubIndex(Node first) {
+        return index.get(first);
+    }
+
+    public boolean removeSubIndex(Node first) {
+        index.remove(first);
+        return index.containsKey(first);
+    }
+
     private long numberOfTailTriples() {
         long size = 0;
 
@@ -206,7 +216,7 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
 
         if (tailGroup != null) {
             for (Triple triple : tailGroup) {
-                add(triple.getSubject(), triple.getPredicate(), triple.getObject(), Collections.EMPTY_SET);
+                add(triple.getSubject(), triple.getPredicate(), triple.getObject(), EMPTY_SET);
                 res.add(triple);
             }
         }

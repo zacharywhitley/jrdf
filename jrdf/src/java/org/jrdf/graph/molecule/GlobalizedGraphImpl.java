@@ -60,96 +60,47 @@
 package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.param.ParameterUtil;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by IntelliJ IDEA.
  * User: imrank
  * Date: 6/09/2007
  * Time: 13:29:44
- * To change this template use File | Settings | File Templates.
- */
-public class GlobalizedGraphImpl implements GlobalizedGraph {
-
-    /**
-     * The SPO index of the molecules.
-     */
-    private MoleculeIndex moleculeIndexSPO;
-
-    /**
-     * The POS index of the molecules.
-     */
-    private transient MoleculeIndex moleculeIndexPOS;
-
-    /**
-     * The OSP index of the molecules.
-     */
-    private transient MoleculeIndex moleculeIndexOSP;
-
-    /**
-     * Collection of the 3 indexes.
-     */
-    private transient MoleculeIndex[] indexes;
-
-    /**
-     * Factory for managing the creation of various iterators.
-     */
-    private MoleculeIteratorFactory iteratorFactory;
+*/
+public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
 
     /**
      * Default constructor.
-     * @param indexes
-     * @param iteratorFactory
+     * @param newIndexes
+     * @param newIteratorFactory
      */
-    public GlobalizedGraphImpl(MoleculeIndex[] indexes, MoleculeIteratorFactory iteratorFactory) {
-        this.indexes = indexes;
-        this.iteratorFactory = iteratorFactory;
-
-        init();
-    }
-
-    private void init() {
-        initIndexes();
-        if (iteratorFactory == null) {
-            iteratorFactory = new MoleculeIteratorFactoryImpl();
-        }
-    }
-
-
-    private void initIndexes() {
-        if (null == moleculeIndexSPO) {
-            moleculeIndexSPO = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-        }
-        if (null == moleculeIndexPOS) {
-            moleculeIndexPOS = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-        }
-        if (null == moleculeIndexOSP) {
-            moleculeIndexOSP = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-        }
-
-        indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};
+    public GlobalizedGraphImpl(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory) {
+        super(newIndexes, newIteratorFactory);
     }
 
     public ClosableIterator<Molecule> find(Triple triple) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     public boolean contains(Molecule molecule) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return contains(molecule.getHeadTriple());
     }
 
     public boolean contains(Triple triple) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        SubjectNode subject = triple.getSubject();
+        PredicateNode predicate = triple.getPredicate();
+        ObjectNode object = triple.getObject();
+        ParameterUtil.checkNotNull(subject, predicate, object);
+        return containsValue(triple);
     }
+
 
     public void add(Molecule molecule) {
         Triple headTriple = molecule.getHeadTriple();
@@ -174,10 +125,6 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
         indexes[2].remove(obj, subj, pred);
     }
 
-    public void close() {
-        //do nothing
-    }
-
     public void clear() {
         indexes[0].clear();
         indexes[1].clear();
@@ -195,4 +142,9 @@ public class GlobalizedGraphImpl implements GlobalizedGraph {
     public MoleculeIteratorFactory getMoleculeIteratorFactory() {
         return iteratorFactory;
     }
+
+    public void close() {
+        //do nothing
+    }
+
 }
