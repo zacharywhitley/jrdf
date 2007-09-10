@@ -120,6 +120,9 @@ public final class ComparisonImpl implements Comparison {
         } else if (g1Grounded) {
             return groundedGraphsAreEqual(g1, g2);
         } else {
+            // Add leanify to both graphs.
+            // Decompose into MSGs NaiveGraphDecomposerImpl.
+            // Compare both MSGs.
             throw new UnsupportedOperationException("Ungrounded Graph Isomorphism not implemented.");
         }
     }
