@@ -62,25 +62,40 @@ package org.jrdf.graph.index.longindex.bdb;
 import junit.framework.TestCase;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.map.MapFactory;
 
 public class LongIndexBdbUnitTest extends TestCase {
     private LongIndexBdb longIndex;
+    private MapFactory factory;
+
     public void setUp() {
-        longIndex = new LongIndexBdb(new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database"));
+        factory = new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database");
+        longIndex = new LongIndexBdb(factory);
         longIndex.clear();
+    }
+    
+    public void tearDown() {
+        //factory.close();
     }
 
     public void testAddition() throws Exception {
-        longIndex.add(new Long(1), new Long(2), new Long(3));
+        longIndex.add(1L, 2L, 3L);
         checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(new Long(1), new Long(2), new Long(3));
+        longIndex.add(1L, 2L, 3L);
         checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(new Long(4), new Long(5), new Long(6));
+        longIndex.add(4L, 5L, 6L);
         checkNumberOfTriples(2, longIndex.getSize());
     }
 
+    public void testRemove() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.remove(1L, 2L, 3L);
+        checkNumberOfTriples(0, longIndex.getSize());
+    }
+
     private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
-        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize,
-                expectedNumber, actualSize);
+        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize, expectedNumber,
+            actualSize);
     }
 }

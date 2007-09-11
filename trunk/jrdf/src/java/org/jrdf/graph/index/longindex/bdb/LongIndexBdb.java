@@ -64,13 +64,13 @@ import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.map.MapFactory;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
-import java.util.Arrays;
 
 // TODO Abdul How is this Serializable?
 public final class LongIndexBdb implements LongIndex, Serializable {
@@ -115,7 +115,7 @@ public final class LongIndexBdb implements LongIndex, Serializable {
 
     public void remove(Long first, Long second, Long third) throws GraphException {
         System.err.println("Removing: " + first + ", " + second + ", " + third);
-        System.err.println("Before : " + toString()) ;
+        System.err.println("Before : " + toString());
         // find the sub index
         LinkedList<Long[]> subIndex = index.get(first);
         // check that the subindex exists
@@ -123,24 +123,22 @@ public final class LongIndexBdb implements LongIndex, Serializable {
             throw new GraphException("Unable to remove nonexistent statement");
         }
         // find the group
-        boolean found = false;
         Long[] groupToRemove = null;
         for (Long[] group : subIndex) {
             if (second.equals(group[0]) && third.equals(group[1])) {
-                found = true;
                 groupToRemove = group;
+                break;
             }
         }
-        removeTriple(found, subIndex, groupToRemove, first);
+        removeTriple(subIndex, groupToRemove, first);
         System.err.println("After: " + toString());
     }
 
-    private void removeTriple(boolean found, LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {
-        if (found) {
-            subIndex.remove(groupToRemove);
-            if (subIndex.isEmpty()) {
-                index.remove(first);
-            }
+    private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {
+        boolean b = subIndex.remove(groupToRemove);
+        System.err.println("Deleted? " + b);
+        if (subIndex.isEmpty()) {
+            index.remove(first);
         }
     }
 
@@ -193,9 +191,8 @@ public final class LongIndexBdb implements LongIndex, Serializable {
             // go over the sub indexes
             size += list.size();
         }
-        toString();
         return size;
-     }
+    }
 
     @Override
     public String toString() {
