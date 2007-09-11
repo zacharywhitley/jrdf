@@ -66,7 +66,6 @@ import org.jrdf.util.ClosableIterator;
 /**
  * Represents a globalized grpah, which maintains molecules. This allows
  * us to better handle blank nodes
- *
  */
 public interface GlobalizedGraph {
 

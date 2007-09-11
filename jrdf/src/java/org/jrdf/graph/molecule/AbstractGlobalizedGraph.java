@@ -69,16 +69,9 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 
 import java.util.HashMap;
+import java.util.SortedSet;
 import java.util.Map;
-import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 7/09/2007
- * Time: 15:27:11
- * To change this template use File | Settings | File Templates.
- */
 public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     /**
      * The SPO index of the molecules.
@@ -107,7 +100,6 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     public AbstractGlobalizedGraph(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory) {
         this.indexes = newIndexes;
         this.iteratorFactory = newIteratorFactory;
-
         init();
     }
 
@@ -119,14 +111,15 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     }
 
     private void initIndexes() {
+        // Fix up creation of SortedSet - add a Triple comparator - probably GroundedTripleComparator.
         if (null == moleculeIndexSPO) {
-            moleculeIndexSPO = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+            moleculeIndexSPO = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
         }
         if (null == moleculeIndexPOS) {
-            moleculeIndexPOS = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+            moleculeIndexPOS = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
         }
         if (null == moleculeIndexOSP) {
-            moleculeIndexOSP = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+            moleculeIndexOSP = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
         }
 
         indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};
@@ -156,13 +149,9 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         boolean res = false;
         PredicateNode predicate = triple.getPredicate();
         ObjectNode object = triple.getObject();
-        Map<Node, Map<Node, Set<Triple>>> predIndex = indexes[PREDICATE_INDEX].getSubIndex(predicate);
+        Map<Node, Map<Node, SortedSet<Triple>>> predIndex = indexes[PREDICATE_INDEX].getSubIndex(predicate);
         if (null != predIndex) {
-            if (ANY_OBJECT_NODE != object) {
-                res = (null != predIndex.get(object));
-            } else {
-                res = true;
-            }
+            res = ANY_OBJECT_NODE == object || (null != predIndex.get(object));
         }
         return res;
     }
@@ -183,14 +172,9 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         boolean res;
         ObjectNode object = triple.getObject();
         SubjectNode subject = triple.getSubject();
-
         if (ANY_OBJECT_NODE != object) {
-            Map<Node, Map<Node, Set<Triple>>> objIndex = indexes[OBJECT_INDEX].getSubIndex(object);
-            if (null != objIndex) {
-                res = (null != objIndex.get(subject));
-            } else {
-                res = false;
-            }
+            Map<Node, Map<Node, SortedSet<Triple>>> objIndex = indexes[OBJECT_INDEX].getSubIndex(object);
+            res = null != objIndex && (null != objIndex.get(subject));
         } else {
             res = true;
         }
@@ -202,15 +186,10 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         SubjectNode first = triple.getSubject();
         PredicateNode predicate = triple.getPredicate();
         ObjectNode object = triple.getObject();
-        Map<Node, Map<Node, Set<Triple>>> subjIndex = indexes[SUBJECT_INDEX].getSubIndex(first);
-        Map<Node, Set<Triple>> subjPredIndex = subjIndex.get(predicate);
-
+        Map<Node, Map<Node, SortedSet<Triple>>> subjIndex = indexes[SUBJECT_INDEX].getSubIndex(first);
+        Map<Node, SortedSet<Triple>> subjPredIndex = subjIndex.get(predicate);
         if (null != subjPredIndex) {
-            if (ANY_OBJECT_NODE != object) {
-                res = subjPredIndex.containsKey(object);
-            } else {
-                res = true;
-            }
+            res = ANY_OBJECT_NODE == object || subjPredIndex.containsKey(object);
         }
         return res;
     }

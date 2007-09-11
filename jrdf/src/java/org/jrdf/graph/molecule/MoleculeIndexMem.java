@@ -66,50 +66,44 @@ import org.jrdf.graph.Triple;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 6/09/2007
- * Time: 13:51:31
- * To change this template use File | Settings | File Templates.
- */
 public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 7410378771227279041L;
 
-    private static final Set EMPTY_SET = new HashSet();
+    private static final SortedSet<Triple> EMPTY_SET = new TreeSet<Triple>();
 
-    private Map<Node, Map<Node, Map<Node, Set<Triple>>>> index;
+    private Map<Node, Map<Node, Map<Node, SortedSet<Triple>>>> index;
 
     public MoleculeIndexMem() {
-        index = new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>();
+        index = new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>();
     }
 
-    public MoleculeIndexMem(Map<Node, Map<Node, Map<Node, Set<Triple>>>> newIndex) {
+    public MoleculeIndexMem(Map<Node, Map<Node, Map<Node, SortedSet<Triple>>>> newIndex) {
         index = newIndex;
     }
 
-    public void add(Node[] nodes, Set<Triple> tail) {
+    public void add(Node[] nodes, SortedSet<Triple> tail) {
         add(nodes[0], nodes[1], nodes[2], tail);
     }
 
-    public void add(Node first, Node second, Node third, Set<Triple> tail) {
-        Map<Node, Map<Node, Set<Triple>>> subIndex = index.get(first);
+    public void add(Node first, Node second, Node third, SortedSet<Triple> tail) {
+        Map<Node, Map<Node, SortedSet<Triple>>> subIndex = index.get(first);
 
         //check subindex exists
         if (null == subIndex) {
-            subIndex = new HashMap<Node, Map<Node, Set<Triple>>>();
+            subIndex = new HashMap<Node, Map<Node, SortedSet<Triple>>>();
             index.put(first, subIndex);
         }
 
         //find the final group
-        Map<Node, Set<Triple>> group = subIndex.get(second);
+        Map<Node, SortedSet<Triple>> group = subIndex.get(second);
 
         if (null == group) {
-            group = new HashMap<Node, Set<Triple>>();
+            group = new HashMap<Node, SortedSet<Triple>>();
             subIndex.put(second, group);
         }
 
@@ -121,12 +115,12 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     }
 
     public void remove(Node first, Node second, Node third) throws GraphException {
-        Map<Node, Map<Node, Set<Triple>>> subIndex = index.get(first);
+        Map<Node, Map<Node, SortedSet<Triple>>> subIndex = index.get(first);
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
 
-        Map<Node, Set<Triple>> group = subIndex.get(second);
+        Map<Node, SortedSet<Triple>> group = subIndex.get(second);
         if (null == group) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
@@ -169,9 +163,9 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     public long numberOfTriples() {
         long size = 0;
 
-        Collection<Map<Node, Map<Node, Set<Triple>>>> spoMap = index.values();
-        for (Map<Node, Map<Node, Set<Triple>>> poMap : spoMap) {
-            for (Map<Node, Set<Triple>> oMap : poMap.values()) {
+        Collection<Map<Node, Map<Node, SortedSet<Triple>>>> spoMap = index.values();
+        for (Map<Node, Map<Node, SortedSet<Triple>>> poMap : spoMap) {
+            for (Map<Node, SortedSet<Triple>> oMap : poMap.values()) {
                 size += oMap.size();
             }
         }
@@ -185,7 +179,7 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         return triples - tailTriples;
     }
 
-    public Map<Node, Map<Node, Set<Triple>>> getSubIndex(Node first) {
+    public Map<Node, Map<Node, SortedSet<Triple>>> getSubIndex(Node first) {
         return index.get(first);
     }
 
@@ -197,10 +191,10 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     private long numberOfTailTriples() {
         long size = 0;
 
-        Collection<Map<Node, Map<Node, Set<Triple>>>> spoMap = index.values();
-        for (Map<Node, Map<Node, Set<Triple>>> poMap : spoMap) {
-            for (Map<Node, Set<Triple>> oMap : poMap.values()) {
-                Collection<Set<Triple>> sets = oMap.values();
+        Collection<Map<Node, Map<Node, SortedSet<Triple>>>> spoMap = index.values();
+        for (Map<Node, Map<Node, SortedSet<Triple>>> poMap : spoMap) {
+            for (Map<Node, SortedSet<Triple>> oMap : poMap.values()) {
+                Collection<SortedSet<Triple>> sets = oMap.values();
                 for (Set<Triple> triples : sets) {
                     if (triples != null) {
                         size += triples.size();
@@ -211,8 +205,8 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         return size;
     }
 
-    private Set<Triple> addTailTriples(Set<Triple> tailGroup) {
-        Set<Triple> res = new HashSet<Triple>();
+    private Set<Triple> addTailTriples(SortedSet<Triple> tailGroup) {
+        Set<Triple> res = new TreeSet<Triple>();
 
         if (tailGroup != null) {
             for (Triple triple : tailGroup) {
