@@ -60,7 +60,7 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.mem.GraphFactory;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.sparql.SparqlConnection;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 

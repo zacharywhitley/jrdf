@@ -62,6 +62,7 @@ package org.jrdf.graph.mem;
 import junit.framework.TestCase;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;

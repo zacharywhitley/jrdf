@@ -59,9 +59,9 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.mem.GraphFactory;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
+import org.jrdf.graph.mem.ReadWriteGraphFactory;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
@@ -113,9 +113,8 @@ public final class TestJRDFFactory implements JRDFFactory {
         return graphFactory.getGraph();
     }
 
-    public IteratorFactory getIteratorFactory() {
-        GraphFactory graphFactory = (GraphFactory) BEAN_FACTORY.getBean("graphFactory");
-        return graphFactory.getIteratorFactory();
+    public ReadWriteGraphFactory getNewReadWriteGraphFactory() {
+        return (ReadWriteGraphFactory) BEAN_FACTORY.getBean("graphFactory");
     }
 
     public AttributeValuePairComparator getNewAttributeValuePairComparator() {
