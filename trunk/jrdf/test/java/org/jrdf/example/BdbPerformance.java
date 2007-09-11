@@ -77,6 +77,8 @@ import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.util.NodeTypeComparator;
+// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
 public class BdbPerformance extends AbstractGraphPerformance {
     private StoredMapHandler handler;
@@ -84,16 +86,17 @@ public class BdbPerformance extends AbstractGraphPerformance {
 
     public BdbPerformance() {
         handler = new StoredMapHandlerImpl();
-        indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database")),
-            new LongIndexBdb(new BdbMapFactory(handler, "catalog", "database"))};
+        indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_spo", "spo")),
+            new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_pos", "pos")),
+            new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_osp", "osp"))};
     }
 
     protected Graph getGraph() {
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
         LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
         BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
+        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
+        NodeComparator comparator = new NodeComparatorImpl(nodeTypeComparator, blankNodeComparator);
         GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return factory.getGraph();
     }

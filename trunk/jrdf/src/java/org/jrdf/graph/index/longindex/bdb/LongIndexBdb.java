@@ -70,6 +70,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.Arrays;
 
 // TODO Abdul How is this Serializable?
 public final class LongIndexBdb implements LongIndex, Serializable {
@@ -113,6 +114,8 @@ public final class LongIndexBdb implements LongIndex, Serializable {
     }
 
     public void remove(Long first, Long second, Long third) throws GraphException {
+        System.err.println("Removing: " + first + ", " + second + ", " + third);
+        System.err.println("Before : " + toString()) ;
         // find the sub index
         LinkedList<Long[]> subIndex = index.get(first);
         // check that the subindex exists
@@ -129,6 +132,7 @@ public final class LongIndexBdb implements LongIndex, Serializable {
             }
         }
         removeTriple(found, subIndex, groupToRemove, first);
+        System.err.println("After: " + toString());
     }
 
     private void removeTriple(boolean found, LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {
@@ -189,6 +193,20 @@ public final class LongIndexBdb implements LongIndex, Serializable {
             // go over the sub indexes
             size += list.size();
         }
+        toString();
         return size;
+     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (Long longIndexId : index.keySet()) {
+            builder.append("Index: " + longIndexId + "\n");
+            LinkedList<Long[]> list = index.get(longIndexId);
+            for (Long[] values : list) {
+                builder.append("\tValues:" + Arrays.asList(values) + "\n");
+            }
+        }
+        return builder.toString();
     }
 }
