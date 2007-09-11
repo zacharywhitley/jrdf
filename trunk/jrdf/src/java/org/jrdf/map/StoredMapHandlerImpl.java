@@ -59,14 +59,14 @@
 
 package org.jrdf.map;
 
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.EnvironmentConfig;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Database;
-import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.bind.serial.SerialBinding;
+import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.collections.StoredMap;
+import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
+import com.sleepycat.je.DatabaseException;
+import com.sleepycat.je.Environment;
+import com.sleepycat.je.EnvironmentConfig;
 
 import java.io.File;
 import java.util.Map;
@@ -88,7 +88,7 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
         return new Environment(dir, env);
     }
 
-    public DatabaseConfig setUpDatabase(boolean transactional) {
+    public DatabaseConfig setUpDatabaseConfig(boolean transactional) {
         DatabaseConfig dbConfig = new DatabaseConfig();
         dbConfig.setTransactional(transactional);
         dbConfig.setAllowCreate(true);
@@ -101,11 +101,13 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
         return new StoredClassCatalog(catalogDb);
     }
 
+    public Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) throws DatabaseException {
+        return env.openDatabase(null, dbName, dbConfig);
+    }
+
     @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog,
-            Class<T> clazz1, Class<A> clazz2) throws DatabaseException {
-        DatabaseConfig dbConfig = setUpDatabase(false);
-        Database database = env.openDatabase(null, dbName, dbConfig);
+    public <T, A, U extends A> Map<T, U> createMap(Environment env, Database database, StoredClassCatalog catalog,
+        Class<T> clazz1, Class<A> clazz2) throws DatabaseException {
         SerialBinding keyBinding = new SerialBinding(catalog, clazz1);
         SerialBinding dataBinding = new SerialBinding(catalog, clazz2);
         return new StoredMap(database, keyBinding, dataBinding, true);
