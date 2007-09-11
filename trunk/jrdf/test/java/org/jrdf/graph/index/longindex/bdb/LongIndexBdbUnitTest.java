@@ -89,8 +89,18 @@ public class LongIndexBdbUnitTest extends TestCase {
 
     public void testRemove() throws Exception {
         longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.add(3L, 4L, 3L);
+        checkNumberOfTriples(2, longIndex.getSize());
         longIndex.remove(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.remove(3L, 4L, 3L);
+        checkNumberOfTriples(0, longIndex.getSize());
+    }
+
+    public void testClear() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        longIndex.add(3L, 4L, 3L);
+        longIndex.clear();
         checkNumberOfTriples(0, longIndex.getSize());
     }
 
