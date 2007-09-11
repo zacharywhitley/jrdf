@@ -77,18 +77,35 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 
 public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
     private StoredMapHandler handler;
+    private BdbMapFactory factory1;
+    private BdbMapFactory factory2;
+    private BdbMapFactory factory3;
     private LongIndex[] indexes;
 
     @Override
     public void setUp() throws Exception {
         handler = new StoredMapHandlerImpl();
-        indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_spo", "spo")),
-            new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_pos", "pos")),
-            new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_osp", "osp"))};
+        factory1 = new BdbMapFactory(handler, "java_class_catalog_spo", "spo");
+        factory2 = new BdbMapFactory(handler, "java_class_catalog_pos", "pos");
+        factory3 = new BdbMapFactory(handler, "java_class_catalog_osp", "osp");
+        indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2), new LongIndexBdb(factory3)};
         indexes[0].clear();
         indexes[1].clear();
         indexes[2].clear();
         super.setUp();
+    }
+    
+    @Override
+    public void tearDown() {
+        try {
+            factory1.close();
+        } finally {
+            try {
+                factory2.close();
+            } finally {
+                factory3.close();
+            }
+        }
     }
 
     /**
