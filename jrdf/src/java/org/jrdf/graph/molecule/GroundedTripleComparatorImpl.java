@@ -64,6 +64,10 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
+/**
+ * A different implementation of TripleComparator.  Where the number of blank nodes in a triple makes it less than
+ * triples without blank nodes.  Triples with the same number of blank nodes are then compared by node type.
+ */
 public class GroundedTripleComparatorImpl implements TripleComparator {
     private static final long serialVersionUID = 678535114447666636L;
     private static final int MAXIMUM_NUMBER_OF_GROUNDED_NODES = 3;

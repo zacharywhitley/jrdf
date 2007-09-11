@@ -65,41 +65,25 @@ import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.LocalizedNodeComparator;
-import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.graph.mem.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 
-/**
- * User: imrank
- * Date: 7/09/2007
- * Time: 15:53:52
- */
 public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-    BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-    NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    TripleComparator comparator = new TripleComparatorImpl(nodeComparator);
+    TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     protected MoleculeIndex moleculeIndex;
     final Graph graph = factory.getNewGraph();
     protected final TripleFactory tripleFactory = graph.getTripleFactory();
     MoleculeIndex spoIndex;
     MoleculeIndex ospIndex;
     MoleculeIndex posIndex;
-    MoleculeIteratorFactoryImpl iteratorFactory;
+    MoleculeIteratorFactory iteratorFactory;
     MoleculeIndex[] indexes;
     GlobalizedGraphImpl globalizedGraph;
     final String BASE_URL = "http://example.org/";
@@ -108,15 +92,13 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     final String LITERAL1 = "xyz";
     final String LITERAL2 = "abc";
 
-
     public void setUp() {
-        spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
-        posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
-        ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
-
+        spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(), comparator);
+        posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(), comparator);
+        ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(), comparator);
         indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
         iteratorFactory = new MoleculeIteratorFactoryImpl();
-        globalizedGraph = new GlobalizedGraphImpl(indexes, iteratorFactory);
+        globalizedGraph = new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);
     }
 
     public abstract void testAdd() throws Exception;
@@ -127,7 +109,6 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
 
     protected Molecule getMolecule() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(comparator);
-
         //create some triples
         double random = Math.random();
         Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);

@@ -62,6 +62,7 @@ package org.jrdf.graph.molecule;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -73,17 +74,21 @@ import java.util.TreeSet;
 
 public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 7410378771227279041L;
-
-    private static final SortedSet<Triple> EMPTY_SET = new TreeSet<Triple>();
-
+    private TripleComparator tripleComparator;
     private Map<Node, Map<Node, Map<Node, SortedSet<Triple>>>> index;
 
-    public MoleculeIndexMem() {
-        index = new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>();
+    private MoleculeIndexMem() {
     }
 
-    public MoleculeIndexMem(Map<Node, Map<Node, Map<Node, SortedSet<Triple>>>> newIndex) {
-        index = newIndex;
+    public MoleculeIndexMem(TripleComparator newTripleComparator) {
+        this.index = new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>();
+        this.tripleComparator = newTripleComparator;
+    }
+
+    public MoleculeIndexMem(Map<Node, Map<Node, Map<Node, SortedSet<Triple>>>> newIndex,
+        TripleComparator newTripleComparator) {
+        this.index = newIndex;
+        this.tripleComparator = newTripleComparator;
     }
 
     public void add(Node[] nodes, SortedSet<Triple> tail) {
@@ -101,7 +106,6 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
 
         //find the final group
         Map<Node, SortedSet<Triple>> group = subIndex.get(second);
-
         if (null == group) {
             group = new HashMap<Node, SortedSet<Triple>>();
             subIndex.put(second, group);
@@ -124,7 +128,6 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         if (null == group) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-
         Set<Triple> tailGroup = group.get(third);
 
         //remove the main index value
@@ -162,7 +165,6 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
 
     public long numberOfTriples() {
         long size = 0;
-
         Collection<Map<Node, Map<Node, SortedSet<Triple>>>> spoMap = index.values();
         for (Map<Node, Map<Node, SortedSet<Triple>>> poMap : spoMap) {
             for (Map<Node, SortedSet<Triple>> oMap : poMap.values()) {
@@ -175,7 +177,6 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     public long numberOfMolecules() {
         long tailTriples = numberOfTailTriples();
         long triples = numberOfTriples();
-
         return triples - tailTriples;
     }
 
@@ -206,15 +207,14 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
     }
 
     private Set<Triple> addTailTriples(SortedSet<Triple> tailGroup) {
-        Set<Triple> res = new TreeSet<Triple>();
-
+        Set<Triple> res = new TreeSet<Triple>(tripleComparator);
         if (tailGroup != null) {
             for (Triple triple : tailGroup) {
-                add(triple.getSubject(), triple.getPredicate(), triple.getObject(), EMPTY_SET);
+                SortedSet<Triple> newEmptySet = new TreeSet<Triple>(tripleComparator);
+                add(triple.getSubject(), triple.getPredicate(), triple.getObject(), newEmptySet);
                 res.add(triple);
             }
         }
-
         return res;
     }
 }

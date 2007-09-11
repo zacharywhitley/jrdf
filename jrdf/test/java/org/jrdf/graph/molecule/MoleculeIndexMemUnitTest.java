@@ -61,6 +61,7 @@ package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -80,9 +81,10 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
     private final String URL2 = BASE_URL + "2";
     private final String LITERAL1 = "xyz";
     private final String LITERAL2 = "abc";
+    private final TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
 
     public void setUp() throws Exception {
-        moleculeIndex = new MoleculeIndexMem();
+        moleculeIndex = new MoleculeIndexMem(tripleComparator);
     }
 
     public void testAdd() throws Exception {

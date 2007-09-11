@@ -67,6 +67,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 
 import java.util.HashMap;
 import java.util.SortedSet;
@@ -77,6 +78,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
      * The SPO index of the molecules.
      */
     private MoleculeIndex moleculeIndexSPO;
+
     /**
      * The POS index of the molecules.
      */
@@ -93,13 +95,16 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
      * Factory for managing the creation of various iterators.
      */
     protected MoleculeIteratorFactory iteratorFactory;
+    protected final TripleComparator tripleComparator;
     static final int SUBJECT_INDEX = 0;
     static final int PREDICATE_INDEX = 1;
     static final int OBJECT_INDEX = 2;
 
-    public AbstractGlobalizedGraph(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory) {
+    public AbstractGlobalizedGraph(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory,
+        TripleComparator newTripleComparator) {
         this.indexes = newIndexes;
         this.iteratorFactory = newIteratorFactory;
+        this.tripleComparator = newTripleComparator;
         init();
     }
 
@@ -113,13 +118,16 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     private void initIndexes() {
         // Fix up creation of SortedSet - add a Triple comparator - probably GroundedTripleComparator.
         if (null == moleculeIndexSPO) {
-            moleculeIndexSPO = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
+            moleculeIndexSPO = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+                tripleComparator);
         }
         if (null == moleculeIndexPOS) {
-            moleculeIndexPOS = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
+            moleculeIndexPOS = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+                tripleComparator);
         }
         if (null == moleculeIndexOSP) {
-            moleculeIndexOSP = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
+            moleculeIndexOSP = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+                tripleComparator);
         }
 
         indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};

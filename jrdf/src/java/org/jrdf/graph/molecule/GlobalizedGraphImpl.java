@@ -64,6 +64,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
@@ -84,8 +85,9 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
      * @param newIndexes
      * @param newIteratorFactory
      */
-    public GlobalizedGraphImpl(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory) {
-        super(newIndexes, newIteratorFactory);
+    public GlobalizedGraphImpl(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory,
+        TripleComparator newTripleComparator) {
+        super(newIndexes, newIteratorFactory, newTripleComparator);
     }
 
     public ClosableIterator<Molecule> find(Triple triple) {
@@ -110,7 +112,7 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         PredicateNode pred = headTriple.getPredicate();
         ObjectNode obj = headTriple.getObject();
         Iterator<Triple> iterator = molecule.tailTriples();
-        SortedSet<Triple> tailTriples = new TreeSet<Triple>();
+        SortedSet<Triple> tailTriples = new TreeSet<Triple>(tripleComparator);
         while (iterator.hasNext()) {
             tailTriples.add(iterator.next());
         }
