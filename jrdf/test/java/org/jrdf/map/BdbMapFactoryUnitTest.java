@@ -63,6 +63,7 @@ import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
+import com.sleepycat.je.Database;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -86,6 +87,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
     private String databaseName = "dbName" + System.currentTimeMillis();
     private Environment environment;
     private StoredClassCatalog storedClassCatalog;
+    private Database database;
 
     public void setUp() {
         storedMapHandler = mockFactory.createMock(StoredMapHandler.class);
@@ -123,6 +125,8 @@ public class BdbMapFactoryUnitTest extends TestCase {
         creatMapExpectations();
         environment.close();
         expectLastCall();
+        database.close();
+        expectLastCall();
         storedClassCatalog.close();
         expectLastCall();
         BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
@@ -138,6 +142,8 @@ public class BdbMapFactoryUnitTest extends TestCase {
         expectLastCall().andThrow(new DatabaseException());
         storedClassCatalog.close();
         expectLastCall();
+        database.close();
+        expectLastCall();
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 mockFactory.replay();
@@ -152,6 +158,8 @@ public class BdbMapFactoryUnitTest extends TestCase {
     public void testCloseCatalogExceptions() throws Exception {
         creatMapExpectations();
         environment.close();
+        expectLastCall();
+        database.close();
         expectLastCall();
         storedClassCatalog.close();
         expectLastCall().andThrow(new DatabaseException());
@@ -188,11 +196,13 @@ public class BdbMapFactoryUnitTest extends TestCase {
         environment = mockFactory.createMock(Environment.class);
         expect(storedMapHandler.setUpEnvironment()).andReturn(environment);
         DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
-        expect(storedMapHandler.setUpDatabase(false)).andReturn(databaseConfig);
+        expect(storedMapHandler.setUpDatabaseConfig(false)).andReturn(databaseConfig);
         storedClassCatalog = mockFactory.createMock(StoredClassCatalog.class);
+        database = mockFactory.createMock(Database.class);
+        expect(storedMapHandler.setupDatabase(environment, databaseName, databaseConfig)).andReturn(database);
         expect(storedMapHandler.setupCatalog(environment, classCatalog, databaseConfig)).
                 andReturn(storedClassCatalog);
-        expect(storedMapHandler.createMap(environment, databaseName, storedClassCatalog, String.class, String.class)).
+        expect(storedMapHandler.createMap(environment, database, storedClassCatalog, String.class, String.class)).
                 andReturn(expectedMap);
         return expectedMap;
     }

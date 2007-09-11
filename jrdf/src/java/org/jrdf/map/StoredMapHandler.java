@@ -60,6 +60,7 @@
 package org.jrdf.map;
 
 import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
@@ -73,11 +74,13 @@ public interface StoredMapHandler {
 
     Environment setUpEnvironment() throws DatabaseException;
 
-    DatabaseConfig setUpDatabase(boolean transactional);
+    DatabaseConfig setUpDatabaseConfig(boolean transactional);
 
     StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
         throws DatabaseException;
 
-    <T, A, U extends A> Map<T, U> createMap(Environment env, String dbName, StoredClassCatalog catalog, Class<T> clazz1,
-        Class<A> clazz2) throws DatabaseException;
+    Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) throws DatabaseException;
+
+    <T, A, U extends A> Map<T, U> createMap(Environment env, Database database, StoredClassCatalog catalog,
+        Class<T> clazz1, Class<A> clazz2) throws DatabaseException;
 }

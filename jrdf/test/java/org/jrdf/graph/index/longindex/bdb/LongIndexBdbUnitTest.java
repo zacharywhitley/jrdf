@@ -75,7 +75,7 @@ public class LongIndexBdbUnitTest extends TestCase {
     }
     
     public void tearDown() {
-        //factory.close();
+        factory.close();
     }
 
     public void testAddition() throws Exception {
