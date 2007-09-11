@@ -59,77 +59,8 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 
-import java.util.Map;
-import java.util.SortedSet;
-
-public interface MoleculeIndex {
-    /**
-     * Adds the given nodes and set to the index.
-     * @param nodes
-     * @param tail
-     */
-    void add(Node[] nodes, SortedSet<Triple> tail);
-
-    /**
-     * Adds the given nodes and set to the index.
-     * @param first
-     * @param second
-     * @param third
-     * @param tail
-     */
-    void add(Node first, Node second, Node third, SortedSet<Triple> tail);
-
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param first
-     * @param second
-     * @param third
-     * @throws GraphException
-     */
-    void remove(Node first, Node second, Node third) throws GraphException;
-
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param triple
-     * @throws GraphException
-     */
-    void remove(Node[] triple) throws GraphException;
-
-
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
-
-
-    boolean contains(Node node);
-
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long numberOfTriples();
-
-
-    /**
-     * Returns the number of molecules contained in the graph.
-     * @return
-     */
-    long numberOfMolecules();
-
-
-
-    Map<Node, Map<Node, SortedSet<Triple>>> getSubIndex(Node first);
-
-
-    boolean removeSubIndex(Node first);
+public interface GroundedTripleComparatorFactory {
+    TripleComparator newComparator();
 }
