@@ -114,8 +114,6 @@ public final class LongIndexBdb implements LongIndex, Serializable {
     }
 
     public void remove(Long first, Long second, Long third) throws GraphException {
-        System.err.println("Removing: " + first + ", " + second + ", " + third);
-        System.err.println("Before : " + toString());
         // find the sub index
         LinkedList<Long[]> subIndex = index.get(first);
         // check that the subindex exists
@@ -131,14 +129,13 @@ public final class LongIndexBdb implements LongIndex, Serializable {
             }
         }
         removeTriple(subIndex, groupToRemove, first);
-        System.err.println("After: " + toString());
     }
 
     private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {
-        boolean b = subIndex.remove(groupToRemove);
-        System.err.println("Deleted? " + b);
-        if (subIndex.isEmpty()) {
-            index.remove(first);
+        subIndex.remove(groupToRemove);
+        index.remove(first);
+        if (!subIndex.isEmpty()) {
+            index.put(first, subIndex);
         }
     }
 
