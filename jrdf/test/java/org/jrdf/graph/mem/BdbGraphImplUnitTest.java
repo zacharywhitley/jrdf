@@ -61,32 +61,48 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.GraphFactory;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
 public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
+    private StoredMapHandler handler;
+    private LongIndex[] indexes;
+
+    @Override
+    public void setUp() throws Exception {
+        handler = new StoredMapHandlerImpl();
+        indexes = new LongIndex[]{new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_spo", "spo")),
+            new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_pos", "pos")),
+            new LongIndexBdb(new BdbMapFactory(handler, "java_class_catalog_osp", "osp"))};
+        indexes[0].clear();
+        indexes[1].clear();
+        indexes[2].clear();
+        super.setUp();
+    }
 
     /**
      * Create a graph implementation.
      *
      * @return A new GraphImplUnitTest.
      */
+    @Override
     public Graph newGraph() throws Exception {
-        LongIndex[] indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        StoredMapHandler handler = new StoredMapHandlerImpl();
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
         LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
         BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
+        NodeTypeComparator nodeTypeComparatorypeComparator = new NodeTypeComparatorImpl();
+        NodeComparator comparator = new NodeComparatorImpl(nodeTypeComparatorypeComparator, blankNodeComparator);
         GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return factory.getGraph();
     }

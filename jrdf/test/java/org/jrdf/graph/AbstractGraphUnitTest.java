@@ -192,7 +192,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      * @throws Exception if query fails when it should have succeeded
      */
     public void testEmpty() throws Exception {
-        assertTrue(graph.isEmpty());
+        assertTrue("Graph is not empty but is: " + graph.getNumberOfTriples(), graph.isEmpty());
         assertEquals(0, graph.getNumberOfTriples());
     }
 
