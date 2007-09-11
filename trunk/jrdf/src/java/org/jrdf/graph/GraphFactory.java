@@ -56,10 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.mem;
-
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.mem.iterator.IteratorFactory;
+package org.jrdf.graph;
 
 /**
  * Allows the construction of a graph.
@@ -69,8 +66,4 @@ import org.jrdf.graph.mem.iterator.IteratorFactory;
  */
 public interface GraphFactory {
     Graph getGraph();
-
-    ReadWriteGraph getReadWriteGraph();
-
-    IteratorFactory getIteratorFactory();
 }

@@ -2,11 +2,11 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
-import org.jrdf.graph.mem.GraphFactory;
 import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.graph.mem.OrderedGraphFactoryImpl;
 import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;

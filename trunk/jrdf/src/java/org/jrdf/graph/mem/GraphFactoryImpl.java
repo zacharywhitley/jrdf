@@ -60,9 +60,9 @@ package org.jrdf.graph.mem;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.index.graphhandler.GraphHandler;
-import org.jrdf.graph.index.graphhandler.GraphHandler201;
-import org.jrdf.graph.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.index.graphhandler.GraphHandler012;
+import org.jrdf.graph.index.graphhandler.GraphHandler120;
+import org.jrdf.graph.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.nodepool.NodePool;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;
@@ -75,7 +75,7 @@ import org.jrdf.graph.mem.iterator.IteratorFactoryImpl;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class GraphFactoryImpl implements GraphFactory {
+public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private LongIndex[] longIndexes;
     private GraphHandler[] graphHandlers;
     private IteratorFactory iteratorFactory;

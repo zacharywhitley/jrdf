@@ -3,7 +3,9 @@
     "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-    <!-- Graph Classes -->
+    <!--Globalized in memory, graph classes -->
+
+    <!-- Localized in memory, graph classes -->
     <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false"/>
 
     <bean class="org.jrdf.graph.index.nodepool.map.MemNodePoolFactory" singleton="true"/>

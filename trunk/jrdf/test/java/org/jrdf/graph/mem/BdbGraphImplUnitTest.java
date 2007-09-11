@@ -62,6 +62,7 @@ package org.jrdf.graph.mem;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.index.longindex.LongIndex;
 import org.jrdf.graph.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.index.nodepool.NodePoolFactory;

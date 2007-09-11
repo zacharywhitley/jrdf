@@ -59,20 +59,15 @@
 
 package org.jrdf.graph.mem;
 
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractResourceUnitTest;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.index.nodepool.map.MemNodePoolFactory;
 
 public class ResourceUnitTest extends AbstractResourceUnitTest {
-    private static final LongIndex[] LONG_INDEXES = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-    private static final NodePoolFactory NODE_POOL_FACTORY = new MemNodePoolFactory();
-    private static final GraphFactory FACTORY = new GraphFactoryImpl(LONG_INDEXES, NODE_POOL_FACTORY);
+    private static final ReadWriteGraphFactory FACTORY = TestJRDFFactory.getFactory().getNewReadWriteGraphFactory();
 
     @Override
     public ReadWriteGraph getReadWriteGraph() {
