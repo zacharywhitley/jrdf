@@ -59,75 +59,35 @@
 
 package org.jrdf.graph.molecule;
 
-import org.jrdf.graph.GraphException;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Map;
-import java.util.SortedSet;
+import java.util.Iterator;
+import java.util.Set;
 
-public interface MoleculeIndex {
-    /**
-     * Adds the given nodes and set to the index.
-     * @param nodes
-     * @param tail
-     */
-    void add(Node[] nodes, SortedSet<Triple> tail);
+public class UniquePredicateIterator implements ClosableIterator<PredicateNode> {
+    private Iterator<Node> iterator;
+    public UniquePredicateIterator(MoleculeIndex indexes) {
+        Set<Node> predicateNodes = indexes.getSubIndex(ANY_SUBJECT_NODE).keySet();
+        iterator = predicateNodes.iterator();
+    }
 
-    /**
-     * Adds the given nodes and set to the index.
-     * @param first
-     * @param second
-     * @param third
-     * @param tail
-     */
-    void add(Node first, Node second, Node third, SortedSet<Triple> tail);
+    public boolean close() {
+        //do nothing
+        return false;
+    }
 
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param first
-     * @param second
-     * @param third
-     */
-    void remove(Node first, Node second, Node third) throws GraphException;
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
 
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @param triple
-     */
-    void remove(Node[] triple) throws GraphException;
+    public PredicateNode next() {
+        return (PredicateNode) iterator.next();
+    }
 
-
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
-
-
-    boolean contains(Node node);
-
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long numberOfTriples();
-
-
-    /**
-     * Returns the number of molecules contained in the graph.
-     * @return
-     */
-    long numberOfMolecules();
-
-
-
-    Map<Node, Map<Node, SortedSet<Triple>>> getSubIndex(Node first);
-
-
-    boolean removeSubIndex(Node first);
+    public void remove() {
+        iterator.remove();
+    }
 }

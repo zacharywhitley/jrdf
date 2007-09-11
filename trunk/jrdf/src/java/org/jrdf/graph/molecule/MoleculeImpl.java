@@ -26,8 +26,8 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -91,13 +91,11 @@ public class MoleculeImpl implements Molecule {
         return getTailTriples().iterator();
     }
 
-    public Set<Triple> getTailTriples() {
-        Set<Triple> set = new HashSet<Triple>();
+    public LinkedHashSet<Triple> getTailTriples() {
+        LinkedHashSet<Triple> set = new LinkedHashSet<Triple>();
         Iterator<Triple> iterator = triples.iterator();
-
         while (iterator.hasNext()) {
             Triple triple = iterator.next();
-
             if (iterator.hasNext()) {
                 set.add(triple);
             }

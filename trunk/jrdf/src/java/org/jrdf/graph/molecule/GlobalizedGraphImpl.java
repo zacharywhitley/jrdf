@@ -67,14 +67,16 @@ import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
-import java.util.Set;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * In memory implementation of Globalized Graph.
- * User: imrank
- * Date: 6/09/2007
- * Time: 13:29:44
-*/
+ *
+ * @author Imran Khan (not the cricketer)
+ * @version $Revision: 1317 $
+ */
 public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
 
     /**
@@ -87,6 +89,9 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
     }
 
     public ClosableIterator<Molecule> find(Triple triple) {
+        checkTripleNoNullNodes(triple);
+        // Find in node, node, node using the triple to match.
+        // Return molecules.
         return null;
     }
 
@@ -95,25 +100,25 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
     }
 
     public boolean contains(Triple triple) {
-        SubjectNode subject = triple.getSubject();
-        PredicateNode predicate = triple.getPredicate();
-        ObjectNode object = triple.getObject();
-        ParameterUtil.checkNotNull(subject, predicate, object);
+        checkTripleNoNullNodes(triple);
         return containsValue(triple);
     }
-
 
     public void add(Molecule molecule) {
         Triple headTriple = molecule.getHeadTriple();
         SubjectNode subj = headTriple.getSubject();
         PredicateNode pred = headTriple.getPredicate();
         ObjectNode obj = headTriple.getObject();
-        Set<Triple> tailTriples = molecule.getTailTriples();
-
+        Iterator<Triple> iterator = molecule.tailTriples();
+        SortedSet<Triple> tailTriples = new TreeSet<Triple>();
+        while (iterator.hasNext()) {
+            tailTriples.add(iterator.next());
+        }
         indexes[0].add(subj, pred, obj, tailTriples);
         indexes[1].add(pred, obj, subj, tailTriples);
         indexes[2].add(obj, subj, pred, tailTriples);
     }
+
 
     public void remove(Molecule molecule) throws GraphException {
         Triple headTriple = molecule.getHeadTriple();
@@ -152,4 +157,10 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         //do nothing
     }
 
+    private void checkTripleNoNullNodes(Triple triple) {
+        SubjectNode subject = triple.getSubject();
+        PredicateNode predicate = triple.getPredicate();
+        ObjectNode object = triple.getObject();
+        ParameterUtil.checkNotNull(subject, predicate, object);
+    }
 }

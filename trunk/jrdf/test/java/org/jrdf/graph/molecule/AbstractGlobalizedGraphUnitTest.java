@@ -80,7 +80,7 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * User: imrank
@@ -110,9 +110,9 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
 
 
     public void setUp() {
-        spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-        posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-        ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
+        spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
+        posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
+        ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
 
         indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
         iteratorFactory = new MoleculeIteratorFactoryImpl();

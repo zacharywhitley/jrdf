@@ -65,16 +65,7 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 7/09/2007
- * Time: 10:23:43
- * To change this template use File | Settings | File Templates.
- */
 public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
-
-
     public ClosableIterator<Molecule> globalizedGraphIterator() {
         throw new UnsupportedOperationException("Method not implemented yet");
     }

@@ -74,12 +74,13 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Implementation of MoleculeParser.
- * User: imrank
- * Date: 7/09/2007
- * Time: 16:55:56
+ *
+ * @author Imran Khan (not the cricketer)
+ * @version $Revision: 1317 $
  */
 public class MoleculeParserImpl implements MoleculeParser {
     private RdfXmlParser parser;
@@ -123,12 +124,11 @@ public class MoleculeParserImpl implements MoleculeParser {
      * @return
      */
     protected GlobalizedGraph getNewGlobalizedGraph() {
-        MoleculeIndex spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-        MoleculeIndex posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-        MoleculeIndex ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Set<Triple>>>>());
-
+        MoleculeIndex spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
+        MoleculeIndex posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
+        MoleculeIndex ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>());
         MoleculeIndex[] indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
-        MoleculeIteratorFactoryImpl iteratorFactory = new MoleculeIteratorFactoryImpl();
+        MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl();
         return new GlobalizedGraphImpl(indexes, iteratorFactory);
     }
 }
