@@ -212,8 +212,7 @@ public interface Graph {
     void close();
 
     /**
-     * Removes a triple from the graph.  The nodes must have already been
-     * created using {@link GraphElementFactory}.
+     * Removes a triple from the graph.  The nodes must have already been created using {@link GraphElementFactory}.
      *
      * @param subject   The subject.
      * @param predicate The predicate.

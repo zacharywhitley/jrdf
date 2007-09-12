@@ -60,56 +60,78 @@
 package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.util.ClosableIterator;
 
 /**
- * Represents a globalized grpah, which maintains molecules. This allows
- * us to better handle blank nodes
+ * Represents a globalized graph, which maintains molecules. This allows us to better handle blank nodes
  */
 public interface GlobalizedGraph {
 
+    // TODO Make sure we don't get false positives i.e. a blank node that's in a molecule being found here - should
+    // only be found with the contains(molecule) call.
+    // TODO Remove this when we're finished - it becomes a subset of the next method?  Where the context/set of triples
+    // is an empty set.
     /**
-     * Given the specified triple, this method will return
-     * any molecules matching the given triples pattern.
-     * @param triple
+     * Check to see if the given triple exists within the graph.  If it contains blank nodes will only check ones
+     * that are not in a molecule.
+     *
+     * @param subject
+     * @param predicate
+     * @param object
      * @return
      */
-    ClosableIterator<Molecule> find(Triple triple);
+    boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
+    // TODO implement this by searching inside the given molecule for matching molecules in the store.
+    // TODO Probably should be contains(subject, predicate, object, Set<Triple>).  Like *, *, o, ...
     /**
-     * Check to see if given molecule exists.
+     * Check to see if a given molecule exists - or part thereof.  So if there are more statements in the molecule it
+     * will still match.
+     *
      * @param molecule
      * @return
      */
     boolean contains(Molecule molecule);
 
+    // TODO Make sure we don't get false positives i.e. a blank node that's in a molecule being found here - should
+    // only be found with the find(molecule) call.
+    // TODO Remove this when we're finished - it becomes a subset of the next method?  Where the context/set of triples
+    // is an empty set.
     /**
-     * Check to see if the given triple exists within
-     * the graph.
+     * Find a triple that may contain wildcards - any subject, any predicate, and any object.
      *
-     * @param triple
+     * @param subject
+     * @param predicate
+     * @param object
      * @return
      */
-    boolean contains(Triple triple);
+    ClosableIterator<Molecule> find(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
+    // TODO find(molecule) - one idea maybe find(subject, predicate, object, Set<Triple>).
+    // ClosableIterator<Molecule> find(SubjectNode subject, PredicateNode predicate, ObjectNode object,
+    // Set<Triple> triples).
+    // The first three parameters can either be a triple or a search condition.  Like *, p, o, ...
+    // TODO Do we want addIntersect()/addUnion()/addMinus().
     /**
-     * Adds the given molecule and its associated triples
-     * to the graph.
+     * Adds the given molecule and its associated triples to the graph.  If a molecule already exists new tail triples
+     * will be added in place.  A molecule with a single grounded node is equivalent to add(subject, predicate, object)
+     * or add(triple).
+     *
      * @param molecule
      */
     void add(Molecule molecule);
 
     /**
-     * Given the specified molecule, this will find
-     * the given molecule and remove it. It will first search
-     * for the molecules head triple, and then progressively remove
-     * the tail triples from the main index.
+     * This will find the given molecule and remove it and any statements it contains. It will first search
+     * for the molecules head triple, and then progressively remove the tail triples from the main index.   A molecule
+     * with a single grounded node is equivalent to remove(subject, predicate, object) or remove(triple).
      *
      * @param molecule
      */
     void remove(Molecule molecule) throws GraphException;
-
 
     /**
      * Closes any open resources.
@@ -118,7 +140,6 @@ public interface GlobalizedGraph {
 
     /**
      * Remove all molecules from the graph.
-     *
      */
     void clear();
 

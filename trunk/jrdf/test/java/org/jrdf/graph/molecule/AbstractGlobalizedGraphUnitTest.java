@@ -67,8 +67,14 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.ObjectNode;
 
 import java.net.URI;
+import java.util.List;
+import java.util.ArrayList;
 
 public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     private static final int NUMBER_OF_MOLECULES = 10;
@@ -94,8 +100,10 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
         comparator = getTripleComparator();
     }
 
+    // TODO Add test here to see if adding the molecule with the same head triple but different context appends the new
+    // tail triples.
     public void testAdd() throws Exception {
-        Molecule molecule = getMolecule();
+        Molecule molecule = createMolecule(createHeadTriple());
 
         assertTrue(globalizedGraph.isEmpty());
         long expected = 0;
@@ -111,7 +119,7 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     }
 
     public void testRemove() throws Exception {
-        Molecule molecule = getMolecule();
+        Molecule molecule = createMolecule(createHeadTriple());
 
         assertTrue(globalizedGraph.isEmpty());
         long expected = 0;
@@ -131,81 +139,65 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     }
 
     public void testNumberOfMolecules() throws Exception {
-        addMolecules();
+        List<Triple> headTriples = getHeadTriples();
+        addMolecules(headTriples);
         assertEquals(NUMBER_OF_MOLECULES, globalizedGraph.getNumberOfMolecules());
     }
 
     public void testContains() throws Exception {
-        Molecule molecule = addMolecules();
-
-        globalizedGraph.add(molecule);
-
-        boolean value = globalizedGraph.contains(molecule);
-        assertTrue(value);
+        checkContains(false, false, false);
+        checkContains(false, false, true);
+        checkContains(false, true, false);
+        checkContains(false, true, true);
+        checkContains(true, false, false);
+        checkContains(true, false, true);
+        checkContains(true, true, false);
+        checkContains(true, true, true);
     }
 
-    public void testContainsAnySubject() throws Exception {
-        Molecule molecule = addMolecules();
-
-        globalizedGraph.add(molecule);
-
-        Triple headTriple = molecule.getHeadTriple();
-        tripleFactory.createTriple(ANY_SUBJECT_NODE, headTriple.getPredicate(), headTriple.getObject());
-        boolean value = globalizedGraph.contains(molecule);
-        assertTrue(value);
-    }
-
-
-    public void testContainsAnyPredicate() throws Exception {
-        Molecule molecule = addMolecules();
-
-        globalizedGraph.add(molecule);
-
-        Triple headTriple = molecule.getHeadTriple();
-        tripleFactory.createTriple(headTriple.getSubject(), ANY_PREDICATE_NODE, headTriple.getObject());
-        boolean value = globalizedGraph.contains(molecule);
-        assertTrue(value);
-    }
-
-    public void testContainsAnyObject() throws Exception {
-        Molecule molecule = addMolecules();
-
-        globalizedGraph.add(molecule);
-
-        Triple headTriple = molecule.getHeadTriple();
-        tripleFactory.createTriple(headTriple.getSubject(), headTriple.getPredicate(), ANY_OBJECT_NODE);
-        boolean value = globalizedGraph.contains(molecule);
-        assertTrue(value);
-    }
-
-    public void testContainsAny() throws Exception {
-        Molecule molecule = addMolecules();
-        boolean value;
-
-        globalizedGraph.add(molecule);
-
-        tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        value = globalizedGraph.contains(molecule);
-        assertTrue(value);
-    }
-
-    private Molecule addMolecules() throws GraphElementFactoryException {
-        Molecule molecule = null;
+    private void checkContains(boolean findAnySubject, boolean findAnyPredicate, boolean findAnyObject)
+        throws GraphElementFactoryException {
+        List<Triple> headTriples = getHeadTriples();
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
-            molecule = getMolecule();
-            globalizedGraph.add(molecule);
+            Triple headTriple = headTriples.get(i);
+            SubjectNode subject = findAnySubject ? ANY_SUBJECT_NODE : headTriple.getSubject();
+            PredicateNode predicate = findAnyPredicate ? ANY_PREDICATE_NODE : headTriple.getPredicate();
+            ObjectNode object = findAnyObject ? ANY_OBJECT_NODE : headTriple.getObject();
+            addMolecules(headTriples);
+            assertTrue(globalizedGraph.contains(subject, predicate, object));
         }
-        return molecule;
+    }
+//    public void testFindAny() throws Exception {
+//        addMolecules();
+//        globalizedGraph.add(molecule);
+//        globalizedGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+//    }
+
+    protected List<Triple> getHeadTriples() throws GraphElementFactoryException {
+        List<Triple> headTriples = new ArrayList<Triple>();
+        for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
+            headTriples.add(createHeadTriple());
+        }
+        return headTriples;
     }
 
-    protected Molecule getMolecule() throws GraphElementFactoryException {
-        Molecule m = new MoleculeImpl(comparator);
-        //create some triples
+    private Triple createHeadTriple() throws GraphElementFactoryException {
         double random = Math.random();
-        Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
-        random = Math.random();
-        Triple triple2 = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL2);
-        m.add(triple);
+        return tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
+    }
+
+    private void addMolecules(List<Triple> headTriples) throws GraphElementFactoryException {
+        for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
+            Molecule m = createMolecule(headTriples.get(i));
+            globalizedGraph.add(m);
+        }
+    }
+
+    private Molecule createMolecule(Triple headTriple) throws GraphElementFactoryException {
+        Molecule m = new MoleculeImpl(comparator);
+        URIReference uriReference = (URIReference) headTriple.getSubject();
+        Triple triple2 = tripleFactory.createTriple(uriReference.getURI(), URI.create(URL2), LITERAL2);
+        m.add(headTriple);
         m.add(triple2);
         return m;
     }

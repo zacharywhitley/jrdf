@@ -76,6 +76,7 @@ public class ReadWriteGraphImpl implements ReadWriteGraph {
     private final ReadableGraph readableGraph;
     private final WritableGraph writableGraph;
 
+    // TODO Take in Readable and Writable graphs instead??
     public ReadWriteGraphImpl(LongIndex[] newIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
         checkNotNull(newIndexes, newNodePool, newIteratorFactory);
         this.readableGraph = new ReadableGraphImpl(newIndexes, newNodePool, newIteratorFactory);

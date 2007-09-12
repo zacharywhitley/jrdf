@@ -66,7 +66,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * In memory implementation of Globalized Graph.
@@ -86,20 +86,22 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         super(newIndexes, newIteratorFactory, newTripleComparator);
     }
 
-    public ClosableIterator<Molecule> find(Triple triple) {
-        checkTripleNoNullNodes(triple);
-        // Find in node, node, node using the triple to match.
-        // Return molecules.
+    public ClosableIterator<Molecule> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        checkNotNull(subject, predicate, object);
         return null;
     }
 
     public boolean contains(Molecule molecule) {
-        return contains(molecule.getHeadTriple());
+        Triple headTriple = molecule.getHeadTriple();
+        SubjectNode subj = headTriple.getSubject();
+        PredicateNode pred = headTriple.getPredicate();
+        ObjectNode obj = headTriple.getObject();
+        return contains(subj, pred, obj);
     }
 
-    public boolean contains(Triple triple) {
-        checkTripleNoNullNodes(triple);
-        return containsValue(triple);
+    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        checkNotNull(subject, predicate, object);
+        return containsValue(subject, predicate, object);
     }
 
     public void add(Molecule molecule) {
@@ -147,12 +149,5 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
 
     public void close() {
         //do nothing
-    }
-
-    private void checkTripleNoNullNodes(Triple triple) {
-        SubjectNode subject = triple.getSubject();
-        PredicateNode predicate = triple.getPredicate();
-        ObjectNode object = triple.getObject();
-        ParameterUtil.checkNotNull(subject, predicate, object);
     }
 }
