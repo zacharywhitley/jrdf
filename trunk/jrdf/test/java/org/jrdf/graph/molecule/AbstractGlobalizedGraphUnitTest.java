@@ -145,14 +145,16 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     }
 
     public void testContains() throws Exception {
-        checkContains(false, false, false);
-        checkContains(false, false, true);
-        checkContains(false, true, false);
-        checkContains(false, true, true);
-        checkContains(true, false, false);
-        checkContains(true, false, true);
-        checkContains(true, true, false);
-        checkContains(true, true, true);
+        // Goes through all 8 possibilities and checks contains.
+        for (int i = 0 ; i < 8; i++) {
+            // 4 falses then 4 trues.
+            boolean findAnySubject = (i & 4) != 0;
+            // 2 falses then 2 trues.
+            boolean findAnyPredicate = (i & 2) != 0;
+            // true then false
+            boolean findAnyObject = (i & 1) != 0;
+            checkContains(findAnySubject, findAnyPredicate, findAnyObject);
+        }
     }
 
     private void checkContains(boolean findAnySubject, boolean findAnyPredicate, boolean findAnyObject)
