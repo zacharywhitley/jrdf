@@ -67,6 +67,7 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
@@ -86,6 +87,8 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
     protected final TripleFactory tripleFactory = graph.getTripleFactory();
 
     protected abstract MoleculeIndex getIndex();
+
+    protected abstract Node[] getNodes(Triple triple);
 
     public void setUp() throws Exception {
         moleculeIndex = getIndex();
@@ -134,7 +137,8 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
 
         //remove the molecule
         Triple headTriple = m1.getHeadTriple();
-        moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
+        Node[] nodes = getNodes(headTriple);
+        moleculeIndex.remove(nodes[0], nodes[1], nodes[2]);
 
         //check remaining size
         numberOfMolecules = moleculeIndex.getNumberOfMolecules();
@@ -164,7 +168,8 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
 
         //remove the molecule
         Triple headTriple = m1.getHeadTriple();
-        moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
+        Node[] nodes = getNodes(headTriple);
+        moleculeIndex.remove(nodes[0], nodes[1], nodes[2]);
 
         //check remaining size
         numberOfMolecules = moleculeIndex.getNumberOfMolecules();
@@ -188,7 +193,8 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
         m.add(triple);
         m.add(triple2);
         Triple headTriple = m.getHeadTriple();
-        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), m);
+        Node[] nodes = getNodes(headTriple);
+        moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
         return m;
     }
 
@@ -196,9 +202,12 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
         Molecule m = new MoleculeImpl(tripleComparator);
         double random = Math.random();
         Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
+        Node[] nodes = getNodes(triple);
+        moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
         m.add(triple);
         Triple headTriple = m.getHeadTriple();
-        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), m);
+        nodes = getNodes(headTriple);
+        moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
         return m;
     }
 }
