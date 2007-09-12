@@ -165,13 +165,7 @@ public class ReadableGraphImpl implements ReadableGraph {
             // Was subj, AnyPredicateNode, obj
             // Use 201 index to find object and then subject.
             Map<Long, Set<Long>> objIndex = longIndexes[2].getSubIndex(values[2]);
-            if (null != objIndex) {
-                // Find object.
-                return null != objIndex.get(values[0]);
-            } else {
-                // Didn't find subject.
-                return false;
-            }
+            return null != objIndex && null != objIndex.get(values[0]);
         } else {
             // Was subj, AnyPredicate, AnyObject
             // If its AnyObjectNode then we've found all we need to find.
@@ -181,24 +175,18 @@ public class ReadableGraphImpl implements ReadableGraph {
 
     private boolean containsAnySubject(Long[] values, PredicateNode predicate, ObjectNode object) {
         if (ANY_PREDICATE_NODE != predicate) {
-            return containsAnySubjectAnyPredicate(values, object);
+            return containsAnySubjectFixedPredicate(values, object);
         } else {
             // AnySubjectNode, AnyPredicateNode, obj.
             return longIndexes[2].contains(values[2]);
         }
     }
 
-    private boolean containsAnySubjectAnyPredicate(Long[] values, ObjectNode object) {
-        // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
+    private boolean containsAnySubjectFixedPredicate(Long[] values, ObjectNode object) {
         Map<Long, Set<Long>> predIndex = longIndexes[1].getSubIndex(values[1]);
         if (null != predIndex) {
-            if (ANY_OBJECT_NODE != object) {
-                // Was AnySubjectNode, pred, obj
-                return null != predIndex.get(values[2]);
-            } else {
-                // If the object is any object node and we found the predicate return true.
-                return true;
-            }
+            // AnySubjectNode, pred, AnyObjectNode or AnySubjectNode, pred, obj.
+            return ANY_OBJECT_NODE == object || null != predIndex.get(values[2]);
         } else {
             // If predicate not found return false.
             return false;
