@@ -66,12 +66,7 @@ import org.jrdf.graph.Graph;
 
 import java.net.URL;
 
-/**
- * User: imrank
- * Date: 7/09/2007
- * Time: 17:18:14
- */
-public class MoleculeParserUnitTest extends TestCase {
+public class MoleculeParserImplUnitTest extends TestCase {
     private static JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
     private MoleculeParser moleculeParser;
     private static final String baseURI = "http://example.org";

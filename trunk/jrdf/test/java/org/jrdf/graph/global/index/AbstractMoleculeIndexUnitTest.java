@@ -63,38 +63,142 @@ import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+
+import java.net.URI;
 
 public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
-    JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-
-    LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-    BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-    NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    TripleComparator comparator = new TripleComparatorImpl(nodeComparator);
-
-    protected MoleculeIndex moleculeIndex;
+    private final String BASE_URL = "http://example.org/";
+    private final String URL1 = BASE_URL + "1";
+    private final String URL2 = BASE_URL + "2";
+    private final String LITERAL1 = "xyz";
+    private final String LITERAL2 = "abc";
+    private final TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
     private final Graph graph = factory.getNewGraph();
+    protected MoleculeIndex moleculeIndex;
     protected final TripleFactory tripleFactory = graph.getTripleFactory();
 
-    public abstract void testAdd() throws Exception;
+    protected abstract MoleculeIndex getIndex();
 
-    public abstract void testGetTripleSize() throws Exception;
+    public void setUp() throws Exception {
+        moleculeIndex = getIndex();
+    }
 
-    public abstract void testGetMoleculeSize() throws Exception;
+    public void testAdd() throws Exception {
+        addMolecule();
+    }
 
-    public abstract void testClean() throws Exception;
+    public void testGetTripleSize() throws Exception {
+        addMolecule();
 
-    public abstract void testRemove() throws Exception;
+        long numTriples = moleculeIndex.getNumberOfTriples();
+        int expected = 2;
+        assertEquals(expected, numTriples);
+    }
 
-    public abstract void testRemoveMoleculeWithNoTail() throws Exception;
+    public void testGetMoleculeSize() throws Exception {
+        addMolecule();
+
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
+        int expected = 1;
+        assertEquals(expected, numberOfMolecules);
+    }
+
+    public void testClean() throws Exception {
+        addMolecule();
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
+        int expected = 1;
+        assertEquals(expected, numberOfMolecules);
+
+        moleculeIndex.clear();
+
+        numberOfMolecules = moleculeIndex.getNumberOfMolecules();
+        expected = 0;
+        assertEquals(expected, numberOfMolecules);
+    }
+
+    public void testRemove() throws Exception {
+        Molecule m1 = addMolecule();
+        Molecule m2 = addMolecule();
+
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
+        int expected = 2;
+        assertEquals(expected, numberOfMolecules);
+
+        //remove the molecule
+        Triple headTriple = m1.getHeadTriple();
+        moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
+
+        //check remaining size
+        numberOfMolecules = moleculeIndex.getNumberOfMolecules();
+        expected = 1;
+        assertEquals(expected, numberOfMolecules);
+
+        long numberOfTriples = moleculeIndex.getNumberOfTriples();
+        expected = 2;
+        assertEquals(expected, numberOfTriples);
+
+        //TODO check remaing molecule is m2
+    }
+
+    /**
+     * This tests the removal where one of the molecules
+     * has no tail triples.
+     *
+     * @throws Exception
+     */
+    public void testRemoveMoleculeWithNoTail() throws Exception {
+        Molecule m1 = addMolecule();
+        Molecule m2 = addMoleculeWithNoTail();
+
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
+        int expected = 2;
+        assertEquals(expected, numberOfMolecules);
+
+        //remove the molecule
+        Triple headTriple = m1.getHeadTriple();
+        moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
+
+        //check remaining size
+        numberOfMolecules = moleculeIndex.getNumberOfMolecules();
+        expected = 1;
+        assertEquals(expected, numberOfMolecules);
+
+        long numberOfTriples = moleculeIndex.getNumberOfTriples();
+        expected = 1;
+        assertEquals(expected, numberOfTriples);
+
+        //TODO check remaing molecule is m2
+    }
+
+
+    private Molecule addMolecule() throws GraphElementFactoryException {
+        Molecule m = new MoleculeImpl(tripleComparator);
+        double random = Math.random();
+        Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
+        random = Math.random();
+        Triple triple2 = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL2);
+        m.add(triple);
+        m.add(triple2);
+        Triple headTriple = m.getHeadTriple();
+        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), m);
+        return m;
+    }
+
+    private Molecule addMoleculeWithNoTail() throws GraphElementFactoryException {
+        Molecule m = new MoleculeImpl(tripleComparator);
+        double random = Math.random();
+        Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
+        m.add(triple);
+        Triple headTriple = m.getHeadTriple();
+        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), m);
+        return m;
+    }
 }
