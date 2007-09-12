@@ -72,7 +72,6 @@ import org.jrdf.graph.TripleFactory;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedSet;
 
 public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
@@ -93,9 +92,9 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     final String LITERAL2 = "abc";
 
     public void setUp() {
-        spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(), comparator);
-        posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(), comparator);
-        ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(), comparator);
+        spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(), comparator);
+        posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(), comparator);
+        ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(), comparator);
         indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
         iteratorFactory = new MoleculeIteratorFactoryImpl();
         globalizedGraph = new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);

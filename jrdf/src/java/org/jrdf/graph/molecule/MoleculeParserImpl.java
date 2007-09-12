@@ -62,7 +62,6 @@ package org.jrdf.graph.molecule;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
@@ -75,7 +74,6 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * Implementation of MoleculeParser.
@@ -126,11 +124,11 @@ public class MoleculeParserImpl implements MoleculeParser {
      */
     protected GlobalizedGraph getNewGlobalizedGraph() {
         TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-        MoleculeIndex spoIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+        MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
             tripleComparator);
-        MoleculeIndex posIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+        MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
             tripleComparator);
-        MoleculeIndex ospIndex = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+        MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
             tripleComparator);
         MoleculeIndex[] indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
         MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl();

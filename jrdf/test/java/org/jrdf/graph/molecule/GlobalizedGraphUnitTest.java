@@ -65,30 +65,22 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Triple;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 7/09/2007
- * Time: 11:31:47
- * To change this template use File | Settings | File Templates.
- */
 public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {
     private final int NUMBER_OF_MOLECULES = 10;
-
 
     public void testAdd() throws Exception {
         Molecule molecule = getMolecule();
 
         assertTrue(globalizedGraph.isEmpty());
         long expected = 0;
-        long value = globalizedGraph.numberOfMolecules();
+        long value = globalizedGraph.getNumberOfMolecules();
         assertEquals(expected, value);
 
         globalizedGraph.add(molecule);
 
         assertFalse(globalizedGraph.isEmpty());
         expected = 1;
-        value = globalizedGraph.numberOfMolecules();
+        value = globalizedGraph.getNumberOfMolecules();
         assertEquals(expected, value);
     }
 
@@ -98,14 +90,14 @@ public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {
 
         assertTrue(globalizedGraph.isEmpty());
         long expected = 0;
-        long value = globalizedGraph.numberOfMolecules();
+        long value = globalizedGraph.getNumberOfMolecules();
         assertEquals(expected, value);
 
         globalizedGraph.add(molecule);
 
         assertFalse(globalizedGraph.isEmpty());
         expected = 1;
-        value = globalizedGraph.numberOfMolecules();
+        value = globalizedGraph.getNumberOfMolecules();
         assertEquals(expected, value);
 
         //test removal
@@ -115,9 +107,7 @@ public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {
 
     public void testNumberOfMolecules() throws Exception {
         addMolecules();
-
-        long value = globalizedGraph.numberOfMolecules();
-        assertEquals(NUMBER_OF_MOLECULES, value);
+        assertEquals(NUMBER_OF_MOLECULES, globalizedGraph.getNumberOfMolecules());
     }
 
     public void testContains() throws Exception {

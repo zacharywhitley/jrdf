@@ -70,7 +70,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
 import java.util.HashMap;
-import java.util.SortedSet;
 import java.util.Map;
 
 public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
@@ -118,15 +117,15 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     private void initIndexes() {
         // Fix up creation of SortedSet - add a Triple comparator - probably GroundedTripleComparator.
         if (null == moleculeIndexSPO) {
-            moleculeIndexSPO = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+            moleculeIndexSPO = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
                 tripleComparator);
         }
         if (null == moleculeIndexPOS) {
-            moleculeIndexPOS = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+            moleculeIndexPOS = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
                 tripleComparator);
         }
         if (null == moleculeIndexOSP) {
-            moleculeIndexOSP = new MoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>(),
+            moleculeIndexOSP = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
                 tripleComparator);
         }
 
@@ -157,7 +156,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         boolean res = false;
         PredicateNode predicate = triple.getPredicate();
         ObjectNode object = triple.getObject();
-        Map<Node, Map<Node, SortedSet<Triple>>> predIndex = indexes[PREDICATE_INDEX].getSubIndex(predicate);
+        Map<Node, Map<Node, Molecule>> predIndex = indexes[PREDICATE_INDEX].getSubIndex(predicate);
         if (null != predIndex) {
             res = ANY_OBJECT_NODE == object || (null != predIndex.get(object));
         }
@@ -181,7 +180,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         ObjectNode object = triple.getObject();
         SubjectNode subject = triple.getSubject();
         if (ANY_OBJECT_NODE != object) {
-            Map<Node, Map<Node, SortedSet<Triple>>> objIndex = indexes[OBJECT_INDEX].getSubIndex(object);
+            Map<Node, Map<Node, Molecule>> objIndex = indexes[OBJECT_INDEX].getSubIndex(object);
             res = null != objIndex && (null != objIndex.get(subject));
         } else {
             res = true;
@@ -194,8 +193,8 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         SubjectNode first = triple.getSubject();
         PredicateNode predicate = triple.getPredicate();
         ObjectNode object = triple.getObject();
-        Map<Node, Map<Node, SortedSet<Triple>>> subjIndex = indexes[SUBJECT_INDEX].getSubIndex(first);
-        Map<Node, SortedSet<Triple>> subjPredIndex = subjIndex.get(predicate);
+        Map<Node, Map<Node, Molecule>> subjIndex = indexes[SUBJECT_INDEX].getSubIndex(first);
+        Map<Node, Molecule> subjPredIndex = subjIndex.get(predicate);
         if (null != subjPredIndex) {
             res = ANY_OBJECT_NODE == object || subjPredIndex.containsKey(object);
         }

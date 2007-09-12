@@ -64,17 +64,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
 import java.net.URI;
-import java.util.Iterator;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-/**
- * Created by IntelliJ IDEA.
- * User: imrank
- * Date: 6/09/2007
- * Time: 14:33:24
- * To change this template use File | Settings | File Templates.
- */
 public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {    
     private final String BASE_URL = "http://example.org/";
     private final String URL1 = BASE_URL + "1";
@@ -84,7 +74,7 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
     private final TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
 
     public void setUp() throws Exception {
-        moleculeIndex = new MoleculeIndexMem(tripleComparator);
+        moleculeIndex = new SPOMoleculeIndexMem(tripleComparator);
     }
 
     public void testAdd() throws Exception {
@@ -94,7 +84,7 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
     public void testGetTripleSize() throws Exception {
         addMolecule();
 
-        long numTriples = moleculeIndex.numberOfTriples();
+        long numTriples = moleculeIndex.getNumberOfTriples();
         int expected = 2;
         assertEquals(expected, numTriples);
     }
@@ -102,20 +92,20 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
     public void testGetMoleculeSize() throws Exception {
         addMolecule();
 
-        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
         int expected = 1;
         assertEquals(expected, numberOfMolecules);
     }
 
     public void testClean() throws Exception {
         addMolecule();
-        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
         int expected = 1;
         assertEquals(expected, numberOfMolecules);
 
         moleculeIndex.clear();
 
-        numberOfMolecules = moleculeIndex.numberOfMolecules();
+        numberOfMolecules = moleculeIndex.getNumberOfMolecules();
         expected = 0;
         assertEquals(expected, numberOfMolecules);
     }
@@ -124,7 +114,7 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
         Molecule m1 = addMolecule();
         Molecule m2 = addMolecule();
 
-        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
         int expected = 2;
         assertEquals(expected, numberOfMolecules);
 
@@ -133,11 +123,11 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
         moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
 
         //check remaining size
-        numberOfMolecules = moleculeIndex.numberOfMolecules();
+        numberOfMolecules = moleculeIndex.getNumberOfMolecules();
         expected = 1;
         assertEquals(expected, numberOfMolecules);
 
-        long numberOfTriples = moleculeIndex.numberOfTriples();
+        long numberOfTriples = moleculeIndex.getNumberOfTriples();
         expected = 2;
         assertEquals(expected, numberOfTriples);
 
@@ -154,7 +144,7 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
         Molecule m1 = addMolecule();
         Molecule m2 = addMoleculeWithNoTail();
 
-        long numberOfMolecules = moleculeIndex.numberOfMolecules();
+        long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
         int expected = 2;
         assertEquals(expected, numberOfMolecules);
 
@@ -163,11 +153,11 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
         moleculeIndex.remove(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject());
 
         //check remaining size
-        numberOfMolecules = moleculeIndex.numberOfMolecules();
+        numberOfMolecules = moleculeIndex.getNumberOfMolecules();
         expected = 1;
         assertEquals(expected, numberOfMolecules);
 
-        long numberOfTriples = moleculeIndex.numberOfTriples();
+        long numberOfTriples = moleculeIndex.getNumberOfTriples();
         expected = 1;
         assertEquals(expected, numberOfTriples);
 
@@ -177,44 +167,25 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
 
     private Molecule addMolecule() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(comparator);
-
-        //create some triples
         double random = Math.random();
         Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
         random = Math.random();
         Triple triple2 = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL2);
         m.add(triple);
         m.add(triple2);
-
-        //add molecule to the index
         Triple headTriple = m.getHeadTriple();
-        Iterator<Triple> iterator = m.iterator();
-        SortedSet<Triple> s = new TreeSet<Triple>(comparator);
-        while (iterator.hasNext()) {
-            Triple triple1 = iterator.next();
-            if (iterator.hasNext()) {
-                s.add(triple1);
-            }
-        }
-        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), s);
-
+        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), m);
         return m;
     }
 
 
     private Molecule addMoleculeWithNoTail() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(comparator);
-
-        //create some triples
         double random = Math.random();
         Triple triple = tripleFactory.createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
         m.add(triple);
-
-        //add molecule to the index
         Triple headTriple = m.getHeadTriple();
-        SortedSet<Triple> s = new TreeSet<Triple>(comparator);
-        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), s);
-
+        moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), m);
         return m;
     }
 }

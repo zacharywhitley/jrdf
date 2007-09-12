@@ -68,10 +68,6 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
-import java.util.Iterator;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 /**
  * In memory implementation of Globalized Graph.
  *
@@ -111,14 +107,9 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         SubjectNode subj = headTriple.getSubject();
         PredicateNode pred = headTriple.getPredicate();
         ObjectNode obj = headTriple.getObject();
-        Iterator<Triple> iterator = molecule.tailTriples();
-        SortedSet<Triple> tailTriples = new TreeSet<Triple>(tripleComparator);
-        while (iterator.hasNext()) {
-            tailTriples.add(iterator.next());
-        }
-        indexes[0].add(subj, pred, obj, tailTriples);
-        indexes[1].add(pred, obj, subj, tailTriples);
-        indexes[2].add(obj, subj, pred, tailTriples);
+        indexes[0].add(subj, pred, obj, molecule);
+        indexes[1].add(pred, obj, subj, molecule);
+        indexes[2].add(obj, subj, pred, molecule);
     }
 
 
@@ -140,15 +131,15 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
     }
 
     public boolean isEmpty() {
-        return indexes[0].numberOfMolecules() == 0L;
+        return indexes[0].getNumberOfMolecules() == 0L;
     }
 
-    public long numberOfMolecules() {
-        return indexes[0].numberOfMolecules();
+    public long getNumberOfMolecules() {
+        return indexes[0].getNumberOfMolecules();
     }
 
     public long numberOfTriples() {
-        return indexes[0].numberOfTriples();
+        return indexes[0].getNumberOfTriples();
     }
 
     public MoleculeIteratorFactory getMoleculeIteratorFactory() {
