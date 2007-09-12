@@ -59,12 +59,12 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.mem.LiteralImpl;
+import org.jrdf.graph.local.mem.LiteralImpl;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.ParamSpec;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.graph.mem.LiteralImpl}.
+ * {@link Instantiator} for {@link LiteralImpl}.
  *
  * @author Tom Adams
  * @version $Id$

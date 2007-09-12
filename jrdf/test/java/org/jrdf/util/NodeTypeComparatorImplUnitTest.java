@@ -60,7 +60,6 @@
 package org.jrdf.util;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.mem.NodeComparatorImpl;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.io.Serializable;

@@ -6,19 +6,19 @@
     <!--Globalized in memory, graph classes -->
 
     <!-- Localized in memory, graph classes -->
-    <bean class="org.jrdf.graph.index.longindex.mem.LongIndexMem" singleton="false"/>
+    <bean class="org.jrdf.graph.local.index.index.longindex.mem.LongIndexMem" singleton="false"/>
 
-    <bean class="org.jrdf.graph.index.nodepool.map.MemNodePoolFactory" singleton="true"/>
+    <bean class="org.jrdf.graph.local.index.index.nodepool.map.MemNodePoolFactory" singleton="true"/>
 
-    <bean id="graphFactory" class="org.jrdf.graph.mem.OrderedGraphFactoryImpl" singleton="false">
+    <bean id="graphFactory" class="org.jrdf.graph.local.mem.OrderedGraphFactoryImpl" singleton="false">
         <constructor-arg>
             <list>
-                <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
-                <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
-                <ref bean="org.jrdf.graph.index.longindex.mem.LongIndexMem"/>
+                <ref bean="org.jrdf.graph.local.index.index.longindex.mem.LongIndexMem"/>
+                <ref bean="org.jrdf.graph.local.index.index.longindex.mem.LongIndexMem"/>
+                <ref bean="org.jrdf.graph.local.index.index.longindex.mem.LongIndexMem"/>
             </list>
         </constructor-arg>
-        <constructor-arg ref="org.jrdf.graph.index.nodepool.map.MemNodePoolFactory"/>
+        <constructor-arg ref="org.jrdf.graph.local.index.index.nodepool.map.MemNodePoolFactory"/>
         <constructor-arg>
             <ref bean="nodeComparator"/>
         </constructor-arg>
@@ -26,8 +26,8 @@
 
     <!-- Relational Classes -->
     <bean id="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl"/>
-    <bean id="localizedNodeComparator" class="org.jrdf.graph.mem.LocalizedNodeComparatorImpl"/>
-    <bean id="blankNodeComparator" class="org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl">
+    <bean id="localizedNodeComparator" class="org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl"/>
+    <bean id="blankNodeComparator" class="org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl">
         <constructor-arg>
             <ref bean="localizedNodeComparator"/>
         </constructor-arg>
@@ -50,7 +50,7 @@
         </constructor-arg>
     </bean>
 
-    <bean id="nodeComparator" class="org.jrdf.graph.mem.NodeComparatorImpl">
+    <bean id="nodeComparator" class="org.jrdf.graph.local.mem.NodeComparatorImpl">
         <constructor-arg>
             <ref bean="nodeTypeComparator"/>
         </constructor-arg>

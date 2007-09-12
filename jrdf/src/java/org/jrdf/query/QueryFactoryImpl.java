@@ -107,11 +107,11 @@ import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.mem.NodeComparatorImpl;
-import org.jrdf.graph.mem.BlankNodeComparator;
-import org.jrdf.graph.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.mem.LocalizedNodeComparator;
-import org.jrdf.graph.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.mem.NodeComparatorImpl;
+import org.jrdf.graph.local.mem.BlankNodeComparator;
+import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.mem.LocalizedNodeComparator;
+import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 
 public class QueryFactoryImpl implements QueryFactory {
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
