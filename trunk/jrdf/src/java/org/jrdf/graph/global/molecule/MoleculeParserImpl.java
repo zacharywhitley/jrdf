@@ -57,45 +57,84 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.graph.global.molecule;
 
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.graph.global.GlobalizedGraphImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.index.MoleculeIndex;
-import org.jrdf.graph.global.molecule.Molecule;
-import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
-import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
+import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
 import org.jrdf.graph.global.index.POSMoleculeIndexMem;
 import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
-import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParseException;
+import org.jrdf.parser.StatementHandlerException;
+import org.jrdf.parser.rdfxml.RdfXmlParser;
 
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph graph = factory.getNewGraph();
-    private TripleFactory tripleFactory = graph.getTripleFactory();
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+/**
+ * Implementation of MoleculeParser.
+ *
+ * @author Imran Khan (not the cricketer)
+ * @version $Revision: 1317 $
+ */
+public class MoleculeParserImpl implements MoleculeParser {
+    private RdfXmlParser parser;
+    private Graph graph;
 
-    public GlobalizedGraph getGlobalizedGraph() {
+    public MoleculeParserImpl(Graph newGraph) {
+        graph = newGraph;
+        try {
+            parser = new RdfXmlParser(graph.getElementFactory());
+        } catch (GraphException e) {
+            throw new IllegalStateException("Error creating MoleculeParserImple", e);
+        }
+    }
+
+    public void parse(InputStream in, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+        parser.parse(in, baseURI);
+    }
+
+    public void parse(Reader reader, String baseURI) throws IOException, ParseException, StatementHandlerException {
+        parser.setStatementHandler(new GraphStatementHandler(graph));
+        parser.parse(reader, baseURI);
+    }
+
+    public GlobalizedGraph getGlobalizedGraph() throws GraphException {
+        GlobalizedGraph globalizedGraph = getNewGlobalizedGraph();
+        GraphDecomposer decomposer = new NaiveGraphDecomposerImpl();
+
+        if (null != globalizedGraph) {
+            Set<Molecule> molecules = decomposer.decompose(graph);
+            for (Molecule molecule : molecules) {
+                globalizedGraph.add(molecule);
+            }
+        }
+        return globalizedGraph;
+    }
+
+    /**
+     * TODO SHOULD BE REPLACED WITH GLOBLIZEDGRAPHFACTORY
+     * @return
+     */
+    protected GlobalizedGraph getNewGlobalizedGraph() {
+        TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
         MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex[] indexes = new MoleculeIndex[]{spoIndex, posIndex, ospIndex};
+        MoleculeIndex[] indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
         MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl();
-        return new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);
-    }
-
-    public TripleFactory getTripleFactory() {
-        return tripleFactory;
-    }
-
-    public TripleComparator getTripleComparator() {
-        return comparator;
+        return new GlobalizedGraphImpl(indexes, iteratorFactory, tripleComparator);
     }
 }

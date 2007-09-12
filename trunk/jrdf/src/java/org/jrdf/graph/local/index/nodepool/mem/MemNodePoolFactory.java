@@ -57,52 +57,28 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.local.index.nodepool.mem;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+import java.util.Map;
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+public class MemNodePoolFactory implements NodePoolFactory {
+    public NodePool createNodePool() {
+        MapFactory factory1 = new MemMapFactory();
+        MapFactory factory2 = new MemMapFactory();
+        Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
+        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(factory1.createMap(Long.class, Node.class));
+        return new NodePoolImpl(nodeTypePool, stringPool);
     }
 
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
-    }
-
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
-    }
-
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
+    public void close() {
+        // Do nothing - in memory.
     }
 }

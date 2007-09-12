@@ -57,52 +57,46 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.local.index.nodepool.bdb;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
+import org.jrdf.map.StoredMapHandler;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+import java.util.Map;
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+public class BdbNodePoolFactory implements NodePoolFactory {
+    private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
+    private static final String DB_NAME_NODEPOOL = "nodePool";
+    private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
+    private static final String DB_NAME_STRINGPOOL = "stringPool";
+    private final StoredMapHandler handler;
+    private BdbMapFactory longNodeFactory;
+    private BdbMapFactory stringLongFactory;
+
+    public BdbNodePoolFactory(final StoredMapHandler newHandler) {
+        this.handler = newHandler;
     }
 
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
+    @SuppressWarnings({ "unchecked" })
+    public NodePool createNodePool() {
+        longNodeFactory = new BdbMapFactory(handler, CLASS_CATALOG_NODEPOOL, DB_NAME_NODEPOOL);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(longNodeFactory.createMap(Long.class, Node.class));
+        stringLongFactory = new BdbMapFactory(handler, CLASS_CATALOG_STRINGPOOL, DB_NAME_STRINGPOOL);
+        final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
+        return new NodePoolImpl(nodeTypePool, stringPool);
     }
 
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
-    }
-
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
+    public void close() {
+        try {
+            longNodeFactory.close();
+        } finally {
+            stringLongFactory.close();
+        }
     }
 }

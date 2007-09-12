@@ -57,52 +57,40 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.parser.StatementHandler;
+import org.jrdf.parser.StatementHandlerException;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+/**
+ * A simple StatementHandler which simply adds triples to a graph
+ * and allows you then to acces the graph at the end of the parsing.
+ *
+ * @author Imran Khan
+ * @version $Revision: 1226 $
+ */
+public class MoleculeParserStatementHandler implements StatementHandler {
+    private Graph graph;
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+    public MoleculeParserStatementHandler(Graph newGraph) {
+        this.graph = newGraph;
     }
 
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
+    public void handleStatement(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws StatementHandlerException {
+        try {
+            graph.add(subject, predicate, object);
+        } catch (GraphException e) {
+            throw new StatementHandlerException("Error loading triple.", e);
+        }
     }
 
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
-    }
-
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
+    public Graph getGraph() {
+        return graph;
     }
 }

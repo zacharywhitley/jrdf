@@ -80,7 +80,7 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.map.MemNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.mem.iterator.IteratorFactory;
 import org.jrdf.util.ClosableIterator;

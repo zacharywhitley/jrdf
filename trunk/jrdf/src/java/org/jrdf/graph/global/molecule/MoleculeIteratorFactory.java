@@ -57,52 +57,60 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.URIReference;
+import org.jrdf.util.ClosableIterator;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+/**
+ * Iterator factory for the molecules contained within a GlobalizedGraph.
+ *
+ * @author Imran Khan
+ * @version $Revision: 1226 $
+ */
+public interface MoleculeIteratorFactory {
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-    }
+    /**
+     * This returns an iterator over the globalizedGraph using
+     * a molecule head triple to match.
+     * @return
+     */
+    ClosableIterator<Molecule> globalizedGraphIterator();
 
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
-    }
+    /**
+     * Returns the predicates associated with the given resource.
+     * @param resource
+     * @return
+     */
+    ClosableIterator<PredicateNode> findUniquePredicates(Resource resource);
 
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
-    }
 
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
-    }
+    /**
+     * Returns all of the unique predicates contained within the graph.
+     * @return
+     */
+    ClosableIterator<PredicateNode> getUniquePredicates();
+
+
+    /**
+     * Returns all resources within the graph.
+     * @return
+     */
+    ClosableIterator<Resource> getResources();
+
+    /**
+     * Returns an iterator over all of the URIReferences contained in the graph.
+     * @return
+     */
+    ClosableIterator<URIReference> getURIReferences();
+
+    /**
+     * Returns an iterator over all of the BlankNodes contained within the graph.
+     * @return
+     */
+    ClosableIterator<BlankNode> getBlankNodes();
+
 }
