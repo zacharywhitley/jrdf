@@ -62,9 +62,14 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.util.EscapeURL;
+import org.jrdf.vocabulary.RDF;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.GlobalizedGraph;
 
 import java.net.URL;
+import java.net.URI;
 
 public class MoleculeParserImplUnitTest extends TestCase {
     private static JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
@@ -75,6 +80,8 @@ public class MoleculeParserImplUnitTest extends TestCase {
     private final Graph jrdfGraph = factory.getNewGraph();
 
     public void setUp() throws Exception {
+        // Work out why we need to do this.
+        jrdfGraph.clear();
         moleculeParser = new MoleculeParserImpl(jrdfGraph);
     }
 
@@ -84,23 +91,21 @@ public class MoleculeParserImplUnitTest extends TestCase {
     }
 
 // TODO NUMBER OF MOLECULES FLUCTUATES DEPNDING ON WHICH TESTS ARE RUN
-//    public void testGetGlobalizedGraph() throws Exception {
-//        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
-//        System.err.println("RESOURCE LOCATION: " + resource.toString());
-//        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
-//
-//        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
-//
-//        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.numberOfMolecules());
-//        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.numberOfTriples());
-//
-//
-//        Triple triple = jrdfGraph.getTripleFactory()
-//            .createTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
-//                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
-//
-//        boolean result = globalizedGraph.contains(triple);
-//        assertTrue(result);
-//    }
+    public void testGetGlobalizedGraph() throws Exception {
+        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
+        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
 
+        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
+
+        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
+        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.numberOfTriples());
+
+
+        Triple triple = jrdfGraph.getTripleFactory()
+            .createTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
+                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
+
+        boolean result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        assertTrue(result);
+    }
 }
