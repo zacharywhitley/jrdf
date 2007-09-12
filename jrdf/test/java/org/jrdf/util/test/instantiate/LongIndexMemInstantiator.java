@@ -59,7 +59,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.local.index.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 

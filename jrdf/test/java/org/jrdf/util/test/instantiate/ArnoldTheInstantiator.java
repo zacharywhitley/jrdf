@@ -63,7 +63,7 @@ import org.jrdf.graph.AnyNode;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.AnySubjectNode;
-import org.jrdf.graph.local.index.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.mem.BlankNodeImpl;
 import org.jrdf.graph.local.mem.LiteralImpl;
 import org.jrdf.graph.local.mem.URIReferenceImpl;

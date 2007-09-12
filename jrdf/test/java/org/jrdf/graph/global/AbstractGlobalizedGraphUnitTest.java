@@ -64,18 +64,17 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     private static final int NUMBER_OF_MOLECULES = 10;
@@ -171,14 +170,14 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
         }
     }
 
-    public void testFindAny() throws Exception {
-        List<Triple> headTriples = getHeadTriples();
-        addTriples(headTriples);
-        ClosableIterator<Molecule> closableIterator = globalizedGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE);
-        assertTrue(closableIterator.hasNext());
-    }
-
+//    public void testFindAny() throws Exception {
+//        List<Triple> headTriples = getHeadTriples();
+//        addTriples(headTriples);
+//        ClosableIterator<Molecule> closableIterator = globalizedGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+//            ANY_OBJECT_NODE);
+//        assertTrue(closableIterator.hasNext());
+//    }
+//
     protected List<Triple> getHeadTriples() throws GraphElementFactoryException {
         List<Triple> headTriples = new ArrayList<Triple>();
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {

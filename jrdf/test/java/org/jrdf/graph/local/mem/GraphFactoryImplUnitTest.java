@@ -60,8 +60,8 @@
 package org.jrdf.graph.local.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.local.index.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
