@@ -60,51 +60,143 @@
 package org.jrdf.graph.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
-    JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    protected MoleculeIndex moleculeIndex;
-    final Graph graph = factory.getNewGraph();
-    protected final TripleFactory tripleFactory = graph.getTripleFactory();
-    MoleculeIndex spoIndex;
-    MoleculeIndex ospIndex;
-    MoleculeIndex posIndex;
-    MoleculeIteratorFactory iteratorFactory;
-    MoleculeIndex[] indexes;
-    GlobalizedGraphImpl globalizedGraph;
-    final String BASE_URL = "http://example.org/";
-    final String URL1 = BASE_URL + "1";
-    final String URL2 = BASE_URL + "2";
-    final String LITERAL1 = "xyz";
-    final String LITERAL2 = "abc";
+    private static final int NUMBER_OF_MOLECULES = 10;
+    private static final String BASE_URL = "http://example.org/";
+    private static final String URL1 = BASE_URL + "1";
+    private static final String URL2 = BASE_URL + "2";
+    private static final String LITERAL1 = "xyz";
+    private static final String LITERAL2 = "abc";
+    private GlobalizedGraph globalizedGraph;
+    private TripleFactory tripleFactory;
+    private TripleComparator comparator;
 
+    public abstract GlobalizedGraph getGlobalizedGraph();
+
+    public abstract TripleFactory getTripleFactory();
+
+    public abstract TripleComparator getTripleComparator();
+
+    @Override
     public void setUp() {
-        spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
-        iteratorFactory = new MoleculeIteratorFactoryImpl();
-        globalizedGraph = new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);
+        globalizedGraph = getGlobalizedGraph();
+        tripleFactory = getTripleFactory();
+        comparator = getTripleComparator();
     }
 
-    public abstract void testAdd() throws Exception;
+    public void testAdd() throws Exception {
+        Molecule molecule = getMolecule();
 
-    public abstract void testRemove() throws Exception;
+        assertTrue(globalizedGraph.isEmpty());
+        long expected = 0;
+        long value = globalizedGraph.getNumberOfMolecules();
+        assertEquals(expected, value);
 
-    public abstract void testContains() throws Exception;
+        globalizedGraph.add(molecule);
+
+        assertFalse(globalizedGraph.isEmpty());
+        expected = 1;
+        value = globalizedGraph.getNumberOfMolecules();
+        assertEquals(expected, value);
+    }
+
+    public void testRemove() throws Exception {
+        Molecule molecule = getMolecule();
+
+        assertTrue(globalizedGraph.isEmpty());
+        long expected = 0;
+        long value = globalizedGraph.getNumberOfMolecules();
+        assertEquals(expected, value);
+
+        globalizedGraph.add(molecule);
+
+        assertFalse(globalizedGraph.isEmpty());
+        expected = 1;
+        value = globalizedGraph.getNumberOfMolecules();
+        assertEquals(expected, value);
+
+        //test removal
+        globalizedGraph.remove(molecule);
+        assertTrue(globalizedGraph.isEmpty());
+    }
+
+    public void testNumberOfMolecules() throws Exception {
+        addMolecules();
+        assertEquals(NUMBER_OF_MOLECULES, globalizedGraph.getNumberOfMolecules());
+    }
+
+    public void testContains() throws Exception {
+        Molecule molecule = addMolecules();
+
+        globalizedGraph.add(molecule);
+
+        boolean value = globalizedGraph.contains(molecule);
+        assertTrue(value);
+    }
+
+    public void testContainsAnySubject() throws Exception {
+        Molecule molecule = addMolecules();
+
+        globalizedGraph.add(molecule);
+
+        Triple headTriple = molecule.getHeadTriple();
+        tripleFactory.createTriple(ANY_SUBJECT_NODE, headTriple.getPredicate(), headTriple.getObject());
+        boolean value = globalizedGraph.contains(molecule);
+        assertTrue(value);
+    }
+
+
+    public void testContainsAnyPredicate() throws Exception {
+        Molecule molecule = addMolecules();
+
+        globalizedGraph.add(molecule);
+
+        Triple headTriple = molecule.getHeadTriple();
+        tripleFactory.createTriple(headTriple.getSubject(), ANY_PREDICATE_NODE, headTriple.getObject());
+        boolean value = globalizedGraph.contains(molecule);
+        assertTrue(value);
+    }
+
+    public void testContainsAnyObject() throws Exception {
+        Molecule molecule = addMolecules();
+
+        globalizedGraph.add(molecule);
+
+        Triple headTriple = molecule.getHeadTriple();
+        tripleFactory.createTriple(headTriple.getSubject(), headTriple.getPredicate(), ANY_OBJECT_NODE);
+        boolean value = globalizedGraph.contains(molecule);
+        assertTrue(value);
+    }
+
+    public void testContainsAny() throws Exception {
+        Molecule molecule = addMolecules();
+        boolean value;
+
+        globalizedGraph.add(molecule);
+
+        tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        value = globalizedGraph.contains(molecule);
+        assertTrue(value);
+    }
+
+    private Molecule addMolecules() throws GraphElementFactoryException {
+        Molecule molecule = null;
+        for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
+            molecule = getMolecule();
+            globalizedGraph.add(molecule);
+        }
+        return molecule;
+    }
 
     protected Molecule getMolecule() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(comparator);
@@ -117,12 +209,4 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
         m.add(triple2);
         return m;
     }
-
-    public abstract void testContainsAnySubject() throws Exception;
-
-    public abstract void testContainsAnyPredicate() throws Exception;
-
-    public abstract void testContainsAnyObject() throws Exception;
-
-    public abstract void testContainsAny() throws Exception;
 }

@@ -73,6 +73,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
+    private static final int SUBJECT_INDEX = 0;
+    private static final int PREDICATE_INDEX = 1;
+    private static final int OBJECT_INDEX = 2;
+
     /**
      * The SPO index of the molecules.
      */
@@ -95,9 +99,6 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
      */
     protected MoleculeIteratorFactory iteratorFactory;
     protected final TripleComparator tripleComparator;
-    static final int SUBJECT_INDEX = 0;
-    static final int PREDICATE_INDEX = 1;
-    static final int OBJECT_INDEX = 2;
 
     public AbstractGlobalizedGraph(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory,
         TripleComparator newTripleComparator) {
