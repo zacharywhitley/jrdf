@@ -67,6 +67,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -132,19 +133,19 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     private void initIndexes() {
         // Fix up creation of SortedSet - add a Triple comparator - probably GroundedTripleComparator.
         if (null == moleculeIndexSPO) {
-            moleculeIndexSPO = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
-            );
+            moleculeIndexSPO = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         }
         if (null == moleculeIndexPOS) {
-            moleculeIndexPOS = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
-            );
+            moleculeIndexPOS = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         }
         if (null == moleculeIndexOSP) {
-            moleculeIndexOSP = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
-            );
+            moleculeIndexOSP = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         }
-
         indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};
+    }
+
+    protected ClosableIterator<Molecule> findValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return null;
     }
 
     protected boolean containsValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {

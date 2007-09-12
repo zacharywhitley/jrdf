@@ -71,6 +71,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
 import java.util.List;
@@ -169,11 +170,14 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
             assertTrue(globalizedGraph.contains(subject, predicate, object));
         }
     }
-//    public void testFindAny() throws Exception {
-//        addMolecules();
-//        globalizedGraph.add(molecule);
-//        globalizedGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-//    }
+
+    public void testFindAny() throws Exception {
+        List<Triple> headTriples = getHeadTriples();
+        addTriples(headTriples);
+        ClosableIterator<Molecule> closableIterator = globalizedGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            ANY_OBJECT_NODE);
+        assertTrue(closableIterator.hasNext());
+    }
 
     protected List<Triple> getHeadTriples() throws GraphElementFactoryException {
         List<Triple> headTriples = new ArrayList<Triple>();
@@ -191,6 +195,14 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     private void addMolecules(List<Triple> headTriples) throws GraphElementFactoryException {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
             Molecule m = createMolecule(headTriples.get(i));
+            globalizedGraph.add(m);
+        }
+    }
+
+    private void addTriples(List<Triple> triples) {
+        for (Triple triple : triples) {
+            Molecule m = new MoleculeImpl(comparator);
+            m.add(triple);
             globalizedGraph.add(m);
         }
     }

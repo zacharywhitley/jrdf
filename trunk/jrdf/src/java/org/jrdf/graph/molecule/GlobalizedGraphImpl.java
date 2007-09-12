@@ -71,7 +71,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 /**
  * In memory implementation of Globalized Graph.
  *
- * @author Imran Khan (not the cricketer)
+ * @author Imran Khan
  * @version $Revision: 1317 $
  */
 public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
@@ -88,7 +88,7 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
 
     public ClosableIterator<Molecule> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         checkNotNull(subject, predicate, object);
-        return null;
+        return findValue(subject, predicate, object);
     }
 
     public boolean contains(Molecule molecule) {
