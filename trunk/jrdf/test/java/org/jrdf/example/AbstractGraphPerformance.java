@@ -117,6 +117,13 @@ public abstract class AbstractGraphPerformance {
 
     protected abstract MapFactory getMapFactory();
 
+    /**
+     * Creates 10 times the given number of nodes for a given graph.
+     *
+     * @param numberOfNodes the number of nodes to create with 10 objects.
+     * @param graph the graph to add.
+     * @throws Exception if there is an exception adding the nodes.
+     */
     private void addPerformance(int numberOfNodes, Graph graph) throws Exception {
         //Test
         long startTime = System.currentTimeMillis();

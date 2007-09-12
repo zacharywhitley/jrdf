@@ -57,55 +57,22 @@
  *
  */
 
-package org.jrdf.graph.mem;
+package org.jrdf.graph.bdb;
 
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedBdbJRDFFactoryImpl;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.index.longindex.LongIndex;
-import org.jrdf.graph.index.longindex.bdb.LongIndexBdb;
-import org.jrdf.graph.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.index.nodepool.map.BdbNodePoolFactory;
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.StoredMapHandlerImpl;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
 public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
-    private StoredMapHandler handler;
-    private BdbMapFactory factory1;
-    private BdbMapFactory factory2;
-    private BdbMapFactory factory3;
-    private LongIndex[] indexes;
+    private JRDFFactory factory;
 
     @Override
     public void setUp() throws Exception {
-        handler = new StoredMapHandlerImpl();
-        factory1 = new BdbMapFactory(handler, "java_class_catalog_spo", "spo");
-        factory2 = new BdbMapFactory(handler, "java_class_catalog_pos", "pos");
-        factory3 = new BdbMapFactory(handler, "java_class_catalog_osp", "osp");
-        indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2), new LongIndexBdb(factory3)};
-        indexes[0].clear();
-        indexes[1].clear();
-        indexes[2].clear();
+        factory = SortedBdbJRDFFactoryImpl.getFactory();
         super.setUp();
-    }
-    
-    @Override
-    public void tearDown() {
-        try {
-            factory1.close();
-        } finally {
-            try {
-                factory2.close();
-            } finally {
-                factory3.close();
-            }
-        }
     }
 
     /**
@@ -115,12 +82,8 @@ public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
      */
     @Override
     public Graph newGraph() throws Exception {
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(handler);
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeTypeComparator nodeTypeComparatorypeComparator = new NodeTypeComparatorImpl();
-        NodeComparator comparator = new NodeComparatorImpl(nodeTypeComparatorypeComparator, blankNodeComparator);
-        GraphFactory factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
+        Graph newGraph = factory.getNewGraph();
+        newGraph.clear();
+        return newGraph;
     }
 }
