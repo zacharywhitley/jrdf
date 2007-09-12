@@ -67,68 +67,69 @@ import org.jrdf.graph.TripleComparator;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
-public class MoleculeIndexMem implements MoleculeIndex, Serializable {
-    private static final long serialVersionUID = 7410378771227279041L;
+public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Serializable {
+    private static final long serialVersionUID = 850704300941647768L;
     private TripleComparator tripleComparator;
-    private Map<Node, Map<Node, Map<Node, SortedSet<Triple>>>> index;
+    private Map<Node, Map<Node, Map<Node, Molecule>>> index;
 
-    private MoleculeIndexMem() {
+    protected AbstractMoleculeIndexMem() {
     }
 
-    public MoleculeIndexMem(TripleComparator newTripleComparator) {
-        this.index = new HashMap<Node, Map<Node, Map<Node, SortedSet<Triple>>>>();
+    protected AbstractMoleculeIndexMem(TripleComparator newTripleComparator) {
+        this.index = new HashMap<Node, Map<Node, Map<Node, Molecule>>>();
         this.tripleComparator = newTripleComparator;
     }
 
-    public MoleculeIndexMem(Map<Node, Map<Node, Map<Node, SortedSet<Triple>>>> newIndex,
+    protected AbstractMoleculeIndexMem(Map<Node, Map<Node, Map<Node, Molecule>>> newIndex,
         TripleComparator newTripleComparator) {
         this.index = newIndex;
         this.tripleComparator = newTripleComparator;
     }
 
-    public void add(Node[] nodes, SortedSet<Triple> tail) {
-        add(nodes[0], nodes[1], nodes[2], tail);
+    public void add(Node first, Node second, Node third, Molecule molecule) {
+        addInternalNodes(first, second, third, molecule);
+        Iterator<Triple> iterator = molecule.tailTriples();
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
+            Node[] nodes = getNodes(triple);
+            addInternalNodes(nodes[0], nodes[1], nodes[2], molecule);
+        }
     }
 
-    public void add(Node first, Node second, Node third, SortedSet<Triple> tail) {
-        Map<Node, Map<Node, SortedSet<Triple>>> subIndex = index.get(first);
+    protected abstract Node[] getNodes(Triple triple);
+
+    private void addInternalNodes(Node first, Node second, Node third, Molecule molecule) {
+        Map<Node, Map<Node, Molecule>> subIndex = index.get(first);
 
         //check subindex exists
         if (null == subIndex) {
-            subIndex = new HashMap<Node, Map<Node, SortedSet<Triple>>>();
+            subIndex = new HashMap<Node, Map<Node, Molecule>>();
             index.put(first, subIndex);
         }
 
         //find the final group
-        Map<Node, SortedSet<Triple>> group = subIndex.get(second);
+        Map<Node, Molecule> group = subIndex.get(second);
         if (null == group) {
-            group = new HashMap<Node, SortedSet<Triple>>();
+            group = new HashMap<Node, Molecule>();
             subIndex.put(second, group);
         }
-
-        Set<Triple> tailGroup = group.get(third);
-        if (null == tailGroup) {
-            addTailTriples(tail);
-        }
-        group.put(third, tail);
+        group.put(third, molecule);
     }
 
     public void remove(Node first, Node second, Node third) throws GraphException {
-        Map<Node, Map<Node, SortedSet<Triple>>> subIndex = index.get(first);
+        Map<Node, Map<Node, Molecule>> subIndex = index.get(first);
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
 
-        Map<Node, SortedSet<Triple>> group = subIndex.get(second);
+        Map<Node, Molecule> group = subIndex.get(second);
         if (null == group) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
-        Set<Triple> tailGroup = group.get(third);
+        Molecule molecule = group.get(third);
 
         //remove the main index value
         if (group.remove(third) == null) {
@@ -141,12 +142,14 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
                 index.remove(first);
             }
         }
-        removeTailTriples(tailGroup);
+        removeTailTriples(molecule);
     }
 
-    private void removeTailTriples(Set<Triple> tailGroup) throws GraphException {
+    private void removeTailTriples(Molecule molecule) throws GraphException {
+        Iterator<Triple> iterator = molecule.tailTriples();
         //remove all other tail triples
-        for (Triple triple : tailGroup) {
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
             remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
         }
     }
@@ -163,42 +166,28 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         return index.containsKey(node);
     }
 
-    public long numberOfTriples() {
+    public long getNumberOfTriples() {
         long size = 0;
-        Collection<Map<Node, Map<Node, SortedSet<Triple>>>> spoMap = index.values();
-        for (Map<Node, Map<Node, SortedSet<Triple>>> poMap : spoMap) {
-            for (Map<Node, SortedSet<Triple>> oMap : poMap.values()) {
+        Collection<Map<Node, Map<Node, Molecule>>> spoMap = index.values();
+        for (Map<Node, Map<Node, Molecule>> poMap : spoMap) {
+            for (Map<Node, Molecule> oMap : poMap.values()) {
                 size += oMap.size();
             }
         }
         return size;
     }
 
-    public long numberOfMolecules() {
-        long tailTriples = numberOfTailTriples();
-        long triples = numberOfTriples();
-        return triples - tailTriples;
-    }
-
-    public Map<Node, Map<Node, SortedSet<Triple>>> getSubIndex(Node first) {
-        return index.get(first);
-    }
-
-    public boolean removeSubIndex(Node first) {
-        index.remove(first);
-        return index.containsKey(first);
-    }
-
-    private long numberOfTailTriples() {
+    public long getNumberOfMolecules() {
         long size = 0;
-
-        Collection<Map<Node, Map<Node, SortedSet<Triple>>>> spoMap = index.values();
-        for (Map<Node, Map<Node, SortedSet<Triple>>> poMap : spoMap) {
-            for (Map<Node, SortedSet<Triple>> oMap : poMap.values()) {
-                Collection<SortedSet<Triple>> sets = oMap.values();
-                for (Set<Triple> triples : sets) {
-                    if (triples != null) {
-                        size += triples.size();
+        for (Node node0 : index.keySet()) {
+            Map<Node, Map<Node, Molecule>> node2ToNode3Map = index.get(node0);
+            for (Node node1 : node2ToNode3Map.keySet()) {
+                Map<Node, Molecule> node3ToMolecule = node2ToNode3Map.get(node1);
+                for (Node node2 : node3ToMolecule.keySet()) {
+                    Molecule molecule = node3ToMolecule.get(node2);
+                    Node[] headNodes = getNodes(molecule.getHeadTriple());
+                    if (headNodes[0].equals(node0) && headNodes[1].equals(node1) && headNodes[2].equals(node2)) {
+                        size++;
                     }
                 }
             }
@@ -206,15 +195,12 @@ public class MoleculeIndexMem implements MoleculeIndex, Serializable {
         return size;
     }
 
-    private Set<Triple> addTailTriples(SortedSet<Triple> tailGroup) {
-        Set<Triple> res = new TreeSet<Triple>(tripleComparator);
-        if (tailGroup != null) {
-            for (Triple triple : tailGroup) {
-                SortedSet<Triple> newEmptySet = new TreeSet<Triple>(tripleComparator);
-                add(triple.getSubject(), triple.getPredicate(), triple.getObject(), newEmptySet);
-                res.add(triple);
-            }
-        }
-        return res;
+    public Map<Node, Map<Node, Molecule>> getSubIndex(Node first) {
+        return index.get(first);
+    }
+
+    public boolean removeSubIndex(Node first) {
+        index.remove(first);
+        return index.containsKey(first);
     }
 }

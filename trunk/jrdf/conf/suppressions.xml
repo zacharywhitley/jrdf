@@ -44,6 +44,7 @@
     <suppress checks="CyclomaticComplexity" files="MoleculeComparatorImpl.java" />
     <suppress checks="CyclomaticComplexity" files="MoleculeImpl.java" />
     <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl.java" />
+    <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem.java" />
     <suppress checks="JavaNCSS" files="MoleculeComparatorImpl.java" />
     <suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl.java" />
     <suppress checks="ReturnCount" files="MoleculeImpl.java" />
