@@ -64,6 +64,9 @@ import org.jrdf.graph.Node;
 
 import java.util.Map;
 
+/**
+ * The generic interface for storing global (fully grounded) triples.
+ */
 public interface GlobalIndex {
 
     boolean contains(Node node);

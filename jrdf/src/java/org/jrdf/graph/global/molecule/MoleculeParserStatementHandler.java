@@ -68,8 +68,8 @@ import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerException;
 
 /**
- * A simple StatementHandler which simply adds triples to a graph
- * and allows you then to acces the graph at the end of the parsing.
+ * A simple StatementHandler which simply adds triples to a graph and allows you then to acces the graph at the
+ * end of the parsing.
  *
  * @author Imran Khan
  * @version $Revision: 1226 $
