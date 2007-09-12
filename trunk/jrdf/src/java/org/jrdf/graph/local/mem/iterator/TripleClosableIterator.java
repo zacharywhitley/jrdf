@@ -59,12 +59,12 @@
 package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.index.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.index.graphhandler.GraphHandler012;
-import org.jrdf.graph.local.index.index.graphhandler.GraphHandler201;
-import org.jrdf.graph.local.index.index.graphhandler.GraphHandler120;
-import org.jrdf.graph.local.index.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
+import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 
 import java.util.Iterator;
 

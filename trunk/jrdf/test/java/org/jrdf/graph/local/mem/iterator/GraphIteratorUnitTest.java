@@ -59,7 +59,7 @@
 package org.jrdf.graph.local.mem.iterator;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.local.index.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;

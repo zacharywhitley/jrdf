@@ -60,8 +60,8 @@ package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.index.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.util.ClosableIterator;
 
 /**

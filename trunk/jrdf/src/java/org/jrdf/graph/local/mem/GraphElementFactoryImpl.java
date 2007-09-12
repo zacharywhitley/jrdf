@@ -65,7 +65,7 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.index.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
