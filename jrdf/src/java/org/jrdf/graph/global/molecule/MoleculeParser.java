@@ -57,52 +57,19 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.parser.Parser;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+/**
+ * Parser for parsing RDF/XML which then allows you to load a GlobalizedGraph.
+ *
+ * @author Imran Khan
+ * @version $Revision: 1226 $
+ */
+public interface MoleculeParser extends Parser {
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-    }
-
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
-    }
-
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
-    }
-
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
-    }
+    GlobalizedGraph getGlobalizedGraph() throws GraphException;
 }

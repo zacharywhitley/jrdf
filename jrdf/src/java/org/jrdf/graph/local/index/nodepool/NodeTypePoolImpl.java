@@ -57,52 +57,37 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.local.index.nodepool;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.local.mem.LocalizedNode;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+import java.util.Collection;
+import java.util.Map;
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+public class NodeTypePoolImpl implements NodeTypePool {
+    /**
+     * The pool of all nodes, mapped from their ids.
+     */
+    private Map<Long, Node> nodePool;
+
+    public NodeTypePoolImpl(Map<Long, Node> newNodePool) {
+        this.nodePool = newNodePool;
     }
 
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
+    public Node get(Long nodeId) {
+        return nodePool.get(nodeId);
     }
 
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
+    public void put(Long id, LocalizedNode node) {
+        nodePool.put(id, node);
     }
 
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
+    public Collection<Node> values() {
+        return nodePool.values();
+    }
+
+    public void clear() {
+        nodePool.clear();
     }
 }

@@ -63,6 +63,8 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.util.ClosableIterator;
 
 /**

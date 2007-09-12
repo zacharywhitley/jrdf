@@ -6,7 +6,7 @@ import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.map.MemNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;

@@ -71,6 +71,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.molecule.MoleculeImpl;
+import org.jrdf.graph.global.molecule.Molecule;
 
 import java.net.URI;
 import java.util.ArrayList;

@@ -57,52 +57,56 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.global.molecule;
 
+import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
+import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+import java.net.URI;
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+public class MoleculeImplUnitTest extends TestCase {
+    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
+    private Graph newGraph = factory.getNewGraph();
+    private GraphElementFactory elementFactory = newGraph.getElementFactory();
+    private TripleFactory tripleFactory = newGraph.getTripleFactory();
+    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
+    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
+    private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
+    private URIReference ref1;
+    private URIReference ref2;
+
+    public void testMoleculeOrderURIReference() throws Exception {
+        Molecule molecule = new MoleculeImpl(comparator);
+        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
+        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
+        Triple triple = tripleFactory.createTriple(ref1, ref1, ref1);
+        molecule.add(triple);
+        molecule.add(tripleFactory.createTriple(ref1, ref1, ref2));
+        assertEquals(triple, molecule.getHeadTriple());
     }
 
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
-    }
-
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
-    }
-
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
+    public void testMoleculeOrderBlankNodes() throws Exception {
+        Molecule molecule = new MoleculeImpl(comparator);
+        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
+        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
+        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
+        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2));
+        molecule.add(triple);
+        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
+            elementFactory.createBlankNode()));
+        assertEquals(triple, molecule.getHeadTriple());
     }
 }

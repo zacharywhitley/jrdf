@@ -57,52 +57,55 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.graph.global.molecule;
 
+import junit.framework.TestCase;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private LongIndex[] indexes;
-    private NodePoolFactory nodePoolFactory;
-    private GraphFactory factory;
-    GraphElementFactory graphElementFactory;
+import java.net.URL;
 
-    public MemPerformance() throws Exception {
-        indexes = new LongIndex[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
+/**
+ * User: imrank
+ * Date: 7/09/2007
+ * Time: 17:18:14
+ */
+public class MoleculeParserUnitTest extends TestCase {
+    private static JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
+    private MoleculeParser moleculeParser;
+    private static final String baseURI = "http://example.org";
+    private final int NUMBER_OF_MOLECULES_IN_PIZZA = 1345;
+    private final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
+    private final Graph jrdfGraph = factory.getNewGraph();
+
+    public void setUp() throws Exception {
+        moleculeParser = new MoleculeParserImpl(jrdfGraph);
     }
 
-    protected Graph getGraph() {
-        nodePoolFactory = new MemNodePoolFactory();
-        LocalizedNodeComparator localizedNodeComparator = new LocalizedNodeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(localizedNodeComparator);
-        NodeComparator comparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-        factory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
-        return factory.getGraph();
+    public void testParse() throws Exception {
+        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
+        moleculeParser.parse(resource.openStream(), baseURI);
     }
 
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
-    }
+// TODO NUMBER OF MOLECULES FLUCTUATES DEPNDING ON WHICH TESTS ARE RUN
+//    public void testGetGlobalizedGraph() throws Exception {
+//        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
+//        System.err.println("RESOURCE LOCATION: " + resource.toString());
+//        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
+//
+//        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
+//
+//        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.numberOfMolecules());
+//        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.numberOfTriples());
+//
+//
+//        Triple triple = jrdfGraph.getTripleFactory()
+//            .createTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
+//                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
+//
+//        boolean result = globalizedGraph.contains(triple);
+//        assertTrue(result);
+//    }
 
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
-//        memPerformance.parsePerformance();
-    }
 }
