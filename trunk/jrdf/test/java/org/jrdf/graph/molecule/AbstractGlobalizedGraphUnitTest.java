@@ -92,9 +92,9 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
     final String LITERAL2 = "abc";
 
     public void setUp() {
-        spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(), comparator);
-        posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(), comparator);
-        ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(), comparator);
+        spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
+        posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
+        ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
         iteratorFactory = new MoleculeIteratorFactoryImpl();
         globalizedGraph = new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);

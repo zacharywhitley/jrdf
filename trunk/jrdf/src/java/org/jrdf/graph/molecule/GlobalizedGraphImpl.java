@@ -118,7 +118,6 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         SubjectNode subj = headTriple.getSubject();
         PredicateNode pred = headTriple.getPredicate();
         ObjectNode obj = headTriple.getObject();
-
         indexes[0].remove(subj, pred, obj);
         indexes[1].remove(pred, obj, subj);
         indexes[2].remove(obj, subj, pred);

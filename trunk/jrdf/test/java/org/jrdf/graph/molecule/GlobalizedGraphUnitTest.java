@@ -84,7 +84,6 @@ public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {
         assertEquals(expected, value);
     }
 
-
     public void testRemove() throws Exception {
         Molecule molecule = getMolecule();
 

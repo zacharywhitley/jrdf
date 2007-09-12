@@ -74,7 +74,7 @@ public class MoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
     private final TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
 
     public void setUp() throws Exception {
-        moleculeIndex = new SPOMoleculeIndexMem(tripleComparator);
+        moleculeIndex = new SPOMoleculeIndexMem();
     }
 
     public void testAdd() throws Exception {
