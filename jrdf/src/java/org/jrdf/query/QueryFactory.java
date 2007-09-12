@@ -57,36 +57,13 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.query;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedBdbJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.StoredMapHandlerImpl;
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
+import org.jrdf.sparql.builder.QueryBuilder;
+import org.jrdf.query.execute.QueryEngine;
 
-public class BdbPerformance extends AbstractGraphPerformance {
-    private JRDFFactory factory;
+public interface QueryFactory {
+    QueryBuilder createQueryBuilder();
 
-    public BdbPerformance() {
-        factory = SortedBdbJRDFFactoryImpl.getFactory();
-    }
-
-    protected Graph getGraph() {
-        Graph newGraph = factory.getNewGraph();
-        newGraph.clear();
-        return newGraph;
-    }
-
-    protected MapFactory getMapFactory() {
-        return new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database");
-    }
-
-    public static void main(String[] args) throws Exception {
-        BdbPerformance bdbPerformance = new BdbPerformance();
-        bdbPerformance.testPerformance();
-//        bdbPerformance.parsePerformance();
-    }
+    QueryEngine createQueryEngine();
 }
