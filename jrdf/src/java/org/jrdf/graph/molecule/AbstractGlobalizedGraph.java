@@ -66,15 +66,25 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
+    /**
+     * Position in the index for SPO.
+     */
     private static final int SUBJECT_INDEX = 0;
+
+    /**
+     * Position in the index for POS.
+     */
     private static final int PREDICATE_INDEX = 1;
+
+    /**
+     * Position in the index for OSP.
+     */
     private static final int OBJECT_INDEX = 2;
 
     /**
@@ -86,18 +96,22 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
      * The POS index of the molecules.
      */
     private transient MoleculeIndex moleculeIndexPOS;
+
     /**
      * The OSP index of the molecules.
      */
     private transient MoleculeIndex moleculeIndexOSP;
+
     /**
      * Collection of the 3 indexes.
      */
     protected transient MoleculeIndex[] indexes;
+
     /**
      * Factory for managing the creation of various iterators.
      */
     protected MoleculeIteratorFactory iteratorFactory;
+
     protected final TripleComparator tripleComparator;
 
     public AbstractGlobalizedGraph(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory,
@@ -133,68 +147,65 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};
     }
 
-    protected boolean containsValue(Triple triple) {
+    protected boolean containsValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         boolean res;
-        if (ANY_SUBJECT_NODE != triple.getSubject()) {
-            res = containsFixedSubject(triple);
+        if (ANY_SUBJECT_NODE != subject) {
+            res = containsFixedSubject(subject, predicate, object);
         } else {
-            res = containsAnySubject(triple);
+            res = containsAnySubject(predicate, object);
         }
         return res;
     }
 
-    private boolean containsAnySubject(Triple triple) {
+    private boolean containsAnySubject(PredicateNode predicate, ObjectNode object) {
         boolean res;
-        if (ANY_PREDICATE_NODE != triple.getPredicate()) {
-            res = containsAnySubjectAnyPredicate(triple);
+        if (ANY_PREDICATE_NODE == predicate) {
+            res = containsAnySubjectAnyPredicate(object);
+        } else if (ANY_OBJECT_NODE == object) {
+            res = containsAnySubjectAnyObject(predicate);
         } else {
-            res = indexes[OBJECT_INDEX].contains(triple.getObject());
+            res = indexes[OBJECT_INDEX].contains(object);
         }
         return res;
     }
 
-    private boolean containsAnySubjectAnyPredicate(Triple triple) {
-        boolean res = false;
-        PredicateNode predicate = triple.getPredicate();
-        ObjectNode object = triple.getObject();
-        Map<Node, Map<Node, Molecule>> predIndex = indexes[PREDICATE_INDEX].getSubIndex(predicate);
-        if (null != predIndex) {
-            res = ANY_OBJECT_NODE == object || (null != predIndex.get(object));
-        }
-        return res;
+    private boolean containsAnySubjectAnyObject(PredicateNode predicate) {
+        return indexes[PREDICATE_INDEX].contains(predicate);
     }
 
-    private boolean containsFixedSubject(Triple triple) {
-        boolean res = false;
-        if (indexes[SUBJECT_INDEX].contains(triple.getSubject())) {
-            if (ANY_PREDICATE_NODE != triple.getPredicate()) {
-                res = containsFixedSubjectFixedPredicate(triple);
+    private boolean containsAnySubjectAnyPredicate(ObjectNode object) {
+        if (object == ANY_OBJECT_NODE) {
+            return indexes[SUBJECT_INDEX].getNumberOfTriples() > 0;
+        } else {
+            return indexes[OBJECT_INDEX].contains(object);
+        }
+    }
+
+    private boolean containsFixedSubject(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        if (indexes[SUBJECT_INDEX].contains(subject)) {
+            if (ANY_PREDICATE_NODE != predicate) {
+                return containsFixedSubjectFixedPredicate(subject, predicate, object);
             } else {
-                res = containsFixedSubjectAnyPredicate(triple);
+                return containsFixedSubjectAnyPredicate(subject, object);
             }
-        }
-        return res;
-    }
-
-    private boolean containsFixedSubjectAnyPredicate(Triple triple) {
-        boolean res;
-        ObjectNode object = triple.getObject();
-        SubjectNode subject = triple.getSubject();
-        if (ANY_OBJECT_NODE != object) {
-            Map<Node, Map<Node, Molecule>> objIndex = indexes[OBJECT_INDEX].getSubIndex(object);
-            res = null != objIndex && (null != objIndex.get(subject));
         } else {
-            res = true;
+            return false;
         }
-        return res;
     }
 
-    private boolean containsFixedSubjectFixedPredicate(Triple triple) {
+    private boolean containsFixedSubjectAnyPredicate(SubjectNode subject, ObjectNode object) {
+        if (ANY_OBJECT_NODE == object) {
+            return true;
+        } else {
+            Map<Node, Map<Node, Molecule>> objIndex = indexes[OBJECT_INDEX].getSubIndex(object);
+            return null != objIndex && null != objIndex.get(subject);
+        }
+    }
+
+    private boolean containsFixedSubjectFixedPredicate(SubjectNode subjectNode, PredicateNode predicate,
+        ObjectNode object) {
         boolean res = false;
-        SubjectNode first = triple.getSubject();
-        PredicateNode predicate = triple.getPredicate();
-        ObjectNode object = triple.getObject();
-        Map<Node, Map<Node, Molecule>> subjIndex = indexes[SUBJECT_INDEX].getSubIndex(first);
+        Map<Node, Map<Node, Molecule>> subjIndex = indexes[SUBJECT_INDEX].getSubIndex(subjectNode);
         Map<Node, Molecule> subjPredIndex = subjIndex.get(predicate);
         if (null != subjPredIndex) {
             res = ANY_OBJECT_NODE == object || subjPredIndex.containsKey(object);
