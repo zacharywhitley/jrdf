@@ -64,7 +64,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.index.operation.mem.ComparisonImpl;
+import org.jrdf.graph.local.index.index.operation.mem.ComparisonImpl;
 import org.jrdf.graph.operation.Comparison;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;

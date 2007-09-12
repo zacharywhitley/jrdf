@@ -60,8 +60,8 @@
 package org.jrdf;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.mem.GraphImpl;
+import org.jrdf.graph.local.index.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.local.mem.GraphImpl;
 import org.jrdf.query.QueryImpl;
 import org.jrdf.query.relation.constants.NullaryTuple;
 import org.jrdf.util.NodeTypeEnum;

@@ -59,14 +59,14 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.mem.URIReferenceImpl;
+import org.jrdf.graph.local.mem.URIReferenceImpl;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.ParamSpec;
 
 import java.net.URI;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.graph.mem.URIReferenceImpl}.
+ * {@link Instantiator} for {@link URIReferenceImpl}.
  *
  * @author Tom Adams
  * @version $Id$

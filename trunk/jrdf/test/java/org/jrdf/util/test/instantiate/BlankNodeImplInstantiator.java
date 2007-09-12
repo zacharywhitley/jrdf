@@ -59,12 +59,12 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.mem.BlankNodeImpl;
+import org.jrdf.graph.local.mem.BlankNodeImpl;
 import org.jrdf.util.test.ReflectTestUtil;
 import org.jrdf.util.test.ParamSpec;
 
 /**
- * {@link Instantiator} for {@link org.jrdf.graph.mem.BlankNodeImpl}.
+ * {@link Instantiator} for {@link BlankNodeImpl}.
  *
  * @author Tom Adams
  * @version $Id$

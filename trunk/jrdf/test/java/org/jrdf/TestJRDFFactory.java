@@ -61,7 +61,7 @@ package org.jrdf;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.mem.ReadWriteGraphFactory;
+import org.jrdf.graph.local.mem.ReadWriteGraphFactory;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
