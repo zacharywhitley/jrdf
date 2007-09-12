@@ -61,18 +61,17 @@ package org.jrdf.graph.molecule;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
 
 import java.util.Map;
 
 public class POSMoleculeIndexMem extends AbstractMoleculeIndexMem {
-    public POSMoleculeIndexMem(TripleComparator newTripleComparator) {
-        super(newTripleComparator);
+    private static final long serialVersionUID = -6722872965581562502L;
+
+    public POSMoleculeIndexMem() {
     }
 
-    public POSMoleculeIndexMem(Map<Node, Map<Node, Map<Node, Molecule>>> newIndex,
-        TripleComparator newTripleComparator) {
-        super(newIndex, newTripleComparator);
+    public POSMoleculeIndexMem(Map<Node, Map<Node, Map<Node, Molecule>>> newIndex) {
+        super(newIndex);
     }
 
     protected Node[] getNodes(Triple triple) {

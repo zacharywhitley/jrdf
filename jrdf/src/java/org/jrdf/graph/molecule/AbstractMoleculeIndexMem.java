@@ -62,7 +62,6 @@ package org.jrdf.graph.molecule;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -72,21 +71,14 @@ import java.util.Map;
 
 public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 850704300941647768L;
-    private TripleComparator tripleComparator;
     private Map<Node, Map<Node, Map<Node, Molecule>>> index;
 
     protected AbstractMoleculeIndexMem() {
-    }
-
-    protected AbstractMoleculeIndexMem(TripleComparator newTripleComparator) {
         this.index = new HashMap<Node, Map<Node, Map<Node, Molecule>>>();
-        this.tripleComparator = newTripleComparator;
     }
 
-    protected AbstractMoleculeIndexMem(Map<Node, Map<Node, Map<Node, Molecule>>> newIndex,
-        TripleComparator newTripleComparator) {
+    protected AbstractMoleculeIndexMem(Map<Node, Map<Node, Map<Node, Molecule>>> newIndex) {
         this.index = newIndex;
-        this.tripleComparator = newTripleComparator;
     }
 
     public void add(Node first, Node second, Node third, Molecule molecule) {
@@ -120,6 +112,16 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
     }
 
     public void remove(Node first, Node second, Node third) throws GraphException {
+        Molecule molecule = removeInternal(first, second, third);
+        Iterator<Triple> iterator = molecule.tailTriples();
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
+            Node[] nodes = getNodes(triple);
+            removeInternal(nodes[0], nodes[1], nodes[2]);
+        }
+    }
+
+    private Molecule removeInternal(Node first, Node second, Node third) throws GraphException {
         Map<Node, Map<Node, Molecule>> subIndex = index.get(first);
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
@@ -142,16 +144,7 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
                 index.remove(first);
             }
         }
-        removeTailTriples(molecule);
-    }
-
-    private void removeTailTriples(Molecule molecule) throws GraphException {
-        Iterator<Triple> iterator = molecule.tailTriples();
-        //remove all other tail triples
-        while (iterator.hasNext()) {
-            Triple triple = iterator.next();
-            remove(triple.getSubject(), triple.getPredicate(), triple.getObject());
-        }
+        return molecule;
     }
 
     public void remove(Node[] nodes) throws GraphException {
@@ -202,5 +195,9 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
     public boolean removeSubIndex(Node first) {
         index.remove(first);
         return index.containsKey(first);
+    }
+
+    public String toString() {
+        return index.toString();
     }
 }

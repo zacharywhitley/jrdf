@@ -124,12 +124,12 @@ public class MoleculeParserImpl implements MoleculeParser {
      */
     protected GlobalizedGraph getNewGlobalizedGraph() {
         TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-        MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
-            tripleComparator);
-        MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
-            tripleComparator);
-        MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
-            tripleComparator);
+        MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
+        );
+        MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
+        );
+        MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
+        );
         MoleculeIndex[] indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
         MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl();
         return new GlobalizedGraphImpl(indexes, iteratorFactory, tripleComparator);

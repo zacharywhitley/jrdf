@@ -117,16 +117,16 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     private void initIndexes() {
         // Fix up creation of SortedSet - add a Triple comparator - probably GroundedTripleComparator.
         if (null == moleculeIndexSPO) {
-            moleculeIndexSPO = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
-                tripleComparator);
+            moleculeIndexSPO = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
+            );
         }
         if (null == moleculeIndexPOS) {
-            moleculeIndexPOS = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
-                tripleComparator);
+            moleculeIndexPOS = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
+            );
         }
         if (null == moleculeIndexOSP) {
-            moleculeIndexOSP = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>(),
-                tripleComparator);
+            moleculeIndexOSP = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>()
+            );
         }
 
         indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};
