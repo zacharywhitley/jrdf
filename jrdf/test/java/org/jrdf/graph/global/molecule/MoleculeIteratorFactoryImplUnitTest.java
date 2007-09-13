@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
@@ -68,70 +68,27 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
 import org.jrdf.util.test.GlobalizedGraphTestUtil;
 
 import java.util.List;
 
-public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
+/**
+ * User: imrank
+ * Date: 13/09/2007
+ * Time: 11:18:05
+ */
+public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
+    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private GlobalizedGraph globalizedGraph;
 
-    public abstract GlobalizedGraph getGlobalizedGraph();
-
-    public abstract TripleComparator getTripleComparator();
-
-    @Override
-    public void setUp() {
-        globalizedGraph = getGlobalizedGraph();
+    public void setUp() throws Exception {
+        globalizedGraph = new GlobalizedGraphMemFactoryImpl(comparator).getNewGlobalizedGraph();
     }
 
-    // TODO Add test here to see if adding the molecule with the same head triple but different context appends the new
-    // tail triples.
-    public void testAdd() throws Exception {
-        Triple headTriple = GlobalizedGraphTestUtil.createHeadTriple();
-        Molecule molecule = GlobalizedGraphTestUtil.createMolecule(headTriple, getTripleComparator());
-
-        assertTrue(globalizedGraph.isEmpty());
-        long expected = 0;
-        long value = globalizedGraph.getNumberOfMolecules();
-        assertEquals(expected, value);
-
-        globalizedGraph.add(molecule);
-
-        assertFalse(globalizedGraph.isEmpty());
-        expected = 1;
-        value = globalizedGraph.getNumberOfMolecules();
-        assertEquals(expected, value);
-    }
-
-    public void testRemove() throws Exception {
-        Triple headTriple = GlobalizedGraphTestUtil.createHeadTriple();
-        Molecule molecule = GlobalizedGraphTestUtil.createMolecule(headTriple, getTripleComparator());
-
-        assertTrue(globalizedGraph.isEmpty());
-        long expected = 0;
-        long value = globalizedGraph.getNumberOfMolecules();
-        assertEquals(expected, value);
-
-        globalizedGraph.add(molecule);
-
-        assertFalse(globalizedGraph.isEmpty());
-        expected = 1;
-        value = globalizedGraph.getNumberOfMolecules();
-        assertEquals(expected, value);
-
-        //test removal
-        globalizedGraph.remove(molecule);
-        assertTrue(globalizedGraph.isEmpty());
-    }
-
-    public void testNumberOfMolecules() throws Exception {
-        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, getTripleComparator());
-        assertEquals(GlobalizedGraphTestUtil.NUMBER_OF_MOLECULES, globalizedGraph.getNumberOfMolecules());
-    }
-
-    public void testContains() throws Exception {
+    public void testFind() throws Exception {
         // Goes through all 8 possibilities and checks contains.
         for (int i = 0 ; i < 8; i++) {
             // 4 falses then 4 trues.
@@ -140,18 +97,18 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
             boolean findAnyPredicate = (i & 2) != 0;
             // true then false
             boolean findAnyObject = (i & 1) != 0;
-            checkContains(findAnySubject, findAnyPredicate, findAnyObject);
+            checkFind(findAnySubject, findAnyPredicate, findAnyObject);
         }
     }
 
-    private void checkContains(boolean findAnySubject, boolean findAnyPredicate, boolean findAnyObject) {
+    private void checkFind(boolean findAnySubject, boolean findAnyPredicate, boolean findAnyObject) {
         List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
         for (int i = 0; i < GlobalizedGraphTestUtil.NUMBER_OF_MOLECULES; i++) {
             Triple headTriple = headTriples.get(i);
             SubjectNode subject = findAnySubject ? ANY_SUBJECT_NODE : headTriple.getSubject();
             PredicateNode predicate = findAnyPredicate ? ANY_PREDICATE_NODE : headTriple.getPredicate();
             ObjectNode object = findAnyObject ? ANY_OBJECT_NODE : headTriple.getObject();
-            GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, getTripleComparator());
+            GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
             assertTrue(globalizedGraph.contains(subject, predicate, object));
         }
     }

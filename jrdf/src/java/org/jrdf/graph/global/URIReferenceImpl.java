@@ -59,18 +59,30 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.graph.AbstractURIReference;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+import java.net.URI;
 
-    public GlobalizedGraph getGlobalizedGraph() {
-        GlobalizedGraphMemFactoryImpl factory = new GlobalizedGraphMemFactoryImpl(comparator);
-        return factory.getNewGlobalizedGraph();
+/**
+ * Globalized implementation of a URIReferenfce.
+ * User: imrank
+ * Date: 13/09/2007
+ * Time: 14:12:53
+ */
+public class URIReferenceImpl extends AbstractURIReference {
+    private static final long serialVersionUID = -7929300110459788186L;
+
+    /**
+     * No arg constructor required for writable interface.
+     */
+    private URIReferenceImpl() {
     }
 
-    public TripleComparator getTripleComparator() {
-        return comparator;
+    public URIReferenceImpl(URI uri) {
+        super(uri);
+    }
+
+    public URIReferenceImpl(URI uri, boolean validate) {
+        super(uri, validate);
     }
 }

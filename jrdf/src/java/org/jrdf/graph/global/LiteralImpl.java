@@ -59,18 +59,35 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.graph.AbstractLiteral;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+import java.net.URI;
 
-    public GlobalizedGraph getGlobalizedGraph() {
-        GlobalizedGraphMemFactoryImpl factory = new GlobalizedGraphMemFactoryImpl(comparator);
-        return factory.getNewGlobalizedGraph();
+/**
+ * Globalized implementation of a Literal.
+ * User: imrank
+ * Date: 13/09/2007
+ * Time: 14:10:53
+ */
+public class LiteralImpl extends AbstractLiteral {
+    private static final long serialVersionUID = -4852789761273819886L;
+
+    private LiteralImpl() {
     }
 
-    public TripleComparator getTripleComparator() {
-        return comparator;
+    public LiteralImpl(String lexicalValue) {
+        super(lexicalValue);
+    }
+
+    public LiteralImpl(String lexicalValue, String language) {
+        super(lexicalValue, language);
+    }
+
+    public LiteralImpl(String lexicalValue, URI datatypeURI) {
+        super(lexicalValue, datatypeURI);
+    }
+
+    public LiteralImpl(Object obj) {
+        super(obj);
     }
 }

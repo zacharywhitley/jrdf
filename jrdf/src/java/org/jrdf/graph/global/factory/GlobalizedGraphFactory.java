@@ -57,20 +57,36 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.graph.global.factory;
 
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.sparql.SparqlConnection;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
 
-    public GlobalizedGraph getGlobalizedGraph() {
-        GlobalizedGraphMemFactoryImpl factory = new GlobalizedGraphMemFactoryImpl(comparator);
-        return factory.getNewGlobalizedGraph();
-    }
+/**
+ * Represends a factory for the creation of GloblizedGraphs.
+ * User: imrank
+ * Date: 13/09/2007
+ * Time: 11:23:42
+ */
+// TODO SHOULD LOOK AT SOMEHOW INTEGRATING THIS INTERFACE WITH JRDFFACTORY (i.e use common super interface)
+public interface GlobalizedGraphFactory {
+    /**
+     * Reload any configuration files used to create the objects.
+     */
+    void refresh();
 
-    public TripleComparator getTripleComparator() {
-        return comparator;
-    }
+    /**
+     * Create a new JRDF globalized graph depending on the current configuration.
+     *
+     * @return a new instance of a JRDF graph.
+     */
+    GlobalizedGraph getNewGlobalizedGraph();
+
+    /**
+     * Create a new connection to perform SPARQL operations depending on the current configuration.
+     *
+     * @return a new instance of a SPARQL connection.
+     */
+    SparqlConnection getNewSparqlConnection();
 }

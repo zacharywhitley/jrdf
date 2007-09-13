@@ -57,20 +57,52 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.graph.global.factory;
 
+import org.jrdf.graph.Node;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.graph.global.GlobalizedGraphImpl;
+import org.jrdf.graph.global.index.MoleculeIndex;
+import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
+import org.jrdf.graph.global.index.POSMoleculeIndexMem;
+import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
+import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
+import org.jrdf.sparql.SparqlConnection;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+import java.util.HashMap;
+import java.util.Map;
 
-    public GlobalizedGraph getGlobalizedGraph() {
-        GlobalizedGraphMemFactoryImpl factory = new GlobalizedGraphMemFactoryImpl(comparator);
-        return factory.getNewGlobalizedGraph();
+/**
+ * Factory for creating globalized graph in memory implementation.
+ *
+ * User: imrank
+ * Date: 13/09/2007
+ * Time: 11:21:19
+ */
+public class GlobalizedGraphMemFactoryImpl implements GlobalizedGraphFactory {
+    private TripleComparator comparator;
+
+    public GlobalizedGraphMemFactoryImpl(TripleComparator comparator) {
+        this.comparator = comparator;
     }
 
-    public TripleComparator getTripleComparator() {
-        return comparator;
+    public void refresh() {
+        throw new UnsupportedOperationException("Method not implemented yet");
+    }
+
+    public GlobalizedGraph getNewGlobalizedGraph() {
+        MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
+        MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
+        MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
+        MoleculeIndex[] indexes = new MoleculeIndex[]{spoIndex, posIndex, ospIndex};
+        MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl();
+        return new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);
+    }
+
+    public SparqlConnection getNewSparqlConnection() {
+        throw new UnsupportedOperationException("Method not implemented yet");
     }
 }
