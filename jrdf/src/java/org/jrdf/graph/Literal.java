@@ -73,11 +73,18 @@ import java.net.URI;
 public interface Literal extends ObjectNode, TypedNodeVisitable, Value {
 
     /**
+     * Obtain a Java native representation of the datatype.
+     *
+     * @return a Java native representation of the datatype.
+     */
+    Object getValue();
+
+    /**
      * Obtain the data type representation of this literal.
      *
      * @return the value object (data type) of this literal.
      */
-    DatatypeValue getValue();
+    DatatypeValue getDatatypeValue();
 
     /**
      * Returns the language code of the literal, or <code>""</code> if no language specified.

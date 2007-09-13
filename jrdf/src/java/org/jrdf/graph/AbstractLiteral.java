@@ -208,7 +208,11 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         return value.getLexicalForm();
     }
 
-    public DatatypeValue getValue() {
+    public Object getValue() {
+        return value.getValue();
+    }
+
+    public DatatypeValue getDatatypeValue() {
         return value;
     }
 

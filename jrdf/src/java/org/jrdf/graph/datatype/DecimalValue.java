@@ -92,6 +92,10 @@ public class DecimalValue implements DatatypeValue, XSDDecimal {
         return value.toPlainString();
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }

@@ -109,6 +109,10 @@ public class NonNegativeIntegerValue implements DatatypeValue, XSDDecimal {
         }
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }

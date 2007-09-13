@@ -113,6 +113,10 @@ public class NonPositiveIntegerValue implements DatatypeValue,  XSDDecimal {
         return newValue.toString();
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }

@@ -109,6 +109,10 @@ public class GMonthCalendarValue implements DatatypeValue {
         return convertToCorrectFormat(value.toString());
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }
