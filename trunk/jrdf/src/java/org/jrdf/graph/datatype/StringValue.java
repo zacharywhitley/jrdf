@@ -86,6 +86,10 @@ public class StringValue implements DatatypeValue {
         return value;
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }

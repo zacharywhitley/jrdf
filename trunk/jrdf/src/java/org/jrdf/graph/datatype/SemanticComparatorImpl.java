@@ -46,6 +46,6 @@ public final class SemanticComparatorImpl implements SemanticComparator {
     }
 
     private int compareDatatypes(final Literal o1, final Literal o2) {
-        return o1.getValue().equivCompareTo(o2.getValue());
+        return o1.getDatatypeValue().equivCompareTo(o2.getDatatypeValue());
     }
 }

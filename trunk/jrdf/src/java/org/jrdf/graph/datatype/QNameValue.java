@@ -96,6 +96,10 @@ public class QNameValue implements DatatypeValue {
         return builder.toString();
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }

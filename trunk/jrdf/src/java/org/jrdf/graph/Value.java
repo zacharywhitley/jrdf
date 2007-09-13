@@ -12,6 +12,13 @@ public interface Value {
     String getLexicalForm();
 
     /**
+     * Object the native Java type for this value.
+     *
+     * @return the native java type for this value.
+     */
+    Object getValue();
+
+    /**
      * Whether the literal is well formed XML.
      *
      * @return whether the literal is wll formed XML.

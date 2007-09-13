@@ -90,6 +90,10 @@ public class BooleanValue implements DatatypeValue {
         return value.toString();
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }

@@ -92,6 +92,10 @@ public class ByteValue implements DatatypeValue, XSDDecimal {
         return value.toString();
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }

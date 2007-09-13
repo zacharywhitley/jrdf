@@ -92,6 +92,10 @@ public class LongValue implements DatatypeValue, XSDDecimal {
         return value.toString();
     }
 
+    public Object getValue() {
+        return value;
+    }
+
     public boolean isWellFormedXML() {
         return false;
     }
