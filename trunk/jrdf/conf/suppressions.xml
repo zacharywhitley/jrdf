@@ -41,6 +41,7 @@
     <suppress checks="ParameterNumber" files="AnyResourceIterator.java" />
 
     <!-- Cleanup molecule implementation -->
+    <suppress checks="ClassDataAbstractionCoupling" files="GlobalizedGraphMemFactoryImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="MoleculeComparatorImpl.java" />
     <suppress checks="CyclomaticComplexity" files="MoleculeImpl.java" />
     <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl.java" />

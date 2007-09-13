@@ -59,18 +59,33 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.graph.AbstractTriple;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+public class TripleImpl extends AbstractTriple {
+    /**
+     * Allow newer compiled version of the stub to operate when changes
+     * have not occurred with the class.
+     * NOTE : update this serialVersionUID when a method or a public member is
+     * deleted.
+     */
+    private static final long serialVersionUID = -3378905394296330572L;
 
-    public GlobalizedGraph getGlobalizedGraph() {
-        GlobalizedGraphMemFactoryImpl factory = new GlobalizedGraphMemFactoryImpl(comparator);
-        return factory.getNewGlobalizedGraph();
+    private TripleImpl() {
     }
 
-    public TripleComparator getTripleComparator() {
-        return comparator;
+    /**
+     * Constructor for this Triple, only to be used by the NodeFactory.
+     *
+     * @param subject   The subject node of this triple.
+     * @param predicate The predicate node of this triple.
+     * @param object    The object node of this triple.
+     */
+    public TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        subjectNode = subject;
+        predicateNode = predicate;
+        objectNode = object;
     }
 }

@@ -57,20 +57,74 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.util.test;
 
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.graph.global.LiteralImpl;
+import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeImpl;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
-    public GlobalizedGraph getGlobalizedGraph() {
-        GlobalizedGraphMemFactoryImpl factory = new GlobalizedGraphMemFactoryImpl(comparator);
-        return factory.getNewGlobalizedGraph();
+/**
+ * User: imrank
+ * Date: 13/09/2007
+ * Time: 14:59:19
+ */
+public class GlobalizedGraphTestUtil {
+    public static final int NUMBER_OF_MOLECULES = 10;
+    private static final String BASE_URL = "http://example.org/";
+    private static final String URL1 = BASE_URL + "1";
+    private static final String URL2 = BASE_URL + "2";
+    private static final String LITERAL1 = "xyz";
+
+
+    public static List<Triple> getHeadTriples() {
+        List<Triple> headTriples = new ArrayList<Triple>();
+        for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
+            headTriples.add(createHeadTriple());
+        }
+        return headTriples;
     }
 
-    public TripleComparator getTripleComparator() {
-        return comparator;
+    public static Triple createHeadTriple() {
+        double random = Math.random();
+
+        return createTriple(URI.create(URL1 + random), URI.create(URL2), LITERAL1);
+    }
+
+    public static void addMolecules(List<Triple> headTriples, GlobalizedGraph globalizedGraph,
+                                    TripleComparator comparator) {
+        for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
+            Molecule m = createMolecule(headTriples.get(i), comparator);
+            globalizedGraph.add(m);
+        }
+    }
+
+    public static Molecule createMolecule(Triple headTriple, TripleComparator comparator) {
+        Molecule m = new MoleculeImpl(comparator);
+        URIReference uriReference = (URIReference) headTriple.getSubject();
+
+        Triple triple2 = createTriple(uriReference.getURI(), URI.create(URL1), LITERAL1);
+        m.add(headTriple);
+        m.add(triple2);
+        return m;
+    }
+
+    public static Triple createTriple(URI subjURI, URI predURI, String lit) {
+        URIReference subj = new URIReferenceImpl(subjURI);
+        URIReferenceImpl pred = new URIReferenceImpl(predURI);
+        Literal obj = new LiteralImpl(lit);
+
+        Triple triple2 = new TripleImpl(subj, pred, obj);
+        return triple2;
     }
 }

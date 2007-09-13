@@ -59,18 +59,83 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.graph.AbstractBlankNode;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+import java.util.UUID;
 
-    public GlobalizedGraph getGlobalizedGraph() {
-        GlobalizedGraphMemFactoryImpl factory = new GlobalizedGraphMemFactoryImpl(comparator);
-        return factory.getNewGlobalizedGraph();
+/**
+ * Globalized implementation of a BlankNode.
+ * User: imrank
+ * Date: 13/09/2007
+ * Time: 14:14:48
+ */
+public class BlankNodeImpl extends AbstractBlankNode {
+
+    private static final long serialVersionUID = -6860668036180223281L;
+
+    /**
+     * Globally Unique Identifier.
+     */
+    private String uid;
+
+    public BlankNodeImpl() {
+        super();
+        uid = UUID.randomUUID().toString();
     }
 
-    public TripleComparator getTripleComparator() {
-        return comparator;
+    public String getUID() {
+        return uid;
+    }
+
+
+    /**
+     * Returns a hash-code value for this BlankNode.  While the implementation
+     * is not defined, if there is a blank node identifier then it should be
+     * the hash code generated from this.  Hash code generation should follow
+     * the normal contract.
+     *
+     * @return a hash-code value for this blank node.
+     */
+    public int hashCode() {
+        return uid.hashCode();
+    }
+
+    /**
+     * While the internal structure of a BlankNode is not defined equality between
+     * two nodes should be able to be determined.
+     *
+     * @param obj the reference object with which to compare.
+     * @return true if this object is the same as the obj argument; false otherwise.
+     */
+    public boolean equals(Object obj) {
+
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
+
+        // Check for null and ensure exactly the same class - not subclass.
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        // Cast and check for equality by value. (same class)
+        try {
+            BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
+            return tmpNode.getUID().equals(uid);
+        } catch (ClassCastException cce) {
+            return false;
+        }
+    }
+
+
+    /**
+     * Returns the String value of this BlankNode as:
+     * uid#id (eg. 29fbf7ba364f1425dda058737d764603#69)
+     *
+     * @return String
+     */
+    public String toString() {
+        return uid;
     }
 }

@@ -24,6 +24,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.param.ParameterUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,9 +38,13 @@ public class MoleculeImpl implements Molecule {
     private SortedSet<Triple> triples;
     private Map<PredicateNode, SubjectNode> predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
     private Map<PredicateNode, ObjectNode> predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
+    private TripleComparator comparator;
 
-    public MoleculeImpl(TripleComparator tripleComparator) {
-        this.triples = new TreeSet<Triple>(tripleComparator);
+
+    public MoleculeImpl(TripleComparator comparator) {
+        ParameterUtil.checkNotNull(comparator);
+        this.comparator = comparator;
+        this.triples = new TreeSet<Triple>(comparator);
     }
 
     public Triple getHeadTriple() {

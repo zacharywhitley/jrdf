@@ -64,6 +64,8 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 
+// TODO This should not have a public constructor.
+
 /**
  * A trivial implementation of an RDF {@link org.jrdf.graph.Triple}.
  *

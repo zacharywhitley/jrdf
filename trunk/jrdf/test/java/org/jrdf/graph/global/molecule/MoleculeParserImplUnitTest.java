@@ -62,17 +62,17 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.util.EscapeURL;
-import org.jrdf.vocabulary.RDF;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.util.EscapeURL;
+import org.jrdf.vocabulary.RDF;
 
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
 
 public class MoleculeParserImplUnitTest extends TestCase {
-    private static JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
+    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
     private MoleculeParser moleculeParser;
     private static final String baseURI = "http://example.org";
     private final int NUMBER_OF_MOLECULES_IN_PIZZA = 1345;

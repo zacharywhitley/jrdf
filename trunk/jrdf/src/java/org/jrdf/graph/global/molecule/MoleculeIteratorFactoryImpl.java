@@ -66,6 +66,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 
 public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
+
     public ClosableIterator<Molecule> globalizedGraphIterator() {
         throw new UnsupportedOperationException("Method not implemented yet");
     }

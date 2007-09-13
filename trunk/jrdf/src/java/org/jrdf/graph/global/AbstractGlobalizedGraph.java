@@ -67,11 +67,13 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.index.MoleculeIndex;
+import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
+import org.jrdf.graph.global.index.POSMoleculeIndexMem;
+import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
+import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
-import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
@@ -141,16 +143,16 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
             moleculeIndexSPO = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         }
         if (null == moleculeIndexPOS) {
-            moleculeIndexPOS = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
+            moleculeIndexPOS = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         }
         if (null == moleculeIndexOSP) {
-            moleculeIndexOSP = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
+            moleculeIndexOSP = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
         }
         indexes = new MoleculeIndex[]{moleculeIndexSPO, moleculeIndexPOS, moleculeIndexOSP};
     }
 
     protected ClosableIterator<Molecule> findValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return null;
+        throw new UnsupportedOperationException("Not yet implemented.");
     }
 
     protected boolean containsValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
