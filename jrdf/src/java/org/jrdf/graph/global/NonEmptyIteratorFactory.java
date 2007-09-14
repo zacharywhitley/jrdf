@@ -72,7 +72,7 @@ import org.jrdf.util.ClosableIterator;
 /**
  * Reperesnts a facotry for creating non-empty iterators over
  * a globalized graph.
- *
+ * <p/>
  * User: imrank
  * Date: 13/09/2007
  * Time: 16:19:38
@@ -89,17 +89,39 @@ public class NonEmptyIteratorFactory {
         if (ANY_SUBJECT_NODE != subj) {
             // {s??} Get fixed subject, fixed or any predicate and object.
             result = fixedSubjectIterator(subj, pred, obj);
+        } else if (ANY_PREDICATE_NODE != pred) {
+            // {*p?} Get any subject, fixed predicate, fixed or any object.
+            result = anySubjectFixedPredicateIterator(subj, pred, obj);
+        } else if (ANY_OBJECT_NODE != obj) {
+            // {**o} Get any subject and predicate, fixed object.
+            result = anySubjectAndPredicateFixedObjectIterator();
+        } else {
+            // {***} Get all.
+            //result = iteratorFactory.globalizedGraphIterator();
+            System.err.println("NOT WORKING YET");
         }
-//        } else if (ANY_PREDICATE_NODE != pred) {
-//            // {*p?} Get any subject, fixed predicate, fixed or any object.
-//            result = anySubjectFixedPredicateIterator(obj);
-//        } else if (ANY_OBJECT_NODE != obj) {
-//            // {**o} Get any subject and predicate, fixed object.
-//            result = anySubjectAndPredicateFixedObjectIterator();
-//        } else {
-//            // {***} Get all.
-//            result = iteratorFactory.globalizedGraphIterator();
-//        }
+        return result;
+    }
+
+    private ClosableIterator<Molecule> anySubjectAndPredicateFixedObjectIterator() {
+        // got {**o}
+        //return iteratorFactory.newOneFixedIterator(values[2], 2);
+        return null;
+    }
+
+    private ClosableIterator<Molecule> anySubjectFixedPredicateIterator(SubjectNode subj, PredicateNode pred,
+                                                                        ObjectNode obj) {
+        ClosableIterator<Molecule> result = null;
+        // test for {*p?}
+        if (ANY_OBJECT_NODE != obj) {
+            // got {*po}
+            result = iteratorFactory.newTwoFixedIterator(pred, obj, GlobalizedGraph.PREDICATE_INDEX);
+        } else {
+            // got {*p*}.
+            //result = iteratorFactory.newOneFixedIterator(values[1], 1);
+            System.err.println("Not working yet");
+        }
+
         return result;
     }
 
@@ -113,18 +135,18 @@ public class NonEmptyIteratorFactory {
                 result = iteratorFactory.newThreeFixedIterator(subj, pred, obj);
             } else {
                 // got {sp*}
-//                result = iteratorFactory.newTwoFixedIterator(subj, pred, 0);
-                System.err.println("Nothing");
+                result = iteratorFactory.newTwoFixedIterator(subj, pred, GlobalizedGraph.SUBJECT_INDEX);
             }
-//        } else {
-//            // test for {s*?}
-//            if (ANY_OBJECT_NODE != obj) {
-//                // got s*o {}
-//                result = iteratorFactory.newTwoFixedIterator(values[2], values[0], 2);
-//            } else {
-//                // got {s**}
-//                result = iteratorFactory.newOneFixedIterator(values[0], 0);
-//            }
+        } else {
+            // test for {s*?}
+            if (ANY_OBJECT_NODE != obj) {
+                // got s*o {}
+                result = iteratorFactory.newTwoFixedIterator(obj, subj, GlobalizedGraph.OBJECT_INDEX);
+            } else {
+                // got {s**}
+                //result = iteratorFactory.newOneFixedIterator(values[0], 0);
+                System.err.println("Not working yet");
+            }
         }
 
         return result;

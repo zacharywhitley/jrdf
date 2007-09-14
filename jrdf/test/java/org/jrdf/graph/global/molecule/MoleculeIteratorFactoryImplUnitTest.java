@@ -60,6 +60,9 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.AnySubjectNode;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -124,5 +127,31 @@ public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
         assertNotNull(closableIterator.next());
         assertFalse(closableIterator.hasNext());
     }
+
+    public void testTwoFixed() throws Exception {
+        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
+        Triple firstHeadTriple = headTriples.get(0);
+        SubjectNode subject = firstHeadTriple.getSubject();
+        PredicateNode predicate = firstHeadTriple.getPredicate();
+        ObjectNode object = firstHeadTriple.getObject();
+
+        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
+        ClosableIterator<Molecule> closableIterator = globalizedGraph.find(subject, predicate, AnyObjectNode.ANY_OBJECT_NODE);
+        assertTrue(closableIterator.hasNext());
+        assertNotNull(closableIterator.next());
+        assertFalse(closableIterator.hasNext());
+
+        closableIterator = globalizedGraph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, object);
+        assertTrue(closableIterator.hasNext());
+        assertNotNull(closableIterator.next());
+        assertTrue(closableIterator.hasNext());
+
+        closableIterator = globalizedGraph.find(AnySubjectNode.ANY_SUBJECT_NODE, predicate, object);
+        assertTrue(closableIterator.hasNext());
+        assertNotNull(closableIterator.next());
+        assertTrue(closableIterator.hasNext());
+
+    }
+
 
 }

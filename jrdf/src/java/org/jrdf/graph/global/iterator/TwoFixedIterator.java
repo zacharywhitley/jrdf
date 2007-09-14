@@ -57,66 +57,70 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.iterator;
 
-import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.graph.global.index.MoleculeIndex;
+import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.util.ClosableIterator;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
 /**
- * Iterator factory for the molecules contained within a GlobalizedGraph.
+ * Globalized Graph iterator where 2 nodes are fixed.
  *
- * @author Imran Khan
- * @version $Revision: 1226 $
+ * User: imrank
+ * Date: 14/09/2007
+ * Time: 12:57:13
  */
-public interface MoleculeIteratorFactory {
+public class TwoFixedIterator implements ClosableIterator<Molecule> {
+    private final MoleculeIndex[] indexes;
+    private Map<Node, Map<Node, Molecule>> subIndex;
+    private Map<Node, Molecule> subGroup;
+    private Iterator<Molecule> moleculeIterator;
+    private Molecule currentMolecule;
+    private boolean hasNext;
 
-    /**
-     * This returns an iterator over the globalizedGraph using
-     * a molecule head triple to match.
-     * @return
-     */
-    ClosableIterator<Molecule> globalizedGraphIterator();
+    public TwoFixedIterator(Node first, Node second, MoleculeIndex [] indexes, int searchIndex) {
+        this.indexes = indexes;
 
-    /**
-     * Returns the predicates associated with the given resource.
-     * @param resource
-     * @return
-     */
-    ClosableIterator<PredicateNode> findUniquePredicates(Resource resource);
+        subIndex = indexes[searchIndex].getSubIndex(first);
 
+        if (null != subIndex) {
+            subGroup = subIndex.get(second);
+            if (null != subGroup) {
+                moleculeIterator = subGroup.values().iterator();
+                hasNext = moleculeIterator.hasNext();
+            }
+        }
+    }
 
-    /**
-     * Returns all of the unique predicates contained within the graph.
-     * @return
-     */
-    ClosableIterator<PredicateNode> getUniquePredicates();
+    public boolean close() {
+        return true;
+    }
 
+    public boolean hasNext() {
+        return hasNext;
+    }
 
-    /**
-     * Returns all resources within the graph.
-     * @return
-     */
-    ClosableIterator<Resource> getResources();
+    public Molecule next() throws NoSuchElementException {
+        currentMolecule = moleculeIterator.next();
+        hasNext = moleculeIterator.hasNext();
+        return currentMolecule;
+    }
 
-    /**
-     * Returns an iterator over all of the URIReferences contained in the graph.
-     * @return
-     */
-    ClosableIterator<URIReference> getURIReferences();
+    public void remove() {
+        moleculeIterator.remove();
 
-    /**
-     * Returns an iterator over all of the BlankNodes contained within the graph.
-     * @return
-     */
-    ClosableIterator<BlankNode> getBlankNodes();
-
-    ClosableIterator<Molecule> newThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode);
-
-    ClosableIterator<Molecule> newTwoFixedIterator(Node first, Node second, int searchIndex);
+        try {
+            indexes[GlobalizedGraph.PREDICATE_INDEX].remove(currentMolecule);
+            indexes[GlobalizedGraph.OBJECT_INDEX].remove(currentMolecule);
+        } catch (GraphException e) {
+            throw new IllegalStateException("Unable to synchronize other indexes.");
+        }
+    }
 }
