@@ -122,6 +122,11 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
         }
     }
 
+    public void remove(Molecule molecule) throws GraphException {
+        Node[] nodes = getNodes(molecule.getHeadTriple());
+        remove(nodes[0], nodes[1], nodes[2]);
+    }
+
     private Molecule removeInternal(Node first, Node second, Node third) throws GraphException {
         Map<Node, Map<Node, Molecule>> subIndex = index.get(first);
         if (null == subIndex) {

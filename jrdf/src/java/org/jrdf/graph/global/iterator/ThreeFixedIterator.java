@@ -59,7 +59,7 @@
 
 package org.jrdf.graph.global.iterator;
 
-import org.jrdf.graph.Node;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -70,7 +70,6 @@ import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.util.ClosableIterator;
 
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -93,26 +92,10 @@ public class ThreeFixedIterator implements ClosableIterator<Molecule> {
         createMolecule(new TripleImpl(subjNode, predNode, objNode));
     }
 
-
     private void createMolecule(Triple triple) {
         MoleculeIndex index = indexes[GlobalizedGraph.SUBJECT_INDEX];
-
-        if (contains(triple, index)) {
-            System.err.println("TODO");
-        }
-
+        molecule = index.getMolecule(triple);
     }
-    private boolean contains(Triple triple, MoleculeIndex index) {
-        Map<Node, Map<Node, Molecule>> subIndex = index.getSubIndex(triple.getSubject());
-        if (subIndex != null) {
-            Map<Node, Molecule> subSubIndex = subIndex.get(triple.getPredicate());
-            if (subSubIndex.containsKey(triple.getObject())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public boolean close() {
         return true;
@@ -122,7 +105,7 @@ public class ThreeFixedIterator implements ClosableIterator<Molecule> {
         return null != molecule;
     }
 
-    public Molecule next() {
+    public Molecule next() throws NoSuchElementException {
         if (null == molecule) {
             if (exception != null) {
                 throw new NoSuchElementException(exception.getMessage());
@@ -138,7 +121,16 @@ public class ThreeFixedIterator implements ClosableIterator<Molecule> {
     }
 
     public void remove() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+        if (null != removeMolecule) {
+            try {
+                indexes[0].remove(molecule);
+                removeMolecule = null;
+            } catch (GraphException ge) {
+                throw new IllegalStateException(ge.getMessage());
+            }
+        } else {
+            throw new IllegalStateException("Next not called or beyond end of data");
+        }
     }
 
 }

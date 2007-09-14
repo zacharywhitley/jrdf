@@ -111,6 +111,9 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     public AbstractGlobalizedGraph(MoleculeIndex[] newIndexes, MoleculeIteratorFactory newIteratorFactory,
         TripleComparator newTripleComparator) {
         this.indexes = newIndexes;
+        this.moleculeIndexSPO = newIndexes[0];
+        this.moleculeIndexPOS = newIndexes[1];
+        this.moleculeIndexOSP = newIndexes[2];
         this.iteratorFactory = newIteratorFactory;
         this.tripleComparator = newTripleComparator;
         init();
