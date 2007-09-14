@@ -131,6 +131,17 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
         assertEquals(GlobalizedGraphTestUtil.NUMBER_OF_MOLECULES, globalizedGraph.getNumberOfMolecules());
     }
 
+
+    public void testGetMolecule() throws Exception {
+        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
+        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, getTripleComparator());
+        assertEquals(GlobalizedGraphTestUtil.NUMBER_OF_MOLECULES, globalizedGraph.getNumberOfMolecules());
+
+        Triple triple = headTriples.get(0);
+        Molecule molecule = globalizedGraph.getMolecule(triple);
+        assertNotNull(molecule);
+    }
+
     public void testContains() throws Exception {
         // Goes through all 8 possibilities and checks contains.
         for (int i = 0 ; i < 8; i++) {

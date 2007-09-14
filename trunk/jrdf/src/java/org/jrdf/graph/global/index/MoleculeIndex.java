@@ -83,6 +83,9 @@ public interface MoleculeIndex {
      */
     void remove(Node first, Node second, Node third) throws GraphException;
 
+
+    void remove(Molecule molecule) throws GraphException;
+
     /**
      * Clear the index's contents.
      */

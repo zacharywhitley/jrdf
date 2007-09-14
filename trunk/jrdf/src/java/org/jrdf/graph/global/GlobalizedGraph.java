@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.util.ClosableIterator;
@@ -151,6 +152,15 @@ public interface GlobalizedGraph {
      */
     void remove(Molecule molecule) throws GraphException;
 
+
+    /**
+     * Retrieves the molecule with the given head triple. Returns null in case
+     * the head triple does not exist.
+     * @param headTriple
+     * @return
+     */
+    Molecule getMolecule(Triple headTriple);
+
     /**
      * Closes any open resources.
      */
@@ -188,5 +198,6 @@ public interface GlobalizedGraph {
      * @return
      */
     MoleculeIteratorFactory getMoleculeIteratorFactory();
+
 }
 

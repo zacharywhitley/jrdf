@@ -60,10 +60,18 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.GlobalizedGraphTestUtil;
+
+import java.util.List;
 
 /**
  * User: imrank
@@ -78,11 +86,6 @@ public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
         globalizedGraph = new GlobalizedGraphMemFactoryImpl(comparator).getNewGlobalizedGraph();
     }
 
-    public void testSomething() {
-        assertTrue(true);
-    }
-
-//
 //    public void testFind() throws Exception {
 //        // Goes through all 8 possibilities and checks contains.
 //        for (int i = 0 ; i < 8; i++) {
@@ -108,15 +111,18 @@ public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
 //        }
 //    }
 
-//    public void testThreeFixed() throws Exception {
-//        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-//        Triple firstHeadTriple = headTriples.get(0);
-//        SubjectNode subject = firstHeadTriple.getSubject();
-//        PredicateNode predicate = firstHeadTriple.getPredicate();
-//        ObjectNode object = firstHeadTriple.getObject();
-//
-//        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
-//        assertTrue(globalizedGraph.find(subject, predicate, object).hasNext());
-//    }
+    public void testThreeFixed() throws Exception {
+        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
+        Triple firstHeadTriple = headTriples.get(0);
+        SubjectNode subject = firstHeadTriple.getSubject();
+        PredicateNode predicate = firstHeadTriple.getPredicate();
+        ObjectNode object = firstHeadTriple.getObject();
+
+        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
+        ClosableIterator<Molecule> closableIterator = globalizedGraph.find(subject, predicate, object);
+        assertTrue(closableIterator.hasNext());
+        assertNotNull(closableIterator.next());
+        assertFalse(closableIterator.hasNext());
+    }
 
 }
