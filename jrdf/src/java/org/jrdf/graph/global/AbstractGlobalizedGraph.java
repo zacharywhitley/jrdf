@@ -80,20 +80,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
-    /**
-     * Position in the index for SPO.
-     */
-    private static final int SUBJECT_INDEX = 0;
-
-    /**
-     * Position in the index for POS.
-     */
-    private static final int PREDICATE_INDEX = 1;
-
-    /**
-     * Position in the index for OSP.
-     */
-    private static final int OBJECT_INDEX = 2;
 
     /**
      * The SPO index of the molecules.
@@ -133,7 +119,7 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     protected void init() {
         initIndexes();
         if (iteratorFactory == null) {
-            iteratorFactory = new MoleculeIteratorFactoryImpl();
+            iteratorFactory = new MoleculeIteratorFactoryImpl(indexes);
         }
     }
 
@@ -152,8 +138,11 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     }
 
     protected ClosableIterator<Molecule> findValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        throw new UnsupportedOperationException("Not yet implemented.");
+        return new NonEmptyIteratorFactory(iteratorFactory).getIterator(subject, predicate, object);
     }
+
+
+    //private ClosableIterator<Tripl>
 
     protected boolean containsValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         boolean res;

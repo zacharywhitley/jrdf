@@ -60,12 +60,21 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.index.MoleculeIndex;
+import org.jrdf.graph.global.iterator.ThreeFixedIterator;
 import org.jrdf.util.ClosableIterator;
 
 public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
+    private final MoleculeIndex[] indexes;
+
+    public MoleculeIteratorFactoryImpl(MoleculeIndex[] indexes) {
+        this.indexes = indexes;
+    }
 
     public ClosableIterator<Molecule> globalizedGraphIterator() {
         throw new UnsupportedOperationException("Method not implemented yet");
@@ -89,5 +98,10 @@ public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
 
     public ClosableIterator<BlankNode> getBlankNodes() {
         throw new UnsupportedOperationException("Method not implemented yet");
+    }
+
+    public ClosableIterator<Molecule> newThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode,
+                                                            ObjectNode objNode) {
+        return new ThreeFixedIterator(subjNode, predNode, objNode, indexes);
     }
 }

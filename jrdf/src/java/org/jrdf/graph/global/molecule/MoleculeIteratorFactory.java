@@ -60,8 +60,10 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 
@@ -113,4 +115,5 @@ public interface MoleculeIteratorFactory {
      */
     ClosableIterator<BlankNode> getBlankNodes();
 
+    ClosableIterator<Molecule> newThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode);
 }
