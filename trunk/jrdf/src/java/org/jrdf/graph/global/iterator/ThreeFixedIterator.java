@@ -57,52 +57,88 @@
  *
  */
 
-package org.jrdf.graph.global.factory;
+package org.jrdf.graph.global.iterator;
 
 import org.jrdf.graph.Node;
-import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.graph.global.GlobalizedGraphImpl;
+import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.index.MoleculeIndex;
-import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
-import org.jrdf.graph.global.index.POSMoleculeIndexMem;
-import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
 import org.jrdf.graph.global.molecule.Molecule;
-import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
-import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
-import org.jrdf.sparql.SparqlConnection;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
- * Factory for creating globalized graph in memory implementation.
- *
+ * Represents an globalized graph iterator where all three nodes are
+ * fixes (i.e. no wildcards).
  * User: imrank
  * Date: 13/09/2007
- * Time: 11:21:19
+ * Time: 17:16:34
  */
-public class GlobalizedGraphMemFactoryImpl implements GlobalizedGraphFactory {
-    private TripleComparator comparator;
+public class ThreeFixedIterator implements ClosableIterator<Molecule> {
+    private Molecule molecule;
 
-    public GlobalizedGraphMemFactoryImpl(TripleComparator comparator) {
-        this.comparator = comparator;
+    private MoleculeIndex[] indexes;
+    private Exception exception;
+    private Molecule removeMolecule;
+
+    public ThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode,
+                              MoleculeIndex[] newIndexes) {
+        indexes = newIndexes;
+        createMolecule(new TripleImpl(subjNode, predNode, objNode));
     }
 
-    public void refresh() {
+
+    private void createMolecule(Triple triple) {
+        MoleculeIndex index = indexes[GlobalizedGraph.SUBJECT_INDEX];
+
+        if (contains(triple, index)) {
+            System.err.println("TODO");
+        }
+
+    }
+    private boolean contains(Triple triple, MoleculeIndex index) {
+        Map<Node, Map<Node, Molecule>> subIndex = index.getSubIndex(triple.getSubject());
+        if (subIndex != null) {
+            Map<Node, Molecule> subSubIndex = subIndex.get(triple.getPredicate());
+            if (subSubIndex.containsKey(triple.getObject())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    public boolean close() {
+        return true;
+    }
+
+    public boolean hasNext() {
+        return null != molecule;
+    }
+
+    public Molecule next() {
+        if (null == molecule) {
+            if (exception != null) {
+                throw new NoSuchElementException(exception.getMessage());
+            } else {
+                throw new NoSuchElementException();
+            }
+        }
+
+        // return the triple, clearing it first so next will fail on a subsequent call
+        removeMolecule = molecule;
+        molecule = null;
+        return removeMolecule;
+    }
+
+    public void remove() {
         throw new UnsupportedOperationException("Method not implemented yet");
     }
 
-    public GlobalizedGraph getNewGlobalizedGraph() {
-        MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex[] indexes = new MoleculeIndex[]{spoIndex, posIndex, ospIndex};
-        MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl(indexes);
-        return new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);
-    }
-
-    public SparqlConnection getNewSparqlConnection() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
 }

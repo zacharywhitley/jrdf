@@ -71,6 +71,22 @@ import org.jrdf.util.ClosableIterator;
  * Represents a globalized graph, which maintains molecules. This allows us to better handle blank nodes
  */
 public interface GlobalizedGraph {
+    /**
+     * Position in the index for SPO.
+     */
+    int SUBJECT_INDEX = 0;
+
+    /**
+     * Position in the index for POS.
+     */
+    int PREDICATE_INDEX = 1;
+
+    /**
+     * Position in the index for OSP.
+     */
+    int OBJECT_INDEX = 2;
+
+
 
     // TODO Make sure we don't get false positives i.e. a blank node that's in a molecule being found here - should
     // only be found with the contains(molecule) call.

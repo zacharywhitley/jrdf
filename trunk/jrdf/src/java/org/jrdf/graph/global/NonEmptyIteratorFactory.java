@@ -57,52 +57,78 @@
  *
  */
 
-package org.jrdf.graph.global.factory;
+package org.jrdf.graph.global;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.graph.global.GlobalizedGraphImpl;
-import org.jrdf.graph.global.index.MoleculeIndex;
-import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
-import org.jrdf.graph.global.index.POSMoleculeIndexMem;
-import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
-import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
-import org.jrdf.sparql.SparqlConnection;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.jrdf.util.ClosableIterator;
 
 /**
- * Factory for creating globalized graph in memory implementation.
+ * Reperesnts a facotry for creating non-empty iterators over
+ * a globalized graph.
  *
  * User: imrank
  * Date: 13/09/2007
- * Time: 11:21:19
+ * Time: 16:19:38
  */
-public class GlobalizedGraphMemFactoryImpl implements GlobalizedGraphFactory {
-    private TripleComparator comparator;
+public class NonEmptyIteratorFactory {
+    private final MoleculeIteratorFactory iteratorFactory;
 
-    public GlobalizedGraphMemFactoryImpl(TripleComparator comparator) {
-        this.comparator = comparator;
+    public NonEmptyIteratorFactory(MoleculeIteratorFactory moleculeIteratorFactory) {
+        this.iteratorFactory = moleculeIteratorFactory;
     }
 
-    public void refresh() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+    public ClosableIterator<Molecule> getIterator(SubjectNode subj, PredicateNode pred, ObjectNode obj) {
+        ClosableIterator<Molecule> result = null;
+        if (ANY_SUBJECT_NODE != subj) {
+            // {s??} Get fixed subject, fixed or any predicate and object.
+            result = fixedSubjectIterator(subj, pred, obj);
+        }
+//        } else if (ANY_PREDICATE_NODE != pred) {
+//            // {*p?} Get any subject, fixed predicate, fixed or any object.
+//            result = anySubjectFixedPredicateIterator(obj);
+//        } else if (ANY_OBJECT_NODE != obj) {
+//            // {**o} Get any subject and predicate, fixed object.
+//            result = anySubjectAndPredicateFixedObjectIterator();
+//        } else {
+//            // {***} Get all.
+//            result = iteratorFactory.globalizedGraphIterator();
+//        }
+        return result;
     }
 
-    public GlobalizedGraph getNewGlobalizedGraph() {
-        MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex[] indexes = new MoleculeIndex[]{spoIndex, posIndex, ospIndex};
-        MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl(indexes);
-        return new GlobalizedGraphImpl(indexes, iteratorFactory, comparator);
+    private ClosableIterator<Molecule> fixedSubjectIterator(SubjectNode subj, PredicateNode pred, ObjectNode obj) {
+        ClosableIterator<Molecule> result = null;
+        // test for {s??}
+        if (ANY_PREDICATE_NODE != pred) {
+            // test for {sp?}
+            if (ANY_OBJECT_NODE != obj) {
+                // got {spo}
+                result = iteratorFactory.newThreeFixedIterator(subj, pred, obj);
+            } else {
+                // got {sp*}
+//                result = iteratorFactory.newTwoFixedIterator(subj, pred, 0);
+                System.err.println("Nothing");
+            }
+//        } else {
+//            // test for {s*?}
+//            if (ANY_OBJECT_NODE != obj) {
+//                // got s*o {}
+//                result = iteratorFactory.newTwoFixedIterator(values[2], values[0], 2);
+//            } else {
+//                // got {s**}
+//                result = iteratorFactory.newOneFixedIterator(values[0], 0);
+//            }
+        }
+
+        return result;
     }
 
-    public SparqlConnection getNewSparqlConnection() {
-        throw new UnsupportedOperationException("Method not implemented yet");
-    }
+
 }

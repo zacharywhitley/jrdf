@@ -61,15 +61,10 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.graph.global.GlobalizedGraphImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.index.MoleculeIndex;
-import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
-import org.jrdf.graph.global.index.POSMoleculeIndexMem;
-import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
+import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.StatementHandlerException;
@@ -78,8 +73,6 @@ import org.jrdf.parser.rdfxml.RdfXmlParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -130,11 +123,6 @@ public class MoleculeParserImpl implements MoleculeParser {
      */
     protected GlobalizedGraph getNewGlobalizedGraph() {
         TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-        MoleculeIndex spoIndex = new SPOMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex posIndex = new POSMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex ospIndex = new OSPMoleculeIndexMem(new HashMap<Node, Map<Node, Map<Node, Molecule>>>());
-        MoleculeIndex[] indexes = new MoleculeIndex[] {spoIndex, posIndex,  ospIndex};
-        MoleculeIteratorFactory iteratorFactory = new MoleculeIteratorFactoryImpl();
-        return new GlobalizedGraphImpl(indexes, iteratorFactory, tripleComparator);
+        return new GlobalizedGraphMemFactoryImpl(tripleComparator).getNewGlobalizedGraph();
     }
 }

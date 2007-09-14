@@ -160,6 +160,20 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
         return index.containsKey(node);
     }
 
+    public Molecule getMolecule(Triple headTriple) {
+        Node[] nodes = getNodes(headTriple);
+
+        Molecule molecule = null;
+        Map<Node, Map<Node, Molecule>> subIndex = getSubIndex(nodes[0]);
+        if (subIndex != null) {
+            Map<Node, Molecule> subSubIndex = subIndex.get(nodes[1]);
+            if (subSubIndex.containsKey(nodes[2])) {
+                molecule = subSubIndex.get(nodes[2]);
+            }
+        }
+        return molecule;
+    }
+
     public long getNumberOfTriples() {
         long size = 0;
         Collection<Map<Node, Map<Node, Molecule>>> spoMap = index.values();

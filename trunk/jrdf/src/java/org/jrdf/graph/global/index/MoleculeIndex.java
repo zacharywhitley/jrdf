@@ -61,6 +61,7 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.Molecule;
 
 import java.util.Map;
@@ -105,4 +106,6 @@ public interface MoleculeIndex {
     Map<Node, Map<Node, Molecule>> getSubIndex(Node first);
 
     boolean removeSubIndex(Node first);
+
+    Molecule getMolecule(Triple headTriple);
 }
