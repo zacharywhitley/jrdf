@@ -77,9 +77,44 @@ public interface TripleFactory {
      * @param predicate The predicate of the statement.
      * @param object    The object of the statement.
      * @return the newly created triple object.
-     * @throws TripleFactoryException If the resource failed to be created.
      */
-    Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws TripleFactoryException;
+    Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+
+    /**
+     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
+     *
+     * @param subject   The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object    The object of the statement.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     */
+    Triple createTriple(URI subject, URI predicate, URI object) throws GraphElementFactoryException;
+
+    /**
+     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
+     *
+     * @param subject   The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object    The object of the statement.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     */
+    Triple createTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException;
+
+    /**
+     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
+     *
+     * @param subject   The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object    The lexical value of the literal.
+     * @param language The language of the object.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     */
+    Triple createTriple(URI subject, URI predicate, String object, String language) throws GraphElementFactoryException;
+
+    Triple createTriple(URI subject, URI predicate, String object, URI dataType) throws GraphElementFactoryException;
 
     /**
      * Reifies a triple.  A triple made up of the first three nodes is added to graph and the reificationNode is used
@@ -105,7 +140,7 @@ public interface TripleFactory {
      * @throws AlreadyReifiedException If there was already a triple URI for
      *                                 the given triple.
      */
-    void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException;
+    void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException, GraphException;
 
     /**
      * Inserts a alternative using the given subject.  The subject is also the object of a proceeding statement that
@@ -115,7 +150,7 @@ public interface TripleFactory {
      * @param alternative the alternative to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException;
+    void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException, GraphException;
 
     /**
      * Inserts a bag using the given subject.  The subject is also
@@ -146,15 +181,4 @@ public interface TripleFactory {
      * @throws TripleFactoryException If the resources were failed to be added.
      */
     void addCollection(SubjectNode firstNode, Collection collection) throws TripleFactoryException;
-
-    Triple createTriple(URI subject, URI predicate, URI object)
-        throws TripleFactoryException, GraphElementFactoryException;
-
-    Triple createTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException;
-
-    Triple createTriple(URI subject, URI predicate, String object, String language)
-        throws GraphElementFactoryException;
-
-    Triple createTriple(URI subject, URI predicate, String object, URI dataType)
-        throws GraphElementFactoryException;
 }

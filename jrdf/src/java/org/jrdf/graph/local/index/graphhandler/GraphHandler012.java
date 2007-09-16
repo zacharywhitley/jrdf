@@ -61,7 +61,6 @@ package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 
@@ -91,7 +90,7 @@ public class GraphHandler012 extends AbstractGraphHandler {
         return index012.iterator();
     }
 
-    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
+    public Node[] createTriple(Long[] nodes) {
         return new Node[]{nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
                 nodePool.getNodeById(nodes[2])};
     }

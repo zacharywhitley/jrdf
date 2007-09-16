@@ -69,7 +69,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 
 import java.net.URI;
@@ -119,18 +118,12 @@ public final class NodeTestUtil {
 
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     public static Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        try {
-            return getTripleFactory().createTriple(subject, predicate, object);
-        } catch (TripleFactoryException e) {
-            throw new RuntimeException(e);
-        }
+        return getTripleFactory().createTriple(subject, predicate, object);
     }
 
     public static Triple createTriple(URI subject, URI predicate, URI object) {
         try {
             return getTripleFactory().createTriple(subject, predicate, object);
-        } catch (TripleFactoryException e) {
-            throw new RuntimeException(e);
         } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }

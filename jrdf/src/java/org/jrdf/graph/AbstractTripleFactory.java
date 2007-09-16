@@ -85,16 +85,11 @@ public abstract class AbstractTripleFactory implements TripleFactory {
      */
     protected GraphElementFactory elementFactory;
 
-    /**
-     * Reifies a triple.  A triple made up of the first three nodes is added to
-     * graph and the reificationNode is used to reify the triple.
-     *
-     * @param subjectNode     the subject of the triple.
-     * @param predicateNode   the predicate of the triple.
-     * @param objectNode      the object of the triple.
-     * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException If the resource failed to be created.
-     */
+    protected AbstractTripleFactory(Graph newGraph, GraphElementFactory newElementFactory) {
+        this.graph = newGraph;
+        this.elementFactory = newElementFactory;
+    }
+
     public void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
             SubjectNode reificationNode) throws TripleFactoryException {
 
@@ -106,14 +101,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    /**
-     * Creates a reification of a triple.  The triple added to the graph and the
-     * reificationNode is used to reify the triple.
-     *
-     * @param triple          the triple to be reified.
-     * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException If the resource failed to be created.
-     */
     public void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException {
         try {
             reallyReifyTriple(triple.getSubject(), triple.getPredicate(), triple.getObject(), reificationNode);
@@ -122,17 +109,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    /**
-     * Creates a reification of a triple.
-     *
-     * @param subjectNode     the subject of the triple.
-     * @param predicateNode   the predicate of the triple.
-     * @param objectNode      the object of the triple.
-     * @param reificationNode
-     * @return a node denoting the reified triple.
-     * @throws GraphElementFactoryException If the resource failed to be created.
-     * @throws AlreadyReifiedException      If there was already a triple URI for  the given triple.
-     */
     private SubjectNode reallyReifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
             SubjectNode reificationNode) throws GraphElementFactoryException, AlreadyReifiedException {
 
@@ -204,15 +180,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         }
     }
 
-    /**
-     * Creates a container.
-     *
-     * @param subjectNode the subject of the triple.
-     * @param container   the container to add.
-     * @throws TripleFactoryException  If the resource failed to be created.
-     * @throws AlreadyReifiedException If there was already a triple URI for
-     *                                 the given triple.
-     */
     private void addContainer(SubjectNode subjectNode, Container container) throws TripleFactoryException {
 
         // assert that the statement is not already reified
@@ -253,25 +220,22 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException, GraphElementFactoryException {
         // Iterate through all elements in the Collection.
         Iterator<ObjectNode> iter = collection.iterator();
+        SubjectNode currentSubjectNode = subject;
         while (iter.hasNext()) {
 
             // Get the next object and create the new FIRST statement.
             ObjectNode object = iter.next();
-            graph.add(subject, rdfFirst, object);
+            graph.add(currentSubjectNode, rdfFirst, object);
 
             // Check if there are any more elements in the Collection.
             if (iter.hasNext()) {
-
-                // Create a new blank node, link the existing subject to it using
-                // the REST predicate.
+                // Create a new blank node, link the existing subject to it using the REST predicate.
                 ObjectNode newSubject = elementFactory.createBlankNode();
                 graph.add(subject, rdfRest, newSubject);
-                subject = (SubjectNode) newSubject;
+                currentSubjectNode = (SubjectNode) newSubject;
             } else {
-
-                // If we are at the end of the list link the existing subject to NIL
-                // using the REST predicate.
-                graph.add(subject, rdfRest, rdfNil);
+                // If we are at the end of the list link the existing subject to NIL using the REST predicate.
+                graph.add(currentSubjectNode, rdfRest, rdfNil);
             }
         }
     }

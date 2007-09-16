@@ -65,13 +65,12 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.local.mem.TripleImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.mem.TripleImpl;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -180,12 +179,8 @@ public final class TwoFixedIterator implements ClosableMemIterator<Triple> {
         Long third = thirdIndexIterator.next();
         hasNext = thirdIndexIterator.hasNext();
         currentNodes = new Long[]{first, second, third};
-        try {
-            Node[] triple = handler.createTriple(currentNodes);
-            return new TripleImpl((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
-        } catch (TripleFactoryException e) {
-            throw new NoSuchElementException("Could not create triple from store: " + e.getMessage());
-        }
+        Node[] triple = handler.createTriple(currentNodes);
+        return new TripleImpl((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
     }
 
     public void remove() {
