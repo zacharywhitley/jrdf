@@ -61,7 +61,6 @@ package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 
@@ -92,7 +91,7 @@ public class GraphHandler201 extends AbstractGraphHandler implements GraphHandle
     }
 
     // TODO AN Not tested - can change first and last values and tests still pass.
-    public Node[] createTriple(Long[] nodes) throws TripleFactoryException {
+    public Node[] createTriple(Long[] nodes) {
         return new Node[]{nodePool.getNodeById(nodes[1]), nodePool.getNodeById(nodes[2]),
                 nodePool.getNodeById(nodes[0])};
     }

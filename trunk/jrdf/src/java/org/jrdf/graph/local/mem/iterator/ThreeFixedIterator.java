@@ -128,12 +128,8 @@ public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
 
     private void createTriple(Long[] longNodes, GraphHandler handler) {
         if (contains(longNodes)) {
-            try {
-                Node[] nodes = handler.createTriple(longNodes);
-                triple = new TripleImpl((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
-            } catch (TripleFactoryException e) {
-                exception = e;
-            }
+            Node[] nodes = handler.createTriple(longNodes);
+            triple = new TripleImpl((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
         }
     }
 
