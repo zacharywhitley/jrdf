@@ -59,43 +59,19 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.local.index.AbstractIndex;
 
 import java.util.Map;
 import java.util.Set;
 
-/**
- * The generic interface for storing global (fully grounded) triples.
- */
-public interface GlobalIndex<T> {
+public class GlobalIndex<Node> extends AbstractIndex<Node> {
+    private static final long serialVersionUID = -1640256337194767517L;
 
-    boolean contains(T node);
+    public GlobalIndex() {
+        super();
+    }
 
-    /**
-     * Adds the given nodes and set to the index.
-     */
-    void add(T first, T second, T third);
-
-    /**
-     * Given the specified nodes, this will located and remove it.
-     *
-     * @throws GraphException
-     */
-    void remove(T first, T second, T third) throws GraphException;
-
-    Map<T, Set<T>> getSubIndex(T first);
-
-    boolean removeSubIndex(T first);
-
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
-
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long getSize();
+    public GlobalIndex(Map<Node, Map<Node, Set<Node>>> newIndex) {
+        super(newIndex);
+    }
 }
