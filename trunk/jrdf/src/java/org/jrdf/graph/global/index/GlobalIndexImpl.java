@@ -61,41 +61,94 @@ package org.jrdf.graph.global.index;
 
 import org.jrdf.graph.GraphException;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * The generic interface for storing global (fully grounded) triples.
- */
-public interface GlobalIndex<T> {
+public class GlobalIndexImpl<T> implements GlobalIndex<T> {
+    private Map<T, Map<T, Set<T>>> index;
 
-    boolean contains(T node);
+    public GlobalIndexImpl() {
+        index = new HashMap<T, Map<T, Set<T>>>();
+    }
 
-    /**
-     * Adds the given nodes and set to the index.
-     */
-    void add(T first, T second, T third);
+    public void add(T first, T second, T third) {
+        // find the sub index
+        Map<T, Set<T>> subIndex = index.get(first);
+        // check that the subindex exists
+        if (null == subIndex) {
+            // no, so create it and add it to the index
+            subIndex = new HashMap<T, Set<T>>();
+            index.put(first, subIndex);
+        }
 
-    /**
-     * Given the specified nodes, this will located and remove it.
-     *
-     * @throws GraphException
-     */
-    void remove(T first, T second, T third) throws GraphException;
+        // find the final group
+        Set<T> group = subIndex.get(second);
+        // check that the group exists
+        if (null == group) {
+            // no, so create it and add it to the subindex
+            group = new HashSet<T>();
+            subIndex.put(second, group);
+        }
 
-    Map<T, Set<T>> getSubIndex(T first);
+        // Add the final node to the group
+        group.add(third);
+    }
 
-    boolean removeSubIndex(T first);
+    public boolean contains(T node) {
+        return index.containsKey(node);
+    }
 
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
+    public void remove(T first, T second, T third) throws GraphException {
+        // find the sub index
+        Map<T, Set<T>> subIndex = index.get(first);
+        // check that the subindex exists
+        if (null == subIndex) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        // find the final group
+        Set<T> group = subIndex.get(second);
+        // check that the group exists
+        if (null == group) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        // remove from the group, report error if it didn't exist
+        if (!group.remove(third)) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        // clean up the graph
+        if (group.isEmpty()) {
+            subIndex.remove(second);
+            if (subIndex.isEmpty()) {
+                index.remove(first);
+            }
+        }
+    }
 
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long getSize();
+    public Map<T, Set<T>> getSubIndex(T first) {
+        return index.get(first);
+    }
+
+    public boolean removeSubIndex(T first) {
+        index.remove(first);
+        return index.containsKey(first);
+    }
+
+    public void clear() {
+        index.clear();
+    }
+
+    public long getSize() {
+        long size = 0;
+        // go over the index map
+        for (Map<T, Set<T>> map : index.values()) {
+            // go over the sub indexes
+            for (Set<T> s : map.values()) {
+                // accumulate the sizes of the groups
+                size += s.size();
+            }
+        }
+        return size;
+    }
 }

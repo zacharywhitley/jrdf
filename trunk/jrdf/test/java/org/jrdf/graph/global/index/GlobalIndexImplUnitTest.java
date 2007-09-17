@@ -59,43 +59,60 @@
 
 package org.jrdf.graph.global.index;
 
-import org.jrdf.graph.GraphException;
+import junit.framework.TestCase;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.URIReferenceImpl;
 
-import java.util.Map;
-import java.util.Set;
+import java.net.URI;
 
-/**
- * The generic interface for storing global (fully grounded) triples.
- */
-public interface GlobalIndex<T> {
+public class GlobalIndexImplUnitTest extends TestCase {
+    private GlobalIndex<Node> index;
+    private URIReference ref1;
+    private URIReference ref2;
+    private URIReference ref3;
+    private URIReference ref4;
+    private URIReference ref5;
+    private URIReference ref6;
 
-    boolean contains(T node);
+    public void setUp() {
+        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
+        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
+        ref3 = new URIReferenceImpl(URI.create("urn:baz"));
+        ref4 = new URIReferenceImpl(URI.create("urn:foo2"));
+        ref5 = new URIReferenceImpl(URI.create("urn:bar2"));
+        ref6 = new URIReferenceImpl(URI.create("urn:baz2"));
+        index = new GlobalIndexImpl<Node>();
+    }
 
-    /**
-     * Adds the given nodes and set to the index.
-     */
-    void add(T first, T second, T third);
+    public void testAddition() throws Exception {
+        index.add(ref1, ref2, ref3);
+        checkNumberOfTriples(1, index.getSize());
+        index.add(ref1, ref2, ref3);
+        checkNumberOfTriples(1, index.getSize());
+        index.add(ref4, ref5, ref6);
+        checkNumberOfTriples(2, index.getSize());
+    }
 
-    /**
-     * Given the specified nodes, this will located and remove it.
-     *
-     * @throws GraphException
-     */
-    void remove(T first, T second, T third) throws GraphException;
+    public void testRemove() throws Exception {
+        index.add(ref1, ref2, ref3);
+        index.add(ref3, ref4, ref3);
+        checkNumberOfTriples(2, index.getSize());
+        index.remove(ref1, ref2, ref3);
+        checkNumberOfTriples(1, index.getSize());
+        index.remove(ref3, ref4, ref3);
+        checkNumberOfTriples(0, index.getSize());
+    }
 
-    Map<T, Set<T>> getSubIndex(T first);
+    public void testClear() throws Exception {
+        index.add(ref1, ref2, ref3);
+        index.add(ref3, ref4, ref3);
+        index.clear();
+        checkNumberOfTriples(0, index.getSize());
+    }
 
-    boolean removeSubIndex(T first);
-
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
-
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long getSize();
+    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
+        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize, expectedNumber,
+            actualSize);
+    }
 }
