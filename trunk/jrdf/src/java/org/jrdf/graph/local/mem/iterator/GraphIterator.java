@@ -60,12 +60,7 @@
 package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 
 import java.util.Iterator;
@@ -191,9 +186,7 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
         Long first = firstEntry.getKey();
 
         // get back the nodes for these IDs and uild the triple
-        currentNodes = new Long[]{first, second, third};
-        Node[] triple = handler.createTriple(currentNodes);
-        return new TripleImpl((SubjectNode) triple[0], (PredicateNode) triple[1], (ObjectNode) triple[2]);
+        return handler.createTriple(first, second, third);
     }
 
 

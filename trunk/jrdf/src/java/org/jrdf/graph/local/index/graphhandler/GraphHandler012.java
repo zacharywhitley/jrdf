@@ -60,7 +60,11 @@
 package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 
@@ -98,9 +102,11 @@ public class GraphHandler012 extends AbstractGraphHandler {
         return index012.iterator();
     }
 
-    public Node[] createTriple(Long[] nodes) {
-        return new Node[]{nodePool.getNodeById(nodes[0]), nodePool.getNodeById(nodes[1]),
-                nodePool.getNodeById(nodes[2])};
+    public Triple createTriple(Long... nodes) {
+        SubjectNode subject = (SubjectNode) nodePool.getNodeById(nodes[0]);
+        PredicateNode predicate = (PredicateNode) nodePool.getNodeById(nodes[1]);
+        ObjectNode object = (ObjectNode) nodePool.getNodeById(nodes[2]);
+        return new TripleImpl(subject, predicate, object);
     }
 
     public void remove(Long[] currentNodes) throws GraphException {

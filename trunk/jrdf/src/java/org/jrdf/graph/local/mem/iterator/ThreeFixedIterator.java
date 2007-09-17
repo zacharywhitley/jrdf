@@ -60,13 +60,8 @@
 package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactoryException;
-import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 
@@ -120,13 +115,12 @@ public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
         nodes = newNodes;
         longIndex = newLongIndex;
         handler = newHandler;
-        createTriple(nodes, newHandler);
+        createTriple();
     }
 
-    private void createTriple(Long[] longNodes, GraphHandler handler) {
-        if (contains(longNodes)) {
-            Node[] nodes = handler.createTriple(longNodes);
-            triple = new TripleImpl((SubjectNode) nodes[0], (PredicateNode) nodes[1], (ObjectNode) nodes[2]);
+    private void createTriple() {
+        if (contains(nodes)) {
+            triple = handler.createTriple(nodes);
         }
     }
 
