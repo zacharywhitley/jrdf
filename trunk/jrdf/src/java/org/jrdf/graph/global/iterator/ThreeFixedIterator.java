@@ -123,7 +123,9 @@ public class ThreeFixedIterator implements ClosableIterator<Molecule> {
     public void remove() {
         if (null != removeMolecule) {
             try {
-                indexes[0].remove(molecule);
+                indexes[GlobalizedGraph.SUBJECT_INDEX].remove(molecule);
+                indexes[GlobalizedGraph.PREDICATE_INDEX].remove(molecule);
+                indexes[GlobalizedGraph.OBJECT_INDEX].remove(molecule);
                 removeMolecule = null;
             } catch (GraphException ge) {
                 throw new IllegalStateException(ge.getMessage());

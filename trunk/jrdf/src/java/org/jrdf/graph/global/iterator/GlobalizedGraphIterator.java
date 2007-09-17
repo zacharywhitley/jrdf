@@ -71,57 +71,131 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
- * Globalized Graph iterator where 2 nodes are fixed.
- *
+ * Iterator for iterating over all of the molecules in a globalized graph.
  * User: imrank
  * Date: 14/09/2007
- * Time: 12:57:13
+ * Time: 16:10:36
  */
-public class TwoFixedIterator implements ClosableIterator<Molecule> {
+public class GlobalizedGraphIterator implements ClosableIterator<Molecule> {
     private final MoleculeIndex[] indexes;
-    private Map<Node, Map<Node, Molecule>> subIndex;
-    private Map<Node, Molecule> subGroup;
-    private Iterator<Molecule> moleculeIterator;
+    private final MoleculeIndex index;
+    private Iterator<Map.Entry<Node, Map<Node, Map<Node, Molecule>>>> iterator;
+    private Map.Entry<Node, Map<Node, Map<Node, Molecule>>> firstEntry;
+    private Iterator<Map.Entry<Node, Map<Node, Molecule>>> subIterator;
+    private Map.Entry<Node, Map<Node, Molecule>> secondEntry;
+    private Iterator<Molecule> itemIterator;
+    private boolean nextCalled;
     private Molecule currentMolecule;
-    private boolean hasNext;
+    private Molecule tempMolecule;
 
-    public TwoFixedIterator(Node first, Node second, MoleculeIndex [] indexes, int searchIndex) {
+    public GlobalizedGraphIterator(MoleculeIndex[] indexes) {
         this.indexes = indexes;
+        index = indexes[GlobalizedGraph.SUBJECT_INDEX];
+        iterator = index.keySetIterator();
+    }
 
-        subIndex = indexes[searchIndex].getSubIndex(first);
+    public boolean close() {
+        throw new UnsupportedOperationException("Method not implemented yet");
+    }
 
-        if (null != subIndex) {
-            subGroup = subIndex.get(second);
-            if (null != subGroup) {
-                moleculeIterator = subGroup.values().iterator();
-                hasNext = moleculeIterator.hasNext();
+    public boolean hasNext() {
+        return updatePosition();
+    }
+
+    public Molecule next() {
+        if (null == iterator) {
+            throw new NoSuchElementException();
+        }
+
+        nextCalled = true;
+        return currentMolecule;
+    }
+
+    /**
+     * Return false in case position can no longer be updated.
+     *
+     * @return
+     */
+    private boolean updatePosition() {
+        if (null == itemIterator || !itemIterator.hasNext()) {
+            if (resetSubIterator()) {
+                return false;
+            }
+            //call update again when current molecule matches the next molecule
+            if (resetCurrentMolecule()) {
+                return updatePosition();
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns false in case where the next molecule in the iterator
+     * is not equal to the currentMolecule
+     * @return
+     */
+    private boolean resetCurrentMolecule() {
+        secondEntry = subIterator.next();
+        itemIterator = secondEntry.getValue().values().iterator();
+        assert itemIterator.hasNext();
+
+        tempMolecule = currentMolecule;
+        currentMolecule = itemIterator.next();
+
+        if (currentMolecule.equals(tempMolecule)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns true in case there are no more values left to iterate over.
+     *
+     * @return
+     */
+    private boolean resetSubIterator() {
+        if (null == subIterator || !subIterator.hasNext()) {
+            if (!iterator.hasNext()) {
+                iterator = null;
+                return true;
+            }
+            firstEntry = iterator.next();
+            subIterator = firstEntry.getValue().entrySet().iterator();
+            assert subIterator.hasNext();
+        }
+        return false;
+    }
+
+    public void remove() {
+        if (nextCalled && null != itemIterator) {
+            itemIterator.remove();
+
+            cleanIndex();
+
+            removeFromNonCurrentIndex();
+        } else {
+            throw new IllegalStateException("Next not called or beyond end of data");
+        }
+    }
+
+    private void cleanIndex() {
+        Map<Node, Molecule> subGroup = secondEntry.getValue();
+        Map<Node, Map<Node, Molecule>> subIndex = firstEntry.getValue();
+        if (subGroup.isEmpty()) {
+            subIterator.remove();
+            if (subIndex.isEmpty()) {
+                iterator.remove();
             }
         }
     }
 
-    public boolean close() {
-        return true;
-    }
-
-    public boolean hasNext() {
-        return hasNext;
-    }
-
-    public Molecule next() throws NoSuchElementException {
-        currentMolecule = moleculeIterator.next();
-        hasNext = moleculeIterator.hasNext();
-        return currentMolecule;
-    }
-
-    public void remove() {
-        moleculeIterator.remove();
-
+    private void removeFromNonCurrentIndex() {
         try {
-            indexes[GlobalizedGraph.SUBJECT_INDEX].remove(currentMolecule);
             indexes[GlobalizedGraph.PREDICATE_INDEX].remove(currentMolecule);
             indexes[GlobalizedGraph.OBJECT_INDEX].remove(currentMolecule);
         } catch (GraphException e) {
-            throw new IllegalStateException("Unable to synchronize other indexes.");
+            throw new IllegalStateException("Unable to remove from non-current indices");
         }
     }
 }

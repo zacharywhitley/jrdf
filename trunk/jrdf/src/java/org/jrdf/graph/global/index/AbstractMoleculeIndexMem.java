@@ -217,6 +217,11 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
         return index.containsKey(first);
     }
 
+
+    public Iterator<Map.Entry<Node, Map<Node, Map<Node, Molecule>>>> keySetIterator() {
+        return index.entrySet().iterator();
+    }
+
     public String toString() {
         return index.toString();
     }
