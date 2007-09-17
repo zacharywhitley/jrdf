@@ -60,9 +60,6 @@
 package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 
 import java.util.NoSuchElementException;
 
@@ -107,9 +104,5 @@ public final class EmptyClosableIterator implements ClosableMemIterator<Triple> 
 
     public boolean close() {
         return true;
-    }
-
-    public boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120) {
-        return false;
     }
 }
