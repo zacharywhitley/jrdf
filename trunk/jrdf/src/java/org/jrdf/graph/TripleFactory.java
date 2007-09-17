@@ -71,76 +71,84 @@ import java.net.URI;
 public interface TripleFactory {
 
     /**
-     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
+     * Creates and adds new triple to graph.
      *
-     * @param subject   The subject of the statement.
+     * @param subject The subject of the statement.
      * @param predicate The predicate of the statement.
-     * @param object    The object of the statement.
+     * @param object The object of the statement.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     */
+    Triple addTriple(URI subject, URI predicate, URI object) throws GraphElementFactoryException;
+
+    /**
+     * Creates and adds new triple to graph.
+     *
+     * @param subject The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object The object of the statement.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     */
+    Triple addTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException;
+
+    /**
+     * Creates and adds new triple to graph.
+     *
+     * @param subject The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object The lexical value of the literal.
+     * @param language The language of the object.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     */
+    Triple addTriple(URI subject, URI predicate, String object, String language) throws GraphElementFactoryException;
+
+    /**
+     * Creates and adds new triple to graph.
+     *
+     * @param subject The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object The lexical value of the literal.
+     * @param dataType The datatype of the object.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     */
+    Triple addTriple(URI subject, URI predicate, String object, URI dataType) throws GraphElementFactoryException;
+
+    /**
+     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add or
+     * #addTriple.
+     *
+     * @param subject The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object The object of the statement.
      * @return the newly created triple object.
      */
     Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
     /**
-     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
-     *
-     * @param subject   The subject of the statement.
-     * @param predicate The predicate of the statement.
-     * @param object    The object of the statement.
-     * @return the newly created triple object.
-     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
-     */
-    Triple createTriple(URI subject, URI predicate, URI object) throws GraphElementFactoryException;
-
-    /**
-     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
-     *
-     * @param subject   The subject of the statement.
-     * @param predicate The predicate of the statement.
-     * @param object    The object of the statement.
-     * @return the newly created triple object.
-     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
-     */
-    Triple createTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException;
-
-    /**
-     * Creates a new triple to be used in the graph.  Does not add it to an associated graph.  Use @see Graph#add.
-     *
-     * @param subject   The subject of the statement.
-     * @param predicate The predicate of the statement.
-     * @param object    The lexical value of the literal.
-     * @param language The language of the object.
-     * @return the newly created triple object.
-     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
-     */
-    Triple createTriple(URI subject, URI predicate, String object, String language) throws GraphElementFactoryException;
-
-    Triple createTriple(URI subject, URI predicate, String object, URI dataType) throws GraphElementFactoryException;
-
-    /**
      * Reifies a triple.  A triple made up of the first three nodes is added to graph and the reificationNode is used
      * to reify the triple.
      *
-     * @param subjectNode     the subject of the triple.
-     * @param predicateNode   the predicate of the triple.
-     * @param objectNode      the object of the triple.
+     * @param subjectNode the subject of the triple.
+     * @param predicateNode the predicate of the triple.
+     * @param objectNode the object of the triple.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException  If the resource failed to be added.
-     * @throws AlreadyReifiedException If there was already a triple URI for
-     *                                 the given triple.
+     * @throws TripleFactoryException If the resource failed to be added.
+     * @throws AlreadyReifiedException If there was already a triple URI for the given triple.
      */
     void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-                     SubjectNode reificationNode) throws TripleFactoryException;
+        SubjectNode reificationNode) throws TripleFactoryException;
 
     /**
      * Reifies a triple.  The triple added to the graph and the reificationNode is used to reify the triple.
      *
-     * @param triple          the triple to be reified.
+     * @param triple the triple to be reified.
      * @param reificationNode a node denoting the reified triple.
-     * @throws TripleFactoryException  If the resource failed to be added.
-     * @throws AlreadyReifiedException If there was already a triple URI for
-     *                                 the given triple.
+     * @throws TripleFactoryException If the resource failed to be added, for example already reified.
      */
-    void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException, GraphException;
+    void reifyTriple(Triple triple, SubjectNode reificationNode) throws TripleFactoryException;
 
     /**
      * Inserts a alternative using the given subject.  The subject is also the object of a proceeding statement that
@@ -150,7 +158,7 @@ public interface TripleFactory {
      * @param alternative the alternative to add.
      * @throws TripleFactoryException If the resources were failed to be added.
      */
-    void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException, GraphException;
+    void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException;
 
     /**
      * Inserts a bag using the given subject.  The subject is also

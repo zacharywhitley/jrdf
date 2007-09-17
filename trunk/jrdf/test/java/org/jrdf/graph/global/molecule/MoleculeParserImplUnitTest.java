@@ -102,7 +102,7 @@ public class MoleculeParserImplUnitTest extends TestCase {
 
 
         Triple triple = jrdfGraph.getTripleFactory()
-            .createTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
+            .addTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
                 RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
 
         boolean result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());

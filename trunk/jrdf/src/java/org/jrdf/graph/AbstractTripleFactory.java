@@ -60,6 +60,7 @@
 package org.jrdf.graph;
 
 import org.jrdf.vocabulary.RDF;
+import org.jrdf.graph.global.TripleImpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -88,6 +89,56 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     protected AbstractTripleFactory(Graph newGraph, GraphElementFactory newElementFactory) {
         this.graph = newGraph;
         this.elementFactory = newElementFactory;
+    }
+
+    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return new TripleImpl(subject, predicate, object);
+    }
+
+    public Triple addTriple(URI subject, URI predicate, URI object) throws GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        URIReference objectNode = elementFactory.createURIReference(object);
+        Triple triple = new TripleImpl(subjectNode, predicateNode, objectNode);
+        addTriple(triple);
+        return triple;
+    }
+
+    public Triple addTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        Literal literal = elementFactory.createLiteral(object);
+        Triple triple = new TripleImpl(subjectNode, predicateNode, literal);
+        addTriple(triple);
+        return triple;
+    }
+
+    public Triple addTriple(URI subject, URI predicate, String object, String language)
+        throws GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        Literal literal = elementFactory.createLiteral(object, language);
+        Triple triple = new TripleImpl(subjectNode, predicateNode, literal);
+        addTriple(triple);
+        return triple;
+    }
+
+    public Triple addTriple(URI subject, URI predicate, String object, URI dataType)
+        throws GraphElementFactoryException {
+        URIReference subjectNode = elementFactory.createURIReference(subject);
+        URIReference predicateNode = elementFactory.createURIReference(predicate);
+        Literal literal = elementFactory.createLiteral(object, dataType);
+        Triple triple = new TripleImpl(subjectNode, predicateNode, literal);
+        addTriple(triple);
+        return triple;
+    }
+
+    private void addTriple(Triple triple) throws GraphElementFactoryException {
+        try {
+            graph.add(triple);
+        } catch (GraphException e) {
+            throw new GraphElementFactoryException(e);
+        }
     }
 
     public void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
@@ -143,11 +194,10 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         return reificationNode;
     }
 
-    public void addAlternative(SubjectNode subjectNode, Alternative alternative) throws
-            TripleFactoryException {
+    public void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException {
         try {
             graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
-                    elementFactory.createURIReference(RDF.ALT));
+                elementFactory.createURIReference(RDF.ALT));
             addContainer(subjectNode, alternative);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
@@ -181,10 +231,8 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     private void addContainer(SubjectNode subjectNode, Container container) throws TripleFactoryException {
-
         // assert that the statement is not already reified
         try {
-
             // Insert statements from colletion.
             long counter = 1L;
             for (ObjectNode object : container) {

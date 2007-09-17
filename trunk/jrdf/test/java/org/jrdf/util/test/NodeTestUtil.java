@@ -123,7 +123,7 @@ public final class NodeTestUtil {
 
     public static Triple createTriple(URI subject, URI predicate, URI object) {
         try {
-            return getTripleFactory().createTriple(subject, predicate, object);
+            return getTripleFactory().addTriple(subject, predicate, object);
         } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
@@ -131,7 +131,7 @@ public final class NodeTestUtil {
 
     public static Triple createTriple(URI subject, URI predicate, String object) {
         try {
-            return getTripleFactory().createTriple(subject, predicate, object);
+            return getTripleFactory().addTriple(subject, predicate, object);
         } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
@@ -139,7 +139,7 @@ public final class NodeTestUtil {
 
     public static Triple createTriple(URI subject, URI predicate, String object, String language) {
         try {
-            return getTripleFactory().createTriple(subject, predicate, object, language);
+            return getTripleFactory().addTriple(subject, predicate, object, language);
         } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }
@@ -147,7 +147,7 @@ public final class NodeTestUtil {
 
     public static Triple createTriple(URI subject, URI predicate, String object, URI datatype) {
         try {
-            return getTripleFactory().createTriple(subject, predicate, object, datatype);
+            return getTripleFactory().addTriple(subject, predicate, object, datatype);
         } catch (GraphElementFactoryException e) {
             throw new RuntimeException(e);
         }

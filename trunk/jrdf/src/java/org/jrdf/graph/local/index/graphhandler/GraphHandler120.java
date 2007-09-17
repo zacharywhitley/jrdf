@@ -61,7 +61,6 @@ package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 

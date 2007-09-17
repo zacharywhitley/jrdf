@@ -57,44 +57,67 @@
  *
  */
 
-package org.jrdf.graph.local.mem;
+package org.jrdf.graph.global;
 
-import org.jrdf.graph.AbstractTriple;
+import org.jrdf.graph.AbstractTripleUnitTest;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.util.test.NodeTestUtil;
 
-// TODO This should not have a public constructor.
+import java.net.URI;
 
 /**
- * A trivial implementation of an RDF {@link org.jrdf.graph.Triple}.
+ * Unit test for {@link TripleImpl}.
  *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
+ * @author Tom Adams
+ * @author Andrew Newman
  * @version $Revision$
  */
-public class TripleImpl extends AbstractTriple {
+public final class TripleImplUnitTest extends AbstractTripleUnitTest {
 
     /**
-     * Allow newer compiled version of the stub to operate when changes
-     * have not occurred with the class.
-     * NOTE : update this serialVersionUID when a method or a public member is
-     * deleted.
+     * Constructs a new test with the given name.
+     *
+     * @param name the name of the test
      */
-    private static final long serialVersionUID = 7468341140195609635L;
-
-    private TripleImpl() {
+    public TripleImplUnitTest(String name) {
+        super(name);
     }
 
-    /**
-     * Constructor for this Triple, only to be used by the NodeFactory.
-     *
-     * @param subject   The subject node of this triple.
-     * @param predicate The predicate node of this triple.
-     * @param object    The object node of this triple.
-     */
-    public TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        subjectNode = subject;
-        predicateNode = predicate;
-        objectNode = object;
+    public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return NodeTestUtil.createTriple(subject, predicate, object);
+    }
+
+    public Triple createTriple (URI subject, URI predicate, URI object) {
+        return NodeTestUtil.createTriple(subject, predicate, object);
+    }
+
+    public Triple createTriple (URI subject, URI predicate, String object) {
+        return NodeTestUtil.createTriple(subject, predicate, object);
+    }
+
+    public Triple createTriple (URI subject, URI predicate, String object, String language) {
+        return NodeTestUtil.createTriple(subject, predicate, object, language);
+    }
+
+    public Triple createTriple (URI subject, URI predicate, String object, URI dataType) {
+        return NodeTestUtil.createTriple(subject, predicate, object, dataType);
+    }
+
+    public Triple createTriple(URI subject, URI predicate) {
+        return NodeTestUtil.createTriple(createResource(subject), createResource(predicate), null);
+    }
+
+    public URIReference createResource(URI uri) {
+        return NodeTestUtil.createResource(uri);
+    }
+
+    public void testClassProperties() {
+        this.checkClassProperties(TripleImpl.class);
+        this.checkAbstractClassProperties();
     }
 }
