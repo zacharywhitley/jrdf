@@ -61,6 +61,7 @@ package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 
 import java.util.Iterator;
@@ -121,7 +122,7 @@ public interface GraphHandler {
      * @param nodes an array of three triple values to create.
      * @return an array of three nodes.
      */
-    Node[] createTriple(Long[] nodes);
+    Triple createTriple(Long... nodes);
 
     /**
      * Removes a triple from the other indexes of the graph.  For example, if this is the 012 GraphHandler it will
