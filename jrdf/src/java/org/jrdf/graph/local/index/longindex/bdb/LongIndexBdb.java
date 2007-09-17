@@ -84,13 +84,9 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         index = newCreator.createMap(Long.class, LinkedList.class);
     }
 
-    public void add(Long[] triple) {
-        add(triple[0], triple[1], triple[2]);
-    }
-
-    public void add(Long first, Long second, Long third) {
+    public void add(Long... triple) {
         // find the sub index
-        LinkedList<Long[]> subIndex = index.get(first);
+        LinkedList<Long[]> subIndex = index.get(triple[0]);
         // check that the subindex exists
         if (null == subIndex) {
             // no, so create it
@@ -98,24 +94,20 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         }
         boolean found = false;
         for (Long[] grp : subIndex) {
-            if (grp[0].equals(second) && grp[1].equals(third)) {
+            if (grp[0].equals(triple[1]) && grp[1].equals(triple[2])) {
                 found = true;
             }
         }
         if (!found) {
-            Long[] group = {second, third};
+            Long[] group = {triple[1], triple[2]};
             subIndex.add(group);
-            index.put(first, subIndex);
+            index.put(triple[0], subIndex);
         }
     }
 
-    public void remove(Long[] triple) throws GraphException {
-        remove(triple[0], triple[1], triple[2]);
-    }
-
-    public void remove(Long first, Long second, Long third) throws GraphException {
+    public void remove(Long... node) throws GraphException {
         // find the sub index
-        LinkedList<Long[]> subIndex = index.get(first);
+        LinkedList<Long[]> subIndex = index.get(node[0]);
         // check that the subindex exists
         if (null == subIndex) {
             throw new GraphException("Unable to remove nonexistent statement");
@@ -123,12 +115,12 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         // find the group
         Long[] groupToRemove = null;
         for (Long[] group : subIndex) {
-            if (second.equals(group[0]) && third.equals(group[1])) {
+            if (node[1].equals(group[0]) && node[2].equals(group[1])) {
                 groupToRemove = group;
                 break;
             }
         }
-        removeTriple(subIndex, groupToRemove, first);
+        removeTriple(subIndex, groupToRemove, node[0]);
     }
 
     private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {

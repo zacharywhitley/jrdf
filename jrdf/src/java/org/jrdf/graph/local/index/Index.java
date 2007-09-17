@@ -70,38 +70,18 @@ public interface Index<T> {
     /**
      * Adds a triple to a single index.  This method defines the internal structure.
      *
-     * @param triple Consists of three longs.
+     * @param node Consists of three longs.
      * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
      */
-    void add(T[] triple) throws GraphException;
-
-    /**
-     * Adds a triple to a single index.  This method defines the internal structure.
-     *
-     * @param first  The first node id.
-     * @param second The second node id.
-     * @param third  The last node id.
-     * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
-     */
-    void add(T first, T second, T third) throws GraphException;
+    void add(T... node) throws GraphException;
 
     /**
      * Removes a triple from a single index.
      *
-     * @param triple Consists of three longs.
+     * @param node
      * @throws GraphException If there was an error revoking the statement, for example if it didn't exist.
      */
-    void remove(T[] triple) throws GraphException;
-
-    /**
-     * Removes a triple from a single index.
-     *
-     * @param first  The first node id.
-     * @param second The second node id.
-     * @param third  The last node id.
-     * @throws GraphException If there was an error revoking the statement, for example if it didn't exist.
-     */
-    void remove(T first, T second, T third) throws GraphException;
+    void remove(T... node) throws GraphException;
 
     /**
      * Removes all triples from this index.

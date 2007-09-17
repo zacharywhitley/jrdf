@@ -109,8 +109,8 @@ public class GraphHandler012 extends AbstractGraphHandler {
         return new TripleImpl(subject, predicate, object);
     }
 
-    public void remove(Long[] currentNodes) throws GraphException {
-        index120.remove(currentNodes[1], currentNodes[2], currentNodes[0]);
-        index201.remove(currentNodes[2], currentNodes[0], currentNodes[1]);
+    public void remove(Long... nodes) throws GraphException {
+        index120.remove(nodes[1], nodes[2], nodes[0]);
+        index201.remove(nodes[2], nodes[0], nodes[1]);
     }
 }

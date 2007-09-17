@@ -128,10 +128,10 @@ public interface GraphHandler {
      * Removes a triple from the other indexes of the graph.  For example, if this is the 012 GraphHandler it will
      * remove the 120 and 201.
      *
-     * @param currentNodes the array of nodes to remove.
+     * @param nodes the array of nodes to remove.
      * @throws GraphException if the nodes do not exist.
      */
-    void remove(Long[] currentNodes) throws GraphException;
+    void remove(Long... nodes) throws GraphException;
 
     Node createNode(Long nodeId);
 }
