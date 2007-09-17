@@ -63,11 +63,12 @@ import junit.framework.TestCase;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.local.index.Index;
 
 import java.net.URI;
 
 public class GlobalIndexImplUnitTest extends TestCase {
-    private GlobalIndex<Node> index;
+    private Index<Node> index;
     private URIReference ref1;
     private URIReference ref2;
     private URIReference ref3;
@@ -82,7 +83,7 @@ public class GlobalIndexImplUnitTest extends TestCase {
         ref4 = new URIReferenceImpl(URI.create("urn:foo2"));
         ref5 = new URIReferenceImpl(URI.create("urn:bar2"));
         ref6 = new URIReferenceImpl(URI.create("urn:baz2"));
-        index = new GlobalIndexImpl<Node>();
+        index = new GlobalIndex<Node>();
     }
 
     public void testAddition() throws Exception {

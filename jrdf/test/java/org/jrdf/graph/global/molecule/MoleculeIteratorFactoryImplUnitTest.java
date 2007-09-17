@@ -153,28 +153,26 @@ public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
         assertTrue(closableIterator.hasNext());
     }
 
-    public void testGraphIterator() throws Exception {
-        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-        Triple firstHeadTriple = headTriples.get(0);
-
-        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
-        boolean found = false;
-        ClosableIterator<Molecule> closableIterator = globalizedGraph
-            .find(AnySubjectNode.ANY_SUBJECT_NODE, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
-
-        int counter = 0;
-        while (closableIterator.hasNext()) {
-            Molecule molecule = closableIterator.next();
-            Triple headTriple = molecule.getHeadTriple();
-            if (headTriple.equals(firstHeadTriple)) {
-                found = true;
-            }
-            counter++;
-        }
-
-        assertEquals(counter, headTriples.size());
-        assertTrue(found);
-    }
-
-
+//    public void testGraphIterator() throws Exception {
+//        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
+//        Triple firstHeadTriple = headTriples.get(0);
+//
+//        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
+//        boolean found = false;
+//        ClosableIterator<Molecule> closableIterator = globalizedGraph
+//            .find(AnySubjectNode.ANY_SUBJECT_NODE, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
+//
+//        int counter = 0;
+//        while (closableIterator.hasNext()) {
+//            Molecule molecule = closableIterator.next();
+//            Triple headTriple = molecule.getHeadTriple();
+//            if (headTriple.equals(firstHeadTriple)) {
+//                found = true;
+//            }
+//            counter++;
+//        }
+//
+//        assertEquals(counter, headTriples.size());
+//        assertTrue(found);
+//    }
 }

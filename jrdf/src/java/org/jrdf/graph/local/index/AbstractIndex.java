@@ -57,20 +57,31 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.local.index;
 
 import org.jrdf.graph.GraphException;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class GlobalIndexImpl<T> implements GlobalIndex<T> {
-    private Map<T, Map<T, Set<T>>> index;
+public class AbstractIndex<T> implements Index<T>, Serializable {
+    private static final long serialVersionUID = 6761527324041518032L;
+    protected Map<T, Map<T, Set<T>>> index;
 
-    public GlobalIndexImpl() {
+    protected AbstractIndex(Map<T, Map<T, Set<T>>> newIndex) {
+        index = newIndex;
+    }
+
+    protected AbstractIndex() {
         index = new HashMap<T, Map<T, Set<T>>>();
+    }
+
+    public void add(T[] triple) {
+        add(triple[0], triple[1], triple[2]);
     }
 
     public void add(T first, T second, T third) {
@@ -98,6 +109,14 @@ public class GlobalIndexImpl<T> implements GlobalIndex<T> {
 
     public boolean contains(T node) {
         return index.containsKey(node);
+    }
+
+    public Iterator<Map.Entry<T, Map<T, Set<T>>>> iterator() {
+        return index.entrySet().iterator();
+    }
+
+    public void remove(T[] triple) throws GraphException {
+        remove(triple[0], triple[1], triple[2]);
     }
 
     public void remove(T first, T second, T third) throws GraphException {
