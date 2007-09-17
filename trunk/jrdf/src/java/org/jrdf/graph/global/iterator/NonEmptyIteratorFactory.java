@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.graph.global.iterator;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
@@ -67,6 +67,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
+import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.util.ClosableIterator;
 
 /**
