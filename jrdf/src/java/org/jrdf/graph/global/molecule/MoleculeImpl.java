@@ -37,6 +37,7 @@ public class MoleculeImpl implements Molecule {
     private SortedSet<Triple> triples;
     private Map<PredicateNode, SubjectNode> predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
     private Map<PredicateNode, ObjectNode> predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
+    private static final int THIRTY_ONE = 31;
 
 
     public MoleculeImpl(TripleComparator comparator) {
@@ -139,5 +140,35 @@ public class MoleculeImpl implements Molecule {
 
     private boolean isBlankNode(Node node) {
         return BlankNode.class.isAssignableFrom(node.getClass());
+    }
+
+    public boolean equals(Object obj) {
+
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
+
+        // Check for null and ensure exactly the same class - not subclass.
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        // Cast and check for equality by value. (same class)
+        try {
+            Molecule tmpMolecule = (Molecule) obj;
+            return tmpMolecule.getHeadTriple().equals(this.getHeadTriple());
+        } catch (ClassCastException cce) {
+            return false;
+        }
+    }
+
+
+    public int hashCode() {
+        int result;
+        result = (triples != null ? triples.hashCode() : 0);
+        result = THIRTY_ONE * result + (predicateSubjectMap != null ? predicateSubjectMap.hashCode() : 0);
+        result = THIRTY_ONE * result + (predicateObjectMap != null ? predicateObjectMap.hashCode() : 0);
+        return result;
     }
 }

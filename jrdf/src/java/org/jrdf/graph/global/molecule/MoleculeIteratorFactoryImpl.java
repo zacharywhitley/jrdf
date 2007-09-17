@@ -67,6 +67,7 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.index.MoleculeIndex;
+import org.jrdf.graph.global.iterator.GlobalizedGraphIterator;
 import org.jrdf.graph.global.iterator.ThreeFixedIterator;
 import org.jrdf.graph.global.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
@@ -79,7 +80,7 @@ public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
     }
 
     public ClosableIterator<Molecule> globalizedGraphIterator() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+        return new GlobalizedGraphIterator(indexes);
     }
 
     public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) {

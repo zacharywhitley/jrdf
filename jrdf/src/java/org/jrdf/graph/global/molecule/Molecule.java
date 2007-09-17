@@ -87,4 +87,7 @@ public interface Molecule {
      * @return
      */
     Iterator<Triple> tailTriples();
+
+
+    boolean equals(Object molecule);
 }

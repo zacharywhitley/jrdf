@@ -57,62 +57,98 @@
  *
  */
 
-package org.jrdf.graph.global.index;
+package org.jrdf.graph.global.iterator;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
- * The generic interface for storing indexed global molecules.
+ * Iterator over molecules in a globalized graph, where one of the nodes in a triple is fixed.
+ * User: imrank
+ * Date: 14/09/2007
+ * Time: 15:34:50
  */
-public interface MoleculeIndex {
-    /**
-     * Adds the given nodes and set to the index.
-     */
-    void add(Node first, Node second, Node third, Molecule molecule);
-
-    /**
-     * Given the specified nodes, this will located the
-     * molecule with the specified nodes and remove it
-     * and the tail triples from the graph.
-     * @throws GraphException
-     */
-    void remove(Node first, Node second, Node third) throws GraphException;
+public class OneFixedIterator implements ClosableIterator<Molecule> {
+    private final MoleculeIndex index;
+    private boolean hasNext;
+    private Iterator<Node> objectIterator;
+    private Molecule currentMolecule;
+    private Iterator<Node> predicateIterator;
+    private Map<Node, Molecule> subIndex;
+    private final Map<Node, Map<Node, Molecule>> index1;
 
 
-    void remove(Molecule molecule) throws GraphException;
+    public OneFixedIterator(Node first, MoleculeIndex[] indexes, int searchIndex) {
+        index = indexes[searchIndex];
 
-    /**
-     * Clear the index's contents.
-     */
-    void clear();
+        index1 = index.getSubIndex(first);
+        predicateIterator = index1.keySet().iterator();
 
-    boolean contains(Node node);
+        while (predicateIterator.hasNext()) {
+            Node predicate = predicateIterator.next();
 
-    /**
-     * Returns the number of triples.
-     *
-     * @return
-     */
-    long getNumberOfTriples();
+            //map of objects
+            subIndex = index1.get(predicate);
+            objectIterator = subIndex.keySet().iterator();
 
-    /**
-     * Returns the number of molecules contained in the graph.
-     * @return
-     */
-    long getNumberOfMolecules();
+            if (objectIterator.hasNext()) {
+                hasNext = true;
+                break;
+            }
+        }
 
-    Map<Node, Map<Node, Molecule>> getSubIndex(Node first);
+    }
 
-    boolean removeSubIndex(Node first);
+    public boolean close() {
+        return true;
+    }
 
-    Molecule getMolecule(Triple headTriple);
+    public boolean hasNext() {
+        return hasNext;
+    }
 
+    public Molecule next() {
+        if (currentMolecule == null) {
+            throw new NoSuchElementException();
+        }
+        if (predicateIterator.hasNext()) {
+            if (objectIterator.hasNext()) {
+                Node node = objectIterator.next();
+                currentMolecule = subIndex.get(node);
+            } else {
+                if (resetIterators()) {
+                    return next();
+                }
+            }
+        } else {
+            currentMolecule = null;
+            return next();
+        }
 
-    Iterator<Map.Entry<Node, Map<Node, Map<Node, Molecule>>>> keySetIterator();
+        return currentMolecule;
+    }
+
+    private boolean resetIterators() {
+        Node predicate = predicateIterator.next();
+        subIndex = index1.get(predicate);
+        objectIterator = subIndex.keySet().iterator();
+
+        //nothing exists in object iterator
+        if (!objectIterator.hasNext()) {
+            return true;
+        } else {
+            Node node = objectIterator.next();
+            currentMolecule = subIndex.get(node);
+        }
+        return false;
+    }
+
+    public void remove() {
+    }
 }
