@@ -74,6 +74,7 @@ import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
+import org.jrdf.graph.global.iterator.NonEmptyIteratorFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
