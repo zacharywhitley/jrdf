@@ -60,7 +60,6 @@ package org.jrdf.graph.local.mem.iterator;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
@@ -69,6 +68,6 @@ public class OneFixedIteratorUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, OneFixedIterator.class);
-        checkConstructor(OneFixedIterator.class, NO_MODIFIER, Long.class, LongIndex.class, GraphHandler.class);
+        checkConstructor(OneFixedIterator.class, NO_MODIFIER, Long.class, GraphHandler.class);
     }
 }

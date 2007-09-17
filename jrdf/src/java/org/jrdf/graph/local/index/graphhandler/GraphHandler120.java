@@ -86,6 +86,14 @@ public class GraphHandler120 extends AbstractGraphHandler implements GraphHandle
         this.nodePool = nodePool;
     }
 
+    public Map<Long, Set<Long>> getSubIndex(Long first) {
+        return index120.getSubIndex(first);
+    }
+
+    public boolean removeSubIndex(Long first) {
+        return index120.removeSubIndex(first);
+    }
+
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> getEntries() {
         return index120.iterator();
     }

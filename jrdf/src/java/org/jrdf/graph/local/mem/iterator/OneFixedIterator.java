@@ -67,7 +67,6 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -92,11 +91,6 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
      * The fixed item.
      */
     private final Long first;
-
-    /**
-     * Allows access to a particular part of the index.
-     */
-    private LongIndex longIndex;
 
     /**
      * The subIndex of this iterator.  Only needed for initialization and the remove method.
@@ -133,21 +127,15 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
-    OneFixedIterator(Long fixedFirstNode, LongIndex newLongIndex, GraphHandler newHandler) {
-
+    OneFixedIterator(Long fixedFirstNode, GraphHandler newHandler) {
         // store the node factory and other starting data
         handler = newHandler;
-
         first = fixedFirstNode;
-        longIndex = newLongIndex;
-
         // initialise the iterators to empty
         thirdIndexIterator = null;
         secondIndexIterator = null;
-
         // find the subIndex from the main index
-        subIndex = longIndex.getSubIndex(first);
-
+        subIndex = handler.getSubIndex(first);
         // check that data exists
         if (null != subIndex) {
             // now get an iterator to the sub index map
@@ -227,14 +215,14 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
 
     private void cleanIndex() {
         // check if a set was cleaned out
-        Set subGroup = secondEntry.getValue();
+        Set<Long> subGroup = secondEntry.getValue();
         if (subGroup.isEmpty()) {
             // remove the entry for the set
             secondIndexIterator.remove();
             // check if a subindex was cleaned out
             if (subIndex.isEmpty()) {
                 // remove the subindex
-                longIndex.removeSubIndex(first);
+                handler.removeSubIndex(first);
                 subIndex = null;
             }
         }
