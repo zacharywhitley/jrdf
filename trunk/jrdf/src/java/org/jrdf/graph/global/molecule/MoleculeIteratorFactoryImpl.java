@@ -68,6 +68,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.iterator.GlobalizedGraphIterator;
+import org.jrdf.graph.global.iterator.OneFixedIterator;
 import org.jrdf.graph.global.iterator.ThreeFixedIterator;
 import org.jrdf.graph.global.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
@@ -110,5 +111,9 @@ public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
 
     public ClosableIterator<Molecule> newTwoFixedIterator(Node first, Node second, int index) {
         return new TwoFixedIterator(first, second, indexes, index);
+    }
+
+    public ClosableIterator<Molecule> newOneFixedIterator(Node first, int index) {
+        return new OneFixedIterator(first, indexes, index);
     }
 }

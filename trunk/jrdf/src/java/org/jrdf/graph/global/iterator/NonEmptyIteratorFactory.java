@@ -62,12 +62,13 @@ package org.jrdf.graph.global.iterator;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
-import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.util.ClosableIterator;
 
 /**
@@ -95,19 +96,17 @@ public class NonEmptyIteratorFactory {
             result = anySubjectFixedPredicateIterator(subj, pred, obj);
         } else if (ANY_OBJECT_NODE != obj) {
             // {**o} Get any subject and predicate, fixed object.
-            result = anySubjectAndPredicateFixedObjectIterator();
+            result = anySubjectAndPredicateFixedObjectIterator(obj);
         } else {
             // {***} Get all.
-            //result = iteratorFactory.globalizedGraphIterator();
-            System.err.println("NOT WORKING YET");
+            result = iteratorFactory.globalizedGraphIterator();
         }
         return result;
     }
 
-    private ClosableIterator<Molecule> anySubjectAndPredicateFixedObjectIterator() {
+    private ClosableIterator<Molecule> anySubjectAndPredicateFixedObjectIterator(Node obj) {
         // got {**o}
-        //return iteratorFactory.newOneFixedIterator(values[2], 2);
-        return null;
+        return iteratorFactory.newOneFixedIterator(obj, GlobalizedGraph.OBJECT_INDEX);
     }
 
     private ClosableIterator<Molecule> anySubjectFixedPredicateIterator(SubjectNode subj, PredicateNode pred,
@@ -119,15 +118,14 @@ public class NonEmptyIteratorFactory {
             result = iteratorFactory.newTwoFixedIterator(pred, obj, GlobalizedGraph.PREDICATE_INDEX);
         } else {
             // got {*p*}.
-            //result = iteratorFactory.newOneFixedIterator(values[1], 1);
-            System.err.println("Not working yet");
+            result = iteratorFactory.newOneFixedIterator(pred, GlobalizedGraph.PREDICATE_INDEX);
         }
 
         return result;
     }
 
     private ClosableIterator<Molecule> fixedSubjectIterator(SubjectNode subj, PredicateNode pred, ObjectNode obj) {
-        ClosableIterator<Molecule> result = null;
+        ClosableIterator<Molecule> result;
         // test for {s??}
         if (ANY_PREDICATE_NODE != pred) {
             // test for {sp?}
@@ -145,8 +143,7 @@ public class NonEmptyIteratorFactory {
                 result = iteratorFactory.newTwoFixedIterator(obj, subj, GlobalizedGraph.OBJECT_INDEX);
             } else {
                 // got {s**}
-                //result = iteratorFactory.newOneFixedIterator(values[0], 0);
-                System.err.println("Not working yet");
+                result = iteratorFactory.newOneFixedIterator(subj, GlobalizedGraph.SUBJECT_INDEX);
             }
         }
 

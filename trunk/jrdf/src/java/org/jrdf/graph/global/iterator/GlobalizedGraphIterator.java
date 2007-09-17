@@ -95,7 +95,7 @@ public class GlobalizedGraphIterator implements ClosableIterator<Molecule> {
     }
 
     public boolean close() {
-        throw new UnsupportedOperationException("Method not implemented yet");
+        return true;
     }
 
     public boolean hasNext() {

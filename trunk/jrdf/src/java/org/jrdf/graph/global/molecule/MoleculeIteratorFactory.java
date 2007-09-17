@@ -119,4 +119,6 @@ public interface MoleculeIteratorFactory {
     ClosableIterator<Molecule> newThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode);
 
     ClosableIterator<Molecule> newTwoFixedIterator(Node first, Node second, int searchIndex);
+
+    ClosableIterator<Molecule> newOneFixedIterator(Node value, int i);
 }
