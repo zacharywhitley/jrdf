@@ -75,34 +75,33 @@ import java.util.NoSuchElementException;
  * Time: 15:34:50
  */
 public class OneFixedIterator implements ClosableIterator<Molecule> {
-    private final MoleculeIndex index;
-    private boolean hasNext;
-    private Iterator<Node> objectIterator;
+    Node first;
+    MoleculeIndex[] indexes;
+    private MoleculeIndex index;
+    private Map<Node, Map<Node, Molecule>> subIndex;
+    private Iterator<Map.Entry<Node, Map<Node, Molecule>>> secondIndexIterator;
+    private Map.Entry<Node, Map<Node, Molecule>> secondEntry;
+    private Iterator<Molecule> thirdIndexIterator;
     private Molecule currentMolecule;
-    private Iterator<Node> predicateIterator;
-    private Map<Node, Molecule> subIndex;
-    private final Map<Node, Map<Node, Molecule>> index1;
+    private boolean nextCalled;
 
 
     public OneFixedIterator(Node first, MoleculeIndex[] indexes, int searchIndex) {
+        this.first = first;
+        this.indexes = indexes;
+
         index = indexes[searchIndex];
 
-        index1 = index.getSubIndex(first);
-        predicateIterator = index1.keySet().iterator();
+        thirdIndexIterator = null;
+        secondIndexIterator = null;
 
-        while (predicateIterator.hasNext()) {
-            Node predicate = predicateIterator.next();
+        subIndex = index.getSubIndex(first);
 
-            //map of objects
-            subIndex = index1.get(predicate);
-            objectIterator = subIndex.keySet().iterator();
+        if (null != subIndex) {
+            secondIndexIterator = subIndex.entrySet().iterator();
 
-            if (objectIterator.hasNext()) {
-                hasNext = true;
-                break;
-            }
+            assert secondIndexIterator.hasNext();
         }
-
     }
 
     public boolean close() {
@@ -110,43 +109,38 @@ public class OneFixedIterator implements ClosableIterator<Molecule> {
     }
 
     public boolean hasNext() {
-        return hasNext;
+        return updatePosition();
     }
 
     public Molecule next() {
-        if (currentMolecule == null) {
+        if (null == secondIndexIterator) {
             throw new NoSuchElementException();
         }
-        if (predicateIterator.hasNext()) {
-            if (objectIterator.hasNext()) {
-                Node node = objectIterator.next();
-                currentMolecule = subIndex.get(node);
-            } else {
-                if (resetIterators()) {
-                    return next();
-                }
-            }
-        } else {
-            currentMolecule = null;
-            return next();
-        }
+        nextCalled = true;
+        updatePosition();
 
         return currentMolecule;
     }
 
-    private boolean resetIterators() {
-        Node predicate = predicateIterator.next();
-        subIndex = index1.get(predicate);
-        objectIterator = subIndex.keySet().iterator();
+    private boolean updatePosition() {
+        if (null == thirdIndexIterator || !thirdIndexIterator.hasNext()) {
+            if (null == secondIndexIterator || !secondIndexIterator.hasNext()) {
+                secondIndexIterator = null;
+                return false;
+            }
+            secondEntry = secondIndexIterator.next();
+            thirdIndexIterator = secondEntry.getValue().values().iterator();
+            assert thirdIndexIterator.hasNext();
 
-        //nothing exists in object iterator
-        if (!objectIterator.hasNext()) {
-            return true;
-        } else {
-            Node node = objectIterator.next();
-            currentMolecule = subIndex.get(node);
+            Molecule tempMolecule = currentMolecule;
+            currentMolecule = thirdIndexIterator.next();
+
+            if (currentMolecule.equals(tempMolecule)) {
+                return updatePosition();
+            }
         }
-        return false;
+
+        return true;
     }
 
     public void remove() {

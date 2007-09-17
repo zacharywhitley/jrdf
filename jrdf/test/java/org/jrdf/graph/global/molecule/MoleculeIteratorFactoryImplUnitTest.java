@@ -71,7 +71,6 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.GlobalizedGraphTestUtil;
 
 import java.util.List;
@@ -89,90 +88,29 @@ public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
         globalizedGraph = new GlobalizedGraphMemFactoryImpl(comparator).getNewGlobalizedGraph();
     }
 
-//    public void testFind() throws Exception {
-//        // Goes through all 8 possibilities and checks contains.
-//        for (int i = 0 ; i < 8; i++) {
-//            // 4 falses then 4 trues.
-//            boolean findAnySubject = (i & 4) != 0;
-//            // 2 falses then 2 trues.
-//            boolean findAnyPredicate = (i & 2) != 0;
-//            // true then false
-//            boolean findAnyObject = (i & 1) != 0;
-//            checkFind(findAnySubject, findAnyPredicate, findAnyObject);
-//        }
-//    }
-//
-//    private void checkFind(boolean findAnySubject, boolean findAnyPredicate, boolean findAnyObject) {
-//        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-//        for (int i = 0; i < GlobalizedGraphTestUtil.NUMBER_OF_MOLECULES; i++) {
-//            Triple headTriple = headTriples.get(i);
-//            SubjectNode subject = findAnySubject ? ANY_SUBJECT_NODE : headTriple.getSubject();
-//            PredicateNode predicate = findAnyPredicate ? ANY_PREDICATE_NODE : headTriple.getPredicate();
-//            ObjectNode object = findAnyObject ? ANY_OBJECT_NODE : headTriple.getObject();
-//            GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
-//            assertTrue(globalizedGraph.find(subject, predicate, object).hasNext());
-//        }
-//    }
-
-    public void testThreeFixed() throws Exception {
-        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-        Triple firstHeadTriple = headTriples.get(0);
-        SubjectNode subject = firstHeadTriple.getSubject();
-        PredicateNode predicate = firstHeadTriple.getPredicate();
-        ObjectNode object = firstHeadTriple.getObject();
-
-        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
-        ClosableIterator<Molecule> closableIterator = globalizedGraph.find(subject, predicate, object);
-        assertTrue(closableIterator.hasNext());
-        assertNotNull(closableIterator.next());
-        assertFalse(closableIterator.hasNext());
+    public void testFind() throws Exception {
+        // Goes through all 8 possibilities and checks contains.
+        for (int i = 0; i < 8; i++) {
+            // 4 falses then 4 trues.
+            boolean findAnySubject = (i & 4) != 0;
+            // 2 falses then 2 trues.
+            boolean findAnyPredicate = (i & 2) != 0;
+            // true then false
+            boolean findAnyObject = (i & 1) != 0;
+            checkFind(findAnySubject, findAnyPredicate, findAnyObject);
+        }
     }
 
-    public void testTwoFixed() throws Exception {
+    private void checkFind(boolean findAnySubject, boolean findAnyPredicate, boolean findAnyObject) {
         List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-        Triple firstHeadTriple = headTriples.get(0);
-        SubjectNode subject = firstHeadTriple.getSubject();
-        PredicateNode predicate = firstHeadTriple.getPredicate();
-        ObjectNode object = firstHeadTriple.getObject();
-
-        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
-        ClosableIterator<Molecule> closableIterator =
-            globalizedGraph.find(subject, predicate, AnyObjectNode.ANY_OBJECT_NODE);
-        assertTrue(closableIterator.hasNext());
-        assertNotNull(closableIterator.next());
-        assertFalse(closableIterator.hasNext());
-
-        closableIterator = globalizedGraph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, object);
-        assertTrue(closableIterator.hasNext());
-        assertNotNull(closableIterator.next());
-        assertTrue(closableIterator.hasNext());
-
-        closableIterator = globalizedGraph.find(AnySubjectNode.ANY_SUBJECT_NODE, predicate, object);
-        assertTrue(closableIterator.hasNext());
-        assertNotNull(closableIterator.next());
-        assertTrue(closableIterator.hasNext());
+        for (int i = 0; i < GlobalizedGraphTestUtil.NUMBER_OF_MOLECULES; i++) {
+            Triple headTriple = headTriples.get(i);
+            SubjectNode subject = findAnySubject ? AnySubjectNode.ANY_SUBJECT_NODE : headTriple.getSubject();
+            PredicateNode predicate =
+                findAnyPredicate ? AnyPredicateNode.ANY_PREDICATE_NODE : headTriple.getPredicate();
+            ObjectNode object = findAnyObject ? AnyObjectNode.ANY_OBJECT_NODE : headTriple.getObject();
+            GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
+            assertTrue(globalizedGraph.find(subject, predicate, object).hasNext());
+        }
     }
-
-//    public void testGraphIterator() throws Exception {
-//        List<Triple> headTriples = GlobalizedGraphTestUtil.getHeadTriples();
-//        Triple firstHeadTriple = headTriples.get(0);
-//
-//        GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
-//        boolean found = false;
-//        ClosableIterator<Molecule> closableIterator = globalizedGraph
-//            .find(AnySubjectNode.ANY_SUBJECT_NODE, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
-//
-//        int counter = 0;
-//        while (closableIterator.hasNext()) {
-//            Molecule molecule = closableIterator.next();
-//            Triple headTriple = molecule.getHeadTriple();
-//            if (headTriple.equals(firstHeadTriple)) {
-//                found = true;
-//            }
-//            counter++;
-//        }
-//
-//        assertEquals(counter, headTriples.size());
-//        assertTrue(found);
-//    }
 }
