@@ -66,9 +66,6 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.mem.TripleImpl;
 
 import java.util.Iterator;
@@ -293,9 +290,5 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
      */
     public boolean close() {
         return true;
-    }
-
-    public boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120) {
-        return handler012 == handler || handler201 == handler || handler120 == handler;
     }
 }
