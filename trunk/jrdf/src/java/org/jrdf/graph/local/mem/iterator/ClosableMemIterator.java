@@ -60,9 +60,6 @@
 
 package org.jrdf.graph.local.mem.iterator;
 
-import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.util.ClosableIterator;
 
 /**
@@ -72,14 +69,4 @@ import org.jrdf.util.ClosableIterator;
  * @version $Revision$
  */
 public interface ClosableMemIterator<Triple> extends ClosableIterator<Triple> {
-
-    /**
-     * Return true if this iterator contains any of the handlers.
-     *
-     * @param handler012 the 012 handler
-     * @param handler201 the 201 handler
-     * @param handler120 the 120 handler
-     * @return true if this iterator contains any of the given handlers.
-     */
-    boolean containsHandler(GraphHandler012 handler012, GraphHandler201 handler201, GraphHandler120 handler120);
 }
