@@ -80,11 +80,30 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         index = new HashMap<T, Map<T, Set<T>>>();
     }
 
-    public void add(T[] triple) {
-        add(triple[0], triple[1], triple[2]);
+    public void add(T... triple) {
+        // find the sub index
+        Map<T, Set<T>> subIndex = index.get(triple[0]);
+        // check that the subindex exists
+        if (null == subIndex) {
+            // no, so create it and add it to the index
+            subIndex = new HashMap<T, Set<T>>();
+            index.put(triple[0], subIndex);
+        }
+
+        // find the final group
+        Set<T> group = subIndex.get(triple[1]);
+        // check that the group exists
+        if (null == group) {
+            // no, so create it and add it to the subindex
+            group = new HashSet<T>();
+            subIndex.put(triple[1], group);
+        }
+
+        // Add the final node to the group
+        group.add(triple[2]);
     }
 
-    public void add(T first, T second, T third) {
+    private void add(T first, T second, T third) {
         // find the sub index
         Map<T, Set<T>> subIndex = index.get(first);
         // check that the subindex exists
@@ -115,11 +134,33 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         return index.entrySet().iterator();
     }
 
-    public void remove(T[] triple) throws GraphException {
-        remove(triple[0], triple[1], triple[2]);
+    public void remove(T... node) throws GraphException {
+        // find the sub index
+        Map<T, Set<T>> subIndex = index.get(node[0]);
+        // check that the subindex exists
+        if (null == subIndex) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        // find the final group
+        Set<T> group = subIndex.get(node[1]);
+        // check that the group exists
+        if (null == group) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        // remove from the group, report error if it didn't exist
+        if (!group.remove(node[2])) {
+            throw new GraphException("Unable to remove nonexistent statement");
+        }
+        // clean up the graph
+        if (group.isEmpty()) {
+            subIndex.remove(node[1]);
+            if (subIndex.isEmpty()) {
+                index.remove(node[0]);
+            }
+        }
     }
 
-    public void remove(T first, T second, T third) throws GraphException {
+    private void remove(T first, T second, T third) throws GraphException {
         // find the sub index
         Map<T, Set<T>> subIndex = index.get(first);
         // check that the subindex exists
