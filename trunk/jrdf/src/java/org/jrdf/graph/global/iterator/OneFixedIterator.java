@@ -85,21 +85,15 @@ public class OneFixedIterator implements ClosableIterator<Molecule> {
     private Molecule currentMolecule;
     private boolean nextCalled;
 
-
     public OneFixedIterator(Node first, MoleculeIndex[] indexes, int searchIndex) {
         this.first = first;
         this.indexes = indexes;
-
         index = indexes[searchIndex];
-
         thirdIndexIterator = null;
         secondIndexIterator = null;
-
         subIndex = index.getSubIndex(first);
-
         if (null != subIndex) {
             secondIndexIterator = subIndex.entrySet().iterator();
-
             assert secondIndexIterator.hasNext();
         }
     }
