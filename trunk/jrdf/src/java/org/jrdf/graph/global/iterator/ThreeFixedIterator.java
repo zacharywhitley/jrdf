@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.global.iterator;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -81,10 +80,8 @@ import java.util.NoSuchElementException;
  */
 public class ThreeFixedIterator implements ClosableIterator<Molecule> {
     private Molecule molecule;
-
     private MoleculeIndex[] indexes;
     private Exception exception;
-    private Molecule removeMolecule;
 
     public ThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode,
                               MoleculeIndex[] newIndexes) {
@@ -115,24 +112,13 @@ public class ThreeFixedIterator implements ClosableIterator<Molecule> {
         }
 
         // return the triple, clearing it first so next will fail on a subsequent call
-        removeMolecule = molecule;
+        Molecule tempMolecule = molecule;
         molecule = null;
-        return removeMolecule;
+        return tempMolecule;
     }
 
     public void remove() {
-        if (null != removeMolecule) {
-            try {
-                indexes[GlobalizedGraph.SUBJECT_INDEX].remove(molecule);
-                indexes[GlobalizedGraph.PREDICATE_INDEX].remove(molecule);
-                indexes[GlobalizedGraph.OBJECT_INDEX].remove(molecule);
-                removeMolecule = null;
-            } catch (GraphException ge) {
-                throw new IllegalStateException(ge.getMessage());
-            }
-        } else {
-            throw new IllegalStateException("Next not called or beyond end of data");
-        }
+        throw new UnsupportedOperationException("Remove is unsupported.");
     }
 
 }

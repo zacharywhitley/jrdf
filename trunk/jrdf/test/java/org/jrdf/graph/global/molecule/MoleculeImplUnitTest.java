@@ -60,16 +60,15 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
+import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
@@ -78,10 +77,6 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 import java.net.URI;
 
 public class MoleculeImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private Graph newGraph = factory.getNewGraph();
-    private GraphElementFactory elementFactory = newGraph.getElementFactory();
-    private TripleFactory tripleFactory = newGraph.getTripleFactory();
     private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
     private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
     private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
@@ -90,23 +85,24 @@ public class MoleculeImplUnitTest extends TestCase {
 
     public void testMoleculeOrderURIReference() throws Exception {
         Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(ref1, ref1, ref1);
+        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
+        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
+        Triple triple = new TripleImpl(ref1, ref1, ref1);
         molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(ref1, ref1, ref2));
+        molecule.add(new TripleImpl(ref1, ref1, ref2));
         assertEquals(triple, molecule.getHeadTriple());
     }
 
     public void testMoleculeOrderBlankNodes() throws Exception {
         Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        Triple triple = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2));
+        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
+        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
+        BlankNode blankNode = new BlankNodeImpl();
+
+        Triple triple = new TripleImpl(blankNode, ref1, ref1);
+        molecule.add(new TripleImpl(blankNode, ref1, ref2));
         molecule.add(triple);
-        molecule.add(tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
-            elementFactory.createBlankNode()));
+        molecule.add(new TripleImpl(blankNode, ref1, blankNode));
         assertEquals(triple, molecule.getHeadTriple());
     }
 }

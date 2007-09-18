@@ -59,20 +59,17 @@
 
 package org.jrdf.graph.global.iterator;
 
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
-import java.util.Set;
 
 public class UniquePredicateIterator implements ClosableIterator<PredicateNode> {
     private Iterator<Node> iterator;
     public UniquePredicateIterator(MoleculeIndex indexes) {
-        Set<Node> predicateNodes = indexes.getSubIndex(ANY_SUBJECT_NODE).keySet();
-        iterator = predicateNodes.iterator();
+
     }
 
     public boolean close() {
@@ -81,7 +78,7 @@ public class UniquePredicateIterator implements ClosableIterator<PredicateNode> 
     }
 
     public boolean hasNext() {
-        return iterator.hasNext();
+        return false;
     }
 
     public PredicateNode next() {

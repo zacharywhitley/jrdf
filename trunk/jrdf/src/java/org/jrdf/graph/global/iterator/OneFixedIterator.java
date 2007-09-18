@@ -75,23 +75,14 @@ import java.util.NoSuchElementException;
  * Time: 15:34:50
  */
 public class OneFixedIterator implements ClosableIterator<Molecule> {
-    Node first;
-    MoleculeIndex[] indexes;
-    private MoleculeIndex index;
-    private Map<Node, Map<Node, Molecule>> subIndex;
     private Iterator<Map.Entry<Node, Map<Node, Molecule>>> secondIndexIterator;
-    private Map.Entry<Node, Map<Node, Molecule>> secondEntry;
     private Iterator<Molecule> thirdIndexIterator;
     private Molecule currentMolecule;
-    private boolean nextCalled;
 
-    public OneFixedIterator(Node first, MoleculeIndex[] indexes, int searchIndex) {
-        this.first = first;
-        this.indexes = indexes;
-        index = indexes[searchIndex];
-        thirdIndexIterator = null;
-        secondIndexIterator = null;
-        subIndex = index.getSubIndex(first);
+    public OneFixedIterator(Node newFirst, MoleculeIndex[] newIndexes, int newSearchIndex) {
+        MoleculeIndex index = newIndexes[newSearchIndex];
+        Map<Node, Map<Node, Molecule>> subIndex = index.getSubIndex(newFirst);
+
         if (null != subIndex) {
             secondIndexIterator = subIndex.entrySet().iterator();
             assert secondIndexIterator.hasNext();
@@ -103,26 +94,31 @@ public class OneFixedIterator implements ClosableIterator<Molecule> {
     }
 
     public boolean hasNext() {
-        return updatePosition();
+        // confirm we still have an item iterator, and that it has data available
+        return null != thirdIndexIterator && thirdIndexIterator.hasNext() ||
+            null != secondIndexIterator && secondIndexIterator.hasNext();
     }
 
     public Molecule next() {
         if (null == secondIndexIterator) {
             throw new NoSuchElementException();
         }
-        nextCalled = true;
         updatePosition();
 
         return currentMolecule;
     }
 
-    private boolean updatePosition() {
+    public void remove() {
+        throw new UnsupportedOperationException("Remove is unsupported.");
+    }
+
+    private void updatePosition() {
         if (null == thirdIndexIterator || !thirdIndexIterator.hasNext()) {
             if (null == secondIndexIterator || !secondIndexIterator.hasNext()) {
                 secondIndexIterator = null;
-                return false;
+                return;
             }
-            secondEntry = secondIndexIterator.next();
+            Map.Entry<Node, Map<Node, Molecule>> secondEntry = secondIndexIterator.next();
             thirdIndexIterator = secondEntry.getValue().values().iterator();
             assert thirdIndexIterator.hasNext();
 
@@ -130,13 +126,8 @@ public class OneFixedIterator implements ClosableIterator<Molecule> {
             currentMolecule = thirdIndexIterator.next();
 
             if (currentMolecule.equals(tempMolecule)) {
-                return updatePosition();
+                updatePosition();
             }
         }
-
-        return true;
-    }
-
-    public void remove() {
     }
 }

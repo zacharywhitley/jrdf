@@ -98,7 +98,7 @@ public class MoleculeParserImplUnitTest extends TestCase {
         GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
 
         assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
-        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.numberOfTriples());
+        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
 
 
         Triple triple = jrdfGraph.getTripleFactory()

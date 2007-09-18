@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.global.iterator;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.index.MoleculeIndex;
@@ -77,20 +76,13 @@ import java.util.NoSuchElementException;
  * Time: 16:10:36
  */
 public class GlobalizedGraphIterator implements ClosableIterator<Molecule> {
-    private final MoleculeIndex[] indexes;
-    private final MoleculeIndex index;
     private Iterator<Map.Entry<Node, Map<Node, Map<Node, Molecule>>>> iterator;
-    private Map.Entry<Node, Map<Node, Map<Node, Molecule>>> firstEntry;
     private Iterator<Map.Entry<Node, Map<Node, Molecule>>> subIterator;
-    private Map.Entry<Node, Map<Node, Molecule>> secondEntry;
     private Iterator<Molecule> itemIterator;
-    private boolean nextCalled;
     private Molecule currentMolecule;
-    private Molecule tempMolecule;
 
     public GlobalizedGraphIterator(MoleculeIndex[] indexes) {
-        this.indexes = indexes;
-        index = indexes[GlobalizedGraph.SUBJECT_INDEX];
+        MoleculeIndex index = indexes[GlobalizedGraph.SUBJECT_INDEX];
         iterator = index.keySetIterator();
     }
 
@@ -106,8 +98,6 @@ public class GlobalizedGraphIterator implements ClosableIterator<Molecule> {
         if (null == iterator) {
             throw new NoSuchElementException();
         }
-
-        nextCalled = true;
         return currentMolecule;
     }
 
@@ -136,17 +126,14 @@ public class GlobalizedGraphIterator implements ClosableIterator<Molecule> {
      * @return
      */
     private boolean resetCurrentMolecule() {
-        secondEntry = subIterator.next();
+        Map.Entry<Node, Map<Node, Molecule>> secondEntry = subIterator.next();
         itemIterator = secondEntry.getValue().values().iterator();
         assert itemIterator.hasNext();
 
-        tempMolecule = currentMolecule;
+        Molecule tempMolecule = currentMolecule;
         currentMolecule = itemIterator.next();
 
-        if (currentMolecule.equals(tempMolecule)) {
-            return true;
-        }
-        return false;
+        return currentMolecule.equals(tempMolecule);
     }
 
     /**
@@ -160,7 +147,7 @@ public class GlobalizedGraphIterator implements ClosableIterator<Molecule> {
                 iterator = null;
                 return true;
             }
-            firstEntry = iterator.next();
+            Map.Entry<Node, Map<Node, Map<Node, Molecule>>> firstEntry = iterator.next();
             subIterator = firstEntry.getValue().entrySet().iterator();
             assert subIterator.hasNext();
         }
@@ -168,34 +155,6 @@ public class GlobalizedGraphIterator implements ClosableIterator<Molecule> {
     }
 
     public void remove() {
-        if (nextCalled && null != itemIterator) {
-            itemIterator.remove();
-
-            cleanIndex();
-
-            removeFromNonCurrentIndex();
-        } else {
-            throw new IllegalStateException("Next not called or beyond end of data");
-        }
-    }
-
-    private void cleanIndex() {
-        Map<Node, Molecule> subGroup = secondEntry.getValue();
-        Map<Node, Map<Node, Molecule>> subIndex = firstEntry.getValue();
-        if (subGroup.isEmpty()) {
-            subIterator.remove();
-            if (subIndex.isEmpty()) {
-                iterator.remove();
-            }
-        }
-    }
-
-    private void removeFromNonCurrentIndex() {
-        try {
-            indexes[GlobalizedGraph.PREDICATE_INDEX].remove(currentMolecule);
-            indexes[GlobalizedGraph.OBJECT_INDEX].remove(currentMolecule);
-        } catch (GraphException e) {
-            throw new IllegalStateException("Unable to remove from non-current indices");
-        }
+        throw new UnsupportedOperationException("Remove is unsupported.");
     }
 }

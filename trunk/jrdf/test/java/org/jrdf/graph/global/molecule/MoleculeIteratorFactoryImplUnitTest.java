@@ -110,6 +110,7 @@ public class MoleculeIteratorFactoryImplUnitTest extends TestCase {
                 findAnyPredicate ? AnyPredicateNode.ANY_PREDICATE_NODE : headTriple.getPredicate();
             ObjectNode object = findAnyObject ? AnyObjectNode.ANY_OBJECT_NODE : headTriple.getObject();
             GlobalizedGraphTestUtil.addMolecules(headTriples, globalizedGraph, comparator);
+
             assertTrue(globalizedGraph.find(subject, predicate, object).hasNext());
         }
     }
