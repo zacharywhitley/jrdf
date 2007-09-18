@@ -60,7 +60,6 @@
 package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 
@@ -132,6 +131,4 @@ public interface GraphHandler {
      * @throws GraphException if the nodes do not exist.
      */
     void remove(Long... nodes) throws GraphException;
-
-    Node createNode(Long nodeId);
 }
