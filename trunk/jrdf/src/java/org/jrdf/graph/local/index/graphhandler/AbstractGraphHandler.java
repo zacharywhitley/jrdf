@@ -60,7 +60,6 @@
 package org.jrdf.graph.local.index.graphhandler;
 
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.operation.mem.BasicOperations;
@@ -83,10 +82,6 @@ public abstract class AbstractGraphHandler implements GraphHandler {
     public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws
             GraphException {
         BasicOperations.reconstruct(firstIndex, secondIndex, thirdIndex);
-    }
-
-    public Node createNode(Long nodeId) {
-        return nodePool.getNodeById(nodeId);
     }
 
     /**

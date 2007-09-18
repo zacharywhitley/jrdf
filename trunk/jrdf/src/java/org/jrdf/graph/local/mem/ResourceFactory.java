@@ -63,6 +63,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Node;
 import org.jrdf.util.ClosableIterator;
 
 public interface ResourceFactory {
@@ -75,4 +76,6 @@ public interface ResourceFactory {
     ClosableIterator<Resource> getBlankNodes();
 
     ClosableIterator<Resource> getURIReferences();
+
+    Node getNodeById(Long nodeId);
 }

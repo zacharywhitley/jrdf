@@ -80,7 +80,7 @@ public class URIReferenceResourceIterator extends ResourceIterator {
             final GraphHandler graphHandler) {
         while (iterator.hasNext()) {
             final long id = iterator.next().getKey();
-            final Node node = graphHandler.createNode(id);
+            final Node node = resourceFactory.getNodeById(id);
             if (node != null && node instanceof URIReference) {
                 return id;
             }

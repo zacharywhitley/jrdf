@@ -257,7 +257,7 @@ public class GraphImpl implements Graph, Serializable {
 
     private void initFactoriesAndGraph(LongIndex[] indexes, GraphHandler[] handlers) {
         if (null == iteratorFactory) {
-            iteratorFactory = new IteratorFactoryImpl(indexes, handlers);
+            iteratorFactory = new IteratorFactoryImpl(indexes, handlers, nodePool);
         }
 
         if (null == readWriteGraph) {

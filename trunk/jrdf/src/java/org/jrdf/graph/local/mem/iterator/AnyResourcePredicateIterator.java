@@ -61,8 +61,8 @@ package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
@@ -71,11 +71,11 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 public class AnyResourcePredicateIterator implements ClosableIterator<PredicateNode> {
-    private final GraphHandler graphHandler;
+    private final NodePool nodePool;
     private Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
 
-    public AnyResourcePredicateIterator(final LongIndex newLongIndex, final GraphHandler newGraphHandler) {
-        this.graphHandler = newGraphHandler;
+    public AnyResourcePredicateIterator(final LongIndex newLongIndex, final NodePool newNodePool) {
+        this.nodePool = newNodePool;
         iterator = newLongIndex.iterator();
     }
 
@@ -87,7 +87,7 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
         if (!iterator.hasNext()) {
             throw new NoSuchElementException();
         }
-        final Node node = graphHandler.createNode(iterator.next().getKey());
+        final Node node = nodePool.getNodeById(iterator.next().getKey());
         // Add check to see if it's a predicate.
         return (PredicateNode) node;
     }

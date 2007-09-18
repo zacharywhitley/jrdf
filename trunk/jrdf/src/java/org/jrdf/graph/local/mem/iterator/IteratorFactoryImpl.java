@@ -62,6 +62,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
 
 /**
@@ -73,10 +74,12 @@ import org.jrdf.util.ClosableIterator;
 public final class IteratorFactoryImpl implements IteratorFactory {
     private final LongIndex[] longIndexes;
     private final GraphHandler[] graphHandlers;
+    private final NodePool nodePool;
 
-    public IteratorFactoryImpl(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers) {
+    public IteratorFactoryImpl(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers, NodePool nodePool) {
         this.longIndexes = longIndexes;
         this.graphHandlers = graphHandlers;
+        this.nodePool = nodePool;
     }
 
     public ClosableMemIterator<Triple> newEmptyClosableIterator() {
@@ -101,10 +104,10 @@ public final class IteratorFactoryImpl implements IteratorFactory {
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return new AnyResourcePredicateIterator(longIndexes[1], graphHandlers[1]);
+        return new AnyResourcePredicateIterator(longIndexes[1], nodePool);
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return new FixedResourcePredicateIterator(longIndexes[1], graphHandlers[1], resource);
+        return new FixedResourcePredicateIterator(longIndexes[1], nodePool, resource);
     }
 }

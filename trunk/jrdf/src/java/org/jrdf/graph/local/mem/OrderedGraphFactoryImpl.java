@@ -92,7 +92,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         this.nodePool.clear();
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers);
+        IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers, nodePool);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], nodeComparator);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);

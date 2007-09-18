@@ -146,11 +146,11 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
     private Resource getNextOSPElement() throws GraphElementFactoryException {
         while (iterator201.hasNext()) {
             //Long index = iterator201.next().getKey();
-            final Long index = getNextNodeID(iterator201, graphHandler201);
+            final Long nodeId = getNextNodeID(iterator201, graphHandler201);
 
             //check the SPO does not contain the given index and that we haven't reached the end of iterator
-            if (index != -1 && !longIndex012.contains(index)) {
-                final Node node = graphHandler201.createNode(index);
+            if (nodeId != -1 && !longIndex012.contains(nodeId)) {
+                final Node node = resourceFactory.getNodeById(nodeId);
                 //check node is not a literal
                 if (!(node instanceof Literal)) {
                     return toResource(node);
@@ -169,7 +169,7 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
     private Resource getNextSPOElement() throws GraphElementFactoryException {
         final Long index = getNextNodeID(iterator012, graphHandler012);
         if (index != -1) {
-            final Node node = graphHandler012.createNode(index);
+            final Node node = resourceFactory.getNodeById(index);
             return toResource(node);
         }
         return null;
