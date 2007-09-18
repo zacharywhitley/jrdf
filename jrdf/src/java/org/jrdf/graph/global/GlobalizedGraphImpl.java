@@ -147,7 +147,7 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         return indexes[0].getNumberOfMolecules();
     }
 
-    public long numberOfTriples() {
+    public long getNumberOfTriples() {
         return indexes[0].getNumberOfTriples();
     }
 

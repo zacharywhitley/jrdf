@@ -59,9 +59,7 @@
 
 package org.jrdf.graph.global.iterator;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.util.ClosableIterator;
@@ -78,20 +76,14 @@ import java.util.NoSuchElementException;
  * Time: 12:57:13
  */
 public class TwoFixedIterator implements ClosableIterator<Molecule> {
-    private final MoleculeIndex[] indexes;
-    private Map<Node, Map<Node, Molecule>> subIndex;
-    private Map<Node, Molecule> subGroup;
     private Iterator<Molecule> moleculeIterator;
-    private Molecule currentMolecule;
     private boolean hasNext;
 
     public TwoFixedIterator(Node first, Node second, MoleculeIndex [] indexes, int searchIndex) {
-        this.indexes = indexes;
-
-        subIndex = indexes[searchIndex].getSubIndex(first);
+        Map<Node, Map<Node, Molecule>> subIndex = indexes[searchIndex].getSubIndex(first);
 
         if (null != subIndex) {
-            subGroup = subIndex.get(second);
+            Map<Node, Molecule> subGroup = subIndex.get(second);
             if (null != subGroup) {
                 moleculeIterator = subGroup.values().iterator();
                 hasNext = moleculeIterator.hasNext();
@@ -108,20 +100,12 @@ public class TwoFixedIterator implements ClosableIterator<Molecule> {
     }
 
     public Molecule next() throws NoSuchElementException {
-        currentMolecule = moleculeIterator.next();
+        Molecule currentMolecule = moleculeIterator.next();
         hasNext = moleculeIterator.hasNext();
         return currentMolecule;
     }
 
     public void remove() {
-        moleculeIterator.remove();
-
-        try {
-            indexes[GlobalizedGraph.SUBJECT_INDEX].remove(currentMolecule);
-            indexes[GlobalizedGraph.PREDICATE_INDEX].remove(currentMolecule);
-            indexes[GlobalizedGraph.OBJECT_INDEX].remove(currentMolecule);
-        } catch (GraphException e) {
-            throw new IllegalStateException("Unable to synchronize other indexes.");
-        }
+        throw new UnsupportedOperationException("Remove is unsupported.");
     }
 }

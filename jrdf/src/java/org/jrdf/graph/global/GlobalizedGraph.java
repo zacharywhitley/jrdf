@@ -190,7 +190,7 @@ public interface GlobalizedGraph {
      * Returns number of triples contained within the graph.
      * @return
      */
-    long numberOfTriples();
+    long getNumberOfTriples();
 
     /**
      * Returns a iterator factory for generating the various
