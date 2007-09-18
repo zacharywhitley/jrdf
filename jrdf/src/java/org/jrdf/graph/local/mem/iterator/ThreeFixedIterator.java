@@ -61,7 +61,6 @@ package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 
@@ -104,11 +103,6 @@ public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
     private Triple removeTriple;
 
     /**
-     * Contains the exception to throw if not null when next is called.
-     */
-    private TripleFactoryException exception;
-
-    /**
      * Constructor.
      */
     ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphHandler newHandler) {
@@ -143,11 +137,7 @@ public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
 
     public Triple next() throws NoSuchElementException {
         if (null == triple) {
-            if (exception != null) {
-                throw new NoSuchElementException(exception.getMessage());
-            } else {
-                throw new NoSuchElementException();
-            }
+            throw new NoSuchElementException();
         }
 
         // return the triple, clearing it first so next will fail on a subsequent call

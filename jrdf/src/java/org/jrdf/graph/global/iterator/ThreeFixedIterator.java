@@ -81,7 +81,6 @@ import java.util.NoSuchElementException;
 public class ThreeFixedIterator implements ClosableIterator<Molecule> {
     private Molecule molecule;
     private MoleculeIndex[] indexes;
-    private Exception exception;
 
     public ThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode,
                               MoleculeIndex[] newIndexes) {
@@ -104,11 +103,7 @@ public class ThreeFixedIterator implements ClosableIterator<Molecule> {
 
     public Molecule next() throws NoSuchElementException {
         if (null == molecule) {
-            if (exception != null) {
-                throw new NoSuchElementException(exception.getMessage());
-            } else {
-                throw new NoSuchElementException();
-            }
+            throw new NoSuchElementException();
         }
 
         // return the triple, clearing it first so next will fail on a subsequent call
