@@ -34,6 +34,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class MoleculeImpl implements Molecule {
+    // TODO This should probably be a set of molecules not triples.  For blank nodes that link to another set of blank nodes
+    // ie. _1 a b, _1 c _2, _2 a b, _2 c d, _2 e _3, _3 f g
     private SortedSet<Triple> triples;
     private Map<PredicateNode, SubjectNode> predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
     private Map<PredicateNode, ObjectNode> predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
