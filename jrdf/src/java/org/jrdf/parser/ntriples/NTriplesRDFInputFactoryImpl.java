@@ -77,6 +77,8 @@ import org.jrdf.parser.ntriples.parser.URIReferenceParser;
 import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.TripleParserImpl;
+import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 
@@ -94,15 +96,17 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph,
             ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
-        return new NTriplesEventReader(stream, baseURI, graph.getTripleFactory(), subjectParser, predicateParser,
-                objectParser, REGEX_MATCHER_FACTORY);
+        TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
+            graph.getTripleFactory());
+        return new NTriplesEventReader(stream, baseURI, REGEX_MATCHER_FACTORY, tripleParser);
     }
 
     public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
             ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
-        return new NTriplesEventReader(reader, baseURI, graph.getTripleFactory(), subjectParser, predicateParser,
-                objectParser, REGEX_MATCHER_FACTORY);
+        TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
+            graph.getTripleFactory());
+        return new NTriplesEventReader(reader, baseURI, REGEX_MATCHER_FACTORY, tripleParser);
     }
 
     public ParseErrorListener getRDFReporter() {
