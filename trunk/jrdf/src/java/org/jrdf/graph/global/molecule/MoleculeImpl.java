@@ -137,28 +137,6 @@ public class MoleculeImpl implements Molecule {
         return triples.size();
     }
 
-    public String toString() {
-        final StringBuilder res = new StringBuilder();
-        final Iterator<Triple> allTriples = iterator();
-        res.append("{\n");
-        if (allTriples.hasNext()) {
-            while (allTriples.hasNext()) {
-                final Triple t = allTriples.next();
-                res.append(t.toString());
-                res.append('\n');
-            }
-        } else {
-            res.append("EMPTY");
-        }
-        res.append("}");
-        return res.toString();
-    }
-
-    private boolean isBlankNode(Node node) {
-        return BlankNode.class.isAssignableFrom(node.getClass());
-    }
-
-    // TODO This isn't right.
     public boolean equals(Object obj) {
 
         // Check equal by reference
@@ -173,14 +151,51 @@ public class MoleculeImpl implements Molecule {
 
         // Cast and check for equality by value. (same class)
         try {
-            Molecule tmpMolecule = (Molecule) obj;
-            return tmpMolecule.getHeadTriple().equals(this.getHeadTriple());
+            MoleculeImpl tmpMolecule = (MoleculeImpl) obj;
+            return tmpMolecule.triples.equals(triples);
         } catch (ClassCastException cce) {
             return false;
         }
     }
 
     public int hashCode() {
-        return (triples != null ? triples.hashCode() : 0);
+        return triples != null ? triples.hashCode() : 0;
+    }
+
+    public String toString() {
+        final StringBuilder res = new StringBuilder();
+        final Iterator<Triple> allTriples = iterator();
+        res.append("{\n");
+        if (allTriples.hasNext()) {
+            while (allTriples.hasNext()) {
+                final Triple t = allTriples.next();
+                printTriple(res, t);
+            }
+        } else {
+            res.append("EMPTY");
+        }
+        res.append("}");
+        return res.toString();
+    }
+
+    private void printTriple(StringBuilder res, Triple t) {
+        res.append("[");
+        res.append(appendNode(t.getSubject())).append(", ");
+        res.append(appendNode(t.getPredicate())).append(", ");
+        res.append(appendNode(t.getObject()));
+        res.append("]");
+        res.append('\n');
+    }
+
+    private String appendNode(Node node) {
+        if (isBlankNode(node)) {
+            return "_";
+        } else {
+            return node.toString();
+        }
+    }
+
+    private boolean isBlankNode(Node node) {
+        return BlankNode.class.isAssignableFrom(node.getClass());
     }
 }
