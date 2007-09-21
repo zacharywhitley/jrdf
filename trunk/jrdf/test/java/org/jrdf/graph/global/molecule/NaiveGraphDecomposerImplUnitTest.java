@@ -100,6 +100,7 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     private Triple triple4;
     private Triple triple5;
     private Triple triple6;
+    private Triple triple7;
     private GraphDecomposer decomposer;
 
     public void setUp() throws Exception {
@@ -116,6 +117,7 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         triple4 = tripleFactory.createTriple(blankNode2, ref2, ref1);
         triple5 = tripleFactory.createTriple(ref2, ref1, ref1);
         triple6 = tripleFactory.createTriple(blankNode1, ref1, ref1);
+        triple7 = tripleFactory.createTriple(blankNode1, ref1, blankNode2);
         decomposer = new NaiveGraphDecomposerImpl();
     }
 
@@ -126,6 +128,18 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         Molecule expectedResults3 = moleculeFactory.createMolecule(triple0);
         Set<Molecule> molecules = decomposer.decompose(newGraph);
         checkMolecules(molecules, expectedResults1, expectedResults2, expectedResults3);
+    }
+    
+    public void testRedundantTriple() throws Exception {
+        newGraph.add(triple1, triple2, triple3, triple4, triple5, triple6, triple7);
+        Molecule equivalentResult1a = moleculeFactory.createMolecule(triple1, triple2, triple4, triple7, triple6);
+        Molecule equivalentResult1b = moleculeFactory.createMolecule(triple1, triple2, triple3, triple4, triple7);
+        Molecule equivalentResult1c = moleculeFactory.createMolecule(triple1, triple2, triple3, triple4, triple7, triple6);
+        Molecule expectedResults2 = moleculeFactory.createMolecule(triple5);
+        Set<Molecule> molecules = decomposer.decompose(newGraph);
+        checkMolecules(molecules, equivalentResult1a, expectedResults2);
+        checkMolecules(molecules, equivalentResult1b, expectedResults2);
+        checkMolecules(molecules, equivalentResult1c, expectedResults2);
     }
 
     public void testGroundedDecompose() throws Exception {
