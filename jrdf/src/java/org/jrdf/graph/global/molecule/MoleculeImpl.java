@@ -40,7 +40,6 @@ public class MoleculeImpl implements Molecule {
     private SortedSet<Triple> triples;
     private Map<PredicateNode, SubjectNode> predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
     private Map<PredicateNode, ObjectNode> predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
-    private static final int THIRTY_ONE = 31;
 
     MoleculeImpl(Set<Triple> newTriples, TripleComparator comparator) {
         this.triples = new TreeSet<Triple>(comparator);
@@ -151,6 +150,7 @@ public class MoleculeImpl implements Molecule {
         return BlankNode.class.isAssignableFrom(node.getClass());
     }
 
+    // TODO This isn't right.
     public boolean equals(Object obj) {
 
         // Check equal by reference
