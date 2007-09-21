@@ -70,18 +70,26 @@ public class MoleculeImpl implements Molecule {
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         if (isBlankNode(subject)) {
-            if (isBlankNode(object)) {
-                return predicateSubjectMap.containsKey(predicate);
-            } else {
-                return predicateSubjectMap.containsKey(predicate) && predicateObjectMap.containsValue(object);
-            }
+            return hasBlankSubject(object, predicate);
         } else {
-            if (isBlankNode(object)) {
-                return predicateSubjectMap.containsValue(subject) && predicateObjectMap.containsKey(predicate);
-            } else {
-                return predicateSubjectMap.containsKey(predicate) && predicateSubjectMap.containsValue(subject) &&
-                    predicateObjectMap.containsValue(object);
-            }
+            return hasFixedSubject(object, subject, predicate);
+        }
+    }
+
+    private boolean hasFixedSubject(ObjectNode object, SubjectNode subject, PredicateNode predicate) {
+        if (isBlankNode(object)) {
+            return predicateSubjectMap.containsValue(subject) && predicateObjectMap.containsKey(predicate);
+        } else {
+            return predicateSubjectMap.containsKey(predicate) && predicateSubjectMap.containsValue(subject) &&
+                predicateObjectMap.containsValue(object);
+        }
+    }
+
+    private boolean hasBlankSubject(ObjectNode object, PredicateNode predicate) {
+        if (isBlankNode(object)) {
+            return predicateSubjectMap.containsKey(predicate);
+        } else {
+            return predicateSubjectMap.containsKey(predicate) && predicateObjectMap.containsValue(object);
         }
     }
 
