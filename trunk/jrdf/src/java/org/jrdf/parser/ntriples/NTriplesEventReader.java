@@ -58,16 +58,9 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.parser.ParseException;
 import org.jrdf.parser.RDFEventReader;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 
@@ -90,30 +83,21 @@ public class NTriplesEventReader implements RDFEventReader {
 
     private final LineNumberReader bufferedReader;
     private final URI baseURI;
-    private final SubjectParser subjectParser;
-    private final PredicateParser predicateParser;
-    private final ObjectParser objectParser;
-    private final TripleFactory factory;
     private final RegexMatcherFactory regexMatcherFactory;
+    private final TripleParser tripleParser;
     private Triple nextTriple;
 
-    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final TripleFactory newFactory,
-            final SubjectParser newSubjectParser, final PredicateParser newPredicateParser,
-            final ObjectParser newObjectParser, final RegexMatcherFactory newRegexFactory) {
-        this(new InputStreamReader(in), newBaseURI, newFactory, newSubjectParser, newPredicateParser, newObjectParser,
-                newRegexFactory);
+    public NTriplesEventReader(final InputStream in, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
+        final TripleParser newTripleParser) {
+        this(new InputStreamReader(in), newBaseURI, newRegexFactory, newTripleParser);
     }
 
-    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final TripleFactory newFactory,
-            final SubjectParser newSubjectParser, final PredicateParser newPredicateParser,
-            final ObjectParser newObjectParser, final RegexMatcherFactory newRegexFactory) {
+    public NTriplesEventReader(final Reader reader, final URI newBaseURI, final RegexMatcherFactory newRegexFactory,
+        final TripleParser newTripleParser) {
         this.bufferedReader = new LineNumberReader(reader);
         this.baseURI = newBaseURI;
-        this.factory = newFactory;
-        this.subjectParser = newSubjectParser;
-        this.predicateParser = newPredicateParser;
-        this.objectParser = newObjectParser;
         this.regexMatcherFactory = newRegexFactory;
+        this.tripleParser = newTripleParser;
         parseNext();
     }
 
@@ -170,25 +154,9 @@ public class NTriplesEventReader implements RDFEventReader {
         if (!COMMENT_REGEX.matcher(line).matches()) {
             tripleRegexMatcher = regexMatcherFactory.createMatcher(TRIPLE_REGEX, line);
             if (tripleRegexMatcher.matches()) {
-                triple = parseTriple(tripleRegexMatcher);
+                triple = tripleParser.parseTriple(tripleRegexMatcher);
             }
         }
         return triple;
-    }
-
-    private Triple parseTriple(RegexMatcher tripleRegexMatcher) {
-        try {
-            SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
-            PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
-            ObjectNode object = objectParser.parseObject(tripleRegexMatcher);
-            if (subject != null && predicate != null && object != null) {
-                return factory.createTriple(subject, predicate, object);
-            } else {
-                // This is an error - will become a NoSuchElementException.
-                return null;
-            }
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
