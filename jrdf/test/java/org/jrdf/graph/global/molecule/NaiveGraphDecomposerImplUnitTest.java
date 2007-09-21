@@ -70,6 +70,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
@@ -125,10 +126,22 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(molecules, expectedResults1, expectedResults2, expectedResults3);
     }
 
-    public void testDecomposeGraph2() throws Exception {
-        newGraph.add(triple3);
+    public void testGroundedDecompose() throws Exception {
+        checkForSingleTriple(triple1);
+    }
+
+    public void testSingleBlankDecompose() throws Exception {
+        checkForSingleTriple(triple2);
+    }
+    
+    public void testTwoBlankDecompose() throws Exception {
+        checkForSingleTriple(triple3);
+    }
+
+    private void checkForSingleTriple(Triple triple) throws GraphException {
+        newGraph.add(triple);
         Set<Molecule> molecules = decomposer.decompose(newGraph);
-        Molecule expectedResults1 = moleculeFactory.createMolecule(triple3);
+        Molecule expectedResults1 = moleculeFactory.createMolecule(triple);
         checkMolecules(molecules, expectedResults1);
     }
 
