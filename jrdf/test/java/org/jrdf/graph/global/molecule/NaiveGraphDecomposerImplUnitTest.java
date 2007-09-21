@@ -99,6 +99,7 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     private Triple triple3;
     private Triple triple4;
     private Triple triple5;
+    private Triple triple6;
     private GraphDecomposer decomposer;
 
     public void setUp() throws Exception {
@@ -114,10 +115,11 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         triple3 = tripleFactory.createTriple(blankNode2, ref1, blankNode1);
         triple4 = tripleFactory.createTriple(blankNode2, ref2, ref1);
         triple5 = tripleFactory.createTriple(ref2, ref1, ref1);
+        triple6 = tripleFactory.createTriple(blankNode1, ref1, ref1);
         decomposer = new NaiveGraphDecomposerImpl();
     }
 
-    public void testDecomposeGraph1() throws Exception {
+    public void testGeneralDecomposeGraph() throws Exception {
         newGraph.add(triple0, triple1, triple2, triple3, triple4, triple5);
         Molecule expectedResults1 = moleculeFactory.createMolecule(triple1, triple2, triple3, triple4);
         Molecule expectedResults2 = moleculeFactory.createMolecule(triple5);
@@ -133,7 +135,11 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     public void testSingleBlankDecompose() throws Exception {
         checkForSingleTriple(triple2);
     }
-    
+
+    public void testSingleBlankDecompose2() throws Exception {
+        checkForSingleTriple(triple6);
+    }
+
     public void testTwoBlankDecompose() throws Exception {
         checkForSingleTriple(triple3);
     }
