@@ -133,6 +133,7 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(molecules, expectedResults1, expectedResults2, expectedResults3);
     }
 
+    // TODO: Write test here for GlobalGraph - should get back only one result!!!
     public void testNoLeanificationOnLocalGraph() throws Exception {
         newGraph.add(blank1SubjectRef1, blank2SubjectRef1, blank1SubjectRef2, blank2SubjectRef2);
         Molecule expectedResult1 = moleculeFactory.createMolecule(blank1SubjectRef1, blank1SubjectRef2);
