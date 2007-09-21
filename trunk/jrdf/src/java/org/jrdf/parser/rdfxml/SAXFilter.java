@@ -25,6 +25,7 @@ import org.jrdf.vocabulary.RDF;
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.ContentHandler;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.sax.SAXTransformerFactory;
@@ -49,7 +50,9 @@ import java.util.Stack;
 
 // TODO (AN) Dependent on RdfXmlParser
 
-class SAXFilter implements org.xml.sax.ContentHandler {
+class SAXFilter implements ContentHandler {
+
+    private static final int INITIAL_BUFFER_SIZE = 512;
 
     /**
      * The transformer handler used to escape XML.
@@ -92,11 +95,10 @@ class SAXFilter implements org.xml.sax.ContentHandler {
      * Stack of ElementInfo objects.
      */
     private Stack<ElementInfo> elInfoStack = new Stack<ElementInfo>();
-
     /**
      * StringBuffer used to collect text during parsing.
      */
-    private StringBuffer charBuf = new StringBuffer(512);
+    private StringBuffer charBuf = new StringBuffer(INITIAL_BUFFER_SIZE);
 
     /**
      * The document's URI.
@@ -561,7 +563,7 @@ class SAXFilter implements org.xml.sax.ContentHandler {
 
         if (0 < unknownPrefixesCount) {
             // Create a String with all needed context prefixes
-            StringBuffer contextPrefixes = new StringBuffer(1024);
+            StringBuffer contextPrefixes = new StringBuffer(INITIAL_BUFFER_SIZE);
             ElementInfo topElement = peekStack();
 
             for (String prefix : unknownPrefixesInXmlLiteral) {

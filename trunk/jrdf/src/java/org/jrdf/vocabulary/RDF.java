@@ -194,29 +194,38 @@ public class RDF extends Vocabulary {
             REST = new URI(BASE_URI + "rest");
 
             // Add Classes
-            RESOURCES.add(SEQ);
-            RESOURCES.add(BAG);
-            RESOURCES.add(ALT);
-            RESOURCES.add(STATEMENT);
-            RESOURCES.add(PROPERTY);
-            RESOURCES.add(XML_LITERAL);
-            RESOURCES.add(LIST);
-            RESOURCES.add(NIL);
-
-            RESOURCES.add(LI);
+            addClasses();
 
             // Add Properties
-            RESOURCES.add(SUBJECT);
-            RESOURCES.add(PREDICATE);
-            RESOURCES.add(OBJECT);
-            RESOURCES.add(TYPE);
-            RESOURCES.add(VALUE);
-            RESOURCES.add(FIRST);
-            RESOURCES.add(REST);
+            addProperties();
+
         } catch (URISyntaxException use) {
 
             // This should never happen.
             throw new ExceptionInInitializerError("Failed to create required URIs");
         }
+    }
+
+    private static void addProperties() {
+        RESOURCES.add(SUBJECT);
+        RESOURCES.add(PREDICATE);
+        RESOURCES.add(OBJECT);
+        RESOURCES.add(TYPE);
+        RESOURCES.add(VALUE);
+        RESOURCES.add(FIRST);
+        RESOURCES.add(REST);
+    }
+
+    private static void addClasses() {
+        RESOURCES.add(SEQ);
+        RESOURCES.add(BAG);
+        RESOURCES.add(ALT);
+        RESOURCES.add(STATEMENT);
+        RESOURCES.add(PROPERTY);
+        RESOURCES.add(XML_LITERAL);
+        RESOURCES.add(LIST);
+        RESOURCES.add(NIL);
+
+        RESOURCES.add(LI);
     }
 }

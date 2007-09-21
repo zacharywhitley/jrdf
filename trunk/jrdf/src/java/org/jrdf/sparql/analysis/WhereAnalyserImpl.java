@@ -114,24 +114,27 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
 
-            if (lhs != null) {
-                if (rhs.getClass().isAssignableFrom(Optional.class)) {
-                    handleOptional(lhs, rhs);
-                } else if (rhs.getClass().isAssignableFrom(Conjunction.class)) {
-                    ((Conjunction<ExpressionVisitor>) rhs).setLhs(lhs);
-                    expression = rhs;
-                } else if (rhs.getClass().isAssignableFrom(Constraint.class) &&
-                        (lhs.getClass().isAssignableFrom(Constraint.class))) {
-                    expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
-                }
-            } else {
-                expression = rhs;
-            }
+            handleExpressions(lhs, rhs);
         } else {
             super.caseAFilteredBasicGraphPatternGraphPattern(node);
         }
     }
 
+    private void handleExpressions(Expression<ExpressionVisitor> lhs, Expression<ExpressionVisitor> rhs) {
+        if (lhs != null) {
+            if (rhs.getClass().isAssignableFrom(Optional.class)) {
+                handleOptional(lhs, rhs);
+            } else if (rhs.getClass().isAssignableFrom(Conjunction.class)) {
+                ((Conjunction<ExpressionVisitor>) rhs).setLhs(lhs);
+                expression = rhs;
+            } else if (rhs.getClass().isAssignableFrom(Constraint.class) &&
+                    (lhs.getClass().isAssignableFrom(Constraint.class))) {
+                expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
+            }
+        } else {
+            expression = rhs;
+        }
+    }
 
 
     @Override

@@ -1035,6 +1035,7 @@ public final class RdfXmlParser implements ConfigurableParser {
                     "nil".equals(localName) ||
                     localName.startsWith("_")) {
                 // These are OK
+                ;
             } else if (
                     "LI".equals(localName) ||
                     "RDF".equals(localName) ||
@@ -1084,6 +1085,7 @@ public final class RdfXmlParser implements ConfigurableParser {
                     "nil".equals(localName) ||
                     localName.startsWith("_")) {
                 // These are OK
+                ;
             } else if (
                     "Description".equals(localName) ||
                     "RDF".equals(localName) ||
@@ -1136,6 +1138,7 @@ public final class RdfXmlParser implements ConfigurableParser {
                         "nil".equals(localName) ||
                         localName.startsWith("_")) {
                     // These are OK
+                    ;
                 } else if (
                         "Description".equals(localName) ||
                                 "LI".equals(localName) ||

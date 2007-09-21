@@ -19,7 +19,6 @@
     <suppress checks="JavaNCSS" files="RDF.java"/>
     <suppress checks="JavaNCSS" files="RDFS.java"/>
     <suppress checks="JavaNCSS" files="XSD.java"/>
-    <suppress checks="JavaNCSS" files="JrdfExample.java"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl.java"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl.java"/>
     <suppress checks="JavaNCSS" files="NodePoolImpl.java"/>
@@ -38,7 +37,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl.java"/>
     <suppress checks="CyclomaticComplexity" files="NTriplesEventReader.java"/>
     <suppress checks="ParameterNumber" files="NTriplesEventReader.java"/>
-    <suppress checks="ParameterNumber" files="AnyResourceIterator.java" />
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="ClassDataAbstractionCoupling" files="GlobalizedGraphMemFactoryImpl.java"/>
@@ -47,7 +45,6 @@
     <suppress checks="CyclomaticComplexity" files="NaiveGraphDecomposerImpl.java" />
     <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem.java" />
     <suppress checks="JavaNCSS" files="MoleculeComparatorImpl.java" />
-    <suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl.java" />
     <suppress checks="ReturnCount" files="MoleculeImpl.java" />
     <suppress checks="ReturnCount" files="MoleculeComparatorImpl.java" />
 
@@ -62,18 +59,22 @@
     <suppress checks="CyclomaticComplexity" files="XmlUtil.java"/>
     <suppress checks="CyclomaticComplexity" files="RdfXmlParser.java"/>
     <suppress checks="CyclomaticComplexity" files="SAXFilter.java"/>
-    <suppress checks="EmptyBlock" files="RdfXmlParser.java"/>
     <suppress checks="JavaNCSS" files="RdfXmlParser.java"/>
     <suppress checks="JavaNCSS" files="SAXFilter.java"/>
     <suppress checks="JavaNCSS" files="XmlDatatypeUtil.java"/>
     <suppress checks="JavaNCSS" files="XmlUtil.java"/>
     <suppress checks="JavadocStyle" files="XmlSchema.java"/>
-    <suppress checks="MagicNumber" files="Atts.java"/>
-    <suppress checks="MagicNumber" files="SAXFilter.java"/>
-    <suppress checks="MagicNumber" files="XmlDatatypeUtil.java"/>
     <suppress checks="MagicNumber" files="XmlUtil.java"/>
     <suppress checks="MemberName" files="RdfXmlParser.java"/>
     <suppress checks="MethodLength" files="XmlUtil.java"/>
     <suppress checks="ReturnCount" files="XmlDatatypeUtil.java"/>
     <suppress checks="ReturnCount" files="XmlUtil.java"/>
+
+    <!--suppress checks="MagicNumber" files="SAXFilter.java"/-->
+    <!--suppress checks="MagicNumber" files="XmlDatatypeUtil.java"/-->
+    <!--suppress checks="ParameterNumber" files="AnyResourceIterator.java" /-->
+    <!--suppress checks="JavaNCSS" files="JrdfExample.java"/-->
+    <!--suppress checks="EmptyBlock" files="RdfXmlParser.java"/-->
+    <!--suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl.java" /-->
+
 </suppressions>

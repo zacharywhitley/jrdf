@@ -61,25 +61,30 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
             Triple triple = iterator.next();
             //check triple has not already been added to molecule
             if (!triplesChecked.contains(triple)) {
-                boolean blankSubject = isBlankNode(triple.getSubject());
-                boolean blankObject = isBlankNode(triple.getObject());
-                if (!blankSubject || !blankObject) {
-                    Molecule molecule = new MoleculeImpl(comparator);
-                    molecule.add(triple);
-                    if (blankSubject || blankObject) {
-                        Set<Triple> hangingTripleSet = getHangingTriples(triple);
-                        molecule.add(hangingTripleSet);
-                    }
-                    Iterator<Triple> tripleIterator = molecule.iterator();
-                    while (tripleIterator.hasNext()) {
-                        Triple t = tripleIterator.next();
-                        triplesChecked.add(t);
-                    }
-                    molecules.add(molecule);
-                }
+                checkThatTripleNotAdded(triple, triplesChecked, molecules);
             }
         }
         return molecules;
+    }
+
+    private void checkThatTripleNotAdded(Triple triple, Set<Triple> triplesChecked, Set<Molecule> molecules)
+        throws GraphException {
+        boolean blankSubject = isBlankNode(triple.getSubject());
+        boolean blankObject = isBlankNode(triple.getObject());
+        if (!blankSubject || !blankObject) {
+            Molecule molecule = new MoleculeImpl(comparator);
+            molecule.add(triple);
+            if (blankSubject || blankObject) {
+                Set<Triple> hangingTripleSet = getHangingTriples(triple);
+                molecule.add(hangingTripleSet);
+            }
+            Iterator<Triple> tripleIterator = molecule.iterator();
+            while (tripleIterator.hasNext()) {
+                Triple t = tripleIterator.next();
+                triplesChecked.add(t);
+            }
+            molecules.add(molecule);
+        }
     }
 
     /**
