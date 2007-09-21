@@ -64,13 +64,13 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
             currentTriple = iterator.next();
             //check triple has not already been added to molecule
             if (!triplesChecked.contains(currentTriple)) {
-                addTriplesWithOneBlankNode();
+                addTriplesWithBlankNodes();
             }
         }
         return molecules;
     }
 
-    private void addTriplesWithOneBlankNode() throws GraphException {
+    private void addTriplesWithBlankNodes() throws GraphException {
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
         boolean blankObject = isBlankNode(currentTriple.getObject());
         Molecule molecule = new MoleculeImpl(comparator);
