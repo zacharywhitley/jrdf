@@ -40,9 +40,7 @@
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="ClassDataAbstractionCoupling" files="GlobalizedGraphMemFactoryImpl.java"/>
-    <suppress checks="CyclomaticComplexity" files="MoleculeImpl.java" />
     <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem.java" />
-    <suppress checks="ReturnCount" files="MoleculeImpl.java" />
 
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>
