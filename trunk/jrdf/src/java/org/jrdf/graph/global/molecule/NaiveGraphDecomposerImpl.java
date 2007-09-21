@@ -48,41 +48,38 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     // TODO AN Change blank node comparator????
     private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
         new NodeTypeComparatorImpl(), new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl())));
+    private final Set<Triple> triplesChecked = new HashSet<Triple>();
+    private final Set<Molecule> molecules = new HashSet<Molecule>();
     private Graph graph;
+    private Triple currentTriple;
 
     public Set<Molecule> decompose(Graph graph) throws GraphException {
         this.graph = graph;
+        triplesChecked.clear();
+        molecules.clear();
         ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        Set<Molecule> molecules = new HashSet<Molecule>();          //set of molecules created by decompose process
-        Set<Triple> triplesChecked = new HashSet<Triple>();       //set of triples which have been added to a molecule)
-
         //move through triples
         while (iterator.hasNext()) {
-            Triple triple = iterator.next();
+            currentTriple = iterator.next();
             //check triple has not already been added to molecule
-            if (!triplesChecked.contains(triple)) {
-                checkThatTripleNotAdded(triple, triplesChecked, molecules);
+            if (!triplesChecked.contains(currentTriple)) {
+                addTriplesWithOneBlankNode();
             }
         }
         return molecules;
     }
 
-    private void checkThatTripleNotAdded(Triple triple, Set<Triple> triplesChecked, Set<Molecule> molecules)
-        throws GraphException {
-        boolean blankSubject = isBlankNode(triple.getSubject());
-        boolean blankObject = isBlankNode(triple.getObject());
-        if (!blankSubject || !blankObject) {
+    private void addTriplesWithOneBlankNode() throws GraphException {
+        boolean blankSubject = isBlankNode(currentTriple.getSubject());
+        boolean blankObject = isBlankNode(currentTriple.getObject());
+        if (!(blankSubject && blankObject)) {
             Molecule molecule = new MoleculeImpl(comparator);
-            molecule.add(triple);
+            molecule.add(currentTriple);
             if (blankSubject || blankObject) {
-                Set<Triple> hangingTripleSet = getHangingTriples(triple);
-                molecule.add(hangingTripleSet);
+                Set<Triple> hangingTriples = getHangingTriples();
+                molecule.add(hangingTriples);
             }
-            Iterator<Triple> tripleIterator = molecule.iterator();
-            while (tripleIterator.hasNext()) {
-                Triple t = tripleIterator.next();
-                triplesChecked.add(t);
-            }
+            addMoleculeTriplesToCheckedTriples(molecule);
             molecules.add(molecule);
         }
     }
@@ -92,29 +89,22 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
      * other triples which hang off blank nodes which occur
      * either as the subject or object of the triple.
      *
-     * @param triple
      * @return
      * @throws GraphException
      */
-    protected Set<Triple> getHangingTriples(Triple triple) throws GraphException {
+    protected Set<Triple> getHangingTriples() throws GraphException {
         Set<Triple> hangingTriples = new HashSet<Triple>();
-        getHangingTriples(hangingTriples, triple);
+        addBlankNode(hangingTriples, currentTriple, currentTriple.getSubject());
+        addBlankNode(hangingTriples, currentTriple, currentTriple.getObject());
         return hangingTriples;
     }
 
-    /**
-     * Given the specified triple, this method will check to see if the
-     * subject and then object node to check if they are blank nodes.
-     * In the case they are this method will then call handleBlankNode method
-     * which adds the hanging triples to the hangingTriples set. In the case
-     *
-     * @param hangingTriples
-     * @param triple
-     * @throws GraphException
-     */
-    protected void getHangingTriples(Set<Triple> hangingTriples, Triple triple) throws GraphException {
-        addBlankNode(hangingTriples, triple, triple.getSubject());
-        addBlankNode(hangingTriples, triple, triple.getObject());
+    private void addMoleculeTriplesToCheckedTriples(Molecule molecule) {
+        Iterator<Triple> tripleIterator = molecule.iterator();
+        while (tripleIterator.hasNext()) {
+            Triple t = tripleIterator.next();
+            triplesChecked.add(t);
+        }
     }
 
     private void addBlankNode(Set<Triple> hangingTriples, Triple triple, Node resource) throws GraphException {
@@ -146,7 +136,8 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
             Triple nextTriple = tripleIterator.next();
             if (!nextTriple.isGrounded() && !nextTriple.equals(triple) && !hangingTriples.contains(nextTriple)) {
                 hangingTriples.add(nextTriple);
-                getHangingTriples(hangingTriples, nextTriple);
+                addBlankNode(hangingTriples, nextTriple, nextTriple.getSubject());
+                addBlankNode(hangingTriples, nextTriple, nextTriple.getObject());
             }
         }
     }

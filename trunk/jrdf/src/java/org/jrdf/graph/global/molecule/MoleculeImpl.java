@@ -42,6 +42,12 @@ public class MoleculeImpl implements Molecule {
     private Map<PredicateNode, ObjectNode> predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
     private static final int THIRTY_ONE = 31;
 
+    MoleculeImpl(Set<Triple> newTriples, TripleComparator comparator) {
+        this.triples = new TreeSet<Triple>(comparator);
+        for (Triple triple : newTriples) {
+            add(triple);
+        }
+    }
 
     public MoleculeImpl(TripleComparator comparator) {
         this.triples = new TreeSet<Triple>(comparator);
@@ -166,12 +172,7 @@ public class MoleculeImpl implements Molecule {
         }
     }
 
-
     public int hashCode() {
-        int result;
-        result = (triples != null ? triples.hashCode() : 0);
-        result = THIRTY_ONE * result + (predicateSubjectMap != null ? predicateSubjectMap.hashCode() : 0);
-        result = THIRTY_ONE * result + (predicateObjectMap != null ? predicateObjectMap.hashCode() : 0);
-        return result;
+        return (triples != null ? triples.hashCode() : 0);
     }
 }
