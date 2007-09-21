@@ -72,16 +72,14 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     private void addTriplesWithOneBlankNode() throws GraphException {
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
         boolean blankObject = isBlankNode(currentTriple.getObject());
-        if (!(blankSubject && blankObject)) {
-            Molecule molecule = new MoleculeImpl(comparator);
-            molecule.add(currentTriple);
-            if (blankSubject || blankObject) {
-                Set<Triple> hangingTriples = getHangingTriples();
-                molecule.add(hangingTriples);
-            }
-            addMoleculeTriplesToCheckedTriples(molecule);
-            molecules.add(molecule);
+        Molecule molecule = new MoleculeImpl(comparator);
+        molecule.add(currentTriple);
+        if (blankSubject || blankObject) {
+            Set<Triple> hangingTriples = getHangingTriples();
+            molecule.add(hangingTriples);
         }
+        addMoleculeTriplesToCheckedTriples(molecule);
+        molecules.add(molecule);
     }
 
     /**
