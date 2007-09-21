@@ -117,8 +117,6 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         indexes[2].add(obj, subj, pred, molecule);
     }
 
-
-
     public void remove(Molecule molecule) throws GraphException {
         Triple headTriple = molecule.getHeadTriple();
         SubjectNode subj = headTriple.getSubject();

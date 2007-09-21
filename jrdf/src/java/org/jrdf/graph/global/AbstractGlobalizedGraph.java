@@ -213,4 +213,8 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
         }
         return res;
     }
+
+    public String toString() {
+        return moleculeIndexSPO.toString();
+    }
 }
