@@ -77,7 +77,6 @@ import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
-import java.util.Iterator;
 import java.util.Set;
 
 public class NaiveGraphDecomposerImplUnitTest extends TestCase {
@@ -126,23 +125,11 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(molecules, expectedResults1, expectedResults2, expectedResults3);
     }
 
-//    public void testDecomposeGraph2() throws Exception {
-//        newGraph.add(triple3);
-//        Set<Molecule> molecules = decomposer.decompose(newGraph);
-//        Molecule expectedResults1 = moleculeFactory.createMolecule(triple3);
-//        checkMolecules(molecules, expectedResults1);
-//    }
-
-    private void compareTriples(Molecule molecule, Set<Triple> expectedResults1) {
-        //Set<Triple> actualTriples = molecule.getTriples();
-        assertEquals(expectedResults1.size(), molecule.size());
-        //for (Triple triple : actualTriples) {
-        Iterator<Triple> iterator = molecule.iterator();
-
-        while (iterator.hasNext()) {
-            Triple triple = iterator.next();
-            assertTrue(expectedResults1.contains(triple));
-        }
+    public void testDecomposeGraph2() throws Exception {
+        newGraph.add(triple3);
+        Set<Molecule> molecules = decomposer.decompose(newGraph);
+        Molecule expectedResults1 = moleculeFactory.createMolecule(triple3);
+        checkMolecules(molecules, expectedResults1);
     }
 
     private void checkMolecules(Set<Molecule> actualMolecules, Molecule... expectedResults) {
