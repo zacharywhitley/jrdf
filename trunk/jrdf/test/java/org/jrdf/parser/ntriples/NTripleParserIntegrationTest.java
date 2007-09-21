@@ -63,10 +63,10 @@ import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
-import org.jrdf.parser.GraphStatementHandler;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
+import org.jrdf.parser.GraphStatementHandler;
+import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.bnodefactory.ParserBlankNodeFactoryImpl;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.checkGraph;
 import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.getSampleData;
@@ -75,10 +75,10 @@ import static org.jrdf.parser.ntriples.NTriplesParserTestUtil.standardTest;
 
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class NTripleParserIntegrationTest extends TestCase {
     private static final String TEST_DATA = "org/jrdf/parser/ntriples/test.nt";
@@ -134,7 +134,7 @@ public class NTripleParserIntegrationTest extends TestCase {
             ParserFactory parserFactory = new ParserFactoryImpl();
             MapFactory creator = new MemMapFactory();
             ParserBlankNodeFactory factory = new ParserBlankNodeFactoryImpl(creator, graph.getElementFactory());
-            NTriplesParser parser = parserFactory.createParser(graph.getElementFactory(), factory);
+            NTriplesParser parser = parserFactory.createParser(graph, factory);
             parser.setStatementHandler(new GraphStatementHandler(graph));
             parser.parse(file.openStream(), "foo");
         }

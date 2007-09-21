@@ -59,17 +59,13 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.StatementHandler;
 import org.jrdf.parser.StatementHandlerConfiguration;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.TripleParser;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 
@@ -88,17 +84,12 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
         "(\\<([\\x20-\\x7E]+?)\\>|_:((\\p{Alpha}\\p{Alnum}*?))|((([\\x20-\\x7E]+?))))\\p{Blank}*" +
         "\\.\\p{Blank}*");
 
-    private final SubjectParser subjectParser;
-    private final PredicateParser predicateParser;
-    private final ObjectParser objectParser;
+    private final TripleParser tripleParser;
     private final RegexMatcherFactory regexMatcherFactory;
     private StatementHandler sh;
 
-    public NTriplesParser(SubjectParser newSubjectParser, PredicateParser newPredicateParser,
-            ObjectParser newObjectParser, RegexMatcherFactory newRegexFactory) {
-        this.subjectParser = newSubjectParser;
-        this.predicateParser = newPredicateParser;
-        this.objectParser = newObjectParser;
+    public NTriplesParser(TripleParser tripleFactory, RegexMatcherFactory newRegexFactory) {
+        this.tripleParser = tripleFactory;
         this.regexMatcherFactory = newRegexFactory;
     }
 
@@ -125,12 +116,8 @@ public class NTriplesParser implements Parser, StatementHandlerConfiguration {
         }
     }
 
-    private void parseTriple(RegexMatcher tripleRegexMatcher) throws ParseException, StatementHandlerException {
-        SubjectNode subject = subjectParser.parseSubject(tripleRegexMatcher);
-        PredicateNode predicate = predicateParser.parsePredicate(tripleRegexMatcher);
-        ObjectNode object = objectParser.parseObject(tripleRegexMatcher);
-        if (subject != null && predicate != null && object != null) {
-            sh.handleStatement(subject, predicate, object);
-        }
+    private void parseTriple(RegexMatcher tripleRegexMatcher) throws StatementHandlerException {
+        Triple triple = tripleParser.parseTriple(tripleRegexMatcher);
+        sh.handleStatement(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 }

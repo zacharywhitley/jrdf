@@ -72,8 +72,8 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.LexicalComparator;
+import org.jrdf.graph.datatype.LexicalComparatorImpl;
 import org.jrdf.graph.datatype.SemanticComparator;
 import org.jrdf.graph.datatype.SemanticComparatorImpl;
 import org.jrdf.parser.GraphStatementHandler;
@@ -106,7 +106,7 @@ public class NTriplesParserTestUtil {
     public static Set<Triple> parseNTriplesFile(InputStream in, Graph graph, ParserBlankNodeFactory factory)
         throws Exception {
         ParserFactory parserFactory = new ParserFactoryImpl();
-        NTriplesParser parser = parserFactory.createParser(graph.getElementFactory(), factory);
+        NTriplesParser parser = parserFactory.createParser(graph, factory);
         parser.setStatementHandler(new GraphStatementHandler(graph));
         parser.parse(in, "foo");
         Set<Triple> actualResults = new HashSet<Triple>();
