@@ -62,23 +62,21 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.global.GroundedTripleComparatorImpl;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
-import static java.util.Arrays.asList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -128,12 +126,12 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(molecules, expectedResults1, expectedResults2, expectedResults3);
     }
 
-    public void testDecomposeGraph2() throws Exception {
-        newGraph.add(triple3);
-        Set<Molecule> molecules = decomposer.decompose(newGraph);
-        Set<Triple> expectedResults1 = new HashSet<Triple>(asList(triple3));
-
-    }
+//    public void testDecomposeGraph2() throws Exception {
+//        newGraph.add(triple3);
+//        Set<Molecule> molecules = decomposer.decompose(newGraph);
+//        Molecule expectedResults1 = moleculeFactory.createMolecule(triple3);
+//        checkMolecules(molecules, expectedResults1);
+//    }
 
     private void compareTriples(Molecule molecule, Set<Triple> expectedResults1) {
         //Set<Triple> actualTriples = molecule.getTriples();
@@ -148,7 +146,7 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     }
 
     private void checkMolecules(Set<Molecule> actualMolecules, Molecule... expectedResults) {
-        assertEquals(expectedResults.length, actualMolecules.size());
+        assertEquals("Wrong number of molecules decomposed", expectedResults.length, actualMolecules.size());
         for (Molecule result : expectedResults) {
             assertTrue("Expected to find result: " + result + " in " + actualMolecules,
                 actualMolecules.contains(result));
