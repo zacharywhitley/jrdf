@@ -23,6 +23,7 @@ package org.jrdf.parser.rdfxml;
  * Provides methods for handling the standard XML Schema datatypes.
  */
 public class XmlDatatypeUtil {
+    private static final int THREE = 3;
 
     /**
      * Checks whether the supplied datatype is a primitive XML Schema
@@ -827,11 +828,11 @@ public class XmlDatatypeUtil {
             // For example, 100.0 will be normalize to 1.000 and
             // -10.0 to -1.00.
             int nonZeroIdx = mantissa.length() - 1;
-            while (3 <= nonZeroIdx && '0' == mantissa.charAt(nonZeroIdx)) {
+            while (THREE <= nonZeroIdx && '0' == mantissa.charAt(nonZeroIdx)) {
                 nonZeroIdx--;
             }
 
-            if (3 > nonZeroIdx && '-' == mantissa.charAt(0)) {
+            if (THREE > nonZeroIdx && '-' == mantissa.charAt(0)) {
                 nonZeroIdx++;
             }
 

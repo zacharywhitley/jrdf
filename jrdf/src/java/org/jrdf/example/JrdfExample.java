@@ -59,6 +59,8 @@
 
 package org.jrdf.example;
 
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -72,8 +74,6 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -164,6 +164,13 @@ public class JrdfExample {
         GraphElementFactory elementFactory = graph.getElementFactory();
         TripleFactory tripleFactory = graph.getTripleFactory();
 
+        assignVlues(elementFactory);
+
+        //create statements
+        createStatments(tripleFactory);
+    }
+
+    private void assignVlues(GraphElementFactory elementFactory) throws Exception {
         //create resources
         person = elementFactory.createURIReference(new URI("http://example.org/staffid#85740"));
         address = elementFactory.createBlankNode();
@@ -180,8 +187,9 @@ public class JrdfExample {
         city = elementFactory.createLiteral("Bedford");
         state = elementFactory.createLiteral("Massachusetts");
         postCode = elementFactory.createLiteral("01730");
+    }
 
-        //create statements
+    private void createStatments(TripleFactory tripleFactory) {
         addressStatement = tripleFactory.createTriple(person, hasAddress, address);
         streetStatement = tripleFactory.createTriple(address, hasStreet, street);
         cityStatement = tripleFactory.createTriple(address, hasCity, city);
@@ -222,13 +230,13 @@ public class JrdfExample {
 
         //get the Factory
         TripleFactory tripleFactory = graph.getTripleFactory();
+        getAllTriples(tripleFactory, graph);
+        doSearch(tripleFactory, graph);
 
-        //get all Triples
-        Triple findAll = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        ClosableIterator allTriples = graph.find(findAll);
-        print("Search for all triples: ", allTriples);
-        allTriples.close();
 
+    }
+
+    private void doSearch(TripleFactory tripleFactory, Graph graph) throws GraphException {
         //search for address (as a subject)
         Triple findAddress = tripleFactory.createTriple(address, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         ClosableIterator addressSubject = graph.find(findAddress);
@@ -246,6 +254,14 @@ public class JrdfExample {
         ClosableIterator addresses = graph.find(findAddresses);
         print("Search for subjects that have an address: ", addresses);
         addresses.close();
+    }
+
+    private void getAllTriples(TripleFactory tripleFactory, Graph graph) throws GraphException {
+        //get all Triples
+        Triple findAll = tripleFactory.createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        ClosableIterator allTriples = graph.find(findAll);
+        print("Search for all triples: ", allTriples);
+        allTriples.close();
     }
 
     /**

@@ -32,12 +32,14 @@ class Atts {
      * List containing Att objects.
      */
     private List<Att> attributes;
+    private static final int ATTRIBUTE_SIZE = 4;
+    private static final int INITIAL_BUILDER_SIZE = 512;
 
     /**
      * Creates a new <tt>Atts</tt> object.
      */
     Atts() {
-        this(4);
+        this(ATTRIBUTE_SIZE);
     }
 
     /**
@@ -146,6 +148,7 @@ class Atts {
 
     /**
      * Returns the number of attributes contained in this object.
+     * @return size of attributes list
      */
     public int size() {
         return attributes.size();
@@ -153,9 +156,10 @@ class Atts {
 
     /**
      * Produces a String-representation of this object.
+     * @return string representation of Atts
      */
     public String toString() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder(INITIAL_BUILDER_SIZE);
         result.append("Atts[");
         for (Att att : attributes) {
             result.append(att.getQName());
