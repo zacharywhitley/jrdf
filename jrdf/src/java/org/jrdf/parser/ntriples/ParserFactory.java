@@ -58,9 +58,9 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.parser.ParserBlankNodeFactory;
 
 public interface ParserFactory {
-    NTriplesParser createParser(GraphElementFactory graphElementFactory, ParserBlankNodeFactory parserBlankNodeFactory);
+    NTriplesParser createParser(Graph graph, ParserBlankNodeFactory parserBlankNodeFactory);
 }

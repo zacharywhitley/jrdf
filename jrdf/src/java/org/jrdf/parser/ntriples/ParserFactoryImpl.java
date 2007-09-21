@@ -58,36 +58,39 @@
 
 package org.jrdf.parser.ntriples;
 
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Graph;
 import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.ntriples.parser.BlankNodeParser;
 import org.jrdf.parser.ntriples.parser.BlankNodeParserImpl;
 import org.jrdf.parser.ntriples.parser.LiteralParser;
 import org.jrdf.parser.ntriples.parser.LiteralParserImpl;
-import org.jrdf.parser.ntriples.parser.URIReferenceParser;
-import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
-import org.jrdf.parser.ntriples.parser.SubjectParser;
-import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
-import org.jrdf.parser.ntriples.parser.PredicateParser;
-import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
-import org.jrdf.parser.ntriples.parser.ObjectParser;
-import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtil;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.parser.ntriples.parser.ObjectParser;
+import org.jrdf.parser.ntriples.parser.ObjectParserImpl;
+import org.jrdf.parser.ntriples.parser.PredicateParser;
+import org.jrdf.parser.ntriples.parser.PredicateParserImpl;
+import org.jrdf.parser.ntriples.parser.SubjectParser;
+import org.jrdf.parser.ntriples.parser.SubjectParserImpl;
+import org.jrdf.parser.ntriples.parser.TripleParser;
+import org.jrdf.parser.ntriples.parser.URIReferenceParser;
+import org.jrdf.parser.ntriples.parser.URIReferenceParserImpl;
+import org.jrdf.parser.ntriples.parser.TripleParserImpl;
 import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 public class ParserFactoryImpl implements ParserFactory {
-    public NTriplesParser createParser(GraphElementFactory graphElementFactory,
-            ParserBlankNodeFactory parserBlankNodeFactory) {
+    public NTriplesParser createParser(Graph newGraph, ParserBlankNodeFactory parserBlankNodeFactory) {
         BlankNodeParser blankNodeParser = new BlankNodeParserImpl(parserBlankNodeFactory);
         RegexMatcherFactory matcherFactory = new RegexMatcherFactoryImpl();
         NTripleUtil literalUtil = new NTripleUtilImpl(matcherFactory);
-        LiteralParser literalParser = new LiteralParserImpl(graphElementFactory, matcherFactory, literalUtil);
-        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(graphElementFactory, literalUtil);
+        LiteralParser literalParser = new LiteralParserImpl(newGraph.getElementFactory(), matcherFactory, literalUtil);
+        URIReferenceParser uriReferenceParser = new URIReferenceParserImpl(newGraph.getElementFactory(), literalUtil);
         SubjectParser subjectParser = new SubjectParserImpl(uriReferenceParser, blankNodeParser);
         PredicateParser predicateParser = new PredicateParserImpl(uriReferenceParser);
         ObjectParser objectParser = new ObjectParserImpl(uriReferenceParser, blankNodeParser, literalParser);
-        return new NTriplesParser(subjectParser, predicateParser, objectParser, matcherFactory);
+        TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
+            newGraph.getTripleFactory());
+        return new NTriplesParser(tripleParser, matcherFactory);
     }
 }
