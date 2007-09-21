@@ -63,12 +63,4 @@
     <suppress checks="MethodLength" files="XmlUtil.java"/>
     <suppress checks="ReturnCount" files="XmlDatatypeUtil.java"/>
     <suppress checks="ReturnCount" files="XmlUtil.java"/>
-
-    <!--suppress checks="MagicNumber" files="SAXFilter.java"/-->
-    <!--suppress checks="MagicNumber" files="XmlDatatypeUtil.java"/-->
-    <!--suppress checks="ParameterNumber" files="AnyResourceIterator.java" /-->
-    <!--suppress checks="JavaNCSS" files="JrdfExample.java"/-->
-    <!--suppress checks="EmptyBlock" files="RdfXmlParser.java"/-->
-    <!--suppress checks="JavaNCSS" files="NaiveGraphDecomposerImpl.java" /-->
-
 </suppressions>
