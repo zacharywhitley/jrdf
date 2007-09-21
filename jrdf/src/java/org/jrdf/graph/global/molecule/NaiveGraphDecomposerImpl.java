@@ -27,8 +27,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.TripleComparatorImpl;
 import org.jrdf.util.ClosableIterator;
@@ -37,6 +36,8 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A Collection all the statements of a particular group.
@@ -47,7 +48,7 @@ import java.util.Set;
 public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     // TODO AN Change blank node comparator????
     private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
-        new NodeTypeComparatorImpl(), new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl())));
+        new NodeTypeComparatorImpl(), new GlobalizedBlankNodeComparatorImpl()));
     private final Set<Triple> triplesChecked = new HashSet<Triple>();
     private final Set<Molecule> molecules = new HashSet<Molecule>();
     private Graph graph;
@@ -91,7 +92,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
      * @throws GraphException
      */
     protected Set<Triple> getHangingTriples() throws GraphException {
-        Set<Triple> hangingTriples = new HashSet<Triple>();
+        SortedSet<Triple> hangingTriples = new TreeSet<Triple>(comparator);
         addBlankNode(hangingTriples, currentTriple, currentTriple.getSubject());
         addBlankNode(hangingTriples, currentTriple, currentTriple.getObject());
         return hangingTriples;
