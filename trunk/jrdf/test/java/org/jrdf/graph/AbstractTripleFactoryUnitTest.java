@@ -449,6 +449,12 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
             count++;
         }
         assertTrue("Should have only the same statements: " + fruit[0], 1 == count);
+
+        Alternative alt2 = createAlternative(fruit);
+        assertEquals(alt, alt2);
+        SubjectNode s2 = elementFactory.createURIReference(new URI("http://example.org/favourite-bananas2"));
+        tripleFactory.addAlternative(s2, alt2);
+        assertEquals(alt, alt2);
     }
 
     /**
@@ -493,8 +499,15 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
             iter.next();
             count++;
         }
-        assertTrue("Should have two of the same statements: " + fruit[2], 2 ==
-            count);
+        assertTrue("Should have two of the same statements: " + fruit[2], 2 == count);
+
+        Bag bag2 = createBag(fruit);
+        // Equal before being added to graph.
+        assertEquals(bag, bag2);
+        SubjectNode s2 = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit2"));
+        tripleFactory.addBag(s2, bag2);
+        // Equal after added - Bags are still equal even with different subjects (they don't know about their subjects).
+        assertEquals(bag, bag2);
     }
 
     /**
@@ -536,6 +549,12 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         assertTrue("Should have statement", graph.contains(s, rdfTwo, fruit[1]));
         assertTrue("Should have statement", graph.contains(s, rdfThree, fruit[2]));
         assertTrue("Should have statement", graph.contains(s, rdfFour, fruit[3]));
+
+        Sequence sequence2 = createSequence(fruit);
+        assertEquals(sequence, sequence2);
+        SubjectNode s2 = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit2"));
+        tripleFactory.addSequence(s2, sequence2);
+        assertEquals(sequence, sequence2);
     }
 
     /**
