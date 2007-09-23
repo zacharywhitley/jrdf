@@ -75,7 +75,7 @@ public class MoleculeParserImplUnitTest extends TestCase {
     private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
     private MoleculeParser moleculeParser;
     private static final String baseURI = "http://example.org";
-    private final int NUMBER_OF_MOLECULES_IN_PIZZA = 1430;
+    private final int NUMBER_OF_MOLECULES_IN_PIZZA = 1431;
     private final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
     private final Graph jrdfGraph = factory.getNewGraph();
 
