@@ -105,6 +105,6 @@ public final class BagImpl extends AbstractUnorderedContainer implements Bag {
 
     @Override
     public String toString() {
-        return "RDF BAG: [" + super.toString() + "]";      n
+        return "RDF BAG: [" + super.toString() + "]";
     }
 }
