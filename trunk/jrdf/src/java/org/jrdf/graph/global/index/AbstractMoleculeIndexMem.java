@@ -194,12 +194,11 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
         long size = 0;
         for (Node node0 : index.keySet()) {
             Map<Node, Map<Node, Molecule>> node2ToNode3Map = index.get(node0);
-            for (Node node1 : node2ToNode3Map.keySet()) {
-                Map<Node, Molecule> node3ToMolecule = node2ToNode3Map.get(node1);
-                for (Node node2 : node3ToMolecule.keySet()) {
-                    Molecule molecule = node3ToMolecule.get(node2);
-                    Node[] headNodes = getNodes(molecule.getHeadTriple());
-                    if (headNodes[0].equals(node0) && headNodes[1].equals(node1) && headNodes[2].equals(node2)) {
+            for (Map.Entry<Node, Map<Node, Molecule>> mapEntries : node2ToNode3Map.entrySet()) {
+                for (Map.Entry<Node, Molecule> nodeToMoleculeEntries : mapEntries.getValue().entrySet()) {
+                    Node[] headNodes = getNodes(nodeToMoleculeEntries.getValue().getHeadTriple());
+                    if (headNodes[0].equals(node0) && headNodes[1].equals(mapEntries.getKey()) &&
+                        headNodes[2].equals(nodeToMoleculeEntries.getKey())) {
                         size++;
                     }
                 }
