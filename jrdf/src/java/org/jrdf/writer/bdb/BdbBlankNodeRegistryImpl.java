@@ -65,6 +65,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 
 import java.util.Map;
+import static java.lang.Integer.*;
 
 public final class BdbBlankNodeRegistryImpl implements BlankNodeRegistry {
     private final MapFactory mapFactory;
@@ -82,7 +83,7 @@ public final class BdbBlankNodeRegistryImpl implements BlankNodeRegistry {
         int size = 0;
         if (id == null) {
             size = blankNodeList.size();
-            blankNodeList.put(node, new Integer(size));
+            blankNodeList.put(node, valueOf(size));
         }
         return "bNode_" + size;
     }

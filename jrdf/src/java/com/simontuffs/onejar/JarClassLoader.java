@@ -130,7 +130,7 @@ public class JarClassLoader extends ClassLoader {
     protected String jarName, mainJar, wrapDir;
     protected boolean delegateToParent;
 
-    protected class ByteCode {
+    protected static class ByteCode {
         public ByteCode(String $name, String $original, byte $bytes[], String $codebase) {
             name = $name;
             original = $original;

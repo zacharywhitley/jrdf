@@ -122,9 +122,8 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
     }
 
     public DatatypeFactoryImpl(final Map<URI, ValueCreator> newCreatorMap) {
-        for (final URI datatypeURI : newCreatorMap.keySet()) {
-            final ValueCreator valueCreator = newCreatorMap.get(datatypeURI);
-            addValueCreator(datatypeURI, valueCreator);
+        for (final Map.Entry<URI, ValueCreator> entry : newCreatorMap.entrySet()) {
+            addValueCreator(entry.getKey(), entry.getValue());
         }
     }
 
