@@ -64,7 +64,7 @@ package org.jrdf.graph.local.mem;
 import org.jrdf.graph.Bag;
 import org.jrdf.graph.ObjectNode;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.List;
 
 /**
@@ -96,8 +96,8 @@ public final class BagImpl extends AbstractUnorderedContainer implements Bag {
 
         boolean returnValue = false;
         if (size() == bag.size()) {
-            List<ObjectNode> myValues = Arrays.asList((ObjectNode[]) toArray());
-            List<ObjectNode> altValues = Arrays.asList((ObjectNode[]) bag.toArray());
+            List<ObjectNode> myValues = asList(toArray(new ObjectNode[size()]));
+            List<ObjectNode> altValues = asList(bag.toArray(new ObjectNode[size()]));
             returnValue = myValues.equals(altValues);
         }
         return returnValue;

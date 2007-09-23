@@ -64,7 +64,7 @@ package org.jrdf.graph.local.mem;
 import org.jrdf.graph.Alternative;
 import org.jrdf.graph.ObjectNode;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
 import java.util.List;
 
 /**
@@ -106,8 +106,8 @@ public final class AlternativeImpl extends AbstractUnorderedContainer implements
 
         boolean returnValue = false;
         if (size() == alt.size()) {
-            List myValues = Arrays.asList(toArray());
-            List altValues = Arrays.asList(alt.toArray());
+            List<ObjectNode> myValues = asList(toArray(new ObjectNode[size()]));
+            List<ObjectNode> altValues = asList(toArray(new ObjectNode[size()]));
             returnValue = myValues.equals(altValues);
         }
         return returnValue;

@@ -127,6 +127,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         TestRunner.run(suite());
     }
 
+    @Override
     public PredicateNode getReifySubject() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.SUBJECT);
@@ -136,6 +137,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         }
     }
 
+    @Override
     public PredicateNode getReifyPredicate() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.PREDICATE);
@@ -145,6 +147,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         }
     }
 
+    @Override
     public PredicateNode getReifyObject() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.OBJECT);
@@ -154,6 +157,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         }
     }
 
+    @Override
     public PredicateNode getRdfType() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.TYPE);
@@ -163,6 +167,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         }
     }
 
+    @Override
     public ObjectNode getRdfStatement() throws TripleFactoryException {
         try {
             return elementFactory.createURIReference(RDF.STATEMENT);
@@ -172,6 +177,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         }
     }
 
+    @Override
     public Collection createCollection(ObjectNode[] objects) {
         Collection collection = new CollectionImpl();
 
@@ -182,6 +188,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         return collection;
     }
 
+    @Override
     public Alternative createAlternative(ObjectNode[] objects) {
         Alternative alternative = new AlternativeImpl();
 
@@ -192,6 +199,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         return alternative;
     }
 
+    @Override
     public Bag createBag(ObjectNode[] objects) {
         Bag bag = new BagImpl();
 
@@ -202,6 +210,7 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
         return bag;
     }
 
+    @Override
     public Sequence createSequence(ObjectNode[] objects) {
         Sequence sequence = new SequenceImpl();
 
