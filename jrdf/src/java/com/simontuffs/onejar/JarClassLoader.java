@@ -311,8 +311,12 @@ public class JarClassLoader extends ClassLoader {
                     if (jar.startsWith(MAIN_PREFIX)) {
                         if (mainClass == null) {
                             JarInputStream jis = new JarInputStream(jarFile.getInputStream(entry));
-                            mainClass = jis.getManifest().getMainAttributes().getValue(Attributes.Name.MAIN_CLASS);
-                            mainJar = jar;
+                            try {
+                                mainClass = jis.getManifest().getMainAttributes().getValue(Attributes.Name.MAIN_CLASS);
+                                mainJar = jar;
+                            } finally {
+                                jis.close();
+                            }
                         } else if (mainJar != null) {
                             WARNING("A main class is defined in multiple jar files inside " + MAIN_PREFIX + mainJar + " and " + jar);
                             WARNING("The main class " + mainClass + " from " + mainJar + " will be used");
