@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <!-- Only off by one class - maybe ResourceFactory - move to GraphImpl? -->
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GlobalizedGraphMemFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="TripleBuilderImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl.java"/>
+    <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl.java"/>
+    <suppress checks="CyclomaticComplexity" files="NodePoolImpl.java"/>
+    <suppress checks="JavaNCSS" files="GraphImpl.java"/>
+    <suppress checks="JavaNCSS" files="RDF.java"/>
+    <suppress checks="JavaNCSS" files="RDFS.java"/>
+    <suppress checks="JavaNCSS" files="XSD.java"/>
+    <suppress checks="JavaNCSS" files="WhereAnalyserImpl.java"/>
+    <suppress checks="JavaNCSS" files="DatatypeFactoryImpl.java"/>
+    <suppress checks="JavaNCSS" files="NodePoolImpl.java"/>
+    <suppress checks="ReturnCount" files="NadicJoinImpl.java"/>
+    <suppress checks="ReturnCount" files="SemiJoinImpl.java"/>
+    <suppress checks="ReturnCount" files="TypeComparatorImpl.java"/>
+    <suppress checks="ReturnCount" files="WhereAnalyserImpl.java"/>
+
+    <!-- Spikes -->
+    <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactoryImpl.java"/>
+
+    <!-- NTriples Parser -->
+    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl.java"/>
+
+    <!-- Cleanup molecule implementation -->
+    <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem.java" />
+
+    <!-- RDF/XML Parser -->
+    <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>
+    <suppress checks="BooleanExpressionComplexity" files="SAXFilter.java"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlDatatypeUtil.java"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlUtil.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlParser.java"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SAXFilter.java"/>
+    <suppress checks="CyclomaticComplexity" files="XmlDatatypeUtil.java"/>
+    <suppress checks="CyclomaticComplexity" files="XmlUtil.java"/>
+    <suppress checks="CyclomaticComplexity" files="RdfXmlParser.java"/>
+    <suppress checks="CyclomaticComplexity" files="SAXFilter.java"/>
+    <suppress checks="JavaNCSS" files="RdfXmlParser.java"/>
+    <suppress checks="JavaNCSS" files="SAXFilter.java"/>
+    <suppress checks="JavaNCSS" files="XmlDatatypeUtil.java"/>
+    <suppress checks="JavaNCSS" files="XmlUtil.java"/>
+    <suppress checks="JavadocStyle" files="XmlSchema.java"/>
+    <suppress checks="MagicNumber" files="XmlUtil.java"/>
+    <suppress checks="MemberName" files="RdfXmlParser.java"/>
+    <suppress checks="MethodLength" files="XmlUtil.java"/>
+    <suppress checks="ReturnCount" files="XmlDatatypeUtil.java"/>
+    <suppress checks="ReturnCount" files="XmlUtil.java"/>
+</suppressions>
