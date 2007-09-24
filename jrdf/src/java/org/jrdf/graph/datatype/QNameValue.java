@@ -60,6 +60,9 @@
 package org.jrdf.graph.datatype;
 
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 
 import javax.xml.namespace.QName;
 
@@ -110,5 +113,24 @@ public class QNameValue implements DatatypeValue {
 
     public int equivCompareTo(DatatypeValue value) {
         return compareTo(value);
+    }
+
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (!hasSuperClassOrInterface(QNameValue.class, obj)) {
+            return false;
+        }
+        return value.equals(((QNameValue) obj).value);
     }
 }

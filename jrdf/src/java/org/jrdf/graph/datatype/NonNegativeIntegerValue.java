@@ -59,10 +59,14 @@
 
 package org.jrdf.graph.datatype;
 
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class NonNegativeIntegerValue implements DatatypeValue, XSDDecimal {
+public class NonNegativeIntegerValue implements XSDDecimal {
     private static final long serialVersionUID = 4550600026432326665L;
     private BigInteger value;
     private boolean isPositive;
@@ -129,4 +133,22 @@ public class NonNegativeIntegerValue implements DatatypeValue, XSDDecimal {
         return getAsBigDecimal().compareTo(((XSDDecimal) value).getAsBigDecimal());
     }
 
+    @Override
+    public int hashCode() {
+        return value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (!hasSuperClassOrInterface(NonNegativeIntegerValue.class, obj)) {
+            return false;
+        }
+        return value.equals(((NonNegativeIntegerValue) obj).value);
+    }
 }

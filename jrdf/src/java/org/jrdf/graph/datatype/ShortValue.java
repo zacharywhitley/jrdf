@@ -65,7 +65,7 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.math.BigDecimal;
 
-public class ShortValue implements DatatypeValue, XSDDecimal {
+public class ShortValue implements XSDDecimal {
     private static final long serialVersionUID = -2451054174062084622L;
     private Short value;
 
