@@ -72,12 +72,12 @@ import java.net.URI;
 import java.net.URL;
 
 public class MoleculeParserImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
-    private MoleculeParser moleculeParser;
-    private static final String baseURI = "http://example.org";
-    private final int NUMBER_OF_MOLECULES_IN_PIZZA = 1431;
-    private final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
+    private static final int NUMBER_OF_MOLECULES_IN_PIZZA = 1431;
+    private static final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
+    private static final String BASE_URI = "http://example.org";
+    private final JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
     private final Graph jrdfGraph = factory.getNewGraph();
+    private MoleculeParser moleculeParser;
 
     public void setUp() throws Exception {
         // Work out why we need to do this.
@@ -87,7 +87,7 @@ public class MoleculeParserImplUnitTest extends TestCase {
 
     public void testParse() throws Exception {
         URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
-        moleculeParser.parse(resource.openStream(), baseURI);
+        moleculeParser.parse(resource.openStream(), BASE_URI);
     }
 
     // TODO: IK Do we know the right answer for this?  i.e. whas is the correct number of molecules for the pizza

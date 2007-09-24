@@ -289,8 +289,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     /**
      * Tests removal.
      *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     public void testRemoval() throws Exception {
         // add some test data
@@ -752,6 +751,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         checkFullIteratorRemoval(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 6);
         checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
         checkFullIteratorRemoval(blank2, ref1, ANY_OBJECT_NODE, 2);
+        checkFullIteratorRemoval(ANY_SUBJECT_NODE, ref2, ANY_OBJECT_NODE, 3);
+        checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, blank2, 2);
         checkFullIteratorRemoval(ref1, ref2, l2, 1);
     }
 
@@ -885,8 +886,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        int expectedFoundTriples)
-        throws GraphException, TripleFactoryException {
+        int expectedFoundTriples) throws GraphException, TripleFactoryException {
 
         addTriplesToGraph();
         addFullTriplesToGraph();
@@ -897,15 +897,15 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(numberOfTriplesInGraph, graph.getNumberOfTriples());
 
         // get an iterator for all the elements
-        ClosableIterator ci = graph.find(subjectNode, predicateNode, objectNode);
+        ClosableIterator<Triple> ci = graph.find(subjectNode, predicateNode, objectNode);
 
         // Check that it throws an exception before hasNext is called.
         checkInvalidRemove(ci);
 
-        for (int i = expectedFoundTriples - 1; 0 <= i; i--) {
+        for (int i = 0; i < expectedFoundTriples; i++) {
             // remove the element
-            assertTrue(ci.hasNext());
-            ci.next();
+            assertTrue("Expected to delete: " + expectedFoundTriples + " but only deleted: " + i, ci.hasNext());
+            Triple triple = ci.next();
             ci.remove();
             assertEquals(--numberOfTriplesInGraph, graph.getNumberOfTriples());
         }
@@ -932,8 +932,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         try {
             ci.remove();
             fail("Must throw an exception.");
-        }
-        catch (IllegalStateException ise) {
+        } catch (IllegalStateException ise) {
             assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
         }
     }
@@ -966,7 +965,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
 
-    private void addFullTriplesToGraph() throws TripleFactoryException, GraphException {
+    private void addFullTriplesToGraph() throws GraphException {
         t1 = tripleFactory.createTriple(blank2, ref1, blank1);
         graph.add(t1);
         t2 = tripleFactory.createTriple(blank2, ref2, blank1);

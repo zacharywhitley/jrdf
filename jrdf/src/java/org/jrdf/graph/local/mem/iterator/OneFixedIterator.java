@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 
+import static java.util.Arrays.asList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -162,6 +163,7 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
         // construct the triple
         Long second = secondEntry.getKey();
         // get back the nodes for these IDs and build the triple
+        currentNodes = new Long[]{first, second, third};
         return handler.createTriple(first, second, third);
     }
 
@@ -199,7 +201,7 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
                 handler.remove(currentNodes);
                 cleanIndex();
             } catch (GraphException ge) {
-                throw new IllegalStateException(ge.getMessage());
+                throw new IllegalStateException(ge.getMessage() + " triple: " + asList(currentNodes));
             }
         } else {
             throw new IllegalStateException("Next not called or beyond end of data");

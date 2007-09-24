@@ -170,6 +170,7 @@ public final class TwoFixedIterator implements ClosableMemIterator<Triple> {
         // Get next node.
         Long third = thirdIndexIterator.next();
         hasNext = thirdIndexIterator.hasNext();
+        currentNodes = new Long[]{first, second, third};
         return handler.createTriple(first, second, third);
     }
 
