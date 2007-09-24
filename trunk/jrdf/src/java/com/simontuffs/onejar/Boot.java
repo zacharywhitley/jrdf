@@ -184,9 +184,13 @@ public class Boot {
             InputStream is = Boot.class.getResourceAsStream("/" + MAIN_JAR);
             if (is != null) {
                 JarInputStream jis = new JarInputStream(is);
-                Manifest manifest = jis.getManifest();
-                Attributes attributes = manifest.getMainAttributes();
-                mainClass = attributes.getValue(Attributes.Name.MAIN_CLASS);
+                try {
+                    Manifest manifest = jis.getManifest();
+                    Attributes attributes = manifest.getMainAttributes();
+                    mainClass = attributes.getValue(Attributes.Name.MAIN_CLASS);
+                } finally {
+                    jis.close();
+                }
             }
         }
 
@@ -209,16 +213,19 @@ public class Boot {
             // Read the "Wrap-Class-Loader" property from the wraploader jar file.
             // This is the class to use as a wrapping class-loader.
             JarInputStream jis = new JarInputStream(Boot.class.getResourceAsStream(WRAP_JAR));
-            String wrapLoader = jis.getManifest().getMainAttributes().getValue(WRAP_CLASS_LOADER);
-            if (wrapLoader == null) {
-                warning(url + " did not contain a " + WRAP_CLASS_LOADER + " attribute, unable to load wrapping classloader");
-            } else {
-                info("using " + wrapLoader);
-                Class jarLoaderClass = bootLoader.loadClass(wrapLoader);
-                Constructor ctor = jarLoaderClass.getConstructor(new Class[]{ClassLoader.class});
-                loader = (JarClassLoader) ctor.newInstance(new Object[]{bootLoader});
+            try {
+                String wrapLoader = jis.getManifest().getMainAttributes().getValue(WRAP_CLASS_LOADER);
+                if (wrapLoader == null) {
+                    warning(url + " did not contain a " + WRAP_CLASS_LOADER + " attribute, unable to load wrapping classloader");
+                } else {
+                    info("using " + wrapLoader);
+                    Class jarLoaderClass = bootLoader.loadClass(wrapLoader);
+                    Constructor ctor = jarLoaderClass.getConstructor(new Class[]{ClassLoader.class});
+                    loader = (JarClassLoader) ctor.newInstance(new Object[]{bootLoader});
+                }
+            } finally {
+                jis.close();
             }
-
         } else {
             info("using JarClassLoader");
             loader = new JarClassLoader(Boot.class.getClassLoader());
