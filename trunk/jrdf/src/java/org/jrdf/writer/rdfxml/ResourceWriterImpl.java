@@ -63,6 +63,7 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.SubjectNode;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.IteratorStack;
 import org.jrdf.writer.BlankNodeRegistry;
@@ -114,9 +115,10 @@ public class ResourceWriterImpl implements ResourceWriter {
     public void writeNestedStatements(final IteratorStack<Triple> stack) throws WriteException {
         statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         while (stack.hasNext()) {
+            SubjectNode currentSubject = currentTriple.getSubject();
             currentTriple = stack.pop();
             // Have we run out of the same subject - if so push it back on an stop iterating.
-            if (!this.currentTriple.equals(currentTriple.getSubject())) {
+            if (!currentSubject.equals(currentTriple.getSubject())) {
                 stack.push(currentTriple);
                 break;
             }
