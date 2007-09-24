@@ -62,8 +62,10 @@ package org.jrdf.graph;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.util.Comparator;
+import java.io.Serializable;
 
-public class ResourceComparator implements Comparator<Resource> {
+public class ResourceComparator implements Comparator<Resource>, Serializable {
+    private static final long serialVersionUID = -3609445587014680658L;
 
     public int compare(Resource resource1, Resource resource2) {
         ParameterUtil.checkNotNull(resource1, resource2);

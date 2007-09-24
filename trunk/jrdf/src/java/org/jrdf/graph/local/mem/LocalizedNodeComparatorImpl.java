@@ -59,7 +59,11 @@
 
 package org.jrdf.graph.local.mem;
 
-public class LocalizedNodeComparatorImpl implements LocalizedNodeComparator {
+import java.io.Serializable;
+
+public class LocalizedNodeComparatorImpl implements LocalizedNodeComparator, Serializable {
+    private static final long serialVersionUID = 5869199081435889072L;
+
     public int compare(LocalizedNode localizedNode1, LocalizedNode localizedNode2) {
         int result = 0;
         Long nodeId1 = localizedNode1.getId();

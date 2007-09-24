@@ -64,6 +64,7 @@ import org.jrdf.query.relation.type.NodeType;
 
 import java.util.List;
 import java.util.SortedSet;
+import java.io.Serializable;
 
 /**
  * Allows the creation of headings.
@@ -71,7 +72,7 @@ import java.util.SortedSet;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface SortedAttributeFactory {
+public interface SortedAttributeFactory extends Serializable {
     /**
      * The default name of a subject heading.
      */

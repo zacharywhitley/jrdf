@@ -61,10 +61,14 @@ package org.jrdf.graph.local.mem;
 
 import org.jrdf.graph.BlankNode;
 
+import java.io.Serializable;
+
 /**
  * Without any context or localization you can't tell the difference between blank nodes.
  */
-public class GlobalizedBlankNodeComparatorImpl implements BlankNodeComparator {
+public class GlobalizedBlankNodeComparatorImpl implements BlankNodeComparator, Serializable {
+    private static final long serialVersionUID = -6103017323667251812L;
+
     public int compare(BlankNode blankNode1, BlankNode blankNode2) {
         return 0;
     }

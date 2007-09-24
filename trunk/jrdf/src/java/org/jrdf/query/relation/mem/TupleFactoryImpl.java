@@ -76,7 +76,11 @@ import java.util.TreeSet;
  * @version $Revision:$
  */
 public final class TupleFactoryImpl implements TupleFactory {
-    private final AttributeValuePairComparator attributeValuePairComparator;
+    private static final long serialVersionUID = 6162523916425888190L;
+    private AttributeValuePairComparator attributeValuePairComparator;
+
+    private TupleFactoryImpl() {
+    }
 
     public TupleFactoryImpl(AttributeValuePairComparator attributeValuePairComparator) {
         checkNotNull(attributeValuePairComparator);

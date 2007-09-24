@@ -84,8 +84,11 @@ public class SortedAttributeFactoryImpl implements SortedAttributeFactory {
     private static final PredicateNodeType PREDICATE_TYPE = new PredicateNodeType();
     private static final ObjectNodeType OBJECT_TYPE = new ObjectNodeType();
     private static final int THREE_TRIPLES = 3;
-    private final AttributeComparator attributeComparator;
+    private AttributeComparator attributeComparator;
     private long nameCounter;
+
+    private SortedAttributeFactoryImpl() {
+    }
 
     public SortedAttributeFactoryImpl(AttributeComparator attributeComparator, long nameCounter) {
         this.attributeComparator = attributeComparator;

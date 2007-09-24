@@ -64,6 +64,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Allows the creation of sorted AttributeValuePairs.
@@ -71,7 +72,7 @@ import java.util.List;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface AttributeValuePairHelper {
+public interface AttributeValuePairHelper extends Serializable {
     List<AttributeValuePair> createAvp(Triple triple);
 
     List<AttributeValuePair> createAvp(AttributeValuePair[] attributeValuePairsArray);
