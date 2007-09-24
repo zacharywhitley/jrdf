@@ -61,14 +61,16 @@ package org.jrdf.graph.local.mem;
 
 import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnySubjectNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
+import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -82,7 +84,7 @@ import java.io.ObjectOutputStream;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphImplUnitTest extends AbstractGraphUnitTest {
+public class OrderedGraphImplUnitTest extends AbstractGraphUnitTest {
 
     /**
      * Create a graph implementation.
@@ -91,8 +93,12 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
      */
     public Graph newGraph() throws Exception {
         LongIndex[] indexes = new LongIndexMem[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        GraphFactory graphFactory = new GraphFactoryImpl(indexes, new MemNodePoolFactory());
-        return graphFactory.getGraph();
+        NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
+        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(
+            new LocalizedNodeComparatorImpl());
+        GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, new MemNodePoolFactory(),
+            new NodeComparatorImpl(typeComparator, blankNodeComparator));
+        return orderedGraphFactory.getGraph();
     }
 
     /**
@@ -101,11 +107,11 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
      * @param args The command line arguments
      */
     public static void main(String[] args) throws Exception {
-        TestRunner.run(GraphImplUnitTest.class);
+        TestRunner.run(OrderedGraphImplUnitTest.class);
     }
 
     //TODO: Create a disk based serialization test.
-
+    
     /**
      * Implementation method for testing serialization of the graph.
      *
@@ -156,10 +162,10 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         assertTrue(graph2.contains(blank2, ref3, l2));
         assertTrue(graph2.contains(blank1, ref3, l3));
         assertTrue(graph2.contains(ref1, ref1, ref1));
-        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref1, AnyObjectNode.ANY_OBJECT_NODE));
+        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE));
         assertTrue(graph2.contains(ref3, ref3, ref3));
-        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, AnyObjectNode.ANY_OBJECT_NODE));
-        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, l3));
+        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE));
+        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, l3));
     }
 
 }

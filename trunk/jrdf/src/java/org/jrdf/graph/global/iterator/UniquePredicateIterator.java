@@ -69,7 +69,6 @@ import java.util.Iterator;
 public class UniquePredicateIterator implements ClosableIterator<PredicateNode> {
     private Iterator<Node> iterator;
     public UniquePredicateIterator(MoleculeIndex indexes) {
-
     }
 
     public boolean close() {

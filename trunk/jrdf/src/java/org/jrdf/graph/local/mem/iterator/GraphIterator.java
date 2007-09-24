@@ -186,6 +186,7 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
         Long first = firstEntry.getKey();
 
         // get back the nodes for these IDs and uild the triple
+        currentNodes = new Long[]{first, second, third};
         return handler.createTriple(first, second, third);
     }
 
@@ -245,8 +246,8 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
      */
     private void cleanIndex() {
         // check if a set was cleaned out
-        Set subGroup = secondEntry.getValue();
-        Map subIndex = firstEntry.getValue();
+        Set<Long> subGroup = secondEntry.getValue();
+        Map<Long, Set<Long>> subIndex = firstEntry.getValue();
         if (subGroup.isEmpty()) {
             // remove the entry for the set
             subIterator.remove();
