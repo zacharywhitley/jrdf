@@ -61,6 +61,7 @@ package org.jrdf.query.relation;
 
 import java.util.List;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * Allows the decoupling of the type of tuple to create at runtime - so classes that need to create Tuples do not
@@ -69,7 +70,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision:$
  */
-public interface TupleFactory {
+public interface TupleFactory extends Serializable {
     Tuple getTuple(Set<AttributeValuePair> avp);
 
     Tuple getTuple(List<AttributeValuePair> avp);

@@ -69,7 +69,6 @@ import java.util.Set;
 
 public final class TupleComparatorImpl implements TupleComparator {
     private static final long serialVersionUID = 7276502975947499595L;
-
     private AttributeValuePairComparator attributeValuePairComparator;
 
     private TupleComparatorImpl() {

@@ -79,8 +79,12 @@ import java.util.SortedSet;
  * @version $Revision:$
  */
 public class AttributeValuePairHelperImpl implements AttributeValuePairHelper {
-    private final SortedAttributeFactory sortedAttributeFactory;
+    private static final long serialVersionUID = -2487809345705496952L;
     private static final int TRIPLES = 3;
+    private SortedAttributeFactory sortedAttributeFactory;
+
+    private AttributeValuePairHelperImpl() {
+    }
 
     public AttributeValuePairHelperImpl(SortedAttributeFactory sortedAttributeFactory) {
         this.sortedAttributeFactory = sortedAttributeFactory;
