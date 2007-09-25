@@ -62,15 +62,26 @@ package org.jrdf.query;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
+import org.jrdf.query.relation.RelationFactory;
+import org.jrdf.query.relation.Tuple;
+import static org.jrdf.query.relation.mem.AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS;
+import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_1;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
+import org.jrdf.util.test.ReflectTestUtil;
 import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Unit test for {@link AnswerImpl}.
@@ -99,5 +110,41 @@ public final class AnswerImplUnitTest extends TestCase {
         factory.replay();
         new AnswerImpl(heading, relation, 100, true);
         factory.verify();
+    }
+
+    public void testSerialization() throws Exception {
+        RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
+        LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
+        heading.add(TEST_ATTRIBUTE_FOO_POS);
+        Set<Tuple> tuples = new HashSet<Tuple>();
+        tuples.add(TEST_TUPLE_1);
+        Answer answer = new AnswerImpl(heading, relationFactory.getRelation(tuples), 1000L, true);
+        checkAnswer(answer, "foo | Literal", 1000L, true);
+
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
+
+        // write the graph
+        os.writeObject(answer);
+
+        // read a new graph back in
+        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
+        ObjectInputStream is = new ObjectInputStream(inputBytes);
+
+        // read the graph
+        Answer answer2 = (Answer) is.readObject();
+        checkAnswer(answer2, "foo | Literal", 1000L, true);
+    }
+
+    private void checkAnswer(Answer answer, String expectedColumnName, long expectedTimeTaken,
+        boolean expectedProjected) {
+        String[] strings = answer.getColumnNames();
+        assertTrue(strings.length == 1);
+        assertEquals(expectedColumnName, strings[0]);
+//        System.err.println("Got: " + answer.getColumnValues().length);
+//        System.err.println("Got: " + answer.getColumnValues()[0][0]);
+        assertEquals(expectedTimeTaken, answer.getTimeTaken());
+        Boolean actualProjected = (Boolean) ReflectTestUtil.getFieldValue(answer, "hasProjected");
+        assertEquals(expectedProjected, actualProjected.booleanValue());
     }
 }

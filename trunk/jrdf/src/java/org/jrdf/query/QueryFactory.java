@@ -61,9 +61,12 @@ package org.jrdf.query;
 
 import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.query.relation.RelationFactory;
 
 public interface QueryFactory {
     QueryBuilder createQueryBuilder();
 
     QueryEngine createQueryEngine();
+
+    RelationFactory createRelationFactory();
 }

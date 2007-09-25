@@ -130,6 +130,8 @@ public class QueryFactoryImpl implements QueryFactory {
         new AttributeValuePairComparatorImpl(ATTRIBUTE_COMPARATOR, NODE_COMPARATOR);
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
     private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
+    private static final RelationFactory RELATION_FACTORY = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR,
+        TUPLE_COMPARATOR);
 
     public QueryBuilder createQueryBuilder() {
         AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl(ATTRIBUTE_FACTORY);
@@ -141,16 +143,19 @@ public class QueryFactoryImpl implements QueryFactory {
         return new SparqlQueryBuilder(sparqlParser);
     }
 
+    public RelationFactory createRelationFactory() {
+        return RELATION_FACTORY;
+    }
+
     public QueryEngine createQueryEngine() {
-        RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
-        Project project = new ProjectImpl(TUPLE_FACTORY, relationFactory);
-        RelationProcessor relationProcessor = new RelationProcessorImpl(relationFactory, TUPLE_COMPARATOR);
+        Project project = new ProjectImpl(TUPLE_FACTORY, RELATION_FACTORY);
+        RelationProcessor relationProcessor = new RelationProcessorImpl(RELATION_FACTORY, TUPLE_COMPARATOR);
         RelationHelper relationHelper = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
         TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, ATTRIBUTE_VALUE_PAIR_COMPARATOR,
             relationHelper);
         TupleEngine unionTupleEngine = new OuterUnionEngine(TUPLE_FACTORY, relationHelper);
         NadicJoin join = new NadicJoinImpl(relationProcessor, joinTupleEngine);
-        Restrict restrict = new RestrictImpl(relationFactory);
+        Restrict restrict = new RestrictImpl(RELATION_FACTORY);
         Union union = new OuterUnionImpl(relationProcessor, unionTupleEngine);
         DyadicJoin leftOuterJoin = new MinimumUnionLeftOuterJoinImpl(join, union);
         return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin);

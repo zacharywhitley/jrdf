@@ -87,7 +87,8 @@ import java.io.ObjectOutputStream;
  */
 public class AttributeCollectorImpl implements VariableCollector {
     private static final long serialVersionUID = 5588873511780742278L;
-    private Map<AttributeName, PositionalNodeType> variables = new HashMap<AttributeName, PositionalNodeType>();
+    private transient Map<AttributeName, PositionalNodeType> variables
+        = new HashMap<AttributeName, PositionalNodeType>();
 
     public void addConstraints(List<AttributeValuePair> avps) {
         for (AttributeValuePair avp : avps) {

@@ -1,23 +1,22 @@
 package org.jrdf;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.GraphFactory;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
+import org.jrdf.graph.local.mem.BlankNodeComparator;
+import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.mem.LocalizedNodeComparator;
+import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.query.execute.NaiveQueryEngineImpl;
+import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
 import org.jrdf.query.relation.attributename.AttributeNameComparator;
@@ -28,28 +27,10 @@ import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.mem.AttributeValuePairHelperImpl;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.relation.mem.GraphRelationFactoryImpl;
-import org.jrdf.query.relation.mem.RelationFactoryImpl;
-import org.jrdf.query.relation.mem.RelationHelper;
-import org.jrdf.query.relation.mem.RelationHelperImpl;
 import org.jrdf.query.relation.mem.SortedAttributeFactory;
 import org.jrdf.query.relation.mem.SortedAttributeFactoryImpl;
 import org.jrdf.query.relation.mem.TupleComparatorImpl;
 import org.jrdf.query.relation.mem.TupleFactoryImpl;
-import org.jrdf.query.relation.operation.DyadicJoin;
-import org.jrdf.query.relation.operation.NadicJoin;
-import org.jrdf.query.relation.operation.Project;
-import org.jrdf.query.relation.operation.Restrict;
-import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
-import org.jrdf.query.relation.operation.mem.common.RelationProcessorImpl;
-import org.jrdf.query.relation.operation.mem.join.NadicJoinImpl;
-import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.query.relation.operation.mem.join.natural.NaturalJoinEngine;
-import org.jrdf.query.relation.operation.mem.project.ProjectImpl;
-import org.jrdf.query.relation.operation.mem.restrict.RestrictImpl;
-import org.jrdf.query.relation.operation.mem.union.MinimumUnionLeftOuterJoinImpl;
-import org.jrdf.query.relation.operation.mem.union.OuterUnionEngine;
-import org.jrdf.query.relation.operation.mem.union.OuterUnionImpl;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
 import org.jrdf.sparql.SparqlConnection;
@@ -87,7 +68,7 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
     private static final TupleFactory TUPLE_FACTORY = new TupleFactoryImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
     private static final TupleComparator TUPLE_COMPARATOR = new TupleComparatorImpl(ATTRIBUTE_VALUE_PAIR_COMPARATOR);
     private static final QueryBuilder BUILDER = createQueryBuilder();
-    private static final QueryEngine QUERY_ENGINE = createQueryEngine();
+    private static final QueryEngine QUERY_ENGINE = new QueryFactoryImpl().createQueryEngine();
     private GraphFactory orderedGraphFactory;
 
     private SortedMemoryJRDFFactoryImpl() {
@@ -120,20 +101,5 @@ public final class SortedMemoryJRDFFactoryImpl implements JRDFFactory {
         SparqlParser sparqlParser = new SableCcSparqlParser(parserFactory, graphRelationFactory, avpHelper,
             ATTRIBUTE_FACTORY);
         return new SparqlQueryBuilder(sparqlParser);
-    }
-
-    private static QueryEngine createQueryEngine() {
-        RelationFactory relationFactory = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, TUPLE_COMPARATOR);
-        Project project = new ProjectImpl(TUPLE_FACTORY, relationFactory);
-        RelationProcessor relationProcessor = new RelationProcessorImpl(relationFactory, TUPLE_COMPARATOR);
-        RelationHelper relationHelper = new RelationHelperImpl(ATTRIBUTE_COMPARATOR);
-        TupleEngine joinTupleEngine = new NaturalJoinEngine(TUPLE_FACTORY, ATTRIBUTE_VALUE_PAIR_COMPARATOR,
-            relationHelper);
-        TupleEngine unionTupleEngine = new OuterUnionEngine(TUPLE_FACTORY, relationHelper);
-        NadicJoin join = new NadicJoinImpl(relationProcessor, joinTupleEngine);
-        Restrict restrict = new RestrictImpl(relationFactory);
-        Union union = new OuterUnionImpl(relationProcessor, unionTupleEngine);
-        DyadicJoin leftOuterJoin = new MinimumUnionLeftOuterJoinImpl(join, union);
-        return new NaiveQueryEngineImpl(project, join, restrict, union, leftOuterJoin);
     }
 }

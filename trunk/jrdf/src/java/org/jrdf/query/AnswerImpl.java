@@ -63,13 +63,19 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
+import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.util.EqualsUtil;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.SortedSet;
+import java.util.HashSet;
 
 /**
  * Default implementation of {@link Answer}.
@@ -78,10 +84,13 @@ import java.util.SortedSet;
  */
 public final class AnswerImpl implements Answer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
-    private final LinkedHashSet<Attribute> heading;
-    private final Relation results;
-    private final long timeTaken;
+    private LinkedHashSet<Attribute> heading;
+    private transient Relation results;
+    private long timeTaken;
     private boolean hasProjected;
+
+    private AnswerImpl() {
+    }
 
     public AnswerImpl(LinkedHashSet<Attribute> newHeading, Relation newResults, long timeTaken, boolean hasProjected) {
         checkNotNull(newHeading, newResults);
@@ -165,5 +174,40 @@ public final class AnswerImpl implements Answer, Serializable {
             }
         }
         return false;
+    }
+
+    private void writeObject(ObjectOutputStream output) throws IOException {
+        output.writeObject(heading);
+        output.writeLong(timeTaken);
+        output.writeBoolean(hasProjected);
+        Set<Attribute> attributes = results.getHeading();
+        output.writeInt(attributes.size());
+        for (Attribute attribute : attributes) {
+            output.writeObject(attribute);
+        }
+        Set<Tuple> tuples = results.getTuples();
+        output.writeInt(tuples.size());
+        for (Tuple tuple : tuples) {
+            output.writeObject(tuple);
+        }
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
+        RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
+        Set<Attribute> newAttributes = new HashSet<Attribute>();
+        Set<Tuple> newTuples = new HashSet<Tuple>();
+        heading = (LinkedHashSet<Attribute>) input.readObject();
+        timeTaken = input.readLong();
+        hasProjected = input.readBoolean();
+        int noAttributes = input.readInt();
+        for (int i = 0; i < noAttributes; i++) {
+            newAttributes.add((Attribute) input.readObject());
+        }
+        int noTuples = input.readInt();
+        for (int i = 0; i < noTuples; i++) {
+            newTuples.add((Tuple) input.readObject());
+        }
+        results = relationFactory.getRelation(newAttributes, newTuples);
     }
 }
