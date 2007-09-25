@@ -78,8 +78,12 @@ import java.util.TreeSet;
  */
 @SuppressWarnings({ "unchecked" })
 public final class TupleImpl implements Tuple {
+    private static final long serialVersionUID = 4135312692643773094L;
+    private AttributeValuePairComparator attributeValuePairComparator;
     private Set<AttributeValuePair> attributeValues;
-    private final AttributeValuePairComparator attributeValuePairComparator;
+
+    private TupleImpl() {
+    }
 
     TupleImpl(Set<AttributeValuePair> attributeValues, AttributeValuePairComparator attributeValuePairComparator) {
         checkNotNull(attributeValues, attributeValuePairComparator);

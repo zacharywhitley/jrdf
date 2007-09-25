@@ -61,6 +61,7 @@ package org.jrdf.query.relation;
 
 import java.util.Set;
 import java.util.SortedSet;
+import java.io.Serializable;
 
 /**
  * A tuple is a named finite set of tuples (attributes to a set of values).
@@ -68,7 +69,7 @@ import java.util.SortedSet;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Tuple {
+public interface Tuple extends Serializable {
 
     /**
      * Returns the set of tuples (attribute name/values).
