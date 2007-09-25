@@ -75,6 +75,8 @@ import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MoleculeImplUnitTest extends TestCase {
     private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
@@ -104,5 +106,52 @@ public class MoleculeImplUnitTest extends TestCase {
         molecule = molecule.add(triple);
         molecule = molecule.add(new TripleImpl(blankNode, ref1, blankNode));
         assertEquals(triple, molecule.getHeadTriple());
+    }
+
+    public void testImmutable() throws Exception {
+        Molecule molecule = new MoleculeImpl(comparator);
+        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
+        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
+        BlankNode blankNode = new BlankNodeImpl();
+
+        Triple triple = new TripleImpl(blankNode, ref1, ref1);
+        molecule = molecule.add(new TripleImpl(blankNode, ref1, ref2));
+        molecule = molecule.add(triple);
+        molecule = molecule.add(new TripleImpl(blankNode, ref1, blankNode));
+        Triple headTriple = molecule.getHeadTriple();
+        int size = molecule.size();
+
+        //test immutability for add
+        molecule.add(triple);
+        assertTrue(headTriple == molecule.getHeadTriple());
+        assertTrue(size == molecule.size());
+
+        //test immutability for remove
+        molecule.remove(triple);
+        assertTrue(headTriple == molecule.getHeadTriple());
+        assertTrue(size == molecule.size());
+    }
+
+
+    public void testImmutableConstructor() throws Exception  {
+        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
+        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
+        BlankNode blankNode = new BlankNodeImpl();
+
+        Set set = new HashSet();
+        Triple triple = new TripleImpl(blankNode, ref1, ref1);
+        set.add(triple);
+        TripleImpl triple1 = new TripleImpl(blankNode, ref1, ref2);
+        set.add(triple1);
+        TripleImpl triple2 = new TripleImpl(blankNode, ref1, blankNode);
+        set.add(triple2);
+
+        Molecule molecule = new MoleculeImpl(set, comparator);
+        Triple headTriple = molecule.getHeadTriple();
+        int size = molecule.size();
+
+        set.remove(triple);
+        assertTrue(size == molecule.size());
+        assertTrue(headTriple == molecule.getHeadTriple());
     }
 }
