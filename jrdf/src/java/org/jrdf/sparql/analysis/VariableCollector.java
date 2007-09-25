@@ -65,6 +65,7 @@ import org.jrdf.query.relation.type.PositionalNodeType;
 
 import java.util.List;
 import java.util.Map;
+import java.io.Serializable;
 
 /**
  * A variable collector takes the attribute value pairs from constraints and add them to a map.  Used to construct
@@ -73,7 +74,7 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision: 1078 $
  */
-public interface VariableCollector {
+public interface VariableCollector extends Serializable {
     void addConstraints(List<AttributeValuePair> avps);
 
     Map<AttributeName, PositionalNodeType> getAttributes();

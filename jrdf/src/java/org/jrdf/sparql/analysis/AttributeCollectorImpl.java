@@ -69,6 +69,10 @@ import org.jrdf.query.relation.type.PositionalNodeType;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.io.ObjectInputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 /**
  * A variable collector takes the attribute value pairs from constraints and add them to a map.  Used to construct
@@ -82,6 +86,7 @@ import java.util.Map;
  * @version $Revision: 1078 $
  */
 public class AttributeCollectorImpl implements VariableCollector {
+    private static final long serialVersionUID = 5588873511780742278L;
     private Map<AttributeName, PositionalNodeType> variables = new HashMap<AttributeName, PositionalNodeType>();
 
     public void addConstraints(List<AttributeValuePair> avps) {
@@ -118,6 +123,25 @@ public class AttributeCollectorImpl implements VariableCollector {
         NodeType nodeType = attribute.getType();
         if (nodeType instanceof PositionalNodeType) {
             variables.put(attribute.getAttributeName(), (PositionalNodeType) nodeType);
+        }
+    }
+
+    private void writeObject(ObjectOutputStream output) throws IOException {
+        Set<Map.Entry<AttributeName, PositionalNodeType>> entries = variables.entrySet();
+        output.writeInt(variables.size());
+        for (Map.Entry<AttributeName, PositionalNodeType> entry : entries) {
+            output.writeObject(entry.getKey());
+            output.writeObject(entry.getValue());
+        }
+    }
+
+    private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
+        variables = new HashMap<AttributeName, PositionalNodeType>();
+        int elements = input.readInt();
+        for (int i = 0; i < elements; i++) {
+            AttributeName attribute = (AttributeName) input.readObject();
+            PositionalNodeType node = (PositionalNodeType) input.readObject();
+            variables.put(attribute, node);
         }
     }
 }
