@@ -37,35 +37,44 @@ public class MoleculeImpl implements Molecule {
     // TODO This should probably be a set of molecules not triples.  For blank nodes that link to another set of blank
     // nodes
     // ie. _1 a b, _1 c _2, _2 a b, _2 c d, _2 e _3, _3 f g
-    private SortedSet<Triple> triples;
-    private Map<PredicateNode, SubjectNode> predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
-    private Map<PredicateNode, ObjectNode> predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
+    private final SortedSet<Triple> triples;
+    private final TripleComparator comparator;
+    private final Map<PredicateNode, SubjectNode> predicateSubjectMap;
+    private final Map<PredicateNode, ObjectNode> predicateObjectMap;
 
-    MoleculeImpl(Set<Triple> newTriples, TripleComparator comparator) {
-        this.triples = new TreeSet<Triple>(comparator);
-        for (Triple triple : newTriples) {
-            add(triple);
+    public MoleculeImpl(TripleComparator newComparator) {
+        comparator = newComparator;
+        triples = new TreeSet<Triple>(newComparator);
+        predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
+        predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
+    }
+
+    public MoleculeImpl(Set<Triple> newTriples, TripleComparator comparator) {
+        this(comparator);
+        triples.addAll(newTriples);
+        initMaps();
+    }
+
+    private void initMaps() {
+        for (Triple triple : triples) {
+            PredicateNode predicate = triple.getPredicate();
+
+            predicateSubjectMap.put(predicate, triple.getSubject());
+            predicateObjectMap.put(predicate, triple.getObject());
         }
     }
 
-    public MoleculeImpl(TripleComparator comparator) {
-        this.triples = new TreeSet<Triple>(comparator);
-    }
 
     public Triple getHeadTriple() {
         return triples.last();
     }
 
-    public void remove(Triple triple) {
-        predicateSubjectMap.remove(triple.getPredicate());
-        predicateObjectMap.remove(triple.getPredicate());
-        triples.remove(triple);
-    }
+    public Molecule remove(Triple triple) {
+        SortedSet<Triple> newTriples = new TreeSet<Triple>(this.comparator);
+        newTriples.addAll(triples);
+        newTriples.remove(triple);
 
-    public void clear() {
-        predicateSubjectMap.clear();
-        predicateObjectMap.clear();
-        triples.clear();
+        return new MoleculeImpl(newTriples, comparator);
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
@@ -121,16 +130,20 @@ public class MoleculeImpl implements Molecule {
         return set;
     }
 
-    public void add(Triple triple) {
-        predicateSubjectMap.put(triple.getPredicate(), triple.getSubject());
-        predicateObjectMap.put(triple.getPredicate(), triple.getObject());
-        triples.add(triple);
+    public Molecule add(Triple triple) {
+        SortedSet<Triple> newTriples = new TreeSet<Triple>(this.comparator);
+        newTriples.addAll(triples);
+        newTriples.add(triple);
+
+        return new MoleculeImpl(newTriples, comparator);
     }
 
-    public void add(Set<Triple> triples) {
-        for (Triple triple : triples) {
-            add(triple);
-        }
+    public Molecule add(Set<Triple> set) {
+        Set<Triple> newTriples = new TreeSet<Triple>(this.comparator);
+        newTriples.addAll(set);
+        newTriples.addAll(this.triples);
+
+        return new MoleculeImpl(newTriples, this.comparator);
     }
 
     public int size() {

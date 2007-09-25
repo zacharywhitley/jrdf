@@ -114,8 +114,8 @@ public class GlobalizedGraphTestUtil {
         URIReference uriReference = (URIReference) headTriple.getSubject();
 
         Triple triple2 = createTriple(uriReference.getURI(), URI.create(URL1), LITERAL1);
-        m.add(headTriple);
-        m.add(triple2);
+        m = m.add(headTriple);
+        m = m.add(triple2);
         return m;
     }
 

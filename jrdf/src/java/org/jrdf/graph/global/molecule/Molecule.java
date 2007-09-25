@@ -59,13 +59,13 @@ public interface Molecule {
      * Adds the given triple to the molecule.
      * @param triple
      */
-    void add(Triple triple);
+    Molecule add(Triple triple);
 
     /**
      * Adds a set of triples to this molecule.
      * @param triples
      */
-    void add(Set<Triple> triples);
+    Molecule add(Set<Triple> triples);
 
     /**
      * Number of triples contained in the molecule.
@@ -90,4 +90,6 @@ public interface Molecule {
 
 
     boolean equals(Object molecule);
+
+    Molecule remove(Triple triple);
 }

@@ -88,8 +88,8 @@ public class MoleculeImplUnitTest extends TestCase {
         ref1 = new URIReferenceImpl(URI.create("urn:foo"));
         ref2 = new URIReferenceImpl(URI.create("urn:bar"));
         Triple triple = new TripleImpl(ref1, ref1, ref1);
-        molecule.add(triple);
-        molecule.add(new TripleImpl(ref1, ref1, ref2));
+        molecule = molecule.add(triple);
+        molecule = molecule.add(new TripleImpl(ref1, ref1, ref2));
         assertEquals(triple, molecule.getHeadTriple());
     }
 
@@ -100,9 +100,9 @@ public class MoleculeImplUnitTest extends TestCase {
         BlankNode blankNode = new BlankNodeImpl();
 
         Triple triple = new TripleImpl(blankNode, ref1, ref1);
-        molecule.add(new TripleImpl(blankNode, ref1, ref2));
-        molecule.add(triple);
-        molecule.add(new TripleImpl(blankNode, ref1, blankNode));
+        molecule = molecule.add(new TripleImpl(blankNode, ref1, ref2));
+        molecule = molecule.add(triple);
+        molecule = molecule.add(new TripleImpl(blankNode, ref1, blankNode));
         assertEquals(triple, molecule.getHeadTriple());
     }
 }

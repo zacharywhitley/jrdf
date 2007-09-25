@@ -97,9 +97,9 @@ public class MoleculeComparatorImplUnitTest extends TestCase {
 
     private void checkMoleculesAreUnequal(Set<Triple> triple1, Set<Triple> triple2) throws GraphException {
         Molecule molecule1 = new MoleculeImpl(comparator);
-        molecule1.add(triple1);
+        molecule1 = molecule1.add(triple1);
         Molecule molecule2 = new MoleculeImpl(comparator);
-        molecule2.add(triple2);
+        molecule2 = molecule2.add(triple2);
         MoleculeComparator moleculeComparator = new MoleculeComparatorImpl();
         assertFalse(moleculeComparator.compare(molecule1, molecule2));
     }
