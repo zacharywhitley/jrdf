@@ -70,7 +70,6 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.io.Serializable;
 import java.util.LinkedHashSet;
 
 /**
@@ -79,11 +78,7 @@ import java.util.LinkedHashSet;
  * @author Tom Adams
  * @version $Revision$
  */
-public final class QueryImpl implements Query, Serializable {
-
-    // FIXME: Check for immutability of parameters.
-    // FIXME TJA: Implement equals() and hashCode()
-    private static final long serialVersionUID = 409607492370028929L;
+public final class QueryImpl implements Query {
     private Expression<ExpressionVisitor> expression;
     private final GraphRelationFactory graphRelationFactory;
 

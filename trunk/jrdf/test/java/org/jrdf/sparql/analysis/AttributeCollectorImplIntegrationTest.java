@@ -60,15 +60,42 @@
 package org.jrdf.sparql.analysis;
 
 import junit.framework.TestCase;
-import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
-import static org.jrdf.util.test.SerializationTestUtil.checkSerializability;
-import static org.jrdf.util.test.SerializationTestUtil.checkSerialization;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
+import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
+import org.jrdf.query.relation.type.PositionalNodeType;
 
-public class AttributeCollectorImplUnitTest extends TestCase {
-    public void testSerializationProperties() {
-        checkSerializability(AttributeCollectorImpl.class);
-        checkSerialialVersionUid(AttributeCollectorImpl.class, 5588873511780742278L);
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Arrays;
+import java.util.Map;
+
+public class AttributeCollectorImplIntegrationTest extends TestCase {
+    private static final AttributeValuePair VALUE_1 = RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+    private static final AttributeValuePair[] VALUES = new AttributeValuePair[]{VALUE_1};
+
+    public void testSerialization() throws Exception {
         VariableCollector collector = new AttributeCollectorImpl();
-        checkSerialization(collector);
+        collector.addConstraints(Arrays.asList(VALUES));
+
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
+
+        // write the graph
+        os.writeObject(collector);
+
+        // read a new graph back in
+        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
+        ObjectInputStream is = new ObjectInputStream(inputBytes);
+
+        // read the graph
+        VariableCollector collecto2 = (VariableCollector) is.readObject();
+        Map<AttributeName, PositionalNodeType> attributes = collecto2.getAttributes();
+        assertEquals(1, attributes.size());
+        AttributeName attributeName = VALUE_1.getAttribute().getAttributeName();
+        assertTrue(attributes.keySet().contains(attributeName));
+        assertEquals(VALUE_1.getAttribute().getType(), attributes.get(attributeName));
     }
 }
