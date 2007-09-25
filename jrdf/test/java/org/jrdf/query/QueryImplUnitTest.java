@@ -63,11 +63,10 @@ import junit.framework.TestCase;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
-import org.jrdf.util.test.SerializationTestUtil;
-import static org.jrdf.util.test.AssertThrows.*;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import java.io.Serializable;
 import java.lang.reflect.Modifier;
 
 /**
@@ -79,14 +78,8 @@ import java.lang.reflect.Modifier;
 public final class QueryImplUnitTest extends TestCase {
 
     public void testClassProperties() {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(Serializable.class, QueryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(QueryImpl.class, Modifier.PUBLIC, Expression.class,
-                GraphRelationFactory.class);
-    }
-
-    public void testSerialVersionUid() {
-        SerializationTestUtil.checkSerialialVersionUid(QueryImpl.class, 409607492370028929L);
+        checkImplementationOfInterfaceAndFinal(Query.class, QueryImpl.class);
+        checkConstructor(QueryImpl.class, Modifier.PUBLIC, Expression.class, GraphRelationFactory.class);
     }
 
     public void testNullsInConstructorThrowException() {
@@ -96,10 +89,4 @@ public final class QueryImplUnitTest extends TestCase {
             }
         });
     }
-
-    public void testGetVariables() {
-
-    }
-
-    // TODO: Test drive other methods - when stable.
 }
