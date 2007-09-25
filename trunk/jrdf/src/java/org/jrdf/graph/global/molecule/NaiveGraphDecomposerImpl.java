@@ -49,6 +49,7 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     // TODO AN Change blank node comparator????
     private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
         new NodeTypeComparatorImpl(), new GlobalizedBlankNodeComparatorImpl()));
+
     private final Set<Triple> triplesChecked = new HashSet<Triple>();
     private final Set<Molecule> molecules = new HashSet<Molecule>();
     private Graph graph;
@@ -74,10 +75,10 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
         boolean blankObject = isBlankNode(currentTriple.getObject());
         Molecule molecule = new MoleculeImpl(comparator);
-        molecule.add(currentTriple);
+        molecule = molecule.add(currentTriple);
         if (blankSubject || blankObject) {
             Set<Triple> hangingTriples = getHangingTriples();
-            molecule.add(hangingTriples);
+            molecule = molecule.add(hangingTriples);
         }
         addMoleculeTriplesToCheckedTriples(molecule);
         molecules.add(molecule);

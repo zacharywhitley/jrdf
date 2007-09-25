@@ -213,8 +213,8 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
         Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(URL1 + random)), new URIReferenceImpl(URI.create(URL2)), new LiteralImpl(LITERAL1));
         random = Math.random();
         Triple triple2 = new TripleImpl(new URIReferenceImpl(URI.create(URL1 + random)), new URIReferenceImpl(URI.create(URL2)), new LiteralImpl(LITERAL2));
-        m.add(triple);
-        m.add(triple2);
+        m = m.add(triple);
+        m = m.add(triple2);
         Triple headTriple = m.getHeadTriple();
         Node[] nodes = getNodes(headTriple);
         moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
@@ -227,7 +227,7 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
         Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(URL1 + random)), new URIReferenceImpl(URI.create(URL2)), new LiteralImpl(LITERAL1));
         Node[] nodes = getNodes(triple);
         moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
-        m.add(triple);
+        m = m.add(triple);
         Triple headTriple = m.getHeadTriple();
         nodes = getNodes(headTriple);
         moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
