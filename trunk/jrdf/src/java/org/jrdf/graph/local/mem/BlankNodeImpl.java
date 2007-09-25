@@ -63,17 +63,20 @@ package org.jrdf.graph.local.mem;
 
 import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.global.GlobalizedBlankNode;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 /**
- * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying
- * attributes.
+ * RDF blank node. Note that blank nodes are deliberately devoid of external indentifying attributes.
  * <p/>
  * Blank nodes, can either be subjects or objects.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode {
+public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankNode {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
@@ -119,7 +122,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode {
      *
      * @return A global String identifier for this node.
      */
-    private String getUID() {
+    public String getUID() {
         return uid;
     }
 
@@ -131,6 +134,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode {
      *
      * @return a hash-code value for this blank node.
      */
+    @Override
     public int hashCode() {
         return id.hashCode() ^ uid.hashCode();
     }
@@ -142,25 +146,19 @@ public class BlankNodeImpl extends AbstractBlankNode implements LocalizedNode {
      * @param obj the reference object with which to compare.
      * @return true if this object is the same as the obj argument; false otherwise.
      */
+    @Override
     public boolean equals(Object obj) {
-
-        // Check equal by reference
-        if (this == obj) {
+        if (isNull(obj)) {
+            return false;
+        }
+        if (sameReference(this, obj)) {
             return true;
         }
-
-        // Check for null and ensure exactly the same class - not subclass.
-        if (obj == null || getClass() != obj.getClass()) {
+        if (!hasSuperClassOrInterface(GlobalizedBlankNode.class, obj)) {
             return false;
         }
-
-        // Cast and check for equality by value. (same class)
-        try {
-            BlankNodeImpl tmpNode = (BlankNodeImpl) obj;
-            return tmpNode.getId().equals(id) && tmpNode.getUID().equals(uid);
-        } catch (ClassCastException cce) {
-            return false;
-        }
+        GlobalizedBlankNode tmpNode = (GlobalizedBlankNode) obj;
+        return getId().equals(tmpNode.getId()) && getUID().equals(tmpNode.getUID());
     }
 
     /**

@@ -59,7 +59,9 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.util.EqualsUtil;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.io.Serializable;
 
@@ -108,13 +110,13 @@ public class AbstractTriple implements Triple, Serializable {
      * {@inheritDoc}
      */
     public boolean equals(Object obj) {
-        if (EqualsUtil.isNull(obj)) {
+        if (isNull(obj)) {
             return false;
         }
-        if (EqualsUtil.sameReference(this, obj)) {
+        if (sameReference(this, obj)) {
             return true;
         }
-        if (!EqualsUtil.hasSuperClassOrInterface(Triple.class, obj)) {
+        if (!hasSuperClassOrInterface(Triple.class, obj)) {
             return false;
         }
         return determineEqualityFromFields((Triple) obj);

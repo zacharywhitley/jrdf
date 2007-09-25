@@ -65,6 +65,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.global.GlobalizedBlankNode;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
@@ -90,7 +91,11 @@ public class ResourceFactoryImpl implements ResourceFactory {
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         try {
             nodePool.localize(node);
-            return new BlankNodeResourceImpl(node, readWriteGraph);
+            if (GlobalizedBlankNode.class.isAssignableFrom(node.getClass())) {
+                return new BlankNodeResourceImpl((GlobalizedBlankNode) node, readWriteGraph);
+            } else {
+                throw new IllegalArgumentException("Unknown node type: " + node.getClass());
+            }
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
