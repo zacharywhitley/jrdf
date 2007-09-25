@@ -61,10 +61,10 @@ package org.jrdf.graph.local.mem;
 
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractResourceUnitTest;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.GlobalizedBlankNode;
 
 public class ResourceUnitTest extends AbstractResourceUnitTest {
     private static final ReadWriteGraphFactory FACTORY = TestJRDFFactory.getFactory().getNewReadWriteGraphFactory();
@@ -80,7 +80,7 @@ public class ResourceUnitTest extends AbstractResourceUnitTest {
     }
 
     @Override
-    public Resource createBlankNodeResource(BlankNode node, ReadWriteGraph readWriteGraph) {
+    public Resource createBlankNodeResource(GlobalizedBlankNode node, ReadWriteGraph readWriteGraph) {
         return new BlankNodeResourceImpl(node, readWriteGraph);
     }
 

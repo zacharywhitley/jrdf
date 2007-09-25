@@ -524,7 +524,9 @@
         <root url="jar://$PROJECT_DIR$/lib/gsbase-2.0.1.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES />
+      <SOURCES>
+        <root url="file://D:/Downloads/gsbase-2.0.1/src/java" />
+      </SOURCES>
     </library>
     <library name="je-3.2.42">
       <CLASSES>

@@ -59,36 +59,35 @@
 
 package org.jrdf.graph.local.mem;
 
+import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.TestJRDFFactory;
+import com.gargoylesoftware.base.testing.EqualsTester;
 
-/**
- * A comparator for blank nodes - assumes that the nodes are from the same graph - i.e. if they have the same node id
- * they are the same.
- */
-public class LocalizedBlankNodeComparatorImpl implements BlankNodeComparator {
-    private final LocalizedNodeComparator localizedNodeComparator;
+public class BlankNodeResourceImplUnitTest extends TestCase {
+    private Graph newGraph;
+    private BlankNode blankNode1;
+    private BlankNode blankNode2;
+    private Resource resource1;
+    private Resource resource2;
+    private Resource resource3;
 
-    public LocalizedBlankNodeComparatorImpl(LocalizedNodeComparator localizedNodeComparator) {
-        this.localizedNodeComparator = localizedNodeComparator;
+    public void setUp() throws Exception {
+        newGraph = TestJRDFFactory.getFactory().getNewGraph();
+        GraphElementFactory graphElementFactory = newGraph.getElementFactory();
+        blankNode1 = graphElementFactory.createBlankNode();
+        blankNode2 = graphElementFactory.createBlankNode();
+        resource1 = graphElementFactory.createResource(blankNode1);
+        resource2 = graphElementFactory.createResource(blankNode1);
+        resource3 = graphElementFactory.createResource(blankNode2);
     }
 
-    public int compare(BlankNode blankNode1, BlankNode blankNode2) {
-        int result;
-        if ((blankNode1 instanceof LocalizedNode) && (blankNode2 instanceof LocalizedNode)) {
-            result = localizedNodeComparator.compare((LocalizedNode) blankNode1, (LocalizedNode) blankNode2);
-        } else {
-            result = compareByString(blankNode1.toString(), blankNode2.toString());
-        }
-        return result;
-    }
-
-    private int compareByString(String str1, String str2) {
-        int result = str1.compareTo(str2);
-        if (result > 0) {
-            result = 1;
-        } else if (result < 0) {
-            result = -1;
-        }
-        return result;
+    public void testEquals() throws Exception {
+        new EqualsTester(resource1, resource2, resource3, null);
+        assertTrue(blankNode1.equals(resource1));
+        assertTrue(resource1.equals(blankNode1));
     }
 }

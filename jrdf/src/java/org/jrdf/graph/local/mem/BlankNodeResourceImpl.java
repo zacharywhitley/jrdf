@@ -61,19 +61,24 @@ package org.jrdf.graph.local.mem;
 
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.global.GlobalizedBlankNode;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.net.URI;
 
-public class BlankNodeResourceImpl extends AbstractResource {
+public final class BlankNodeResourceImpl extends AbstractResource implements GlobalizedBlankNode {
     private static final long serialVersionUID = -7817086166570580806L;
-    private BlankNode node;
+    private GlobalizedBlankNode node;
 
     private BlankNodeResourceImpl() {
     }
 
-    BlankNodeResourceImpl(BlankNode newNode, ReadWriteGraph newReadWriteGraph) {
-        super(((LocalizedNode) newNode).getId(), newReadWriteGraph);
+    BlankNodeResourceImpl(GlobalizedBlankNode newNode, ReadWriteGraph newReadWriteGraph) {
+        super(newNode.getId(), newReadWriteGraph);
         this.node = newNode;
     }
 
@@ -89,15 +94,26 @@ public class BlankNodeResourceImpl extends AbstractResource {
         return null;
     }
 
+    @Override
     public int hashCode() {
-        return (node != null ? node.hashCode() : 0);
+        return node != null ? node.hashCode() : 0;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (obj instanceof BlankNode) {
-            return node.equals((BlankNode) obj);
+        if (isNull(obj)) {
+            return false;
         }
-        return false;
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (hasSuperClassOrInterface(Resource.class, obj)) {
+            return getUnderlyingNode().equals(((Resource) obj).getUnderlyingNode());
+        } else if (hasSuperClassOrInterface(BlankNode.class, obj)) {
+            return getUnderlyingNode().equals(obj);
+        } else {
+            return false;
+        }
     }
 
     public void accept(TypedNodeVisitor visitor) {
@@ -106,5 +122,9 @@ public class BlankNodeResourceImpl extends AbstractResource {
 
     public String toString() {
         return node.toString();
+    }
+
+    public String getUID() {
+        return node.getUID();
     }
 }

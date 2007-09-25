@@ -60,12 +60,16 @@
 package org.jrdf.graph.local.mem;
 
 import org.jrdf.graph.Node;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.URIReference;
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
+import static org.jrdf.util.EqualsUtil.isNull;
+import static org.jrdf.util.EqualsUtil.sameReference;
 
 import java.net.URI;
 
-public class URIReferenceResourceImpl extends AbstractResource {
+public final class URIReferenceResourceImpl extends AbstractResource {
     private static final long serialVersionUID = 6874840676043541168L;
     private URIReference node;
 
@@ -89,15 +93,26 @@ public class URIReferenceResourceImpl extends AbstractResource {
         return node.getURI();
     }
 
+    @Override
     public int hashCode() {
-        return (node != null ? node.hashCode() : 0);
+        return node != null ? node.hashCode() : 0;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (obj instanceof URIReference) {
-            return node.equals((URIReference) obj);
+        if (isNull(obj)) {
+            return false;
         }
-        return false;
+        if (sameReference(this, obj)) {
+            return true;
+        }
+        if (hasSuperClassOrInterface(Resource.class, obj)) {
+            return getUnderlyingNode().equals(((Resource) obj).getUnderlyingNode());
+        } else if (hasSuperClassOrInterface(URIReference.class, obj)) {
+            return getUnderlyingNode().equals(obj);
+        } else {
+            return false;
+        }
     }
 
     public void accept(TypedNodeVisitor visitor) {

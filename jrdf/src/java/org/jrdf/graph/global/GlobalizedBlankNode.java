@@ -57,38 +57,15 @@
  *
  */
 
-package org.jrdf.graph.local.mem;
+package org.jrdf.graph.global;
 
-import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.local.mem.LocalizedNode;
 
-/**
- * A comparator for blank nodes - assumes that the nodes are from the same graph - i.e. if they have the same node id
- * they are the same.
- */
-public class LocalizedBlankNodeComparatorImpl implements BlankNodeComparator {
-    private final LocalizedNodeComparator localizedNodeComparator;
-
-    public LocalizedBlankNodeComparatorImpl(LocalizedNodeComparator localizedNodeComparator) {
-        this.localizedNodeComparator = localizedNodeComparator;
-    }
-
-    public int compare(BlankNode blankNode1, BlankNode blankNode2) {
-        int result;
-        if ((blankNode1 instanceof LocalizedNode) && (blankNode2 instanceof LocalizedNode)) {
-            result = localizedNodeComparator.compare((LocalizedNode) blankNode1, (LocalizedNode) blankNode2);
-        } else {
-            result = compareByString(blankNode1.toString(), blankNode2.toString());
-        }
-        return result;
-    }
-
-    private int compareByString(String str1, String str2) {
-        int result = str1.compareTo(str2);
-        if (result > 0) {
-            result = 1;
-        } else if (result < 0) {
-            result = -1;
-        }
-        return result;
-    }
+public interface GlobalizedBlankNode extends LocalizedNode {
+    /**
+     * Returns the identifier for the blank node.
+     *
+     * @return the identifier for the blank node.
+     */
+    String getUID();
 }

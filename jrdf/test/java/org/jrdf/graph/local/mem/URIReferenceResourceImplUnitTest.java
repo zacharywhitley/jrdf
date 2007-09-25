@@ -59,36 +59,37 @@
 
 package org.jrdf.graph.local.mem;
 
-import org.jrdf.graph.BlankNode;
+import junit.framework.TestCase;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.TestJRDFFactory;
+import com.gargoylesoftware.base.testing.EqualsTester;
 
-/**
- * A comparator for blank nodes - assumes that the nodes are from the same graph - i.e. if they have the same node id
- * they are the same.
- */
-public class LocalizedBlankNodeComparatorImpl implements BlankNodeComparator {
-    private final LocalizedNodeComparator localizedNodeComparator;
+import java.net.URI;
 
-    public LocalizedBlankNodeComparatorImpl(LocalizedNodeComparator localizedNodeComparator) {
-        this.localizedNodeComparator = localizedNodeComparator;
+public class URIReferenceResourceImplUnitTest extends TestCase {
+    private Graph newGraph;
+    private URIReference uri1;
+    private URIReference uri2;
+    private Resource resource1;
+    private Resource resource2;
+    private Resource resource3;
+
+    public void setUp() throws Exception {
+        newGraph = TestJRDFFactory.getFactory().getNewGraph();
+        GraphElementFactory graphElementFactory = newGraph.getElementFactory();
+        uri1 = graphElementFactory.createURIReference(URI.create("urn:foo"));
+        uri2 = graphElementFactory.createURIReference(URI.create("urn:bar"));
+        resource1 = graphElementFactory.createResource(uri1);
+        resource2 = graphElementFactory.createResource(uri1);
+        resource3 = graphElementFactory.createResource(uri2);
     }
 
-    public int compare(BlankNode blankNode1, BlankNode blankNode2) {
-        int result;
-        if ((blankNode1 instanceof LocalizedNode) && (blankNode2 instanceof LocalizedNode)) {
-            result = localizedNodeComparator.compare((LocalizedNode) blankNode1, (LocalizedNode) blankNode2);
-        } else {
-            result = compareByString(blankNode1.toString(), blankNode2.toString());
-        }
-        return result;
-    }
-
-    private int compareByString(String str1, String str2) {
-        int result = str1.compareTo(str2);
-        if (result > 0) {
-            result = 1;
-        } else if (result < 0) {
-            result = -1;
-        }
-        return result;
+    public void testEquals() throws Exception {
+        new EqualsTester(resource1, resource2, resource3, null);
+        assertTrue(uri1.equals(resource1));
+        assertTrue(resource1.equals(uri1));
     }
 }

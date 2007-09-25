@@ -63,6 +63,7 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import org.jrdf.graph.local.mem.ReadWriteGraph;
+import org.jrdf.graph.global.GlobalizedBlankNode;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
@@ -87,7 +88,7 @@ public abstract class AbstractResourceUnitTest extends TestCase {
 
     public abstract ReadWriteGraph getReadWriteGraph();
     public abstract GraphElementFactory getElementFactory();
-    public abstract Resource createBlankNodeResource(BlankNode node, ReadWriteGraph readWriteGraph);
+    public abstract Resource createBlankNodeResource(GlobalizedBlankNode node, ReadWriteGraph readWriteGraph);
     public abstract Resource createURIReferenceResource(URIReference node,
             ReadWriteGraph readWriteGraph);
 
@@ -104,10 +105,10 @@ public abstract class AbstractResourceUnitTest extends TestCase {
         object1 = elementFactory.createLiteral("SomeValue1");
         object2 = elementFactory.createLiteral("SomeValue2");
         object3 = elementFactory.createLiteral("SomeValue3");
-        blankNode1 = createBlankNodeResource(elementFactory.createBlankNode(), readWriteGraph);
-        blankNode2 = createBlankNodeResource(elementFactory.createBlankNode(), readWriteGraph);
-        blankNode3 = createBlankNodeResource(elementFactory.createBlankNode(), readWriteGraph);
-        blankNode4 = createBlankNodeResource(elementFactory.createBlankNode(), readWriteGraph);
+        blankNode1 = createBlankNodeResource((GlobalizedBlankNode) elementFactory.createBlankNode(), readWriteGraph);
+        blankNode2 = createBlankNodeResource((GlobalizedBlankNode) elementFactory.createBlankNode(), readWriteGraph);
+        blankNode3 = createBlankNodeResource((GlobalizedBlankNode) elementFactory.createBlankNode(), readWriteGraph);
+        blankNode4 = createBlankNodeResource((GlobalizedBlankNode) elementFactory.createBlankNode(), readWriteGraph);
         uriRef1 = createURIReferenceResource(elementFactory.createURIReference(uri1), readWriteGraph);
     }
 
@@ -230,7 +231,7 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testGetSubjects() throws Exception {
-        Resource object = createBlankNodeResource(elementFactory.createBlankNode(), readWriteGraph);
+        Resource object = createBlankNodeResource((GlobalizedBlankNode) elementFactory.createBlankNode(), readWriteGraph);
         blankNode1.addValue(predicate1, object);
         blankNode2.addValue(predicate1, object);
         blankNode3.addValue(predicate1, object);
