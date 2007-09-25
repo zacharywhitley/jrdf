@@ -65,30 +65,25 @@ import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.mem.join.TupleEngine;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Common tuple processing code - gets headings and then processes tuples using the tuple engine.
  */
-public final class RelationProcessorImpl implements RelationProcessor, Serializable {
+public final class RelationProcessorImpl implements RelationProcessor {
     private RelationFactory relationFactory;
     private TupleComparator tupleComparator;
-    private static final long serialVersionUID = 5483640117544955640L;
-
-    private RelationProcessorImpl() {
-    }
 
     public RelationProcessorImpl(RelationFactory relationFactory, TupleComparator tupleComparator) {
-        ParameterUtil.checkNotNull(relationFactory, tupleComparator);
+        checkNotNull(relationFactory, tupleComparator);
         this.relationFactory = relationFactory;
         this.tupleComparator = tupleComparator;
     }

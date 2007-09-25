@@ -59,13 +59,13 @@
 
 package org.jrdf.query.relation.mem;
 
+import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationFactory;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Set;
 
@@ -74,7 +74,7 @@ public final class RelationFactoryImpl implements RelationFactory {
     private final TupleComparator tupleComparator;
 
     public RelationFactoryImpl(AttributeComparator attributeComparator, TupleComparator tupleComparator) {
-        ParameterUtil.checkNotNull(attributeComparator, tupleComparator);
+        checkNotNull(attributeComparator, tupleComparator);
         this.attributeComparator = attributeComparator;
         this.tupleComparator = tupleComparator;
     }

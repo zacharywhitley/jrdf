@@ -57,44 +57,55 @@
  *
  */
 
-package org.jrdf.graph.local.mem;
+package org.jrdf.sparql.analysis;
 
-import org.jrdf.graph.BlankNode;
+import junit.framework.TestCase;
+import org.jrdf.query.relation.AttributeValuePair;
+import org.jrdf.query.relation.attributename.AttributeName;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import org.jrdf.query.relation.type.PositionalNodeType;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerializability;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialization;
 
-import java.io.Serializable;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import static java.util.Arrays.asList;
+import java.util.Map;
 
-/**
- * A comparator for blank nodes - assumes that the nodes are from the same graph - i.e. if they have the same node id
- * they are the same.
- */
-public class LocalizedBlankNodeComparatorImpl implements BlankNodeComparator, Serializable {
-    private static final long serialVersionUID = 3858464100978500030L;
-    private LocalizedNodeComparator localizedNodeComparator;
+public class AttributeCollectorImplUnitTest extends TestCase {
+    private static final AttributeValuePair VALUE_1 = POS_FOO1_SUBJECT_R1;
+    private static final AttributeValuePair[] VALUES = new AttributeValuePair[]{VALUE_1};
 
-    private LocalizedBlankNodeComparatorImpl() {
+    public void testSerializationProperties() {
+        checkSerializability(AttributeCollectorImpl.class);
+        checkSerialialVersionUid(AttributeCollectorImpl.class, 5588873511780742278L);
+        VariableCollector collector = new AttributeCollectorImpl();
+        checkSerialization(collector);
     }
 
-    public LocalizedBlankNodeComparatorImpl(LocalizedNodeComparator localizedNodeComparator) {
-        this.localizedNodeComparator = localizedNodeComparator;
-    }
+    public void testSerialization() throws Exception {
+        VariableCollector collector = new AttributeCollectorImpl();
+        collector.addConstraints(asList(VALUES));
 
-    public int compare(BlankNode blankNode1, BlankNode blankNode2) {
-        int result;
-        if ((blankNode1 instanceof LocalizedNode) && (blankNode2 instanceof LocalizedNode)) {
-            result = localizedNodeComparator.compare((LocalizedNode) blankNode1, (LocalizedNode) blankNode2);
-        } else {
-            result = compareByString(blankNode1.toString(), blankNode2.toString());
-        }
-        return result;
-    }
+        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
 
-    private int compareByString(String str1, String str2) {
-        int result = str1.compareTo(str2);
-        if (result > 0) {
-            result = 1;
-        } else if (result < 0) {
-            result = -1;
-        }
-        return result;
+        // write the graph
+        os.writeObject(collector);
+
+        // read a new graph back in
+        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
+        ObjectInputStream is = new ObjectInputStream(inputBytes);
+
+        // read the graph
+        VariableCollector collecto2 = (VariableCollector) is.readObject();
+        Map<AttributeName, PositionalNodeType> attributes = collecto2.getAttributes();
+        assertEquals(1, attributes.size());
+        AttributeName attributeName = VALUE_1.getAttribute().getAttributeName();
+        assertTrue(attributes.keySet().contains(attributeName));
+        assertEquals(VALUE_1.getAttribute().getType(), attributes.get(attributeName));
     }
 }

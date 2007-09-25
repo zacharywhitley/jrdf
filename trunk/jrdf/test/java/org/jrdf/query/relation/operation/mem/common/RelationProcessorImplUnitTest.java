@@ -65,10 +65,8 @@ import org.jrdf.query.relation.TupleComparator;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import java.io.Serializable;
 import java.lang.reflect.Modifier;
 
 public class RelationProcessorImplUnitTest extends TestCase {
@@ -77,7 +75,6 @@ public class RelationProcessorImplUnitTest extends TestCase {
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(RelationProcessor.class, RelationProcessorImpl.class);
-        checkImplementationOfInterface(Serializable.class, RelationProcessorImpl.class);
         checkConstructor(RelationProcessorImpl.class, Modifier.PUBLIC, PARAMETERS);
         checkConstructorSetsFieldsAndFieldsPrivate(RelationProcessorImpl.class, PARAMETERS, PARAMETER_NAMES);
         checkConstructNullAssertion(RelationProcessorImpl.class, PARAMETERS);
