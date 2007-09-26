@@ -62,7 +62,7 @@ package org.jrdf.graph.global;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.factory.GlobalizedGraphMemFactoryImpl;
 
-public class GlobalizedGraphUnitTest extends AbstractGlobalizedGraphUnitTest {    
+public class GlobalizedGraphImplUnitTest extends AbstractGlobalizedGraphUnitTest {    
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
 
     public GlobalizedGraph getGlobalizedGraph() {
