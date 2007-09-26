@@ -70,6 +70,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedSet;
 
 public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 850704300941647768L;
@@ -113,10 +114,13 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
             subIndex.put(second, group);
         }
         if (group.containsKey(third)) {
-            System.err.println("Already contains: " + group.get(third));
-            System.err.println("Adding: " + molecule);
+            Molecule tmpMolecule = group.remove(third);
+            SortedSet<Triple> triples = molecule.getTriples();
+            Molecule newMolecule = tmpMolecule.add(triples);
+            group.put(third, newMolecule);
+        } else {
+            group.put(third, molecule);
         }
-        group.put(third, molecule);
     }
 
     public void remove(Node first, Node second, Node third) throws GraphException {

@@ -22,6 +22,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 
 import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.Set;
 
 /**
@@ -92,4 +93,6 @@ public interface Molecule {
     boolean equals(Object molecule);
 
     Molecule remove(Triple triple);
+
+    SortedSet<Triple> getTriples();
 }

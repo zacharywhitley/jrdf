@@ -114,6 +114,10 @@ public class MoleculeImpl implements Molecule {
         return triples.iterator();
     }
 
+    public SortedSet<Triple> getTriples() {
+        return triples;
+    }
+
     public Iterator<Triple> tailTriples() {
         return getTailTriples().iterator();
     }
@@ -140,8 +144,8 @@ public class MoleculeImpl implements Molecule {
 
     public Molecule add(Set<Triple> set) {
         Set<Triple> newTriples = new TreeSet<Triple>(this.comparator);
-        newTriples.addAll(set);
         newTriples.addAll(this.triples);
+        newTriples.addAll(set);
 
         return new MoleculeImpl(newTriples, this.comparator);
     }

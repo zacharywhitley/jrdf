@@ -92,16 +92,16 @@ public class MoleculeParserImplUnitTest extends TestCase {
 
 //    // TODO: IK Do we know the right answer for this?  i.e. whas is the correct number of molecules for the pizza
     // ontology.
-//    public void testGetGlobalizedGraph() throws Exception {
-//        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
-//        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
-//        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
-//        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
-//        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
-//        Triple triple = jrdfGraph.getTripleFactory()
-//            .addTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
-//                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
-//        boolean result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
-//        assertTrue(result);
-//    }
+    public void testGetGlobalizedGraph() throws Exception {
+        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
+        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
+        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
+        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
+        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
+        Triple triple = jrdfGraph.getTripleFactory()
+            .addTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
+                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
+        boolean result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        assertTrue(result);
+    }
 }
