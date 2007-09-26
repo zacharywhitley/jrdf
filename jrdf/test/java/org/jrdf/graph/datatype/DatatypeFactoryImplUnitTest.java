@@ -76,6 +76,7 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final String TEN_SECOND_AFTER_UNIX_EPOCH_STRING = "1970-01-01T10:00:10.000+10:00";
     private static final String HAPPY_NEW_YEAR = "2000-01-01T00:00:00.000+10:00";
     private static final String COFFEE_TIME = "09:30:00.000+10:00";
+    private static final String DURATION = "3600";
     private static final String G_MONTH_DAY_STR = "--01-21";
     private static final String G_YEAR_MONTH_STR = "1999-06";
     private static final String G_YEAR_STR = "2007";
