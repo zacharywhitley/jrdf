@@ -114,9 +114,9 @@ public class MoleculeParserImpl implements MoleculeParser {
             for (Molecule molecule : molecules) {
                 globalizedGraph.add(molecule);
                 counter++;
-                if (counter != globalizedGraph.getNumberOfMolecules()) {
-                    throw new RuntimeException("Out of sync: " + counter + molecule);
-                }
+//                if (counter != globalizedGraph.getNumberOfMolecules()) {
+//                    throw new RuntimeException("Out of sync: " + counter + molecule);
+//                }
 
             }
         }

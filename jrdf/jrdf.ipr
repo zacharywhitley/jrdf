@@ -272,7 +272,7 @@
       <module fileurl="file://$PROJECT_DIR$/jrdf.iml" filepath="$PROJECT_DIR$/jrdf.iml" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="IDEA 6180" project-jdk-type="IDEA JDK">
+  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/iclasses" />
   </component>
   <component name="ProjectRunConfigurationManager" />
