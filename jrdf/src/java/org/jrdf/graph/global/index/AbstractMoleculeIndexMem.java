@@ -70,7 +70,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedSet;
 
 public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 850704300941647768L;
