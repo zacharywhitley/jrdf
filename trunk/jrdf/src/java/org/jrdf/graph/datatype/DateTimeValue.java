@@ -68,6 +68,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.ObjectInputStream;
 
 public class DateTimeValue implements DatatypeValue {
     private static final long serialVersionUID = 3135119000595034019L;
@@ -145,5 +149,25 @@ public class DateTimeValue implements DatatypeValue {
             return false;
         }
         return value.equals(((DateTimeValue) obj).value);
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        if (Serializable.class.isAssignableFrom(value.getClass())) {
+            out.writeBoolean(true);
+            out.defaultWriteObject();
+        } else {
+            out.writeBoolean(false);
+            out.writeUTF(getLexicalForm());
+        }
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        boolean isDefault = in.readBoolean();
+        if (isDefault) {
+            in.defaultReadObject();
+        } else {
+            String lexicalForm = in.readUTF();
+            value = FACTORY.newXMLGregorianCalendar(lexicalForm);
+        }
     }
 }

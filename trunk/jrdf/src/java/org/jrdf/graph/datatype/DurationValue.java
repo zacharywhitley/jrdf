@@ -66,6 +66,10 @@ import static org.jrdf.util.EqualsUtil.sameReference;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.Duration;
 import javax.xml.datatype.DatatypeFactory;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.ObjectInputStream;
 
 public class DurationValue implements DatatypeValue {
     private static final long serialVersionUID = -7039266563142815725L;
@@ -136,5 +140,25 @@ public class DurationValue implements DatatypeValue {
             return false;
         }
         return value.equals(((DurationValue) obj).value);
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        if (Serializable.class.isAssignableFrom(value.getClass())) {
+            out.writeBoolean(true);
+            out.defaultWriteObject();
+        } else {
+            out.writeBoolean(false);
+            out.writeUTF(getLexicalForm());
+        }
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        boolean isDefault = in.readBoolean();
+        if (isDefault) {
+            in.defaultReadObject();
+        } else {
+            String lexicalForm = in.readUTF();
+            value = FACTORY.newDuration(lexicalForm);
+        }
     }
 }

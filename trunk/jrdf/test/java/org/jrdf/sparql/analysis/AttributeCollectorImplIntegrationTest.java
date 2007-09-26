@@ -59,16 +59,13 @@
 
 package org.jrdf.sparql.analysis;
 
+import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.TestCase;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -79,20 +76,8 @@ public class AttributeCollectorImplIntegrationTest extends TestCase {
     public void testSerialization() throws Exception {
         VariableCollector collector = new AttributeCollectorImpl();
         collector.addConstraints(Arrays.asList(VALUES));
-
-        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
-
-        // write the graph
-        os.writeObject(collector);
-
-        // read a new graph back in
-        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
-        ObjectInputStream is = new ObjectInputStream(inputBytes);
-
-        // read the graph
-        VariableCollector collecto2 = (VariableCollector) is.readObject();
-        Map<AttributeName, PositionalNodeType> attributes = collecto2.getAttributes();
+        VariableCollector collector2 = (VariableCollector) TestUtil.copyBySerialization(collector);
+        Map<AttributeName, PositionalNodeType> attributes = collector2.getAttributes();
         assertEquals(1, attributes.size());
         AttributeName attributeName = VALUE_1.getAttribute().getAttributeName();
         assertTrue(attributes.keySet().contains(attributeName));

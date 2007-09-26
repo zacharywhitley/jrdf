@@ -61,7 +61,6 @@ package org.jrdf.graph.datatype;
 
 import junit.framework.TestCase;
 import org.jrdf.vocabulary.XSD;
-import org.jrdf.graph.datatype.DatatypeValue;
 
 import java.net.URI;
 import java.util.Calendar;
@@ -69,6 +68,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
+//TODO Missing CalendarValue, DurationValue
 public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final int TEN_SECONDS = 10000;
     private static final Date TEN_SECONDS_AFTER_UNIX_EPOCH = new Date(TEN_SECONDS);
