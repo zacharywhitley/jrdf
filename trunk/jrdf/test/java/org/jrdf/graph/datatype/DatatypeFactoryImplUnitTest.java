@@ -68,7 +68,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-//TODO Missing CalendarValue, DurationValue
 public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final int TEN_SECONDS = 10000;
     private static final Date TEN_SECONDS_AFTER_UNIX_EPOCH = new Date(TEN_SECONDS);
@@ -76,7 +75,8 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
     private static final String TEN_SECOND_AFTER_UNIX_EPOCH_STRING = "1970-01-01T10:00:10.000+10:00";
     private static final String HAPPY_NEW_YEAR = "2000-01-01T00:00:00.000+10:00";
     private static final String COFFEE_TIME = "09:30:00.000+10:00";
-    private static final String DURATION = "3600";
+    private static final String DURATION_1 = "P0Y0M0DT0H10M0S";
+    private static final String DURATION_2 = "-P120D";
     private static final String G_MONTH_DAY_STR = "--01-21";
     private static final String G_YEAR_MONTH_STR = "1999-06";
     private static final String G_YEAR_STR = "2007";
@@ -186,6 +186,12 @@ public class DatatypeFactoryImplUnitTest extends TestCase {
         checkCreatingValue("bar", XSD.Q_NAME);
         checkCreatingValue("foo:bar", XSD.Q_NAME);
         checkEmptyString(XSD.Q_NAME);
+    }
+
+    public void testDuration() {
+        checkCreatingValue(DURATION_1, XSD.DURATION);
+        checkCreatingValue(DURATION_2, XSD.DURATION);
+        checkEmptyString(XSD.DURATION);
     }
 
     private void checkWrongStringValueAndCreate(String strToParse, URI uri) {

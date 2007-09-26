@@ -73,7 +73,8 @@ import java.net.URI;
  */
 public abstract class AbstractLiteralUnitTest extends TestCase {
     private static final String DATE = "1980-01-01T10:00:10.000+10:00";
-    private static final String G_MONTH_STR_1 = "--11";
+    private static final String DURATION = "P1D";
+    private static final String G_MONTH_STR = "--11";
 
     public abstract Literal createLiteral(String newLexicalForm) throws Exception;
 
@@ -86,8 +87,10 @@ public abstract class AbstractLiteralUnitTest extends TestCase {
 
     public void testSerialization() throws Exception {
         Literal literal1 = createLiteral(DATE, XSD.DATE_TIME);
-        Literal literal2 = createLiteral(G_MONTH_STR_1, XSD.G_MONTH);
+        Literal literal2 = createLiteral(G_MONTH_STR, XSD.G_MONTH);
+        Literal literal3 = createLiteral(DURATION, XSD.DURATION);
         checkSerialization(literal1);
         checkSerialization(literal2);
+        checkSerialization(literal3);
     }
 }
