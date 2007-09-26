@@ -63,6 +63,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.graph.global.molecule.MoleculeImpl;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -73,6 +74,8 @@ import java.util.Map;
 public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 850704300941647768L;
     private Map<Node, Map<Node, Map<Node, Molecule>>> index;
+
+    private static final Molecule DUMMY_MOLECULE = new MoleculeImpl(null);
 
     protected AbstractMoleculeIndexMem() {
         this.index = new HashMap<Node, Map<Node, Map<Node, Molecule>>>();
@@ -88,7 +91,7 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
         while (iterator.hasNext()) {
             Triple triple = iterator.next();
             Node[] nodes = getNodes(triple);
-            addInternalNodes(nodes[0], nodes[1], nodes[2], molecule);
+            addInternalNodes(nodes[0], nodes[1], nodes[2], DUMMY_MOLECULE);
         }
     }
 
@@ -192,15 +195,31 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
 
     public long getNumberOfMolecules() {
         long size = 0;
-        for (Node node0 : index.keySet()) {
-            Map<Node, Map<Node, Molecule>> node2ToNode3Map = index.get(node0);
-            for (Map.Entry<Node, Map<Node, Molecule>> mapEntries : node2ToNode3Map.entrySet()) {
-                for (Map.Entry<Node, Molecule> nodeToMoleculeEntries : mapEntries.getValue().entrySet()) {
-                    Node[] headNodes = getNodes(nodeToMoleculeEntries.getValue().getHeadTriple());
-                    if (headNodes[0].equals(node0) && headNodes[1].equals(mapEntries.getKey()) &&
-                        headNodes[2].equals(nodeToMoleculeEntries.getKey())) {
+
+        //spo-m
+        for (Node node : index.keySet()) {
+
+
+            Map<Node, Map<Node, Molecule>> firstLevelIndex = index.get(node);
+
+            // po-m
+            for (Map.Entry<Node, Map<Node, Molecule>> mapEntries : firstLevelIndex.entrySet()) {
+
+                //o-m
+                for (Map.Entry<Node, Molecule> secondLevelIndex : mapEntries.getValue().entrySet()) {
+
+                    //m
+                    Molecule molecule = secondLevelIndex.getValue();
+                    //Node[] headNodes = getNodes(molecule.getHeadTriple());
+
+                    if (molecule != DUMMY_MOLECULE) {
                         size++;
                     }
+
+//                    if (headNodes[0].equals(node) && headNodes[1].equals(mapEntries.getKey()) &&
+//                        headNodes[2].equals(secondLevelIndex.getKey())) {
+//                        size++;
+//                    }
                 }
             }
         }
