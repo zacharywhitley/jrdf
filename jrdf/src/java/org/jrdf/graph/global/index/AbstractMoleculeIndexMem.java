@@ -113,14 +113,14 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
             group = new HashMap<Node, Molecule>();
             subIndex.put(second, group);
         }
-        if (group.containsKey(third)) {
-            Molecule tmpMolecule = group.remove(third);
-            SortedSet<Triple> triples = molecule.getTriples();
-            Molecule newMolecule = tmpMolecule.add(triples);
-            group.put(third, newMolecule);
-        } else {
+//        if (group.containsKey(third)) {
+//            Molecule tmpMolecule = group.remove(third);
+//            SortedSet<Triple> triples = molecule.getTriples();
+//            Molecule newMolecule = tmpMolecule.add(triples);
+//            group.put(third, newMolecule);
+//        } else {
             group.put(third, molecule);
-        }
+//        }
     }
 
     public void remove(Node first, Node second, Node third) throws GraphException {
