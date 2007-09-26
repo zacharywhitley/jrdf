@@ -46,7 +46,6 @@ import java.util.TreeSet;
  * @version $Revision: 1226 $
  */
 public class NaiveGraphDecomposerImpl implements GraphDecomposer {
-    // TODO AN Change blank node comparator????
     private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
         new NodeTypeComparatorImpl(), new GlobalizedBlankNodeComparatorImpl()));
     private final Set<Triple> triplesChecked = new HashSet<Triple>();
