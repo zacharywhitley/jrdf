@@ -98,19 +98,15 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
     }
 
     public void testAddSameMoleculeTwice() throws Exception {
-
         for (int i = 0; i < 1000; i++) {
             Molecule molecule = createMultiLevelMolecule();
             Triple headTriple = molecule.getHeadTriple();
-            moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), molecule);
-
+            Node[] nodes = getNodes(headTriple);
+            moleculeIndex.add(nodes[0], nodes[1], nodes[2], molecule);
             Molecule m = addMolecule();
-
             addMoleculeWithNoTail();
-
             assertEquals((i + 1) * 3, moleculeIndex.getNumberOfMolecules());
         }
-
     }
 
     public void testGetTripleSize() throws Exception {
