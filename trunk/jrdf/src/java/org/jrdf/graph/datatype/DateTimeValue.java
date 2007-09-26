@@ -152,7 +152,7 @@ public class DateTimeValue implements DatatypeValue {
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
-        if (Serializable.class.isAssignableFrom(value.getClass())) {
+        if (value == null || Serializable.class.isAssignableFrom(value.getClass())) {
             out.writeBoolean(true);
             out.defaultWriteObject();
         } else {
