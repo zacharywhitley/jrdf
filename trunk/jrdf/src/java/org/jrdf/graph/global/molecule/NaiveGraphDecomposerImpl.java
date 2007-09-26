@@ -49,7 +49,6 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     // TODO AN Change blank node comparator????
     private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
         new NodeTypeComparatorImpl(), new GlobalizedBlankNodeComparatorImpl()));
-
     private final Set<Triple> triplesChecked = new HashSet<Triple>();
     private final Set<Molecule> molecules = new HashSet<Molecule>();
     private Graph graph;

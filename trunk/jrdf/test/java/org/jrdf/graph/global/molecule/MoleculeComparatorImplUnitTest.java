@@ -6,16 +6,11 @@ import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 
 import java.net.URI;
 import static java.util.Arrays.asList;
@@ -32,9 +27,7 @@ public class MoleculeComparatorImplUnitTest extends TestCase {
     private GraphElementFactory elementFactory2 = newGraph2.getElementFactory();
     private TripleFactory tripleFactory1 = newGraph1.getTripleFactory();
     private TripleFactory tripleFactory2 = newGraph2.getTripleFactory();
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new TripleComparatorImpl(nodeComparator);
+    private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private URIReference ref1;
     private URIReference ref2;
 

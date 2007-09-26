@@ -61,27 +61,20 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.BlankNodeImpl;
-import org.jrdf.graph.global.GroundedTripleComparatorImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
 public class MoleculeImplUnitTest extends TestCase {
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
+    private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private URIReference ref1;
     private URIReference ref2;
 
