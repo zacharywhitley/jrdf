@@ -110,8 +110,14 @@ public class MoleculeParserImpl implements MoleculeParser {
 
         if (null != globalizedGraph) {
             Set<Molecule> molecules = decomposer.decompose(graph);
+            int counter = 0;
             for (Molecule molecule : molecules) {
                 globalizedGraph.add(molecule);
+                counter++;
+                if (counter != globalizedGraph.getNumberOfMolecules()) {
+                    throw new RuntimeException("Out of sync: " + counter + molecule);
+                }
+
             }
         }
         return globalizedGraph;

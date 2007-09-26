@@ -60,23 +60,24 @@
 package org.jrdf.graph.global.index;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.LiteralImpl;
-import org.jrdf.graph.global.TripleImpl;
-import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.*;
+import org.jrdf.graph.global.*;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeImpl;
+import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
+import java.util.Iterator;
 
 public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
-    private final String BASE_URL = "http://example.org/";
-    private final String URL1 = BASE_URL + "1";
-    private final String URL2 = BASE_URL + "2";
+    public static final URI EQUVALENT_CLASS = URI.create("http://www.w3.org/2002/07/owl#equivalentClass");
+    public static final URI INTERSECTION_OF = URI.create("http://www.w3.org/2002/07/owl#intersectionOf");
+    public static final URI CLASS = URI.create("http://www.w3.org/2002/07/owl#Class");
+    public static final URI ONE_OF = URI.create("http://www.w3.org/2002/07/owl#oneOf");
+    private static final String BASE_URL = "http://www.co-ode.org/ontologies/pizza/pizza.owl#";
+    private static final URI AMERICA_URL = URI.create(BASE_URL + "America");
+    private static final URI ITALY_URL = URI.create(BASE_URL + "Italy");
+    private final String COUNTRY_URL = BASE_URL + "Country";
     private final String LITERAL1 = "xyz";
     private final String LITERAL2 = "abc";
     private final TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -93,6 +94,23 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
 
     public void testAdd() throws Exception {
         addMolecule();
+        assertEquals(1, moleculeIndex.getNumberOfMolecules());
+    }
+
+    public void testAddSameMoleculeTwice() throws Exception {
+
+        for (int i = 0; i < 1000; i++) {
+            Molecule molecule = createMultiLevelMolecule();
+            Triple headTriple = molecule.getHeadTriple();
+            moleculeIndex.add(headTriple.getSubject(), headTriple.getPredicate(), headTriple.getObject(), molecule);
+
+            Molecule m = addMolecule();
+
+            addMoleculeWithNoTail();
+
+            assertEquals((i + 1) * 3, moleculeIndex.getNumberOfMolecules());
+        }
+
     }
 
     public void testGetTripleSize() throws Exception {
@@ -174,7 +192,7 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
         assertEquals(expected, numberOfMolecules);
 
         long numberOfTriples = moleculeIndex.getNumberOfTriples();
-        expected = 1;
+        expected = 2;
         assertEquals(expected, numberOfTriples);
 
         //TODO check remaing molecule is m2
@@ -206,13 +224,20 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
         //TODO check remaing molecule is m2
     }
 
+    private void addMolecule(Molecule molecule) {
+        Triple headTriple = molecule.getHeadTriple();
+        Node[] nodes = getNodes(headTriple);
+        moleculeIndex.add(nodes[0], nodes[1], nodes[2], molecule);
+    }
+
 
     private Molecule addMolecule() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(tripleComparator);
         double random = Math.random();
-        Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(URL1 + random)), new URIReferenceImpl(URI.create(URL2)), new LiteralImpl(LITERAL1));
+        BlankNodeImpl blankNode = new BlankNodeImpl();
+        Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(URI.create(BASE_URL)), blankNode);
         random = Math.random();
-        Triple triple2 = new TripleImpl(new URIReferenceImpl(URI.create(URL1 + random)), new URIReferenceImpl(URI.create(URL2)), new LiteralImpl(LITERAL2));
+        Triple triple2 = new TripleImpl(blankNode, new URIReferenceImpl(URI.create(BASE_URL)), new LiteralImpl(LITERAL2));
         m = m.add(triple);
         m = m.add(triple2);
         Triple headTriple = m.getHeadTriple();
@@ -224,13 +249,60 @@ public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
     private Molecule addMoleculeWithNoTail() throws GraphElementFactoryException {
         Molecule m = new MoleculeImpl(tripleComparator);
         double random = Math.random();
-        Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(URL1 + random)), new URIReferenceImpl(URI.create(URL2)), new LiteralImpl(LITERAL1));
-        Node[] nodes = getNodes(triple);
+        BlankNodeImpl blankNode = new BlankNodeImpl();
+        Triple headTriple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(URI.create(BASE_URL)), blankNode);
+        TripleImpl tailTriple = new TripleImpl(blankNode, new URIReferenceImpl(URI.create(BASE_URL)), new LiteralImpl(LITERAL1));
+        m = m.add(headTriple);
+        m = m.add(tailTriple);
+
+        Node[] nodes = getNodes(m.getHeadTriple());
         moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
+
+        Iterator<Triple> iterator = m.tailTriples();
+        while (iterator.hasNext()) {
+            nodes = getNodes(iterator.next());
+            moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
+        }
+
+//        m = m.add(headTriple);
+//        Triple headTriple = m.getHeadTriple();
+//        nodes = getNodes(headTriple);
+//        moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
+        return m;
+    }
+
+
+    private Molecule createMultiLevelMolecule() throws Exception {
+        Molecule m = new MoleculeImpl(tripleComparator);
+
+        //
+        BlankNodeImpl blankNodeB = new BlankNodeImpl();
+        TripleImpl triple = new TripleImpl(new URIReferenceImpl(URI.create(COUNTRY_URL)), new URIReferenceImpl(EQUVALENT_CLASS), blankNodeB);
         m = m.add(triple);
-        Triple headTriple = m.getHeadTriple();
-        nodes = getNodes(headTriple);
-        moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
+
+        BlankNodeImpl blankNodeC = new BlankNodeImpl();
+        TripleImpl triple1 = new TripleImpl(blankNodeB, new URIReferenceImpl(INTERSECTION_OF), blankNodeC);
+        m = m.add(triple1);
+
+        BlankNodeImpl blankNodeD = new BlankNodeImpl();
+        TripleImpl triple2 = new TripleImpl(blankNodeC, new URIReferenceImpl(RDF.FIRST), blankNodeD);
+        m = m.add(triple2);
+
+        TripleImpl triple3 = new TripleImpl(blankNodeD, new URIReferenceImpl(RDF.TYPE), new URIReferenceImpl(CLASS));
+        m = m.add(triple3);
+        BlankNodeImpl blankNodeE = new BlankNodeImpl();
+        TripleImpl triple4 = new TripleImpl(blankNodeD, new URIReferenceImpl(ONE_OF), blankNodeE);
+        m = m.add(triple4);
+
+        TripleImpl triple5 = new TripleImpl(blankNodeE, new URIReferenceImpl(RDF.FIRST), new URIReferenceImpl(AMERICA_URL));
+        m = m.add(triple5);
+        BlankNodeImpl blankNodeF = new BlankNodeImpl();
+        TripleImpl triple6 = new TripleImpl(blankNodeE, new URIReferenceImpl(RDF.REST), blankNodeF);
+        m = m.add(triple6);
+
+        TripleImpl triple7 = new TripleImpl(blankNodeF, new URIReferenceImpl(RDF.FIRST), new URIReferenceImpl(ITALY_URL));
+        m = m.add(triple7);
+
         return m;
     }
 }

@@ -165,7 +165,17 @@ public class MoleculeImpl implements Molecule {
         // Cast and check for equality by value. (same class)
         try {
             MoleculeImpl tmpMolecule = (MoleculeImpl) obj;
-            return tmpMolecule.triples.equals(triples);
+            boolean res = tmpMolecule.triples.equals(triples);
+
+            if (!res) {
+                System.err.println("Comparision false: " + obj  +  " AND\n " + this);
+            }
+            else {
+                System.err.println("Comparision true: " + obj  +  " AND\n " + this);
+            }
+
+
+            return res;
         } catch (ClassCastException cce) {
             return false;
         }
@@ -202,7 +212,8 @@ public class MoleculeImpl implements Molecule {
 
     private String appendNode(Node node) {
         if (isBlankNode(node)) {
-            return "_";
+            //return "_";
+            return node.toString();
         } else {
             return node.toString();
         }
