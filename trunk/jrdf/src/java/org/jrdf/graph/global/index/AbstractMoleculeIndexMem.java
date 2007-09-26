@@ -63,19 +63,17 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.Molecule;
-import org.jrdf.graph.global.molecule.MoleculeImpl;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Serializable {
     private static final long serialVersionUID = 850704300941647768L;
     private Map<Node, Map<Node, Map<Node, Molecule>>> index;
-
-    private static final Molecule DUMMY_MOLECULE = new MoleculeImpl(null);
 
     protected AbstractMoleculeIndexMem() {
         this.index = new HashMap<Node, Map<Node, Map<Node, Molecule>>>();
@@ -91,7 +89,7 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
         while (iterator.hasNext()) {
             Triple triple = iterator.next();
             Node[] nodes = getNodes(triple);
-            addInternalNodes(nodes[0], nodes[1], nodes[2], DUMMY_MOLECULE);
+            addInternalNodes(nodes[0], nodes[1], nodes[2], molecule);
         }
     }
 
@@ -112,14 +110,14 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
             group = new HashMap<Node, Molecule>();
             subIndex.put(second, group);
         }
-//        if (group.containsKey(third)) {
-//            Molecule tmpMolecule = group.remove(third);
-//            SortedSet<Triple> triples = molecule.getTriples();
-//            Molecule newMolecule = tmpMolecule.add(triples);
-//            group.put(third, newMolecule);
-//        } else {
+        if (group.containsKey(third)) {
+            Molecule tmpMolecule = group.remove(third);
+            Set<Triple> triples = molecule.getTriples();
+            Molecule newMolecule = tmpMolecule.add(triples);
+            group.put(third, newMolecule);
+        } else {
             group.put(third, molecule);
-//        }
+        }
     }
 
     public void remove(Node first, Node second, Node third) throws GraphException {
@@ -217,16 +215,11 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
 
                     //m
                     Molecule molecule = secondLevelIndex.getValue();
-                    //Node[] headNodes = getNodes(molecule.getHeadTriple());
-
-                    if (molecule != DUMMY_MOLECULE) {
+                    Node[] headNodes = getNodes(molecule.getHeadTriple());
+                    if (headNodes[0].equals(node) && headNodes[1].equals(mapEntries.getKey()) &&
+                        headNodes[2].equals(secondLevelIndex.getKey())) {
                         size++;
                     }
-
-//                    if (headNodes[0].equals(node) && headNodes[1].equals(mapEntries.getKey()) &&
-//                        headNodes[2].equals(secondLevelIndex.getKey())) {
-//                        size++;
-//                    }
                 }
             }
         }

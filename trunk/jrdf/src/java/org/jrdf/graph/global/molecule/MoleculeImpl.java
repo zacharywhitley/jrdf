@@ -24,6 +24,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -43,14 +44,15 @@ public class MoleculeImpl implements Molecule {
     private final Map<PredicateNode, ObjectNode> predicateObjectMap;
 
     public MoleculeImpl(TripleComparator newComparator) {
+        checkNotNull(newComparator);
         comparator = newComparator;
         triples = new TreeSet<Triple>(newComparator);
         predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
         predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
     }
 
-    public MoleculeImpl(Set<Triple> newTriples, TripleComparator comparator) {
-        this(comparator);
+    public MoleculeImpl(Set<Triple> newTriples, TripleComparator newComparator) {
+        this(newComparator);
         triples.addAll(newTriples);
         initMaps();
     }
@@ -70,7 +72,7 @@ public class MoleculeImpl implements Molecule {
     }
 
     public Molecule remove(Triple triple) {
-        SortedSet<Triple> newTriples = new TreeSet<Triple>(this.comparator);
+        SortedSet<Triple> newTriples = new TreeSet<Triple>(comparator);
         newTriples.addAll(triples);
         newTriples.remove(triple);
 
@@ -135,7 +137,7 @@ public class MoleculeImpl implements Molecule {
     }
 
     public Molecule add(Triple triple) {
-        SortedSet<Triple> newTriples = new TreeSet<Triple>(this.comparator);
+        SortedSet<Triple> newTriples = new TreeSet<Triple>(comparator);
         newTriples.addAll(triples);
         newTriples.add(triple);
 
@@ -143,11 +145,12 @@ public class MoleculeImpl implements Molecule {
     }
 
     public Molecule add(Set<Triple> set) {
-        Set<Triple> newTriples = new TreeSet<Triple>(this.comparator);
+        Set<Triple> newTriples = new TreeSet<Triple>(comparator);
         newTriples.addAll(this.triples);
-        newTriples.addAll(set);
-
-        return new MoleculeImpl(newTriples, this.comparator);
+        for (Triple triple : set) {
+            newTriples.add(triple);
+        }
+        return new MoleculeImpl(newTriples, comparator);
     }
 
     public int size() {
@@ -169,17 +172,7 @@ public class MoleculeImpl implements Molecule {
         // Cast and check for equality by value. (same class)
         try {
             MoleculeImpl tmpMolecule = (MoleculeImpl) obj;
-            boolean res = tmpMolecule.triples.equals(triples);
-
-            if (!res) {
-                System.err.println("Comparision false: " + obj  +  " AND\n " + this);
-            }
-            else {
-                System.err.println("Comparision true: " + obj  +  " AND\n " + this);
-            }
-
-
-            return res;
+            return tmpMolecule.triples.equals(triples);
         } catch (ClassCastException cce) {
             return false;
         }
