@@ -112,6 +112,10 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
             group = new HashMap<Node, Molecule>();
             subIndex.put(second, group);
         }
+        if (group.containsKey(third)) {
+            System.err.println("Already contains: " + group.get(third));
+            System.err.println("Adding: " + molecule);
+        }
         group.put(third, molecule);
     }
 
