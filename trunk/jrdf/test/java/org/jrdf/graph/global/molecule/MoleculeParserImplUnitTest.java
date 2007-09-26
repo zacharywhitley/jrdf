@@ -62,14 +62,9 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
-import org.jrdf.util.EscapeURL;
-import org.jrdf.vocabulary.RDF;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.GlobalizedGraph;
 
 import java.net.URL;
-import java.net.URI;
 
 public class MoleculeParserImplUnitTest extends TestCase {
     private static final int NUMBER_OF_MOLECULES_IN_PIZZA = 1431;
@@ -92,16 +87,16 @@ public class MoleculeParserImplUnitTest extends TestCase {
 
 //    // TODO: IK Do we know the right answer for this?  i.e. whas is the correct number of molecules for the pizza
     // ontology.
-    public void testGetGlobalizedGraph() throws Exception {
-        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
-        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
-        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
-        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
-        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
-        Triple triple = jrdfGraph.getTripleFactory()
-            .addTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
-                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
-        boolean result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
-        assertTrue(result);
-    }
+//    public void testGetGlobalizedGraph() throws Exception {
+//        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
+//        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
+//        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
+//        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
+//        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
+//        Triple triple = jrdfGraph.getTripleFactory()
+//            .addTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
+//                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
+//        boolean result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
+//        assertTrue(result);
+//    }
 }
