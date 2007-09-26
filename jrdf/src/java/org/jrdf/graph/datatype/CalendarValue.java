@@ -146,22 +146,22 @@ public class CalendarValue implements DatatypeValue {
         return value.equals(((CalendarValue) obj).value);
     }
 
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    private void writeObject(ObjectOutputStream output) throws IOException {
         if (value == null || Serializable.class.isAssignableFrom(value.getClass())) {
-            out.writeBoolean(true);
-            out.defaultWriteObject();
+            output.writeBoolean(true);
+            output.defaultWriteObject();
         } else {
-            out.writeBoolean(false);
-            out.writeUTF(getLexicalForm());
+            output.writeBoolean(false);
+            output.writeUTF(getLexicalForm());
         }
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        boolean isDefault = in.readBoolean();
+    private void readObject(ObjectInputStream input) throws IOException, ClassNotFoundException {
+        boolean isDefault = input.readBoolean();
         if (isDefault) {
-            in.defaultReadObject();
+            input.defaultReadObject();
         } else {
-            String lexicalForm = in.readUTF();
+            String lexicalForm = input.readUTF();
             value = FACTORY.newXMLGregorianCalendar(lexicalForm);
         }
     }
