@@ -62,8 +62,12 @@ package org.jrdf.graph.datatype;
 import org.jrdf.util.EqualsUtil;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.GregorianCalendar;
 
 public class GMonthCalendarValue implements DatatypeValue {
@@ -160,5 +164,25 @@ public class GMonthCalendarValue implements DatatypeValue {
     private String convertToCorrectFormat(String s) {
         // Remove the extra -- from the date i.e. from --10-- to --10
         return s.substring(0, END_OF_CORRECT_DATE) + s.substring(START_OF_TIME_ZONE, s.length());
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        if (Serializable.class.isAssignableFrom(value.getClass())) {
+            out.writeBoolean(true);
+            out.defaultWriteObject();
+        } else {
+            out.writeBoolean(false);
+            out.writeUTF(getLexicalForm());
+        }
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        boolean isDefault = in.readBoolean();
+        if (isDefault) {
+            in.defaultReadObject();
+        } else {
+            String lexicalForm = in.readUTF();
+            value = FACTORY.newXMLGregorianCalendar(convertToBuggyFormat(lexicalForm));
+        }
     }
 }

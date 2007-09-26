@@ -57,53 +57,37 @@
  *
  */
 
-package org.jrdf.query;
+package org.jrdf.graph;
 
-import com.gargoylesoftware.base.testing.TestUtil;
 import junit.framework.TestCase;
-import org.jrdf.graph.AnyNode;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.RelationFactory;
-import org.jrdf.query.relation.Tuple;
-import org.jrdf.query.relation.mem.AttributeImplUnitTest;
-import org.jrdf.query.relation.mem.TupleImplUnitTest;
-import org.jrdf.util.test.ReflectTestUtil;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialization;
+import org.jrdf.vocabulary.XSD;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.net.URI;
 
 /**
- * Unit test for {@link AnswerImpl}.
+ * Unit test for {@link AbstractLiteral}.
  *
- * @author Tom Adams
- * @version $Revision: 1510 $
+ * @author Andrew Newman
+ * @version $Revision: 1395 $
  */
-public final class AnswerImplIntegrationTest extends TestCase {
-    public void testSerialization() throws Exception {
-        RelationFactory relationFactory = new QueryFactoryImpl().createRelationFactory();
-        LinkedHashSet<Attribute> heading = new LinkedHashSet<Attribute>();
-        heading.add(AttributeImplUnitTest.TEST_ATTRIBUTE_FOO_POS);
-        Set<Tuple> tuples = new HashSet<Tuple>();
-        tuples.add(TupleImplUnitTest.TEST_TUPLE_1);
-        Answer answer = new AnswerImpl(heading, relationFactory.getRelation(tuples), 1000L, true);
-        checkAnswer(answer, "foo | Literal", AnyNode.ANY_NODE.toString(), 1000L, true);
-        Answer answer2 = (Answer) TestUtil.copyBySerialization(answer);
-        // read the graph
-        checkAnswer(answer2, "foo | Literal", AnyNode.ANY_NODE.toString(), 1000L, true);
+public abstract class AbstractLiteralUnitTest extends TestCase {
+    private static final String DATE = "1980-01-01T10:00:10.000+10:00";
+    private static final String G_MONTH_STR_1 = "--11";
+
+    public abstract Literal createLiteral(String newLexicalForm) throws Exception;
+
+    public abstract Literal createLiteral(String newLexicalForm, String newLanguage) throws Exception;
+
+    public abstract Literal createLiteral(String newLexicalForm, URI newDatatypeURI) throws Exception;
+
+    public void setUp() throws Exception {
     }
 
-    private void checkAnswer(Answer answer, String expectedColumnName, String expectedValue, long expectedTimeTaken,
-        boolean expectedProjected) {
-        String[] strings = answer.getColumnNames();
-        assertTrue(strings.length == 1);
-        assertEquals(expectedColumnName, strings[0]);
-        String[][] values = answer.getColumnValues();
-        assertEquals(1, values.length);
-        assertEquals(1, values[0].length);
-        assertEquals(expectedValue, values[0][0]);
-        assertEquals(expectedTimeTaken, answer.getTimeTaken());
-        Boolean actualProjected = (Boolean) ReflectTestUtil.getFieldValue(answer, "hasProjected");
-        assertEquals(expectedProjected, actualProjected.booleanValue());
+    public void testSerialization() throws Exception {
+        Literal literal1 = createLiteral(DATE, XSD.DATE_TIME);
+        Literal literal2 = createLiteral(G_MONTH_STR_1, XSD.G_MONTH);
+        checkSerialization(literal1);
+        checkSerialization(literal2);
     }
 }

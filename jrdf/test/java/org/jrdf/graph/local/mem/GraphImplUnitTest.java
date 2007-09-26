@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 1499 $
+ * $Date: 2007-09-24 11:05:48 +1000 (Mon, 24 Sep 2007) $
  *
  * ====================================================================
  *
@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.local.mem;
 
+import com.gargoylesoftware.base.testing.TestUtil;
 import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.AnyObjectNode;
@@ -70,17 +71,12 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 1499 $
  */
 public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
@@ -127,19 +123,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         // check that the graph is as expected
         assertEquals(9, graph.getNumberOfTriples());
 
-        // create an in-memory output stream
-        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
-
-        // write the graph
-        os.writeObject(graph);
-
-        // read a new graph back in
-        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
-        ObjectInputStream is = new ObjectInputStream(inputBytes);
-
-        // read the graph
-        Graph graph2 = (Graph) is.readObject();
+        Graph graph2 = (Graph) TestUtil.copyBySerialization(graph);
 
         ref3 = graph2.getElementFactory().createURIReference(ref1.getURI());
         Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
