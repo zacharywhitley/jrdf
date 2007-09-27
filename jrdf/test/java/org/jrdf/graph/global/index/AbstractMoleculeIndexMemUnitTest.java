@@ -60,10 +60,25 @@
 package org.jrdf.graph.global.index;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.*;
-import org.jrdf.graph.global.*;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.global.BlankNodeImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.LiteralImpl;
+import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeImpl;
+import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.mem.NodeComparatorImpl;
+import org.jrdf.graph.local.mem.TripleComparatorImpl;
+import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
@@ -78,12 +93,14 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
     private static final URI AMERICA_URL = URI.create(BASE_URL + "America");
     private static final URI ITALY_URL = URI.create(BASE_URL + "Italy");
     private static final int NUMBER_OF_MOLECULES = 10;
-    private final String COUNTRY_URL = BASE_URL + "Country";
+    private static final URI COUNTRY_URL = URI.create(BASE_URL + "Country");
     private final String LITERAL1 = "xyz";
     private final String LITERAL2 = "abc";
-    private final TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private final TripleComparator groundedTripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), 
+        new GlobalizedBlankNodeComparatorImpl());
+    private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
     protected MoleculeIndex moleculeIndex;
-
 
     protected abstract MoleculeIndex getIndex();
 
@@ -93,18 +110,13 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
         moleculeIndex = getIndex();
     }
 
-    public void testAdd() throws Exception {
-        addMolecule();
-        assertEquals(1, moleculeIndex.getNumberOfMolecules());
-    }
-
     public void testAddSameMoleculeTwice() throws Exception {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
             Molecule molecule = createMultiLevelMolecule();
             Triple headTriple = molecule.getHeadTriple();
             Node[] nodes = getNodes(headTriple);
             moleculeIndex.add(nodes[0], nodes[1], nodes[2], molecule);
-            Molecule m = addMolecule();
+            addMolecule();
             addMoleculeWithNoTail();
             assertEquals((i + 1) * 3, moleculeIndex.getNumberOfMolecules());
         }
@@ -112,18 +124,10 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
 
     public void testGetTripleSize() throws Exception {
         addMolecule();
-
-        long numTriples = moleculeIndex.getNumberOfTriples();
-        int expected = 2;
-        assertEquals(expected, numTriples);
-    }
-
-    public void testGetMoleculeSize() throws Exception {
-        addMolecule();
-
+        long numberOfTriples = moleculeIndex.getNumberOfTriples();
         long numberOfMolecules = moleculeIndex.getNumberOfMolecules();
-        int expected = 1;
-        assertEquals(expected, numberOfMolecules);
+        assertEquals("Expected number of triples did not match", 2, numberOfTriples);
+        assertEquals("Expected number of molecules did not match", 1, numberOfMolecules);
     }
 
     public void testClean() throws Exception {
@@ -221,15 +225,8 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
         //TODO check remaing molecule is m2
     }
 
-    private void addMolecule(Molecule molecule) {
-        Triple headTriple = molecule.getHeadTriple();
-        Node[] nodes = getNodes(headTriple);
-        moleculeIndex.add(nodes[0], nodes[1], nodes[2], molecule);
-    }
-
-
-    private Molecule addMolecule() throws GraphElementFactoryException {
-        Molecule m = new MoleculeImpl(tripleComparator);
+    private Molecule addMolecule() {
+        Molecule m = new MoleculeImpl(groundedTripleComparator);
         double random = Math.random();
         BlankNodeImpl blankNode = new BlankNodeImpl();
         Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(URI.create(BASE_URL)), blankNode);
@@ -243,8 +240,8 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
         return m;
     }
 
-    private Molecule addMoleculeWithNoTail() throws GraphElementFactoryException {
-        Molecule m = new MoleculeImpl(tripleComparator);
+    private Molecule addMoleculeWithNoTail() {
+        Molecule m = new MoleculeImpl(groundedTripleComparator);
         double random = Math.random();
         BlankNodeImpl blankNode = new BlankNodeImpl();
         Triple headTriple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(URI.create(BASE_URL)), blankNode);
@@ -260,46 +257,31 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
             nodes = getNodes(iterator.next());
             moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
         }
-
-//        m = m.add(headTriple);
-//        Triple headTriple = m.getHeadTriple();
-//        nodes = getNodes(headTriple);
-//        moleculeIndex.add(nodes[0], nodes[1], nodes[2], m);
         return m;
     }
 
-
     private Molecule createMultiLevelMolecule() throws Exception {
-        Molecule m = new MoleculeImpl(tripleComparator);
-
-        //
-        BlankNodeImpl blankNodeB = new BlankNodeImpl();
-        TripleImpl triple = new TripleImpl(new URIReferenceImpl(URI.create(COUNTRY_URL)), new URIReferenceImpl(EQUVALENT_CLASS), blankNodeB);
-        m = m.add(triple);
-
-        BlankNodeImpl blankNodeC = new BlankNodeImpl();
-        TripleImpl triple1 = new TripleImpl(blankNodeB, new URIReferenceImpl(INTERSECTION_OF), blankNodeC);
-        m = m.add(triple1);
-
-        BlankNodeImpl blankNodeD = new BlankNodeImpl();
-        TripleImpl triple2 = new TripleImpl(blankNodeC, new URIReferenceImpl(RDF.FIRST), blankNodeD);
-        m = m.add(triple2);
-
-        TripleImpl triple3 = new TripleImpl(blankNodeD, new URIReferenceImpl(RDF.TYPE), new URIReferenceImpl(CLASS));
-        m = m.add(triple3);
-        BlankNodeImpl blankNodeE = new BlankNodeImpl();
-        TripleImpl triple4 = new TripleImpl(blankNodeD, new URIReferenceImpl(ONE_OF), blankNodeE);
-        m = m.add(triple4);
-
-        TripleImpl triple5 = new TripleImpl(blankNodeE, new URIReferenceImpl(RDF.FIRST), new URIReferenceImpl(AMERICA_URL));
-        m = m.add(triple5);
-        BlankNodeImpl blankNodeF = new BlankNodeImpl();
-        TripleImpl triple6 = new TripleImpl(blankNodeE, new URIReferenceImpl(RDF.REST), blankNodeF);
-        m = m.add(triple6);
-
-        TripleImpl triple7 = new TripleImpl(blankNodeF, new URIReferenceImpl(RDF.FIRST), new URIReferenceImpl(ITALY_URL));
-        m = m.add(triple7);
-
+        Molecule m = new MoleculeImpl(groundedTripleComparator);
+        BlankNode blankNodeB = new BlankNodeImpl();
+        BlankNode blankNodeC = new BlankNodeImpl();
+        BlankNode blankNodeD = new BlankNodeImpl();
+        BlankNode blankNodeE = new BlankNodeImpl();
+        BlankNode blankNodeF = new BlankNodeImpl();
+        m = addTripleToMolecule(m, new URIReferenceImpl(COUNTRY_URL), new URIReferenceImpl(EQUVALENT_CLASS),
+            blankNodeB);
+        m = addTripleToMolecule(m, blankNodeB, new URIReferenceImpl(INTERSECTION_OF), blankNodeC);
+        m = addTripleToMolecule(m, blankNodeC, new URIReferenceImpl(RDF.FIRST), blankNodeD);
+        m = addTripleToMolecule(m, blankNodeD, new URIReferenceImpl(RDF.TYPE), new URIReferenceImpl(CLASS));
+        m = addTripleToMolecule(m, blankNodeD, new URIReferenceImpl(ONE_OF), blankNodeE);
+        m = addTripleToMolecule(m, blankNodeE, new URIReferenceImpl(RDF.FIRST), new URIReferenceImpl(AMERICA_URL));
+        m = addTripleToMolecule(m, blankNodeE, new URIReferenceImpl(RDF.REST), blankNodeF);
+        m = addTripleToMolecule(m, blankNodeF, new URIReferenceImpl(RDF.FIRST), new URIReferenceImpl(ITALY_URL));
         return m;
+    }
+
+    private Molecule addTripleToMolecule(Molecule molecule, SubjectNode subject, PredicateNode predicate,
+        ObjectNode object) {
+        Triple triple = new TripleImpl(subject, predicate, object);
+        return molecule.add(triple);
     }
 }

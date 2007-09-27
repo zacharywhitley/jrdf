@@ -76,8 +76,8 @@ public final class TripleComparatorImpl implements TripleComparator {
     private TripleComparatorImpl() {
     }
 
-    public TripleComparatorImpl(NodeComparator nodeComparator) {
-        this.nodeComparator = nodeComparator;
+    public TripleComparatorImpl(NodeComparator newNodeComparator) {
+        this.nodeComparator = newNodeComparator;
     }
 
     public int compare(Triple o1, Triple o2) {
