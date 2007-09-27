@@ -72,7 +72,7 @@ import java.net.URI;
 import java.net.URL;
 
 public class MoleculeParserImplUnitTest extends TestCase {
-    private static final int NUMBER_OF_MOLECULES_IN_PIZZA = 1429;
+    private static final int NUMBER_OF_MOLECULES_IN_PIZZA = 1384;
     private static final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
     private static final String BASE_URI = "http://example.org";
     private final JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();

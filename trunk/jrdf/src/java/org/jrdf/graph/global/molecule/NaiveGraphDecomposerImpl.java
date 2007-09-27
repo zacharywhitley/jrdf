@@ -27,11 +27,8 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -46,8 +43,7 @@ import java.util.TreeSet;
  * @version $Revision: 1226 $
  */
 public class NaiveGraphDecomposerImpl implements GraphDecomposer {
-    private final TripleComparator comparator = new TripleComparatorImpl(new NodeComparatorImpl(
-        new NodeTypeComparatorImpl(), new GlobalizedBlankNodeComparatorImpl()));
+    private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private final Set<Triple> triplesChecked = new HashSet<Triple>();
     private final Set<Molecule> molecules = new HashSet<Molecule>();
     private Graph graph;
