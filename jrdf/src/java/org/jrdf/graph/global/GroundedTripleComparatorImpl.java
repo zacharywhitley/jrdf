@@ -60,7 +60,6 @@
 package org.jrdf.graph.global;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
@@ -71,19 +70,19 @@ import org.jrdf.graph.TripleComparator;
 public class GroundedTripleComparatorImpl implements TripleComparator {
     private static final long serialVersionUID = 678535114447666636L;
     private static final int MAXIMUM_NUMBER_OF_GROUNDED_NODES = 3;
-    private NodeComparator nodeComparator;
+    private TripleComparator tripleComparator;
 
     private GroundedTripleComparatorImpl() {
     }
 
-    public GroundedTripleComparatorImpl(NodeComparator nodeComparator) {
-        this.nodeComparator = nodeComparator;
+    public GroundedTripleComparatorImpl(TripleComparator newTripleComparator) {
+        this.tripleComparator = newTripleComparator;
     }
 
     public int compare(Triple o1, Triple o2) {
         int result = compareTriples(o1, o2);
         if (result == 0) {
-            result = compareGroundedTriples(o1, o2);
+            result = tripleComparator.compare(o1, o2);
         }
         return result;
     }
@@ -109,25 +108,5 @@ public class GroundedTripleComparatorImpl implements TripleComparator {
             grounded--;
         }
         return grounded;
-    }
-
-    private int compareGroundedTriples(Triple o1, Triple o2) {
-        int subjectComparison = nodeComparator.compare(o1.getSubject(), o2.getSubject());
-        if (subjectComparison == 0) {
-            return comparePredicates(o1, o2);
-        }
-        return subjectComparison;
-    }
-
-    private int comparePredicates(Triple o1, Triple o2) {
-        int predicateComparison = nodeComparator.compare(o1.getPredicate(), o2.getPredicate());
-        if (predicateComparison == 0) {
-            return compareObjects(o1, o2);
-        }
-        return predicateComparison;
-    }
-
-    private int compareObjects(Triple o1, Triple o2) {
-        return nodeComparator.compare(o1.getObject(), o2.getObject());
     }
 }

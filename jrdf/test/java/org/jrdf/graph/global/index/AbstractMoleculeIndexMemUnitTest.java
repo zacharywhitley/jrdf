@@ -77,6 +77,7 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
     private static final String BASE_URL = "http://www.co-ode.org/ontologies/pizza/pizza.owl#";
     private static final URI AMERICA_URL = URI.create(BASE_URL + "America");
     private static final URI ITALY_URL = URI.create(BASE_URL + "Italy");
+    private static final int NUMBER_OF_MOLECULES = 10;
     private final String COUNTRY_URL = BASE_URL + "Country";
     private final String LITERAL1 = "xyz";
     private final String LITERAL2 = "abc";
@@ -98,7 +99,7 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
     }
 
     public void testAddSameMoleculeTwice() throws Exception {
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
             Molecule molecule = createMultiLevelMolecule();
             Triple headTriple = molecule.getHeadTriple();
             Node[] nodes = getNodes(headTriple);
