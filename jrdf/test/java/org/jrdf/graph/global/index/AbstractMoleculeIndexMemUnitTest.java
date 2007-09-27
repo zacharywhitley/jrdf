@@ -69,7 +69,7 @@ import org.jrdf.vocabulary.RDF;
 import java.net.URI;
 import java.util.Iterator;
 
-public abstract class AbstractMoleculeIndexUnitTest extends TestCase {
+public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
     public static final URI EQUVALENT_CLASS = URI.create("http://www.w3.org/2002/07/owl#equivalentClass");
     public static final URI INTERSECTION_OF = URI.create("http://www.w3.org/2002/07/owl#intersectionOf");
     public static final URI CLASS = URI.create("http://www.w3.org/2002/07/owl#Class");

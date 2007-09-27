@@ -62,7 +62,7 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 
-public class SPOMoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
+public class SPOMoleculeIndexMemUnitTest extends AbstractMoleculeIndexMemUnitTest {
     protected MoleculeIndex getIndex() {
         return new SPOMoleculeIndexMem();
     }
