@@ -64,15 +64,10 @@ import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
 
@@ -81,9 +76,7 @@ public class GroundedTripleComparatorImplUnitTest extends TestCase {
     private Graph newGraph = factory.getNewGraph();
     private GraphElementFactory elementFactory = newGraph.getElementFactory();
     private TripleFactory tripleFactory = newGraph.getTripleFactory();
-    private BlankNodeComparator blankNodeComparator = new GlobalizedBlankNodeComparatorImpl();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), blankNodeComparator);
-    private TripleComparator comparator = new GroundedTripleComparatorImpl(nodeComparator);
+    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private URIReference ref1;
     private URIReference ref2;
 
