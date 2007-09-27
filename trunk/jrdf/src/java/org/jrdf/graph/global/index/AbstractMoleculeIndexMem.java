@@ -113,8 +113,7 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
         if (group.containsKey(third)) {
             Molecule tmpMolecule = group.remove(third);
             Set<Triple> triples = molecule.getTriples();
-            Molecule newMolecule = tmpMolecule.add(triples);
-            group.put(third, newMolecule);
+            group.put(third, tmpMolecule.add(triples));
         } else {
             group.put(third, molecule);
         }

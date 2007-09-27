@@ -528,7 +528,7 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file://D:/Downloads/gsbase-2.0.1/src/java" />
+        <root url="file://$PROJECT_DIR$/../../Downloads/gsbase-2.0.1/src/java" />
       </SOURCES>
     </library>
     <library name="je-3.2.42">
