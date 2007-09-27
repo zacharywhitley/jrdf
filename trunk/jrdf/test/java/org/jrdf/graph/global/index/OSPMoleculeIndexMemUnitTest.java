@@ -3,7 +3,7 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 
-public class OSPMoleculeIndexMemUnitTest extends AbstractMoleculeIndexUnitTest {
+public class OSPMoleculeIndexMemUnitTest extends AbstractMoleculeIndexMemUnitTest {
     protected MoleculeIndex getIndex() {
         return new OSPMoleculeIndexMem();
     }
