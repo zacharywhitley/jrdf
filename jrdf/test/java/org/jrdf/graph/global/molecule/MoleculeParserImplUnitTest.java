@@ -65,6 +65,8 @@ import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.GlobalizedGraph;
+import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.util.EscapeURL;
 import org.jrdf.vocabulary.RDF;
 
@@ -78,6 +80,12 @@ public class MoleculeParserImplUnitTest extends TestCase {
     private final JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
     private final Graph jrdfGraph = factory.getNewGraph();
     private MoleculeParser moleculeParser;
+    private final URIReferenceImpl BANGLADESH_URI =
+        new URIReferenceImpl(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#Bangladesh"));
+    private final URIReferenceImpl AMERICAN_URI =
+        new URIReferenceImpl(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"));
+    private final URIReferenceImpl TYPE_URI = new URIReferenceImpl(RDF.TYPE);
+    private final URIReferenceImpl CLASS_URI = new URIReferenceImpl(URI.create("http://www.w3.org/2002/07/owl#Class"));
 
     public void setUp() throws Exception {
         // Work out why we need to do this.
@@ -96,10 +104,13 @@ public class MoleculeParserImplUnitTest extends TestCase {
         GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
         assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
         assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
-        Triple triple = jrdfGraph.getTripleFactory()
-            .addTriple(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"),
-                RDF.TYPE, URI.create("http://www.w3.org/2002/07/owl#Class"));
-        boolean result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
+
+        Triple triple = new TripleImpl(AMERICAN_URI, TYPE_URI, CLASS_URI);
+        boolean result = globalizedGraph.contains(triple);
         assertTrue(result);
+
+        triple = new TripleImpl(BANGLADESH_URI, TYPE_URI, CLASS_URI);
+        result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
+        assertFalse(result);
     }
 }

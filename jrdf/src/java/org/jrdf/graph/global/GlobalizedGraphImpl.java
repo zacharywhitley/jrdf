@@ -107,6 +107,11 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
         return containsValue(subject, predicate, object);
     }
 
+    public boolean contains(Triple triple) {
+        checkNotNull(triple);
+        return containsValue(triple.getSubject(), triple.getPredicate(), triple.getObject());
+    }
+
     public void add(Molecule molecule) {
         Triple headTriple = molecule.getHeadTriple();
         SubjectNode subj = headTriple.getSubject();
