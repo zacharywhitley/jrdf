@@ -104,6 +104,17 @@ public interface GlobalizedGraph {
      */
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
+
+
+    /**
+     * Check to see if the given triple exists within the graph.  If it contains blank nodes will only check ones
+     * that are not in a molecule.
+     *
+     * @param triple
+     * @return
+     */
+    boolean contains(Triple triple);
+
     // TODO implement this by searching inside the given molecule for matching molecules in the store.
     // TODO Probably should be contains(subject, predicate, object, Set<Triple>).  Like *, *, o, ...
     /**

@@ -49,8 +49,8 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     private Graph graph;
     private Triple currentTriple;
 
-    public Set<Molecule> decompose(Graph graph) throws GraphException {
-        this.graph = graph;
+    public Set<Molecule> decompose(Graph newGraph) throws GraphException {
+        graph = newGraph;
         triplesChecked.clear();
         molecules.clear();
         ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
