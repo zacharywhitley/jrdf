@@ -86,6 +86,10 @@ public class MoleculeImpl implements Molecule {
         }
     }
 
+    public Iterator<Molecule> getSubMolecules() {
+        return null;
+    }
+
     private boolean hasFixedSubject(ObjectNode object, SubjectNode subject, PredicateNode predicate) {
         if (isBlankNode(object)) {
             return predicateSubjectMap.containsValue(subject) && predicateObjectMap.containsKey(predicate);
@@ -113,6 +117,10 @@ public class MoleculeImpl implements Molecule {
 
     public Iterator<Triple> iterator() {
         return triples.iterator();
+    }
+
+    public Iterator<Molecule> moleculeIterator() {
+        return null;
     }
 
     public SortedSet<Triple> getTriples() {
