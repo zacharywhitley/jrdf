@@ -64,7 +64,6 @@ package org.jrdf.util;
 public final class NodeTypeComparatorImpl implements NodeTypeComparator {
     private static final long serialVersionUID = 31512609314856094L;
 
-    // TODO (AN) Move to different class - TypeComparatorImpl
     public int compare(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
         // TODO (AN) Test drive.
         if (nodeType1Enum.equals(nodeType2Enum)) {
@@ -97,7 +96,6 @@ public final class NodeTypeComparatorImpl implements NodeTypeComparator {
         return result;
     }
 
-    // TODO (AN) Move to different class - TypeComparatorImpl
     private int uriComparison(NodeTypeEnum nodeType1Enum, NodeTypeEnum nodeType2Enum) {
         int result;
         if (nodeType2Enum.isLiteralNode()) {

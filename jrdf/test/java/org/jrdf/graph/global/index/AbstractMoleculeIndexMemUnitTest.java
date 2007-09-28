@@ -62,12 +62,12 @@ package org.jrdf.graph.global.index;
 import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.LiteralImpl;
@@ -108,6 +108,22 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
 
     public void setUp() throws Exception {
         moleculeIndex = getIndex();
+    }
+
+    public void testComparators() {
+        Molecule m = new MoleculeImpl(groundedTripleComparator);
+        Molecule m2 = new MoleculeImpl(tripleComparator);
+        BlankNode blankNode1 = new BlankNodeImpl();
+        BlankNode blankNode2 = new BlankNodeImpl();
+        Triple triple1 = new TripleImpl(blankNode1, new URIReferenceImpl(URI.create("urn:p1")),
+            new URIReferenceImpl(URI.create("urn:o")));
+        Triple triple2 = new TripleImpl(blankNode1, new URIReferenceImpl(URI.create("urn:p2")), blankNode2);
+        Triple triple3 = new TripleImpl(blankNode1, new URIReferenceImpl(URI.create("urn:p3")),
+            new URIReferenceImpl(URI.create("urn:o")));
+        m = addTriplesToMolecule(m, triple2, triple1, triple3);
+        m2 = addTriplesToMolecule(m2, triple2, triple1, triple3);
+        checkExpectedOrder(m, triple2, triple1, triple3);
+        checkExpectedOrder(m2, triple1, triple2, triple3);
     }
 
     public void testAddSameMoleculeTwice() throws Exception {
@@ -283,5 +299,22 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
         ObjectNode object) {
         Triple triple = new TripleImpl(subject, predicate, object);
         return molecule.add(triple);
+    }
+
+    private Molecule addTriplesToMolecule(Molecule m, Triple... triples) {
+        for (Triple triple : triples) {
+            m = m.add(triple);
+        }
+        return m;
+    }
+
+    private void checkExpectedOrder(Molecule actualMolecule, Triple... expectedTriples) {
+        Iterator<Triple> iterator = actualMolecule.iterator();
+        int index = 0;
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
+            assertEquals(triple, expectedTriples[index]);
+            index++;
+        }
     }
 }
