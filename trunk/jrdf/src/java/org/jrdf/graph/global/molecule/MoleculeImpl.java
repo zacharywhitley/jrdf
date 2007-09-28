@@ -60,7 +60,6 @@ public class MoleculeImpl implements Molecule {
     private void initMaps() {
         for (Triple triple : triples) {
             PredicateNode predicate = triple.getPredicate();
-
             predicateSubjectMap.put(predicate, triple.getSubject());
             predicateObjectMap.put(predicate, triple.getObject());
         }
