@@ -22,8 +22,8 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 
 import java.util.Iterator;
-import java.util.SortedSet;
 import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * A Collection all the statements of a particular group.
@@ -55,6 +55,7 @@ public interface Molecule {
      * @return
      */
     Iterator<Triple> iterator();
+    Iterator<Molecule> moleculeIterator();
 
     /**
      * Adds the given triple to the molecule.
@@ -87,8 +88,8 @@ public interface Molecule {
      * Iterate through the tail triples.
      * @return
      */
+    Iterator<Molecule> getSubMolecules();
     Iterator<Triple> tailTriples();
-
 
     boolean equals(Object molecule);
 

@@ -16,7 +16,8 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.GraphException;
+import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  * Compares two molecules.
@@ -24,7 +25,7 @@ import org.jrdf.graph.GraphException;
  * @author Imran Khan
  * @version $Revision: 1226 $
  */
-public interface MoleculeComparator {
+public interface MoleculeComparator extends Comparator<Molecule>, Serializable {
 
     /**
      * Given 2 molecules this method will compare the two and determine
@@ -34,5 +35,5 @@ public interface MoleculeComparator {
      * @param m2
      * @return
      */
-    boolean compare(Molecule m1, Molecule m2) throws GraphException;
+    int compare(Molecule m1, Molecule m2);
 }
