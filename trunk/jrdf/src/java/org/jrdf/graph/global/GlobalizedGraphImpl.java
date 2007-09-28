@@ -71,6 +71,8 @@ import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.Iterator;
+
 /**
  * In memory implementation of Globalized Graph.
  *
@@ -114,12 +116,39 @@ public class GlobalizedGraphImpl extends AbstractGlobalizedGraph {
 
     public void add(Molecule molecule) {
         Triple headTriple = molecule.getHeadTriple();
+//        if (!isSubMolecule(molecule)) {
         SubjectNode subj = headTriple.getSubject();
         PredicateNode pred = headTriple.getPredicate();
         ObjectNode obj = headTriple.getObject();
         indexes[0].add(subj, pred, obj, molecule);
         indexes[1].add(pred, obj, subj, molecule);
         indexes[2].add(obj, subj, pred, molecule);
+//        }
+    }
+
+    // TODO Re-enable when we have a sub-molecule contains that works correctly.
+    private boolean isSubMolecule(Molecule molecule) {
+        Triple headTriple = molecule.getHeadTriple();
+        ClosableIterator<Molecule> closableIterator = findValue(headTriple.getSubject(), headTriple.getPredicate(),
+            headTriple.getObject());
+        while (closableIterator.hasNext()) {
+            Molecule molecule1 = closableIterator.next();
+            if (compareInternalTriples(molecule, molecule1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean compareInternalTriples(Molecule molecule, Molecule molecule1) {
+        Iterator<Triple> iterator = molecule.iterator();
+        while (iterator.hasNext()) {
+            Triple triple = iterator.next();
+            if (!molecule1.contains(triple)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void remove(Molecule molecule) throws GraphException {

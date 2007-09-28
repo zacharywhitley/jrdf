@@ -174,12 +174,11 @@ public abstract class AbstractMoleculeIndexMem implements MoleculeIndex, Seriali
 
     public Molecule getMolecule(Triple headTriple) {
         Node[] nodes = getNodes(headTriple);
-
         Molecule molecule = null;
         Map<Node, Map<Node, Molecule>> subIndex = getSubIndex(nodes[0]);
         if (subIndex != null) {
             Map<Node, Molecule> subSubIndex = subIndex.get(nodes[1]);
-            if (subSubIndex.containsKey(nodes[2])) {
+            if (subSubIndex != null && subSubIndex.containsKey(nodes[2])) {
                 molecule = subSubIndex.get(nodes[2]);
             }
         }
