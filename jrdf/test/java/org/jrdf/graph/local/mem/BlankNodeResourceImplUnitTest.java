@@ -65,6 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.TestJRDFFactory;
+import org.jrdf.util.test.AssertThrows;
 import com.gargoylesoftware.base.testing.EqualsTester;
 
 public class BlankNodeResourceImplUnitTest extends TestCase {
@@ -89,5 +90,14 @@ public class BlankNodeResourceImplUnitTest extends TestCase {
         new EqualsTester(resource1, resource2, resource3, null);
         assertTrue(blankNode1.equals(resource1));
         assertTrue(resource1.equals(blankNode1));
+    }
+
+    public void testGetURI() {
+        AssertThrows.assertThrows(UnsupportedOperationException.class, "Blank nodes resource, does not have a URI",
+            new AssertThrows.Block(){
+                public void execute() throws Throwable {
+                    resource1.getURI();
+                }
+            });
     }
 }

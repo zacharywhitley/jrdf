@@ -100,6 +100,11 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return resourceFactory.createResource(node);
     }
 
+    public Resource createResource() throws GraphElementFactoryException {
+        BlankNode blankNode = createBlankNode();
+        return createResource(blankNode);
+    }
+
     public BlankNode createBlankNode() throws GraphElementFactoryException {
         //get an Unique Identifier
         String uid;
@@ -114,6 +119,10 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         BlankNode node = new BlankNodeImpl(nodeId, uid);
         nodePool.registerNode((LocalizedNode) node);
         return node;
+    }
+
+    public URIReference createResource(URI uri) throws GraphElementFactoryException {
+        return createResource(createURIReference(uri));
     }
 
     public URIReference createURIReference(URI uri) throws GraphElementFactoryException {
@@ -136,6 +145,10 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         URIReference node = new URIReferenceImpl(uri, validate, nodeId);
         nodePool.registerNode((LocalizedNode) node);
         return node;
+    }
+
+    public URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException {
+        return createResource(createURIReference(uri));
     }
 
     public Literal convertToLiteral(Object object) throws GraphElementFactoryException {
