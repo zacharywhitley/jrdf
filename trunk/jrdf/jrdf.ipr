@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project version="4" relativePaths="true">
+<project version="4" relativePaths="false">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
     <buildFile url="file://$PROJECT_DIR$/build.xml">
@@ -528,7 +528,7 @@
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="file://$PROJECT_DIR$/../../Downloads/gsbase-2.0.1/src/java" />
+        <root url="file:///Users/andrew/java/jrdf/Downloads/gsbase-2.0.1/src/java" />
       </SOURCES>
     </library>
     <library name="je-3.2.42">

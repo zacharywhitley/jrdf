@@ -11,9 +11,9 @@ import java.io.Serializable;
 public interface Resource extends URIReference, BlankNode, Serializable {
 
     /**
-     * Returns true if this is a URIReference, otherwise (currently) it's a BlankNode.
+     * Returns true if this is a URIReference, otherwise it's a BlankNode.
      *
-     * @return true if this is a URIReference, otherwise (currently) it's a BlankNode.
+     * @return true if this is a URIReference, otherwise it's a BlankNode.
      */
     boolean isURIReference();
 
@@ -81,6 +81,10 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      */
     ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException;
 
-
+    /**
+     * Returns the node that the resource represents - either a BlankNode or a URIReference.
+     *
+     * @return the BlankNode or URIReference.
+     */
     Node getUnderlyingNode();
 }

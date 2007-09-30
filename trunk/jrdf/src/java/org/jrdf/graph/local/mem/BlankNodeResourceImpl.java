@@ -91,7 +91,7 @@ public final class BlankNodeResourceImpl extends AbstractResource implements Glo
     }
 
     public URI getURI() {
-        return null;
+        throw new UnsupportedOperationException("Blank nodes resource, does not have a URI");
     }
 
     @Override
