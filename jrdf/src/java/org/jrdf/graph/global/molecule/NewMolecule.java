@@ -59,76 +59,12 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
+public interface NewMolecule {
+    Triple getHeadTriple();
 
-public class HeadMoleculeImpl implements NewMolecule {
-    private final Triple triple;
+    boolean contains(Molecule molecule);
 
-    public HeadMoleculeImpl(Triple triple) {
-        this.triple = triple;
-    }
-
-    public Triple getHeadTriple() {
-        return triple;
-    }
-
-    public Iterator<Triple> find(Triple triple) {
-        return null;
-    }
-
-    public boolean contains(Triple triple) {
-        return false;
-    }
-
-    public Iterator<Triple> iterator() {
-        return null;
-    }
-
-    public Iterator<Molecule> moleculeIterator() {
-        // Return null iterator.
-        return null;
-    }
-
-    public Molecule add(Triple triple) {
-        return null;
-    }
-
-    public Molecule add(Set<Triple> triples) {
-        return null;
-    }
-
-    public int size() {
-        return 1;
-    }
-
-    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return false;
-    }
-
-    public Iterator<Triple> tailTriples() {
-        return null;
-    }
-
-    public Molecule remove(Triple triple) {
-        return null;
-    }
-
-    public SortedSet<Triple> getTriples() {
-        return null;
-    }
-
-    public boolean contains(Molecule molecule) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public Iterator<Molecule> getSubMolecules() {
-        return null;
-    }
+    int size();
 }

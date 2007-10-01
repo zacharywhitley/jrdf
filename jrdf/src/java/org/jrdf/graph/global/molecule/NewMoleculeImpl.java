@@ -65,131 +65,119 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class MoleculeNewImpl implements Molecule {
+public class NewMoleculeImpl implements NewMolecule {
     // TODO This should probably be a set of molecules not triples.  For blank nodes that link to another set of blank
     // nodes
     // ie. _1 a b, _1 c _2, _2 a b, _2 c d, _2 e _3, _3 f g
-    private final SortedSet<Molecule> subMolecules;
-    private final MoleculeComparator moleculeComparator;
-    private final Map<PredicateNode, SubjectNode> predicateSubjectMap;
-    private final Map<PredicateNode, ObjectNode> predicateObjectMap;
+    private final SortedSet<NewMolecule> subMolecules;
+    private final NewMoleculeComparator moleculeComparator;
 
-    public MoleculeNewImpl(MoleculeComparator newComparator) {
+    public NewMoleculeImpl(NewMoleculeComparator newComparator) {
         ParameterUtil.checkNotNull(newComparator);
         moleculeComparator = newComparator;
-        subMolecules = new TreeSet<Molecule>(moleculeComparator);
-        predicateSubjectMap = new HashMap<PredicateNode, SubjectNode>();
-        predicateObjectMap = new HashMap<PredicateNode, ObjectNode>();
+        subMolecules = new TreeSet<NewMolecule>(moleculeComparator);
     }
 
-    public MoleculeNewImpl(MoleculeComparator newComparator, Triple... rootTriples) {
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
         this(newComparator);
         for (Triple rootTriple : rootTriples) {
-            Molecule newMolecule = new HeadMoleculeImpl(rootTriple);
+            NewMolecule newMolecule = new HeadMoleculeImpl(rootTriple);
             subMolecules.add(newMolecule);
         }
     }
 
-    public MoleculeNewImpl(MoleculeComparator newComparator, Molecule childMolecule) {
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, NewMolecule... childMolecules) {
         this(newComparator);
-        add(childMolecule);
+        for (NewMolecule molecule : childMolecules) {
+            subMolecules.add(molecule);
+        }
     }
 
     public Triple getHeadTriple() {
         return subMolecules.last().getHeadTriple();
     }
 
-
-    public Molecule remove(Triple triple) {
-        throw new UnsupportedOperationException("Need more brains");
+    public NewMolecule remove(Triple triple) {
+        NewMolecule headMolecule = new HeadMoleculeImpl(triple);
+        subMolecules.remove(headMolecule);
+        return new NewMoleculeImpl(moleculeComparator, subMolecules.toArray(new NewMolecule[subMolecules.size()]));
     }
 
     public SortedSet<Triple> getTriples() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
-    public Molecule add(Triple triple) {
-        throw new UnsupportedOperationException("Need more brains");
+    public NewMolecule add(Triple triple) {
+        NewMolecule newMolecule = new HeadMoleculeImpl(triple);
+        subMolecules.add(newMolecule);
+        return new NewMoleculeImpl(moleculeComparator, subMolecules.toArray(new NewMolecule[subMolecules.size()]));
     }
-
-//    public Molecule add(Triple triple) {
-//        SortedSet<Triple> newTriples = new TreeSet<Triple>(moleculeComparator);
-//        newTriples.addAll(subMolecules);
-//        newTriples.add(triple);
-//
-//        return new MoleculeNewImpl(newTriples, moleculeComparator);
-//    }
 
     public void add(Molecule childMolecule) {
     }
 
-    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        if (isBlankNode(subject)) {
-            return hasBlankSubject(object, predicate);
-        } else {
-            return hasFixedSubject(object, subject, predicate);
-        }
+    public boolean contains(Triple triple) {
+        NewMolecule moleculeToFind = new HeadMoleculeImpl(triple);
+        return subMolecules.contains(moleculeToFind);
     }
 
-    public Iterator<Molecule> getSubMolecules() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        return contains(new TripleImpl(subject, predicate, object));
+    }
+
+    public boolean contains(Molecule molecule) {
+        // Head triple comparison
+        if (subMolecules.contains(molecule)) {
+            return true;
+        } else {
+            Iterator<NewMolecule> iterator = getSubMolecules();
+            while (iterator.hasNext()) {
+                NewMolecule tailMolecule = iterator.next();
+                if (molecule.size() > 1) {
+                    tailMolecule.contains(molecule);
+                }
+            }
+        }
+        return false;
+    }
+
+    public Iterator<NewMolecule> getSubMolecules() {
+        return subMolecules.iterator();
     }
 
     public Iterator<Triple> tailTriples() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    private boolean hasFixedSubject(ObjectNode object, SubjectNode subject, PredicateNode predicate) {
-        if (isBlankNode(object)) {
-            return predicateSubjectMap.containsValue(subject) && predicateObjectMap.containsKey(predicate);
-        } else {
-            return predicateSubjectMap.containsKey(predicate) && predicateSubjectMap.containsValue(subject) &&
-                predicateObjectMap.containsValue(object);
-        }
-    }
-
-    private boolean hasBlankSubject(ObjectNode object, PredicateNode predicate) {
-        if (isBlankNode(object)) {
-            return predicateSubjectMap.containsKey(predicate);
-        } else {
-            return predicateSubjectMap.containsKey(predicate) && predicateObjectMap.containsValue(object);
-        }
+        return null;
     }
 
     public ClosableIterator<Triple> find(Triple triple) {
         throw new UnsupportedOperationException("Method not yet implemented");
     }
 
-    public boolean contains(Triple triple) {
-        return contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
-    }
-
     public Iterator<Triple> iterator() {
         return null;
     }
 
-    public Iterator<Molecule> moleculeIterator() {
+    public Iterator<NewMolecule> moleculeIterator() {
         return subMolecules.iterator();
     }
 
-    public LinkedHashSet<Molecule> getTailTriples() {
-        LinkedHashSet<Molecule> set = new LinkedHashSet<Molecule>();
-        Iterator<Molecule> iterator = subMolecules.iterator();
+    public LinkedHashSet<NewMolecule> getTailTriples() {
+        LinkedHashSet<NewMolecule> set = new LinkedHashSet<NewMolecule>();
+        Iterator<NewMolecule> iterator = subMolecules.iterator();
         while (iterator.hasNext()) {
-            Molecule molecule = iterator.next();
+            NewMolecule molecule = iterator.next();
             if (iterator.hasNext()) {
                 set.add(molecule);
             }
@@ -197,12 +185,12 @@ public class MoleculeNewImpl implements Molecule {
         return set;
     }
 
-    public Molecule add(Set<Triple> set) {
+    public NewMolecule add(Set<Triple> set) {
         List<Triple> newMolecules = new ArrayList<Triple>();
         for (Triple triple : set) {
             newMolecules.add(triple);
         }
-        return new MoleculeNewImpl(moleculeComparator, newMolecules.toArray(new Triple[newMolecules.size()]));
+        return new NewMoleculeImpl(moleculeComparator, newMolecules.toArray(new Triple[newMolecules.size()]));
     }
 
     public int size() {
@@ -223,7 +211,7 @@ public class MoleculeNewImpl implements Molecule {
 
         // Cast and check for equality by value. (same class)
         try {
-            MoleculeNewImpl tmpMolecule = (MoleculeNewImpl) obj;
+            NewMoleculeImpl tmpMolecule = (NewMoleculeImpl) obj;
             return tmpMolecule.subMolecules.equals(subMolecules);
         } catch (ClassCastException cce) {
             return false;

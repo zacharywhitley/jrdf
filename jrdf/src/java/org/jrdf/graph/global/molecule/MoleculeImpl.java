@@ -65,7 +65,6 @@ public class MoleculeImpl implements Molecule {
         }
     }
 
-
     public Triple getHeadTriple() {
         return triples.last();
     }
@@ -84,10 +83,6 @@ public class MoleculeImpl implements Molecule {
         } else {
             return hasFixedSubject(object, subject, predicate);
         }
-    }
-
-    public Iterator<Molecule> getSubMolecules() {
-        return null;
     }
 
     private boolean hasFixedSubject(ObjectNode object, SubjectNode subject, PredicateNode predicate) {
@@ -119,10 +114,6 @@ public class MoleculeImpl implements Molecule {
         return triples.iterator();
     }
 
-    public Iterator<Molecule> moleculeIterator() {
-        return null;
-    }
-
     public SortedSet<Triple> getTriples() {
         return triples;
     }
@@ -147,7 +138,6 @@ public class MoleculeImpl implements Molecule {
         SortedSet<Triple> newTriples = new TreeSet<Triple>(comparator);
         newTriples.addAll(triples);
         newTriples.add(triple);
-
         return new MoleculeImpl(newTriples, comparator);
     }
 
