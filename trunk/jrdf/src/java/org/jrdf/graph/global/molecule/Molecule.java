@@ -55,7 +55,6 @@ public interface Molecule {
      * @return
      */
     Iterator<Triple> iterator();
-    Iterator<Molecule> moleculeIterator();
 
     /**
      * Adds the given triple to the molecule.
@@ -88,7 +87,6 @@ public interface Molecule {
      * Iterate through the tail triples.
      * @return
      */
-    Iterator<Molecule> getSubMolecules();
     Iterator<Triple> tailTriples();
 
     boolean equals(Object molecule);

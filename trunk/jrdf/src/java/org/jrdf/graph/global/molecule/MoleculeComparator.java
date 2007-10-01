@@ -26,14 +26,4 @@ import java.util.Comparator;
  * @version $Revision: 1226 $
  */
 public interface MoleculeComparator extends Comparator<Molecule>, Serializable {
-
-    /**
-     * Given 2 molecules this method will compare the two and determine
-     * if they are simlar.
-     *
-     * @param m1
-     * @param m2
-     * @return
-     */
-    int compare(Molecule m1, Molecule m2);
 }
