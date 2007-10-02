@@ -67,4 +67,6 @@ public interface NewMolecule {
     boolean contains(Molecule molecule);
 
     int size();
+
+    NewMolecule add(Triple triple);
 }

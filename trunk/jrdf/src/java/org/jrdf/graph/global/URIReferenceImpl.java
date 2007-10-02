@@ -65,9 +65,6 @@ import java.net.URI;
 
 /**
  * Globalized implementation of a URIReferenfce.
- * User: imrank
- * Date: 13/09/2007
- * Time: 14:12:53
  */
 public class URIReferenceImpl extends AbstractURIReference {
     private static final long serialVersionUID = -7929300110459788186L;
@@ -76,6 +73,14 @@ public class URIReferenceImpl extends AbstractURIReference {
      * No arg constructor required for writable interface.
      */
     private URIReferenceImpl() {
+    }
+
+    public URIReferenceImpl(String string) {
+        super(URI.create(string));
+    }
+
+    public URIReferenceImpl(String string, boolean validate) {
+        super(URI.create(string), validate);
     }
 
     public URIReferenceImpl(URI uri) {

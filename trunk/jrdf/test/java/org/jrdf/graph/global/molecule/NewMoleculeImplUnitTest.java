@@ -60,92 +60,60 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.BlankNodeImpl;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.global.BlankNodeImpl;
 
-import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
-
-public class MoleculeImplUnitTest extends TestCase {
+public class NewMoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private URIReference ref1;
     private URIReference ref2;
+    private URIReference ref3;
+    private Triple triple1;
+    private Triple triple2;
+    private Triple triple3;
+    private Triple triple4;
+    private BlankNode bNode1;
 
-    public void testMoleculeOrderURIReference() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
-        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
-        Triple triple1 = new TripleImpl(ref1, ref1, ref1);
-        Triple triple2 = new TripleImpl(ref1, ref1, ref2);
-        molecule = molecule.add(triple1);
-        molecule = molecule.add(triple2);
-        assertEquals(triple1, molecule.getHeadTriple());
+    public void setUp() {
+        ref1 = new URIReferenceImpl("urn:foo");
+        ref2 = new URIReferenceImpl("urn:bar");
+        ref3 = new URIReferenceImpl("urn:baz");
+        bNode1 = new BlankNodeImpl();
+        triple1 = new TripleImpl(ref1, ref1, ref1);
+        triple2 = new TripleImpl(ref2, ref1, ref1);
+        triple3 = new TripleImpl(ref3, ref1, ref1);
+        triple4 = new TripleImpl(ref1, ref1, bNode1);
     }
 
-    public void testMoleculeOrderBlankNodes() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
-        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
-        BlankNode blankNode = new BlankNodeImpl();
-
-        Triple triple = new TripleImpl(blankNode, ref1, ref1);
-        molecule = molecule.add(new TripleImpl(blankNode, ref1, ref2));
-        molecule = molecule.add(triple);
-        molecule = molecule.add(new TripleImpl(blankNode, ref1, blankNode));
-        assertEquals(triple, molecule.getHeadTriple());
+    public void testMoleculeCreation() {
+        NewMolecule newMolecule = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), triple1, triple2,
+            triple3, triple4);
+        assertEquals(triple1, newMolecule.getHeadTriple());
+    }
+    
+    public void testMoleculeCreation2() {
+        NewMolecule newMolecule = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator));
+        newMolecule = newMolecule.add(triple2);
+        newMolecule = newMolecule.add(triple3);
+        newMolecule = newMolecule.add(triple1);
+        newMolecule = newMolecule.add(triple4);
+        assertEquals(triple1, newMolecule.getHeadTriple());
     }
 
-    public void testImmutable() throws Exception {
-        Molecule molecule = new MoleculeImpl(comparator);
-        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
-        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
-        BlankNode blankNode = new BlankNodeImpl();
-
-        Triple triple = new TripleImpl(blankNode, ref1, ref1);
-        molecule = molecule.add(new TripleImpl(blankNode, ref1, ref2));
-        molecule = molecule.add(triple);
-        molecule = molecule.add(new TripleImpl(blankNode, ref1, blankNode));
-        Triple headTriple = molecule.getHeadTriple();
-        int size = molecule.size();
-
-        //test immutability for add
-        molecule.add(triple);
-        assertTrue(headTriple == molecule.getHeadTriple());
-        assertTrue(size == molecule.size());
-
-        //test immutability for remove
-        molecule.remove(triple);
-        assertTrue(headTriple == molecule.getHeadTriple());
-        assertTrue(size == molecule.size());
-    }
-
-
-    public void testImmutableConstructor() throws Exception  {
-        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
-        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
-        BlankNode blankNode = new BlankNodeImpl();
-
-        Set set = new HashSet();
-        Triple triple = new TripleImpl(blankNode, ref1, ref1);
-        set.add(triple);
-        TripleImpl triple1 = new TripleImpl(blankNode, ref1, ref2);
-        set.add(triple1);
-        TripleImpl triple2 = new TripleImpl(blankNode, ref1, blankNode);
-        set.add(triple2);
-
-        Molecule molecule = new MoleculeImpl(set, comparator);
-        Triple headTriple = molecule.getHeadTriple();
-        int size = molecule.size();
-
-        set.remove(triple);
-        assertTrue(size == molecule.size());
-        assertTrue(headTriple == molecule.getHeadTriple());
+    public void testAddVsConstructor() {
+        NewMolecule newMolecule1 = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator));
+        newMolecule1.add(triple1);
+        newMolecule1.add(triple2);
+        newMolecule1.add(triple3);
+        newMolecule1.add(triple4);
+        NewMolecule newMolecule2 = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), triple1, triple2,
+            triple3, triple4);
+        assertEquals(newMolecule1, newMolecule2);
     }
 }
