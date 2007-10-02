@@ -63,20 +63,22 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 
 public class HeadMoleculeImpl implements NewMolecule {
-    private final Triple triple;
+    private final Triple internalTriple;
 
     public HeadMoleculeImpl(Triple triple) {
-        this.triple = triple;
+        this.internalTriple = triple;
     }
 
     public Triple getHeadTriple() {
-        return triple;
+        return internalTriple;
     }
 
     public Iterator<Triple> find(Triple triple) {
@@ -96,8 +98,9 @@ public class HeadMoleculeImpl implements NewMolecule {
         return null;
     }
 
-    public Molecule add(Triple triple) {
-        return null;
+    public NewMolecule add(Triple triple) {
+        TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+        return new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), internalTriple, triple);
     }
 
     public Molecule add(Set<Triple> triples) {
@@ -130,5 +133,9 @@ public class HeadMoleculeImpl implements NewMolecule {
 
     public Iterator<Molecule> getSubMolecules() {
         return null;
+    }
+
+    public String toString() {
+        return internalTriple.toString();
     }
 }

@@ -67,7 +67,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -78,14 +78,11 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class NewMoleculeImpl implements NewMolecule {
-    // TODO This should probably be a set of molecules not triples.  For blank nodes that link to another set of blank
-    // nodes
-    // ie. _1 a b, _1 c _2, _2 a b, _2 c d, _2 e _3, _3 f g
     private final SortedSet<NewMolecule> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator) {
-        ParameterUtil.checkNotNull(newComparator);
+        checkNotNull(newComparator);
         moleculeComparator = newComparator;
         subMolecules = new TreeSet<NewMolecule>(moleculeComparator);
     }
