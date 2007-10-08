@@ -60,18 +60,18 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
-import org.jrdf.graph.global.BlankNodeImpl;
 
-import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 public class NewMoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -107,7 +107,7 @@ public class NewMoleculeImplUnitTest extends TestCase {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple1, triple2, triple3, triple4);
         assertEquals(triple1, newMolecule.getHeadTriple());
     }
-    
+
     public void testMoleculeCreation2() {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
         newMolecule = newMolecule.add(triple2);
@@ -127,7 +127,7 @@ public class NewMoleculeImplUnitTest extends TestCase {
         assertEquals(newMolecule1, newMolecule2);
     }
 
-    public void testCreateMoleculeWithSubmolecules() {
+    public void testMergeHeadMolecules() {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple6);
         NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, triple6, triple5);
         assertEquals(triple6, newMolecule.getHeadTriple());
@@ -138,13 +138,35 @@ public class NewMoleculeImplUnitTest extends TestCase {
         checkHasHeadMolecules(newMolecule, triple5, triple6);
     }
 
-    private void checkHasHeadMolecules(NewMolecule newMolecule, Triple... triples) {
+//    public void testCombineSubMolecules() {
+//        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple4);
+//        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, triple5, triple6);
+//        newMolecule = newMolecule.add(internalMolecule);
+//        assertEquals(triple4, newMolecule.getHeadTriple());
+//        assertEquals(2, newMolecule.size());
+//        checkHasSubMolecule(newMolecule, new HeadMoleculeImpl(triple4), internalMolecule);
+//    }
+
+    private void checkHasHeadMolecules(NewMolecule actualMolecule, Triple... triples) {
         Set<NewMolecule> moleculeContents = new HashSet<NewMolecule>();
         for (Triple triple : triples) {
             NewMolecule headMolecule = new HeadMoleculeImpl(triple);
             moleculeContents.add(headMolecule);
         }
-        Iterator<NewMolecule> subMolecules = newMolecule.getSubMolecules();
+        Iterator<NewMolecule> subMolecules = actualMolecule.getSubMolecules();
+        while (subMolecules.hasNext()) {
+            NewMolecule tmpMolecule = subMolecules.next();
+            assertTrue("Could not find: " + tmpMolecule + " in " + moleculeContents,
+                moleculeContents.contains(tmpMolecule));
+        }
+    }
+
+    private void checkHasSubMolecule(NewMolecule actualMolecule, NewMolecule... expectedMolecules) {
+        Set<NewMolecule> moleculeContents = new HashSet<NewMolecule>();
+        for (NewMolecule molecule : expectedMolecules) {
+            moleculeContents.add(molecule);
+        }
+        Iterator<NewMolecule> subMolecules = actualMolecule.getSubMolecules();
         while (subMolecules.hasNext()) {
             NewMolecule tmpMolecule = subMolecules.next();
             assertTrue("Could not find: " + tmpMolecule + " in " + moleculeContents,

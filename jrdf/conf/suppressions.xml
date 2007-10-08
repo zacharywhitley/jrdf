@@ -29,6 +29,7 @@
     <suppress checks="ReturnCount" files="WhereAnalyserImpl.java"/>
 
     <!-- Spikes -->
+    <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl.java"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactoryImpl.java"/>

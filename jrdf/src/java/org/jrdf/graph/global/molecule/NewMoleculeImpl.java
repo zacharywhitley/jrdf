@@ -76,40 +76,43 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class NewMoleculeImpl implements NewMolecule {
-    private final SortedSet<NewMolecule> subMolecules;
+    private final SortedMap<NewMolecule, NewMolecule> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
-        subMolecules = new TreeSet<NewMolecule>(moleculeComparator);
+        subMolecules = new TreeMap<NewMolecule, NewMolecule>(moleculeComparator);
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
         this(newComparator);
         for (Triple rootTriple : rootTriples) {
             NewMolecule newMolecule = new HeadMoleculeImpl(rootTriple);
-            subMolecules.add(newMolecule);
+            subMolecules.put(newMolecule, null);
         }
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, NewMolecule... childMolecules) {
         this(newComparator);
         for (NewMolecule molecule : childMolecules) {
-            subMolecules.add(molecule);
+            subMolecules.put(molecule, null);
         }
     }
 
     public Triple getHeadTriple() {
-        return subMolecules.last().getHeadTriple();
+        return subMolecules.lastKey().getHeadTriple();
     }
 
     public NewMolecule remove(Triple triple) {
         NewMolecule headMolecule = new HeadMoleculeImpl(triple);
         subMolecules.remove(headMolecule);
-        return new NewMoleculeImpl(moleculeComparator, subMolecules.toArray(new NewMolecule[subMolecules.size()]));
+        return new NewMoleculeImpl(moleculeComparator,
+            subMolecules.keySet().toArray(new NewMolecule[subMolecules.size()]));
     }
 
     public SortedSet<Triple> getTriples() {
@@ -118,20 +121,24 @@ public class NewMoleculeImpl implements NewMolecule {
 
     public NewMolecule add(Triple triple) {
         NewMolecule newMolecule = new HeadMoleculeImpl(triple);
-        subMolecules.add(newMolecule);
-        return new NewMoleculeImpl(moleculeComparator, subMolecules.toArray(new NewMolecule[subMolecules.size()]));
+        subMolecules.put(newMolecule, null);
+        return new NewMoleculeImpl(moleculeComparator,
+            subMolecules.keySet().toArray(new NewMolecule[subMolecules.size()]));
     }
 
     public NewMolecule add(NewMolecule childMolecule) {
-        if (childMolecule.getHeadTriple().equals(getHeadTriple())) {
+        Triple headTriple = getHeadTriple();
+        Triple childHeadTriple = childMolecule.getHeadTriple();
+        if (childHeadTriple.equals(headTriple)) {
             return mergeHeadMatchingMolecule(childMolecule);
+        } else {
+            throw new UnsupportedOperationException();
         }
-        throw new UnsupportedOperationException();
     }
 
     private NewMolecule mergeHeadMatchingMolecule(NewMolecule childMolecule) {
         SortedSet<NewMolecule> newMolecules = new TreeSet<NewMolecule>(moleculeComparator);
-        newMolecules.addAll(subMolecules);
+        newMolecules.addAll(subMolecules.keySet());
         Iterator<NewMolecule> subMoleculeIter = childMolecule.getSubMolecules();
         while (subMoleculeIter.hasNext()) {
             newMolecules.add(subMoleculeIter.next());
@@ -141,7 +148,7 @@ public class NewMoleculeImpl implements NewMolecule {
 
     public boolean contains(Triple triple) {
         NewMolecule moleculeToFind = new HeadMoleculeImpl(triple);
-        return subMolecules.contains(moleculeToFind);
+        return subMolecules.keySet().contains(moleculeToFind);
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
@@ -150,7 +157,7 @@ public class NewMoleculeImpl implements NewMolecule {
 
     public boolean contains(Molecule molecule) {
         // Head triple comparison
-        if (subMolecules.contains(molecule)) {
+        if (subMolecules.keySet().contains(molecule)) {
             return true;
         } else {
             Iterator<NewMolecule> iterator = getSubMolecules();
@@ -165,7 +172,7 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public Iterator<NewMolecule> getSubMolecules() {
-        return subMolecules.iterator();
+        return subMolecules.keySet().iterator();
     }
 
     public Iterator<Triple> tailTriples() {
@@ -181,12 +188,12 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public Iterator<NewMolecule> moleculeIterator() {
-        return subMolecules.iterator();
+        return subMolecules.keySet().iterator();
     }
 
     public LinkedHashSet<NewMolecule> getTailTriples() {
         LinkedHashSet<NewMolecule> set = new LinkedHashSet<NewMolecule>();
-        Iterator<NewMolecule> iterator = subMolecules.iterator();
+        Iterator<NewMolecule> iterator = subMolecules.keySet().iterator();
         while (iterator.hasNext()) {
             NewMolecule molecule = iterator.next();
             if (iterator.hasNext()) {
