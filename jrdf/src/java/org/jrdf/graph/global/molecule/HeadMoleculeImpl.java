@@ -139,6 +139,34 @@ public class HeadMoleculeImpl implements NewMolecule {
         return null;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        // Check equal by reference
+        if (this == obj) {
+            return true;
+        }
+
+        // Check for null and ensure exactly the same class - not subclass.
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        // Cast and check for equality by value. (same class)
+        try {
+            HeadMoleculeImpl tmpMolecule = (HeadMoleculeImpl) obj;
+            return tmpMolecule.internalTriple.equals(internalTriple);
+        } catch (ClassCastException cce) {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return internalTriple != null ? internalTriple.hashCode() : 0;
+    }
+
+
     public String toString() {
         return internalTriple.toString();
     }

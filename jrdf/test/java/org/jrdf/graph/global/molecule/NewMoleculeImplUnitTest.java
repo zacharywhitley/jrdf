@@ -69,6 +69,10 @@ import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.graph.global.BlankNodeImpl;
 
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
+
 public class NewMoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private NewMoleculeComparator moleculeComparator;
@@ -131,5 +135,20 @@ public class NewMoleculeImplUnitTest extends TestCase {
         newMolecule = newMolecule.add(internalMolecule);
         assertEquals(triple6, newMolecule.getHeadTriple());
         assertEquals(2, newMolecule.size());
+        checkHasHeadMolecules(newMolecule, triple5, triple6);
+    }
+
+    private void checkHasHeadMolecules(NewMolecule newMolecule, Triple... triples) {
+        Set<NewMolecule> moleculeContents = new HashSet<NewMolecule>();
+        for (Triple triple : triples) {
+            NewMolecule headMolecule = new HeadMoleculeImpl(triple);
+            moleculeContents.add(headMolecule);
+        }
+        Iterator<NewMolecule> subMolecules = newMolecule.getSubMolecules();
+        while (subMolecules.hasNext()) {
+            NewMolecule tmpMolecule = subMolecules.next();
+            assertTrue("Could not find: " + tmpMolecule + " in " + moleculeContents,
+                moleculeContents.contains(tmpMolecule));
+        }
     }
 }

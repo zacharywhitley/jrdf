@@ -208,6 +208,7 @@ public class NewMoleculeImpl implements NewMolecule {
         return subMolecules.size();
     }
 
+    @Override
     public boolean equals(Object obj) {
 
         // Check equal by reference
@@ -229,10 +230,12 @@ public class NewMoleculeImpl implements NewMolecule {
         }
     }
 
+    @Override
     public int hashCode() {
         return subMolecules != null ? subMolecules.hashCode() : 0;
     }
 
+    @Override
     public String toString() {
         return "Implement me";
     }
