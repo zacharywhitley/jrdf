@@ -103,6 +103,10 @@ public class HeadMoleculeImpl implements NewMolecule {
         return new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), internalTriple, triple);
     }
 
+    public NewMolecule add(NewMolecule childMolecule) {
+        return null;
+    }
+
     public Molecule add(Set<Triple> triples) {
         return null;
     }
@@ -131,7 +135,7 @@ public class HeadMoleculeImpl implements NewMolecule {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Iterator<Molecule> getSubMolecules() {
+    public Iterator<NewMolecule> getSubMolecules() {
         return null;
     }
 

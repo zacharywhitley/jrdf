@@ -71,6 +71,7 @@ import org.jrdf.graph.global.BlankNodeImpl;
 
 public class NewMoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private NewMoleculeComparator moleculeComparator;
     private URIReference ref1;
     private URIReference ref2;
     private URIReference ref3;
@@ -78,27 +79,33 @@ public class NewMoleculeImplUnitTest extends TestCase {
     private Triple triple2;
     private Triple triple3;
     private Triple triple4;
+    private Triple triple5;
+    private Triple triple6;
     private BlankNode bNode1;
+    private BlankNode bNode2;
 
     public void setUp() {
         ref1 = new URIReferenceImpl("urn:foo");
         ref2 = new URIReferenceImpl("urn:bar");
         ref3 = new URIReferenceImpl("urn:baz");
         bNode1 = new BlankNodeImpl();
+        bNode2 = new BlankNodeImpl();
         triple1 = new TripleImpl(ref1, ref1, ref1);
         triple2 = new TripleImpl(ref2, ref1, ref1);
         triple3 = new TripleImpl(ref3, ref1, ref1);
         triple4 = new TripleImpl(ref1, ref1, bNode1);
+        triple5 = new TripleImpl(bNode2, ref2, bNode1);
+        triple6 = new TripleImpl(bNode1, ref3, ref3);
+        moleculeComparator = new NewMoleculeComparatorImpl(comparator);
     }
 
     public void testMoleculeCreation() {
-        NewMolecule newMolecule = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), triple1, triple2,
-            triple3, triple4);
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple1, triple2, triple3, triple4);
         assertEquals(triple1, newMolecule.getHeadTriple());
     }
     
     public void testMoleculeCreation2() {
-        NewMolecule newMolecule = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator));
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
         newMolecule = newMolecule.add(triple2);
         newMolecule = newMolecule.add(triple3);
         newMolecule = newMolecule.add(triple1);
@@ -107,13 +114,22 @@ public class NewMoleculeImplUnitTest extends TestCase {
     }
 
     public void testAddVsConstructor() {
-        NewMolecule newMolecule1 = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator));
+        NewMolecule newMolecule1 = new NewMoleculeImpl(moleculeComparator);
         newMolecule1.add(triple1);
         newMolecule1.add(triple2);
         newMolecule1.add(triple3);
         newMolecule1.add(triple4);
-        NewMolecule newMolecule2 = new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), triple1, triple2,
-            triple3, triple4);
+        NewMolecule newMolecule2 = new NewMoleculeImpl(moleculeComparator, triple1, triple2, triple3, triple4);
         assertEquals(newMolecule1, newMolecule2);
+    }
+
+    public void testCreateMoleculeWithSubmolecules() {
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple6);
+        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, triple6, triple5);
+        assertEquals(triple6, newMolecule.getHeadTriple());
+        assertEquals(triple6, internalMolecule.getHeadTriple());
+        newMolecule = newMolecule.add(internalMolecule);
+        assertEquals(triple6, newMolecule.getHeadTriple());
+        assertEquals(2, newMolecule.size());
     }
 }
