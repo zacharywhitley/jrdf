@@ -122,7 +122,21 @@ public class NewMoleculeImpl implements NewMolecule {
         return new NewMoleculeImpl(moleculeComparator, subMolecules.toArray(new NewMolecule[subMolecules.size()]));
     }
 
-    public void add(Molecule childMolecule) {
+    public NewMolecule add(NewMolecule childMolecule) {
+        if (childMolecule.getHeadTriple().equals(getHeadTriple())) {
+            return mergeHeadMatchingMolecule(childMolecule);
+        }
+        throw new UnsupportedOperationException();
+    }
+
+    private NewMolecule mergeHeadMatchingMolecule(NewMolecule childMolecule) {
+        SortedSet<NewMolecule> newMolecules = new TreeSet<NewMolecule>(moleculeComparator);
+        newMolecules.addAll(subMolecules);
+        Iterator<NewMolecule> subMoleculeIter = childMolecule.getSubMolecules();
+        while (subMoleculeIter.hasNext()) {
+            newMolecules.add(subMoleculeIter.next());
+        }
+        return new NewMoleculeImpl(moleculeComparator, newMolecules.toArray(new NewMolecule[newMolecules.size()]));
     }
 
     public boolean contains(Triple triple) {

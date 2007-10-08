@@ -61,6 +61,8 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
 
+import java.util.Iterator;
+
 public interface NewMolecule {
     Triple getHeadTriple();
 
@@ -69,4 +71,8 @@ public interface NewMolecule {
     int size();
 
     NewMolecule add(Triple triple);
+
+    NewMolecule add(NewMolecule childMolecule);
+
+    Iterator<NewMolecule> getSubMolecules();
 }
