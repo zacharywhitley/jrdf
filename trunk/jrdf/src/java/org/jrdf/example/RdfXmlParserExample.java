@@ -65,6 +65,7 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.Triple;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.ClosableIterator;
@@ -103,7 +104,7 @@ public final class RdfXmlParserExample {
             final Graph jrdfMem = JRDF_FACTORY.getNewGraph();
             Parser parser = new GraphRdfXmlParser(jrdfMem);
             parser.parse(in, EscapeURL.toEscapedString(url));
-            ClosableIterator iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            ClosableIterator<Triple> iter = jrdfMem.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
             try {
                 while (iter.hasNext()) {
                     System.out.println("Graph: " + iter.next());
