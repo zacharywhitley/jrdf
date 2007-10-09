@@ -138,14 +138,14 @@ public class NewMoleculeImplUnitTest extends TestCase {
         checkHasHeadMolecules(newMolecule, triple5, triple6);
     }
 
-//    public void testCombineSubMolecules() {
-//        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple4);
-//        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, triple5, triple6);
-//        newMolecule = newMolecule.add(internalMolecule);
-//        assertEquals(triple4, newMolecule.getHeadTriple());
-//        assertEquals(2, newMolecule.size());
-//        checkHasSubMolecule(newMolecule, new HeadMoleculeImpl(triple4), internalMolecule);
-//    }
+    public void testCombineSubMolecules() {
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple4);
+        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, triple5, triple6);
+        newMolecule = newMolecule.add(internalMolecule);
+        assertEquals(triple4, newMolecule.getHeadTriple());
+        assertEquals(1, newMolecule.size());
+        checkHasSubMolecule(newMolecule, new HeadMoleculeImpl(triple4), internalMolecule);
+    }
 
     private void checkHasHeadMolecules(NewMolecule actualMolecule, Triple... triples) {
         Set<NewMolecule> moleculeContents = new HashSet<NewMolecule>();

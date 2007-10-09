@@ -83,6 +83,12 @@ public class NewMoleculeImpl implements NewMolecule {
     private final SortedMap<NewMolecule, NewMolecule> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
 
+    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<NewMolecule, NewMolecule> newSubMolecules) {
+        checkNotNull(newComparator, newSubMolecules);
+        moleculeComparator = newComparator;
+        subMolecules = newSubMolecules;
+    }
+
     public NewMoleculeImpl(NewMoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
@@ -132,7 +138,11 @@ public class NewMoleculeImpl implements NewMolecule {
         if (childHeadTriple.equals(headTriple)) {
             return mergeHeadMatchingMolecule(childMolecule);
         } else {
-            throw new UnsupportedOperationException();
+            NewMolecule headMolecule = subMolecules.lastKey();
+            subMolecules.remove(headMolecule);
+            NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, headMolecule, childMolecule);
+            subMolecules.put(headMolecule, newMolecule);
+            return new NewMoleculeImpl(moleculeComparator, subMolecules);
         }
     }
 
