@@ -73,6 +73,10 @@ import org.jrdf.util.EscapeURL;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 /**
  * A simple example of parsing in a RDF/XML file into an in memory JRDF graph.
@@ -81,7 +85,6 @@ import java.net.URL;
  * @version $Revision$
  */
 public final class RdfXmlParserExample {
-
     private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
     private static final String DEFAULT_RDF_URL = "http://rss.slashdot.org/Slashdot/slashdot";
 
@@ -93,10 +96,9 @@ public final class RdfXmlParserExample {
 //    Parser parser = new RdfXmlParser(factory.getGraph().getElementFactory());
 //    parser.parse(in, EscapeURL.toEscapedString(url));
 
-
     public static void main(String[] args) throws Exception {
         URL url = getDocumentURL(args);
-        InputStream in = url.openStream();
+        InputStream in = getInputStream(url);
         try {
             final Graph jrdfMem = JRDF_FACTORY.getNewGraph();
             Parser parser = new GraphRdfXmlParser(jrdfMem);
@@ -113,6 +115,22 @@ public final class RdfXmlParserExample {
         } finally {
             in.close();
         }
+    }
+
+    private static InputStream getInputStream(URL url) throws Exception {
+        URLConnection urlConnection = url.openConnection();
+        urlConnection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+        urlConnection.connect();
+        String encoding = urlConnection.getContentEncoding();
+        InputStream in = null;
+        if (encoding != null && encoding.equalsIgnoreCase("gzip")) {
+            in = new GZIPInputStream(urlConnection.getInputStream());
+        } else if (encoding != null && encoding.equalsIgnoreCase("deflate")) {
+            in = new InflaterInputStream(urlConnection.getInputStream(), new Inflater(true));
+        } else {
+            in = urlConnection.getInputStream();
+        }
+        return in;
     }
 
     private static URL getDocumentURL(String[] args) throws MalformedURLException {
