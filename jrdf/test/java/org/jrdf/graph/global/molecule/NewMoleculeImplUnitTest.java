@@ -72,6 +72,8 @@ import org.jrdf.graph.global.URIReferenceImpl;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NewMoleculeImplUnitTest extends TestCase {
     private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -144,33 +146,28 @@ public class NewMoleculeImplUnitTest extends TestCase {
         newMolecule = newMolecule.add(internalMolecule);
         assertEquals(triple4, newMolecule.getHeadTriple());
         assertEquals(1, newMolecule.size());
-        checkHasSubMolecule(newMolecule, new HeadMoleculeImpl(triple4), internalMolecule);
+        HashMap<Triple, NewMolecule> expectedSubMolecules = new HashMap<Triple, NewMolecule>();
+        expectedSubMolecules.put(triple4, internalMolecule);
+        checkHasSubMolecule(newMolecule, expectedSubMolecules);
     }
 
     private void checkHasHeadMolecules(NewMolecule actualMolecule, Triple... triples) {
-        Set<NewMolecule> moleculeContents = new HashSet<NewMolecule>();
+        Set<Triple> moleculeContents = new HashSet<Triple>();
         for (Triple triple : triples) {
-            NewMolecule headMolecule = new HeadMoleculeImpl(triple);
-            moleculeContents.add(headMolecule);
+            moleculeContents.add(triple);
         }
-        Iterator<NewMolecule> subMolecules = actualMolecule.getSubMolecules();
-        while (subMolecules.hasNext()) {
-            NewMolecule tmpMolecule = subMolecules.next();
-            assertTrue("Could not find: " + tmpMolecule + " in " + moleculeContents,
-                moleculeContents.contains(tmpMolecule));
+        Iterator<Triple> rootTriples = actualMolecule.getRootTriples();
+        while (rootTriples.hasNext()) {
+            Triple tmpTriple = rootTriples.next();
+            assertTrue("Could not find: " + tmpTriple + " in " + moleculeContents,
+                moleculeContents.contains(tmpTriple));
         }
     }
 
-    private void checkHasSubMolecule(NewMolecule actualMolecule, NewMolecule... expectedMolecules) {
-        Set<NewMolecule> moleculeContents = new HashSet<NewMolecule>();
-        for (NewMolecule molecule : expectedMolecules) {
-            moleculeContents.add(molecule);
-        }
-        Iterator<NewMolecule> subMolecules = actualMolecule.getSubMolecules();
-        while (subMolecules.hasNext()) {
-            NewMolecule tmpMolecule = subMolecules.next();
-            assertTrue("Could not find: " + tmpMolecule + " in " + moleculeContents,
-                moleculeContents.contains(tmpMolecule));
+    private void checkHasSubMolecule(NewMolecule actualMolecule, HashMap<Triple, NewMolecule> expectedSubMolecules) {
+        for (Map.Entry<Triple,NewMolecule> entry : expectedSubMolecules.entrySet()) {
+            NewMolecule newMolecule = actualMolecule.getMolecule(entry.getKey());
+            assertEquals("Trying to find molecule for triple: " + entry.getKey(), entry.getValue(), newMolecule);
         }
     }
 }

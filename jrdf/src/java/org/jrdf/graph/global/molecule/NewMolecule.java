@@ -74,5 +74,7 @@ public interface NewMolecule {
 
     NewMolecule add(NewMolecule childMolecule);
 
-    Iterator<NewMolecule> getSubMolecules();
+    Iterator<Triple> getRootTriples();
+
+    NewMolecule getMolecule(Triple rootTriple);
 }
