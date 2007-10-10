@@ -135,7 +135,11 @@ public class HeadMoleculeImpl implements NewMolecule {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Iterator<NewMolecule> getSubMolecules() {
+    public Iterator<Triple> getRootTriples() {
+        return null;
+    }
+
+    public NewMolecule getMolecule(Triple rootTriple) {
         return null;
     }
 
