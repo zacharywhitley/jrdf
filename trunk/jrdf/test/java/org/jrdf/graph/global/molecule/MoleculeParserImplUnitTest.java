@@ -62,6 +62,8 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.GlobalizedGraph;
@@ -86,6 +88,7 @@ public class MoleculeParserImplUnitTest extends TestCase {
         new URIReferenceImpl(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"));
     private final URIReferenceImpl TYPE_URI = new URIReferenceImpl(RDF.TYPE);
     private final URIReferenceImpl CLASS_URI = new URIReferenceImpl(URI.create("http://www.w3.org/2002/07/owl#Class"));
+    private final URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
 
     public void setUp() throws Exception {
         // Work out why we need to do this.
@@ -94,15 +97,18 @@ public class MoleculeParserImplUnitTest extends TestCase {
     }
 
     public void testParse() throws Exception {
-        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
         moleculeParser.parse(resource.openStream(), BASE_URI);
     }
 
+    public void testNormalParser() throws Exception {
+        Parser parser = new GraphRdfXmlParser(jrdfGraph);
+        parser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
+    }
+
     public void testGetGlobalizedGraph() throws Exception {
-        URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
         moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
         GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
-//        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
+        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
         assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
 
         Triple triple = new TripleImpl(AMERICAN_URI, TYPE_URI, CLASS_URI);

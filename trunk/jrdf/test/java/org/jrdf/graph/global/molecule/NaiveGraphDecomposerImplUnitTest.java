@@ -82,17 +82,17 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     private TripleFactory tripleFactory = newGraph.getTripleFactory();
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     private MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(tripleComparator);
-    private Triple grounded1;
-    private Triple blank1ObjectRef1;
-    private Triple blank1SubjectRef1;
-    private Triple blank2to1Ref1;
-    private Triple blank2Ref2Ref1;
-    private Triple grounded2;
-    private Triple sameBlank1SubjectRef1;
-    private Triple blank1to2Ref1;
-    private Triple blank2SubjectRef1;
-    private Triple blank1SubjectRef2;
-    private Triple blank2SubjectRef2;
+    private Triple r2r1r2;
+    private Triple r1r1b1;
+    private Triple b1r1r1;
+    private Triple b2r1b1;
+    private Triple b2r2r1;
+    private Triple r2r1r1;
+    private Triple b1r1r1_2;
+    private Triple b1r1b2;
+    private Triple b2r1r1;
+    private Triple b1r2r2;
+    private Triple b2r2r2;
     private GraphDecomposer decomposer;
 
     public void setUp() throws Exception {
@@ -102,49 +102,45 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         URIReference ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
         BlankNode blankNode1 = elementFactory.createBlankNode();
         BlankNode blankNode2 = elementFactory.createBlankNode();
-        grounded1 = tripleFactory.createTriple(ref2, ref1, ref2);
-        grounded2 = tripleFactory.createTriple(ref2, ref1, ref1);
-        blank1ObjectRef1 = tripleFactory.createTriple(ref1, ref1, blankNode1);
-        blank1SubjectRef1 = tripleFactory.createTriple(blankNode1, ref1, ref1);
-        blank1SubjectRef2 = tripleFactory.createTriple(blankNode1, ref2, ref2);
-        blank2SubjectRef1 = tripleFactory.createTriple(blankNode2, ref1, ref1);
-        blank2SubjectRef2 = tripleFactory.createTriple(blankNode2, ref2, ref2);
-        sameBlank1SubjectRef1 = tripleFactory.createTriple(blankNode1, ref1, ref1);
-        blank2Ref2Ref1 = tripleFactory.createTriple(blankNode2, ref2, ref1);
-        blank2to1Ref1 = tripleFactory.createTriple(blankNode2, ref1, blankNode1);
-        blank1to2Ref1 = tripleFactory.createTriple(blankNode1, ref1, blankNode2);
+        r2r1r2 = tripleFactory.createTriple(ref2, ref1, ref2);
+        r2r1r1 = tripleFactory.createTriple(ref2, ref1, ref1);
+        r1r1b1 = tripleFactory.createTriple(ref1, ref1, blankNode1);
+        b1r1r1 = tripleFactory.createTriple(blankNode1, ref1, ref1);
+        b1r2r2 = tripleFactory.createTriple(blankNode1, ref2, ref2);
+        b2r1r1 = tripleFactory.createTriple(blankNode2, ref1, ref1);
+        b2r2r2 = tripleFactory.createTriple(blankNode2, ref2, ref2);
+        b1r1r1_2 = tripleFactory.createTriple(blankNode1, ref1, ref1);
+        b2r2r1 = tripleFactory.createTriple(blankNode2, ref2, ref1);
+        b2r1b1 = tripleFactory.createTriple(blankNode2, ref1, blankNode1);
+        b1r1b2 = tripleFactory.createTriple(blankNode1, ref1, blankNode2);
         decomposer = new NaiveGraphDecomposerImpl();
     }
 
     public void testGeneralDecomposeGraph() throws Exception {
-        newGraph.add(grounded1, blank1ObjectRef1, blank1SubjectRef1, blank2to1Ref1, blank2Ref2Ref1, grounded2);
-        Molecule expectedResults1 = moleculeFactory.createMolecule(blank1ObjectRef1, blank1SubjectRef1, blank2to1Ref1,
-            blank2Ref2Ref1);
-        Molecule expectedResults2 = moleculeFactory.createMolecule(grounded2);
-        Molecule expectedResults3 = moleculeFactory.createMolecule(grounded1);
+        newGraph.add(r2r1r2, r1r1b1, b1r1r1, b2r1b1, b2r2r1, r2r1r1);
+        Molecule expectedResults1 = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r1b1,
+            b2r2r1);
+        Molecule expectedResults2 = moleculeFactory.createMolecule(r2r1r1);
+        Molecule expectedResults3 = moleculeFactory.createMolecule(r2r1r2);
         Set<Molecule> molecules = decomposer.decompose(newGraph);
         checkMolecules(molecules, expectedResults1, expectedResults2, expectedResults3);
     }
 
     // TODO: Write test here for GlobalGraph - should get back only one result!!!
     public void testNoLeanificationOnLocalGraph() throws Exception {
-        newGraph.add(blank1SubjectRef1, blank2SubjectRef1, blank1SubjectRef2, blank2SubjectRef2);
-        Molecule expectedResult1 = moleculeFactory.createMolecule(blank1SubjectRef1, blank1SubjectRef2);
-        Molecule expectedResult2 = moleculeFactory.createMolecule(blank2SubjectRef1, blank2SubjectRef2);
+        newGraph.add(b1r1r1, b2r1r1, b1r2r2, b2r2r2);
+        Molecule expectedResult1 = moleculeFactory.createMolecule(b1r1r1, b1r2r2);
+        Molecule expectedResult2 = moleculeFactory.createMolecule(b2r1r1, b2r2r2);
         Set<Molecule> molecules = decomposer.decompose(newGraph);
         checkMolecules(molecules, expectedResult1, expectedResult2);
     }
     
     public void testBlankNodesWithSameReferenceTest() throws Exception {
-        newGraph.add(blank1ObjectRef1, blank1SubjectRef1, blank2to1Ref1, blank2Ref2Ref1, grounded2, sameBlank1SubjectRef1,
-            blank1to2Ref1);
-        Molecule equivalentResult1a = moleculeFactory.createMolecule(blank1ObjectRef1, blank1SubjectRef1, blank2Ref2Ref1,
-            blank1to2Ref1, sameBlank1SubjectRef1);
-        Molecule equivalentResult1b = moleculeFactory.createMolecule(blank1ObjectRef1, blank1SubjectRef1, blank2to1Ref1,
-            blank2Ref2Ref1, blank1to2Ref1);
-        Molecule equivalentResult1c = moleculeFactory.createMolecule(blank1ObjectRef1, blank1SubjectRef1, blank2to1Ref1,
-            blank2Ref2Ref1, blank1to2Ref1, sameBlank1SubjectRef1);
-        Molecule expectedResults2 = moleculeFactory.createMolecule(grounded2);
+        newGraph.add(r1r1b1, b1r1r1, b2r1b1, b2r2r1, r2r1r1, b1r1r1_2, b1r1b2);
+        Molecule equivalentResult1a = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r2r1, b1r1b2, b1r1r1_2);
+        Molecule equivalentResult1b = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r1b1, b2r2r1, b1r1b2);
+        Molecule equivalentResult1c = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r1b1, b2r2r1, b1r1b2, b1r1r1_2);
+        Molecule expectedResults2 = moleculeFactory.createMolecule(r2r1r1);
         Set<Molecule> molecules = decomposer.decompose(newGraph);
         checkMolecules(molecules, equivalentResult1a, expectedResults2);
         checkMolecules(molecules, equivalentResult1b, expectedResults2);
@@ -152,19 +148,19 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     }
 
     public void testGroundedDecompose() throws Exception {
-        checkForSingleTriple(blank1ObjectRef1);
+        checkForSingleTriple(r1r1b1);
     }
 
     public void testSingleBlankDecompose() throws Exception {
-        checkForSingleTriple(blank1SubjectRef1);
+        checkForSingleTriple(b1r1r1);
     }
 
     public void testSingleBlankDecompose2() throws Exception {
-        checkForSingleTriple(sameBlank1SubjectRef1);
+        checkForSingleTriple(b1r1r1_2);
     }
 
     public void testTwoBlankDecompose() throws Exception {
-        checkForSingleTriple(blank2to1Ref1);
+        checkForSingleTriple(b2r1b1);
     }
 
     private void checkForSingleTriple(Triple triple) throws GraphException {
