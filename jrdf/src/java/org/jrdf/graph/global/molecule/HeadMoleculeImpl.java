@@ -139,7 +139,7 @@ public class HeadMoleculeImpl implements NewMolecule {
         return null;
     }
 
-    public NewMolecule getMolecule(Triple rootTriple) {
+    public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
         return null;
     }
 

@@ -139,6 +139,7 @@ public class NewMoleculeImplUnitTest extends TestCase {
         assertEquals(2, newMolecule.size());
         checkHasHeadMolecules(newMolecule, triple5, triple6);
     }
+    
 
     public void testCombineSubMolecules() {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple4);
@@ -166,8 +167,10 @@ public class NewMoleculeImplUnitTest extends TestCase {
 
     private void checkHasSubMolecule(NewMolecule actualMolecule, HashMap<Triple, NewMolecule> expectedSubMolecules) {
         for (Map.Entry<Triple,NewMolecule> entry : expectedSubMolecules.entrySet()) {
-            NewMolecule newMolecule = actualMolecule.getMolecule(entry.getKey());
-            assertEquals("Trying to find molecule for triple: " + entry.getKey(), entry.getValue(), newMolecule);
+            Set<NewMolecule> newMolecule = actualMolecule.getSubMolecules(entry.getKey());
+            HashSet<NewMolecule> actualMolecules = new HashSet<NewMolecule>();
+            actualMolecules.add(entry.getValue());
+            assertEquals("Trying to find molecule for triple: " + entry.getKey(), actualMolecules, newMolecule);
         }
     }
 }
