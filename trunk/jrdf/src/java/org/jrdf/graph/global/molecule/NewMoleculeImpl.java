@@ -79,14 +79,15 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.HashSet;
 
 public class NewMoleculeImpl implements NewMolecule {
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     // This should be a set of molecules for the values.
-    private final SortedMap<Triple, NewMolecule> subMolecules;
+    private final SortedMap<Triple, Set<NewMolecule>> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
 
-    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple, NewMolecule> newSubMolecules) {
+    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
@@ -95,7 +96,7 @@ public class NewMoleculeImpl implements NewMolecule {
     public NewMoleculeImpl(NewMoleculeComparator newComparator) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
-        subMolecules = new TreeMap<Triple, NewMolecule>(comparator);
+        subMolecules = new TreeMap<Triple, Set<NewMolecule>>(comparator);
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
@@ -109,7 +110,9 @@ public class NewMoleculeImpl implements NewMolecule {
         this(newComparator);
         for (NewMolecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
-            subMolecules.put(headTriple, molecule);
+            HashSet<NewMolecule> submolecules = new HashSet<NewMolecule>();
+            submolecules.add(molecule);
+            subMolecules.put(headTriple, submolecules);
         }
     }
 
@@ -144,7 +147,9 @@ public class NewMoleculeImpl implements NewMolecule {
             // a child molecule onto the head triple.
             // Also we can currently on store one submolecule off of any single triple.
             subMolecules.remove(headTriple);
-            subMolecules.put(headTriple, childMolecule);
+            HashSet<NewMolecule> containedMolecules = new HashSet<NewMolecule>();
+            containedMolecules.add(childMolecule);
+            subMolecules.put(headTriple, containedMolecules);
             return new NewMoleculeImpl(moleculeComparator, subMolecules);
         }
     }
@@ -181,7 +186,7 @@ public class NewMoleculeImpl implements NewMolecule {
         return subMolecules.keySet().iterator();
     }
 
-    public NewMolecule getMolecule(Triple rootTriple) {
+    public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
         return subMolecules.get(rootTriple);
     }
 
