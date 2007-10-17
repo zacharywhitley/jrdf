@@ -59,123 +59,30 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.global.BlankNodeImpl;
+import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 
-import java.util.Iterator;
-import java.util.Set;
-import java.util.SortedSet;
+public class NewMoleculeTestUtil {
+    private static final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    public static final URIReference ref1 = new URIReferenceImpl("urn:foo");
+    public static final URIReference ref2 = new URIReferenceImpl("urn:bar");
+    public static final URIReference ref3 = new URIReferenceImpl("urn:baz");
+    public static final BlankNode bNode1 = new BlankNodeImpl();
+    public static final BlankNode bNode2 = new BlankNodeImpl();
+    public static final Triple triple1 = new TripleImpl(ref1, ref1, ref1);
+    public static final Triple triple2 = new TripleImpl(ref2, ref1, ref1);
+    public static final Triple triple3 = new TripleImpl(ref3, ref1, ref1);
+    public static final Triple triple4 = new TripleImpl(ref1, ref1, bNode1);
+    public static final Triple triple5 = new TripleImpl(bNode2, ref2, bNode1);
+    public static final Triple triple6 = new TripleImpl(bNode1, ref3, ref3);
+    public static final NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(comparator);
 
-public class HeadMoleculeImpl implements NewMolecule {
-    private final Triple internalTriple;
-
-    public HeadMoleculeImpl(Triple triple) {
-        this.internalTriple = triple;
-    }
-
-    public Triple getHeadTriple() {
-        return internalTriple;
-    }
-
-    public Iterator<Triple> find(Triple triple) {
-        return null;
-    }
-
-    public boolean contains(Triple triple) {
-        return false;
-    }
-
-    public Iterator<Triple> iterator() {
-        return null;
-    }
-
-    public Iterator<Molecule> moleculeIterator() {
-        // Return null iterator.
-        return null;
-    }
-
-    public NewMolecule add(Triple triple) {
-        TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-        return new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), internalTriple, triple);
-    }
-
-    public NewMolecule add(NewMolecule childMolecule) {
-        return null;
-    }
-
-    public Molecule add(Set<Triple> triples) {
-        return null;
-    }
-
-    public int size() {
-        return 1;
-    }
-
-    public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return false;
-    }
-
-    public Iterator<Triple> tailTriples() {
-        return null;
-    }
-
-    public Molecule remove(Triple triple) {
-        return null;
-    }
-
-    public SortedSet<Triple> getTriples() {
-        return null;
-    }
-
-    public boolean contains(Molecule molecule) {
-        return false;
-    }
-
-    public Iterator<Triple> getRootTriples() {
-        return null;
-    }
-
-    public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
-        return null;
-    }
-
-    public NewMolecule add(Triple triple, NewMolecule newMolecule) {
-        return null;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-
-        // Check equal by reference
-        if (this == obj) {
-            return true;
-        }
-
-        // Check for null and ensure exactly the same class - not subclass.
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-
-        // Cast and check for equality by value. (same class)
-        try {
-            HeadMoleculeImpl tmpMolecule = (HeadMoleculeImpl) obj;
-            return tmpMolecule.internalTriple.equals(internalTriple);
-        } catch (ClassCastException cce) {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return internalTriple != null ? internalTriple.hashCode() : 0;
-    }
-
-
-    public String toString() {
-        return internalTriple.toString();
+    private NewMoleculeTestUtil() {
     }
 }
