@@ -63,6 +63,5 @@ import junit.framework.TestCase;
 
 public class MergeSubmoleculesImplUnitTest extends TestCase {
     public void testMergeSubmolecules() {
-        assertTrue(true);
     }
 }

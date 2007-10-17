@@ -60,50 +60,22 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.BlankNodeImpl;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.TripleImpl;
-import org.jrdf.graph.global.URIReferenceImpl;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.moleculeComparator;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple2;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple3;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple4;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple5;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple6;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class NewMoleculeImplUnitTest extends TestCase {
-    private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private NewMoleculeComparator moleculeComparator;
-    private URIReference ref1;
-    private URIReference ref2;
-    private URIReference ref3;
-    private Triple triple1;
-    private Triple triple2;
-    private Triple triple3;
-    private Triple triple4;
-    private Triple triple5;
-    private Triple triple6;
-    private BlankNode bNode1;
-    private BlankNode bNode2;
-
-    public void setUp() {
-        ref1 = new URIReferenceImpl("urn:foo");
-        ref2 = new URIReferenceImpl("urn:bar");
-        ref3 = new URIReferenceImpl("urn:baz");
-        bNode1 = new BlankNodeImpl();
-        bNode2 = new BlankNodeImpl();
-        triple1 = new TripleImpl(ref1, ref1, ref1);
-        triple2 = new TripleImpl(ref2, ref1, ref1);
-        triple3 = new TripleImpl(ref3, ref1, ref1);
-        triple4 = new TripleImpl(ref1, ref1, bNode1);
-        triple5 = new TripleImpl(bNode2, ref2, bNode1);
-        triple6 = new TripleImpl(bNode1, ref3, ref3);
-        moleculeComparator = new NewMoleculeComparatorImpl(comparator);
-    }
 
     public void testMoleculeCreation() {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple1, triple2, triple3, triple4);
