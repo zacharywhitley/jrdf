@@ -59,5 +59,5 @@
 
 package org.jrdf.graph.global.molecule;
 
-public interface MergeMolecule {
+public interface MergeSubmolecules {
 }
