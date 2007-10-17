@@ -59,10 +59,10 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.Triple;
+import junit.framework.TestCase;
 
-public interface MergeSubmolecules {
-    NewMolecule mergeHeadMatchingMolecule(NewMolecule molecule1, NewMolecule molecule2);
-
-    NewMolecule mergeSubmolecules(NewMolecule molecule1, NewMolecule molecule2, Triple currentTriple);
+public class MergeSubmoleculesImplUnitTest extends TestCase {
+    public void testMergeSubmolecules() {
+        assertTrue(true);
+    }
 }
