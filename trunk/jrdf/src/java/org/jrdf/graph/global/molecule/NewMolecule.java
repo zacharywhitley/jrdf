@@ -78,4 +78,6 @@ public interface NewMolecule {
     Iterator<Triple> getRootTriples();
 
     Set<NewMolecule> getSubMolecules(Triple rootTriple);
+
+    NewMolecule add(Triple triple, NewMolecule newMolecule);
 }

@@ -136,6 +136,16 @@ public class NewMoleculeImpl implements NewMolecule {
         return new NewMoleculeImpl(moleculeComparator, subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
     }
 
+    public NewMolecule add(Triple triple, NewMolecule newMolecule) {
+        Set<NewMolecule> moleculeSet = subMolecules.get(triple);
+        if (moleculeSet == null) {
+            moleculeSet = new HashSet<NewMolecule>();
+        }
+        moleculeSet.add(newMolecule);
+        subMolecules.put(triple, moleculeSet);
+        return new NewMoleculeImpl(moleculeComparator, subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
+    }
+
     public NewMolecule add(NewMolecule childMolecule) {
         Triple headTriple = getHeadTriple();
         Triple childHeadTriple = childMolecule.getHeadTriple();

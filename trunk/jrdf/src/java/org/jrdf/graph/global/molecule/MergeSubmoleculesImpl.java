@@ -61,43 +61,70 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
 
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Comparator;
 
-public class MergeMoleculesImpl implements MergeMolecule {
+public class MergeSubmoleculesImpl implements MergeSubmolecules {
     private final Comparator comparator;
     private final NewMoleculeComparator moleculeComparator;
 
-    public MergeMoleculesImpl(Comparator<Triple> comparator, NewMoleculeComparator moleculeComparator) {
+    public MergeSubmoleculesImpl(Comparator<Triple> comparator, NewMoleculeComparator moleculeComparator) {
         this.comparator = comparator;
         this.moleculeComparator = moleculeComparator;
     }
 
     public NewMolecule mergeHeadMatchingMolecule(NewMolecule molecule1, NewMolecule molecule2) {
-        SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
-        addRootTriples(molecule1, newRootTriples);
-        addRootTriples(molecule2, newRootTriples);
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newRootTriples.toArray(
-            new Triple[newRootTriples.size()]));
-        Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
-        while (subMoleculeIter.hasNext()) {
-            Triple currentTriple = subMoleculeIter.next();
-            Set<NewMolecule> curr1 = molecule1.getSubMolecules(currentTriple);
-            Set<NewMolecule> curr2 = molecule2.getSubMolecules(currentTriple);
-//            if (!curr1.isEmpty() && !curr2.isEmpty()) {
-//                //newMolecule.add(mergeHeadMatchingMolecule(curr1, curr2));
-//            } else if (curr1.isEmpty() && curr2.isEmpty()) {
-//                // add curr1
-//                //newMolecule.add(curr1);
-//            } else {
-//                // add curr 2
-//                //newMolecule.add(curr2);
-//            }
+        if (molecule1.getHeadTriple().equals(molecule2.getHeadTriple())) {
+            SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
+            addRootTriples(molecule1, newRootTriples);
+            addRootTriples(molecule2, newRootTriples);
+            NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newRootTriples.toArray(
+                new Triple[newRootTriples.size()]));
+            Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
+            while (subMoleculeIter.hasNext()) {
+                Triple currentTriple = subMoleculeIter.next();
+                newMolecule.add(currentTriple, mergeSubMolecules(molecule1, molecule2, currentTriple));
+            }
+            return newMolecule;
+        } else {
+            throw new IllegalArgumentException("Cannot merge molecules with different head triples.");
         }
+    }
+
+    public NewMolecule mergeSubMolecules(NewMolecule molecule1, NewMolecule molecule2, Triple currentTriple) {
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
+        Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
+        Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
+        iteratorAndMergeMolecules(newMolecule, currentTriple, curr1Iterator, curr2Iterator);
         return newMolecule;
+    }
+
+    private void iteratorAndMergeMolecules(NewMolecule newMolecule, Triple currentTriple,
+        Iterator<NewMolecule> curr1Iterator, Iterator<NewMolecule> curr2Iterator) {
+        NewMolecule currentMolecule1 = curr1Iterator.next();
+        NewMolecule currentMolecule2 = curr2Iterator.next();
+        while (curr1Iterator.hasNext() || curr2Iterator.hasNext()) {
+            int result = moleculeComparator.compare(currentMolecule1, currentMolecule2);
+            if (result == 1) {
+                currentMolecule1 = addMolecule(newMolecule, currentTriple, currentMolecule1, curr1Iterator);
+            } else if (result == -1) {
+                currentMolecule2 = addMolecule(newMolecule, currentTriple, currentMolecule2, curr2Iterator);
+            } else {
+                newMolecule.add(currentTriple, mergeHeadMatchingMolecule(currentMolecule1, currentMolecule2));
+            }
+        }
+    }
+
+    private NewMolecule addMolecule(NewMolecule newMolecule, Triple currentTriple, NewMolecule currentMolecule,
+        Iterator<NewMolecule> moleculeIterator) {
+        NewMolecule tmpMolecule = currentMolecule;
+        newMolecule.add(currentTriple, tmpMolecule);
+        if (moleculeIterator.hasNext()) {
+            tmpMolecule = moleculeIterator.next();
+        }
+        return tmpMolecule;
     }
 
     private void addRootTriples(NewMolecule sourceMolecule, SortedSet<Triple> destinationRootTriples) {
