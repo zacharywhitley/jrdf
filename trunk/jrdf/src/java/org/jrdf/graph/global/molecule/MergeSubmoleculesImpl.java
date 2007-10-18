@@ -104,10 +104,10 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
 
     private void iteratorAndMergeMolecules(NewMolecule newMolecule, Triple currentTriple,
         Iterator<NewMolecule> curr1Iterator, Iterator<NewMolecule> curr2Iterator) {
-        boolean endIterator1 = true;
-        boolean endIterator2 = true;
-        NewMolecule currentMolecule1 = curr1Iterator.next();
-        NewMolecule currentMolecule2 = curr2Iterator.next();
+        boolean endIterator1 = curr1Iterator.hasNext();
+        boolean endIterator2 = curr2Iterator.hasNext();
+        NewMolecule currentMolecule1 = getNextFromIterator(curr1Iterator);
+        NewMolecule currentMolecule2 = getNextFromIterator(curr2Iterator);
         while (endIterator1 || endIterator2) {
             int result = moleculeComparator.compare(currentMolecule1, currentMolecule2);
             if (result == 1) {
@@ -126,6 +126,12 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         Iterator<NewMolecule> moleculeIterator) {
         NewMolecule tmpMolecule = currentMolecule;
         newMolecule.add(currentTriple, tmpMolecule);
+        tmpMolecule = getNextFromIterator(moleculeIterator);
+        return tmpMolecule;
+    }
+
+    private NewMolecule getNextFromIterator(Iterator<NewMolecule> moleculeIterator) {
+        NewMolecule tmpMolecule;
         if (moleculeIterator.hasNext()) {
             tmpMolecule = moleculeIterator.next();
         } else {
