@@ -61,7 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import static org.jrdf.graph.global.molecule.NullNewMolecule.*;
+import static org.jrdf.graph.global.molecule.NullNewMolecule.NULL_MOLECULE;
 
 import java.util.Iterator;
 import java.util.SortedSet;
@@ -76,7 +76,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         this.moleculeComparator = moleculeComparator;
     }
 
-    public NewMolecule mergeHeadMatchingMolecule(NewMolecule molecule1, NewMolecule molecule2) {
+    public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2) {
         if (molecule1.getHeadTriple().equals(molecule2.getHeadTriple())) {
             SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
             addRootTriples(molecule1, newRootTriples);
@@ -86,7 +86,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
             Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
             while (subMoleculeIter.hasNext()) {
                 Triple currentTriple = subMoleculeIter.next();
-                newMolecule.add(currentTriple, merge(currentTriple, molecule1, molecule2));
+                newMolecule.specialAdd(merge(currentTriple, molecule1, molecule2));
             }
             return newMolecule;
         } else {
@@ -117,7 +117,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
                 endIterator2 = curr1Iterator.hasNext();
                 currentMolecule2 = addMolecule(newMolecule, currentTriple, currentMolecule2, curr2Iterator);
             } else {
-                newMolecule.add(currentTriple, mergeHeadMatchingMolecule(currentMolecule1, currentMolecule2));
+                newMolecule.add(currentTriple, merge(currentMolecule1, currentMolecule2));
             }
         }
     }

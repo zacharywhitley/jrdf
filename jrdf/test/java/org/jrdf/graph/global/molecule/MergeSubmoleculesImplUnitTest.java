@@ -80,6 +80,13 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         mergeSubmolecules = new MergeSubmoleculesImpl(TRIPLE_COMPARATOR, newMoleculeComparator);
     }
 
+    public void testMergeHeadMolecules() {
+        NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
+        NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        submoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+    }
+
     public void testMergeSubmolecules() {
         NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
         NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);

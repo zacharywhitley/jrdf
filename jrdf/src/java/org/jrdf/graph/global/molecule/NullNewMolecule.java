@@ -104,4 +104,7 @@ public final class NullNewMolecule implements NewMolecule {
     public NewMolecule add(Triple triple, NewMolecule newMolecule) {
         throw new UnsupportedOperationException();
     }
+
+    public void specialAdd(NewMolecule molecule) {
+    }
 }

@@ -80,4 +80,6 @@ public interface NewMolecule {
     Set<NewMolecule> getSubMolecules(Triple rootTriple);
 
     NewMolecule add(Triple triple, NewMolecule newMolecule);
+
+    void specialAdd(NewMolecule molecule);
 }

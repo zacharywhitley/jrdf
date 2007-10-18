@@ -147,6 +147,9 @@ public class HeadMoleculeImpl implements NewMolecule {
         return null;
     }
 
+    public void specialAdd(NewMolecule molecule) {
+    }
+
     @Override
     public boolean equals(Object obj) {
 
