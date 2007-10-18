@@ -80,6 +80,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.HashSet;
+import java.util.Collections;
 
 public class NewMoleculeImpl implements NewMolecule {
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -205,7 +206,11 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
-        return subMolecules.get(rootTriple);
+        Set<NewMolecule> molecules = subMolecules.get(rootTriple);
+        if (molecules == null) {
+            molecules = Collections.emptySet();
+        }
+        return molecules;
     }
 
     public Iterator<Triple> tailTriples() {

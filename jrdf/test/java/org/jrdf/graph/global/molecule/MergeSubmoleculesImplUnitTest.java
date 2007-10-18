@@ -80,7 +80,14 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         mergeSubmolecules = new MergeSubmoleculesImpl(TRIPLE_COMPARATOR, newMoleculeComparator);
     }
 
-    public void testMergeHeadMolecules() {
+    public void testMergeMolecules() {
+        NewMolecule molecule1 = NewMoleculeTestUtil.createMolecule(b1r1r1, b1r2r2, b1r3r3);
+        NewMolecule molecule2 = NewMoleculeTestUtil.createMolecule(b1r1r1, b1r2r3, b1r3r2);
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        moluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r3, b1r2r3, b1r3r2);
+    }
+
+    public void testMergeHeadMoleculesWithSubMolecules() {
         NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
         NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
@@ -110,6 +117,18 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         }
         for (Triple headTriple : expectedTriples) {
             assertTrue(headTriples.contains(headTriple));
+        }
+    }
+
+    private void moluculeContainsRootTriples(NewMolecule molecule, Triple... expectedTriples) {
+        assertEquals("Unexpected size of molecule", expectedTriples.length, molecule.size());
+        Iterator<Triple> iter = molecule.getRootTriples();
+        Set<Triple> rootTriples = new HashSet<Triple>();
+        while (iter.hasNext()) {
+            rootTriples.add(iter.next());
+        }
+        for (Triple expectedTriple : expectedTriples) {
+            assertTrue(rootTriples.contains(expectedTriple));
         }
     }
 }
