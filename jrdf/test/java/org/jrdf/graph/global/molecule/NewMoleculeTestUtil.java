@@ -75,14 +75,30 @@ public class NewMoleculeTestUtil {
     public static final URIReference ref3 = new URIReferenceImpl("urn:baz");
     public static final BlankNode bNode1 = new BlankNodeImpl();
     public static final BlankNode bNode2 = new BlankNodeImpl();
-    public static final Triple triple1 = new TripleImpl(ref1, ref1, ref1);
-    public static final Triple triple2 = new TripleImpl(ref2, ref1, ref1);
-    public static final Triple triple3 = new TripleImpl(ref3, ref1, ref1);
-    public static final Triple triple4 = new TripleImpl(ref1, ref1, bNode1);
-    public static final Triple triple5 = new TripleImpl(bNode2, ref2, bNode1);
-    public static final Triple triple6 = new TripleImpl(bNode1, ref3, ref3);
+    public static final Triple r1r1r1 = new TripleImpl(ref1, ref1, ref1);
+    public static final Triple r2r1r1 = new TripleImpl(ref2, ref1, ref1);
+    public static final Triple r3r1r1 = new TripleImpl(ref3, ref1, ref1);
+    public static final Triple r1r1b1 = new TripleImpl(ref1, ref1, bNode1);
+    public static final Triple b2r2b1 = new TripleImpl(bNode2, ref2, bNode1);
+    public static final Triple b1r1r1 = new TripleImpl(bNode1, ref1, ref1);
+    public static final Triple b1r2r2 = new TripleImpl(bNode1, ref1, ref1);
+    public static final Triple b1r3r3 = new TripleImpl(bNode1, ref3, ref3);
     public static final NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(comparator);
 
     private NewMoleculeTestUtil() {
+    }
+
+    public static NewMolecule createMolecule(Triple... triples) {
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
+        for (Triple triple : triples) {
+            newMolecule.add(triple);
+        }
+        return newMolecule;
+    }
+
+    public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
+        newMolecule.add(rootTriple, molecule);
+        return newMolecule;
     }
 }

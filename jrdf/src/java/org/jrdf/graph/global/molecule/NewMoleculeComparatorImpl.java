@@ -61,6 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
+import static org.jrdf.graph.global.molecule.NullNewMolecule.*;
 
 public class NewMoleculeComparatorImpl implements NewMoleculeComparator {
     private static final long serialVersionUID = 3376402602482439640L;
@@ -74,8 +75,14 @@ public class NewMoleculeComparatorImpl implements NewMoleculeComparator {
     }
 
     public int compare(NewMolecule molecule, NewMolecule molecule1) {
-        Triple headTriple = molecule.getHeadTriple();
-        Triple headTriple1 = molecule1.getHeadTriple();
-        return tripleComparator.compare(headTriple, headTriple1);
+        if (molecule == NULL_MOLECULE) {
+            return -1;
+        } else if (molecule1 == NULL_MOLECULE) {
+            return 1;
+        } else {
+            Triple headTriple = molecule.getHeadTriple();
+            Triple headTriple1 = molecule1.getHeadTriple();
+            return tripleComparator.compare(headTriple, headTriple1);
+        }
     }
 }
