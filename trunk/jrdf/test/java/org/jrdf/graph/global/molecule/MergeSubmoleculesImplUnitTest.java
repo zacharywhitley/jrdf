@@ -60,15 +60,18 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.GroundedTripleComparatorFactory;
-import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
-
-import java.util.Set;
-import java.util.Iterator;
-import java.util.HashSet;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.GroundedTripleComparatorFactory;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r1r1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r2r2;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r2r3;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r2;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r3;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkMoluculeContainsRootTriples;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkSubmoleculesContainsHeadTriples;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMolecule;
 
 public class MergeSubmoleculesImplUnitTest extends TestCase {
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
@@ -84,14 +87,14 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         NewMolecule molecule1 = NewMoleculeTestUtil.createMolecule(b1r1r1, b1r2r2, b1r3r3);
         NewMolecule molecule2 = NewMoleculeTestUtil.createMolecule(b1r1r1, b1r2r3, b1r3r2);
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        moluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r3, b1r2r3, b1r3r2);
+        checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r3, b1r2r3, b1r3r2);
     }
 
     public void testMergeHeadMoleculesWithSubMolecules() {
         NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
         NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        submoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
     }
 
     public void testMergeSubmolecules() {
@@ -99,36 +102,11 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
         NewMolecule newMolecule = mergeSubmolecules.merge(b1r1r1, molecule1, molecule2);
         assertEquals("Expected head triple to be", b1r1r1, newMolecule.getHeadTriple());
-        submoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
     }
 
     private NewMolecule createMoleculeWithSubmolecule(Triple headTriple, Triple submoleculeTriple) {
         NewMolecule submolecule = createMolecule(submoleculeTriple);
         return createMolecule(headTriple, submolecule);
-    }
-
-    private void submoleculesContainsHeadTriples(Set<NewMolecule> subMolecules, Triple... expectedTriples) {
-        assertEquals("Expected submolecules", expectedTriples.length, subMolecules.size());
-        Iterator<NewMolecule> iter = subMolecules.iterator();
-        Set<Triple> headTriples = new HashSet<Triple>();
-        while (iter.hasNext()) {
-            NewMolecule tmpMolecule = iter.next();
-            headTriples.add(tmpMolecule.getHeadTriple());
-        }
-        for (Triple headTriple : expectedTriples) {
-            assertTrue(headTriples.contains(headTriple));
-        }
-    }
-
-    private void moluculeContainsRootTriples(NewMolecule molecule, Triple... expectedTriples) {
-        assertEquals("Unexpected size of molecule", expectedTriples.length, molecule.size());
-        Iterator<Triple> iter = molecule.getRootTriples();
-        Set<Triple> rootTriples = new HashSet<Triple>();
-        while (iter.hasNext()) {
-            rootTriples.add(iter.next());
-        }
-        for (Triple expectedTriple : expectedTriples) {
-            assertTrue(rootTriples.contains(expectedTriple));
-        }
     }
 }

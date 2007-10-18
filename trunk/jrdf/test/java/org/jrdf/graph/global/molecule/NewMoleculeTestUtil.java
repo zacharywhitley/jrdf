@@ -59,14 +59,20 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.URIReference;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.BlankNodeImpl;
-import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.global.URIReferenceImpl;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class NewMoleculeTestUtil {
     private static final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -102,5 +108,30 @@ public class NewMoleculeTestUtil {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
         newMolecule.add(rootTriple, molecule);
         return newMolecule;
+    }
+
+    public static void checkMoluculeContainsRootTriples(NewMolecule molecule, Triple... expectedTriples) {
+        assertEquals("Unexpected size of molecule", expectedTriples.length, molecule.size());
+        Iterator<Triple> iter = molecule.getRootTriples();
+        Set<Triple> rootTriples = new HashSet<Triple>();
+        while (iter.hasNext()) {
+            rootTriples.add(iter.next());
+        }
+        for (Triple expectedTriple : expectedTriples) {
+            assertTrue(rootTriples.contains(expectedTriple));
+        }
+    }
+
+    public static void checkSubmoleculesContainsHeadTriples(Set<NewMolecule> subMolecules, Triple... expectedTriples) {
+        assertEquals("Expected submolecules", expectedTriples.length, subMolecules.size());
+        Iterator<NewMolecule> iter = subMolecules.iterator();
+        Set<Triple> headTriples = new HashSet<Triple>();
+        while (iter.hasNext()) {
+            NewMolecule tmpMolecule = iter.next();
+            headTriples.add(tmpMolecule.getHeadTriple());
+        }
+        for (Triple headTriple : expectedTriples) {
+            assertTrue(headTriples.contains(headTriple));
+        }
     }
 }
