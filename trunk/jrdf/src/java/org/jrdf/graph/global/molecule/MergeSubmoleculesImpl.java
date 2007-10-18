@@ -60,17 +60,18 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import static org.jrdf.graph.global.molecule.NullNewMolecule.*;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class MergeSubmoleculesImpl implements MergeSubmolecules {
-    private final Comparator comparator;
+    private final TripleComparator comparator;
     private final NewMoleculeComparator moleculeComparator;
 
-    public MergeSubmoleculesImpl(Comparator<Triple> comparator, NewMoleculeComparator moleculeComparator) {
+    public MergeSubmoleculesImpl(TripleComparator comparator, NewMoleculeComparator moleculeComparator) {
         this.comparator = comparator;
         this.moleculeComparator = moleculeComparator;
     }
@@ -85,7 +86,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
             Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
             while (subMoleculeIter.hasNext()) {
                 Triple currentTriple = subMoleculeIter.next();
-                newMolecule.add(currentTriple, mergeSubmolecules(molecule1, molecule2, currentTriple));
+                newMolecule.add(currentTriple, mergeSubmolecules(currentTriple, molecule1, molecule2));
             }
             return newMolecule;
         } else {
@@ -93,7 +94,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         }
     }
 
-    public NewMolecule mergeSubmolecules(NewMolecule molecule1, NewMolecule molecule2, Triple currentTriple) {
+    public NewMolecule mergeSubmolecules(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
         Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
         Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
@@ -103,13 +104,17 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
 
     private void iteratorAndMergeMolecules(NewMolecule newMolecule, Triple currentTriple,
         Iterator<NewMolecule> curr1Iterator, Iterator<NewMolecule> curr2Iterator) {
+        boolean endIterator1 = true;
+        boolean endIterator2 = true;
         NewMolecule currentMolecule1 = curr1Iterator.next();
         NewMolecule currentMolecule2 = curr2Iterator.next();
-        while (curr1Iterator.hasNext() || curr2Iterator.hasNext()) {
+        while (endIterator1 || endIterator2) {
             int result = moleculeComparator.compare(currentMolecule1, currentMolecule2);
             if (result == 1) {
+                endIterator1 = curr1Iterator.hasNext();
                 currentMolecule1 = addMolecule(newMolecule, currentTriple, currentMolecule1, curr1Iterator);
             } else if (result == -1) {
+                endIterator2 = curr1Iterator.hasNext();
                 currentMolecule2 = addMolecule(newMolecule, currentTriple, currentMolecule2, curr2Iterator);
             } else {
                 newMolecule.add(currentTriple, mergeHeadMatchingMolecule(currentMolecule1, currentMolecule2));
@@ -123,6 +128,8 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         newMolecule.add(currentTriple, tmpMolecule);
         if (moleculeIterator.hasNext()) {
             tmpMolecule = moleculeIterator.next();
+        } else {
+            tmpMolecule = NULL_MOLECULE;
         }
         return tmpMolecule;
     }

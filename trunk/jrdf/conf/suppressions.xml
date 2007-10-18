@@ -40,6 +40,7 @@
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem.java" />
+    <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl.java" />
 
     <!-- RDF/XML Parser -->
     <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser.java"/>

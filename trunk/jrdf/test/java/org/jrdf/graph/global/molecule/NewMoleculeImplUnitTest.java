@@ -62,12 +62,12 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.moleculeComparator;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple2;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple3;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple4;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple5;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.triple6;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r1r1r1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r2r1r1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r3r1r1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r1r1b1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b2r2b1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r3;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -78,49 +78,49 @@ import java.util.Set;
 public class NewMoleculeImplUnitTest extends TestCase {
 
     public void testMoleculeCreation() {
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple1, triple2, triple3, triple4);
-        assertEquals(triple1, newMolecule.getHeadTriple());
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, r1r1r1, r2r1r1, r3r1r1, r1r1b1);
+        assertEquals(r1r1r1, newMolecule.getHeadTriple());
     }
 
     public void testMoleculeCreation2() {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
-        newMolecule = newMolecule.add(triple2);
-        newMolecule = newMolecule.add(triple3);
-        newMolecule = newMolecule.add(triple1);
-        newMolecule = newMolecule.add(triple4);
-        assertEquals(triple1, newMolecule.getHeadTriple());
+        newMolecule = newMolecule.add(r2r1r1);
+        newMolecule = newMolecule.add(r3r1r1);
+        newMolecule = newMolecule.add(r1r1r1);
+        newMolecule = newMolecule.add(r1r1b1);
+        assertEquals(r1r1r1, newMolecule.getHeadTriple());
     }
 
     public void testAddVsConstructor() {
         NewMolecule newMolecule1 = new NewMoleculeImpl(moleculeComparator);
-        newMolecule1.add(triple1);
-        newMolecule1.add(triple2);
-        newMolecule1.add(triple3);
-        newMolecule1.add(triple4);
-        NewMolecule newMolecule2 = new NewMoleculeImpl(moleculeComparator, triple1, triple2, triple3, triple4);
+        newMolecule1.add(r1r1r1);
+        newMolecule1.add(r2r1r1);
+        newMolecule1.add(r3r1r1);
+        newMolecule1.add(r1r1b1);
+        NewMolecule newMolecule2 = new NewMoleculeImpl(moleculeComparator, r1r1r1, r2r1r1, r3r1r1, r1r1b1);
         assertEquals(newMolecule1, newMolecule2);
     }
 
     public void testMergeHeadMolecules() {
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple6);
-        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, triple6, triple5);
-        assertEquals(triple6, newMolecule.getHeadTriple());
-        assertEquals(triple6, internalMolecule.getHeadTriple());
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, b1r3r3);
+        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, b1r3r3, b2r2b1);
+        assertEquals(b1r3r3, newMolecule.getHeadTriple());
+        assertEquals(b1r3r3, internalMolecule.getHeadTriple());
         newMolecule = newMolecule.add(internalMolecule);
-        assertEquals(triple6, newMolecule.getHeadTriple());
+        assertEquals(b1r3r3, newMolecule.getHeadTriple());
         assertEquals(2, newMolecule.size());
-        checkHasHeadMolecules(newMolecule, triple5, triple6);
+        checkHasHeadMolecules(newMolecule, b2r2b1, b1r3r3);
     }
     
 
     public void testCombineSubMolecules() {
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, triple4);
-        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, triple5, triple6);
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, r1r1b1);
+        NewMolecule internalMolecule = new NewMoleculeImpl(moleculeComparator, b2r2b1, b1r3r3);
         newMolecule = newMolecule.add(internalMolecule);
-        assertEquals(triple4, newMolecule.getHeadTriple());
+        assertEquals(r1r1b1, newMolecule.getHeadTriple());
         assertEquals(1, newMolecule.size());
         HashMap<Triple, NewMolecule> expectedSubMolecules = new HashMap<Triple, NewMolecule>();
-        expectedSubMolecules.put(triple4, internalMolecule);
+        expectedSubMolecules.put(r1r1b1, internalMolecule);
         checkHasSubMolecule(newMolecule, expectedSubMolecules);
     }
 

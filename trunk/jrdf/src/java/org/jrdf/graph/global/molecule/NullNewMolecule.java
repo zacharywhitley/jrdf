@@ -59,38 +59,49 @@
 
 package org.jrdf.graph.global.molecule;
 
-import junit.framework.TestCase;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.global.GroundedTripleComparatorFactory;
-import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
 
-import java.util.Set;
 import java.util.Iterator;
-import java.util.HashSet;
+import java.util.Set;
 
-public class MergeSubmoleculesImplUnitTest extends TestCase {
-    public void testMergeSubmolecules() {
-        NewMolecule subMolecule1 = createMolecule(b1r2r2);
-        NewMolecule molecule1 = createMolecule(b1r1r1, subMolecule1);
-        NewMolecule subMolecule2 = createMolecule(b1r3r3);
-        NewMolecule molecule2 = createMolecule(b1r1r1, subMolecule2);
-        GroundedTripleComparatorFactory tripleComparatorFactory = new GroundedTripleComparatorFactoryImpl();
-        TripleComparator tripleComparator = tripleComparatorFactory.newComparator();
-        MergeSubmolecules mergeSubmolecules = new MergeSubmoleculesImpl(tripleComparator,
-            new NewMoleculeComparatorImpl(tripleComparator));
-        NewMolecule newMolecule = mergeSubmolecules.mergeSubmolecules(b1r1r1, molecule1, molecule2);
-        assertEquals(b1r1r1, newMolecule.getHeadTriple());
-        Set<NewMolecule> subMolecules = newMolecule.getSubMolecules(b1r1r1);
-        assertEquals(2, subMolecules.size());
-        Iterator<NewMolecule> iter = subMolecules.iterator();
-        Set<Triple> headTriples = new HashSet<Triple>();
-        while (iter.hasNext()) {
-            NewMolecule tmpMolecule = iter.next();
-            headTriples.add(tmpMolecule.getHeadTriple());
-        }
-        assertTrue(headTriples.contains(b1r2r2));
-        assertTrue(headTriples.contains(b1r3r3));
+public final class NullNewMolecule implements NewMolecule {
+    /**
+     * Null object for molecule.
+     */
+    public static final NewMolecule NULL_MOLECULE = new NullNewMolecule();
+
+    private NullNewMolecule() {
+    }
+
+    public Triple getHeadTriple() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean contains(Molecule molecule) {
+        return false;
+    }
+
+    public int size() {
+        return 0;
+    }
+
+    public NewMolecule add(Triple triple) {
+        throw new UnsupportedOperationException();
+    }
+
+    public NewMolecule add(NewMolecule childMolecule) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterator<Triple> getRootTriples() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
+        throw new UnsupportedOperationException();
+    }
+
+    public NewMolecule add(Triple triple, NewMolecule newMolecule) {
+        throw new UnsupportedOperationException();
     }
 }
