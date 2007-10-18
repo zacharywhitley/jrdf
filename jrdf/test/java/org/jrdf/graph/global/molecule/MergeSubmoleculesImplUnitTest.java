@@ -60,7 +60,6 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
@@ -72,6 +71,7 @@ import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r3;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkMoluculeContainsRootTriples;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkSubmoleculesContainsHeadTriples;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMolecule;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMoleculeWithSubmolecule;
 
 public class MergeSubmoleculesImplUnitTest extends TestCase {
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
@@ -84,8 +84,8 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
     }
 
     public void testMergeMolecules() {
-        NewMolecule molecule1 = NewMoleculeTestUtil.createMolecule(b1r1r1, b1r2r2, b1r3r3);
-        NewMolecule molecule2 = NewMoleculeTestUtil.createMolecule(b1r1r1, b1r2r3, b1r3r2);
+        NewMolecule molecule1 = createMolecule(b1r1r1, b1r2r2, b1r3r3);
+        NewMolecule molecule2 = createMolecule(b1r1r1, b1r2r3, b1r3r2);
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r3, b1r2r3, b1r3r2);
     }
@@ -103,10 +103,5 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         NewMolecule newMolecule = mergeSubmolecules.merge(b1r1r1, molecule1, molecule2);
         assertEquals("Expected head triple to be", b1r1r1, newMolecule.getHeadTriple());
         checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
-    }
-
-    private NewMolecule createMoleculeWithSubmolecule(Triple headTriple, Triple submoleculeTriple) {
-        NewMolecule submolecule = createMolecule(submoleculeTriple);
-        return createMolecule(headTriple, submolecule);
     }
 }

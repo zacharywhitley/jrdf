@@ -110,6 +110,11 @@ public class NewMoleculeTestUtil {
         return newMolecule;
     }
 
+    public static NewMolecule createMoleculeWithSubmolecule(Triple headTriple, Triple submoleculeTriple) {
+        NewMolecule submolecule = createMolecule(submoleculeTriple);
+        return createMolecule(headTriple, submolecule);
+    }
+
     public static void checkMoluculeContainsRootTriples(NewMolecule molecule, Triple... expectedTriples) {
         assertEquals("Unexpected size of molecule", expectedTriples.length, molecule.size());
         Iterator<Triple> iter = molecule.getRootTriples();
