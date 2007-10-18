@@ -64,6 +64,6 @@ import org.jrdf.graph.Triple;
 public interface MergeSubmolecules {
     NewMolecule mergeHeadMatchingMolecule(NewMolecule molecule1, NewMolecule molecule2);
 
-    NewMolecule mergeSubmolecules(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2
+    NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2
     );
 }

@@ -86,7 +86,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
             Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
             while (subMoleculeIter.hasNext()) {
                 Triple currentTriple = subMoleculeIter.next();
-                newMolecule.add(currentTriple, mergeSubmolecules(currentTriple, molecule1, molecule2));
+                newMolecule.add(currentTriple, merge(currentTriple, molecule1, molecule2));
             }
             return newMolecule;
         } else {
@@ -94,7 +94,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         }
     }
 
-    public NewMolecule mergeSubmolecules(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
+    public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
         Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
         Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
