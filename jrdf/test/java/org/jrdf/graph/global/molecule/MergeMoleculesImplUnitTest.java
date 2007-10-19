@@ -65,10 +65,11 @@ import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
 import java.util.Set;
 
 public class MergeMoleculesImplUnitTest extends TestCase {
+    private MergeMolecules mergeMolecules = new MergeMoleculesImpl();
+
     public void testMerge() {
         NewMolecule m1 = createMolecule(b2r1r2, b2r2r2, b2r3b3);
         NewMolecule m2 = createMolecule(b3r1r3, b3r2r3);
-        MergeMolecules mergeMolecules = new MergeMoleculesImpl();
         NewMolecule newMolecule = mergeMolecules.merge(m1, m2);
         checkMoluculeContainsRootTriples(newMolecule, b2r1r2, b2r2r2, b2r3b3);
         Set<NewMolecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
