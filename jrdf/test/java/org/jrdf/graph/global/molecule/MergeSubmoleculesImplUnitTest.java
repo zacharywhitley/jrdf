@@ -106,12 +106,12 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
     }
 
-    public void testMultilevelMerge() {
+    public void testMergeM1SubsumesM2() {
         NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2), asSet(b2r1r2, b2r2r2, b2r3b3),
             asSet(b3r1r3, b3r2r3));
         NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2, b2r3b3), asSet(b3r1r3));
-//        NewMolecule newMolecue = mergeSubmolecules.merge(molecule1, molecule2);
-//        System.err.println("Got new mole " + newMolecue);
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        assertEquals(molecule1, newMolecule);
     }
 
     public void testMergeSubmolecules() {
