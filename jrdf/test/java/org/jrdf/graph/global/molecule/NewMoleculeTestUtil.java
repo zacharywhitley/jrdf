@@ -81,16 +81,22 @@ public class NewMoleculeTestUtil {
     public static final URIReference ref3 = new URIReferenceImpl("urn:baz");
     public static final BlankNode bNode1 = new BlankNodeImpl();
     public static final BlankNode bNode2 = new BlankNodeImpl();
+    public static final BlankNode bNode3 = new BlankNodeImpl();
     public static final Triple r1r1r1 = new TripleImpl(ref1, ref1, ref1);
     public static final Triple r2r1r1 = new TripleImpl(ref2, ref1, ref1);
     public static final Triple r3r1r1 = new TripleImpl(ref3, ref1, ref1);
     public static final Triple r1r1b1 = new TripleImpl(ref1, ref1, bNode1);
-    public static final Triple b2r2b1 = new TripleImpl(bNode2, ref2, bNode1);
     public static final Triple b1r1r1 = new TripleImpl(bNode1, ref1, ref1);
     public static final Triple b1r2r2 = new TripleImpl(bNode1, ref2, ref2);
     public static final Triple b1r3r3 = new TripleImpl(bNode1, ref3, ref3);
     public static final Triple b1r2r3 = new TripleImpl(bNode1, ref2, ref3);
     public static final Triple b1r3r2 = new TripleImpl(bNode1, ref3, ref2);
+    public static final Triple b2r1r2 = new TripleImpl(bNode2, ref1, ref2);
+    public static final Triple b2r2b1 = new TripleImpl(bNode2, ref2, bNode1);
+    public static final Triple b2r3b3 = new TripleImpl(bNode2, ref3, bNode3);
+    public static final Triple b2r2r2 = new TripleImpl(bNode2, ref2, ref2);
+    public static final Triple b3r1r3 = new TripleImpl(bNode3, ref1, ref1);
+    public static final Triple b3r2r3 = new TripleImpl(bNode3, ref2, ref3);
     public static final NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(comparator);
 
     private NewMoleculeTestUtil() {
@@ -102,6 +108,13 @@ public class NewMoleculeTestUtil {
             newMolecule.add(triple);
         }
         return newMolecule;
+    }
+
+    public static NewMolecule createMultiLevelMolecule(Set<Triple> level1Triples, Set<Triple> level2Triples,
+        Set<Triple> level3Triples) {
+        NewMolecule level3 = createMolecule(level3Triples.toArray(new Triple[level3Triples.size()]));
+        System.err.println("Created: " + level3);
+        return null;
     }
 
     public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
