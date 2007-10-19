@@ -266,7 +266,7 @@ public class NewMoleculeImpl implements NewMolecule {
 
     @Override
     public String toString() {
-        return subMolecules.toString();
+        return "\n\t" + subMolecules.toString() + "\n";
     }
 
     private boolean isBlankNode(Node node) {

@@ -88,6 +88,7 @@ public class NewMoleculeTestUtil {
     public static final Triple r1r1b1 = new TripleImpl(ref1, ref1, bNode1);
     public static final Triple b1r1r1 = new TripleImpl(bNode1, ref1, ref1);
     public static final Triple b1r2r2 = new TripleImpl(bNode1, ref2, ref2);
+    public static final Triple b1r2b2 = new TripleImpl(bNode1, ref2, bNode2);
     public static final Triple b1r3r3 = new TripleImpl(bNode1, ref3, ref3);
     public static final Triple b1r2r3 = new TripleImpl(bNode1, ref2, ref3);
     public static final Triple b1r3r2 = new TripleImpl(bNode1, ref3, ref2);
@@ -95,7 +96,7 @@ public class NewMoleculeTestUtil {
     public static final Triple b2r2b1 = new TripleImpl(bNode2, ref2, bNode1);
     public static final Triple b2r3b3 = new TripleImpl(bNode2, ref3, bNode3);
     public static final Triple b2r2r2 = new TripleImpl(bNode2, ref2, ref2);
-    public static final Triple b3r1r3 = new TripleImpl(bNode3, ref1, ref1);
+    public static final Triple b3r1r3 = new TripleImpl(bNode3, ref1, ref3);
     public static final Triple b3r2r3 = new TripleImpl(bNode3, ref2, ref3);
     public static final NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(comparator);
 
@@ -113,8 +114,12 @@ public class NewMoleculeTestUtil {
     public static NewMolecule createMultiLevelMolecule(Set<Triple> level1Triples, Set<Triple> level2Triples,
         Set<Triple> level3Triples) {
         NewMolecule level3 = createMolecule(level3Triples.toArray(new Triple[level3Triples.size()]));
-        System.err.println("Created: " + level3);
-        return null;
+        NewMolecule level2 = createMolecule(level2Triples.toArray(new Triple[level2Triples.size()]));
+        NewMolecule level1 = createMolecule(level1Triples.toArray(new Triple[level1Triples.size()]));
+        MergeMolecules mergeMolecules = new MergeMoleculesImpl();
+        NewMolecule level2And3 = mergeMolecules.merge(level2, level3);
+        System.err.println("2and3 " + level2And3);
+        return mergeMolecules.merge(level1, level2And3);
     }
 
     public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {

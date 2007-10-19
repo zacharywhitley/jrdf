@@ -68,7 +68,11 @@ import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r2r2;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r2r3;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r2;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r3;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b2r1r2;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b2r2r2;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b2r3b3;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b3r1r3;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b3r2r3;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkMoluculeContainsRootTriples;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkSubmoleculesContainsHeadTriples;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMolecule;
@@ -77,12 +81,11 @@ import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMultiLeve
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
 import static org.jrdf.util.test.SetUtil.asSet;
 
-import java.util.Collections;
-
 public class MergeSubmoleculesImplUnitTest extends TestCase {
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
     private MergeSubmolecules mergeSubmolecules;
+
 
     public void setUp() {
         NewMoleculeComparator newMoleculeComparator = new NewMoleculeComparatorImpl(TRIPLE_COMPARATOR);
@@ -96,8 +99,9 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r3, b1r2r3, b1r3r2);
     }
 
-    public void testMergeMolecules2Levels() {
-        createMultiLevelMolecule(Collections.EMPTY_SET, asSet(b2r1r2, b2r2r2, b2r3b3), asSet(b3r1r3, b3r2r3));
+    public void testMultilevelMerge() {
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2), asSet(b2r1r2, b2r2r2, b2r3b3),
+            asSet(b3r1r3, b3r2r3));
     }
 
     public void testMergeHeadMoleculesWithSubMolecules() {
