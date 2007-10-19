@@ -93,11 +93,13 @@ public class NewMoleculeTestUtil {
     public static final Triple b1r2r3 = new TripleImpl(bNode1, ref2, ref3);
     public static final Triple b1r3r2 = new TripleImpl(bNode1, ref3, ref2);
     public static final Triple b2r1r2 = new TripleImpl(bNode2, ref1, ref2);
+    public static final Triple b2r3r1 = new TripleImpl(bNode2, ref3, ref1);
     public static final Triple b2r2b1 = new TripleImpl(bNode2, ref2, bNode1);
     public static final Triple b2r3b3 = new TripleImpl(bNode2, ref3, bNode3);
     public static final Triple b2r2r2 = new TripleImpl(bNode2, ref2, ref2);
     public static final Triple b3r1r3 = new TripleImpl(bNode3, ref1, ref3);
     public static final Triple b3r2r3 = new TripleImpl(bNode3, ref2, ref3);
+    public static final Triple b3r3r3 = new TripleImpl(bNode3, ref3, ref3);
     public static final NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(comparator);
 
     private NewMoleculeTestUtil() {

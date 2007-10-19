@@ -114,6 +114,16 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         assertEquals(molecule1, newMolecule);
     }
 
+    public void testMerge() {
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2), asSet(b2r1r2, b2r2r2, b2r3b3),
+            asSet(b3r1r3, b3r2r3));
+        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r3r3), asSet(b2r1r2, b2r3b3, b2r3r1),
+            asSet(b3r1r3, b3r3r3));
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        assertEquals(createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2, b1r3r3), asSet(b2r1r2, b2r2r2, b2r3b3,
+            b2r3r1), asSet(b3r1r3, b3r2r3, b3r3r3)), newMolecule);
+    }
+
     public void testMergeSubmolecules() {
         NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
         NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
