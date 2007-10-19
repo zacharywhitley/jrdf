@@ -99,16 +99,19 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r3, b1r2r3, b1r3r2);
     }
 
-    public void testMultilevelMerge() {
-        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2), asSet(b2r1r2, b2r2r2, b2r3b3),
-            asSet(b3r1r3, b3r2r3));
-    }
-
     public void testMergeHeadMoleculesWithSubMolecules() {
         NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
         NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+    }
+
+    public void testMultilevelMerge() {
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2, b1r2r2), asSet(b2r1r2, b2r2r2, b2r3b3),
+            asSet(b3r1r3, b3r2r3));
+        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2, b2r3b3), asSet(b3r1r3));
+//        NewMolecule newMolecue = mergeSubmolecules.merge(molecule1, molecule2);
+//        System.err.println("Got new mole " + newMolecue);
     }
 
     public void testMergeSubmolecules() {

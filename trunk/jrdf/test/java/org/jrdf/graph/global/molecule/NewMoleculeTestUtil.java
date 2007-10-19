@@ -118,7 +118,6 @@ public class NewMoleculeTestUtil {
         NewMolecule level1 = createMolecule(level1Triples.toArray(new Triple[level1Triples.size()]));
         MergeMolecules mergeMolecules = new MergeMoleculesImpl();
         NewMolecule level2And3 = mergeMolecules.merge(level2, level3);
-        System.err.println("2and3 " + level2And3);
         return mergeMolecules.merge(level1, level2And3);
     }
 
