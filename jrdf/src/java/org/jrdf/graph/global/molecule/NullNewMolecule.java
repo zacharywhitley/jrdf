@@ -107,4 +107,9 @@ public final class NullNewMolecule implements NewMolecule {
 
     public void specialAdd(NewMolecule molecule) {
     }
+
+    @Override
+    public String toString() {
+        return "NULL";
+    }
 }
