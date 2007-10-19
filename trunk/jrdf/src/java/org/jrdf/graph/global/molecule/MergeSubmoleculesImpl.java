@@ -98,11 +98,11 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
         Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
         Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
-        iteratorAndMergeMolecules(newMolecule, currentTriple, curr1Iterator, curr2Iterator);
+        iterateAndMergeMolecules(newMolecule, currentTriple, curr1Iterator, curr2Iterator);
         return newMolecule;
     }
 
-    private void iteratorAndMergeMolecules(NewMolecule newMolecule, Triple currentTriple,
+    private void iterateAndMergeMolecules(NewMolecule newMolecule, Triple currentTriple,
         Iterator<NewMolecule> curr1Iterator, Iterator<NewMolecule> curr2Iterator) {
         boolean endIterator1 = curr1Iterator.hasNext();
         boolean endIterator2 = curr2Iterator.hasNext();
@@ -114,10 +114,15 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
                 endIterator1 = curr1Iterator.hasNext();
                 currentMolecule1 = addMolecule(newMolecule, currentTriple, currentMolecule1, curr1Iterator);
             } else if (result == -1) {
-                endIterator2 = curr1Iterator.hasNext();
+                endIterator2 = curr2Iterator.hasNext();
                 currentMolecule2 = addMolecule(newMolecule, currentTriple, currentMolecule2, curr2Iterator);
             } else {
-                newMolecule.add(currentTriple, merge(currentMolecule1, currentMolecule2));
+                NewMolecule newMolecule1 = merge(currentMolecule1, currentMolecule2);
+                newMolecule.add(currentTriple, newMolecule1);
+                endIterator1 = curr1Iterator.hasNext();
+                endIterator2 = curr2Iterator.hasNext();
+                currentMolecule1 = getNextFromIterator(curr1Iterator);
+                currentMolecule2 = getNextFromIterator(curr2Iterator);
             }
         }
     }
