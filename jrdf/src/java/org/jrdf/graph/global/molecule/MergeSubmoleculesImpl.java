@@ -117,8 +117,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
                 endIterator2 = curr2Iterator.hasNext();
                 currentMolecule2 = addMolecule(newMolecule, currentTriple, currentMolecule2, curr2Iterator);
             } else {
-                NewMolecule newMolecule1 = merge(currentMolecule1, currentMolecule2);
-                newMolecule.add(currentTriple, newMolecule1);
+                newMolecule.add(currentTriple, merge(currentMolecule1, currentMolecule2));
                 endIterator1 = curr1Iterator.hasNext();
                 endIterator2 = curr2Iterator.hasNext();
                 currentMolecule1 = getNextFromIterator(curr1Iterator);
