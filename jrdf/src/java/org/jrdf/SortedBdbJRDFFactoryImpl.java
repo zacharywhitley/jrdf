@@ -119,6 +119,7 @@ public final class SortedBdbJRDFFactoryImpl implements JRDFFactory {
     public void refresh() {
     }
 
+    // TODO FIXME the will return the same graph - not new graphs.
     public Graph getNewGraph() {
         return orderedGraphFactory.getGraph();
     }
