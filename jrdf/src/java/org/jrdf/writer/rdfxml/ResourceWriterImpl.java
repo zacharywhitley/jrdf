@@ -102,6 +102,7 @@ public class ResourceWriterImpl implements ResourceWriter {
         try {
             xmlStreamWriter.writeStartElement("rdf:Description");
             currentTriple.getSubject().accept(this);
+            xmlStreamWriter.writeCharacters("\n    ");
             xmlStreamWriter.flush();
             if (exception != null) {
                 throw exception;
@@ -112,7 +113,7 @@ public class ResourceWriterImpl implements ResourceWriter {
         }
     }
 
-    public void writeNestedStatements(final IteratorStack<Triple> stack) throws WriteException {
+    public void writeNestedStatements(final IteratorStack<Triple> stack) throws WriteException, XMLStreamException {
         statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         while (stack.hasNext()) {
             SubjectNode currentSubject = currentTriple.getSubject();
@@ -122,6 +123,7 @@ public class ResourceWriterImpl implements ResourceWriter {
                 stack.push(currentTriple);
                 break;
             }
+            xmlStreamWriter.writeCharacters("    ");
             statement.writePredicateObject(currentTriple.getPredicate(), currentTriple.getObject());
         }
     }
@@ -129,6 +131,7 @@ public class ResourceWriterImpl implements ResourceWriter {
     public void writeEnd() throws WriteException {
         try {
             xmlStreamWriter.writeEndElement();
+            xmlStreamWriter.writeCharacters("\n");
             xmlStreamWriter.flush();
         } catch (XMLStreamException e) {
             throw new WriteException(e);

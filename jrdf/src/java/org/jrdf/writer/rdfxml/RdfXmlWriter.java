@@ -116,7 +116,8 @@ public class RdfXmlWriter implements RdfWriter {
         this.names = newNames;
     }
 
-    public void write(Graph graph, OutputStream stream) throws IOException, WriteException, GraphException {
+    public void write(Graph graph, OutputStream stream)
+        throws IOException, WriteException, GraphException, XMLStreamException {
         final OutputStreamWriter writer = new OutputStreamWriter(stream);
         try {
             write(graph, writer);
@@ -125,7 +126,8 @@ public class RdfXmlWriter implements RdfWriter {
         }
     }
 
-    public void write(Graph graph, Writer writer) throws IOException, WriteException, GraphException {
+    public void write(Graph graph, Writer writer)
+        throws IOException, WriteException, GraphException, XMLStreamException {
         printWriter = new PrintWriter(writer);
         try {
             write(graph, (String) null);
@@ -143,7 +145,7 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws GraphException If the graph cannot be read.
      * @throws WriteException If the contents could not be written
      */
-    private void write(Graph graph, String encoding) throws GraphException, WriteException {
+    private void write(Graph graph, String encoding) throws GraphException, WriteException, XMLStreamException {
         try {
             // Initialize values.
             blankNodeRegistry.clear();
@@ -181,7 +183,7 @@ public class RdfXmlWriter implements RdfWriter {
      * @throws GraphException If the graph cannot be read.
      * @throws WriteException If the statements could not be written.
      */
-    private void writeStatements(final Graph graph) throws GraphException, WriteException {
+    private void writeStatements(final Graph graph) throws GraphException, WriteException, XMLStreamException {
         final ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             final IteratorStack<Triple> stack = new IteratorStack<Triple>(iter);

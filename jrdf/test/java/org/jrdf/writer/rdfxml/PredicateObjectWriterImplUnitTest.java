@@ -90,14 +90,15 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
         XMLStreamWriter.class};
     private static final String NODE_ID = "foo";
     private static final XMLStreamException EXPECTED_EXCEPTION = new XMLStreamException();
+    private static final String LANGUAGE = "en-au";
+    private static final String LANGUAGE_LITERAL = "foo@en-au";
+    private static final String DATA_TYPE = "xsd:int";
+    private static final String NEW_LINE = System.getProperty("line.separator");
     private MockFactory factory = new MockFactory();
     private RdfNamespaceMap map;
     private BlankNodeRegistry blankNodeRegistry;
     private XMLStreamWriter xmlStreamWriter;
     private PredicateObjectWriter writer;
-    private static final String LANGUAGE = "en-au";
-    private static final String LANGUAGE_LITERAL = "foo@en-au";
-    private static final String DATA_TYPE = "xsd:int";
 
     public void setUp() {
         map = factory.createMock(RdfNamespaceMap.class);
@@ -129,6 +130,7 @@ public class PredicateObjectWriterImplUnitTest extends TestCase {
         xmlStreamWriter.writeStartElement(NODE_ID);
         object.accept(writer);
         xmlStreamWriter.writeEndElement();
+        xmlStreamWriter.writeCharacters(NEW_LINE);
         xmlStreamWriter.flush();
         factory.replay();
         writer.writePredicateObject(predicate, object);
