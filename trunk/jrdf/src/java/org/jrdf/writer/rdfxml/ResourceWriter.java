@@ -64,13 +64,15 @@ import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.util.IteratorStack;
 import org.jrdf.writer.WriteException;
 
+import javax.xml.stream.XMLStreamException;
+
 public interface ResourceWriter extends TypedNodeVisitor {
 
     void setTriple(Triple triple);
 
     void writeStart() throws WriteException;
 
-    void writeNestedStatements(IteratorStack<Triple> stack) throws WriteException;
+    void writeNestedStatements(IteratorStack<Triple> stack) throws WriteException, XMLStreamException;
 
     void writeEnd() throws WriteException;
 }

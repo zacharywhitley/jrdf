@@ -76,6 +76,7 @@ import org.jrdf.writer.WriteException;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -162,7 +163,8 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         return read;
     }
 
-    private StringWriter writeGraph(Graph graph) throws WriteException, GraphException, IOException {
+    private StringWriter writeGraph(Graph graph)
+        throws WriteException, GraphException, IOException, XMLStreamException {
         // do write
         StringWriter out = new StringWriter();
         try {
