@@ -771,18 +771,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
                 newGraph.add(blank1, newRes, newRes);
             }
         });
-    }
-
-    /**
-     * Test blank node semantics across graphs - throws exception when adding blank node across graphs.  Throws an
-     * exception when the node id does not exist and returns null.
-     */
-    public void testBlankNodesAcrossGraphs2() throws Exception {
-        final Graph newGraph = newGraph();
-        GraphElementFactory graphElementFactory = newGraph.getElementFactory();
-        URI newURI = new URI("http://namespace#somevalue");
-        final URIReference newRes = graphElementFactory.createURIReference(newURI);
-        newGraph.add(newRes, newRes, newRes);
         assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
             public void execute() throws Throwable {
                 newGraph.add(blank2, newRes, newRes);

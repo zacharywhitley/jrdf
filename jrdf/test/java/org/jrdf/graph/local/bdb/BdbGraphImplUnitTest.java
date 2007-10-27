@@ -61,19 +61,14 @@ package org.jrdf.graph.local.bdb;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedBdbJRDFFactoryImpl;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
 public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
-    private JRDFFactory factory;
-
-    @Override
-    public void setUp() throws Exception {
-        factory = SortedBdbJRDFFactoryImpl.getFactory();
-        super.setUp();
-    }
+    private static final JRDFFactory FACTORY = SortedBdbJRDFFactoryImpl.getFactory();
 
     /**
      * Create a graph implementation.
@@ -82,7 +77,7 @@ public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
      */
     @Override
     public Graph newGraph() throws Exception {
-        Graph newGraph = factory.getNewGraph();
+        Graph newGraph = FACTORY.getNewGraph();
         newGraph.clear();
         return newGraph;
     }

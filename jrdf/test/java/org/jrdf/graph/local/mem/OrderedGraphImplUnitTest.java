@@ -71,6 +71,8 @@ import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactoryImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -85,6 +87,7 @@ import java.io.ObjectOutputStream;
  * @version $Revision$
  */
 public class OrderedGraphImplUnitTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
 
     /**
      * Create a graph implementation.
@@ -92,26 +95,11 @@ public class OrderedGraphImplUnitTest extends AbstractGraphUnitTest {
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
-        LongIndex[] indexes = new LongIndexMem[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
-        BlankNodeComparator blankNodeComparator = new LocalizedBlankNodeComparatorImpl(
-            new LocalizedNodeComparatorImpl());
-        GraphFactory orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, new MemNodePoolFactory(),
-            new NodeComparatorImpl(typeComparator, blankNodeComparator));
-        return orderedGraphFactory.getGraph();
-    }
-
-    /**
-     * Default test runner.
-     *
-     * @param args The command line arguments
-     */
-    public static void main(String[] args) throws Exception {
-        TestRunner.run(OrderedGraphImplUnitTest.class);
+        return FACTORY.getNewGraph();
     }
 
     //TODO: Create a disk based serialization test.
-    
+
     /**
      * Implementation method for testing serialization of the graph.
      *
@@ -167,5 +155,4 @@ public class OrderedGraphImplUnitTest extends AbstractGraphUnitTest {
         assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE));
         assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, l3));
     }
-
 }
