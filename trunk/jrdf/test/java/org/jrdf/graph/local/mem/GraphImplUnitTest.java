@@ -60,7 +60,6 @@
 package org.jrdf.graph.local.mem;
 
 import com.gargoylesoftware.base.testing.TestUtil;
-import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnySubjectNode;
@@ -89,15 +88,6 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
         LongIndex[] indexes = new LongIndexMem[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
         GraphFactory graphFactory = new GraphFactoryImpl(indexes, new MemNodePoolFactory());
         return graphFactory.getGraph();
-    }
-
-    /**
-     * Default test runner.
-     *
-     * @param args The command line arguments
-     */
-    public static void main(String[] args) throws Exception {
-        TestRunner.run(GraphImplUnitTest.class);
     }
 
     //TODO: Create a disk based serialization test.
