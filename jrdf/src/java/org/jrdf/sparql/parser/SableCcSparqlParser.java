@@ -79,12 +79,11 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.io.IOException;
 
 public final class SableCcSparqlParser implements SparqlParser {
-
     private static final String INVALID_QUERY_MESSAGE = "Unable to parse query syntax";
-    private ParserFactory parserFactory;
-    private GraphRelationFactory graphRelationFactory;
     private final AttributeValuePairHelper avpHelper;
     private final SortedAttributeFactory sortedAttributeFactory;
+    private ParserFactory parserFactory;
+    private GraphRelationFactory graphRelationFactory;
 
     public SableCcSparqlParser(ParserFactory parserFactory, GraphRelationFactory graphRelationFactory,
             AttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
