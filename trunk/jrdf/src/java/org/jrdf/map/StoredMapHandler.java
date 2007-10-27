@@ -64,8 +64,6 @@ import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-
-import java.io.File;
 import java.util.Map;
 
 public interface StoredMapHandler {
