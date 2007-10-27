@@ -112,7 +112,6 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     public void refresh() {
     }
 
-    // TODO FIXME the will return the same graph - not new graphs.
     public Graph getNewGraph() {
         graphNumber++;
         BdbMapFactory factory1 = new BdbMapFactory(HANDLER, "java_class_catalog_spo", "spo" + graphNumber);
