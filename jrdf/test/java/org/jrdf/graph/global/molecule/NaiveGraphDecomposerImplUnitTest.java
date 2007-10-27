@@ -61,7 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -76,7 +76,7 @@ import java.net.URI;
 import java.util.Set;
 
 public class NaiveGraphDecomposerImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
+    private JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private Graph newGraph = factory.getNewGraph();
     private GraphElementFactory elementFactory = newGraph.getElementFactory();
     private TripleFactory tripleFactory = newGraph.getTripleFactory();
@@ -134,7 +134,7 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
         Set<Molecule> molecules = decomposer.decompose(newGraph);
         checkMolecules(molecules, expectedResult1, expectedResult2);
     }
-    
+
     public void testBlankNodesWithSameReferenceTest() throws Exception {
         newGraph.add(r1r1b1, b1r1r1, b2r1b1, b2r2r1, r2r1r1, b1r1r1_2, b1r1b2);
         Molecule equivalentResult1a = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r2r1, b1r1b2, b1r1r1_2);

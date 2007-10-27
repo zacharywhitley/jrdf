@@ -59,20 +59,13 @@
 
 package org.jrdf.graph.local.mem;
 
-import junit.textui.TestRunner;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.SortedMemoryJRDFFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -87,7 +80,7 @@ import java.io.ObjectOutputStream;
  * @version $Revision$
  */
 public class OrderedGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
+    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.

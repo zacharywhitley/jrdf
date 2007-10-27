@@ -61,7 +61,7 @@ package org.jrdf.graph.global;
 
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Triple;
@@ -72,7 +72,7 @@ import org.jrdf.graph.URIReference;
 import java.net.URI;
 
 public class GroundedTripleComparatorImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
+    private JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private Graph newGraph = factory.getNewGraph();
     private GraphElementFactory elementFactory = newGraph.getElementFactory();
     private TripleFactory tripleFactory = newGraph.getTripleFactory();
