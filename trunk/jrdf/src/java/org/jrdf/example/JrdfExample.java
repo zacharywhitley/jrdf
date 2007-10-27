@@ -60,7 +60,7 @@
 package org.jrdf.example;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.SortedMemoryJRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -85,7 +85,7 @@ import java.util.Iterator;
  */
 public class JrdfExample {
 
-    private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactoryImpl.getFactory();
+    private static final JRDFFactory JRDF_FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     //Resources
     private URIReference person;

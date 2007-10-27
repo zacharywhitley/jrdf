@@ -61,7 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactoryImpl;
+import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.graph.Graph;
@@ -79,7 +79,7 @@ public class MoleculeParserImplUnitTest extends TestCase {
     private static final int NUMBER_OF_MOLECULES_IN_PIZZA = 1384;
     private static final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
     private static final String BASE_URI = "http://example.org";
-    private final JRDFFactory factory = SortedMemoryJRDFFactoryImpl.getFactory();
+    private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph jrdfGraph = factory.getNewGraph();
     private MoleculeParser moleculeParser;
     private final URIReferenceImpl BANGLADESH_URI =
