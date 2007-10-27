@@ -98,18 +98,11 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
+    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl();
+    private static long graphNumber;
     private GraphFactory orderedGraphFactory;
 
     private SortedBdbJRDFFactory() {
-        StoredMapHandler handler = new StoredMapHandlerImpl();
-        BdbMapFactory factory1 = new BdbMapFactory(handler, "java_class_catalog_spo", "spo");
-        BdbMapFactory factory2 = new BdbMapFactory(handler, "java_class_catalog_pos", "pos");
-        BdbMapFactory factory3 = new BdbMapFactory(handler, "java_class_catalog_osp", "osp");
-        LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
-            new LongIndexBdb(factory3)};
-        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
-        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
-        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
     }
 
     public static JRDFFactory getFactory() {
@@ -121,6 +114,15 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
 
     // TODO FIXME the will return the same graph - not new graphs.
     public Graph getNewGraph() {
+        graphNumber++;
+        BdbMapFactory factory1 = new BdbMapFactory(HANDLER, "java_class_catalog_spo", "spo" + graphNumber);
+        BdbMapFactory factory2 = new BdbMapFactory(HANDLER, "java_class_catalog_pos", "pos" + graphNumber);
+        BdbMapFactory factory3 = new BdbMapFactory(HANDLER, "java_class_catalog_osp", "osp" + graphNumber);
+        LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
+            new LongIndexBdb(factory3)};
+        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
+        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
+        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();
     }
 
