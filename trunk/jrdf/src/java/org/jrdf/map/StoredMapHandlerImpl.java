@@ -75,10 +75,6 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
     private static final String USERNAME = System.getProperty("user.name");
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
 
-    public File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
-    }
-
     public Environment setUpEnvironment() throws DatabaseException {
         File dir = getDir();
         dir.mkdirs();
@@ -111,5 +107,9 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
         SerialBinding keyBinding = new SerialBinding(catalog, clazz1);
         SerialBinding dataBinding = new SerialBinding(catalog, clazz2);
         return new StoredMap(database, keyBinding, dataBinding, true);
+    }
+
+    private File getDir() {
+        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
 }

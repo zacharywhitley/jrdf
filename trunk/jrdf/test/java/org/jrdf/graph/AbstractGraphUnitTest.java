@@ -916,6 +916,13 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         }
     }
 
+    public void testSeparateGraphs() throws Exception {
+        graph.add(blank2, ref1, l2);
+        assertEquals(1, graph.getNumberOfTriples());
+        newGraph();
+        assertEquals(1, graph.getNumberOfTriples());
+    }
+
     private void checkInvalidRemove(ClosableIterator ci) {
         try {
             ci.remove();

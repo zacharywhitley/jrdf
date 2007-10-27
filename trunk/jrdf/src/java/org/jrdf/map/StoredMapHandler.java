@@ -70,8 +70,6 @@ import java.util.Map;
 
 public interface StoredMapHandler {
 
-    File getDir();
-
     Environment setUpEnvironment() throws DatabaseException;
 
     DatabaseConfig setUpDatabaseConfig(boolean transactional);
