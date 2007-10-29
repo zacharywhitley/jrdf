@@ -72,6 +72,8 @@ import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -79,8 +81,6 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.HashSet;
-import java.util.Collections;
 
 public class NewMoleculeImpl implements NewMolecule {
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -266,7 +266,34 @@ public class NewMoleculeImpl implements NewMolecule {
 
     @Override
     public String toString() {
-        return "\n\t" + subMolecules.toString() + "\n";
+        return printRootTriples(1, getRootTriples()).toString();
+    }
+
+    private StringBuilder printRootTriples(int level, Iterator<Triple> rootTriples) {
+        final StringBuilder res = new StringBuilder();
+        while (rootTriples.hasNext()) {
+            Triple triple = rootTriples.next();
+            res.append("\n");
+            for (int index = 0; index < level; index++) {
+                res.append("--");
+            }
+            res.append("> " + triple + " = ");
+            Set<NewMolecule> newMolecules = getSubMolecules(triple);
+            if (newMolecules.isEmpty()) {
+                res.append("{}");
+            } else {
+                res.append(printSubMolecules(level + 1, newMolecules));
+            }
+        }
+        return res;
+    }
+
+    private StringBuilder printSubMolecules(int level, Set<NewMolecule> subMolecules) {
+        final StringBuilder res = new StringBuilder();
+        for (NewMolecule molecule : subMolecules) {
+            res.append(printRootTriples(level, molecule.getRootTriples()));
+        }
+        return res;
     }
 
     private boolean isBlankNode(Node node) {

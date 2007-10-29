@@ -87,6 +87,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
             while (subMoleculeIter.hasNext()) {
                 Triple currentTriple = subMoleculeIter.next();
                 newMolecule.specialAdd(merge(currentTriple, molecule1, molecule2));
+                System.err.println("Result of special add: " + newMolecule);
             }
             return newMolecule;
         } else {
@@ -95,10 +96,14 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
     }
 
     public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
+        System.err.println("Merging: " + currentTriple);
+        System.err.println("Merging: " + molecule1);
+        System.err.println("Merging: " + molecule2);
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
         Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
         Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
         iterateAndMergeMolecules(newMolecule, currentTriple, curr1Iterator, curr2Iterator);
+        System.err.println("Result: " + newMolecule);
         return newMolecule;
     }
 
