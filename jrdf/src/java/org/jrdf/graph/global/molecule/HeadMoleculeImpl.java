@@ -150,6 +150,10 @@ public class HeadMoleculeImpl implements NewMolecule {
     public void specialAdd(NewMolecule molecule) {
     }
 
+    public NewMolecule add(Triple triple, Triple newTriple) {
+        return null;
+    }
+
     @Override
     public boolean equals(Object obj) {
 
