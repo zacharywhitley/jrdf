@@ -147,6 +147,17 @@ public class NewMoleculeImpl implements NewMolecule {
         return new NewMoleculeImpl(moleculeComparator, subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
     }
 
+    public NewMolecule add(Triple triple, Triple newTriple) {
+        Set<NewMolecule> moleculeSet = subMolecules.get(triple);
+        if (moleculeSet == null) {
+            moleculeSet = new HashSet<NewMolecule>();
+        }
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
+        moleculeSet.add(newMolecule);
+        subMolecules.put(triple, moleculeSet);
+        return new NewMoleculeImpl(moleculeComparator, subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
+    }
+
     public void specialAdd(NewMolecule molecule) {
         Iterator<Triple> rootTriples = molecule.getRootTriples();
         while (rootTriples.hasNext()) {
@@ -253,6 +264,14 @@ public class NewMoleculeImpl implements NewMolecule {
         // Cast and check for equality by value. (same class)
         try {
             NewMoleculeImpl tmpMolecule = (NewMoleculeImpl) obj;
+//            for (Triple triple : subMolecules.keySet()) {
+//                System.err.println("Got:" + triple);
+//                System.err.println("Got:" + getSubMolecules(triple));
+//            }
+//            for (Triple triple : tmpMolecule.subMolecules.keySet()) {
+//                System.err.println("Got:" + triple);
+//                System.err.println("Got:" + tmpMolecule.getSubMolecules(triple));
+//            }
             return tmpMolecule.subMolecules.equals(subMolecules);
         } catch (ClassCastException cce) {
             return false;
@@ -266,10 +285,11 @@ public class NewMoleculeImpl implements NewMolecule {
 
     @Override
     public String toString() {
-        return printRootTriples(1, getRootTriples()).toString();
+//        return printRootTriples(1, this, getRootTriples()).toString();
+        return subMolecules.toString();
     }
 
-    private StringBuilder printRootTriples(int level, Iterator<Triple> rootTriples) {
+    private StringBuilder printRootTriples(int level, NewMolecule molecule, Iterator<Triple> rootTriples) {
         final StringBuilder res = new StringBuilder();
         while (rootTriples.hasNext()) {
             Triple triple = rootTriples.next();
@@ -278,7 +298,7 @@ public class NewMoleculeImpl implements NewMolecule {
                 res.append("--");
             }
             res.append("> " + triple + " = ");
-            Set<NewMolecule> newMolecules = getSubMolecules(triple);
+            Set<NewMolecule> newMolecules = molecule.getSubMolecules(triple);
             if (newMolecules.isEmpty()) {
                 res.append("{}");
             } else {
@@ -291,7 +311,7 @@ public class NewMoleculeImpl implements NewMolecule {
     private StringBuilder printSubMolecules(int level, Set<NewMolecule> subMolecules) {
         final StringBuilder res = new StringBuilder();
         for (NewMolecule molecule : subMolecules) {
-            res.append(printRootTriples(level, molecule.getRootTriples()));
+            res.append(printRootTriples(level, molecule, molecule.getRootTriples()));
         }
         return res;
     }

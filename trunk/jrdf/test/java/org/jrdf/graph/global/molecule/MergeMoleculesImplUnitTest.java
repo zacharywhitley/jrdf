@@ -73,7 +73,7 @@ public class MergeMoleculesImplUnitTest extends TestCase {
         NewMolecule newMolecule = mergeMolecules.merge(m1, m2);
         checkMoluculeContainsRootTriples(newMolecule, b2r1r2, b2r2r2, b2r3b3);
         Set<NewMolecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
-        assertEquals(1, subMolecules.size());
-        checkMoluculeContainsRootTriples(subMolecules.iterator().next(), b3r1r3, b3r2r3);
+        assertEquals(2, subMolecules.size());
+        checkSubmoleculesContainsHeadTriples(subMolecules, b3r1r3, b3r2r3);
     }
 }

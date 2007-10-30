@@ -74,8 +74,7 @@ public class MergeMoleculesImpl implements MergeMolecules {
             while (m2RootTriples.hasNext()) {
                 Triple m2Triple = m2RootTriples.next();
                 if (blankNodesMatch(m1Triple, m2Triple)) {
-                    m1.add(m1Triple, m2);
-                    break;
+                    m1.add(m1Triple, m2Triple);
                 }
             }
         }

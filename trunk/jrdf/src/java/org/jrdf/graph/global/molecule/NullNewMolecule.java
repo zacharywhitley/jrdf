@@ -105,6 +105,10 @@ public final class NullNewMolecule implements NewMolecule {
         throw new UnsupportedOperationException();
     }
 
+    public NewMolecule add(Triple triple, Triple newTriple) {
+        throw new UnsupportedOperationException();
+    }
+
     public void specialAdd(NewMolecule molecule) {
     }
 

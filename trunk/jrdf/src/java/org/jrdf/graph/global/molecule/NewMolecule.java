@@ -82,4 +82,6 @@ public interface NewMolecule {
     NewMolecule add(Triple triple, NewMolecule newMolecule);
 
     void specialAdd(NewMolecule molecule);
+
+    NewMolecule add(Triple triple, Triple newTriple);
 }
