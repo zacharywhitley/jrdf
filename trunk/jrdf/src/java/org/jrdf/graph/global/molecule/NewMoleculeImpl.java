@@ -87,28 +87,34 @@ public class NewMoleculeImpl implements NewMolecule {
     // This should be a set of molecules for the values.
     private final SortedMap<Triple, Set<NewMolecule>> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
+    private final MergeMolecules moleculeMerger;
 
-    private NewMoleculeImpl(NewMoleculeComparator newComparator, SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
+    private NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger,
+        SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
+        this.moleculeMerger = newMoleculeMerger;
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator) {
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         subMolecules = new TreeMap<Triple, Set<NewMolecule>>(comparator);
+        moleculeMerger = newMoleculeMerger;
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, Triple... rootTriples) {
-        this(newComparator);
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger,
+        Triple... rootTriples) {
+        this(newComparator, newMoleculeMerger);
         for (Triple rootTriple : rootTriples) {
             subMolecules.put(rootTriple, null);
         }
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, NewMolecule... childMolecules) {
-        this(newComparator);
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger,
+        NewMolecule... childMolecules) {
+        this(newComparator, newMoleculeMerger);
         for (NewMolecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
             HashSet<NewMolecule> submolecules = new HashSet<NewMolecule>();
@@ -122,9 +128,9 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public NewMolecule remove(Triple triple) {
-        NewMolecule headMolecule = new HeadMoleculeImpl(triple);
+        NewMolecule headMolecule = new NewMoleculeImpl(moleculeComparator, moleculeMerger, triple);
         subMolecules.remove(headMolecule);
-        return new NewMoleculeImpl(moleculeComparator,
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
             subMolecules.keySet().toArray(new NewMolecule[subMolecules.size()]));
     }
 
@@ -134,7 +140,8 @@ public class NewMoleculeImpl implements NewMolecule {
 
     public NewMolecule add(Triple triple) {
         subMolecules.put(triple, null);
-        return new NewMoleculeImpl(moleculeComparator, subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
+            subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
     }
 
     public NewMolecule add(Triple triple, NewMolecule newMolecule) {
@@ -144,7 +151,8 @@ public class NewMoleculeImpl implements NewMolecule {
         }
         moleculeSet.add(newMolecule);
         subMolecules.put(triple, moleculeSet);
-        return new NewMoleculeImpl(moleculeComparator, subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
+            subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
     }
 
     public NewMolecule add(Triple triple, Triple newTriple) {
@@ -152,10 +160,11 @@ public class NewMoleculeImpl implements NewMolecule {
         if (moleculeSet == null) {
             moleculeSet = new HashSet<NewMolecule>();
         }
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newTriple);
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, moleculeMerger, newTriple);
         moleculeSet.add(newMolecule);
         subMolecules.put(triple, moleculeSet);
-        return new NewMoleculeImpl(moleculeComparator, subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
+            subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
     }
 
     public void specialAdd(NewMolecule molecule) {
@@ -180,7 +189,7 @@ public class NewMoleculeImpl implements NewMolecule {
             HashSet<NewMolecule> containedMolecules = new HashSet<NewMolecule>();
             containedMolecules.add(childMolecule);
             subMolecules.put(headTriple, containedMolecules);
-            return new NewMoleculeImpl(moleculeComparator, subMolecules);
+            return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);
         }
     }
 
@@ -191,7 +200,8 @@ public class NewMoleculeImpl implements NewMolecule {
         while (subMoleculeIter.hasNext()) {
             newRootTriples.add(subMoleculeIter.next());
         }
-        return new NewMoleculeImpl(moleculeComparator, newRootTriples.toArray(new Triple[newRootTriples.size()]));
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
+            newRootTriples.toArray(new Triple[newRootTriples.size()]));
     }
 
     public boolean contains(Triple triple) {
@@ -241,7 +251,8 @@ public class NewMoleculeImpl implements NewMolecule {
         for (Triple triple : set) {
             newMolecules.add(triple);
         }
-        return new NewMoleculeImpl(moleculeComparator, newMolecules.toArray(new Triple[newMolecules.size()]));
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
+            newMolecules.toArray(new Triple[newMolecules.size()]));
     }
 
     public int size() {
