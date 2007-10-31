@@ -81,6 +81,7 @@ import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkSubmolecul
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMoleculeWithSubmolecule;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMultiLevelMolecule;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;
 
@@ -94,7 +95,7 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
 
     public void setUp() {
         NewMoleculeComparator newMoleculeComparator = new NewMoleculeComparatorImpl(TRIPLE_COMPARATOR);
-        mergeSubmolecules = new MergeSubmoleculesImpl(TRIPLE_COMPARATOR, newMoleculeComparator);
+        mergeSubmolecules = new MergeSubmoleculesImpl(TRIPLE_COMPARATOR, newMoleculeComparator, MERGE_MOLECULE);
     }
 
     public void testMergeMolecules() {
@@ -140,20 +141,30 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
             });
     }
 
-    public void testMergeSubmolecules() {
-        NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
-        NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
-        NewMolecule newMolecule = mergeSubmolecules.merge(b1r1r1, molecule1, molecule2);
-        assertEquals("Expected head triple to be", b1r1r1, newMolecule.getHeadTriple());
-        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
-    }
-
-    public void testMergeUnmatchedHeadTriples2() {
+    public void testMergeUnmatchedSecondLevelTriples() {
         NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1), EMPTY_SET);
         NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2), EMPTY_SET);
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1, b2r1r2),
             EMPTY_SET);
         assertEquals(expectedMolecule, newMolecule);
+    }
+
+    public void testMergeUnmatchedLevelTriples() {
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1), EMPTY_SET);
+        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2, b2r2r2, b2r3b3),
+            asSet(b3r1r3));
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1, b2r1r2, b2r2r2,
+            b2r3b3), asSet(b3r1r3));
+        assertEquals(expectedMolecule, newMolecule);
+    }
+
+    public void testMergeSubmolecules() {
+        NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
+        NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
+        NewMolecule newMolecule = mergeSubmolecules.merge(b1r1r1, molecule1, molecule2);
+        assertEquals("Expected head triple to be", b1r1r1, newMolecule.getHeadTriple());
+        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
     }
 }

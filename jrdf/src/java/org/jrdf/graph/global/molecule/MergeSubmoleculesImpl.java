@@ -70,10 +70,13 @@ import java.util.TreeSet;
 public class MergeSubmoleculesImpl implements MergeSubmolecules {
     private final TripleComparator comparator;
     private final NewMoleculeComparator moleculeComparator;
+    private final MergeMolecules moleculeMerger;
 
-    public MergeSubmoleculesImpl(TripleComparator comparator, NewMoleculeComparator moleculeComparator) {
-        this.comparator = comparator;
-        this.moleculeComparator = moleculeComparator;
+    public MergeSubmoleculesImpl(TripleComparator newComparator, NewMoleculeComparator newMoleculeComparator,
+        MergeMolecules newMoleculeMerger) {
+        this.comparator = newComparator;
+        this.moleculeComparator = newMoleculeComparator;
+        this.moleculeMerger = newMoleculeMerger;
     }
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2) {
@@ -81,7 +84,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
             SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
             addRootTriples(molecule1, newRootTriples);
             addRootTriples(molecule2, newRootTriples);
-            NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, newRootTriples.toArray(
+            NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, moleculeMerger, newRootTriples.toArray(
                 new Triple[newRootTriples.size()]));
             Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
             while (subMoleculeIter.hasNext()) {
@@ -95,7 +98,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
     }
 
     public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
+        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, moleculeMerger);
         Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
         Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
         iterateAndMergeMolecules(newMolecule, currentTriple, curr1Iterator, curr2Iterator);

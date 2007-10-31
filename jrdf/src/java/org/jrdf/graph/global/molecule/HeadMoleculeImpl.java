@@ -100,7 +100,7 @@ public class HeadMoleculeImpl implements NewMolecule {
 
     public NewMolecule add(Triple triple) {
         TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-        return new NewMoleculeImpl(new NewMoleculeComparatorImpl(comparator), internalTriple, triple);
+        return null;
     }
 
     public NewMolecule add(NewMolecule childMolecule) {

@@ -100,13 +100,14 @@ public class NewMoleculeTestUtil {
     public static final Triple b3r1r3 = new TripleImpl(bNode3, ref1, ref3);
     public static final Triple b3r2r3 = new TripleImpl(bNode3, ref2, ref3);
     public static final Triple b3r3r3 = new TripleImpl(bNode3, ref3, ref3);
-    public static final NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(comparator);
+    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(comparator);
+    public static final MergeMolecules MERGE_MOLECULE = new MergeMoleculesImpl();
 
     private NewMoleculeTestUtil() {
     }
 
     public static NewMolecule createMolecule(Triple... triples) {
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
+        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE);
         for (Triple triple : triples) {
             newMolecule.add(triple);
         }
@@ -124,7 +125,7 @@ public class NewMoleculeTestUtil {
     }
 
     public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
-        NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator);
+        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE);
         newMolecule.add(rootTriple, molecule);
         return newMolecule;
     }
