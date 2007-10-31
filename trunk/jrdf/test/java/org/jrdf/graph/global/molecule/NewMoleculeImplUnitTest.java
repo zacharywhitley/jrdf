@@ -61,14 +61,13 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.MOLECULE_COMPARATOR;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.MOLECULE_FACTORY;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r3;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b2r2b1;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r1r1b1;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r1r1r1;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r2r1r1;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r3r1r1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r1r1b1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b2r2b1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r3;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -79,12 +78,12 @@ import java.util.Set;
 public class NewMoleculeImplUnitTest extends TestCase {
 
     public void testMoleculeCreation() {
-        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE, r1r1r1, r2r1r1, r3r1r1, r1r1b1);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1r1, r2r1r1, r3r1r1, r1r1b1);
         assertEquals(r1r1r1, newMolecule.getHeadTriple());
     }
 
     public void testMoleculeCreation2() {
-        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule();
         newMolecule = newMolecule.add(r2r1r1);
         newMolecule = newMolecule.add(r3r1r1);
         newMolecule = newMolecule.add(r1r1r1);
@@ -93,19 +92,18 @@ public class NewMoleculeImplUnitTest extends TestCase {
     }
 
     public void testAddVsConstructor() {
-        NewMolecule newMolecule1 = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE);
+        NewMolecule newMolecule1 = MOLECULE_FACTORY.createMolecule();
         newMolecule1.add(r1r1r1);
         newMolecule1.add(r2r1r1);
         newMolecule1.add(r3r1r1);
         newMolecule1.add(r1r1b1);
-        NewMolecule newMolecule2 = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE, r1r1r1, r2r1r1, r3r1r1,
-            r1r1b1);
+        NewMolecule newMolecule2 = MOLECULE_FACTORY.createMolecule(r1r1r1, r2r1r1, r3r1r1, r1r1b1);
         assertEquals(newMolecule1, newMolecule2);
     }
 
     public void testMergeHeadMolecules() {
-        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE, b1r3r3);
-        NewMolecule internalMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE, b1r3r3, b2r2b1);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3);
+        NewMolecule internalMolecule = MOLECULE_FACTORY.createMolecule(b1r3r3, b2r2b1);
         assertEquals(b1r3r3, newMolecule.getHeadTriple());
         assertEquals(b1r3r3, internalMolecule.getHeadTriple());
         newMolecule = newMolecule.add(internalMolecule);
@@ -116,11 +114,11 @@ public class NewMoleculeImplUnitTest extends TestCase {
     
 
     public void testCombineSubMolecules() {
-        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE, r1r1b1);
-        NewMolecule internalMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE, b2r2b1, b1r3r3);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1b1);
+        NewMolecule internalMolecule = MOLECULE_FACTORY.createMolecule(b2r2b1, b1r3r3);
         newMolecule = newMolecule.add(internalMolecule);
         assertEquals(r1r1b1, newMolecule.getHeadTriple());
-        assertEquals(1, newMolecule.size());
+        assertEquals(3, newMolecule.size());
         HashMap<Triple, NewMolecule> expectedSubMolecules = new HashMap<Triple, NewMolecule>();
         expectedSubMolecules.put(r1r1b1, internalMolecule);
         checkHasSubMolecule(newMolecule, expectedSubMolecules);
