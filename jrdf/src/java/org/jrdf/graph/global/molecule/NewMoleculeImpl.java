@@ -59,8 +59,6 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
@@ -80,16 +78,16 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.Collection;
 
 public class NewMoleculeImpl implements NewMolecule {
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     // This should be a set of molecules for the values.
     private final SortedMap<Triple, Set<NewMolecule>> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
-    private final MergeMolecules moleculeMerger;
+    private final MergeSubmolecules moleculeMerger;
 
-    private NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger,
+    private NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
         SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
@@ -97,14 +95,14 @@ public class NewMoleculeImpl implements NewMolecule {
         this.moleculeMerger = newMoleculeMerger;
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger) {
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
         subMolecules = new TreeMap<Triple, Set<NewMolecule>>(comparator);
         moleculeMerger = newMoleculeMerger;
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger,
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
         Triple... rootTriples) {
         this(newComparator, newMoleculeMerger);
         for (Triple rootTriple : rootTriples) {
@@ -112,7 +110,7 @@ public class NewMoleculeImpl implements NewMolecule {
         }
     }
 
-    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeMolecules newMoleculeMerger,
+    public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
         NewMolecule... childMolecules) {
         this(newComparator, newMoleculeMerger);
         for (NewMolecule molecule : childMolecules) {
@@ -180,7 +178,7 @@ public class NewMoleculeImpl implements NewMolecule {
         Triple childHeadTriple = childMolecule.getHeadTriple();
         if (childHeadTriple.equals(headTriple)) {
             // Assume that there are no molecules hanging off the any of the triples.
-            return mergeHeadMatchingMolecule(childMolecule);
+            return moleculeMerger.merge(this, childMolecule);
         } else {
             // For now assume there is a match with the least grounded to the head triple and therefore we are adding
             // a child molecule onto the head triple.
@@ -191,17 +189,6 @@ public class NewMoleculeImpl implements NewMolecule {
             subMolecules.put(headTriple, containedMolecules);
             return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);
         }
-    }
-
-    private NewMolecule mergeHeadMatchingMolecule(NewMolecule childMolecule) {
-        SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
-        newRootTriples.addAll(subMolecules.keySet());
-        Iterator<Triple> subMoleculeIter = childMolecule.getRootTriples();
-        while (subMoleculeIter.hasNext()) {
-            newRootTriples.add(subMoleculeIter.next());
-        }
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
-            newRootTriples.toArray(new Triple[newRootTriples.size()]));
     }
 
     public boolean contains(Triple triple) {
@@ -256,12 +243,30 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public int size() {
-        return subMolecules.size();
+        int size = this.subMolecules.keySet().size();
+        Collection<Set<NewMolecule>> collectionOfMoleculeSets = subMolecules.values();
+        for (Set<NewMolecule> molecules : collectionOfMoleculeSets) {
+            size += calcSize(molecules);
+        }
+        return size;
+    }
+
+    private int calcSize(Set<NewMolecule> molecules) {
+        int size = 0;
+        if (molecules != null) {
+            for (NewMolecule molecule : molecules) {
+                Iterator<Triple> rootTriples = molecule.getRootTriples();
+                while (rootTriples.hasNext()) {
+                    size += calcSize(molecule.getSubMolecules(rootTriples.next()));
+                    size++;
+                }
+            }
+        }
+        return size;
     }
 
     @Override
     public boolean equals(Object obj) {
-
         // Check equal by reference
         if (this == obj) {
             return true;
@@ -275,14 +280,6 @@ public class NewMoleculeImpl implements NewMolecule {
         // Cast and check for equality by value. (same class)
         try {
             NewMoleculeImpl tmpMolecule = (NewMoleculeImpl) obj;
-//            for (Triple triple : subMolecules.keySet()) {
-//                System.err.println("Got:" + triple);
-//                System.err.println("Got:" + getSubMolecules(triple));
-//            }
-//            for (Triple triple : tmpMolecule.subMolecules.keySet()) {
-//                System.err.println("Got:" + triple);
-//                System.err.println("Got:" + tmpMolecule.getSubMolecules(triple));
-//            }
             return tmpMolecule.subMolecules.equals(subMolecules);
         } catch (ClassCastException cce) {
             return false;
@@ -296,8 +293,7 @@ public class NewMoleculeImpl implements NewMolecule {
 
     @Override
     public String toString() {
-//        return printRootTriples(1, this, getRootTriples()).toString();
-        return subMolecules.toString();
+        return printRootTriples(1, this, getRootTriples()).toString();
     }
 
     private StringBuilder printRootTriples(int level, NewMolecule molecule, Iterator<Triple> rootTriples) {
@@ -325,9 +321,5 @@ public class NewMoleculeImpl implements NewMolecule {
             res.append(printRootTriples(level, molecule, molecule.getRootTriples()));
         }
         return res;
-    }
-
-    private boolean isBlankNode(Node node) {
-        return BlankNode.class.isAssignableFrom(node.getClass());
     }
 }

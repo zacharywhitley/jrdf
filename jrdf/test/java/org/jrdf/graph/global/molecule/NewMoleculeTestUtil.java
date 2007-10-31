@@ -69,6 +69,7 @@ import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -102,12 +103,15 @@ public class NewMoleculeTestUtil {
     public static final Triple b3r3r3 = new TripleImpl(bNode3, ref3, ref3);
     public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(comparator);
     public static final MergeMolecules MERGE_MOLECULE = new MergeMoleculesImpl();
+    private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
+    private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
+    public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(TRIPLE_COMPARATOR, MOLECULE_COMPARATOR);
 
     private NewMoleculeTestUtil() {
     }
 
     public static NewMolecule createMolecule(Triple... triples) {
-        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecue();
         for (Triple triple : triples) {
             newMolecule.add(triple);
         }
@@ -125,7 +129,7 @@ public class NewMoleculeTestUtil {
     }
 
     public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
-        NewMolecule newMolecule = new NewMoleculeImpl(MOLECULE_COMPARATOR, MERGE_MOLECULE);
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecue();;
         newMolecule.add(rootTriple, molecule);
         return newMolecule;
     }
@@ -136,7 +140,13 @@ public class NewMoleculeTestUtil {
     }
 
     public static void checkMoluculeContainsRootTriples(NewMolecule molecule, Triple... expectedTriples) {
-        assertEquals("Unexpected size of molecule", expectedTriples.length, molecule.size());
+        Iterator<Triple> actualRootTriplesIterator = molecule.getRootTriples();
+        int count = 0;
+        while (actualRootTriplesIterator.hasNext()) {
+            actualRootTriplesIterator.next();
+            count++;
+        }
+        assertEquals("Unexpected size of root triples in molecule", expectedTriples.length, count);
         Iterator<Triple> iter = molecule.getRootTriples();
         Set<Triple> rootTriples = new HashSet<Triple>();
         while (iter.hasNext()) {

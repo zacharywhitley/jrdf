@@ -89,13 +89,14 @@ import static java.util.Collections.EMPTY_SET;
 
 public class MergeSubmoleculesImplUnitTest extends TestCase {
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
-    private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
     private MergeSubmolecules mergeSubmolecules;
 
 
     public void setUp() {
-        NewMoleculeComparator newMoleculeComparator = new NewMoleculeComparatorImpl(TRIPLE_COMPARATOR);
-        mergeSubmolecules = new MergeSubmoleculesImpl(TRIPLE_COMPARATOR, newMoleculeComparator, MERGE_MOLECULE);
+        TripleComparator tripleComparator = TRIPLE_COMPARATOR_FACTORY.newComparator();
+        NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(tripleComparator);
+        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(tripleComparator, moleculeComparator);
+        mergeSubmolecules = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory);
     }
 
     public void testMergeMolecules() {
