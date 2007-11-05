@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC "-//Puppy Crawl//DTD Suppressions 1.0//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
+
+<suppressions>
+    <!-- Only off by one class - maybe ResourceFactory - move to GraphImpl? -->
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GlobalizedGraphMemFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="TripleBuilderImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
+    <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
+    <suppress checks="CyclomaticComplexity" files="NodePoolImpl"/>
+    <suppress checks="JavaNCSS" files="GraphImpl"/>
+    <suppress checks="JavaNCSS" files="RDF"/>
+    <suppress checks="JavaNCSS" files="RDFS"/>
+    <suppress checks="JavaNCSS" files="XSD"/>
+    <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
+    <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
+    <suppress checks="JavaNCSS" files="NodePoolImpl"/>
+    <suppress checks="ReturnCount" files="NadicJoinImpl"/>
+    <suppress checks="ReturnCount" files="SemiJoinImpl"/>
+    <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
+    <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
+
+    <!-- Spikes -->
+    <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
+    <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
+    <suppress checks="JavaNCSS" files="Serializer"/>
+    <suppress checks="JavaNCSS" files="BlockFile"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="Serializer"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="BlockFile"/>
+
+    <!-- NTriples Parser -->
+    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl"/>
+
+    <!-- Cleanup molecule implementation -->
+    <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
+    <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />
+
+    <!-- RDF/XML Parser -->
+    <suppress checks="BooleanExpressionComplexity" files="RdfXmlParser"/>
+    <suppress checks="BooleanExpressionComplexity" files="SAXFilter"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlDatatypeUtil"/>
+    <suppress checks="BooleanExpressionComplexity" files="XmlUtil"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlParser"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SAXFilter"/>
+    <suppress checks="CyclomaticComplexity" files="XmlDatatypeUtil"/>
+    <suppress checks="CyclomaticComplexity" files="XmlUtil"/>
+    <suppress checks="CyclomaticComplexity" files="RdfXmlParser"/>
+    <suppress checks="CyclomaticComplexity" files="SAXFilter"/>
+    <suppress checks="JavaNCSS" files="RdfXmlParser"/>
+    <suppress checks="JavaNCSS" files="SAXFilter"/>
+    <suppress checks="JavaNCSS" files="XmlDatatypeUtil"/>
+    <suppress checks="JavaNCSS" files="XmlUtil"/>
+    <suppress checks="JavadocStyle" files="XmlSchema"/>
+    <suppress checks="MagicNumber" files="XmlUtil"/>
+    <suppress checks="MemberName" files="RdfXmlParser"/>
+    <suppress checks="MethodLength" files="XmlUtil"/>
+    <suppress checks="ReturnCount" files="XmlDatatypeUtil"/>
+    <suppress checks="ReturnCount" files="XmlUtil"/>
+</suppressions>
