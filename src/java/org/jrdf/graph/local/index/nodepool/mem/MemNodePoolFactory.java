@@ -57,25 +57,29 @@
  *
  */
 
-package org.jrdf.graph.local.bdb;
+package org.jrdf.graph.local.index.nodepool.mem;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedBdbJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.Graph;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
+import org.jrdf.map.MapFactory;
+import org.jrdf.map.MemMapFactory;
 
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
+import java.util.Map;
 
-public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
+public class MemNodePoolFactory implements NodePoolFactory {
+    public NodePool createNodePool() {
+        MapFactory factory1 = new MemMapFactory();
+        MapFactory factory2 = new MemMapFactory();
+        Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
+        Map<Long, Node> nodePool = factory1.createMap(Long.class, Node.class);
+        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(nodePool);
+        return new NodePoolImpl(nodeTypePool, stringPool);
+    }
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    @Override
-    public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+    public void close() {
+        // Do nothing - in memory.
     }
 }

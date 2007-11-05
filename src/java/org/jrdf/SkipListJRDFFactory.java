@@ -62,17 +62,18 @@ package org.jrdf;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.bdb.LongIndexBdb;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.skiplist.SkipListNodePoolFactory;
+import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
+import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.MapFactory;
+import org.jrdf.map.MemMapFactory;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.query.QueryFactory;
@@ -90,7 +91,7 @@ import org.jrdf.util.NodeTypeComparatorImpl;
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
-public final class SortedBdbJRDFFactory implements JRDFFactory {
+public final class SkipListJRDFFactory implements JRDFFactory {
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
     private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
     private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
@@ -102,11 +103,11 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     private static long graphNumber;
     private GraphFactory orderedGraphFactory;
 
-    private SortedBdbJRDFFactory() {
+    private SkipListJRDFFactory() {
     }
 
     public static JRDFFactory getFactory() {
-        return new SortedBdbJRDFFactory();
+        return new SkipListJRDFFactory();
     }
 
     public void refresh() {
@@ -114,12 +115,15 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        BdbMapFactory factory1 = new BdbMapFactory(HANDLER, "java_class_catalog_spo", "spo" + graphNumber);
-        BdbMapFactory factory2 = new BdbMapFactory(HANDLER, "java_class_catalog_pos", "pos" + graphNumber);
-        BdbMapFactory factory3 = new BdbMapFactory(HANDLER, "java_class_catalog_osp", "osp" + graphNumber);
+//        MapFactory factory1 = new SkipListMapFactory("spo" + graphNumber);
+//        MapFactory factory2 = new SkipListMapFactory("pos" + graphNumber);
+//        MapFactory factory3 = new SkipListMapFactory("osp" + graphNumber);
+        MapFactory factory1 = new MemMapFactory();
+        MapFactory factory2 = new MemMapFactory();
+        MapFactory factory3 = new MemMapFactory();
         LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
             new LongIndexBdb(factory3)};
-        NodePoolFactory nodePoolFactory = new MemNodePoolFactory();
+        NodePoolFactory nodePoolFactory = new SkipListNodePoolFactory();
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();
