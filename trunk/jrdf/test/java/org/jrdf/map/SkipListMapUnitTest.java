@@ -57,25 +57,17 @@
  *
  */
 
-package org.jrdf.graph.local.bdb;
+package org.jrdf.map;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SkipListJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.Graph;
+import junit.framework.TestCase;
 
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
-
-public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SkipListJRDFFactory.getFactory();
-
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    @Override
-    public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+public class SkipListMapUnitTest extends TestCase {
+    public void testClear() {
+        SkipListMap skipListMap = new SkipListMap();
+        skipListMap.put(1L, "foo");
+        skipListMap.put(2L, "bar");
+        skipListMap.put(1L, "baz");
+        skipListMap.clear();
+        assertEquals(0, skipListMap.size());
     }
 }
