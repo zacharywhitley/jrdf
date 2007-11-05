@@ -60,15 +60,13 @@
 package org.jrdf.graph.local.mem;
 
 import com.gargoylesoftware.base.testing.TestUtil;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnySubjectNode;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.Literal;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
@@ -78,6 +76,7 @@ import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
  * @version $Revision: 1499 $
  */
 public class GraphImplUnitTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.
@@ -85,9 +84,7 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
-        LongIndex[] indexes = new LongIndexMem[]{new LongIndexMem(), new LongIndexMem(), new LongIndexMem()};
-        GraphFactory graphFactory = new GraphFactoryImpl(indexes, new MemNodePoolFactory());
-        return graphFactory.getGraph();
+        return FACTORY.getNewGraph();
     }
 
     //TODO: Create a disk based serialization test.

@@ -74,7 +74,8 @@ public class MemNodePoolFactory implements NodePoolFactory {
         MapFactory factory1 = new MemMapFactory();
         MapFactory factory2 = new MemMapFactory();
         Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
-        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(factory1.createMap(Long.class, Node.class));
+        Map<Long, Node> nodePool = factory1.createMap(Long.class, Node.class);
+        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(nodePool);
         return new NodePoolImpl(nodeTypePool, stringPool);
     }
 

@@ -57,25 +57,31 @@
  *
  */
 
-package org.jrdf.graph.local.bdb;
+package org.jrdf.map;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SkipListJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.Graph;
+import junit.framework.TestCase;
 
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
+import java.util.Map;
 
-public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SkipListJRDFFactory.getFactory();
-
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    @Override
-    public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+public class SkipListMapFactoryUnitTest extends TestCase {
+    public void testCreateStringLong() {
+        MapFactory factory = new SkipListMapFactory("nodePool");
+        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put("Foo" + i, new Long(i));
+            Long aLong = stringPool.get("Foo" + i);
+            assertEquals(new Long(i).longValue(), aLong.longValue());
+        }
+        factory.close();
+    }
+    public void testCreateLongString() {
+        MapFactory factory = new SkipListMapFactory("nodePool");
+        Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put(new Long(i), "Foo" + i);
+            String value = stringPool.get(new Long(i));
+            assertEquals("Foo" + i, value);
+        }
+        factory.close();
     }
 }
