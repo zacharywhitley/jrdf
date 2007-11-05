@@ -34,27 +34,27 @@ import java.io.IOException;
 
 public class FreeListBlock {
     /**
-     * Page
+     * Page.
      */
     public int page;
 
     /**
-     * Next page
+     * Next page.
      */
     public int nextPage;
 
     /**
-     * Length
+     * Length.
      */
     public int len;
 
     /**
-     * Branches
+     * Branches.
      */
     public int[] branches = null;
 
     /**
-     * File
+     * File.
      */
     public RandomAccessInterface file;
 
