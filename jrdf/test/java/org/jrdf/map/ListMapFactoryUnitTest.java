@@ -59,41 +59,29 @@
 
 package org.jrdf.map;
 
-import net.metanotion.util.skiplist.SkipList;
+import junit.framework.TestCase;
 
-import java.util.AbstractSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Map;
 
-public class SkipListSet<E> extends AbstractSet<E> implements Set<E> {
-    private final SkipList list;
-
-    public SkipListSet(SkipList list) {
-        this.list = list;
+public class ListMapFactoryUnitTest extends TestCase {
+    public void testCreateStringLong() {
+        MapFactory factory = new ListMapFactory("nodePool");
+        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put("Foo" + i, new Long(i));
+            Long aLong = stringPool.get("Foo" + i);
+            assertEquals(new Long(i).longValue(), aLong.longValue());
+        }
+        factory.close();
     }
-
-    @Override
-    public int size() {
-        return list.size();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return list.get((Comparable) o) != null;
-    }
-
-    @Override
-    public Iterator<E> iterator() {
-        return list.iterator();
-    }
-
-    @Override
-    public boolean add(E o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
+    public void testCreateLongString() {
+        MapFactory factory = new ListMapFactory("nodePool");
+        Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put(new Long(i), "Foo" + i);
+            String value = stringPool.get(new Long(i));
+            assertEquals("Foo" + i, value);
+        }
+        factory.close();
     }
 }

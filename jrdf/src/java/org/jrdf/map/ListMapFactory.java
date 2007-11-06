@@ -59,29 +59,64 @@
 
 package org.jrdf.map;
 
-import junit.framework.TestCase;
+import net.metanotion.io.RAIFile;
+import net.metanotion.io.Serializer;
+import net.metanotion.io.block.BlockFile;
+import net.metanotion.io.data.IntBytes;
+import net.metanotion.io.data.LongBytes;
+import net.metanotion.io.data.StringBytes;
+import net.metanotion.util.skiplist.BaseSkipList;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
-public class SkipListMapFactoryUnitTest extends TestCase {
-    public void testCreateStringLong() {
-        MapFactory factory = new SkipListMapFactory("nodePool");
-        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
-        for (int i = 0; i < 100; i++) {
-            stringPool.put("Foo" + i, new Long(i));
-            Long aLong = stringPool.get("Foo" + i);
-            assertEquals(new Long(i).longValue(), aLong.longValue());
-        }
-        factory.close();
+public class ListMapFactory implements MapFactory {
+    private static final String USERNAME = System.getProperty("user.name");
+    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+    private Map<Class<?>, Serializer> classToSerializer = new HashMap<Class<?>, Serializer>();
+    private final String name;
+    private BlockFile keyBlockFile;
+    private BlockFile valueBlockFile;
+
+    public ListMapFactory(String name) {
+        classToSerializer.put(Integer.class, new IntBytes());
+        classToSerializer.put(Long.class, new LongBytes());
+        classToSerializer.put(String.class, new StringBytes());
+        this.name = name;
     }
-    public void testCreateLongString() {
-        MapFactory factory = new SkipListMapFactory("nodePool");
-        Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
-        for (int i = 0; i < 100; i++) {
-            stringPool.put(new Long(i), "Foo" + i);
-            String value = stringPool.get(new Long(i));
-            assertEquals("Foo" + i, value);
+
+    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
+        try {
+            keyBlockFile = getBlockFile("key");
+            valueBlockFile = getBlockFile("value");
+            Serializer indexSerializer = classToSerializer.get(Integer.class);
+            Serializer keySerializer = classToSerializer.get(clazz1);
+            Serializer valueSerializer = classToSerializer.get(clazz2);
+//            return new SkipListMap(keysList, valuesList);
+            return new ListMap(new BaseSkipList(10), new BaseSkipList(10));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        factory.close();
+    }
+
+    private <T, A, U extends A> BlockFile getBlockFile(String type) throws IOException {
+        File file = new File(getDir() + "/" + name + type);
+        RAIFile raif = new RAIFile(file, true, true);
+        return new BlockFile(raif, true);
+    }
+
+    public void close() {
+        try {
+            keyBlockFile.close();
+            valueBlockFile.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    private File getDir() {
+        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
 }

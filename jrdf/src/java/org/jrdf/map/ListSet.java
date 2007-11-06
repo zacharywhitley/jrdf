@@ -59,67 +59,41 @@
 
 package org.jrdf.map;
 
-import net.metanotion.io.RAIFile;
-import net.metanotion.io.Serializer;
-import net.metanotion.io.block.BlockFile;
-import net.metanotion.io.block.index.BSkipList;
-import net.metanotion.io.data.IntBytes;
-import net.metanotion.io.data.LongBytes;
-import net.metanotion.io.data.StringBytes;
-import net.metanotion.util.skiplist.BaseSkipList;
+import net.metanotion.util.skiplist.SkipList;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.AbstractSet;
+import java.util.Iterator;
+import java.util.Set;
 
-public class SkipListMapFactory implements MapFactory {
-    private static final String USERNAME = System.getProperty("user.name");
-    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
-    private Map<Class<?>, Serializer> classToSerializer = new HashMap<Class<?>, Serializer>();
-    private final String name;
-    private BlockFile keyBlockFile;
-    private BlockFile valueBlockFile;
+public class ListSet<E> extends AbstractSet<E> implements Set<E> {
+    private final SkipList list;
 
-    public SkipListMapFactory(String name) {
-        classToSerializer.put(Integer.class, new IntBytes());
-        classToSerializer.put(Long.class, new LongBytes());
-        classToSerializer.put(String.class, new StringBytes());
-        this.name = name;
+    public ListSet(SkipList list) {
+        this.list = list;
     }
 
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            keyBlockFile = getBlockFile("key");
-            valueBlockFile = getBlockFile("value");
-            Serializer indexSerializer = classToSerializer.get(Integer.class);
-            Serializer keySerializer = classToSerializer.get(clazz1);
-            Serializer valueSerializer = classToSerializer.get(clazz2);
-            BSkipList keysList = keyBlockFile.makeIndex("key", keySerializer, indexSerializer);
-            BSkipList valuesList = valueBlockFile.makeIndex("value", indexSerializer, valueSerializer);
-//            return new SkipListMap(keysList, valuesList);
-            return new SkipListMap(new BaseSkipList(10), new BaseSkipList(10));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    @Override
+    public int size() {
+        return list.size();
     }
 
-    private <T, A, U extends A> BlockFile getBlockFile(String type) throws IOException {
-        File file = new File(getDir() + "/" + name + type);
-        RAIFile raif = new RAIFile(file, true, true);
-        return new BlockFile(raif, true);
+    @Override
+    public boolean contains(Object o) {
+        return list.get((Comparable) o) != null;
     }
 
-    public void close() {
-        try {
-            keyBlockFile.close();
-            valueBlockFile.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
+    @Override
+    public Iterator<E> iterator() {
+        return list.iterator();
     }
 
-    private File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
+    @Override
+    public boolean add(E o) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
     }
 }
