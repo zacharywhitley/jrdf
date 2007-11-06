@@ -62,10 +62,10 @@ package org.jrdf.map;
 import net.metanotion.io.RAIFile;
 import net.metanotion.io.Serializer;
 import net.metanotion.io.block.BlockFile;
+import net.metanotion.io.block.index.BSkipList;
 import net.metanotion.io.data.IntBytes;
 import net.metanotion.io.data.LongBytes;
 import net.metanotion.io.data.StringBytes;
-import net.metanotion.util.skiplist.BaseSkipList;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,8 +94,12 @@ public class ListMapFactory implements MapFactory {
             Serializer indexSerializer = classToSerializer.get(Integer.class);
             Serializer keySerializer = classToSerializer.get(clazz1);
             Serializer valueSerializer = classToSerializer.get(clazz2);
-//            return new SkipListMap(keysList, valuesList);
-            return new ListMap(new BaseSkipList(10), new BaseSkipList(10));
+            BSkipList.init(keyBlockFile, 2, 1000);
+            BSkipList.init(valueBlockFile, 2, 1000);
+            BSkipList keysList = new BSkipList(1000, keyBlockFile, 2, keySerializer, indexSerializer);
+            BSkipList valuesList = new BSkipList(1000, valueBlockFile, 2, indexSerializer, valueSerializer);
+            return new ListMap(keysList, valuesList);
+//            return new ListMap(new BaseSkipList(1000), new BaseSkipList(1000));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
