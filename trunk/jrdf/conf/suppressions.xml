@@ -38,6 +38,7 @@
     <suppress checks="JavaNCSS" files="BlockFile"/>
     <suppress checks="ClassDataAbstractionCoupling" files="Serializer"/>
     <suppress checks="ClassDataAbstractionCoupling" files="BlockFile"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SkipListMapFactory"/>
 
     <!-- NTriples Parser -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>

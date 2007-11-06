@@ -57,31 +57,17 @@
  *
  */
 
-package net.metanotion.io.data;
+package org.jrdf.map;
 
 import junit.framework.TestCase;
 
-import java.util.LinkedList;
-import java.util.Arrays;
-import java.util.List;
-
-public class BinaryLongBytesUnitTest extends TestCase {
-    public void testBackAndForth() {
-        BinaryLongBytes binaryLongBytes = new BinaryLongBytes();
-        LinkedList<Long[]> src = new LinkedList<Long[]>();
-        for (int elements = 0; elements < 10; elements++) {
-            src.add(new Long[]{new Long(elements * 2), new Long(elements * 2) + 1});
-        }
-        byte[] bytes = binaryLongBytes.getBytes(src);
-        LinkedList<Long[]> result = (LinkedList<Long[]>) binaryLongBytes.construct(bytes);
-        for (int index = 0; index < src.size(); index++) {
-            checkArraysEqual(src.get(index), result.get(index));
-        }
-    }
-
-    private void checkArraysEqual(Long[] src, Long[] dest) {
-        List<Long> srcLongs = Arrays.asList(src);
-        List<Long> destLongs = Arrays.asList(dest);
-        assertEquals("Expected: " + srcLongs + " but was " + destLongs, srcLongs, destLongs);
+public class ListMapUnitTest extends TestCase {
+    public void testClear() {
+        ListMap listMap = new ListMap();
+        listMap.put(1L, "foo");
+        listMap.put(2L, "bar");
+        listMap.put(1L, "baz");
+        listMap.clear();
+        assertEquals(0, listMap.size());
     }
 }

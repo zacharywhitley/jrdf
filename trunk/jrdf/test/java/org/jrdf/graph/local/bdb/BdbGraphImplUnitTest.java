@@ -60,14 +60,14 @@
 package org.jrdf.graph.local.bdb;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SkipListJRDFFactory;
+import org.jrdf.SortedBdbJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
 public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SkipListJRDFFactory.getFactory();
+    private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
 
     /**
      * Create a graph implementation.

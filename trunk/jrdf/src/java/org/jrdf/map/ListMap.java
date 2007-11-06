@@ -7,16 +7,16 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class SkipListMap<K, V> implements Map<K, V> {
+public class ListMap<K, V> implements Map<K, V> {
     private SkipList keys;
     private SkipList values;
 
-    public SkipListMap() {
+    public ListMap() {
         this.keys = new BaseSkipList(3);
         this.values = new BaseSkipList(3);
     }
 
-    public SkipListMap(SkipList keys, SkipList values) {
+    public ListMap(SkipList keys, SkipList values) {
         this.keys = keys;
         this.values = values;
     }
@@ -83,11 +83,11 @@ public class SkipListMap<K, V> implements Map<K, V> {
     }
 
     public Set<K> keySet() {
-        return new SkipListSet(keys);
+        return new ListSet(keys);
     }
 
     public Collection<V> values() {
-        return new SkipListSet(values);
+        return new ListSet(values);
     }
 
     public Set<Entry<K, V>> entrySet() {
