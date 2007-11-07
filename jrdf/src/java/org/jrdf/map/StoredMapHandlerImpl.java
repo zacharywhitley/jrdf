@@ -61,6 +61,10 @@ package org.jrdf.map;
 
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.bind.tuple.TupleBinding;
+import com.sleepycat.bind.tuple.StringBinding;
+import com.sleepycat.bind.tuple.LongBinding;
+import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.collections.StoredMap;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
@@ -70,10 +74,17 @@ import com.sleepycat.je.EnvironmentConfig;
 
 import java.io.File;
 import java.util.Map;
+import java.util.HashMap;
 
 public class StoredMapHandlerImpl implements StoredMapHandler {
     private static final String USERNAME = System.getProperty("user.name");
     private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+    private Map<Class<?>, TupleBinding> binding = new HashMap<Class<?>, TupleBinding>();
+
+    public StoredMapHandlerImpl() {
+        binding.put(String.class, new StringBinding());
+        binding.put(Long.class, new LongBinding());
+    }
 
     public Environment setUpEnvironment() throws DatabaseException {
         File dir = getDir();
@@ -104,8 +115,16 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
     @SuppressWarnings({ "unchecked" })
     public <T, A, U extends A> Map<T, U> createMap(Environment env, Database database, StoredClassCatalog catalog,
         Class<T> clazz1, Class<A> clazz2) throws DatabaseException {
-        SerialBinding keyBinding = new SerialBinding(catalog, clazz1);
-        SerialBinding dataBinding = new SerialBinding(catalog, clazz2);
+        EntryBinding keyBinding = new SerialBinding(catalog, clazz1);
+        EntryBinding dataBinding = new SerialBinding(catalog, clazz2);
+        return new StoredMap(database, keyBinding, dataBinding, true);
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public <T, A, U extends A> Map<T, U> createMap(Environment env, Database database,
+        Class<T> clazz1, Class<A> clazz2) {
+        EntryBinding keyBinding = binding.get(clazz1);
+        EntryBinding dataBinding = binding.get(clazz2);
         return new StoredMap(database, keyBinding, dataBinding, true);
     }
 

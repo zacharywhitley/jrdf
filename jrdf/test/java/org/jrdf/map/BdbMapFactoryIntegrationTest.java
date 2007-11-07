@@ -59,78 +59,48 @@
 
 package org.jrdf.map;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import com.sleepycat.je.Database;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import junit.framework.TestCase;
 
 import java.util.Map;
 
-public final class BdbMapFactory implements MapFactory {
-    private final StoredMapHandler handler;
-    private final String classCatalog;
-    private final String databaseName;
-    private Environment env;
-    private StoredClassCatalog catalog;
-    private Database database;
+public class BdbMapFactoryIntegrationTest extends TestCase {
+    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl();
+    private MapFactory factory;
 
-    public BdbMapFactory(StoredMapHandler newHandler, String newClassCatalog, String newDatabaseName) {
-        checkNotNull(newHandler, newClassCatalog, newDatabaseName);
-        this.handler = newHandler;
-        this.classCatalog = newClassCatalog;
-        this.databaseName = newDatabaseName;
+    public void setUp() throws Exception {
+        super.setUp();
+        factory = new BdbMapFactory(HANDLER, "java_class_catalog_spo", "testDb");
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            catalog = handler.setupCatalog(env, classCatalog, dbConfig);
-            database = handler.setupDatabase(env, databaseName, dbConfig);
-            // TODO change to this when implemented array of longs handler.
-            //return handler.createMap(env, database, clazz1, clazz2);
-            return handler.createMap(env, database, catalog, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+    public void testCreateStringLong() {
+        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put("Foo" + i, new Long(i));
+            Long aLong = stringPool.get("Foo" + i);
+            assertEquals(new Long(i).longValue(), aLong.longValue());
         }
+        factory.close();
     }
 
-    public void close() {
-        try {
-            closeDatabase();
-        } finally {
-            try {
-                closeCatalog();
-            } finally {
-                closeEnvironment();
-            }
+    public void testCreateLongString() {
+        Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put(new Long(i), "Foo" + i);
+            String value = stringPool.get(new Long(i));
+            assertEquals("Foo" + i, value);
         }
+        factory.close();
     }
 
-    private void closeDatabase() {
-        try {
-            database.close();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void closeCatalog() {
-        try {
-            catalog.close();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void closeEnvironment() {
-        try {
-            env.close();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public void testCreateLongArrayList() {
+//        Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
+//        for (int i = 0; i < 100; i++) {
+//            LinkedList<Long[]> list = new LinkedList<Long[]>();
+//            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
+//            tripleStore.put(new Long(i), list);
+//            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
+//            assertEquals(list, longs);
+//        }
+//        factory.close();
+//    }
 }

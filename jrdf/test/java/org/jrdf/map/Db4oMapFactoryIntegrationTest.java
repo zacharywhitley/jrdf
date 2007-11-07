@@ -61,10 +61,9 @@ package org.jrdf.map;
 
 import junit.framework.TestCase;
 
-import java.util.LinkedList;
 import java.util.Map;
 
-public class Db4oFactoryUnitTest extends TestCase {
+public class Db4oMapFactoryIntegrationTest extends TestCase {
     private DirectoryHandler handler = new TempDirectoryHandler();
     private MapFactory factory;
 
@@ -93,15 +92,15 @@ public class Db4oFactoryUnitTest extends TestCase {
         factory.close();
     }
 
-    public void testCreateLongArrayList() {
-        Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
-        for (int i = 0; i < 100; i++) {
-            LinkedList<Long[]> list = new LinkedList<Long[]>();
-            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
-            tripleStore.put(new Long(i), list);
-            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
-            assertEquals(list, longs);
-        }
-        factory.close();
-    }
+//    public void testCreateLongArrayList() {
+//        Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
+//        for (int i = 0; i < 100; i++) {
+//            LinkedList<Long[]> list = new LinkedList<Long[]>();
+//            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
+//            tripleStore.put(new Long(i), list);
+//            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
+//            assertEquals(list, longs);
+//        }
+//        factory.close();
+//    }
 }
