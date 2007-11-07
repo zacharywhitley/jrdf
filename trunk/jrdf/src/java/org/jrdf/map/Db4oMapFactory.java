@@ -76,17 +76,21 @@ public class Db4oMapFactory implements MapFactory {
     public Db4oMapFactory(DirectoryHandler dirHandler, String name) {
         this.dirHandler = dirHandler;
         this.name = name;
+        File file = new File(dirHandler.getDir(), name);
+        deleteIfExists(file);
+        try {
+            db = Db4o.openFile(file.getCanonicalPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressWarnings({ "unchecked" })
     public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            File file = new File(dirHandler.getDir(), name);
-            deleteIfExists(file);
-            return getMap(file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Db4oMap db4oMap = db.ext().collections().newHashMap(INITIAL_MAP_SIZE);
+        db4oMap.deleteRemoved(true);
+        db.set(db4oMap);
+        return db4oMap;
     }
 
     public void close() {
@@ -99,11 +103,4 @@ public class Db4oMapFactory implements MapFactory {
         }
     }
 
-    private Db4oMap getMap(File file) throws IOException {
-        db = Db4o.openFile(file.getCanonicalPath());
-        Db4oMap db4oMap = db.ext().collections().newHashMap(INITIAL_MAP_SIZE);
-        db4oMap.deleteRemoved(true);
-        db.set(db4oMap);
-        return db4oMap;
-    }
 }

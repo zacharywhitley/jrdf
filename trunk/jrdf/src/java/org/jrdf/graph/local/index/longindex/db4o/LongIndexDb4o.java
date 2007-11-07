@@ -59,147 +59,37 @@
 
 package org.jrdf.graph.local.index.longindex.db4o;
 
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.local.index.AbstractIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.map.MapFactory;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
 // TODO How is this Serializable?
-public final class LongIndexDb4o implements LongIndex, Serializable {
+public final class LongIndexDb4o extends AbstractIndex<Long> implements LongIndex, Serializable {
     private static final long serialVersionUID = 6044200669651883129L;
     private MapFactory creator;
-    private Map<Long, LinkedList<Long[]>> index;
 
     private LongIndexDb4o() {
     }
 
     public LongIndexDb4o(MapFactory newCreator) {
         this.creator = newCreator;
-        this.index = creator.createMap(Long.class, LinkedList.class);
-    }
-
-    public void add(Long... triple) {
-        // find the sub index
-        LinkedList<Long[]> subIndex = index.get(triple[0]);
-        // check that the subindex exists
-        if (null == subIndex) {
-            // no, so create it
-            subIndex = new LinkedList<Long[]>();
-        }
-        boolean found = false;
-        for (Long[] grp : subIndex) {
-            if (grp[0].equals(triple[1]) && grp[1].equals(triple[2])) {
-                found = true;
-            }
-        }
-        if (!found) {
-            Long[] group = {triple[1], triple[2]};
-            subIndex.add(group);
-            index.put(triple[0], subIndex);
-        }
-    }
-
-    public void remove(Long... node) throws GraphException {
-        // find the sub index
-        LinkedList<Long[]> subIndex = index.get(node[0]);
-        // check that the subindex exists
-        if (null == subIndex) {
-            throw new GraphException("Unable to remove nonexistent statement");
-        }
-        // find the group
-        Long[] groupToRemove = null;
-        for (Long[] group : subIndex) {
-            if (node[1].equals(group[0]) && node[2].equals(group[1])) {
-                groupToRemove = group;
-                break;
-            }
-        }
-        removeTriple(subIndex, groupToRemove, node[0]);
-    }
-
-    private void removeTriple(LinkedList<Long[]> subIndex, Long[] groupToRemove, Long first) {
-        subIndex.remove(groupToRemove);
-        index.remove(first);
-        if (!subIndex.isEmpty()) {
-            index.put(first, subIndex);
-        }
-    }
-
-    public void clear() {
-        index.clear();
-    }
-
-    public void close() {
-        creator.close();
-    }
-
-    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
-        Map<Long, Map<Long, Set<Long>>> map = new HashMap<Long, Map<Long, Set<Long>>>();
-        Set<Long> set = index.keySet();
-        for (Long indx : set) {
-            Map<Long, Set<Long>> subIndex = getSubIndex(indx);
-            map.put(indx, subIndex);
-        }
-        return map.entrySet().iterator();
-    }
-
-    public Map<Long, Set<Long>> getSubIndex(Long first) {
-        if (index.containsKey(first)) {
-            Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-            for (Long[] elements : index.get(first)) {
-                Set<Long> longs;
-                if (resultMap.containsKey(elements[0])) {
-                    longs = resultMap.remove(elements[0]);
-                } else {
-                    longs = new HashSet<Long>();
-                }
-                longs.add(elements[1]);
-                resultMap.put(elements[0], longs);
-            }
-            return resultMap;
-        } else {
-            return null;
-        }
-    }
-
-    public boolean contains(Long first) {
-        return index.containsKey(first);
-    }
-
-    public boolean removeSubIndex(Long first) {
-        index.remove(first);
-        return index.containsKey(first);
+        this.index = creator.createMap(Long.class, Map.class);
     }
 
     public long getSize() {
         int size = 0;
         // go over the index map
-        Set<Map.Entry<Long, LinkedList<Long[]>>> entries = index.entrySet();
-        for (Map.Entry<Long, LinkedList<Long[]>> entry : entries) {
-            LinkedList<Long[]> list = entry.getValue();
-            size += list.size();
-        }
-        return size;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        for (Long longIndexId : index.keySet()) {
-            builder.append("Index: " + longIndexId + "\n");
-            LinkedList<Long[]> list = index.get(longIndexId);
-            for (Long[] values : list) {
-                builder.append("\tValues:" + Arrays.asList(values) + "\n");
+        Set<Map.Entry<Long, Map<Long, Set<Long>>>> entries = index.entrySet();
+        for (Map.Entry<Long, Map<Long, Set<Long>>> entry : entries) {
+            Map<Long, Set<Long>> value = entry.getValue();
+            for (Set<Long> sets : value.values()) {
+                size += sets.size();
             }
         }
-        return builder.toString();
+        return size;
     }
 }
