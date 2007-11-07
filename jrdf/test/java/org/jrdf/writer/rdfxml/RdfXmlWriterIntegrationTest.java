@@ -169,6 +169,7 @@ public class RdfXmlWriterIntegrationTest extends TestCase {
         StringWriter out = new StringWriter();
         try {
             BlankNodeRegistry nodeRegistry = new MemBlankNodeRegistryImpl();
+            nodeRegistry.clear();
             RdfNamespaceMap map = new RdfNamespaceMapImpl();
             RdfWriter writer = new RdfXmlWriter(nodeRegistry, map);
             writer.write(graph, out);
