@@ -57,36 +57,38 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.map;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedBdbJRDFFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
-import org.jrdf.map.StoredMapHandlerImpl;
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
+import com.sleepycat.bind.tuple.TupleBinding;
+import com.sleepycat.bind.tuple.TupleInput;
+import com.sleepycat.bind.tuple.TupleOutput;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.TypedNodeVisitor;
 
-public class BdbPerformance extends AbstractGraphPerformance {
-    private JRDFFactory factory;
-
-    public BdbPerformance() {
-        factory = SortedBdbJRDFFactory.getFactory();
+public class BlankNodeBinding extends TupleBinding {
+    public Object entryToObject(TupleInput tupleInput) {
+        return new BlankNodeImpl(tupleInput.readString());
     }
 
-    protected Graph getGraph() {
-        Graph newGraph = factory.getNewGraph();
-        newGraph.clear();
-        return newGraph;
+    public void objectToEntry(Object object, TupleOutput tupleOutput) {
+        BlankNode node = (BlankNode) object;
+        tupleOutput.writeString(node.toString());
     }
 
-    protected MapFactory getMapFactory() {
-        return new BdbMapFactory(new StoredMapHandlerImpl(), "database");
-    }
+    private final class BlankNodeImpl implements BlankNode {
+        private String value;
 
-    public static void main(String[] args) throws Exception {
-        BdbPerformance bdbPerformance = new BdbPerformance();
-        bdbPerformance.testPerformance();
-//        bdbPerformance.parsePerformance();
+        private BlankNodeImpl(String newValue) {
+            value = newValue;
+        }
+
+        public void accept(TypedNodeVisitor visitor) {
+            visitor.visitBlankNode(this);
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
     }
 }
