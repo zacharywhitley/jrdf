@@ -79,4 +79,8 @@ public interface StoredMapHandler {
 
     <T, A, U extends A> Map<T, U> createMap(Environment env, Database database, StoredClassCatalog catalog,
         Class<T> clazz1, Class<A> clazz2) throws DatabaseException;
+
+    @SuppressWarnings({ "unchecked" })
+        <T, A, U extends A> Map<T, U> createMap(Environment env, Database database,
+        Class<T> clazz1, Class<A> clazz2);
 }
