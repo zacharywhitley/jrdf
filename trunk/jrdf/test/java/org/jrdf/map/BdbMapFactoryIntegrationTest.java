@@ -69,7 +69,7 @@ public class BdbMapFactoryIntegrationTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        factory = new BdbMapFactory(HANDLER, "java_class_catalog_spo", "testDb");
+        factory = new BdbMapFactory(HANDLER, "testDb");
     }
 
     public void testCreateStringLong() {

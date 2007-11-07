@@ -115,9 +115,9 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        MapFactory factory1 = new BdbMapFactory(HANDLER, "java_class_catalog_spo", "spo" + graphNumber);
-        MapFactory factory2 = new BdbMapFactory(HANDLER, "java_class_catalog_pos", "pos" + graphNumber);
-        MapFactory factory3 = new BdbMapFactory(HANDLER, "java_class_catalog_osp", "osp" + graphNumber);
+        MapFactory factory1 = new BdbMapFactory(HANDLER, "spo" + graphNumber);
+        MapFactory factory2 = new BdbMapFactory(HANDLER, "pos" + graphNumber);
+        MapFactory factory3 = new BdbMapFactory(HANDLER, "osp" + graphNumber);
         LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
             new LongIndexBdb(factory3)};
         NodePoolFactory nodePoolFactory = new MemNodePoolFactory();

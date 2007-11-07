@@ -35,6 +35,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
     <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="StoredMapHandlerImpl"/>
 
     <!-- NTriples Parser -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>

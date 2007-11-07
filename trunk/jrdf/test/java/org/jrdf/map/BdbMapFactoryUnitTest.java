@@ -59,11 +59,10 @@
 
 package org.jrdf.map;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-import com.sleepycat.je.Database;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
@@ -79,14 +78,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BdbMapFactoryUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = {StoredMapHandler.class, String.class, String.class};
-    private static final String[] PARAMETER_NAMES = {"newHandler", "newClassCatalog", "newDatabaseName"};
+    private static final Class[] PARAM_TYPES = {StoredMapHandler.class, String.class};
+    private static final String[] PARAMETER_NAMES = {"newHandler", "newDatabaseName"};
     private MockFactory mockFactory = new MockFactory();
     private StoredMapHandler storedMapHandler;
-    private String classCatalog = "catalog" + System.currentTimeMillis();
     private String databaseName = "dbName" + System.currentTimeMillis();
     private Environment environment;
-    private StoredClassCatalog storedClassCatalog;
     private Database database;
 
     public void setUp() {
@@ -103,7 +100,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
     public void testCreateMap() throws Exception {
         HashMap<String, String> expectedMap = creatMapExpectations();
         mockFactory.replay();
-        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
         Map<String,String> actualMap = factory.createMap(String.class, String.class);
         assertTrue(expectedMap == actualMap);
         mockFactory.verify();
@@ -114,7 +111,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 mockFactory.replay();
-                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
                 factory.createMap(String.class, String.class);
                 mockFactory.verify();
             }
@@ -127,9 +124,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         expectLastCall();
         database.close();
         expectLastCall();
-        storedClassCatalog.close();
-        expectLastCall();
-        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
         mockFactory.replay();
         factory.createMap(String.class, String.class);
         factory.close();
@@ -140,33 +135,12 @@ public class BdbMapFactoryUnitTest extends TestCase {
         creatMapExpectations();
         environment.close();
         expectLastCall().andThrow(new DatabaseException());
-        storedClassCatalog.close();
-        expectLastCall();
         database.close();
         expectLastCall();
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 mockFactory.replay();
-                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
-                factory.createMap(String.class, String.class);
-                factory.close();
-                mockFactory.verify();
-            }
-        });
-    }
-
-    public void testCloseCatalogExceptions() throws Exception {
-        creatMapExpectations();
-        environment.close();
-        expectLastCall();
-        database.close();
-        expectLastCall();
-        storedClassCatalog.close();
-        expectLastCall().andThrow(new DatabaseException());
-        AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
-            public void execute() throws Throwable {
-                mockFactory.replay();
-                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
                 factory.createMap(String.class, String.class);
                 factory.close();
                 mockFactory.verify();
@@ -178,12 +152,10 @@ public class BdbMapFactoryUnitTest extends TestCase {
         creatMapExpectations();
         environment.close();
         expectLastCall().andThrow(new DatabaseException());
-        storedClassCatalog.close();
-        expectLastCall().andThrow(new DatabaseException());
         AssertThrows.assertThrows(RuntimeException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 mockFactory.replay();
-                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, classCatalog, databaseName);
+                BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
                 factory.createMap(String.class, String.class);
                 factory.close();
                 mockFactory.verify();
@@ -197,12 +169,9 @@ public class BdbMapFactoryUnitTest extends TestCase {
         expect(storedMapHandler.setUpEnvironment()).andReturn(environment);
         DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
         expect(storedMapHandler.setUpDatabaseConfig(false)).andReturn(databaseConfig);
-        storedClassCatalog = mockFactory.createMock(StoredClassCatalog.class);
         database = mockFactory.createMock(Database.class);
         expect(storedMapHandler.setupDatabase(environment, databaseName, databaseConfig)).andReturn(database);
-        expect(storedMapHandler.setupCatalog(environment, classCatalog, databaseConfig)).
-                andReturn(storedClassCatalog);
-        expect(storedMapHandler.createMap(environment, database, storedClassCatalog, String.class, String.class)).
+        expect(storedMapHandler.createMap(environment, database, String.class, String.class)).
                 andReturn(expectedMap);
         return expectedMap;
     }

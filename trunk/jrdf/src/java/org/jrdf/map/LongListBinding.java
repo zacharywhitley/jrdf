@@ -57,25 +57,32 @@
  *
  */
 
-package org.jrdf.graph.local.bdb;
+package org.jrdf.map;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedBdbJRDFFactory;
-import org.jrdf.graph.AbstractGraphUnitTest;
-import org.jrdf.graph.Graph;
+import com.sleepycat.bind.tuple.TupleBinding;
+import com.sleepycat.bind.tuple.TupleInput;
+import com.sleepycat.bind.tuple.TupleOutput;
 
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
+import java.util.LinkedList;
 
-public class BdbGraphImplUnitTest extends AbstractGraphUnitTest {
-    private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
+public class LongListBinding extends TupleBinding {
+    public Object entryToObject(TupleInput tupleInput) {
+        LinkedList<Long[]> list = new LinkedList<Long[]>();
+        long size = tupleInput.readLong();
+        for (int i = 0; i < size; i++) {
+            list.add(new Long[]{tupleInput.readLong(), tupleInput.readLong()});
+        }
+        return list;
+    }
 
-    /**
-     * Create a graph implementation.
-     *
-     * @return A new GraphImplUnitTest.
-     */
-    @Override
-    public Graph newGraph() throws Exception {
-        return FACTORY.getNewGraph();
+    @SuppressWarnings({ "unchecked" })
+    public void objectToEntry(Object object, TupleOutput tupleOutput) {
+        LinkedList<Long[]> list = (LinkedList<Long[]>) object;
+        tupleOutput.writeLong(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            Long[] longs = list.get(i);
+            tupleOutput.writeLong(longs[0]);
+            tupleOutput.writeLong(longs[1]);
+        }
     }
 }

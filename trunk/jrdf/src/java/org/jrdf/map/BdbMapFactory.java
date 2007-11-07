@@ -59,27 +59,23 @@
 
 package org.jrdf.map;
 
-import com.sleepycat.bind.serial.StoredClassCatalog;
+import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-import com.sleepycat.je.Database;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Map;
 
 public final class BdbMapFactory implements MapFactory {
     private final StoredMapHandler handler;
-    private final String classCatalog;
     private final String databaseName;
     private Environment env;
-    private StoredClassCatalog catalog;
     private Database database;
 
-    public BdbMapFactory(StoredMapHandler newHandler, String newClassCatalog, String newDatabaseName) {
-        checkNotNull(newHandler, newClassCatalog, newDatabaseName);
+    public BdbMapFactory(StoredMapHandler newHandler, String newDatabaseName) {
+        checkNotNull(newHandler, newDatabaseName);
         this.handler = newHandler;
-        this.classCatalog = newClassCatalog;
         this.databaseName = newDatabaseName;
     }
 
@@ -88,11 +84,8 @@ public final class BdbMapFactory implements MapFactory {
         try {
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            catalog = handler.setupCatalog(env, classCatalog, dbConfig);
             database = handler.setupDatabase(env, databaseName, dbConfig);
-            // TODO change to this when implemented array of longs handler.
-            //return handler.createMap(env, database, clazz1, clazz2);
-            return handler.createMap(env, database, catalog, clazz1, clazz2);
+            return handler.createMap(env, database, clazz1, clazz2);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
@@ -102,25 +95,13 @@ public final class BdbMapFactory implements MapFactory {
         try {
             closeDatabase();
         } finally {
-            try {
-                closeCatalog();
-            } finally {
-                closeEnvironment();
-            }
+            closeEnvironment();
         }
     }
 
     private void closeDatabase() {
         try {
             database.close();
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void closeCatalog() {
-        try {
-            catalog.close();
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
