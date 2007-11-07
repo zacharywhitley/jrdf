@@ -131,4 +131,6 @@ public interface Index<T> {
      * @return the number of triples in the index.
      */
     long getSize();
+
+    void close();
 }

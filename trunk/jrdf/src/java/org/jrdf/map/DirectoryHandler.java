@@ -59,15 +59,8 @@
 
 package org.jrdf.map;
 
-import junit.framework.TestCase;
+import java.io.File;
 
-public class ListMapUnitTest extends TestCase {
-    public void testClear() {
-        ListMap listMap = new ListMap();
-        listMap.put(1L, "foo");
-        listMap.put(2L, "bar");
-        listMap.put(1L, "baz");
-        listMap.clear();
-        assertEquals(0, listMap.size());
-    }
+public interface DirectoryHandler {
+    File getDir();
 }

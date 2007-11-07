@@ -57,56 +57,23 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.bdb;
+package org.jrdf.graph.local.bdb;
 
-import junit.framework.TestCase;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.StoredMapHandlerImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedDb4oJRDFFactory;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
 
-public class LongIndexBdbUnitTest extends TestCase {
-    private LongIndex longIndex;
-    private MapFactory factory;
+public class Db4oGraphImplUnitTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedDb4oJRDFFactory.getFactory();
 
-    public void setUp() {
-        factory = new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database");
-        longIndex = new LongIndexBdb(factory);
-        longIndex.clear();
-    }
-
-    public void tearDown() {
-        factory.close();
-    }
-
-    public void testAddition() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(4L, 5L, 6L);
-        checkNumberOfTriples(2, longIndex.getSize());
-    }
-
-    public void testRemove() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        checkNumberOfTriples(2, longIndex.getSize());
-        longIndex.remove(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.remove(3L, 4L, 3L);
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    public void testClear() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        longIndex.clear();
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
-        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize, expectedNumber,
-            actualSize);
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    @Override
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 }

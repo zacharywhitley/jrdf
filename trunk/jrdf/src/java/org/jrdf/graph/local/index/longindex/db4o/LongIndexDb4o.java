@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.bdb;
+package org.jrdf.graph.local.index.longindex.db4o;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
@@ -72,16 +72,18 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-// TODO Abdul How is this Serializable?
-public final class LongIndexBdb implements LongIndex, Serializable {
+// TODO How is this Serializable?
+public final class LongIndexDb4o implements LongIndex, Serializable {
     private static final long serialVersionUID = 6044200669651883129L;
+    private MapFactory creator;
     private Map<Long, LinkedList<Long[]>> index;
 
-    private LongIndexBdb() {
+    private LongIndexDb4o() {
     }
 
-    public LongIndexBdb(MapFactory newCreator) {
-        index = newCreator.createMap(Long.class, LinkedList.class);
+    public LongIndexDb4o(MapFactory newCreator) {
+        this.creator = newCreator;
+        this.index = creator.createMap(Long.class, LinkedList.class);
     }
 
     public void add(Long... triple) {
@@ -135,6 +137,10 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         index.clear();
     }
 
+    public void close() {
+        creator.close();
+    }
+
     public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
         Map<Long, Map<Long, Set<Long>>> map = new HashMap<Long, Map<Long, Set<Long>>>();
         Set<Long> set = index.keySet();
@@ -176,14 +182,12 @@ public final class LongIndexBdb implements LongIndex, Serializable {
     public long getSize() {
         int size = 0;
         // go over the index map
-        for (LinkedList<Long[]> list : index.values()) {
-            // go over the sub indexes
+        Set<Map.Entry<Long, LinkedList<Long[]>>> entries = index.entrySet();
+        for (Map.Entry<Long, LinkedList<Long[]>> entry : entries) {
+            LinkedList<Long[]> list = entry.getValue();
             size += list.size();
         }
         return size;
-    }
-
-    public void close() {
     }
 
     @Override

@@ -486,14 +486,6 @@
     </LanguageOptions>
   </component>
   <component name="libraryTable">
-    <library name="junit">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/junit-3.8.1.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/gsbase-2.0.1.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES />
-    </library>
     <library name="spring">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/spring/spring-dao-2.0.1.jar!/" />
@@ -538,9 +530,7 @@
         <root url="jar://$PROJECT_DIR$/lib/gsbase-2.0.1.jar!/" />
       </CLASSES>
       <JAVADOC />
-      <SOURCES>
-        <root url="file:///Users/andrew/java/jrdf/Downloads/gsbase-2.0.1/src/java" />
-      </SOURCES>
+      <SOURCES />
     </library>
     <library name="je-3.2.42">
       <CLASSES>
@@ -553,6 +543,13 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-asl-3.2.1.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/woodstox/stax-api-1.0.1.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="db4o-6.3-java5">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/db4o/db4o-6.3-java5.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

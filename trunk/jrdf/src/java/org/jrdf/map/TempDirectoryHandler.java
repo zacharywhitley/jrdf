@@ -57,56 +57,15 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.bdb;
+package org.jrdf.map;
 
-import junit.framework.TestCase;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.StoredMapHandlerImpl;
-import org.jrdf.map.MapFactory;
-import org.jrdf.graph.local.index.longindex.LongIndex;
+import java.io.File;
 
-public class LongIndexBdbUnitTest extends TestCase {
-    private LongIndex longIndex;
-    private MapFactory factory;
+public class TempDirectoryHandler implements DirectoryHandler {
+    private static final String USERNAME = System.getProperty("user.name");
+    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
 
-    public void setUp() {
-        factory = new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database");
-        longIndex = new LongIndexBdb(factory);
-        longIndex.clear();
-    }
-
-    public void tearDown() {
-        factory.close();
-    }
-
-    public void testAddition() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(4L, 5L, 6L);
-        checkNumberOfTriples(2, longIndex.getSize());
-    }
-
-    public void testRemove() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        checkNumberOfTriples(2, longIndex.getSize());
-        longIndex.remove(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.remove(3L, 4L, 3L);
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    public void testClear() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        longIndex.clear();
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
-        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize, expectedNumber,
-            actualSize);
+    public File getDir() {
+        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
 }

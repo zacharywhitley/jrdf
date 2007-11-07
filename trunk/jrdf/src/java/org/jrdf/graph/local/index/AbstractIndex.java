@@ -150,6 +150,9 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         index.clear();
     }
 
+    public void close() {
+    }
+
     public long getSize() {
         long size = 0;
         // go over the index map
