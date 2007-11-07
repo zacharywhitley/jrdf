@@ -57,17 +57,49 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex.bdb;
+package org.jrdf.graph.local.index.longindex;
 
-import org.jrdf.graph.local.index.longindex.AbstractLongIndexUnitTest;
+import junit.framework.TestCase;
+import org.jrdf.map.MapFactory;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.graph.local.index.longindex.bdb.LongIndexBdb;
 
-public class LongIndexBdbUnitTest extends AbstractLongIndexUnitTest {
+public class AbstractLongIndexUnitTest extends TestCase {
+    protected LongIndex longIndex;
+    protected MapFactory factory;
 
-    public void setUp() {
-        factory = new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database");
-        longIndex = new LongIndexBdb(factory);
+    public void tearDown() {
+        factory.close();
+    }
+
+    public void testAddition() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.add(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.add(4L, 5L, 6L);
+        checkNumberOfTriples(2, longIndex.getSize());
+    }
+
+    public void testRemove() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        longIndex.add(3L, 4L, 3L);
+        checkNumberOfTriples(2, longIndex.getSize());
+        longIndex.remove(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.remove(3L, 4L, 3L);
+        checkNumberOfTriples(0, longIndex.getSize());
+    }
+
+    public void testClear() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        longIndex.add(3L, 4L, 3L);
         longIndex.clear();
+        checkNumberOfTriples(0, longIndex.getSize());
+    }
+
+    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
+        assertEquals("Incorrect numober of triples: ", expectedNumber, actualSize);
     }
 }

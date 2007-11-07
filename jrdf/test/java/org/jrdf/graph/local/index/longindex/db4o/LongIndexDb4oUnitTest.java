@@ -59,54 +59,14 @@
 
 package org.jrdf.graph.local.index.longindex.db4o;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.longindex.AbstractLongIndexUnitTest;
 import org.jrdf.map.Db4oMapFactory;
-import org.jrdf.map.MapFactory;
 import org.jrdf.map.TempDirectoryHandler;
 
-public class LongIndexDb4oUnitTest extends TestCase {
-    private LongIndex longIndex;
-    private MapFactory factory;
-
+public class LongIndexDb4oUnitTest extends AbstractLongIndexUnitTest {
     public void setUp() {
         factory = new Db4oMapFactory(new TempDirectoryHandler(), "testDb");
         longIndex = new LongIndexDb4o(factory);
         longIndex.clear();
-    }
-
-    public void tearDown() {
-        factory.close();
-    }
-
-    public void testAddition() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(4L, 5L, 6L);
-        checkNumberOfTriples(2, longIndex.getSize());
-    }
-
-    public void testRemove() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        checkNumberOfTriples(2, longIndex.getSize());
-        longIndex.remove(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.remove(3L, 4L, 3L);
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    public void testClear() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        longIndex.clear();
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
-        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize, expectedNumber,
-            actualSize);
     }
 }
