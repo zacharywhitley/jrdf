@@ -85,9 +85,9 @@ public class BdbNodePoolFactory implements NodePoolFactory {
 
     @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
-        longNodeFactory = new BdbMapFactory(handler, CLASS_CATALOG_NODEPOOL, DB_NAME_NODEPOOL);
+        longNodeFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL);
         final NodeTypePool nodeTypePool = new NodeTypePoolImpl(longNodeFactory.createMap(Long.class, Node.class));
-        stringLongFactory = new BdbMapFactory(handler, CLASS_CATALOG_STRINGPOOL, DB_NAME_STRINGPOOL);
+        stringLongFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL);
         final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
         return new NodePoolImpl(nodeTypePool, stringPool);
     }

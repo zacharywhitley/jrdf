@@ -75,6 +75,7 @@ import com.sleepycat.je.EnvironmentConfig;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class StoredMapHandlerImpl implements StoredMapHandler {
     private static final String USERNAME = System.getProperty("user.name");
@@ -84,6 +85,7 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
     public StoredMapHandlerImpl() {
         binding.put(String.class, new StringBinding());
         binding.put(Long.class, new LongBinding());
+        binding.put(LinkedList.class, new LongListBinding());
     }
 
     public Environment setUpEnvironment() throws DatabaseException {

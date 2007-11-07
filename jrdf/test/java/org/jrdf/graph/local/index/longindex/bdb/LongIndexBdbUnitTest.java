@@ -66,7 +66,7 @@ import org.jrdf.map.StoredMapHandlerImpl;
 public class LongIndexBdbUnitTest extends AbstractLongIndexUnitTest {
 
     public void setUp() {
-        factory = new BdbMapFactory(new StoredMapHandlerImpl(), "catalog", "database");
+        factory = new BdbMapFactory(new StoredMapHandlerImpl(), "database");
         longIndex = new LongIndexBdb(factory);
         longIndex.clear();
     }

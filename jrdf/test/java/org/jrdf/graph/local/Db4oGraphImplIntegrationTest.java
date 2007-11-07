@@ -57,46 +57,27 @@
  *
  */
 
-package org.jrdf.graph.local.index.longindex;
+package org.jrdf.graph.local;
 
-import junit.framework.TestCase;
-import org.jrdf.map.MapFactory;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedDb4oJRDFFactory;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
 
-public abstract class AbstractLongIndexUnitTest extends TestCase {
-    protected LongIndex longIndex;
-    protected MapFactory factory;
+public class Db4oGraphImplIntegrationTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedDb4oJRDFFactory.getFactory();
+
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    @Override
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
+    }
 
     public void tearDown() {
-        factory.close();
-    }
-
-    public void testAddition() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.add(4L, 5L, 6L);
-        checkNumberOfTriples(2, longIndex.getSize());
-    }
-
-    public void testRemove() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        checkNumberOfTriples(2, longIndex.getSize());
-        longIndex.remove(1L, 2L, 3L);
-        checkNumberOfTriples(1, longIndex.getSize());
-        longIndex.remove(3L, 4L, 3L);
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    public void testClear() throws Exception {
-        longIndex.add(1L, 2L, 3L);
-        longIndex.add(3L, 4L, 3L);
-        longIndex.clear();
-        checkNumberOfTriples(0, longIndex.getSize());
-    }
-
-    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
-        assertEquals("Incorrect numober of triples: ", expectedNumber, actualSize);
+        FACTORY.close();
     }
 }
