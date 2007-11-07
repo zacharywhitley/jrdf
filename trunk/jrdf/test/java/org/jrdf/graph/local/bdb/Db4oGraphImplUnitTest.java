@@ -76,4 +76,8 @@ public class Db4oGraphImplUnitTest extends AbstractGraphUnitTest {
     public Graph newGraph() throws Exception {
         return FACTORY.getNewGraph();
     }
+
+    public void tearDown() {
+        FACTORY.close();
+    }
 }

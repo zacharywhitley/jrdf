@@ -98,4 +98,7 @@ public final class SpringJRDFFactory implements JRDFFactory {
     public SparqlConnection getNewSparqlConnection() {
         return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
+
+    public void close() {
+    }
 }

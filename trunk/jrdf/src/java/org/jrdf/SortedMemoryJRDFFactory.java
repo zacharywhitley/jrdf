@@ -152,6 +152,9 @@ public final class SortedMemoryJRDFFactory implements JRDFFactory {
         return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
 
+    public void close() {
+    }
+
     private static QueryBuilder createQueryBuilder() {
         AttributeValuePairHelper avpHelper = new AttributeValuePairHelperImpl(ATTRIBUTE_FACTORY);
         GraphRelationFactory graphRelationFactory = new GraphRelationFactoryImpl(ATTRIBUTE_FACTORY, avpHelper,

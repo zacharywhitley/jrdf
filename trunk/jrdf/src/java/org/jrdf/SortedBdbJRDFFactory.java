@@ -129,4 +129,7 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     public SparqlConnection getNewSparqlConnection() {
         return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
     }
+
+    public void close() {
+    }
 }
