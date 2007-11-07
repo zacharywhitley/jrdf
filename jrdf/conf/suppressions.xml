@@ -34,11 +34,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
     <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
-    <suppress checks="JavaNCSS" files="Serializer"/>
-    <suppress checks="JavaNCSS" files="BlockFile"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="Serializer"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="BlockFile"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="SkipListMapFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
 
     <!-- NTriples Parser -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>

@@ -59,68 +59,49 @@
 
 package org.jrdf.map;
 
-import net.metanotion.io.RAIFile;
-import net.metanotion.io.Serializer;
-import net.metanotion.io.block.BlockFile;
-import net.metanotion.io.block.index.BSkipList;
-import net.metanotion.io.data.IntBytes;
-import net.metanotion.io.data.LongBytes;
-import net.metanotion.io.data.StringBytes;
+import junit.framework.TestCase;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
-public class ListMapFactory implements MapFactory {
-    private static final String USERNAME = System.getProperty("user.name");
-    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
-    private Map<Class<?>, Serializer> classToSerializer = new HashMap<Class<?>, Serializer>();
-    private final String name;
-    private BlockFile keyBlockFile;
-    private BlockFile valueBlockFile;
+public class Db4oFactoryUnitTest extends TestCase {
+    private DirectoryHandler handler = new TempDirectoryHandler();
+    private MapFactory factory;
 
-    public ListMapFactory(String name) {
-        classToSerializer.put(Integer.class, new IntBytes());
-        classToSerializer.put(Long.class, new LongBytes());
-        classToSerializer.put(String.class, new StringBytes());
-        this.name = name;
+    public void setUp() throws Exception {
+        super.setUp();
+        factory = new Db4oMapFactory(handler, "testDb");
     }
 
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            keyBlockFile = getBlockFile("key");
-            valueBlockFile = getBlockFile("value");
-            Serializer indexSerializer = classToSerializer.get(Integer.class);
-            Serializer keySerializer = classToSerializer.get(clazz1);
-            Serializer valueSerializer = classToSerializer.get(clazz2);
-            BSkipList.init(keyBlockFile, 2, 1000);
-            BSkipList.init(valueBlockFile, 2, 1000);
-            BSkipList keysList = new BSkipList(1000, keyBlockFile, 2, keySerializer, indexSerializer);
-            BSkipList valuesList = new BSkipList(1000, valueBlockFile, 2, indexSerializer, valueSerializer);
-            return new ListMap(keysList, valuesList);
-//            return new ListMap(new BaseSkipList(1000), new BaseSkipList(1000));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void testCreateStringLong() {
+        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put("Foo" + i, new Long(i));
+            Long aLong = stringPool.get("Foo" + i);
+            assertEquals(new Long(i).longValue(), aLong.longValue());
         }
+        factory.close();
     }
 
-    private <T, A, U extends A> BlockFile getBlockFile(String type) throws IOException {
-        File file = new File(getDir() + "/" + name + type);
-        RAIFile raif = new RAIFile(file, true, true);
-        return new BlockFile(raif, true);
-    }
-
-    public void close() {
-        try {
-            keyBlockFile.close();
-            valueBlockFile.close();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+    public void testCreateLongString() {
+        Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
+        for (int i = 0; i < 100; i++) {
+            stringPool.put(new Long(i), "Foo" + i);
+            String value = stringPool.get(new Long(i));
+            assertEquals("Foo" + i, value);
         }
+        factory.close();
     }
 
-    private File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
+    public void testCreateLongArrayList() {
+        Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
+        for (int i = 0; i < 100; i++) {
+            LinkedList<Long[]> list = new LinkedList<Long[]>();
+            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
+            tripleStore.put(new Long(i), list);
+            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
+            assertEquals(list, longs);
+        }
+        factory.close();
     }
 }

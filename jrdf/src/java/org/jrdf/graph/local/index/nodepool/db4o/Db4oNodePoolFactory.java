@@ -57,40 +57,46 @@
  *
  */
 
-package net.metanotion.io.data;
+package org.jrdf.graph.local.index.nodepool.db4o;
 
-import net.metanotion.io.Serializer;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePool;
+import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
+import org.jrdf.map.Db4oMapFactory;
+import org.jrdf.map.DirectoryHandler;
 
-import java.util.LinkedList;
+import java.util.Map;
 
-public class BinaryLongBytes implements Serializer {
-    private LongBytes longBytes = new LongBytes();
+public class Db4oNodePoolFactory implements NodePoolFactory {
+    private static final String DB_NAME_NODEPOOL = "nodePool";
+    private static final String DB_NAME_STRINGPOOL = "stringPool";
+    private final DirectoryHandler handler;
+    private final long graphNumber;
+    private Db4oMapFactory longNodeFactory;
+    private Db4oMapFactory stringLongFactory;
 
-    public byte[] getBytes(Object o) {
-        LinkedList<Long[]> v = (LinkedList<Long[]>) o;
-        byte[] b = new byte[16 * v.size()];
-        int index = 0;
-        for (Long[] longs : v) {
-            System.arraycopy(longBytes.getBytes(longs[0]), 0, b, 8 * index, 8);
-            System.arraycopy(longBytes.getBytes(longs[1]), 0, b, 8 * (index + 1), 8);
-            index += 2;
-        }
-        return b;
+    public Db4oNodePoolFactory(final DirectoryHandler newHandler, long graphNumber) {
+        this.handler = newHandler;
+        this.graphNumber = graphNumber;
     }
 
-    public Object construct(byte[] b) {
-        LinkedList<Long[]> v = new LinkedList<Long[]>();
-        for (int index = 0; index < b.length / 8; index += 2) {
-            Long firstLong = getLongFromBytes(b, index);
-            Long secondLong = getLongFromBytes(b, index + 1);
-            v.addLast(new Long[]{firstLong, secondLong});
-        }
-        return v;
+    @SuppressWarnings({ "unchecked" })
+    public NodePool createNodePool() {
+        longNodeFactory = new Db4oMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(longNodeFactory.createMap(Long.class, Node.class));
+        stringLongFactory = new Db4oMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
+        final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
+        return new NodePoolImpl(nodeTypePool, stringPool);
     }
 
-    private Long getLongFromBytes(byte[] src, int index) {
-        byte[] dest = new byte[8];
-        System.arraycopy(src, index * 8, dest, 0, 8);
-        return (Long) longBytes.construct(dest);
+    public void close() {
+        try {
+            longNodeFactory.close();
+        } finally {
+            stringLongFactory.close();
+        }
     }
 }

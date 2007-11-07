@@ -57,31 +57,56 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.graph.local.index.longindex.db4o;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.map.Db4oMapFactory;
+import org.jrdf.map.MapFactory;
+import org.jrdf.map.TempDirectoryHandler;
 
-import java.util.Map;
+public class LongIndexDb4oUnitTest extends TestCase {
+    private LongIndex longIndex;
+    private MapFactory factory;
 
-public class ListMapFactoryUnitTest extends TestCase {
-    public void testCreateStringLong() {
-        MapFactory factory = new ListMapFactory("nodePool");
-        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
-        for (int i = 0; i < 100; i++) {
-            stringPool.put("Foo" + i, new Long(i));
-            Long aLong = stringPool.get("Foo" + i);
-            assertEquals(new Long(i).longValue(), aLong.longValue());
-        }
+    public void setUp() {
+        factory = new Db4oMapFactory(new TempDirectoryHandler(), "testDb");
+        longIndex = new LongIndexDb4o(factory);
+        longIndex.clear();
+    }
+
+    public void tearDown() {
         factory.close();
     }
-    public void testCreateLongString() {
-        MapFactory factory = new ListMapFactory("nodePool");
-        Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
-        for (int i = 0; i < 100; i++) {
-            stringPool.put(new Long(i), "Foo" + i);
-            String value = stringPool.get(new Long(i));
-            assertEquals("Foo" + i, value);
-        }
-        factory.close();
+
+    public void testAddition() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.add(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.add(4L, 5L, 6L);
+        checkNumberOfTriples(2, longIndex.getSize());
+    }
+
+    public void testRemove() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        longIndex.add(3L, 4L, 3L);
+        checkNumberOfTriples(2, longIndex.getSize());
+        longIndex.remove(1L, 2L, 3L);
+        checkNumberOfTriples(1, longIndex.getSize());
+        longIndex.remove(3L, 4L, 3L);
+        checkNumberOfTriples(0, longIndex.getSize());
+    }
+
+    public void testClear() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        longIndex.add(3L, 4L, 3L);
+        longIndex.clear();
+        checkNumberOfTriples(0, longIndex.getSize());
+    }
+
+    private void checkNumberOfTriples(final int expectedNumber, final long actualSize) {
+        assertEquals("Number of triples should be " + expectedNumber + " we got: " + actualSize, expectedNumber,
+            actualSize);
     }
 }

@@ -63,19 +63,19 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.bdb.LongIndexBdb;
+import org.jrdf.graph.local.index.longindex.db4o.LongIndexDb4o;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.skiplist.SkipListNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
+import org.jrdf.map.Db4oMapFactory;
+import org.jrdf.map.DirectoryHandler;
 import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.map.TempDirectoryHandler;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
@@ -91,7 +91,7 @@ import org.jrdf.util.NodeTypeComparatorImpl;
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
-public final class SkipListJRDFFactory implements JRDFFactory {
+public final class SortedDb4oJRDFFactory implements JRDFFactory {
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
     private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
     private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
@@ -99,15 +99,15 @@ public final class SkipListJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl();
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static long graphNumber;
     private GraphFactory orderedGraphFactory;
 
-    private SkipListJRDFFactory() {
+    private SortedDb4oJRDFFactory() {
     }
 
     public static JRDFFactory getFactory() {
-        return new SkipListJRDFFactory();
+        return new SortedDb4oJRDFFactory();
     }
 
     public void refresh() {
@@ -115,15 +115,12 @@ public final class SkipListJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-//        MapFactory factory1 = new SkipListMapFactory("spo" + graphNumber);
-//        MapFactory factory2 = new SkipListMapFactory("pos" + graphNumber);
-//        MapFactory factory3 = new SkipListMapFactory("osp" + graphNumber);
-        MapFactory factory1 = new MemMapFactory();
-        MapFactory factory2 = new MemMapFactory();
-        MapFactory factory3 = new MemMapFactory();
-        LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
-            new LongIndexBdb(factory3)};
-        NodePoolFactory nodePoolFactory = new SkipListNodePoolFactory();
+        MapFactory factory1 = new Db4oMapFactory(HANDLER, "spo" + graphNumber);
+        MapFactory factory2 = new Db4oMapFactory(HANDLER, "pos" + graphNumber);
+        MapFactory factory3 = new Db4oMapFactory(HANDLER, "osp" + graphNumber);
+        LongIndex[] indexes = new LongIndex[]{new LongIndexDb4o(factory1), new LongIndexDb4o(factory2),
+            new LongIndexDb4o(factory3)};
+        NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();

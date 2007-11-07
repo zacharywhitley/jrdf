@@ -59,41 +59,51 @@
 
 package org.jrdf.map;
 
-import net.metanotion.util.skiplist.SkipList;
+import com.db4o.Db4o;
+import com.db4o.ObjectContainer;
+import com.db4o.types.Db4oMap;
 
-import java.util.AbstractSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
-public class ListSet<E> extends AbstractSet<E> implements Set<E> {
-    private final SkipList list;
+public class Db4oMapFactory implements MapFactory {
+    private static final int INITIAL_MAP_SIZE = 1000;
+    private final DirectoryHandler dirHandler;
+    private final String name;
+    private ObjectContainer db;
 
-    public ListSet(SkipList list) {
-        this.list = list;
+    public Db4oMapFactory(DirectoryHandler dirHandler, String name) {
+        this.dirHandler = dirHandler;
+        this.name = name;
     }
 
-    @Override
-    public int size() {
-        return list.size();
+    @SuppressWarnings({ "unchecked" })
+    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
+        try {
+            File file = new File(dirHandler.getDir(), name);
+            deleteIfExists(file);
+            return getMap(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @Override
-    public boolean contains(Object o) {
-        return list.get((Comparable) o) != null;
+    public void close() {
+        db.close();
     }
 
-    @Override
-    public Iterator<E> iterator() {
-        return list.iterator();
+    private void deleteIfExists(File file) {
+        if (file.exists()) {
+            file.delete();
+        }
     }
 
-    @Override
-    public boolean add(E o) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        throw new UnsupportedOperationException();
+    private Db4oMap getMap(File file) throws IOException {
+        db = Db4o.openFile(file.getCanonicalPath());
+        Db4oMap db4oMap = db.ext().collections().newHashMap(INITIAL_MAP_SIZE);
+        db4oMap.deleteRemoved(true);
+        db.set(db4oMap);
+        return db4oMap;
     }
 }
