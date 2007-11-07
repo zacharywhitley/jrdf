@@ -88,4 +88,9 @@ public interface JRDFFactory {
      * @return a new instance of a SPARQL connection.
      */
     SparqlConnection getNewSparqlConnection();
+
+    /**
+     * Closes any open resource created by the factory.
+     */
+    void close();
 }

@@ -133,6 +133,9 @@ public final class TestJRDFFactory implements JRDFFactory {
         return (SparqlConnection) BEAN_FACTORY.getBean("sparqlConnection");
     }
 
+    public void close() {
+    }
+
     public NodeComparator getNewNodeComparator() {
         return (NodeComparator) BEAN_FACTORY.getBean("nodeComparator");
     }

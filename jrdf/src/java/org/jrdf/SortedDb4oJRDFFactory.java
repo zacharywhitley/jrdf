@@ -85,6 +85,9 @@ import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
+import java.util.Set;
+import java.util.HashSet;
+
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
  *
@@ -102,6 +105,8 @@ public final class SortedDb4oJRDFFactory implements JRDFFactory {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static long graphNumber;
     private GraphFactory orderedGraphFactory;
+    private Set<MapFactory> openMaps = new HashSet<MapFactory>();
+    private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
 
     private SortedDb4oJRDFFactory() {
     }
@@ -122,11 +127,24 @@ public final class SortedDb4oJRDFFactory implements JRDFFactory {
             new LongIndexDb4o(factory3)};
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
+        openMaps.add(factory1);
+        openMaps.add(factory2);
+        openMaps.add(factory3);
+        openFactories.add(nodePoolFactory);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();
     }
 
     public SparqlConnection getNewSparqlConnection() {
         return new SparqlConnectionImpl(BUILDER, QUERY_ENGINE);
+    }
+
+    public void close() {
+        for (MapFactory openMap : openMaps) {
+            openMap.close();
+        }
+        for (NodePoolFactory openFactory : openFactories) {
+            openFactory.close();
+        }
     }
 }
