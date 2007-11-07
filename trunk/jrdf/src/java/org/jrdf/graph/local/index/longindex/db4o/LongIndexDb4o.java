@@ -63,12 +63,11 @@ import org.jrdf.graph.local.index.AbstractIndex;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.map.MapFactory;
 
-import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
 // TODO How is this Serializable?
-public final class LongIndexDb4o extends AbstractIndex<Long> implements LongIndex, Serializable {
+public final class LongIndexDb4o extends AbstractIndex<Long> implements LongIndex {
     private static final long serialVersionUID = 6044200669651883129L;
     private MapFactory creator;
 
