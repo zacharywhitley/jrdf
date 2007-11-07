@@ -129,10 +129,12 @@ public abstract class AbstractGraphPerformance {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < numberOfNodes; i++) {
             URI subjectURI = URI.create(SUBJECT_PREFIX + i);
+            System.err.println("Creating 10 for : " + (SUBJECT_PREFIX + i)) ;
             for (int j = 0; j < 10; j++) {
+                URI predicateURI = URI.create(PREDICATE_PREFIX + j);
                 URI objectURI = URI.create(OBJECT_PREFIX + j);
                 graph.add(graphElementFactory.createURIReference(subjectURI),
-                    graphElementFactory.createURIReference(predicates.get((int) Math.random() * NO_PREDICATES)),
+                    graphElementFactory.createURIReference(predicateURI),
                     graphElementFactory.createURIReference(objectURI));
             }
         }

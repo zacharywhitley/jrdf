@@ -59,23 +59,24 @@
 
 package org.jrdf.map;
 
+import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
-import com.sleepycat.bind.tuple.TupleBinding;
-import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.bind.tuple.LongBinding;
-import com.sleepycat.bind.EntryBinding;
+import com.sleepycat.bind.tuple.StringBinding;
+import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.collections.StoredMap;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
+import org.jrdf.graph.BlankNode;
 
 import java.io.File;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class StoredMapHandlerImpl implements StoredMapHandler {
     private static final String USERNAME = System.getProperty("user.name");
@@ -86,6 +87,7 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
         binding.put(String.class, new StringBinding());
         binding.put(Long.class, new LongBinding());
         binding.put(LinkedList.class, new LongListBinding());
+        binding.put(BlankNode.class, new BlankNodeBinding());
     }
 
     public Environment setUpEnvironment() throws DatabaseException {
