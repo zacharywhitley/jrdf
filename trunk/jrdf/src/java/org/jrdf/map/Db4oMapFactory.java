@@ -76,7 +76,9 @@ public class Db4oMapFactory implements MapFactory {
     public Db4oMapFactory(DirectoryHandler dirHandler, String name) {
         this.dirHandler = dirHandler;
         this.name = name;
-        File file = new File(dirHandler.getDir(), name);
+        File parent = dirHandler.getDir();
+        parent.mkdirs();
+        File file = new File(parent, name);
         deleteIfExists(file);
         try {
             db = Db4o.openFile(file.getCanonicalPath());
