@@ -17,12 +17,12 @@
     <property name="src.dir" value="src"/>
     <property name="test.dir" value="test"/>
     <property name="checkstyle.lib.dir" value="${lib.dir}/checkstyle"/>
+    <property name="one-jar.lib.dir" value="${lib.dir}/one-jar"/>
     <property name="prod.src.dir" value="${src.dir}/java"/>
     <property name="test.src.dir" value="${test.dir}/java"/>
     <property name="gen.src.dir" value="${build.dir}/gen"/>
     <property name="modified.src.dir" value="${build.dir}/jester"/>
     <property name="sablecc.src.dir" value="${src.dir}/sablecc"/>
-    <property name="javacc.src.dir" value="${src.dir}/javacc"/>
     <property name="prod.classes.dir" value="${build.dir}/prod-classes"/>
     <property name="test.classes.dir" value="${build.dir}/test-classes"/>
     <property name="dist.dir" value="${build.dir}/dist"/>
@@ -196,6 +196,9 @@
     </path>
 
     <taskdef resource="emma_ant.properties" classpathref="test.class.path" />
+
+    <taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask"
+        classpath="${one-jar.lib.dir}/one-jar-ant-task-0.96.jar" onerror="report"/>
 
     <taskdef resource="checkstyletask.properties"
              classpath="${checkstyle.lib.dir}/checkstyle-all-4.2.jar"/>

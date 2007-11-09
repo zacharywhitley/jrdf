@@ -98,29 +98,34 @@
            <map from="${basedir}/lib" to="lib"/>
            <path refid="production.class.path"/>
         </pathconvert>
-        <jar destfile="${dist.dir}/gui/${project.jar}">
+        <jar destfile="${dist.dir}/gui/main.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.jrdf.gui.SparqlGui"/>
                 <attribute name="Class-Path" value="${jar.classpath}"/>
             </manifest>
             <fileset dir="${prod.classes.dir}" excludes="com/**/*"/>
         </jar>
+
         <!-- Copy required lib jars to ./lib/* -->
         <copy todir="${dist.dir}/gui">
             <fileset dir="${basedir}">
                 <patternset refid="production.classpath.pattern"/>
             </fileset>
         </copy>
-        <!-- Create structure for single jar file -->
-        <mkdir dir="${dist.dir}/gui/main"/>
-        <move file="${dist.dir}/gui/${project.jar}" todir="${dist.dir}/gui/main"/>
-        <!-- Update uber jar with one-jar classes and manifest. -->
-        <jar destfile="${dist.dir}/gui/${gui.jar}" manifest="${conf.dir}/boot-manifest.mf">
-            <fileset dir="${dist.dir}/gui" includes="**/*" excludes="${gui.jar}"/>
-            <fileset dir="${prod.classes.dir}" includes="com/**/*"/>
+
+        <!--Create uber jar with one-jar classes and manifest. -->
+        <one-jar destfile="${dist.dir}/gui/${gui.jar}" manifest="${conf.dir}/boot-manifest.mf">
+            <main jar="${dist.dir}/gui/main.jar"/>
+            <lib>
+                <fileset dir="${dist.dir}/gui/lib"/>
+            </lib>
             <fileset dir="${conf.dir}" includes="**/commons-logging.properties"/>
             <fileset dir="${conf.dir}" includes="**/simplelog.properties"/>
-        </jar>
+        </one-jar>
+
+        <!-- Cleanup -->
+        <deltree dir="${dist.dir}/gui/lib"/>
+        <delete file="${dist.dir}/gui/main.jar"/> 
     </target>
 
     <target name="javadoc" depends="-compile">
