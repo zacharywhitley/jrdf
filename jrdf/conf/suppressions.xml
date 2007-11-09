@@ -26,14 +26,10 @@
     <suppress checks="ReturnCount" files="SemiJoinImpl"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
-
-    <!-- Spikes -->
-    <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
-    <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="StoredMapHandlerImpl"/>
 
@@ -43,6 +39,8 @@
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
+    <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
+    <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
     <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />
 
     <!-- RDF/XML Parser -->
