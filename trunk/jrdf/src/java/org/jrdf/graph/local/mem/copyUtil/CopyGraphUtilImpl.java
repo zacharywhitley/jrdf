@@ -80,9 +80,6 @@ import java.util.Set;
 public class CopyGraphUtilImpl implements CopyGraphUtil {
     private GraphToGraphMapper mapper;
 
-    public CopyGraphUtilImpl() {
-    }
-
     public Graph copyGraph(Graph newSourceGraph, Graph newTargetGraph) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph);
         ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);

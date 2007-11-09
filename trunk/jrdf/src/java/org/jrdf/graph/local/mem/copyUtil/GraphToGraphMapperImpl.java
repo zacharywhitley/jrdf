@@ -47,45 +47,36 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     }
 
     public Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException {
-        Triple newTriple;
         while (it.hasNext()) {
             Triple triple = it.next();
             if (!triple.isGrounded()) {
-                newTriple = createNewTriple(triple);
-                graph.add(newTriple);
+                graph.add(createNewTriple(triple));
             }
         }
         return graph;
     }
 
-    public Triple createNewTriple(Triple triple) throws GraphElementFactoryException {
-        SubjectNode newsn;
-        PredicateNode newpn;
-        ObjectNode newon;
-        Triple newTriple;
+    private Triple createNewTriple(Triple triple) throws GraphElementFactoryException {
         SubjectNode sn = triple.getSubject();
         PredicateNode pn = triple.getPredicate();
         ObjectNode on = triple.getObject();
-
-        newsn = (SubjectNode) createNewNode(sn);
-        newpn = elementFactory.createURIReference(((URIReference) pn).getURI());
-        newon = (ObjectNode) createNewNode(on);
-
-        newTriple = tripleFactory.createTriple(newsn, newpn, newon);
-        return newTriple;
+        SubjectNode newsn = (SubjectNode) createNewNode(sn);
+        PredicateNode newpn = elementFactory.createURIReference(((URIReference) pn).getURI());
+        ObjectNode newon = (ObjectNode) createNewNode(on);
+        return tripleFactory.createTriple(newsn, newpn, newon);
     }
 
     public void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException {
-        SubjectNode sN = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
-        PredicateNode pN = elementFactory.createURIReference(((URIReference) triple.getPredicate()).getURI());
-        ObjectNode oON = triple.getObject();
-        ObjectNode oN = createLiteralOrURI(oON);
-        graph.add(tripleFactory.createTriple(sN, pN, oN));
+        SubjectNode subjectNode = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
+        PredicateNode predicateNode = elementFactory.createURIReference(
+            ((URIReference) triple.getPredicate()).getURI());
+        ObjectNode objectNode = createLiteralOrURI(triple.getObject());
+        graph.add(tripleFactory.createTriple(subjectNode, predicateNode, objectNode));
     }
 
     private Node createNewNode(Node node) throws GraphElementFactoryException {
         Node newNode;
-        if (GraphToGraphMapperImpl.isBlankNode(node)) {
+        if (isBlankNode(node)) {
             newNode = newBNodeMap.get(new Integer(node.hashCode()));
         } else {
             newNode = createLiteralOrURI(node);
