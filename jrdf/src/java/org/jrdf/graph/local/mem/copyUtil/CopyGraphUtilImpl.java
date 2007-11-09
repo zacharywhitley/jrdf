@@ -82,21 +82,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Oct 31, 2007
- * Time: 2:16:07 PM
- * To change this template use File | Settings | File Templates.
- */
 public class CopyGraphUtilImpl implements CopyGraphUtil {
     private HashMap<Integer, BlankNode> newBNodeMap;
-
     private Graph sourceGraph;
     private Graph targetGraph;
     private GraphElementFactory elemFactory;
     private TripleFactory tripleFactory;
-
     private CopyGraphHelper helper;
 
     public CopyGraphUtilImpl(Graph sg, Graph tg) {
