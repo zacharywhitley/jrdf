@@ -1,4 +1,4 @@
-package org.jrdf.graph.local.mem.copyUtil;
+package org.jrdf.graph.local.util;
 
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
@@ -35,6 +35,14 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return graph;
     }
 
+    public void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException {
+        SubjectNode subjectNode = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
+        PredicateNode predicateNode = elementFactory.createURIReference(
+            ((URIReference) triple.getPredicate()).getURI());
+        ObjectNode objectNode = createLiteralOrURI(triple.getObject());
+        graph.add(tripleFactory.createTriple(subjectNode, predicateNode, objectNode));
+    }
+
     public void updateBlankNodes(Triple triple) throws GraphElementFactoryException {
         SubjectNode subjectNode = triple.getSubject();
         if (isBlankNode(subjectNode)) {
@@ -64,14 +72,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         PredicateNode newPredicateNode = elementFactory.createURIReference(((URIReference) predicateNode).getURI());
         ObjectNode newObjectNode = (ObjectNode) createNewNode(objectNode);
         return tripleFactory.createTriple(newSubjectNode, newPredicateNode, newObjectNode);
-    }
-
-    public void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException {
-        SubjectNode subjectNode = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
-        PredicateNode predicateNode = elementFactory.createURIReference(
-            ((URIReference) triple.getPredicate()).getURI());
-        ObjectNode objectNode = createLiteralOrURI(triple.getObject());
-        graph.add(tripleFactory.createTriple(subjectNode, predicateNode, objectNode));
     }
 
     private Node createNewNode(Node node) throws GraphElementFactoryException {

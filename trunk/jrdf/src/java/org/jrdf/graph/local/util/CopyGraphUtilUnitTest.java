@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.mem.copyUtil;
+package org.jrdf.graph.local.util;
 
 import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
