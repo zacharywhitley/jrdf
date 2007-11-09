@@ -87,13 +87,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Oct 29, 2007
- * Time: 1:29:48 PM
- * To change this template use File | Settings | File Templates.
- */
 public class CopyGraphUtilUnitTest extends TestCase {
     private String url1 = "http://www.example.com/1#";
 
@@ -260,7 +253,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
         while (it.hasNext()) {
             Triple tmpT = it.next();
             SubjectNode tmpSN = tmpT.getSubject();
-            if (CopyGraphHelper.isBlankNode(tmpSN)) {
+            if (GraphToGraphMapperImpl.isBlankNode(tmpSN)) {
                 if (tmpSN.hashCode() == bNode1Hash) {
                     
                 }
@@ -284,16 +277,16 @@ public class CopyGraphUtilUnitTest extends TestCase {
         if (pNode1.hashCode() == t1.getPredicate().hashCode()) {
             Node node1 = t1.getObject();
             Node node2 = t2.getSubject();
-            assertTrue("BNode", CopyGraphHelper.isBlankNode(node1));
-            assertTrue("BNode", CopyGraphHelper.isBlankNode(node2));
+            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node1));
+            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node2));
             assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
             assertTrue("Hahs values different", node2.hashCode() != t2.getObject().hashCode());
         }
         else if (pNode2.hashCode() == t1.getPredicate().hashCode()) {
             Node node1 = t1.getSubject();
             Node node2 = t2.getObject();
-            assertTrue("BNode", CopyGraphHelper.isBlankNode(node1));
-            assertTrue("BNode", CopyGraphHelper.isBlankNode(node2));
+            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node1));
+            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node2));
             assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
         }
     }
@@ -351,10 +344,10 @@ public class CopyGraphUtilUnitTest extends TestCase {
         graph1.add(triple4);
 
         cgUtilImpl = new CopyGraphUtilImpl(graph1, graph2);
-        graph2 = cgUtilImpl.copyTriplesForNode(node1, graph1, graph2);
+        graph2 = cgUtilImpl.copyTriplesForNode(graph1, graph2, node1);
         assertEquals("graph2 size", 1, graph2.getNumberOfTriples());
         graph2.clear();
-        graph2 = cgUtilImpl.copyTriplesForNode(bNode1, graph1, graph2);
+        graph2 = cgUtilImpl.copyTriplesForNode(graph1, graph2, bNode1);
         assertEquals("graph2 size", 3, graph2.getNumberOfTriples());
     }
 }
