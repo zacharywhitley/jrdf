@@ -16,8 +16,6 @@ public interface GraphToGraphMapper {
 
     ObjectNode createLiteralOrURI(Node oON) throws GraphElementFactoryException;
 
-    Triple createNewTriple(Triple triple) throws GraphElementFactoryException;
-
     void updateBlankNodes(Triple triple) throws GraphElementFactoryException;
 
     Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException;
