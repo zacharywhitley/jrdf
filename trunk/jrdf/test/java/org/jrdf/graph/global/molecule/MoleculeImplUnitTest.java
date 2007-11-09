@@ -132,7 +132,7 @@ public class MoleculeImplUnitTest extends TestCase {
         ref2 = new URIReferenceImpl(URI.create("urn:bar"));
         BlankNode blankNode = new BlankNodeImpl();
 
-        Set set = new HashSet();
+        Set<Triple> set = new HashSet<Triple>();
         Triple triple = new TripleImpl(blankNode, ref1, ref1);
         set.add(triple);
         TripleImpl triple1 = new TripleImpl(blankNode, ref1, ref2);
