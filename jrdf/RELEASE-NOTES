@@ -1,5 +1,6 @@
 JRDF Release 0.5.1
 ==================
+* Added db4o implementation and improved Bdb implementation.
 * Added Graph copying between two local graphs (Feature 1805283).
 * Added Resource creation on GraphElementFactory (Feature 1805285).
 * Fixed confusing semantics of getNewGraph on factories.  Previously,
