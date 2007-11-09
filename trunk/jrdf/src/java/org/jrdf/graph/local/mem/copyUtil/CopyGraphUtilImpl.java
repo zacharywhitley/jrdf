@@ -71,6 +71,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.HashSet;
@@ -78,10 +79,15 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class CopyGraphUtilImpl implements CopyGraphUtil {
+    private final MapFactory mapFactory;
     private GraphToGraphMapper mapper;
 
+    public CopyGraphUtilImpl(MapFactory newMapFactory) {
+        this.mapFactory = newMapFactory;
+    }
+
     public Graph copyGraph(Graph newSourceGraph, Graph newTargetGraph) throws GraphException {
-        mapper = new GraphToGraphMapperImpl(newTargetGraph);
+        mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
         ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         readSourceGraph(triples);
         triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -96,7 +102,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }
 
     public Graph copyTriplesForNode(Graph newSourceGraph, Graph newTargetGraph, Node node) throws GraphException {
-        mapper = new GraphToGraphMapperImpl(newTargetGraph);
+        mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
         Iterator<Triple> triples;
         try {
             Set<Triple> set = getAllTriplesForNode(node, newSourceGraph);
