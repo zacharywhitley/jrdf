@@ -79,24 +79,16 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class CopyGraphUtilImpl implements CopyGraphUtil {
-    private Graph sourceGraph;
-    private Graph targetGraph;
-    private GraphElementFactory elemFactory;
     private GraphToGraphMapper mapper;
 
-    public CopyGraphUtilImpl(Graph sg, Graph tg) {
-        sourceGraph = sg;
-        targetGraph = tg;
-        mapper = new GraphToGraphMapperImpl(tg);
-        elemFactory = tg.getElementFactory();
+    public CopyGraphUtilImpl() {
     }
 
-    public Graph copyGraph(Graph sg, Graph tg) throws GraphException {
-        sourceGraph = sg;
-        targetGraph = tg;
-        ClosableIterator<Triple> triples = sourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+    public Graph copyGraph(Graph newSourceGraph, Graph newTargetGraph) throws GraphException {
+        mapper = new GraphToGraphMapperImpl(newTargetGraph);
+        ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         readSourceGraph(triples);
-        triples = sourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             mapper.createNewTriples(triples);
         } catch (Exception e) {
@@ -104,15 +96,14 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         } finally {
             triples.close();
         }
-        return targetGraph;
+        return mapper.getGraph();
     }
 
-    public Graph copyTriplesForNode(Graph sourceGraph, Graph targetGraph, Node node) throws GraphException {
-        sourceGraph = sourceGraph;
-        targetGraph = targetGraph;
+    public Graph copyTriplesForNode(Graph newSourceGraph, Graph newTargetGraph, Node node) throws GraphException {
+        mapper = new GraphToGraphMapperImpl(newTargetGraph);
         Iterator<Triple> triples;
         try {
-            Set<Triple> set = getAllTriplesForNode(node, sourceGraph);
+            Set<Triple> set = getAllTriplesForNode(node, newSourceGraph);
             triples = set.iterator();
             readSourceGraph(triples);
             triples = set.iterator();
@@ -120,7 +111,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         } catch (Exception e) {
             throw new GraphException("Cannot copy RDF graph with node", e);
         }
-        return targetGraph;
+        return newTargetGraph;
     }
 
     private Set<Triple> getAllTriplesForNode(Node node, Graph graph) throws GraphException {
@@ -198,7 +189,6 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
                 triple = triples.next();
                 if (triple.isGrounded()) {
                     mapper.addTripleToGraph(triple);
-                    targetGraph = mapper.getGraph();
                 } else {
                     mapper.updateBlankNodes(triple);
                 }
