@@ -70,7 +70,7 @@ import java.net.URI;
  * @author Andrew Newman
  * @version $Revision$
  */
-public interface Literal extends ObjectNode, TypedNodeVisitable, Value {
+public interface Literal extends ObjectNode, Value {
 
     /**
      * Obtain a Java native representation of the datatype.
