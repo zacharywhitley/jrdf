@@ -277,6 +277,25 @@
     <option name="GENERATE_IIOP_STUBS" value="false" />
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
   </component>
+  <component name="SvnBranchConfigurationManager">
+    <option name="myConfigurationMap">
+      <map>
+        <entry key="$PROJECT_DIR$">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://jrdf.svn.sf.net/svnroot/jrdf/branches" />
+                  <option value="https://jrdf.svn.sf.net/svnroot/jrdf/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://jrdf.svn.sf.net/svnroot/jrdf/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="ToggleTest">
     <toggle from="*" to="*UnitTest" />
     <toggle from="*" to="*AtomicTest" />
