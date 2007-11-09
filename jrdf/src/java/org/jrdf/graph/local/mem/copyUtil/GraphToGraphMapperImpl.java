@@ -3,30 +3,32 @@ package org.jrdf.graph.local.mem.copyUtil;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.map.MapFactory;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     private Graph graph;
     private GraphElementFactory elementFactory;
     private TripleFactory tripleFactory;
-    private HashMap<Integer, BlankNode> newBNodeMap = new HashMap<Integer, BlankNode>();
+    private Map<Integer, BlankNode> newBNodeMap;
 
-    public GraphToGraphMapperImpl(Graph g) {
-        graph = g;
-        elementFactory = graph.getElementFactory();
-        tripleFactory = graph.getTripleFactory();
+    public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory) {
+        this.graph = newGraph;
+        this.elementFactory = graph.getElementFactory();
+        this.tripleFactory = graph.getTripleFactory();
+        newBNodeMap = mapFactory.createMap(Integer.class, BlankNode.class);
     }
 
     public Graph getGraph() {

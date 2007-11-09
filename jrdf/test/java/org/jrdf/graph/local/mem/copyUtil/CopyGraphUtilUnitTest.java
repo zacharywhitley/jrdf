@@ -80,6 +80,8 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.graph.local.mem.GraphFactoryImpl;
+import org.jrdf.map.MapFactory;
+import org.jrdf.map.MemMapFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
@@ -88,8 +90,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public class CopyGraphUtilUnitTest extends TestCase {
+    private static final MapFactory MAP_FACTORY = new MemMapFactory();
     private String url1 = "http://www.example.com/1#";
-
     private Graph graph1;
     private Graph graph2;
     private Triple triple1;
@@ -97,7 +99,6 @@ public class CopyGraphUtilUnitTest extends TestCase {
     private Triple triple3;
     private Triple triple4;
     private Triple triple5;
-
     private Node node1;
     private PredicateNode pNode1;
     private PredicateNode pNode2;
@@ -106,17 +107,13 @@ public class CopyGraphUtilUnitTest extends TestCase {
     private Node node3;
     private Node node4;
     private Node node5;
-
     private BlankNode bNode1;
     private BlankNode bNode2;
     private BlankNode bNode3;
-
     private TripleFactory tFac1;
     private TripleFactory tFac2;
-    
     private GraphElementFactory eFac1;
     private GraphElementFactory eFac2;
-
     private CopyGraphUtil cgUtilImpl;
 
     private Graph newGraph() {
@@ -153,7 +150,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, (ObjectNode) node2);
         graph1.add(triple1);
 
-        cgUtilImpl = new CopyGraphUtilImpl();
+        cgUtilImpl = new CopyGraphUtilImpl(MAP_FACTORY);
         graph2 = cgUtilImpl.copyGraph(graph1, graph2);
 
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -172,7 +169,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode1);
         graph1.add(triple1);
 
-        cgUtilImpl = new CopyGraphUtilImpl();
+        cgUtilImpl = new CopyGraphUtilImpl(MAP_FACTORY);
         graph2 = cgUtilImpl.copyGraph(graph1, graph2);
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         if (it.hasNext()) {
@@ -190,7 +187,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
         triple1 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node2);
         graph1.add(triple1);
 
-        cgUtilImpl = new CopyGraphUtilImpl();
+        cgUtilImpl = new CopyGraphUtilImpl(MAP_FACTORY);
         graph2 = cgUtilImpl.copyGraph(graph1, graph2);
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         if (it.hasNext()) {
@@ -211,7 +208,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, literal);
         graph1.add(triple1);
 
-        cgUtilImpl = new CopyGraphUtilImpl();
+        cgUtilImpl = new CopyGraphUtilImpl(MAP_FACTORY);
         graph2 = cgUtilImpl.copyGraph(graph1, graph2);
         ClosableIterator<Triple> triples = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Triple trip = triples.next();
@@ -267,7 +264,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
 
         graph1.add(triple1);
         graph1.add(triple2);
-        cgUtilImpl = new CopyGraphUtilImpl();
+        cgUtilImpl = new CopyGraphUtilImpl(MAP_FACTORY);
         graph2 = cgUtilImpl.copyGraph(graph1, graph2);
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Triple t1 = it.next();
@@ -304,7 +301,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
         PredicateNode np2Node = eFac2.createURIReference(URI.create(url1 + "p2"));
         PredicateNode np3Node = eFac2.createURIReference(URI.create(url1 + "p3"));
         
-        cgUtilImpl = new CopyGraphUtilImpl();
+        cgUtilImpl = new CopyGraphUtilImpl(MAP_FACTORY);
         graph2 = cgUtilImpl.copyGraph(graph1, graph2);
         ClosableIterator<Triple> trps1 = graph2.find(ANY_SUBJECT_NODE, np1Node, ANY_OBJECT_NODE);
         Triple trp1 = null;
@@ -343,7 +340,7 @@ public class CopyGraphUtilUnitTest extends TestCase {
         graph1.add(triple3);
         graph1.add(triple4);
 
-        cgUtilImpl = new CopyGraphUtilImpl();
+        cgUtilImpl = new CopyGraphUtilImpl(MAP_FACTORY);
         graph2 = cgUtilImpl.copyTriplesForNode(graph1, graph2, node1);
         assertEquals("graph2 size", 1, graph2.getNumberOfTriples());
         graph2.clear();
