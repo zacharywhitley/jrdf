@@ -124,8 +124,8 @@
         </one-jar>
 
         <!-- Cleanup -->
-        <deltree dir="${dist.dir}/gui/lib"/>
-        <delete file="${dist.dir}/gui/main.jar"/> 
+        <delete dir="${dist.dir}/gui/lib"/>
+        <delete file="${dist.dir}/gui/main.jar"/>
     </target>
 
     <target name="javadoc" depends="-compile">
