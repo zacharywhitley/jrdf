@@ -61,6 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r1r1;
@@ -81,10 +82,10 @@ import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkSubmolecul
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMoleculeWithSubmolecule;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;
 
+import java.util.Collections;
 import static java.util.Collections.EMPTY_SET;
 
 public class MergeSubmoleculesImplUnitTest extends TestCase {
@@ -143,16 +144,19 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
     }
 
     public void testMergeUnmatchedSecondLevelTriples() {
-        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1), EMPTY_SET);
-        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2), EMPTY_SET);
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1),
+                Collections.<Triple>emptySet());
+        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2),
+                Collections.<Triple>emptySet());
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1, b2r1r2),
-            EMPTY_SET);
+            Collections.<Triple>emptySet());
         assertEquals(expectedMolecule, newMolecule);
     }
 
     public void testMergeUnmatchedLevelTriples() {
-        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1), EMPTY_SET);
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1),
+                Collections.<Triple>emptySet());
         NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2, b2r2r2, b2r3b3),
             asSet(b3r1r3));
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
