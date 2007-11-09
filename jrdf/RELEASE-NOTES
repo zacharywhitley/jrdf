@@ -1,3 +1,25 @@
+JRDF Release 0.5.1
+==================
+* Added Graph copying between two local graphs (Feature 1805283).
+* Added Resource creation on GraphElementFactory (Feature 1805285).
+* Fixed confusing semantics of getNewGraph on factories.  Previously,
+it would create a new graph object with the same indices and
+node/string pools.  Now it creates new indices and node/string pools.
+(Bug 1821049).
+* Fixed behaviour of equality of resources (Bug 1783063).
+* getValue() on literals not returns the underlying Java class -
+getDatatypeValue() has been added to return the wrapper class
+(Bug 1793803).
+* Fixed bugs associated with data types including: equals on
+some datatypes was missing or incorrect and serialization
+(Bug 1793814, 1802351).
+* BdbFactory bugs fixed (Bugs 1793822, 1827349).
+* Remove and close incorrectly implemented (Bug 1793822).
+* Inefficient creation of RDF/XML (Bug 1800829).
+* Allowed correct serialization of Answers (Bug 1802319).
+* Creation of NullURI instead of returning null when calling
+getURI on a blank node resource (Bug 1805264).
+
 JRDF Release 0.5.0
 ==================
 * First support for Java 6.  Will run under Java 5 but requires StAX library
