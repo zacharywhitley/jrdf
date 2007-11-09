@@ -1,0 +1,4 @@
+RDF/XML Parser
+==============
+Original source is from Aduna's RIO Parser (found in org.jrdf.parser).  Part of
+the Sesame project (http://www.openrdf.org).  Licenced under LGPL (see LGPL-LICENCE file).
