@@ -2,9 +2,3 @@ RDF/XML Parser
 ==============
 Original source is from Aduna's RIO Parser (found in org.jrdf.parser).  Part of
 the Sesame project (http://www.openrdf.org).  Licenced under LGPL (see LGPL-LICENCE file).
-
-JAR Class Loader
-================
-Original code from (http://one-jar.sourceforge.net/) modified to fix known bug with OS X
-(http://sourceforge.net/tracker/index.php?func=detail&aid=1476985&group_id=111153&atid=658457).
-Licenced under One Jar licence (see ONE-JAR-LICENCE file).
