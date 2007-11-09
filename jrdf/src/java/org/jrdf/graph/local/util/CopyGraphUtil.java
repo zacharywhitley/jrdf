@@ -1,4 +1,4 @@
-package org.jrdf.graph.local.mem.copyUtil;
+package org.jrdf.graph.local.util;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
