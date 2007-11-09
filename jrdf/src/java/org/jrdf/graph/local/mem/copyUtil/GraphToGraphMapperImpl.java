@@ -36,15 +36,13 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     }
 
     public void updateBlankNodes(Triple triple) throws GraphElementFactoryException {
-        final SubjectNode bsNode = triple.getSubject();
-        if (isBlankNode(bsNode)) {
-            int bnHash = bsNode.hashCode();
-            newBNodeMap.put(bnHash, elementFactory.createBlankNode());
+        SubjectNode subjectNode = triple.getSubject();
+        if (isBlankNode(subjectNode)) {
+            newBNodeMap.put(subjectNode.hashCode(), elementFactory.createBlankNode());
         }
-        final ObjectNode boNode = triple.getObject();
-        if (isBlankNode(boNode)) {
-            int bnHash = boNode.hashCode();
-            newBNodeMap.put(bnHash, elementFactory.createBlankNode());
+        final ObjectNode objectNode = triple.getObject();
+        if (isBlankNode(objectNode)) {
+            newBNodeMap.put(objectNode.hashCode(), elementFactory.createBlankNode());
         }
     }
 
@@ -59,13 +57,13 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     }
 
     private Triple createNewTriple(Triple triple) throws GraphElementFactoryException {
-        SubjectNode sn = triple.getSubject();
-        PredicateNode pn = triple.getPredicate();
-        ObjectNode on = triple.getObject();
-        SubjectNode newsn = (SubjectNode) createNewNode(sn);
-        PredicateNode newpn = elementFactory.createURIReference(((URIReference) pn).getURI());
-        ObjectNode newon = (ObjectNode) createNewNode(on);
-        return tripleFactory.createTriple(newsn, newpn, newon);
+        SubjectNode subjectNode = triple.getSubject();
+        PredicateNode predicateNode = triple.getPredicate();
+        ObjectNode objectNode = triple.getObject();
+        SubjectNode newSubjectNode = (SubjectNode) createNewNode(subjectNode);
+        PredicateNode newPredicateNode = elementFactory.createURIReference(((URIReference) predicateNode).getURI());
+        ObjectNode newObjectNode = (ObjectNode) createNewNode(objectNode);
+        return tripleFactory.createTriple(newSubjectNode, newPredicateNode, newObjectNode);
     }
 
     public void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException {
@@ -79,26 +77,26 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     private Node createNewNode(Node node) throws GraphElementFactoryException {
         Node newNode;
         if (isBlankNode(node)) {
-            newNode = newBNodeMap.get(new Integer(node.hashCode()));
+            newNode = newBNodeMap.get(node.hashCode());
         } else {
-            newNode = createLiteralOrURI(node);
+            newNode = createLiteralOrURI((ObjectNode) node);
         }
         return newNode;
     }
 
-    public ObjectNode createLiteralOrURI(Node oON) throws GraphElementFactoryException {
-        ObjectNode oN;
-        if (Literal.class.isAssignableFrom(oON.getClass())) {
-            Literal lit = (Literal) oON;
+    private ObjectNode createLiteralOrURI(ObjectNode objectNode) throws GraphElementFactoryException {
+        ObjectNode newObjectNode;
+        if (Literal.class.isAssignableFrom(objectNode.getClass())) {
+            Literal lit = (Literal) objectNode;
             if (lit.isDatatypedLiteral()) {
-                oN = elementFactory.createLiteral(lit.getValue().toString(), lit.getDatatypeURI());
+                newObjectNode = elementFactory.createLiteral(lit.getValue().toString(), lit.getDatatypeURI());
             } else {
-                oN = elementFactory.createLiteral(lit.getValue().toString());
+                newObjectNode = elementFactory.createLiteral(lit.getValue().toString());
             }
         } else {
-            oN = elementFactory.createURIReference(((URIReference) oON).getURI());
+            newObjectNode = elementFactory.createURIReference(((URIReference) objectNode).getURI());
         }
-        return oN;
+        return newObjectNode;
     }
 
     public static boolean isBlankNode(Node node) {
