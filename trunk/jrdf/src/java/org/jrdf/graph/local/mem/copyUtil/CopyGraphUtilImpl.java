@@ -94,10 +94,16 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         newBNodeMap = new HashMap<Integer, BlankNode>();
         sourceGraph = sg;
         targetGraph = tg;
-        helper = new CopyGraphHelper(tg);
+        helper = new CopyGraphHelper(targetGraph);
 
-        elemFactory = tg.getElementFactory();
-        tripleFactory = tg.getTripleFactory();
+        elemFactory = targetGraph.getElementFactory();
+        tripleFactory = targetGraph.getTripleFactory();
+    }
+
+    private void reset() {
+        helper = new CopyGraphHelper(targetGraph);
+        elemFactory = targetGraph.getElementFactory();
+        tripleFactory = targetGraph.getTripleFactory();
     }
 
     /**
@@ -112,6 +118,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     public Graph copyGraph(Graph sg, Graph tg) throws GraphException {
         sourceGraph = sg;
         targetGraph = tg;
+        reset();
         ClosableIterator<Triple> triples = sourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         readSourceGraph(triples);
         triples = sourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -214,6 +221,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     public Graph copyTriplesForNode(Node node, Graph sg, Graph tg) throws GraphException {
         sourceGraph = sg;
         targetGraph = tg;
+        reset();
 
         Iterator<Triple> triples;
         try {
