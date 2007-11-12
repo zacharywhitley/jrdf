@@ -79,11 +79,11 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class StoredMapHandlerImpl implements StoredMapHandler {
-    private static final String USERNAME = System.getProperty("user.name");
-    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
     private Map<Class<?>, TupleBinding> binding = new HashMap<Class<?>, TupleBinding>();
+    private final DirectoryHandler handler;
 
-    public StoredMapHandlerImpl() {
+    public StoredMapHandlerImpl(DirectoryHandler handler) {
+        this.handler = handler;
         binding.put(String.class, new StringBinding());
         binding.put(Long.class, new LongBinding());
         binding.put(LinkedList.class, new LongListBinding());
@@ -91,7 +91,7 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
     }
 
     public Environment setUpEnvironment() throws DatabaseException {
-        File dir = getDir();
+        File dir = handler.getDir();
         dir.mkdirs();
         EnvironmentConfig env = new EnvironmentConfig();
         env.setTransactional(true);
@@ -130,9 +130,5 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
         EntryBinding keyBinding = binding.get(clazz1);
         EntryBinding dataBinding = binding.get(clazz2);
         return new StoredMap(database, keyBinding, dataBinding, true);
-    }
-
-    private File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
 }

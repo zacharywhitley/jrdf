@@ -65,6 +65,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.map.TempDirectoryHandler;
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 
 public class BdbPerformance extends AbstractGraphPerformance {
@@ -81,7 +82,7 @@ public class BdbPerformance extends AbstractGraphPerformance {
     }
 
     protected MapFactory getMapFactory() {
-        return new BdbMapFactory(new StoredMapHandlerImpl(), "database");
+        return new BdbMapFactory(new StoredMapHandlerImpl(new TempDirectoryHandler()), "database");
     }
 
     public static void main(String[] args) throws Exception {
