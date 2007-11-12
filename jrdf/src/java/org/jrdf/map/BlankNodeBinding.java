@@ -62,7 +62,6 @@ package org.jrdf.map;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.local.mem.BlankNodeImpl;
 
 public class BlankNodeBinding extends TupleBinding {
@@ -71,7 +70,11 @@ public class BlankNodeBinding extends TupleBinding {
     }
 
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        BlankNode node = (BlankNode) object;
-        tupleOutput.writeString(node.toString());
+        if (BlankNodeImpl.class.isAssignableFrom(object.getClass())) {
+            BlankNodeImpl node = (BlankNodeImpl) object;
+            tupleOutput.writeString(node.toString());
+        } else {
+            throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
+        }
     }
 }
