@@ -182,7 +182,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      * @return BlankNodeImpl
      * @throws IllegalArgumentException
      */
-    public BlankNode valueOf(String nodeString) throws IllegalArgumentException {
+    public static BlankNode valueOf(String nodeString) throws IllegalArgumentException {
 
         String[] split = nodeString.split("#");
 
