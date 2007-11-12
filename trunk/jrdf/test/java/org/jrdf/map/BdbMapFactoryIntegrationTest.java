@@ -64,7 +64,7 @@ import junit.framework.TestCase;
 import java.util.Map;
 
 public class BdbMapFactoryIntegrationTest extends TestCase {
-    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl();
+    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl(new TempDirectoryHandler());
     private MapFactory factory;
 
     public void setUp() throws Exception {
