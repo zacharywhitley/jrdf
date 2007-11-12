@@ -60,7 +60,6 @@
 package org.jrdf.map;
 
 import com.sleepycat.bind.EntryBinding;
-import com.sleepycat.bind.serial.SerialBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
@@ -117,18 +116,18 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Environment env, Database database, StoredClassCatalog catalog,
-        Class<T> clazz1, Class<A> clazz2) throws DatabaseException {
-        EntryBinding keyBinding = new SerialBinding(catalog, clazz1);
-        EntryBinding dataBinding = new SerialBinding(catalog, clazz2);
+    public <T, A, U extends A> Map<T, U> createMap(Environment env, Database database, Class<T> clazz1,
+        Class<A> clazz2) {
+        EntryBinding keyBinding = getBinding(clazz1);
+        EntryBinding dataBinding = getBinding(clazz2);
         return new StoredMap(database, keyBinding, dataBinding, true);
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Environment env, Database database,
-        Class<T> clazz1, Class<A> clazz2) {
-        EntryBinding keyBinding = binding.get(clazz1);
-        EntryBinding dataBinding = binding.get(clazz2);
-        return new StoredMap(database, keyBinding, dataBinding, true);
+    private EntryBinding getBinding(Class<?> clazz) {
+        if (binding.keySet().contains(clazz)) {
+            return binding.get(clazz);
+        } else {
+            throw new IllegalArgumentException("Cannot retrieve binding for class: " + clazz.getClass());
+        }
     }
 }
