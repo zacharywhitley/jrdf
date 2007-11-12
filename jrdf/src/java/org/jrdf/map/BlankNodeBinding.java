@@ -63,32 +63,15 @@ import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.local.mem.BlankNodeImpl;
 
 public class BlankNodeBinding extends TupleBinding {
     public Object entryToObject(TupleInput tupleInput) {
-        return new BlankNodeImpl(tupleInput.readString());
+        return BlankNodeImpl.valueOf(tupleInput.readString());
     }
 
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
         BlankNode node = (BlankNode) object;
         tupleOutput.writeString(node.toString());
-    }
-
-    private final class BlankNodeImpl implements BlankNode {
-        private String value;
-
-        private BlankNodeImpl(String newValue) {
-            value = newValue;
-        }
-
-        public void accept(TypedNodeVisitor visitor) {
-            visitor.visitBlankNode(this);
-        }
-
-        @Override
-        public String toString() {
-            return value;
-        }
     }
 }
