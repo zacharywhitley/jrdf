@@ -68,9 +68,12 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.mem.LocalizedNode;
+import org.jrdf.map.MapFactory;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class NodePoolImpl implements NodePool {
     /**
@@ -93,9 +96,9 @@ public final class NodePoolImpl implements NodePool {
      */
     private long nextNode = 1L;
 
-    public NodePoolImpl(NodeTypePool newNodeTypePool, Map<String, Long> newStringPool) {
+    public NodePoolImpl(NodeTypePool newNodeTypePool, MapFactory newMapFactory) {
         nodeTypePool = newNodeTypePool;
-        stringPool = newStringPool;
+        stringPool = newMapFactory.createMap(String.class, Long.class);
     }
 
     public Node getNodeById(Long id) {
@@ -139,8 +142,24 @@ public final class NodePoolImpl implements NodePool {
         }
     }
 
-    public Collection<Node> getNodePoolValues() {
-        return nodeTypePool.values();
+    public void registerNodePoolValues(List<Map<Long, String>> values) {
+        // Recalculate size.
+        for (Map<Long, String> value : values) {
+            nextNode += value.size();
+        }
+        // Add non-blank nodes to string pool.
+        addEntries(values.get(1).entrySet());
+        addEntries(values.get(2).entrySet());
+        // Add all entries to node pool.
+        nodeTypePool.addNodeValues(this, values);
+    }
+
+    public List<Map<Long, String>> getNodePoolValues() {
+        List<Map<Long, String>> values = new ArrayList<Map<Long, String>>();
+        values.add(nodeTypePool.getBNodeValues());
+        values.add(nodeTypePool.getURINodeValues());
+        values.add(nodeTypePool.getLiteralNodeValues());
+        return values;
     }
 
     public Long getNextNodeId() {
@@ -238,5 +257,11 @@ public final class NodePoolImpl implements NodePool {
                 "node.  Got: " + node + ", expected: " + blankNode);
         }
         return nodeId;
+    }
+
+    private void addEntries(Set<Map.Entry<Long, String>> entries) {
+        for (Map.Entry<Long, String> entry : entries) {
+            stringPool.put(entry.getValue(), entry.getKey());
+        }
     }
 }

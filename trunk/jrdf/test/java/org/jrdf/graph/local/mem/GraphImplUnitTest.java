@@ -89,47 +89,47 @@ public class GraphImplUnitTest extends AbstractGraphUnitTest {
 
     //TODO: Create a disk based serialization test.
 
-//    /**
-//     * Implementation method for testing serialization of the graph.
-//     *
-//     * @throws Exception When a problem is found.
-//     */
-//    public void testSerializing() throws Exception {
-//        // populate the graph
-//        graph.add(blank1, ref1, blank2);
-//        graph.add(blank1, ref2, blank2);
-//        graph.add(blank1, ref1, l1);
-//        graph.add(blank1, ref1, l2);
-//        graph.add(blank2, ref1, blank2);
-//        graph.add(blank2, ref2, blank2);
-//        graph.add(blank2, ref1, l1);
-//        graph.add(blank2, ref1, l2);
-//        graph.add(blank2, ref1, l2);
-//        graph.add(ref1, ref1, ref1);
-//
-//        // check that the graph is as expected
-//        assertEquals(9, graph.getNumberOfTriples());
-//
-//        Graph graph2 = (Graph) TestUtil.copyBySerialization(graph);
-//
-//        ref3 = graph2.getElementFactory().createURIReference(ref1.getURI());
-//        Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
-//
-//        // test that the graphs are equivalent
-//        assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
-//        assertTrue(graph2.contains(blank1, ref1, blank2));
-//        assertTrue(graph2.contains(blank1, ref2, blank2));
-//        assertTrue(graph2.contains(blank1, ref1, l1));
-//        assertTrue(graph2.contains(blank1, ref1, l2));
-//        assertTrue(graph2.contains(blank2, ref1, blank2));
-//        assertTrue(graph2.contains(blank2, ref2, blank2));
-//        assertTrue(graph2.contains(blank2, ref1, l1));
-//        assertTrue(graph2.contains(blank2, ref3, l2));
-//        assertTrue(graph2.contains(blank1, ref3, l3));
-//        assertTrue(graph2.contains(ref1, ref1, ref1));
-//        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref1, AnyObjectNode.ANY_OBJECT_NODE));
-//        assertTrue(graph2.contains(ref3, ref3, ref3));
-//        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, AnyObjectNode.ANY_OBJECT_NODE));
-//        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, l3));
-//    }
+    /**
+     * Implementation method for testing serialization of the graph.
+     *
+     * @throws Exception When a problem is found.
+     */
+    public void testSerializing() throws Exception {
+        // populate the graph
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(blank1, ref1, l1);
+        graph.add(blank1, ref1, l2);
+        graph.add(blank2, ref1, blank2);
+        graph.add(blank2, ref2, blank2);
+        graph.add(blank2, ref1, l1);
+        graph.add(blank2, ref1, l2);
+        graph.add(blank2, ref1, l2);
+        graph.add(ref1, ref1, ref1);
+
+        // check that the graph is as expected
+        assertEquals(9, graph.getNumberOfTriples());
+
+        Graph graph2 = (Graph) TestUtil.copyBySerialization(graph);
+
+        ref3 = graph2.getElementFactory().createURIReference(ref1.getURI());
+        Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
+
+        // test that the graphs are equivalent
+        assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
+        assertTrue(graph2.contains(blank1, ref1, blank2));
+        assertTrue(graph2.contains(blank1, ref2, blank2));
+        assertTrue(graph2.contains(blank1, ref1, l1));
+        assertTrue(graph2.contains(blank1, ref1, l2));
+        assertTrue(graph2.contains(blank2, ref1, blank2));
+        assertTrue(graph2.contains(blank2, ref2, blank2));
+        assertTrue(graph2.contains(blank2, ref1, l1));
+        assertTrue(graph2.contains(blank2, ref3, l2));
+        assertTrue(graph2.contains(blank1, ref3, l3));
+        assertTrue(graph2.contains(ref1, ref1, ref1));
+        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref1, AnyObjectNode.ANY_OBJECT_NODE));
+        assertTrue(graph2.contains(ref3, ref3, ref3));
+        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, AnyObjectNode.ANY_OBJECT_NODE));
+        assertTrue(graph2.contains(AnySubjectNode.ANY_SUBJECT_NODE, ref3, l3));
+    }
 }

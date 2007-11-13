@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.local.index.nodepool.mem;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
@@ -79,18 +78,13 @@ import java.util.Map;
 
 public class MemNodePoolFactory implements NodePoolFactory {
     public NodePool createNodePool() {
-        MapFactory factory = new MemMapFactory();
-        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
-        Map<Long, Node> nodePool = factory.createMap(Long.class, Node.class);
-        Map<Long, String> bnodePool = factory.createMap(Long.class, String.class);
-        Map<Long, String> uriPool = factory.createMap(Long.class, String.class);
-        Map<Long, String> literalPool = factory.createMap(Long.class, String.class);
+        MapFactory mapFactory = new MemMapFactory();
+        Map<String, Long> stringPool = mapFactory.createMap(String.class, Long.class);
         RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
         LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
         StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(bnodePool, uriPool, literalPool, mapper);
-//        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(nodePool);
-        return new NodePoolImpl(nodeTypePool, stringPool);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapFactory, mapper);
+        return new NodePoolImpl(nodeTypePool, mapFactory);
     }
 
     public void close() {

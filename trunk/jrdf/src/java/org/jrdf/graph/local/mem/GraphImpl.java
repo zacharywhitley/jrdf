@@ -71,8 +71,6 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.local.mem.iterator.URIReferenceResourceIterator;
-import org.jrdf.graph.local.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
@@ -83,6 +81,8 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.mem.iterator.IteratorFactory;
+import org.jrdf.graph.local.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.local.mem.iterator.URIReferenceResourceIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
@@ -99,6 +99,7 @@ import java.io.StringWriter;
 import static java.util.Arrays.asList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -414,7 +415,7 @@ public class GraphImpl implements Graph, Serializable {
         // write out the first index with the default writer
         out.defaultWriteObject();
         // write all the nodes as well
-        out.writeObject(nodePool.getNodePoolValues().toArray());
+        out.writeObject(nodePool.getNodePoolValues());
         // TODO: Consider writing these nodes individually.  Converting to an array
         // may take up unnecessary memory
     }
@@ -432,12 +433,10 @@ public class GraphImpl implements Graph, Serializable {
         init();
 
         // read all the nodes as well
-        Object[] nodes = (Object[]) in.readObject();
+        List<Map<Long, String>> values = (List<Map<Long, String>>) in.readObject();
 
         // populate the node factory with these nodes
-        for (Object node : nodes) {
-            nodePool.registerNode((LocalizedNode) node);
-        }
+        nodePool.registerNodePoolValues(values);
 
         // fill in the other indexes
         try {
