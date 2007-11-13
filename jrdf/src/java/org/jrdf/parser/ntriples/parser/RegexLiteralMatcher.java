@@ -8,7 +8,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import java.util.regex.Pattern;
 
 public final class RegexLiteralMatcher implements LiteralMatcher {
-    private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
+    private Pattern pattern = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
         "(" +
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
         ").*");
@@ -17,6 +17,7 @@ public final class RegexLiteralMatcher implements LiteralMatcher {
     private static final int DATATYPE_INDEX = 8;
     private final RegexMatcherFactory regexFactory;
     private final NTripleUtil nTripleUtil;
+    private static final int LITERAL_VALUES_LENGTH = 3;
 
     public RegexLiteralMatcher(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil) {
         checkNotNull(newRegexFactory, newNTripleUtil);
@@ -24,16 +25,20 @@ public final class RegexLiteralMatcher implements LiteralMatcher {
         this.nTripleUtil = newNTripleUtil;
     }
 
+    public void setPattern(String newPattern) {
+        pattern = Pattern.compile(newPattern);
+    }
+
     public boolean matches(String s) {
         checkNotEmptyString("s", s);
-        RegexMatcher matcher = regexFactory.createMatcher(LANGUAGE_REGEX, s);
+        RegexMatcher matcher = regexFactory.createMatcher(pattern, s);
         return matcher.matches();
     }
 
     public String[] parse(String s) {
         checkNotEmptyString("s", s);
-        RegexMatcher matcher = regexFactory.createMatcher(LANGUAGE_REGEX, s);
-        String[] values = new String[3];
+        RegexMatcher matcher = regexFactory.createMatcher(pattern, s);
+        String[] values = new String[LITERAL_VALUES_LENGTH];
         if (matcher.matches()) {
             String ntriplesLiteral = matcher.group(LITERAL_INDEX);
             values[0] = nTripleUtil.unescapeLiteral(ntriplesLiteral);

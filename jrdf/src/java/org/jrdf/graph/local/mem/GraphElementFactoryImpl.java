@@ -151,7 +151,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return createResource(createURIReference(uri));
     }
 
-    public Literal convertToLiteral(Object object) throws GraphElementFactoryException {
+    public Literal convertToLiteral(Object object) {
         LiteralMutableId literal = new LiteralImpl(object);
         addNodeId(literal);
         return literal;

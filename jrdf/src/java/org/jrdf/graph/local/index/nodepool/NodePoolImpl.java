@@ -139,7 +139,6 @@ public final class NodePoolImpl implements NodePool {
         }
     }
 
-
     public Collection<Node> getNodePoolValues() {
         return nodeTypePool.values();
     }

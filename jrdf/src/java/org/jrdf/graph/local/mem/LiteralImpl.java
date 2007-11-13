@@ -92,17 +92,17 @@ public class LiteralImpl extends AbstractLiteral implements LocalizedNode, Seria
      */
     private String thisString;
 
-    LiteralImpl(String newLexicalForm) {
+    public LiteralImpl(String newLexicalForm) {
         super(newLexicalForm);
         thisString = super.toString();
     }
 
-    LiteralImpl(String newLexicalForm, String newLanguage) {
+    public LiteralImpl(String newLexicalForm, String newLanguage) {
         super(newLexicalForm, newLanguage);
         thisString = super.toString();
     }
 
-    LiteralImpl(String newLexicalForm, URI datatype) {
+    public LiteralImpl(String newLexicalForm, URI datatype) {
         super(newLexicalForm, datatype);
         thisString = super.toString();
     }

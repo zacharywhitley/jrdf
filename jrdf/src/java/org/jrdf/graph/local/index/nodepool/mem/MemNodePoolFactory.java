@@ -64,18 +64,32 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
 import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePool;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 
 import java.util.Map;
 
 public class MemNodePoolFactory implements NodePoolFactory {
     public NodePool createNodePool() {
-        MapFactory factory1 = new MemMapFactory();
-        MapFactory factory2 = new MemMapFactory();
-        Map<String, Long> stringPool = factory2.createMap(String.class, Long.class);
-        Map<Long, Node> nodePool = factory1.createMap(Long.class, Node.class);
-        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(nodePool);
+        MapFactory factory = new MemMapFactory();
+        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
+        Map<Long, Node> nodePool = factory.createMap(Long.class, Node.class);
+        Map<Long, String> bnodePool = factory.createMap(Long.class, String.class);
+        Map<Long, String> uriPool = factory.createMap(Long.class, String.class);
+        Map<Long, String> literalPool = factory.createMap(Long.class, String.class);
+        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
+        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
+        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(bnodePool, uriPool, literalPool, mapper);
+//        NodeTypePoolImpl nodeTypePool = new NodeTypePoolImpl(nodePool);
         return new NodePoolImpl(nodeTypePool, stringPool);
     }
 

@@ -59,14 +59,20 @@
 
 package org.jrdf.graph.local.index.nodepool.bdb;
 
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.NodeTypePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePool;
 import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
+import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.StoredMapHandler;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 import java.util.Map;
 
@@ -77,6 +83,7 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     private BdbMapFactory longNodeFactory;
     private BdbMapFactory stringLongFactory;
 
+
     public BdbNodePoolFactory(final StoredMapHandler newHandler) {
         this.handler = newHandler;
     }
@@ -84,7 +91,13 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
         longNodeFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL);
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(longNodeFactory.createMap(Long.class, Node.class));
+        Map<Long, String> bnodePool = longNodeFactory.createMap(Long.class, String.class);
+        Map<Long, String> uriPool = longNodeFactory.createMap(Long.class, String.class);
+        Map<Long, String> literalPool = longNodeFactory.createMap(Long.class, String.class);
+        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
+        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
+        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(bnodePool, uriPool, literalPool, mapper);
         stringLongFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL);
         final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
         return new NodePoolImpl(nodeTypePool, stringPool);
