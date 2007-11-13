@@ -60,8 +60,11 @@
 package org.jrdf.graph.local.index.nodepool;
 
 import org.jrdf.graph.Node;
+import org.jrdf.graph.local.mem.BlankNodeImpl;
 import org.jrdf.graph.local.mem.LocalizedNode;
+import org.jrdf.graph.local.mem.URIReferenceImpl;
 
+import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
 
@@ -70,12 +73,29 @@ public class NodeTypePoolImpl implements NodeTypePool {
      * The pool of all nodes, mapped from their ids.
      */
     private Map<Long, Node> nodePool;
+    private Map<Long, String> blankNodePool;
+    private Map<Long, String> uriNodePool;
+    private Map<Long, String> literalPool;
 
     public NodeTypePoolImpl(Map<Long, Node> newNodePool) {
         this.nodePool = newNodePool;
     }
 
+    public NodeTypePoolImpl(Map<Long, String> newBlankNodePool, Map<Long, String> newURINodePool,
+        Map<Long, String> newLiteralPool) {
+        blankNodePool = newBlankNodePool;
+        uriNodePool = newURINodePool;
+        literalPool = newLiteralPool;
+    }
+
     public Node get(Long nodeId) {
+//        if (blankNodePool.keySet().contains(nodeId)) {
+//            return BlankNodeImpl.valueOf(blankNodePool.get(nodeId));
+//        } else if (uriNodePool.keySet().contains(nodeId)) {
+//            return new URIReferenceImpl(URI.create(uriNodePool.get(nodeId)), nodeId);
+//        } else if (literalPool.keySet().contains(nodeId)) {
+//            return new LiteralImpl()
+//        }
         return nodePool.get(nodeId);
     }
 

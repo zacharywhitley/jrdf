@@ -72,42 +72,28 @@ import java.net.URI;
 import java.util.regex.Pattern;
 
 public final class LiteralParserImpl implements LiteralParser {
-    private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
-            "(" +
-            "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-            ").*");
-    private static final int LITERAL_INDEX = 1;
-    private static final int LANGUAGE_INDEX = 5;
-    private static final int DATATYPE_INDEX = 8;
     private final GraphElementFactory graphElementFactory;
-    private final RegexMatcherFactory regexMatcherFactory;
-    private final NTripleUtil nTripleUtil;
+    private final LiteralMatcher literalMatcher;
 
-    public LiteralParserImpl(GraphElementFactory newGraphElementFactory, RegexMatcherFactory newRegexMatcherFactory,
-            NTripleUtil newNTripleUtil) {
-        checkNotNull(newGraphElementFactory, newRegexMatcherFactory, newNTripleUtil);
+    public LiteralParserImpl(GraphElementFactory newGraphElementFactory, LiteralMatcher newLiteralMatcher) {
+        checkNotNull(newGraphElementFactory, newLiteralMatcher);
         this.graphElementFactory = newGraphElementFactory;
-        this.regexMatcherFactory = newRegexMatcherFactory;
-        this.nTripleUtil = newNTripleUtil;
+        this.literalMatcher = newLiteralMatcher;
     }
 
     public Literal parseLiteral(String s) throws ParseException {
         checkNotEmptyString("s", s);
-        RegexMatcher matcher = regexMatcherFactory.createMatcher(LANGUAGE_REGEX, s);
-        if (matcher.matches()) {
-            String ntriplesLiteral = matcher.group(LITERAL_INDEX);
-            String literal = nTripleUtil.unescapeLiteral(ntriplesLiteral);
-            String language = matcher.group(LANGUAGE_INDEX);
-            String datatype = matcher.group(DATATYPE_INDEX);
-            return createLiteral(language, literal, datatype, s);
-        } else {
+        String[] matches = literalMatcher.parse(s);
+        if (matches[0] == null && matches[1] == null && matches[2] == null) {
             throw new ParseException("Didn't find a matching literal", 1);
         }
+        return createLiteral(matches[0], matches[1], matches[2], s);
     }
 
-    private Literal createLiteral(String language, String literal, String datatype, String s) throws ParseException {
+    private Literal createLiteral(String literal, String language, String datatype, String originalString)
+        throws ParseException {
         try {
-            checkEitherLanguageOrDatatype(language, datatype, s);
+            checkEitherLanguageOrDatatype(language, datatype, originalString);
             if (language != null) {
                 return graphElementFactory.createLiteral(literal, language);
             } else if (datatype != null) {
@@ -116,7 +102,7 @@ public final class LiteralParserImpl implements LiteralParser {
                 return graphElementFactory.createLiteral(literal);
             }
         } catch (GraphElementFactoryException gefe) {
-            throw new ParseException("Failed to create literal from line: " + s, 1);
+            throw new ParseException("Failed to create literal from line: " + originalString, 1);
         }
     }
 
