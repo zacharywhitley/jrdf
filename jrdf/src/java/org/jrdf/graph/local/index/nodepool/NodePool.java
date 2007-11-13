@@ -63,7 +63,8 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.local.mem.LocalizedNode;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Maps between the Long identifier and a Node (globalized value) or from a String to a Long (local value).
@@ -102,7 +103,7 @@ public interface NodePool {
      *
      * @return The node pool.
      */
-    Collection<Node> getNodePoolValues();
+    List<Map<Long, String>> getNodePoolValues();
 
     /**
      * Returns the current next node Id increments it by one.
@@ -136,4 +137,6 @@ public interface NodePool {
      * Removes all entries from the nodepool.
      */
     void clear();
+
+    void registerNodePoolValues(List<Map<Long, String>> values);
 }

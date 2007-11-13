@@ -61,6 +61,7 @@ package org.jrdf.graph.local.index.nodepool;
 import junit.framework.TestCase;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.map.MapFactory;
 
 import static java.lang.reflect.Modifier.PUBLIC;
 import java.util.Map;
@@ -71,9 +72,9 @@ import java.util.Map;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class NodePoolUnitTest extends TestCase {
+public class NodePoolImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(NodePool.class, NodePoolImpl.class);
-        checkConstructor(NodePoolImpl.class, PUBLIC, NodeTypePool.class, Map.class);
+        checkConstructor(NodePoolImpl.class, PUBLIC, NodeTypePool.class, MapFactory.class);
     }
 }

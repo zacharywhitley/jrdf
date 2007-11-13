@@ -74,13 +74,11 @@ import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.util.Map;
-
 public class BdbNodePoolFactory implements NodePoolFactory {
     private static final String DB_NAME_NODEPOOL = "nodePool";
     private static final String DB_NAME_STRINGPOOL = "stringPool";
     private final StoredMapHandler handler;
-    private BdbMapFactory longNodeFactory;
+    private BdbMapFactory mapFactory;
     private BdbMapFactory stringLongFactory;
 
 
@@ -90,22 +88,18 @@ public class BdbNodePoolFactory implements NodePoolFactory {
 
     @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
-        longNodeFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL);
-        Map<Long, String> bnodePool = longNodeFactory.createMap(Long.class, String.class);
-        Map<Long, String> uriPool = longNodeFactory.createMap(Long.class, String.class);
-        Map<Long, String> literalPool = longNodeFactory.createMap(Long.class, String.class);
+        mapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL);
         RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
         LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
         StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(bnodePool, uriPool, literalPool, mapper);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapFactory, mapper);
         stringLongFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL);
-        final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
-        return new NodePoolImpl(nodeTypePool, stringPool);
+        return new NodePoolImpl(nodeTypePool, stringLongFactory);
     }
 
     public void close() {
         try {
-            longNodeFactory.close();
+            mapFactory.close();
         } finally {
             stringLongFactory.close();
         }

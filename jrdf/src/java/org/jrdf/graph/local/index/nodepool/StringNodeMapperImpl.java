@@ -36,11 +36,11 @@ public class StringNodeMapperImpl implements StringNodeMapper {
         }
     }
 
-    public Node convertToBlankNode(String string) {
+    public BlankNode convertToBlankNode(String string) {
         return BlankNodeImpl.valueOf(string);
     }
 
-    public Node convertToURI(String string, Long nodeId) {
+    public URIReference convertToURIReference(String string, Long nodeId) {
         return new URIReferenceImpl(URI.create(string), nodeId);
     }
 

@@ -62,14 +62,21 @@ package org.jrdf.graph.local.index.nodepool;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.local.mem.LocalizedNode;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public interface NodeTypePool {
     Node get(Long nodeId);
 
     void put(Long id, LocalizedNode node);
 
-    Collection<Node> values();
+    Map<Long, String> getBNodeValues();
 
     void clear();
+
+    Map<Long, String> getURINodeValues();
+
+    Map<Long, String> getLiteralNodeValues();
+
+    void addNodeValues(NodePool nodePool, List<Map<Long, String>> values);
 }

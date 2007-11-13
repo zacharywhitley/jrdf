@@ -74,14 +74,12 @@ import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.util.Map;
-
 public class Db4oNodePoolFactory implements NodePoolFactory {
     private static final String DB_NAME_NODEPOOL = "nodePool";
     private static final String DB_NAME_STRINGPOOL = "stringPool";
     private final DirectoryHandler handler;
     private final long graphNumber;
-    private Db4oMapFactory longNodeFactory;
+    private Db4oMapFactory mapFactory;
     private Db4oMapFactory stringLongFactory;
 
     public Db4oNodePoolFactory(final DirectoryHandler newHandler, long graphNumber) {
@@ -91,23 +89,18 @@ public class Db4oNodePoolFactory implements NodePoolFactory {
 
     @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
-        longNodeFactory = new Db4oMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
+        mapFactory = new Db4oMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
         RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
         LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
-        Map<Long, String> bnodePool = longNodeFactory.createMap(Long.class, String.class);
-        Map<Long, String> uriPool = longNodeFactory.createMap(Long.class, String.class);
-        Map<Long, String> literalPool = longNodeFactory.createMap(Long.class, String.class);
         StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(bnodePool, uriPool, literalPool, mapper);
-        //final NodeTypePool nodeTypePool = new NodeTypePoolImpl(longNodeFactory.createMap(Long.class, Node.class));
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapFactory, mapper);
         stringLongFactory = new Db4oMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
-        final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
-        return new NodePoolImpl(nodeTypePool, stringPool);
+        return new NodePoolImpl(nodeTypePool, stringLongFactory);
     }
 
     public void close() {
         try {
-            longNodeFactory.close();
+            mapFactory.close();
         } finally {
             stringLongFactory.close();
         }

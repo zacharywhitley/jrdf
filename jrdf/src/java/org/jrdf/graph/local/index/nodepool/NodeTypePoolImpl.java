@@ -64,11 +64,10 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.mem.LocalizedNode;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import org.jrdf.map.MapFactory;
+
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class NodeTypePoolImpl implements NodeTypePool {
     /**
@@ -79,11 +78,10 @@ public class NodeTypePoolImpl implements NodeTypePool {
     private Map<Long, String> literalNodePool;
     private StringNodeMapper mapper;
 
-    public NodeTypePoolImpl(Map<Long, String> newBlankNodePool, Map<Long, String> newURINodePool,
-        Map<Long, String> newLiteralNodePool, StringNodeMapper newMapper) {
-        blankNodePool = newBlankNodePool;
-        uriNodePool = newURINodePool;
-        literalNodePool = newLiteralNodePool;
+    public NodeTypePoolImpl(MapFactory mapFactory, StringNodeMapper newMapper) {
+        blankNodePool = mapFactory.createMap(Long.class, String.class);
+        uriNodePool = mapFactory.createMap(Long.class, String.class);
+        literalNodePool = mapFactory.createMap(Long.class, String.class);
         mapper = newMapper;
     }
 
@@ -92,7 +90,7 @@ public class NodeTypePoolImpl implements NodeTypePool {
         if (blankNodePool.keySet().contains(nodeId)) {
             node = mapper.convertToBlankNode(blankNodePool.get(nodeId));
         } else if (uriNodePool.keySet().contains(nodeId)) {
-            node = mapper.convertToURI(uriNodePool.get(nodeId), nodeId);
+            node = mapper.convertToURIReference(uriNodePool.get(nodeId), nodeId);
         } else if (literalNodePool.keySet().contains(nodeId)) {
             node = mapper.convertToLiteral(literalNodePool.get(nodeId), nodeId);
         }
@@ -112,9 +110,22 @@ public class NodeTypePoolImpl implements NodeTypePool {
         }
     }
 
-    public Collection<Node> values() {
-        Set<Node> allNodes = new HashSet<Node>();
-        return Collections.emptySet();
+    public void addNodeValues(NodePool nodePool, List<Map<Long, String>> values) {
+        blankNodePool = values.get(0);
+        uriNodePool = values.get(1);
+        literalNodePool = values.get(2);
+    }
+
+    public Map<Long, String> getBNodeValues() {
+        return blankNodePool;
+    }
+
+    public Map<Long, String> getURINodeValues() {
+        return uriNodePool;
+    }
+
+    public Map<Long, String> getLiteralNodeValues() {
+        return literalNodePool;
     }
 
     public void clear() {
