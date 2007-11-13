@@ -77,18 +77,18 @@ public final class BdbMapFactory implements MapFactory {
         checkNotNull(newHandler, newDatabaseName);
         this.handler = newHandler;
         this.databaseName = newDatabaseName;
+        try {
+            this.env = handler.setUpEnvironment();
+            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
+            this.database = handler.setupDatabase(env, databaseName, dbConfig);
+        } catch (DatabaseException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @SuppressWarnings({ "unchecked" })
     public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            database = handler.setupDatabase(env, databaseName, dbConfig);
-            return handler.createMap(env, database, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+        return handler.createMap(env, database, clazz1, clazz2);
     }
 
     public void close() {

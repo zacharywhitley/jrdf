@@ -104,7 +104,6 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
             throw new GraphException("Cannot create new triples.", e);
         } finally {
             triples.close();
-            mapFactory.close();
         }
         return mapper.getGraph();
     }
@@ -112,13 +111,11 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     public Node copyTriplesForNode(Graph newSourceGraph, Graph newTargetGraph, Node node)
         throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
-        Iterator<Triple> triples;
         try {
             Set<Triple> set = getAllTriplesForSubjectNode((SubjectNode) node, newSourceGraph);
             set.addAll(getAllTriplesForObjectNode((ObjectNode) node, newSourceGraph));
             readSourceGraph(set.iterator());
             mapper.createNewTriples(set.iterator());
-            //mapFactory.close();
             return mapper.createNewNode(node);
         } catch (Exception e) {
             throw new GraphException("Cannot copy RDF graph with node", e);
@@ -126,8 +123,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }
 
     public SubjectNode copyTriplesForSubjectNode(Graph newSourceGraph, Graph newTargetGraph,
-                                                 SubjectNode node, SubjectNode newNode)
-        throws GraphException {
+        SubjectNode node, SubjectNode newNode) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
         try {
             Set<Triple> set = getAllTriplesForSubjectNode(node, newSourceGraph);
@@ -144,7 +140,6 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         readSourceGraph(triples);
         triples = set.iterator();
         mapper.createNewTriples(triples);
-        mapFactory.close();
     }
 
     private void replaceSubjectNode(Graph newTargetGraph, SubjectNode node, SubjectNode newNode)
@@ -161,9 +156,8 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         }
     }
 
-    public ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph,
-                                               ObjectNode node, ObjectNode newNode)
-        throws GraphException {
+    public ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph, ObjectNode node,
+        ObjectNode newNode) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
         try {
             Set<Triple> set = getAllTriplesForObjectNode(node, newSourceGraph);
