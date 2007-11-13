@@ -71,9 +71,7 @@ import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import java.util.Map;
 
 public class BdbNodePoolFactory implements NodePoolFactory {
-    private static final String CLASS_CATALOG_NODEPOOL = "java_class_catalog_nodepool";
     private static final String DB_NAME_NODEPOOL = "nodePool";
-    private static final String CLASS_CATALOG_STRINGPOOL = "java_class_catalog_stringpool";
     private static final String DB_NAME_STRINGPOOL = "stringPool";
     private final StoredMapHandler handler;
     private BdbMapFactory longNodeFactory;
