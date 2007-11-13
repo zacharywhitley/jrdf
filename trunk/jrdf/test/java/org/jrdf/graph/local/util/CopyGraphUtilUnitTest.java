@@ -82,16 +82,16 @@ import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
+import org.jrdf.map.TempDirectoryHandler;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 public class CopyGraphUtilUnitTest extends TestCase {
-    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl();
+    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl(new TempDirectoryHandler());
     private MapFactory mapFactory = null;
     private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
 
