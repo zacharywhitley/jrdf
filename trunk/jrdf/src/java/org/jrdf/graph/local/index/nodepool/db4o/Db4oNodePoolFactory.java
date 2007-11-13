@@ -59,14 +59,20 @@
 
 package org.jrdf.graph.local.index.nodepool.db4o;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
 import org.jrdf.graph.local.index.nodepool.NodeTypePool;
 import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
 import org.jrdf.map.Db4oMapFactory;
 import org.jrdf.map.DirectoryHandler;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 import java.util.Map;
 
@@ -86,7 +92,14 @@ public class Db4oNodePoolFactory implements NodePoolFactory {
     @SuppressWarnings({ "unchecked" })
     public NodePool createNodePool() {
         longNodeFactory = new Db4oMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
-        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(longNodeFactory.createMap(Long.class, Node.class));
+        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
+        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
+        Map<Long, String> bnodePool = longNodeFactory.createMap(Long.class, String.class);
+        Map<Long, String> uriPool = longNodeFactory.createMap(Long.class, String.class);
+        Map<Long, String> literalPool = longNodeFactory.createMap(Long.class, String.class);
+        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(bnodePool, uriPool, literalPool, mapper);
+        //final NodeTypePool nodeTypePool = new NodeTypePoolImpl(longNodeFactory.createMap(Long.class, Node.class));
         stringLongFactory = new Db4oMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
         final Map<String, Long> stringPool = stringLongFactory.createMap(String.class, Long.class);
         return new NodePoolImpl(nodeTypePool, stringPool);

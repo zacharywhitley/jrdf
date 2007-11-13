@@ -63,13 +63,9 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.parser.ParseException;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-
 import java.net.URI;
-import java.util.regex.Pattern;
 
 public final class LiteralParserImpl implements LiteralParser {
     private final GraphElementFactory graphElementFactory;

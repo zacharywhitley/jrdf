@@ -4,4 +4,6 @@ public interface LiteralMatcher {
     boolean matches(String s);
 
     String[] parse(String s);
+
+    void setPattern(String newPattern);
 }
