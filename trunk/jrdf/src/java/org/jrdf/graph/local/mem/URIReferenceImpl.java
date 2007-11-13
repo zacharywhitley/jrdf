@@ -100,7 +100,7 @@ public class URIReferenceImpl extends AbstractURIReference implements LocalizedN
      * @param newUri The newUri of this node.
      * @param newId  The internal identifier for this node.
      */
-    URIReferenceImpl(URI newUri, Long newId) {
+    public URIReferenceImpl(URI newUri, Long newId) {
         super(newUri);
         checkNotNull(newUri, newId);
         id = newId;

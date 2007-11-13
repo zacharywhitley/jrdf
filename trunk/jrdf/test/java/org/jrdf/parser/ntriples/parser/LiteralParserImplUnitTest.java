@@ -65,50 +65,33 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.parser.ParseException;
-import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
-import org.jrdf.util.boundary.RegexMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
-import java.util.regex.Pattern;
 import java.net.URI;
 
 public class LiteralParserImplUnitTest extends TestCase {
     private static final Class<LiteralParser> TARGET_INTERFACE = LiteralParser.class;
     private static final Class<LiteralParserImpl> TEST_CLASS = LiteralParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, RegexMatcherFactory.class,
-        NTripleUtil.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "regexMatcherFactory",
-        "nTripleUtil"};
-    private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
-            "(" +
-            "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-            ").*");
-    private static final int LITERAL_INDEX = 1;
-    private static final int LANGUAGE_INDEX = 5;
-    private static final int DATATYPE_INDEX = 8;
+    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, LiteralMatcher.class};
+    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "literalMatcher"};
     private static final String LINE = "line" + Math.random();
-    private static final String UNESCAPED_LITERAL = "unescapedLiteral" + Math.random();
+    private static final String LITERAL = "unescapedLiteral" + Math.random();
     private static final String LANGUAGE = "language" + Math.random();
     private static final URI DATATYPE = URI.create("datatype" + Math.random());
     private final MockFactory mockFactory = new MockFactory();
     private GraphElementFactory elementFactory;
-    private RegexMatcherFactory regexMatcherFactory;
-    private RegexMatcher matcher;
     private LiteralParser parser;
-    private NTripleUtil nTripleUtil;
     private Literal expectedLiteral;
+    private LiteralMatcher literalMatcher;
 
     public void setUp() {
         elementFactory = mockFactory.createMock(GraphElementFactory.class);
-        regexMatcherFactory = mockFactory.createMock(RegexMatcherFactory.class);
-        matcher = mockFactory.createMock(RegexMatcher.class);
-        nTripleUtil = mockFactory.createMock(NTripleUtil.class);
+        literalMatcher = mockFactory.createMock(LiteralMatcher.class);
         expectedLiteral = mockFactory.createMock(Literal.class);
-        parser = new LiteralParserImpl(elementFactory, regexMatcherFactory, nTripleUtil);
+        parser = new LiteralParserImpl(elementFactory, literalMatcher);
     }
 
     public void testClassProperties() {
@@ -121,16 +104,15 @@ public class LiteralParserImplUnitTest extends TestCase {
     }
 
     public void testParseLiteralWithException() throws Exception {
-        expect(matcher.matches()).andReturn(false);
-        expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(LINE))).andReturn(matcher);
+        expect(literalMatcher.parse(LINE)).andReturn(new String[3]);
         mockFactory.replay();
         checkThrowsParseException(LINE, "Didn't find a matching literal");
         mockFactory.verify();
     }
 
     public void testParsePlainLiteral() throws Exception {
-        final String line = parserExpectations(UNESCAPED_LITERAL, null, null);
-        expect(elementFactory.createLiteral(UNESCAPED_LITERAL)).andReturn(expectedLiteral);
+        final String line = parserExpectations(LITERAL, null, null);
+        expect(elementFactory.createLiteral(LITERAL)).andReturn(expectedLiteral);
         mockFactory.replay();
         Literal actualLiteral = parser.parseLiteral(line);
         assertTrue(expectedLiteral == actualLiteral);
@@ -138,8 +120,8 @@ public class LiteralParserImplUnitTest extends TestCase {
     }
 
     public void testParseLanguagesLiteral() throws Exception {
-        final String line = parserExpectations(UNESCAPED_LITERAL, LANGUAGE, null);
-        expect(elementFactory.createLiteral(UNESCAPED_LITERAL, LANGUAGE)).andReturn(expectedLiteral);
+        final String line = parserExpectations(LITERAL, LANGUAGE, null);
+        expect(elementFactory.createLiteral(LITERAL, LANGUAGE)).andReturn(expectedLiteral);
         mockFactory.replay();
         Literal actualLiteral = parser.parseLiteral(line);
         assertTrue(expectedLiteral == actualLiteral);
@@ -147,8 +129,8 @@ public class LiteralParserImplUnitTest extends TestCase {
     }
 
     public void testParseDatatypeLiteral() throws Exception {
-        final String line = parserExpectations(UNESCAPED_LITERAL, null, DATATYPE.toString());
-        expect(elementFactory.createLiteral(UNESCAPED_LITERAL, DATATYPE)).andReturn(expectedLiteral);
+        final String line = parserExpectations(LITERAL, null, DATATYPE.toString());
+        expect(elementFactory.createLiteral(LITERAL, DATATYPE)).andReturn(expectedLiteral);
         mockFactory.replay();
         Literal actualLiteral = parser.parseLiteral(line);
         assertTrue(expectedLiteral == actualLiteral);
@@ -156,31 +138,31 @@ public class LiteralParserImplUnitTest extends TestCase {
     }
 
     public void testParseThrowsExceptionWithBothLanguageAndDatatypeLiteral() throws Exception {
-        final String line = parserExpectations(UNESCAPED_LITERAL, LANGUAGE, DATATYPE.toString());
+        final String line = parserExpectations(LITERAL, LANGUAGE, DATATYPE.toString());
         mockFactory.replay();
         checkThrowsParseException(line, "Cannot create a literal with both language and data type from line: " + line);
         mockFactory.verify();
     }
 
     public void testHandlesGraphElementFactoryExceptionWhenCreatingPlainLiteal() throws Exception {
-        final String line = parserExpectations(UNESCAPED_LITERAL, null, null);
-        expect(elementFactory.createLiteral(UNESCAPED_LITERAL)).andThrow(new GraphElementFactoryException("foo"));
+        final String line = parserExpectations(LITERAL, null, null);
+        expect(elementFactory.createLiteral(LITERAL)).andThrow(new GraphElementFactoryException("foo"));
         mockFactory.replay();
         checkThrowsParseException(line, "Failed to create literal from line: " + line);
         mockFactory.verify();
     }
 
     public void testHandlesGraphElementFactoryExceptionWhenCreatingLanguageLiteal() throws Exception {
-        final String line = parserExpectations(UNESCAPED_LITERAL, LANGUAGE, null);
-        expect(elementFactory.createLiteral(UNESCAPED_LITERAL, LANGUAGE)).andThrow(new GraphElementFactoryException("foo"));
+        final String line = parserExpectations(LITERAL, LANGUAGE, null);
+        expect(elementFactory.createLiteral(LITERAL, LANGUAGE)).andThrow(new GraphElementFactoryException("foo"));
         mockFactory.replay();
         checkThrowsParseException(line, "Failed to create literal from line: " + line);
         mockFactory.verify();
     }
 
     public void testHandlesGraphElementFactoryExceptionWhenCreatingDatatypeLiteal() throws Exception {
-        final String line = parserExpectations(UNESCAPED_LITERAL, null, DATATYPE.toString());
-        expect(elementFactory.createLiteral(UNESCAPED_LITERAL, DATATYPE)).andThrow(new GraphElementFactoryException("foo"));
+        final String line = parserExpectations(LITERAL, null, DATATYPE.toString());
+        expect(elementFactory.createLiteral(LITERAL, DATATYPE)).andThrow(new GraphElementFactoryException("foo"));
         mockFactory.replay();
         checkThrowsParseException(line, "Failed to create literal from line: " + line);
         mockFactory.verify();
@@ -198,16 +180,9 @@ public class LiteralParserImplUnitTest extends TestCase {
         }
     }
 
-    private String parserExpectations(String unescapedLiteral, String language, String datatype)
-            throws GraphElementFactoryException {
+    private String parserExpectations(String literal, String language, String datatype) {
         final String line = "string" + Math.random();
-        final String literal = "string" + Math.random();
-        expect(regexMatcherFactory.createMatcher(eqPattern(LANGUAGE_REGEX), eq(line))).andReturn(matcher);
-        expect(matcher.matches()).andReturn(true);
-        expect(matcher.group(LITERAL_INDEX)).andReturn(literal);
-        expect(nTripleUtil.unescapeLiteral(literal)).andReturn(unescapedLiteral);
-        expect(matcher.group(LANGUAGE_INDEX)).andReturn(language);
-        expect(matcher.group(DATATYPE_INDEX)).andReturn(datatype);
+        expect(literalMatcher.parse(line)).andReturn(new String[]{literal, language, datatype});
         return line;
     }
 }
