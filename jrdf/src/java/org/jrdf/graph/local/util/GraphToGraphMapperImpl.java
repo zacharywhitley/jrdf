@@ -22,13 +22,13 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     private Graph graph;
     private GraphElementFactory elementFactory;
     private TripleFactory tripleFactory;
-    private Map<Integer, BlankNode> newBNodeMap;
+    private Map<Long, BlankNode> newBNodeMap;
 
     public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory) {
         this.graph = newGraph;
         this.elementFactory = graph.getElementFactory();
         this.tripleFactory = graph.getTripleFactory();
-        newBNodeMap = mapFactory.createMap(Integer.class, BlankNode.class);
+        newBNodeMap = mapFactory.createMap(Long.class, BlankNode.class);
     }
 
     public Graph getGraph() {
@@ -40,17 +40,18 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         PredicateNode predicateNode = elementFactory.createURIReference(
             ((URIReference) triple.getPredicate()).getURI());
         ObjectNode objectNode = createLiteralOrURI(triple.getObject());
-        graph.add(tripleFactory.createTriple(subjectNode, predicateNode, objectNode));
+        final Triple triple1 = tripleFactory.createTriple(subjectNode, predicateNode, objectNode);
+        graph.add(triple1);
     }
 
     public void updateBlankNodes(Triple triple) throws GraphElementFactoryException {
         SubjectNode subjectNode = triple.getSubject();
         if (isBlankNode(subjectNode)) {
-            newBNodeMap.put(subjectNode.hashCode(), elementFactory.createBlankNode());
+            newBNodeMap.put((long) subjectNode.hashCode(), elementFactory.createBlankNode());
         }
         final ObjectNode objectNode = triple.getObject();
         if (isBlankNode(objectNode)) {
-            newBNodeMap.put(objectNode.hashCode(), elementFactory.createBlankNode());
+            newBNodeMap.put((long) objectNode.hashCode(), elementFactory.createBlankNode());
         }
     }
 
@@ -74,10 +75,17 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return tripleFactory.createTriple(newSubjectNode, newPredicateNode, newObjectNode);
     }
 
-    private Node createNewNode(Node node) throws GraphElementFactoryException {
+    /**
+     * The map may contain the subject (object) node that some triples may hang off from.
+     * @param node
+     * @return
+     * @throws GraphElementFactoryException
+     */
+    public Node createNewNode(Node node) throws GraphElementFactoryException {
         Node newNode;
-        if (isBlankNode(node)) {
-            newNode = newBNodeMap.get(node.hashCode());
+        //if (isBlankNode(node)) {
+        if (newBNodeMap.containsKey((long) node.hashCode())) {
+            newNode = newBNodeMap.get((long) node.hashCode());
         } else {
             newNode = createLiteralOrURI((ObjectNode) node);
         }
