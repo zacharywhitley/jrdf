@@ -28,7 +28,7 @@ public interface CopyGraphUtil {
      * @param node @return
      * @throws GraphException
      */
-    Node copyTriplesForNode(Graph sourceGraph, Graph targetGraph, Node node)
+    Node copyTriplesForNode(Graph sourceGraph, Graph targetGraph, Node node, Node newNode)
         throws GraphException;
 
     Graph getGraph();
