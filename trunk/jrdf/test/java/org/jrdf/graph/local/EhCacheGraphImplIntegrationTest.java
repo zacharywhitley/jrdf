@@ -57,67 +57,27 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.graph.local;
 
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedEhCacheJRDFFactory;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
 
-import java.util.Map;
+public class EhCacheGraphImplIntegrationTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedEhCacheJRDFFactory.getFactory();
 
-public final class BdbMapFactory implements MapFactory {
-    private final StoredMapHandler handler;
-    private final String databaseName;
-    private Environment env;
-    private Database database;
-    private long mapNumber;
-
-    public BdbMapFactory(StoredMapHandler newHandler, String newDatabaseName) {
-        checkNotNull(newHandler, newDatabaseName);
-        this.handler = newHandler;
-        this.databaseName = newDatabaseName;
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    @Override
+    public Graph newGraph() throws Exception {
+        return FACTORY.getNewGraph();
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            mapNumber++;
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            database = handler.setupDatabase(env, databaseName + mapNumber, dbConfig);
-            return handler.createMap(env, database, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void close() {
-        try {
-            closeDatabase();
-        } finally {
-            closeEnvironment();
-        }
-    }
-
-    private void closeDatabase() {
-        try {
-            if (database != null) {
-                database.close();
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void closeEnvironment() {
-        try {
-            if (env != null) {
-                env.close();
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+    public void tearDown() {
+        FACTORY.close();
     }
 }

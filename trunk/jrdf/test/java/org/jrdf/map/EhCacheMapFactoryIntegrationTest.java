@@ -59,65 +59,52 @@
 
 package org.jrdf.map;
 
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import junit.framework.TestCase;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map;
 
-public final class BdbMapFactory implements MapFactory {
-    private final StoredMapHandler handler;
-    private final String databaseName;
-    private Environment env;
-    private Database database;
-    private long mapNumber;
+public class EhCacheMapFactoryIntegrationTest extends TestCase {
+    private final DirectoryHandler directoryHandler = new TempDirectoryHandler();
+    private MapFactory factory;
 
-    public BdbMapFactory(StoredMapHandler newHandler, String newDatabaseName) {
-        checkNotNull(newHandler, newDatabaseName);
-        this.handler = newHandler;
-        this.databaseName = newDatabaseName;
+    public void setUp() throws Exception {
+        super.setUp();
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            mapNumber++;
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            database = handler.setupDatabase(env, databaseName + mapNumber, dbConfig);
-            return handler.createMap(env, database, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
+    public void testCreateStringLong() {
+        factory = new EhCacheMapFactory("default");
+        Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
+        for (int i = 0; i < 10000; i++) {
+            stringPool.put("Foo" + i, new Long(i));
+            Long aLong = stringPool.get("Foo" + i);
+            assertEquals(new Long(i).longValue(), aLong.longValue());
         }
     }
 
-    public void close() {
-        try {
-            closeDatabase();
-        } finally {
-            closeEnvironment();
+    public void testCreateLongString() {
+        factory = new EhCacheMapFactory("default");
+        Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
+        for (int i = 0; i < 10000; i++) {
+            stringPool.put(new Long(i), "Foo" + i);
+            String value = stringPool.get(new Long(i));
+            assertEquals("Foo" + i, value);
         }
     }
 
-    private void closeDatabase() {
-        try {
-            if (database != null) {
-                database.close();
+    public void testCreateLongArrayList() {
+        factory = new EhCacheMapFactory("default");
+        Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
+        for (int i = 0; i < 10000; i++) {
+            LinkedList<Long[]> list = new LinkedList<Long[]>();
+            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
+            tripleStore.put(new Long(i), list);
+            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
+            for (int index = 0; index < list.size() - 1; index++) {
+                Long[] listValues = list.get(index);
+                assertEquals(Arrays.asList(longs.get(i)), Arrays.asList(listValues));
             }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void closeEnvironment() {
-        try {
-            if (env != null) {
-                env.close();
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
         }
     }
 }
