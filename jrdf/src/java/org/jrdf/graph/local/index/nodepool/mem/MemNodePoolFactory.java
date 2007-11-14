@@ -74,12 +74,9 @@ import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 
-import java.util.Map;
-
 public class MemNodePoolFactory implements NodePoolFactory {
     public NodePool createNodePool() {
         MapFactory mapFactory = new MemMapFactory();
-        Map<String, Long> stringPool = mapFactory.createMap(String.class, Long.class);
         RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
         LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
         StringNodeMapper mapper = new StringNodeMapperImpl(matcher);

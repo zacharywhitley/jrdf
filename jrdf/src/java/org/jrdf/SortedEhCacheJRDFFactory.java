@@ -65,18 +65,15 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.bdb.LongIndexBdb;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.ehcache.EhCacheNodePoolFactory;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.map.BdbMapFactory;
+import org.jrdf.map.EhCacheMapFactory;
 import org.jrdf.map.MapFactory;
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.StoredMapHandlerImpl;
-import org.jrdf.map.TempDirectoryHandler;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
@@ -92,7 +89,7 @@ import org.jrdf.util.NodeTypeComparatorImpl;
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
-public final class SortedBdbJRDFFactory implements JRDFFactory {
+public final class SortedEhCacheJRDFFactory implements JRDFFactory {
     private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
     private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
     private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
@@ -100,15 +97,14 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl(new TempDirectoryHandler());
     private static long graphNumber;
     private GraphFactory orderedGraphFactory;
 
-    private SortedBdbJRDFFactory() {
+    private SortedEhCacheJRDFFactory() {
     }
 
     public static JRDFFactory getFactory() {
-        return new SortedBdbJRDFFactory();
+        return new SortedEhCacheJRDFFactory();
     }
 
     public void refresh() {
@@ -116,12 +112,12 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        MapFactory factory1 = new BdbMapFactory(HANDLER, "spo" + graphNumber);
-        MapFactory factory2 = new BdbMapFactory(HANDLER, "pos" + graphNumber);
-        MapFactory factory3 = new BdbMapFactory(HANDLER, "osp" + graphNumber);
+        MapFactory factory1 = new EhCacheMapFactory("spo" + graphNumber);
+        MapFactory factory2 = new EhCacheMapFactory("pos" + graphNumber);
+        MapFactory factory3 = new EhCacheMapFactory("osp" + graphNumber);
         LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
             new LongIndexBdb(factory3)};
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(HANDLER, graphNumber);
+        NodePoolFactory nodePoolFactory = new EhCacheNodePoolFactory(graphNumber);
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();

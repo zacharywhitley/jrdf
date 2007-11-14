@@ -57,67 +57,42 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.graph.local.index.nodepool.ehcache;
 
-import com.sleepycat.je.Database;
-import com.sleepycat.je.DatabaseConfig;
-import com.sleepycat.je.DatabaseException;
-import com.sleepycat.je.Environment;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
+import org.jrdf.graph.local.index.nodepool.NodeTypePool;
+import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
+import org.jrdf.map.EhCacheMapFactory;
+import org.jrdf.map.MapFactory;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.util.Map;
+public class EhCacheNodePoolFactory implements NodePoolFactory {
+    private static final String DB_NAME_NODEPOOL = "nodePool";
+    private static final String DB_NAME_STRINGPOOL = "stringPool";
+    private final long graphNumber;
 
-public final class BdbMapFactory implements MapFactory {
-    private final StoredMapHandler handler;
-    private final String databaseName;
-    private Environment env;
-    private Database database;
-    private long mapNumber;
-
-    public BdbMapFactory(StoredMapHandler newHandler, String newDatabaseName) {
-        checkNotNull(newHandler, newDatabaseName);
-        this.handler = newHandler;
-        this.databaseName = newDatabaseName;
+    public EhCacheNodePoolFactory(long graphNumber) {
+        this.graphNumber = graphNumber;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T, A, U extends A> Map<T, U> createMap(Class<T> clazz1, Class<A> clazz2) {
-        try {
-            mapNumber++;
-            env = handler.setUpEnvironment();
-            DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            database = handler.setupDatabase(env, databaseName + mapNumber, dbConfig);
-            return handler.createMap(env, database, clazz1, clazz2);
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
+    public NodePool createNodePool() {
+        MapFactory nodePoolMapFactory = new EhCacheMapFactory(DB_NAME_NODEPOOL + graphNumber);
+        MapFactory stringPoolMapFactory = new EhCacheMapFactory(DB_NAME_STRINGPOOL + graphNumber);
+        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
+        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
+        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+        final NodeTypePool nodeTypePool = new NodeTypePoolImpl(nodePoolMapFactory, mapper);
+        return new NodePoolImpl(nodeTypePool, stringPoolMapFactory);
     }
 
     public void close() {
-        try {
-            closeDatabase();
-        } finally {
-            closeEnvironment();
-        }
-    }
-
-    private void closeDatabase() {
-        try {
-            if (database != null) {
-                database.close();
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void closeEnvironment() {
-        try {
-            if (env != null) {
-                env.close();
-            }
-        } catch (DatabaseException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

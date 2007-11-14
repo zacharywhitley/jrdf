@@ -94,8 +94,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(MapFactory.class, BdbMapFactory.class);
         checkConstructor(BdbMapFactory.class, Modifier.PUBLIC, PARAM_TYPES);
         checkConstructNullAssertion(BdbMapFactory.class, PARAM_TYPES);
-        // TODO - Need to fix this - as the constructor requires other methods to be called.
-//        checkConstructorSetsFieldsAndFieldsPrivateFinal(BdbMapFactory.class, PARAM_TYPES, PARAMETER_NAMES);
+        checkConstructorSetsFieldsAndFieldsPrivateFinal(BdbMapFactory.class, PARAM_TYPES, PARAMETER_NAMES);
     }
 
     public void testCreateMap() throws Exception {
@@ -171,7 +170,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         DatabaseConfig databaseConfig = mockFactory.createMock(DatabaseConfig.class);
         expect(storedMapHandler.setUpDatabaseConfig(false)).andReturn(databaseConfig);
         database = mockFactory.createMock(Database.class);
-        expect(storedMapHandler.setupDatabase(environment, databaseName, databaseConfig)).andReturn(database);
+        expect(storedMapHandler.setupDatabase(environment, databaseName + 1, databaseConfig)).andReturn(database);
         expect(storedMapHandler.createMap(environment, database, String.class, String.class)).
                 andReturn(expectedMap);
         return expectedMap;
