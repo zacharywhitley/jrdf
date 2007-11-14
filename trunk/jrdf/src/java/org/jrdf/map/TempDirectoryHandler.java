@@ -68,4 +68,22 @@ public class TempDirectoryHandler implements DirectoryHandler {
     public File getDir() {
         return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
+
+    public boolean removeDir() {
+        return deleteDirectory(getDir());
+    }
+
+    private boolean deleteDirectory(File directory) {
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    file.delete();
+                } else {
+                    deleteDirectory(file);
+                }
+            }
+        }
+        return directory.delete();
+    }
 }
