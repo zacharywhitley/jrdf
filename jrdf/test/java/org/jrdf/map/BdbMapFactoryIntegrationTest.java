@@ -61,46 +61,52 @@ package org.jrdf.map;
 
 import junit.framework.TestCase;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class BdbMapFactoryIntegrationTest extends TestCase {
-    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl(new TempDirectoryHandler());
+    private final DirectoryHandler directoryHandler = new TempDirectoryHandler();
+    private final StoredMapHandler mapHandler = new StoredMapHandlerImpl(directoryHandler);
     private MapFactory factory;
 
     public void setUp() throws Exception {
         super.setUp();
-        factory = new BdbMapFactory(HANDLER, "testDb");
+        directoryHandler.removeDir();
     }
 
     public void testCreateStringLong() {
+        factory = new BdbMapFactory(mapHandler, "testDb2");
         Map<String, Long> stringPool = factory.createMap(String.class, Long.class);
         for (int i = 0; i < 100; i++) {
             stringPool.put("Foo" + i, new Long(i));
             Long aLong = stringPool.get("Foo" + i);
             assertEquals(new Long(i).longValue(), aLong.longValue());
         }
-        factory.close();
     }
 
     public void testCreateLongString() {
+        factory = new BdbMapFactory(mapHandler, "testDb3");
         Map<Long, String> stringPool = factory.createMap(Long.class, String.class);
         for (int i = 0; i < 100; i++) {
             stringPool.put(new Long(i), "Foo" + i);
             String value = stringPool.get(new Long(i));
             assertEquals("Foo" + i, value);
         }
-        factory.close();
     }
 
-//    public void testCreateLongArrayList() {
-//        Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
-//        for (int i = 0; i < 100; i++) {
-//            LinkedList<Long[]> list = new LinkedList<Long[]>();
-//            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
-//            tripleStore.put(new Long(i), list);
-//            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
-//            assertEquals(list, longs);
-//        }
-//        factory.close();
-//    }
+    public void testCreateLongArrayList() {
+        factory = new BdbMapFactory(mapHandler, "testDb4");
+        Map<Long, LinkedList<Long[]>> tripleStore = factory.createMap(Long.class, LinkedList.class);
+        for (int i = 0; i < 100; i++) {
+            LinkedList<Long[]> list = new LinkedList<Long[]>();
+            list.add(new Long[]{new Long(i + 1), new Long(i + 2)});
+            tripleStore.put(new Long(i), list);
+            LinkedList<Long[]> longs = tripleStore.get(new Long(i));
+            for (int index = 0; index < list.size() - 1; index++) {
+                Long[] listValues = list.get(index);
+                assertEquals(Arrays.asList(longs.get(i)), Arrays.asList(listValues));
+            }
+        }
+    }
 }
