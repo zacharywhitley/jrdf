@@ -329,11 +329,11 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple4);
 
         cgUtil = new CopyGraphUtilImpl(mapFactory);
-        cgUtil.copyTriplesForNode(graph1, graph2, node1);
+        cgUtil.copyTriplesForNode(graph1, graph2, node1, null);
         graph2 = cgUtil.getGraph();
         assertEquals("graph2 size", 1, graph2.getNumberOfTriples());
         graph2.clear();
-        cgUtil.copyTriplesForNode(graph1, graph2, bNode1);
+        cgUtil.copyTriplesForNode(graph1, graph2, bNode1, null);
         graph2 = cgUtil.getGraph();
         assertEquals("graph2 size", 3, graph2.getNumberOfTriples());
         mapFactory.close();
