@@ -76,7 +76,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractGraphPerformance {
-    private static final int NUMBER_OF_NODES = 1000;
+    private static final int NUMBER_OF_NODES = 10000;
     private static final int NO_PREDICATES = 10;
     private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
     private static final String SUBJECT_PREFIX = "http://foo";
@@ -140,8 +140,8 @@ public abstract class AbstractGraphPerformance {
         }
         long finishTime = System.currentTimeMillis();
         System.out.println("Testing Add Performance:");
-        System.out.println("Adding " + numberOfNodes + " Triples took: " + (finishTime - startTime) + " ms = " +
-            ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
+        System.out.println("Adding " + graph.getNumberOfTriples() + " Triples took: " + (finishTime - startTime) +
+                " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
     }
 
     private void findPerformance(int nodes, Graph graph) throws Exception {
@@ -174,11 +174,11 @@ public abstract class AbstractGraphPerformance {
                         if (! (object3 instanceof SubjectNode)) continue;
                         cnt++;
                     }
-                    
+
                 }
-                
+
             }
-            
+
         }
 
         long finishTime = System.currentTimeMillis();
