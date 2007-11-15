@@ -8,6 +8,7 @@ import static org.jrdf.util.test.SetUtil.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Iterator;
 
 public class LongIndexSesameUnitTest extends TestCase {
     private LongIndex longIndex;
@@ -38,6 +39,27 @@ public class LongIndexSesameUnitTest extends TestCase {
         Set<Long> set2 = asSet(4L, 5L);
         checkSubIndexResult(1L, 2L, set1);
         checkSubIndexResult(2L, 2L, set2);
+    }
+
+    public void testAddAndRemoveSubIndex() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        longIndex.add(1L, 2L, 4L);
+        longIndex.add(2L, 2L, 4L);
+        longIndex.add(2L, 2L, 5L);
+        boolean changed = longIndex.removeSubIndex(1L);
+        assertTrue(changed);
+        assertEquals(2, longIndex.getSize());
+    }
+
+    public void testIterator() throws Exception {
+        longIndex.add(1L, 2L, 3L);
+        longIndex.add(1L, 2L, 4L);
+        longIndex.add(2L, 2L, 4L);
+        longIndex.add(2L, 2L, 5L);
+        Iterator<Map.Entry<Long,Map<Long,Set<Long>>>> entryIterator = longIndex.iterator();
+        while (entryIterator.hasNext()) {
+            System.err.println("Got: " + entryIterator.next());
+        }
     }
 
     public void testAddition() throws Exception {
