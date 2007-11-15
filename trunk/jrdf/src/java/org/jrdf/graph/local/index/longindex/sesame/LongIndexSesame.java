@@ -19,6 +19,9 @@ public final class LongIndexSesame implements LongIndex {
     private static final int TRIPLES = 3;
     private BTree btree;
     private ByteHandler handler = new ByteHandler();
+    private static final int OFFSET_1 = 0;
+    private static final int OFFSET_2 = 8;
+    private static final int OFFSET_3 = 16;
 
     public LongIndexSesame(DirectoryHandler handler, String fileName) {
         BTreeValueComparator comparator = new DefaultBTreeValueComparator();
@@ -42,6 +45,15 @@ public final class LongIndexSesame implements LongIndex {
 
     public void remove(Long... node) throws GraphException {
         try {
+            byte[] key = handler.toBytes(node[OFFSET_1], node[1], node[2]);
+            byte[] filter = new byte[VALUE_SIZE];
+            putLong(0xffffffffffffffffL, filter, OFFSET_1);
+            putLong(0xffffffffffffffffL, filter, OFFSET_2);
+            putLong(0xffffffffffffffffL, filter, OFFSET_3);
+            BTreeIterator bTreeIterator = btree.iterateValues(key, filter);
+            if (bTreeIterator.next() == null) {
+                throw new GraphException("Unable to remove nonexistent statement");
+            }
             btree.remove(handler.toBytes(node));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -64,7 +76,7 @@ public final class LongIndexSesame implements LongIndex {
         try {
             byte[] key = handler.toBytes(first, 0L, 0L);
             byte[] filter = new byte[VALUE_SIZE];
-            putLong(0xffffffffffffffffL, filter, 0);
+            putLong(0xffffffffffffffffL, filter, OFFSET_1);
             BTreeIterator bTreeIterator = btree.iterateValues(key, filter);
             byte[] bytes = bTreeIterator.next();
             Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
@@ -80,7 +92,11 @@ public final class LongIndexSesame implements LongIndex {
                 resultMap.put(longs[1], longSet);
                 bytes = bTreeIterator.next();
             }
-            return resultMap;
+            if (resultMap.isEmpty()) {
+                return null;
+            } else {
+                return resultMap;
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -90,7 +106,7 @@ public final class LongIndexSesame implements LongIndex {
         try {
             byte[] key = handler.toBytes(first, 0L, 0L);
             byte[] filter = new byte[VALUE_SIZE];
-            putLong(0xffffffffffffffffL, filter, 0);
+            putLong(0xffffffffffffffffL, filter, OFFSET_1);
             byte[] bytes = btree.iterateValues(key, filter).next();
             return bytes != null;
         } catch (IOException e) {
@@ -102,7 +118,7 @@ public final class LongIndexSesame implements LongIndex {
         try {
             byte[] key = handler.toBytes(first, 0L, 0L);
             byte[] filter = new byte[VALUE_SIZE];
-            putLong(0xffffffffffffffffL, filter, 0);
+            putLong(0xffffffffffffffffL, filter, OFFSET_1);
             BTreeIterator bTreeIterator = btree.iterateValues(key, filter);
             byte[] bytes = bTreeIterator.next();
             boolean changed = bytes != null;
@@ -117,7 +133,7 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public long getSize() {
-        long counter = 0;
+        long counter = OFFSET_1;
         try {
             BTreeIterator bTreeIterator = btree.iterateAll();
             while (bTreeIterator.next() != null) {

@@ -105,8 +105,13 @@ public final class NodePoolImpl implements NodePool {
         return nodeTypePool.get(id);
     }
 
+    // TODO - Review these two methods.
     public Long getNodeIdByString(String str) {
         return stringPool.get(str);
+    }
+
+    public Long getNodeId(String value) {
+        return nextNode++;
     }
 
     public void registerNode(LocalizedNode node) {
@@ -160,10 +165,6 @@ public final class NodePoolImpl implements NodePool {
         values.add(nodeTypePool.getURINodeValues());
         values.add(nodeTypePool.getLiteralNodeValues());
         return values;
-    }
-
-    public Long getNodeId(String value) {
-        return nextNode++;
     }
 
     public Long[] localize(Node first, Node second, Node third) throws GraphException {

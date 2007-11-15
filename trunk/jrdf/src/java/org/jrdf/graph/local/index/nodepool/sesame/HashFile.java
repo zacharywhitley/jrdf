@@ -241,8 +241,7 @@ public class HashFile {
         }
     }
 
-    public void close()
-        throws IOException {
+    public void close() throws IOException {
         raf.close();
         raf = null;
         fileChannel = null;

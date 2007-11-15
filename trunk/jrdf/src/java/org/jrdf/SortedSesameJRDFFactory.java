@@ -143,5 +143,7 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
         for (NodePoolFactory openFactory : openFactories) {
             openFactory.close();
         }
+        openIndexes.clear();
+        openFactories.clear();
     }
 }

@@ -13,9 +13,11 @@
     <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="LongIndexSesame"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="NodePoolImpl"/>
     <suppress checks="CyclomaticComplexity" files="StringNodeMapperImpl"/>
+    <suppress checks="CyclomaticComplexity" files="SesameNodePool"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="RDF"/>
     <suppress checks="JavaNCSS" files="RDFS"/>

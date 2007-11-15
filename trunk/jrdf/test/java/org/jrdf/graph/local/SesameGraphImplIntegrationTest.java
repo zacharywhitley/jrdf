@@ -57,51 +57,30 @@
  *
  */
 
-package org.jrdf.graph.local.index.nodepool.sesame;
+package org.jrdf.graph.local;
 
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
-import org.jrdf.map.DirectoryHandler;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedSesameJRDFFactory;
+import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.graph.AbstractGraphUnitTest;
+import org.jrdf.graph.Graph;
 
-import java.io.File;
-import java.io.IOException;
+public class SesameGraphImplIntegrationTest extends AbstractGraphUnitTest {
+    private static final JRDFFactory FACTORY = SortedSesameJRDFFactory.getFactory();
 
-public class SesameNodePoolFactory implements NodePoolFactory {
-    private final DirectoryHandler handler;
-    private final long graphNumber;
-    private IterativeDataStore nodePool;
-
-    public SesameNodePoolFactory(DirectoryHandler handler, long graphNumber) {
-        this.handler = handler;
-        this.graphNumber = graphNumber;
+    /**
+     * Create a graph implementation.
+     *
+     * @return A new GraphImplUnitTest.
+     */
+    @Override
+    public Graph newGraph() throws Exception {
+        new TempDirectoryHandler().removeDir();
+        final Graph newGraph = FACTORY.getNewGraph();
+        return newGraph;
     }
 
-    public NodePool createNodePool() {
-        try {
-            RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-            LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
-            StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
-            File file = new File(handler.getDir(), "nodepool");
-            file.mkdirs();
-            nodePool = new IterativeDataStore(file, "" + graphNumber, false);
-            return new SesameNodePool(nodePool, mapper);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void close() {
-        try {
-            nodePool.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void tearDown() {
+        FACTORY.close();
     }
 }
