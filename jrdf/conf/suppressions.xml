@@ -48,6 +48,7 @@
     <suppress checks="CyclomaticComplexity" files="HashFile"/>
     <suppress checks="CyclomaticComplexity" files="IDFile"/>
     <suppress checks="CyclomaticComplexity" files="BTree"/>
+    <suppress checks="JavaNCSS" files="EntryIterator"/>
     <suppress checks="JavaNCSS" files="DataFile"/>
     <suppress checks="JavaNCSS" files="HashFile"/>
     <suppress checks="JavaNCSS" files="IDFile"/>

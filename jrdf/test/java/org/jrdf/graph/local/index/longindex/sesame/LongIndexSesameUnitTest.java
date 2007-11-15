@@ -57,9 +57,6 @@ public class LongIndexSesameUnitTest extends TestCase {
         longIndex.add(2L, 2L, 4L);
         longIndex.add(2L, 2L, 5L);
         Iterator<Map.Entry<Long,Map<Long,Set<Long>>>> entryIterator = longIndex.iterator();
-        while (entryIterator.hasNext()) {
-            System.err.println("Got: " + entryIterator.next());
-        }
     }
 
     public void testAddition() throws Exception {

@@ -63,7 +63,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.db4o.LongIndexDb4o;
+import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.sesame.SesameNodePoolFactory;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
@@ -72,9 +72,7 @@ import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.map.Db4oMapFactory;
 import org.jrdf.map.DirectoryHandler;
-import org.jrdf.map.MapFactory;
 import org.jrdf.map.TempDirectoryHandler;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
@@ -105,7 +103,7 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static long graphNumber;
     private GraphFactory orderedGraphFactory;
-    private Set<MapFactory> openMaps = new HashSet<MapFactory>();
+    private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
 
     private SortedSesameJRDFFactory() {
@@ -120,16 +118,15 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        MapFactory factory1 = new Db4oMapFactory(HANDLER, "spo" + graphNumber);
-        MapFactory factory2 = new Db4oMapFactory(HANDLER, "pos" + graphNumber);
-        MapFactory factory3 = new Db4oMapFactory(HANDLER, "osp" + graphNumber);
-        LongIndex[] indexes = new LongIndex[]{new LongIndexDb4o(factory1), new LongIndexDb4o(factory2),
-            new LongIndexDb4o(factory3)};
+        LongIndex index1 = new LongIndexSesame(HANDLER, "spo" + graphNumber);
+        LongIndex index2 = new LongIndexSesame(HANDLER, "pos" + graphNumber);
+        LongIndex index3 = new LongIndexSesame(HANDLER, "osp" + graphNumber);
+        LongIndex[] indexes = new LongIndex[]{index1, index2, index3};
         NodePoolFactory nodePoolFactory = new SesameNodePoolFactory(HANDLER, graphNumber);
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
-        openMaps.add(factory1);
-        openMaps.add(factory2);
-        openMaps.add(factory3);
+        openIndexes.add(index1);
+        openIndexes.add(index2);
+        openIndexes.add(index3);
         openFactories.add(nodePoolFactory);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();
@@ -140,8 +137,8 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
     }
 
     public void close() {
-        for (MapFactory openMap : openMaps) {
-            openMap.close();
+        for (LongIndex index : openIndexes) {
+            index.close();
         }
         for (NodePoolFactory openFactory : openFactories) {
             openFactory.close();

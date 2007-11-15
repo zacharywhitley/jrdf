@@ -16,13 +16,15 @@ import java.util.Set;
 public final class LongIndexSesame implements LongIndex {
     private static final int BLOCK_SIZE = 4096;
     private static final int VALUE_SIZE = 24;
+    private static final int TRIPLES = 3;
     private BTree btree;
     private ByteHandler handler = new ByteHandler();
-    private static final int TRIPLES = 3;
 
     public LongIndexSesame(DirectoryHandler handler, String fileName) {
         BTreeValueComparator comparator = new DefaultBTreeValueComparator();
         try {
+            File parent = handler.getDir();
+            parent.mkdirs();
             File file = new File(handler.getDir(), fileName);
             btree = new BTree(file, BLOCK_SIZE, VALUE_SIZE, comparator);
         } catch (IOException e) {
@@ -135,79 +137,4 @@ public final class LongIndexSesame implements LongIndex {
         }
     }
 
-    private static class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
-        private ByteHandler handler = new ByteHandler();
-        private BTreeIterator iterator;
-        private byte[] currentValues;
-
-        public EntryIterator(BTreeIterator newIterator) {
-            try {
-                this.iterator = newIterator;
-                this.currentValues = newIterator.next();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        public boolean hasNext() {
-            return currentValues != null;
-        }
-
-        public Entry next() {
-            try {
-                Long key = handler.fromBytes(currentValues, TRIPLES)[0];
-                Long currentKey = new Long(key.longValue());
-                Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-                while (currentValues != null || currentKey.equals(key)) {
-                    Long[] longs = handler.fromBytes(currentValues, TRIPLES);
-                    Set<Long> longSet;
-                    if (resultMap.containsKey(longs[1])) {
-                        longSet = resultMap.get(longs[1]);
-                    } else {
-                        longSet = new HashSet<Long>();
-                    }
-                    longSet.add(longs[2]);
-                    resultMap.put(longs[1], longSet);
-                    currentValues = iterator.next();
-                    if (currentValues != null) {
-                        currentKey = handler.fromBytes(currentValues, TRIPLES)[0];
-                    }
-                }
-                Entry entry = new Entry(key, resultMap);
-                return entry;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        public void remove() {
-            throw new UnsupportedOperationException("Cannot set values - read only");
-        }
-    }
-
-    private static class Entry implements Map.Entry<Long, Map<Long, Set<Long>>> {
-        private final Long key;
-        private final Map<Long, Set<Long>> values;
-
-        public Entry(Long key, Map<Long, Set<Long>> values) {
-            this.key = key;
-            this.values = values;
-        }
-
-        public Long getKey() {
-            return key;
-        }
-
-        public Map<Long, Set<Long>> getValue() {
-            return values;
-        }
-
-        public Map<Long, Set<Long>> setValue(Map<Long, Set<Long>> value) {
-            throw new UnsupportedOperationException("Cannot set values - read only");
-        }
-
-        public String toString() {
-            return "Key: " + key + " Entries: " + values;
-        }
-    }
 }

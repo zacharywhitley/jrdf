@@ -60,7 +60,7 @@
 package org.jrdf.example;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedBdbJRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
@@ -72,7 +72,7 @@ public class BdbPerformance extends AbstractGraphPerformance {
     private JRDFFactory factory;
 
     public BdbPerformance() {
-        factory = SortedBdbJRDFFactory.getFactory();
+        factory = SortedMemoryJRDFFactory.getFactory();
     }
 
     protected Graph getGraph() {
