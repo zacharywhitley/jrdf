@@ -106,11 +106,12 @@ public interface NodePool {
     List<Map<Long, String>> getNodePoolValues();
 
     /**
-     * Returns the current next node Id increments it by one.
+     * Returns a new node id.  That maybe based on the value.
      *
-     * @return the current next node Id.
+     * @param value
+     * @return
      */
-    Long getNextNodeId();
+    Long getNodeId(String value);
 
     /**
      * Converts a globalized set of triple objects to an array of longs.
@@ -139,4 +140,5 @@ public interface NodePool {
     void clear();
 
     void registerNodePoolValues(List<Map<Long, String>> values);
+
 }

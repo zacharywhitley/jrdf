@@ -162,7 +162,7 @@ public final class NodePoolImpl implements NodePool {
         return values;
     }
 
-    public Long getNextNodeId() {
+    public Long getNodeId(String value) {
         return nextNode++;
     }
 
@@ -186,6 +186,7 @@ public final class NodePoolImpl implements NodePool {
         nextNode = 1L;
     }
 
+    // TODO Comeback and review this.
     private Long convertSubject(Node first) throws GraphException {
         Long subjectValue = null;
         if (ANY_SUBJECT_NODE != first) {

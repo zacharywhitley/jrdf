@@ -15,6 +15,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="NodePoolImpl"/>
+    <suppress checks="CyclomaticComplexity" files="StringNodeMapperImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="RDF"/>
     <suppress checks="JavaNCSS" files="RDFS"/>
@@ -22,17 +23,31 @@
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="NodePoolImpl"/>
+    <suppress checks="JavaNCSS" files="SesameNodePool"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl"/>
     <suppress checks="ReturnCount" files="SemiJoinImpl"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
+    <suppress checks="ReturnCount" files="StringNodeMapperImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedEhCacheJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="StoredMapHandlerImpl"/>
+
+    <!-- Import -->
+    <suppress checks="CyclomaticComplexity" files="DataFile"/>
+    <suppress checks="CyclomaticComplexity" files="HashFile"/>
+    <suppress checks="CyclomaticComplexity" files="IDFile"/>
+    <suppress checks="JavaNCSS" files="DataFile"/>
+    <suppress checks="JavaNCSS" files="HashFile"/>
+    <suppress checks="JavaNCSS" files="IDFile"/>
+    <suppress checks="MagicNumber" files="DataFile"/>
+    <suppress checks="MagicNumber" files="HashFile"/>
+    <suppress checks="MagicNumber" files="IDFile"/>
 
     <!-- NTriples Parser -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
