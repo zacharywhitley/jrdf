@@ -169,8 +169,9 @@ public final class LongIndexBdb implements LongIndex, Serializable {
     }
 
     public boolean removeSubIndex(Long first) {
+        final boolean changed = index.containsKey(first);
         index.remove(first);
-        return index.containsKey(first);
+        return changed;
     }
 
     public long getSize() {

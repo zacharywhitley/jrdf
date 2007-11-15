@@ -142,8 +142,9 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
     }
 
     public boolean removeSubIndex(T first) {
+        final boolean containsKey = index.containsKey(first);
         index.remove(first);
-        return index.containsKey(first);
+        return containsKey;
     }
 
     public void clear() {
