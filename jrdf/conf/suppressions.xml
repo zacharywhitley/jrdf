@@ -39,15 +39,24 @@
     <suppress checks="ClassDataAbstractionCoupling" files="StoredMapHandlerImpl"/>
 
     <!-- Import -->
+    <suppress checks="BooleanExpressionComplexity" files="ByteArrayUtil"/>
+    <suppress checks="BooleanExpressionComplexity" files="ByteHandler"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="BTree"/>
+    <suppress checks="ReturnCount" files="BTree"/>
     <suppress checks="CyclomaticComplexity" files="DataFile"/>
     <suppress checks="CyclomaticComplexity" files="HashFile"/>
     <suppress checks="CyclomaticComplexity" files="IDFile"/>
+    <suppress checks="CyclomaticComplexity" files="BTree"/>
     <suppress checks="JavaNCSS" files="DataFile"/>
     <suppress checks="JavaNCSS" files="HashFile"/>
     <suppress checks="JavaNCSS" files="IDFile"/>
+    <suppress checks="JavaNCSS" files="BTree"/>
     <suppress checks="MagicNumber" files="DataFile"/>
     <suppress checks="MagicNumber" files="HashFile"/>
     <suppress checks="MagicNumber" files="IDFile"/>
+    <suppress checks="MagicNumber" files="BTree"/>
+    <suppress checks="MagicNumber" files="ByteArrayUtil"/>
+    <suppress checks="MagicNumber" files="ByteHandler"/>
 
     <!-- NTriples Parser -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
