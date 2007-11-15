@@ -2,6 +2,7 @@ package org.jrdf.graph.local.index.longindex.sesame;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.*;
 import org.jrdf.map.DirectoryHandler;
 
 import java.io.File;
@@ -9,12 +10,15 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public final class LongIndexSesame implements LongIndex {
     private static final int BLOCK_SIZE = 4096;
     private static final int VALUE_SIZE = 24;
     private BTree btree;
     private ByteHandler handler = new ByteHandler();
+    private static final int TRIPLES = 3;
 
     public LongIndexSesame(DirectoryHandler handler, String fileName) {
         BTreeValueComparator comparator = new DefaultBTreeValueComparator();
@@ -55,13 +59,42 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
-        return null;
+        try {
+            byte[] key = handler.toBytes(first, 0L, 0L);
+            byte[] filter = new byte[VALUE_SIZE];
+            putLong(0xffffffffffffffffL, filter, 0);
+            BTreeIterator bTreeIterator = btree.iterateValues(key, filter);
+            byte[] bytes = bTreeIterator.next();
+            Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
+            while (bytes != null) {
+                Long[] longs = handler.fromBytes(bytes, TRIPLES);
+                Set<Long> longSet;
+                if (resultMap.containsKey(longs[1])) {
+                    longSet = resultMap.get(longs[1]);
+                } else {
+                    longSet = new HashSet<Long>();
+                }
+                longSet.add(longs[2]);
+                resultMap.put(longs[1], longSet);
+                bytes = bTreeIterator.next();
+            }
+            return resultMap;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean contains(Long first) {
-        byte[] array = new byte[VALUE_SIZE];
-        ByteArrayUtil.putLong(0xffffffffffffffffL, array, 0);
-        return false;
+        try {
+            byte[] key = handler.toBytes(first, 0L, 0L);
+            byte[] filter = new byte[VALUE_SIZE];
+            putLong(0xffffffffffffffffL, filter, 0);
+            byte[] bytes = btree.iterateValues(key, filter).next();
+            return bytes != null;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean removeSubIndex(Long first) {
@@ -69,9 +102,23 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public long getSize() {
-        return 0;
+        long counter = 0;
+        try {
+            BTreeIterator bTreeIterator = btree.iterateAll();
+            while (bTreeIterator.next() != null) {
+                counter++;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return counter;
     }
 
     public void close() {
+        try {
+            btree.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
