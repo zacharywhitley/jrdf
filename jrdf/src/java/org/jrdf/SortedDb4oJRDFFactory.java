@@ -146,5 +146,7 @@ public final class SortedDb4oJRDFFactory implements JRDFFactory {
         for (NodePoolFactory openFactory : openFactories) {
             openFactory.close();
         }
+        openMaps.clear();
+        openFactories.clear();
     }
 }
