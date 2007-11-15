@@ -115,7 +115,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         }
 
         // create the node identifier and add
-        Long nodeId = nodePool.getNextNodeId();
+        Long nodeId = nodePool.getNodeId(uid);
         BlankNode node = new BlankNodeImpl(nodeId, uid);
         nodePool.registerNode((LocalizedNode) node);
         return node;
@@ -141,7 +141,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         }
 
         // create the node identifier and add
-        nodeId = nodePool.getNextNodeId();
+        nodeId = nodePool.getNodeId(uri.toString());
         URIReference node = new URIReferenceImpl(uri, validate, nodeId);
         nodePool.registerNode((LocalizedNode) node);
         return node;
@@ -198,7 +198,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         } else {
 
             // create the node identifier
-            Long nextNode = nodePool.getNextNodeId();
+            Long nextNode = nodePool.getNodeId(strId);
             newLiteral.setId(nextNode);
             nodePool.registerNode(newLiteral);
         }

@@ -1,13 +1,16 @@
 package org.jrdf.graph.local.index.nodepool;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
+import static org.jrdf.graph.AnySubjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.AnyObjectNode.*;
 import org.jrdf.graph.local.mem.BlankNodeImpl;
-import org.jrdf.graph.local.mem.URIReferenceImpl;
 import org.jrdf.graph.local.mem.LiteralImpl;
 import org.jrdf.graph.local.mem.LiteralMutableId;
+import org.jrdf.graph.local.mem.URIReferenceImpl;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 
 import java.net.URI;
@@ -31,9 +34,10 @@ public class StringNodeMapperImpl implements StringNodeMapper {
             return ((URIReference) node).getURI().toString();
         } else if (Literal.class.isAssignableFrom(node.getClass())) {
             return ((Literal) node).getEscapedForm();
-        } else {
-            throw new IllegalArgumentException("Failed to conver node: " + node);
+        } else if (node == ANY_SUBJECT_NODE || node == ANY_PREDICATE_NODE || node == ANY_OBJECT_NODE) {
+            return null;
         }
+        throw new IllegalArgumentException("Failed to conver node: " + node);
     }
 
     public BlankNode convertToBlankNode(String string) {

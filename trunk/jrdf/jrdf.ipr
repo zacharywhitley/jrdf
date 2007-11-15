@@ -559,6 +559,7 @@
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/ehcache/ehcache-1.4.0-beta.jar!/" />
         <root url="jar://$PROJECT_DIR$/lib/ehcache/jsr107cache-1.0.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/ehcache/backport-util-concurrent-3.0.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />
