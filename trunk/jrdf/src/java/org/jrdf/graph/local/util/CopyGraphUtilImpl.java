@@ -64,6 +64,7 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -71,17 +72,19 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Logger;
 
 public class CopyGraphUtilImpl implements CopyGraphUtil {
     private final MapFactory mapFactory;
     private GraphToGraphMapper mapper;
+    private final Logger logger = Logger.getLogger("CopyGraphUtil");
+    private final long second = 1000;
 
     public CopyGraphUtilImpl(MapFactory newMapFactory) {
         this.mapFactory = newMapFactory;
@@ -92,11 +95,15 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }
 
     public Graph copyGraph(Graph newSourceGraph, Graph newTargetGraph) throws GraphException {
-        //if (mapper == null) {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
-        //}
+        long start = System.currentTimeMillis() / second;
         ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        readSourceGraph(triples);
+        //long end = System.currentTimeMillis() / second;
+        logger.info("Read source graph time = " + ((System.currentTimeMillis() / second) - start));
+        start = System.currentTimeMillis() / second;
+        readAndUpdateTripleIterator(triples);
+        //end = System.currentTimeMillis() / second;
+        logger.info("Updating blank nodes time = " + ((System.currentTimeMillis() / second) - start));
         triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             mapper.createNewTriples(triples);
@@ -112,13 +119,10 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
         try {
-            Set<Triple> set = getAllTriplesForSubjectNode((SubjectNode) node, newSourceGraph);
-            set.addAll(getAllTriplesForObjectNode((ObjectNode) node, newSourceGraph));
+            Set<Triple> set = getAllTriplesForNode(node, newSourceGraph);
             createNewGraph(set);
-            replaceSubjectNode(newTargetGraph, (SubjectNode) node, (SubjectNode) newNode);
-            replaceObjectNode(newTargetGraph, (ObjectNode) node, (ObjectNode) newNode);
-            //readSourceGraph(set.iterator());
-            //mapper.createNewTriples(set.iterator());
+            mapper.replaceSubjectNode((SubjectNode) node, (SubjectNode) newNode);
+            mapper.replaceObjectNode((ObjectNode) node, (ObjectNode) newNode);
             return mapper.createNewNode(node);
         } catch (Exception e) {
             throw new GraphException("Cannot copy RDF graph with node", e);
@@ -131,21 +135,35 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         try {
             Set<Triple> set = getAllTriplesForSubjectNode(node, newSourceGraph);
             createNewGraph(set);
-            replaceSubjectNode(newTargetGraph, node, newNode);
+            mapper.replaceSubjectNode(node, newNode);
             return (SubjectNode) mapper.createNewNode(node);
         } catch (GraphElementFactoryException e) {
             throw new GraphException("Cannot copy RDF graph with subject node", e);
         }
     }
 
+    public ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph,
+                                               ObjectNode node, ObjectNode newNode)
+        throws GraphException {
+        mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
+        try {
+            Set<Triple> set = getAllTriplesForObjectNode(node, newSourceGraph);
+            createNewGraph(set);
+            mapper.replaceObjectNode(node, newNode);
+            return (ObjectNode) mapper.createNewNode(node);
+        } catch (GraphElementFactoryException e) {
+            throw new GraphException("Cannot copy RDF graph with object node", e);
+        }
+    }
+
     private void createNewGraph(Set<Triple> set) throws GraphException, GraphElementFactoryException {
         Iterator<Triple> triples = set.iterator();
-        readSourceGraph(triples);
+        readAndUpdateTripleIterator(triples);
         triples = set.iterator();
         mapper.createNewTriples(triples);
     }
 
-    private void replaceSubjectNode(Graph newTargetGraph, SubjectNode node, SubjectNode newNode)
+    /*private void replaceSubjectNode(Graph newTargetGraph, SubjectNode node, SubjectNode newNode)
         throws GraphException, GraphElementFactoryException {
         if (newNode != null) {
             final SubjectNode oldSNode = (SubjectNode) mapper.createNewNode(node);
@@ -157,23 +175,9 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
             }
             iterator.close();
         }
-    }
+    }*/
 
-    public ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph,
-                                               ObjectNode node, ObjectNode newNode)
-        throws GraphException {
-        mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
-        try {
-            Set<Triple> set = getAllTriplesForObjectNode(node, newSourceGraph);
-            createNewGraph(set);
-            replaceObjectNode(newTargetGraph, node, newNode);
-            return (ObjectNode) mapper.createNewNode(node);
-        } catch (GraphElementFactoryException e) {
-            throw new GraphException("Cannot copy RDF graph with object node", e);
-        }
-    }
-
-    private void replaceObjectNode(Graph newTargetGraph, ObjectNode node, ObjectNode newNode)
+    /*private void replaceObjectNode(Graph newTargetGraph, ObjectNode node, ObjectNode newNode)
         throws GraphException, GraphElementFactoryException {
         if (newNode != null) {
             final ObjectNode oldONode = (ObjectNode) mapper.createNewNode(node);
@@ -185,6 +189,15 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
             }
             iterator.close();
         }
+    }*/
+
+    private Set<Triple> getAllTriplesForNode(Node node, Graph graph) throws GraphException {
+        Set<Triple> set = new HashSet<Triple>();
+        Set<BlankNode> bSet = new HashSet<BlankNode>();
+        addTriplesToSetForSubject(graph, set, (SubjectNode) node);
+        addTriplesToSetForObject(graph, set, (ObjectNode) node);
+        getAllTriplesForNode0(graph, set, bSet, node);
+        return set;
     }
 
     private Set<Triple> getAllTriplesForSubjectNode(SubjectNode node, Graph graph) throws GraphException {
@@ -276,15 +289,16 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         }
     }
 
-    private void readSourceGraph(Iterator<Triple> triples) throws GraphException {
+    private void readAndUpdateTripleIterator(Iterator<Triple> triples) throws GraphException {
         try {
             while (triples.hasNext()) {
                 Triple triple = triples.next();
-                if (triple.isGrounded()) {
-                    mapper.addTripleToGraph(triple);
-                } else {
+                if (!triple.isGrounded()) {
                     mapper.updateBlankNodes(triple);
-                }
+                    //mapper.addTripleToGraph(triple);
+                } /*else {
+                    mapper.updateBlankNodes(triple);
+                }*/
             }
         } catch (Exception e) {
             throw new GraphException("Cannot read RDF graph", e);

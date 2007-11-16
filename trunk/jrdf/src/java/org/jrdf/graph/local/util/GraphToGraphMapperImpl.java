@@ -1,5 +1,8 @@
 package org.jrdf.graph.local.util;
 
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -14,20 +17,24 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.map.MapFactory;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     private Graph graph;
     private GraphElementFactory elementFactory;
     private TripleFactory tripleFactory;
     private Map<Long, BlankNode> newBNodeMap;
+    private Logger logger = Logger.getLogger("GGMapper");
+    private final int second = 1000;
 
     public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory) {
-        this.graph = newGraph;
-        this.elementFactory = graph.getElementFactory();
-        this.tripleFactory = graph.getTripleFactory();
+        graph = newGraph;
+        elementFactory = graph.getElementFactory();
+        tripleFactory = graph.getTripleFactory();
         newBNodeMap = mapFactory.createMap(Long.class, BlankNode.class);
     }
 
@@ -55,13 +62,29 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         }
     }
 
+    /**
+     * Adds those triples with blank nodes to the graph.
+     * @param it
+     * @return
+     * @throws GraphException
+     * @throws GraphElementFactoryException
+     */
     public Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException {
+        int size = 0;
+        long start = System.currentTimeMillis() / second;
         while (it.hasNext()) {
             Triple triple = it.next();
-            if (!triple.isGrounded()) {
+            size++;
+            graph.add(createNewTriple(triple));
+            /*if (!triple.isGrounded()) {
                 graph.add(createNewTriple(triple));
             }
+            else {
+                graph.add(createNewTriple(triple));
+            }*/
         }
+        long end = System.currentTimeMillis() / second;
+        logger.info("create " + size + " triples takes: " + (end - start));
         return graph;
     }
 
@@ -83,8 +106,8 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
      */
     public Node createNewNode(Node node) throws GraphElementFactoryException {
         Node newNode;
-        //if (isBlankNode(node)) {
-        if (newBNodeMap.containsKey((long) node.hashCode())) {
+        if (isBlankNode(node)) {
+        //if (newBNodeMap.containsKey((long) node.hashCode())) {
             newNode = newBNodeMap.get((long) node.hashCode());
         } else {
             newNode = createLiteralOrURI((ObjectNode) node);
@@ -109,5 +132,33 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
 
     public static boolean isBlankNode(Node node) {
         return BlankNode.class.isAssignableFrom(node.getClass());
+    }
+
+    public void replaceObjectNode(ObjectNode node, ObjectNode newNode)
+        throws GraphException, GraphElementFactoryException {
+        if (newNode != null) {
+            final ObjectNode oldONode = (ObjectNode) createNewNode(node);
+            ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, oldONode);
+            while (iterator.hasNext()) {
+                Triple triple = iterator.next();
+                graph.add(triple.getSubject(), triple.getPredicate(), newNode);
+                graph.remove(triple.getSubject(), triple.getPredicate(), oldONode);
+            }
+            iterator.close();
+        }
+    }
+
+    public void replaceSubjectNode(SubjectNode node, SubjectNode newNode)
+        throws GraphException, GraphElementFactoryException {
+        if (newNode != null) {
+            final SubjectNode oldSNode = (SubjectNode) createNewNode(node);
+            ClosableIterator<Triple> iterator = graph.find(oldSNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            while (iterator.hasNext()) {
+                Triple triple = iterator.next();
+                graph.add(newNode, triple.getPredicate(), triple.getObject());
+                graph.remove(oldSNode, triple.getPredicate(), triple.getObject());
+            }
+            iterator.close();
+        }
     }
 }
