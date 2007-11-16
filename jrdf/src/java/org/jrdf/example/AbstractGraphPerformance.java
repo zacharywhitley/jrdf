@@ -102,7 +102,7 @@ public abstract class AbstractGraphPerformance {
     public void testPerformance() throws Exception {
         Graph graph = getGraph();
         graphElementFactory = graph.getElementFactory();
-        parsePerformance();
+        //parsePerformance();
         addPerformance(NUMBER_OF_NODES_TO_ADD, graph);
         findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
     }
