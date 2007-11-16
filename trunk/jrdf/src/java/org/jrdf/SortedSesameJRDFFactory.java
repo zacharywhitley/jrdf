@@ -65,7 +65,7 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.index.nodepool.sesame.SesameNodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
@@ -122,7 +122,7 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
         LongIndex index2 = new LongIndexSesame(HANDLER, "pos" + graphNumber);
         LongIndex index3 = new LongIndexSesame(HANDLER, "osp" + graphNumber);
         LongIndex[] indexes = new LongIndex[]{index1, index2, index3};
-        NodePoolFactory nodePoolFactory = new SesameNodePoolFactory(HANDLER, graphNumber);
+        NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
         openIndexes.add(index1);
         openIndexes.add(index2);

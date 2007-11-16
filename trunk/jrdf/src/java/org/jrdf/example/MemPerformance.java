@@ -62,32 +62,22 @@ package org.jrdf.example;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
-import org.jrdf.map.StoredMapHandlerImpl;
-import org.jrdf.map.TempDirectoryHandler;
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
+import org.jrdf.map.MemMapFactory;
 
-public class BdbPerformance extends AbstractGraphPerformance {
-    private JRDFFactory factory;
-
-    public BdbPerformance() {
-        factory = SortedMemoryJRDFFactory.getFactory();
-    }
+public class MemPerformance extends AbstractGraphPerformance {
+    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
 
     protected Graph getGraph() {
-        Graph newGraph = factory.getNewGraph();
-        newGraph.clear();
-        return newGraph;
+        return FACTORY.getNewGraph();
     }
 
     protected MapFactory getMapFactory() {
-        return new BdbMapFactory(new StoredMapHandlerImpl(new TempDirectoryHandler()), "database");
+        return new MemMapFactory();
     }
 
     public static void main(String[] args) throws Exception {
-        BdbPerformance bdbPerformance = new BdbPerformance();
-        bdbPerformance.testPerformance();
-//        bdbPerformance.parsePerformance();
+        MemPerformance memPerformance = new MemPerformance();
+        memPerformance.testPerformance();
     }
 }
