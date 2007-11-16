@@ -5,6 +5,8 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
 
 import java.util.Iterator;
 
@@ -30,4 +32,8 @@ public interface GraphToGraphMapper {
     Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException;
 
     Node createNewNode(Node node) throws GraphElementFactoryException;
+
+    void replaceObjectNode(ObjectNode node, ObjectNode newNode) throws GraphException, GraphElementFactoryException;
+
+    void replaceSubjectNode(SubjectNode node, SubjectNode newNode) throws GraphException, GraphElementFactoryException;
 }

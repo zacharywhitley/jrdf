@@ -71,6 +71,7 @@ import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Node;
 
 import java.io.File;
 import java.util.HashMap;
@@ -87,6 +88,7 @@ public class StoredMapHandlerImpl implements StoredMapHandler {
         binding.put(Long.class, new LongBinding());
         binding.put(LinkedList.class, new LongListBinding());
         binding.put(BlankNode.class, new BlankNodeBinding());
+        binding.put(Node.class, new NodeBinding());
     }
 
     public Environment setUpEnvironment() throws DatabaseException {

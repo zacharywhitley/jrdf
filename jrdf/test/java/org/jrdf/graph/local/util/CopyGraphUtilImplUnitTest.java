@@ -83,9 +83,11 @@ import org.jrdf.map.MemMapFactory;
 import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.parser.Parser;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
