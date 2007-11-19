@@ -61,16 +61,10 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.bdb.LongIndexBdb;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
@@ -83,8 +77,6 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.builder.QueryBuilder;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -93,10 +85,6 @@ import org.jrdf.util.NodeTypeComparatorImpl;
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class SortedBdbJRDFFactory implements JRDFFactory {
-    private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
-    private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
-    private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
-        LOCALIZED_NODE_COMPARATOR);
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
@@ -122,8 +110,7 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
         LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
             new LongIndexBdb(factory3)};
         NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(HANDLER, graphNumber);
-        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
-        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
+        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory);
         return orderedGraphFactory.getGraph();
     }
 

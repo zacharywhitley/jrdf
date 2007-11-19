@@ -59,8 +59,6 @@
 package org.jrdf.graph.local.mem;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.mem.iterator.IteratorFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
@@ -68,8 +66,10 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.mem.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.IteratorFactoryImpl;
 import org.jrdf.graph.local.mem.iterator.OrderedIteratorFactoryImpl;
+import org.jrdf.set.MemSetFactory;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -85,8 +85,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private ReadWriteGraph readWriteGraph;
     private ResourceFactory resourceFactory;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
-        NodeComparator nodeComparator) {
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
         this.longIndexes = newLongIndexes;
         nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
@@ -94,7 +93,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers, nodePool);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
-            graphHandlers[0], nodeComparator);
+            graphHandlers[0], new MemSetFactory());
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
     }

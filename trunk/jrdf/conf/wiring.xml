@@ -19,9 +19,6 @@
             </list>
         </constructor-arg>
         <constructor-arg ref="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory"/>
-        <constructor-arg>
-            <ref bean="nodeComparator"/>
-        </constructor-arg>
     </bean>
 
     <!-- Relational Classes -->

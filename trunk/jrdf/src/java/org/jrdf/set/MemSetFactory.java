@@ -1,6 +1,7 @@
 package org.jrdf.set;
 
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
@@ -25,6 +26,7 @@ public class MemSetFactory implements SetFactory {
         NodeComparator newNodeComparator = new NodeComparatorImpl(nodeTypeComparator,
             comparator);
         defaultComparators.put(Triple.class, new TripleComparatorImpl(newNodeComparator));
+        defaultComparators.put(PredicateNode.class, newNodeComparator);
     }
 
     @SuppressWarnings({ "unchecked" })

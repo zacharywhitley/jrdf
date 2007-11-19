@@ -72,6 +72,9 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
+import org.jrdf.util.bdb.BlankNodeBinding;
+import org.jrdf.util.bdb.LongListBinding;
+import org.jrdf.util.bdb.NodeBinding;
 
 import java.io.File;
 import java.util.HashMap;

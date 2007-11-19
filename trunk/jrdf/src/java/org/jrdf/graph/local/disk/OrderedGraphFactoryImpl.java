@@ -59,7 +59,6 @@
 package org.jrdf.graph.local.disk;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.disk.iterator.IteratorFactoryImpl;
 import org.jrdf.graph.local.disk.iterator.OrderedIteratorFactoryImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
@@ -95,8 +94,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private ReadWriteGraph readWriteGraph;
     private ResourceFactory resourceFactory;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
-        NodeComparator nodeComparator, BTree spoTree) {
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree spoTree) {
         this.longIndexes = newLongIndexes;
         nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
@@ -105,7 +103,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers, nodePool,
             spoTree);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
-            graphHandlers[0], nodeComparator, new BdbSetFactory(new StoredSetHandlerImpl(new TempDirectoryHandler()),
+            graphHandlers[0], new BdbSetFactory(new StoredSetHandlerImpl(new TempDirectoryHandler()),
                 "tmpResults"));
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
