@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
 
 public class StoredSetHandlerImpl implements StoredSetHandler {
     private Map<Class<?>, TupleBinding> binding = new HashMap<Class<?>, TupleBinding>();
@@ -64,7 +64,7 @@ public class StoredSetHandlerImpl implements StoredSetHandler {
     }
 
     @SuppressWarnings({ "unchecked" })
-    public <T> Set<T> createSet(Database database, Class<T> clazz) {
+    public <T> SortedSet<T> createSet(Database database, Class<T> clazz) {
         EntryBinding keyBinding = getBinding(clazz);
         return new StoredSortedKeySet(database, keyBinding, true);
     }

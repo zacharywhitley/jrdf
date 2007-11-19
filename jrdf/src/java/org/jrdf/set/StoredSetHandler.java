@@ -6,7 +6,7 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 public interface StoredSetHandler {
     Environment setUpEnvironment() throws DatabaseException;
@@ -18,5 +18,5 @@ public interface StoredSetHandler {
 
     Database setupDatabase(Environment env, String dbName, DatabaseConfig dbConfig) throws DatabaseException;
 
-    <T> Set<T> createSet(Database database, Class<T> clazz);
+    <T> SortedSet<T> createSet(Database database, Class<T> clazz);
 }

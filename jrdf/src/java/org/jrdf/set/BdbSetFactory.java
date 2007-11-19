@@ -1,12 +1,12 @@
 package org.jrdf.set;
 
 import com.sleepycat.je.Database;
+import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-import com.sleepycat.je.DatabaseConfig;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 public class BdbSetFactory implements SetFactory {
     private final StoredSetHandler handler;
@@ -21,7 +21,7 @@ public class BdbSetFactory implements SetFactory {
         this.databaseName = newDatabaseName;
     }
 
-    public <T> Set<T> createSet(Class<T> clazz) {
+    public <T> SortedSet<T> createSet(Class<T> clazz) {
         try {
             setNumber++;
             env = handler.setUpEnvironment();
