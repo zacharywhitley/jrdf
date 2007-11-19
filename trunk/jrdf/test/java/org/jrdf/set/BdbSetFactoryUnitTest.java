@@ -6,13 +6,6 @@ import org.jrdf.map.TempDirectoryHandler;
 
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Nov 19, 2007
- * Time: 11:04:28 AM
- * To change this template use File | Settings | File Templates.
- */
 public class BdbSetFactoryUnitTest extends TestCase {
     private static DirectoryHandler handler = new TempDirectoryHandler();
     private StoredSetHandler storedSetHandler;
