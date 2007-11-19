@@ -4,10 +4,8 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.putLong;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.*;
-import org.jrdf.map.DirectoryHandler;
 
 import java.io.IOException;
-import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,24 +13,11 @@ import java.util.Map;
 import java.util.Set;
 
 public final class LongIndexSesame implements LongIndex {
-    private static final int BLOCK_SIZE = 4096;
-    private static final int VALUE_SIZE = 24;
     private static final int OFFSET = 8;
     private static final long MASK = 0xffffffffffffffffL;
     private static final int TRIPLES = 3;
+    private static final int VALUE_SIZE = 24;
     private BTree btree;
-
-    public static BTree createBTree(DirectoryHandler handler, String fileName) {
-        BTreeValueComparator comparator = new DefaultBTreeValueComparator();
-        try {
-            File parent = handler.getDir();
-            parent.mkdirs();
-            File file = new File(handler.getDir(), fileName);
-            return new BTree(file, BLOCK_SIZE, VALUE_SIZE, comparator);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public LongIndexSesame(BTree newBtree) {
         this.btree = newBtree;
