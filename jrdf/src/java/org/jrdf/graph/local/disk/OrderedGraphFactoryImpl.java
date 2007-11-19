@@ -94,7 +94,8 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private ReadWriteGraph readWriteGraph;
     private ResourceFactory resourceFactory;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree spoTree) {
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree spoTree,
+            long graphNumber) {
         this.longIndexes = newLongIndexes;
         nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
@@ -104,7 +105,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
             spoTree);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
             graphHandlers[0], new BdbSetFactory(new StoredSetHandlerImpl(new TempDirectoryHandler()),
-                "tmpResults"));
+                "tmpResults" + graphNumber));
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
     }

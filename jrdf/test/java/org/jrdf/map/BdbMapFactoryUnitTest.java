@@ -125,7 +125,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         database.close();
         expectLastCall();
         mockFactory.replay();
-        BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
+        MapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
         factory.createMap(String.class, String.class);
         factory.close();
         mockFactory.verify();

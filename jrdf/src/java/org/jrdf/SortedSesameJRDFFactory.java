@@ -61,7 +61,7 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.disk.GraphFactoryImpl;
+import org.jrdf.graph.local.disk.OrderedGraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
@@ -117,7 +117,7 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
         openIndexes.add(indexes[1]);
         openIndexes.add(indexes[2]);
         openFactories.add(nodePoolFactory);
-        orderedGraphFactory = new GraphFactoryImpl(indexes, nodePoolFactory, bTrees[0]);
+        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, bTrees[0], graphNumber);
         return orderedGraphFactory.getGraph();
     }
 
