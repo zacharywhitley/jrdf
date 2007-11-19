@@ -1,9 +1,9 @@
 package org.jrdf.set;
 
-import java.util.Set;
+import java.util.SortedSet;
 
 public interface SetFactory {
-    <T> Set<T> createSet(Class<T> clazz);
+    <T> SortedSet<T> createSet(Class<T> clazz);
 
     void close();
 }
