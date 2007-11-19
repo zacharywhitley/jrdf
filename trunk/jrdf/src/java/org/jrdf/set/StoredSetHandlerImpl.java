@@ -13,10 +13,13 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.map.DirectoryHandler;
 import org.jrdf.util.bdb.BlankNodeBinding;
 import org.jrdf.util.bdb.LongListBinding;
 import org.jrdf.util.bdb.NodeBinding;
-import org.jrdf.map.DirectoryHandler;
+import org.jrdf.util.bdb.TripleBinding;
 
 import java.io.File;
 import java.util.HashMap;
@@ -35,6 +38,8 @@ public class StoredSetHandlerImpl implements StoredSetHandler {
         binding.put(LinkedList.class, new LongListBinding());
         binding.put(BlankNode.class, new BlankNodeBinding());
         binding.put(Node.class, new NodeBinding());
+        binding.put(PredicateNode.class, new NodeBinding());
+        binding.put(Triple.class, new TripleBinding());
     }
 
     public Environment setUpEnvironment() throws DatabaseException {

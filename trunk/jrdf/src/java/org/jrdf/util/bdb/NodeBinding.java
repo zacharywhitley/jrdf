@@ -47,8 +47,7 @@ public class NodeBinding extends TupleBinding {
             tupleOutput.writeByte(2);
             tupleOutput.writeString(mapper.convertToString((Node) object));
             tupleOutput.writeLong(((LocalizedNode) object).getId());
-        } else {
-            throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
         }
+        throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
     }
 }
