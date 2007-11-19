@@ -1,5 +1,7 @@
 package org.jrdf.graph.local.index.longindex.sesame;
 
+import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.*;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.Iterator;
@@ -9,7 +11,6 @@ import java.io.IOException;
 
 public class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
     private static final int TRIPLES = 3;
-    private ByteHandler handler = new ByteHandler();
     private BTreeIterator iterator;
     private byte[] currentValues;
 
@@ -28,11 +29,11 @@ public class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Lon
 
     public Map.Entry<Long, Map<Long, Set<Long>>> next() {
         try {
-            Long key = handler.fromBytes(currentValues, TRIPLES)[0];
+            Long key = fromBytes(currentValues, TRIPLES)[0];
             Long currentKey = new Long(key);
             Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
             while (currentValues != null && currentKey.equals(key)) {
-                Long[] longs = handler.fromBytes(currentValues, TRIPLES);
+                Long[] longs = fromBytes(currentValues, TRIPLES);
                 Set<Long> longSet;
                 if (resultMap.containsKey(longs[1])) {
                     longSet = resultMap.get(longs[1]);
@@ -43,7 +44,7 @@ public class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Lon
                 resultMap.put(longs[1], longSet);
                 currentValues = iterator.next();
                 if (currentValues != null) {
-                    currentKey = handler.fromBytes(currentValues, TRIPLES)[0];
+                    currentKey = fromBytes(currentValues, TRIPLES)[0];
                 }
             }
             return new Entry(key, resultMap);

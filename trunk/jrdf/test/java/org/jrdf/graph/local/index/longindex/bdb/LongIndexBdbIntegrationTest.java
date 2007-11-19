@@ -71,4 +71,8 @@ public class LongIndexBdbIntegrationTest extends AbstractLongIndexIntegrationTes
         longIndex = new LongIndexBdb(factory);
         longIndex.clear();
     }
+
+    public void cleanUp() {
+        longIndex.close();
+    }
 }
