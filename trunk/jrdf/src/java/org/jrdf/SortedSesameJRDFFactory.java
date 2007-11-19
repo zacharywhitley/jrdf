@@ -64,6 +64,10 @@ import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
+import org.jrdf.graph.local.index.longindex.sesame.BTreeValueComparator;
+import org.jrdf.graph.local.index.longindex.sesame.DefaultBTreeValueComparator;
+import org.jrdf.graph.local.index.longindex.sesame.BTree;
+import static org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame.*;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
@@ -85,6 +89,8 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -118,15 +124,12 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        LongIndex index1 = new LongIndexSesame(HANDLER, "spo" + graphNumber);
-        LongIndex index2 = new LongIndexSesame(HANDLER, "pos" + graphNumber);
-        LongIndex index3 = new LongIndexSesame(HANDLER, "osp" + graphNumber);
-        LongIndex[] indexes = new LongIndex[]{index1, index2, index3};
+        LongIndex[] indexes = createIndexes(createBTrees());
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
-        openIndexes.add(index1);
-        openIndexes.add(index2);
-        openIndexes.add(index3);
+        openIndexes.add(indexes[0]);
+        openIndexes.add(indexes[1]);
+        openIndexes.add(indexes[2]);
         openFactories.add(nodePoolFactory);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
         return orderedGraphFactory.getGraph();
@@ -145,5 +148,15 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
         }
         openIndexes.clear();
         openFactories.clear();
+    }
+
+    private BTree[] createBTrees() {
+        return new BTree[] {createBTree(HANDLER, "spo" + graphNumber), createBTree(HANDLER, "pos" + graphNumber),
+            createBTree(HANDLER, "osp" + graphNumber)};
+    }
+
+    private LongIndex[] createIndexes(BTree... btrees) {
+        return new LongIndex[]{new LongIndexSesame(btrees[0]), new LongIndexSesame(btrees[1]),
+            new LongIndexSesame(btrees[2])};
     }
 }

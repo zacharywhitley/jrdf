@@ -6,7 +6,8 @@ import org.jrdf.map.TempDirectoryHandler;
 public class LongIndexSesameIntegrationTest extends AbstractLongIndexIntegrationTest {
 
     public void setUp() {
-        longIndex = new LongIndexSesame(new TempDirectoryHandler(), "sesTestDb");
+        BTree tree = LongIndexSesame.createBTree(new TempDirectoryHandler(), "sesTestDb");
+        longIndex = new LongIndexSesame(tree);
         longIndex.clear();
     }
 }
