@@ -63,11 +63,10 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
-import org.jrdf.graph.local.index.longindex.sesame.BTreeValueComparator;
-import org.jrdf.graph.local.index.longindex.sesame.DefaultBTreeValueComparator;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
-import static org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame.*;
+import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
+import org.jrdf.graph.local.index.longindex.sesame.BTreeFactoryImpl;
+import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
@@ -89,8 +88,6 @@ import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -109,6 +106,7 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
     private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
     private static long graphNumber;
     private GraphFactory orderedGraphFactory;
+    private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
 
@@ -151,8 +149,9 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
     }
 
     private BTree[] createBTrees() {
-        return new BTree[] {createBTree(HANDLER, "spo" + graphNumber), createBTree(HANDLER, "pos" + graphNumber),
-            createBTree(HANDLER, "osp" + graphNumber)};
+        return new BTree[] {btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
+            btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
+            btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
     }
 
     private LongIndex[] createIndexes(BTree... btrees) {
