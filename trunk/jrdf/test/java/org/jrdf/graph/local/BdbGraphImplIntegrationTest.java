@@ -81,7 +81,7 @@ public class BdbGraphImplIntegrationTest extends AbstractGraphUnitTest {
     }
 
     public void setUp() throws Exception {
-        super.setUp();
         new TempDirectoryHandler().removeDir();
+        super.setUp();
     }
 }

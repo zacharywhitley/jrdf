@@ -41,6 +41,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="StoredMapHandlerImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="StoredSetHandlerImpl"/>
+    <suppress checks="ParameterNumber" files="OrderedIteratorFactoryImpl"/>
 
     <!-- Import -->
     <suppress checks="BooleanExpressionComplexity" files="ByteArrayUtil"/>

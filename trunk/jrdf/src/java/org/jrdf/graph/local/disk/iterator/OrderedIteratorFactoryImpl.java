@@ -62,14 +62,15 @@ import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
-import org.jrdf.graph.local.mem.iterator.IteratorFactory;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
-import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
-import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.mem.TripleComparatorImpl;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.local.mem.iterator.IteratorFactory;
+import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
+import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
+import org.jrdf.set.SetFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -84,15 +85,17 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final NodePool nodePool;
     private final LongIndex longIndex;
     private final GraphHandler graphHandler;
+    private final SetFactory setFactory;
 
     public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
-            GraphHandler newGraphHandler, NodeComparator newNodeComparator) {
-        checkNotNull(newIteratorFactory, newNodePool, newLongIndex, newGraphHandler, newNodeComparator);
+            GraphHandler newGraphHandler, NodeComparator newNodeComparator, SetFactory newSetFactory) {
+        checkNotNull(newIteratorFactory, newNodePool, newLongIndex, newGraphHandler, newNodeComparator, newSetFactory);
         this.iteratorFactory = newIteratorFactory;
         this.nodePool = newNodePool;
         this.longIndex = newLongIndex;
         this.graphHandler = newGraphHandler;
         this.nodeComparator = newNodeComparator;
+        this.setFactory = newSetFactory;
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
