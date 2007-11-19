@@ -3,44 +3,50 @@ package org.jrdf.util.bdb;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
 import org.jrdf.graph.local.mem.BlankNodeImpl;
 import org.jrdf.graph.local.mem.LiteralImpl;
+import org.jrdf.graph.local.mem.LocalizedNode;
 import org.jrdf.graph.local.mem.URIReferenceImpl;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
-import java.net.URI;
-
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Nov 14, 2007
- * Time: 1:04:23 PM
- * To change this template use File | Settings | File Templates.
- */
 public class NodeBinding extends TupleBinding {
+    private RegexMatcherFactoryImpl regexFactory = new RegexMatcherFactoryImpl();
+    private StringNodeMapper mapper = new StringNodeMapperImpl(new RegexLiteralMatcher(regexFactory,
+        new NTripleUtilImpl(regexFactory)));
+
     public Object entryToObject(TupleInput tupleInput) {
         Object object;
-        try {
-            object = BlankNodeImpl.valueOf(tupleInput.readString());
-        } catch (Exception e) {
-            try {
-                object = URI.create(tupleInput.readString());
-            } catch (Exception ex) {
-                object = new LiteralImpl(tupleInput.readString());
-            }
+        byte b = tupleInput.readByte();
+        String str = tupleInput.readString();
+        if (b == 0) {
+            object = mapper.convertToBlankNode(str);
+        } else if (b == 1) {
+            object = mapper.convertToURIReference(str, tupleInput.readLong());
+        } else if (b == 2) {
+            object = mapper.convertToLiteral(str, tupleInput.readLong());
+        } else {
+            throw new IllegalArgumentException("Cannot read class type");
         }
         return object;
     }
 
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        if (URIReferenceImpl.class.isAssignableFrom(object.getClass())) {
-            URIReferenceImpl node = (URIReferenceImpl) object;
-            tupleOutput.writeString(node.toString());
-        } else if (BlankNodeImpl.class.isAssignableFrom(object.getClass())) {
-            BlankNodeImpl node = (BlankNodeImpl) object;
-            tupleOutput.writeString(node.toString());
+        if (BlankNodeImpl.class.isAssignableFrom(object.getClass())) {
+            tupleOutput.writeByte(0);
+            tupleOutput.writeString(mapper.convertToString((Node) object));
+        } else if (URIReferenceImpl.class.isAssignableFrom(object.getClass())) {
+            tupleOutput.writeByte(1);
+            tupleOutput.writeString(mapper.convertToString((Node) object));
+            tupleOutput.writeLong(((LocalizedNode) object).getId());
         } else if (LiteralImpl.class.isAssignableFrom(object.getClass())) {
-            LiteralImpl node = (LiteralImpl) object;
-            tupleOutput.writeString(node.toString());
+            tupleOutput.writeByte(2);
+            tupleOutput.writeString(mapper.convertToString((Node) object));
+            tupleOutput.writeLong(((LocalizedNode) object).getId());
         } else {
             throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
         }
