@@ -71,7 +71,7 @@ import java.util.NoSuchElementException;
  */
 public final class EmptyClosableIterator implements ClosableMemIterator<Triple> {
 
-    EmptyClosableIterator() {
+    public EmptyClosableIterator() {
     }
 
     /**

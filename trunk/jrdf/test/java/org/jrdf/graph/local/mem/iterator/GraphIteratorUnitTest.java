@@ -64,9 +64,11 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
+import static java.lang.reflect.Modifier.PUBLIC;
+
 public class GraphIteratorUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, GraphIterator.class);
-        checkConstructor(GraphIterator.class, NO_MODIFIER, GraphHandler.class);
+        checkConstructor(GraphIterator.class, PUBLIC, GraphHandler.class);
     }
 }

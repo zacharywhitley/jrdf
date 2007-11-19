@@ -69,13 +69,9 @@ import java.util.Map;
 
 public class Db4oMapFactory implements MapFactory {
     private static final int INITIAL_MAP_SIZE = 1000;
-    private final DirectoryHandler dirHandler;
-    private final String name;
     private ObjectContainer db;
 
     public Db4oMapFactory(DirectoryHandler dirHandler, String name) {
-        this.dirHandler = dirHandler;
-        this.name = name;
         File parent = dirHandler.getDir();
         parent.mkdirs();
         File file = new File(parent, name);

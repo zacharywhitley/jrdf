@@ -129,7 +129,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
         expect(iteratorFactory.newEmptyClosableIterator()).andReturn(returnIterator);
         mockFactory.replay();
         IteratorFactory orderedIteratorFactory = createOrderedIteratorFactory(nodeComparator);
-        ClosableMemIterator<Triple> actualIterator = orderedIteratorFactory.newEmptyClosableIterator();
+        ClosableIterator<Triple> actualIterator = orderedIteratorFactory.newEmptyClosableIterator();
         assertTrue(returnIterator == actualIterator);
         mockFactory.verify();
     }

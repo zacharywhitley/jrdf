@@ -65,10 +65,12 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
+import static java.lang.reflect.Modifier.PUBLIC;
+
 public class TwoFixedIteratorUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, TwoFixedIterator.class);
-        checkConstructor(TwoFixedIterator.class, NO_MODIFIER, Long.class, Long.class, LongIndex.class,
+        checkConstructor(TwoFixedIterator.class, PUBLIC, Long.class, Long.class, LongIndex.class,
                 GraphHandler.class);
     }
 }

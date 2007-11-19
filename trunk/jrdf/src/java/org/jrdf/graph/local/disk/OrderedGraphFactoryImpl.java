@@ -56,20 +56,66 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.disk;
 
-import junit.framework.TestCase;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.local.disk.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.local.disk.iterator.OrderedIteratorFactoryImpl;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.NO_MODIFIER;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.graph.local.index.longindex.sesame.BTree;
+import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.mem.GraphImpl;
+import org.jrdf.graph.local.mem.ReadWriteGraph;
+import org.jrdf.graph.local.mem.ReadWriteGraphFactory;
+import org.jrdf.graph.local.mem.ReadWriteGraphImpl;
+import org.jrdf.graph.local.mem.ResourceFactory;
+import org.jrdf.graph.local.mem.ResourceFactoryImpl;
+import org.jrdf.graph.local.mem.iterator.IteratorFactory;
 
-import static java.lang.reflect.Modifier.PUBLIC;
+/**
+ * Creates a new Graph implementation based on required types.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
+public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
+    private LongIndex[] longIndexes;
+    private GraphHandler[] graphHandlers;
+    private IteratorFactory iteratorFactory;
+    private NodePool nodePool;
+    private ReadWriteGraph readWriteGraph;
+    private ResourceFactory resourceFactory;
 
-public class ThreeFixedIteratorUnitTest extends TestCase {
-    public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, ThreeFixedIterator.class);
-        checkConstructor(ThreeFixedIterator.class, PUBLIC, Long[].class, LongIndex.class, GraphHandler.class);
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory,
+        NodeComparator nodeComparator, BTree spoTree) {
+        this.longIndexes = newLongIndexes;
+        nodePool = newNodePoolFactory.createNodePool();
+        this.nodePool.clear();
+        this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
+            new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
+        IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers, nodePool,
+            spoTree);
+        this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
+            graphHandlers[0], nodeComparator);
+        this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
+        this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
+    }
+
+    public Graph getGraph() {
+        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph, resourceFactory);
+    }
+
+    public ReadWriteGraph getReadWriteGraph() {
+        return readWriteGraph;
+    }
+
+    public IteratorFactory getIteratorFactory() {
+        return iteratorFactory;
     }
 }

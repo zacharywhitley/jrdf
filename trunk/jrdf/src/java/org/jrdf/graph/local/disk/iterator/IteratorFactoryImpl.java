@@ -56,72 +56,69 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.disk.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.longindex.sesame.BTree;
+import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.mem.iterator.AnyResourcePredicateIterator;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.local.mem.iterator.EmptyClosableIterator;
+import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
+import org.jrdf.graph.local.mem.iterator.IteratorFactory;
+import org.jrdf.graph.local.mem.iterator.OneFixedIterator;
+import org.jrdf.graph.local.mem.iterator.ThreeFixedIterator;
+import org.jrdf.graph.local.mem.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
 
 /**
- * Creates the iterators.  Allows different implementations of iterators to be used.
+ * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
  *
  * @author Andrew Newman
  * @version $Id$
  */
-public interface IteratorFactory {
-    /**
-     * Return an new EmptyClosableIterator - indicates no results found.
-     *
-     * @return an empty closable iterator - always hasNext false and next throws exception.
-     */
-    ClosableIterator<Triple> newEmptyClosableIterator();
+public final class IteratorFactoryImpl implements IteratorFactory {
+    private final LongIndex[] longIndexes;
+    private final GraphHandler[] graphHandlers;
+    private final NodePool nodePool;
+    private final BTree spoBTree;
 
-    /**
-     * Return an new GraphIterator - result of an unconstrained find.
-     *
-     * @return a graph iterator - goes through all triples in the graph.
-     */
-    ClosableIterator<Triple> newGraphIterator();
+    public IteratorFactoryImpl(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers, NodePool nodePool,
+        final BTree spoBTree) {
+        this.longIndexes = longIndexes;
+        this.graphHandlers = graphHandlers;
+        this.nodePool = nodePool;
+        this.spoBTree = spoBTree;
+    }
 
-    /**
-     * Return a new FixedIterator - bound by one node.
-     *
-     * @param fixedFirstNode the node to find.
-     * @param index which index (from the three) to use.
-     * @return a new FixedIterator - goes through the graph and returns all given triples with the given node.
-     */
-    ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index);
+    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
+        return new EmptyClosableIterator();
+    }
 
-    /**
-     * Return a new FixedItereator - bound by two nodes.
-     *
-     * @param fixedFirstNode the first node to find.
-     * @param fixedSecondNode the second node to find.
-     * @param index which index (from the three) to use.
-     * @return a new FixedIterator - goes through the graph and returns all given triples with the two given nodes.
-     */
-    ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index);
+    public ClosableIterator<Triple> newGraphIterator() {
+        return new BTreeGraphIterator(spoBTree, graphHandlers[0]);
+    }
 
-    /**
-     * Return a new FixedIterator - bound by three nodes.
-     *
-     * @param nodes the triple to find.
-     * @return a new FixedIterator - either one or none triples.
-     */
-    ClosableIterator<Triple> newThreeFixedIterator(Long[] nodes);
+    public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
+        return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
+    }
 
-    /**
-     * Return a new PredicateIterator - all unique predicates.
-     *
-     * @return a new PredicateIterator - all unique predicates.
-     */
-    ClosableIterator<PredicateNode> newPredicateIterator();
+    public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
+        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], graphHandlers[index]);
+    }
 
-    /**
-     * Return a new PredicateIterator - all unique predicates for a given resource (subject and object).
-     *
-     * @param resource all unique predicate for a given resource.
-     * @return a new PredicateIterator - all unique predicate for a given resource (subject and object).
-     */
-    ClosableIterator<PredicateNode> newPredicateIterator(Long resource);
+    public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
+        return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
+    }
+
+    public ClosableIterator<PredicateNode> newPredicateIterator() {
+        return new AnyResourcePredicateIterator(longIndexes[1], nodePool);
+    }
+
+    public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
+        return new FixedResourcePredicateIterator(longIndexes[1], nodePool, resource);
+    }
 }

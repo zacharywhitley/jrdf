@@ -129,7 +129,7 @@ public final class GraphIterator implements ClosableMemIterator<Triple> {
      * @throws IllegalArgumentException Must be created with implementations from
      *                                  the memory package.
      */
-    GraphIterator(GraphHandler newHandler) {
+    public GraphIterator(GraphHandler newHandler) {
         // store the node factory
         handler = newHandler;
         iterator = handler.getEntries();
