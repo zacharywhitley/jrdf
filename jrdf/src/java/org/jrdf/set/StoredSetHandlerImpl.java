@@ -24,13 +24,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Nov 19, 2007
- * Time: 10:56:26 AM
- * To change this template use File | Settings | File Templates.
- */
 public class StoredSetHandlerImpl implements StoredSetHandler {
     private Map<Class<?>, TupleBinding> binding = new HashMap<Class<?>, TupleBinding>();
     private final DirectoryHandler handler;
