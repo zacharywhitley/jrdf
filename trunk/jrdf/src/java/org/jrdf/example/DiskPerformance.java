@@ -61,19 +61,28 @@ package org.jrdf.example;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedSesameJRDFFactory;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.bdb.BdbBlankNodeRegistryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.map.StoredMapHandler;
 
 public class DiskPerformance extends AbstractGraphPerformance {
+    private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
     private JRDFFactory factory = SortedSesameJRDFFactory.getFactory();
 
     protected Graph getGraph() {
         Graph newGraph = factory.getNewGraph();
         newGraph.clear();
         return newGraph;
+    }
+
+    protected BlankNodeRegistry getBlankNodeRegistry() {
+        final StoredMapHandler newHandler = new StoredMapHandlerImpl(dirHandler);
+        return new BdbBlankNodeRegistryImpl(new BdbMapFactory(newHandler, "foobarbaz"));
     }
 
     protected MapFactory getMapFactory() {

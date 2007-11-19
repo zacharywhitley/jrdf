@@ -64,6 +64,8 @@ import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.Graph;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 
 public class MemPerformance extends AbstractGraphPerformance {
     private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
@@ -74,6 +76,10 @@ public class MemPerformance extends AbstractGraphPerformance {
 
     protected MapFactory getMapFactory() {
         return new MemMapFactory();
+    }
+
+    protected BlankNodeRegistry getBlankNodeRegistry() {
+        return new MemBlankNodeRegistryImpl();
     }
 
     public static void main(String[] args) throws Exception {

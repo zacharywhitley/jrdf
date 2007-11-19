@@ -61,17 +61,25 @@ package org.jrdf.example;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.map.MapFactory;
+import org.jrdf.map.TempDirectoryHandler;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.RdfWriter;
+import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -88,6 +96,7 @@ public abstract class AbstractGraphPerformance {
     private static final String OBJECT_PREFIX = "http://foo";
     private static final String URI_STRING = "http://foo/bar";
     private static final String PATH = "/org/jrdf/example/pizza.rdf";
+    private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
     private List<URI> predicates = new ArrayList<URI>();
     private GraphElementFactory graphElementFactory;
     private int noFinds;
@@ -104,6 +113,7 @@ public abstract class AbstractGraphPerformance {
         graphElementFactory = graph.getElementFactory();
         //parsePerformance();
         addPerformance(NUMBER_OF_NODES_TO_ADD, graph);
+        writePerformance(graph);
         findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
     }
 
@@ -111,24 +121,23 @@ public abstract class AbstractGraphPerformance {
 
     protected abstract MapFactory getMapFactory();
 
+    protected abstract BlankNodeRegistry getBlankNodeRegistry();
+
     public void parsePerformance() throws Exception {
         URL source = getClass().getResource(PATH);
-        System.out.println("Source: " + source);
         InputStream stream = source.openStream();
-        Parser parser = new RdfXmlParser(getGraph().getElementFactory(), getMapFactory());
+        final Graph graph = getGraph();
+        Parser parser = new RdfXmlParser(graph.getElementFactory(), getMapFactory());
         long startTime = System.currentTimeMillis();
         parser.parse(stream, URI_STRING);
-        long finishTime = System.currentTimeMillis();
-        System.out.println("Parsing: " + PATH);
-        System.out.println("Time to parse file: " + (finishTime - startTime) + " ms = " +
-            ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
+        outputResult(graph, startTime, "Testing Parsing Performance (" + PATH + "): ");
     }
 
     /**
      * Creates 10 times the given number of nodes for a given graph.
      *
      * @param numberOfNodes the number of nodes to create with 10 objects.
-     * @param graph the graph to add.
+     * @param graph         the graph to add.
      * @throws Exception if there is an exception adding the nodes.
      */
     private void addPerformance(int numberOfNodes, Graph graph) throws Exception {
@@ -136,14 +145,11 @@ public abstract class AbstractGraphPerformance {
         for (int i = 0; i < numberOfNodes; i++) {
             for (int j = 0; j < NUMBER_OF_PREDICATES; j++) {
                 graph.add(graphElementFactory.createURIReference(URI.create(SUBJECT_PREFIX + i)),
-                    graphElementFactory.createURIReference(URI.create(PREDICATE_PREFIX + j)),
-                    graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + j)));
+                        graphElementFactory.createURIReference(URI.create(PREDICATE_PREFIX + j)),
+                        graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + j)));
             }
         }
-        long finishTime = System.currentTimeMillis();
-        System.out.println("\nTesting Add Performance:");
-        System.out.println("Adding " + graph.getNumberOfTriples() + " Triples took: " + (finishTime - startTime) +
-            " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
+        outputResult(graph, startTime, "Testing Add Performance:");
     }
 
     private void findPerformance(int nodes, Graph graph) throws Exception {
@@ -152,16 +158,33 @@ public abstract class AbstractGraphPerformance {
             URI subjectURI = URI.create(SUBJECT_PREFIX + index);
             find1(graph, subjectURI);
         }
+        outputResult(graph, startTime, "Testing Find Performance: " + noFinds);
+    }
+
+    private void writePerformance(Graph graph) throws Exception {
+        long startTime = System.currentTimeMillis();
+        Writer out = new FileWriter(new File(dirHandler.getDir(), "foo.rdf"));
+        try {
+            BlankNodeRegistry nodeRegistry = getBlankNodeRegistry();
+            nodeRegistry.clear();
+            RdfWriter writer = new RdfXmlWriter(nodeRegistry, new RdfNamespaceMapImpl());
+            writer.write(graph, out);
+        } finally {
+            out.close();
+        }
+        outputResult(graph, startTime, "Testing RDF/XML Write Performance:");
+    }
+
+    private void outputResult(Graph graph, long startTime, String what) throws GraphException {
         long finishTime = System.currentTimeMillis();
-        System.out.println("\nTesting Find Performance:");
-        System.out.println("Find operations: " + noFinds + " to find a random triple from " + nodes +
-            " Triples took: " + (finishTime - startTime) + " ms = " +
-            ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
+        System.out.println("\n" + what);
+        System.out.println("Triples: " + graph.getNumberOfTriples() + " Took: " + (finishTime - startTime) +
+                " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
     }
 
     private void find1(Graph graph, URI subjectURI) throws GraphException, GraphElementFactoryException {
         ClosableIterator<Triple> itr = findRandomPredicates(graph,
-            graphElementFactory.createURIReference(subjectURI));
+                graphElementFactory.createURIReference(subjectURI));
         while (itr.hasNext()) {
             Triple triple1 = itr.next();
             ObjectNode object1 = triple1.getObject();
@@ -199,8 +222,8 @@ public abstract class AbstractGraphPerformance {
         throws GraphException, GraphElementFactoryException {
         noFinds++;
         return graph.find(subject,
-            graphElementFactory.createURIReference(predicates.get((int) Math.random() * NO_PREDICATES)),
-            graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + (int) Math.random() *
-                NUMBER_OF_PREDICATES)));
+                graphElementFactory.createURIReference(predicates.get((int) Math.random() * NO_PREDICATES)),
+                graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + (int) Math.random() *
+                        NUMBER_OF_PREDICATES)));
     }
 }

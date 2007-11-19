@@ -246,11 +246,6 @@ public final class RdfXmlParser implements ConfigurableParser {
      */
     public RdfXmlParser(GraphElementFactory graphElementFactory, MapFactory creator) throws GraphException {
         this(graphElementFactory, new ParserBlankNodeFactoryImpl(creator, graphElementFactory));
-//        if (creator instanceof BdbMapFactory) {
-//            usedIDs = new HashSet<URI>();
-//            storedMap = creator.createMap(Integer.class, Set.class);
-//            storedMap.put(new Integer(1), usedIDs);
-//        }
     }
 
     /**
