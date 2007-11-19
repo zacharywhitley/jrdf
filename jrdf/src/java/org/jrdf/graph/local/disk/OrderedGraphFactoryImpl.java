@@ -77,6 +77,9 @@ import org.jrdf.graph.local.mem.ReadWriteGraphImpl;
 import org.jrdf.graph.local.mem.ResourceFactory;
 import org.jrdf.graph.local.mem.ResourceFactoryImpl;
 import org.jrdf.graph.local.mem.iterator.IteratorFactory;
+import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.set.BdbSetFactory;
+import org.jrdf.set.StoredSetHandlerImpl;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -102,7 +105,8 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         IteratorFactory tmpIteratorFactory = new IteratorFactoryImpl(newLongIndexes, graphHandlers, nodePool,
             spoTree);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, nodePool, newLongIndexes[0],
-            graphHandlers[0], nodeComparator);
+            graphHandlers[0], nodeComparator, new BdbSetFactory(new StoredSetHandlerImpl(new TempDirectoryHandler()),
+                "tmpResults"));
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
     }

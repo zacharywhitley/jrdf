@@ -7,6 +7,7 @@ import com.sleepycat.je.Environment;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.SortedSet;
+import java.util.Comparator;
 
 public class BdbSetFactory implements SetFactory {
     private final StoredSetHandler handler;
@@ -31,6 +32,10 @@ public class BdbSetFactory implements SetFactory {
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<? super T> comparator) {
+        throw new UnsupportedOperationException("Bdb implementation does not support comparators");
     }
 
     public void close() {
