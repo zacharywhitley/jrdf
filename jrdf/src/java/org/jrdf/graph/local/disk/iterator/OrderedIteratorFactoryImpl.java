@@ -56,13 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.disk.iterator;
 
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.local.mem.TripleComparatorImpl;
+import org.jrdf.graph.local.mem.iterator.IteratorFactory;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
+import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;

@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 1449 $
+ * $Date: 2007-09-12 17:15:14 +1000 (Wed, 12 Sep 2007) $
  *
  * ====================================================================
  *
@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
@@ -66,7 +66,7 @@ import org.jrdf.util.ClosableIterator;
  * Creates the iterators.  Allows different implementations of iterators to be used.
  *
  * @author Andrew Newman
- * @version $Id$
+ * @version $Id: IteratorFactory.java 1449 2007-09-12 07:15:14Z hamrawee $
  */
 public interface IteratorFactory {
     /**

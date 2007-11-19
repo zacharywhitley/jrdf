@@ -132,7 +132,8 @@ public final class TwoFixedIterator implements ClosableMemIterator<Triple> {
     /**
      * Constructor.  Sets up the internal iterators.
      */
-    TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex, GraphHandler newHandler) {
+    public TwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, LongIndex newLongIndex,
+        GraphHandler newHandler) {
 
         // store the node factory and other starting data
         first = fixedFirstNode;

@@ -105,7 +105,7 @@ public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
     /**
      * Constructor.
      */
-    ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphHandler newHandler) {
+    public ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphHandler newHandler) {
         nodes = newNodes;
         longIndex = newLongIndex;
         handler = newHandler;

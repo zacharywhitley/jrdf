@@ -123,7 +123,7 @@ public final class OneFixedIterator implements ClosableMemIterator<Triple> {
      *
      * @throws IllegalArgumentException Must pass in a GraphElementFactory memory implementation.
      */
-    OneFixedIterator(Long fixedFirstNode, GraphHandler newHandler) {
+    public OneFixedIterator(Long fixedFirstNode, GraphHandler newHandler) {
         // store the node factory and other starting data
         handler = newHandler;
         first = fixedFirstNode;
