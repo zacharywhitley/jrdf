@@ -7,10 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.io.IOException;
 
-/**
- * Class description goes here.
-*/
-class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
+public class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
     private static final int TRIPLES = 3;
     private ByteHandler handler = new ByteHandler();
     private BTreeIterator iterator;
@@ -29,10 +26,10 @@ class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
         return currentValues != null;
     }
 
-    public Entry next() {
+    public Map.Entry<Long, Map<Long, Set<Long>>> next() {
         try {
             Long key = handler.fromBytes(currentValues, TRIPLES)[0];
-            Long currentKey = new Long(key.longValue());
+            Long currentKey = new Long(key);
             Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
             while (currentValues != null && currentKey.equals(key)) {
                 Long[] longs = handler.fromBytes(currentValues, TRIPLES);

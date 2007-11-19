@@ -69,4 +69,8 @@ public class LongIndexDb4oIntegrationTest extends AbstractLongIndexIntegrationTe
         longIndex = new LongIndexDb4o(factory);
         longIndex.clear();
     }
+
+    public void tearDown() {
+        factory.close();
+    }
 }

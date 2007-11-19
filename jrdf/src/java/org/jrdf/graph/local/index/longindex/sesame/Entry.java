@@ -3,10 +3,7 @@ package org.jrdf.graph.local.index.longindex.sesame;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Class description goes here.
-*/
-class Entry implements Map.Entry<Long, Map<Long, Set<Long>>> {
+public class Entry implements Map.Entry<Long, Map<Long, Set<Long>>> {
     private final Long key;
     private final Map<Long, Set<Long>> values;
 
