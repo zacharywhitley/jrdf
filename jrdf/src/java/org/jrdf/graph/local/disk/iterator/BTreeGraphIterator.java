@@ -1,6 +1,7 @@
 package org.jrdf.graph.local.disk.iterator;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeIterator;
@@ -11,11 +12,12 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 
 public class BTreeGraphIterator implements ClosableIterator<Triple> {
+    private static final int TRIPLES = 3;
     private final BTree btree;
     private BTreeIterator bTreeIterator;
+    private byte[] bytesToRemove;
     private byte[] currentBytes;
     private final GraphHandler handler;
-    private static final int TRIPLES = 3;
     private boolean nextCalled;
 
     public BTreeGraphIterator(BTree newBTree, GraphHandler newHandler) {
@@ -44,17 +46,22 @@ public class BTreeGraphIterator implements ClosableIterator<Triple> {
         }
         nextCalled = true;
         Triple triple = handler.createTriple(fromBytes(currentBytes, TRIPLES));
+        bytesToRemove = currentBytes;
         getNextBytes();
         return triple;
     }
 
     public void remove() {
         try {
-            if (nextCalled && null != currentBytes) {
+            if (!nextCalled && null == bytesToRemove) {
                 throw new IllegalStateException("Next not called or beyond end of data");
             } else {
-                btree.remove(currentBytes);
+                btree.remove(bytesToRemove);
+                Long[] longs = fromBytes(bytesToRemove, TRIPLES);
+                handler.remove(longs);
             }
+        } catch (GraphException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -63,7 +63,6 @@ package org.jrdf.graph.local.mem;
 
 import org.jrdf.graph.AbstractLiteral;
 
-import java.io.Serializable;
 import java.net.URI;
 
 /**
@@ -72,7 +71,7 @@ import java.net.URI;
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @version $Revision$
  */
-public class LiteralImpl extends AbstractLiteral implements LocalizedNode, Serializable, LiteralMutableId {
+public class LiteralImpl extends AbstractLiteral implements LiteralMutableId {
 
     /**
      * Allow newer compiled version of the stub to operate when changes

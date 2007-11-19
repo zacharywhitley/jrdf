@@ -71,8 +71,11 @@ import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
 import org.jrdf.graph.local.mem.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.OneFixedIterator;
 import org.jrdf.graph.local.mem.iterator.ThreeFixedIterator;
+import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
 import org.jrdf.graph.local.mem.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
+
+import java.util.Iterator;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -103,15 +106,16 @@ public final class IteratorFactoryImpl implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
+        return wrapInTripleIterator(new OneFixedIterator(fixedFirstNode, graphHandlers[index]));
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], graphHandlers[index]);
+        return wrapInTripleIterator(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index],
+            graphHandlers[index]));
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
+        return wrapInTripleIterator(new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
@@ -120,5 +124,9 @@ public final class IteratorFactoryImpl implements IteratorFactory {
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
         return new FixedResourcePredicateIterator(longIndexes[1], nodePool, resource);
+    }
+
+    private ClosableIterator<Triple> wrapInTripleIterator(Iterator<Triple> iterator) {
+        return new TripleClosableIterator(iterator, nodePool, longIndexes[0], graphHandlers[0]);
     }
 }
