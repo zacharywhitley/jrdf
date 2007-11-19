@@ -3,6 +3,7 @@ package org.jrdf.graph.local.index.longindex.sesame;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.putLong;
+import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.*;
 import org.jrdf.map.DirectoryHandler;
 
 import java.io.File;
@@ -19,7 +20,6 @@ public final class LongIndexSesame implements LongIndex {
     private static final int VALUE_SIZE = 24;
     private static final int TRIPLES = 3;
     private BTree btree;
-    private ByteHandler handler = new ByteHandler();
     private static final int OFFSET = 8;
 
     public LongIndexSesame(DirectoryHandler handler, String fileName) {
@@ -36,7 +36,7 @@ public final class LongIndexSesame implements LongIndex {
 
     public void add(Long... node) throws GraphException {
         try {
-            btree.insert(handler.toBytes(node));
+            btree.insert(toBytes(node));
         } catch (IOException e) {
             throw new GraphException(e);
         }
@@ -48,7 +48,7 @@ public final class LongIndexSesame implements LongIndex {
             if (bTreeIterator.next() == null) {
                 throw new GraphException("Unable to remove nonexistent statement");
             }
-            btree.remove(handler.toBytes(node));
+            btree.remove(toBytes(node));
         } catch (IOException e) {
             throw new GraphException(e);
         }
@@ -72,7 +72,7 @@ public final class LongIndexSesame implements LongIndex {
             byte[] bytes = bTreeIterator.next();
             Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
             while (bytes != null) {
-                Long[] longs = handler.fromBytes(bytes, TRIPLES);
+                Long[] longs = fromBytes(bytes, TRIPLES);
                 Set<Long> longSet;
                 if (resultMap.containsKey(longs[1])) {
                     longSet = resultMap.get(longs[1]);
@@ -139,7 +139,7 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     private BTreeIterator getIterator(Long... node) {
-        byte[] key = handler.toBytes(node[0], node[1], node[2]);
+        byte[] key = toBytes(node[0], node[1], node[2]);
         byte[] filter = new byte[VALUE_SIZE];
         for (int i = 0; i < TRIPLES; i++) {
             addToFilter(filter, i, node);
