@@ -15,6 +15,7 @@ public class BdbSetFactoryUnitTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
+        handler.removeDir();
         storedSetHandler = new StoredSetHandlerImpl(handler);
     }
 

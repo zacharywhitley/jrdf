@@ -61,7 +61,6 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
@@ -69,11 +68,6 @@ import org.jrdf.graph.local.index.longindex.sesame.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
 import org.jrdf.map.DirectoryHandler;
 import org.jrdf.map.TempDirectoryHandler;
@@ -83,8 +77,6 @@ import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.builder.QueryBuilder;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -96,10 +88,6 @@ import java.util.Set;
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
  */
 public final class SortedSesameJRDFFactory implements JRDFFactory {
-    private static final NodeTypeComparator NODE_TYPE_COMPARATOR = new NodeTypeComparatorImpl();
-    private static final LocalizedNodeComparator LOCALIZED_NODE_COMPARATOR = new LocalizedNodeComparatorImpl();
-    private static final BlankNodeComparator BLANK_NODE_COMPARATOR = new LocalizedBlankNodeComparatorImpl(
-        LOCALIZED_NODE_COMPARATOR);
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
@@ -122,14 +110,14 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        LongIndex[] indexes = createIndexes(createBTrees());
+        BTree[] bTrees = createBTrees();
+        LongIndex[] indexes = createIndexes(bTrees);
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
-        NodeComparator comparator = new NodeComparatorImpl(NODE_TYPE_COMPARATOR, BLANK_NODE_COMPARATOR);
         openIndexes.add(indexes[0]);
         openIndexes.add(indexes[1]);
         openIndexes.add(indexes[2]);
         openFactories.add(nodePoolFactory);
-        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, comparator);
+        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory);
         return orderedGraphFactory.getGraph();
     }
 

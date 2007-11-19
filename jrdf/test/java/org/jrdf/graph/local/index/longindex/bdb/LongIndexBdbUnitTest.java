@@ -67,7 +67,9 @@ import org.jrdf.map.TempDirectoryHandler;
 public class LongIndexBdbUnitTest extends AbstractLongIndexUnitTest {
 
     public void setUp() {
-        factory = new BdbMapFactory(new StoredMapHandlerImpl(new TempDirectoryHandler()), "database");
+        TempDirectoryHandler directoryHandler = new TempDirectoryHandler();
+        directoryHandler.removeDir();
+        factory = new BdbMapFactory(new StoredMapHandlerImpl(directoryHandler), "database");
         longIndex = new LongIndexBdb(factory);
         longIndex.clear();
     }

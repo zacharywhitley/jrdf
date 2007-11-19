@@ -57,24 +57,32 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.util.bdb;
 
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
-import org.jrdf.graph.local.mem.BlankNodeImpl;
 
-public class BlankNodeBinding extends TupleBinding {
+import java.util.LinkedList;
+
+public class LongListBinding extends TupleBinding {
     public Object entryToObject(TupleInput tupleInput) {
-        return BlankNodeImpl.valueOf(tupleInput.readString());
+        LinkedList<Long[]> list = new LinkedList<Long[]>();
+        long size = tupleInput.readLong();
+        for (int i = 0; i < size; i++) {
+            list.add(new Long[]{tupleInput.readLong(), tupleInput.readLong()});
+        }
+        return list;
     }
 
+    @SuppressWarnings({ "unchecked" })
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        if (BlankNodeImpl.class.isAssignableFrom(object.getClass())) {
-            BlankNodeImpl node = (BlankNodeImpl) object;
-            tupleOutput.writeString(node.toString());
-        } else {
-            throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
+        LinkedList<Long[]> list = (LinkedList<Long[]>) object;
+        tupleOutput.writeLong(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            Long[] longs = list.get(i);
+            tupleOutput.writeLong(longs[0]);
+            tupleOutput.writeLong(longs[1]);
         }
     }
 }

@@ -13,10 +13,10 @@ import com.sleepycat.je.Environment;
 import com.sleepycat.je.EnvironmentConfig;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
-import org.jrdf.map.BlankNodeBinding;
+import org.jrdf.util.bdb.BlankNodeBinding;
+import org.jrdf.util.bdb.LongListBinding;
+import org.jrdf.util.bdb.NodeBinding;
 import org.jrdf.map.DirectoryHandler;
-import org.jrdf.map.LongListBinding;
-import org.jrdf.map.NodeBinding;
 
 import java.io.File;
 import java.util.HashMap;
@@ -73,7 +73,7 @@ public class StoredSetHandlerImpl implements StoredSetHandler {
         if (binding.keySet().contains(clazz)) {
             return binding.get(clazz);
         } else {
-            throw new IllegalArgumentException("Cannot retrieve binding for class: " + clazz.getClass());
+            throw new IllegalArgumentException("Cannot retrieve binding for class: " + clazz);
         }
     }
 

@@ -1,4 +1,4 @@
-package org.jrdf.map;
+package org.jrdf.util.bdb;
 
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
