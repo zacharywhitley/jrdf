@@ -40,6 +40,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="StoredMapHandlerImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="StoredSetHandlerImpl"/>
 
     <!-- Import -->
     <suppress checks="BooleanExpressionComplexity" files="ByteArrayUtil"/>
