@@ -8,13 +8,6 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Nov 19, 2007
- * Time: 10:51:19 AM
- * To change this template use File | Settings | File Templates.
- */
 public class BdbSetFactory implements SetFactory {
     private final StoredSetHandler handler;
     private final String databaseName;
