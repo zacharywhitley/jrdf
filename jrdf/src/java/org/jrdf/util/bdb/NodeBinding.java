@@ -3,10 +3,10 @@ package org.jrdf.util.bdb;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
-import org.jrdf.graph.local.mem.BlankNodeImpl;
 import org.jrdf.graph.local.mem.LiteralImpl;
 import org.jrdf.graph.local.mem.LocalizedNode;
 import org.jrdf.graph.local.mem.URIReferenceImpl;
@@ -36,7 +36,7 @@ public class NodeBinding extends TupleBinding {
     }
 
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
-        if (BlankNodeImpl.class.isAssignableFrom(object.getClass())) {
+        if (BlankNode.class.isAssignableFrom(object.getClass())) {
             tupleOutput.writeByte(0);
             tupleOutput.writeString(mapper.convertToString((Node) object));
         } else if (URIReferenceImpl.class.isAssignableFrom(object.getClass())) {
@@ -47,7 +47,8 @@ public class NodeBinding extends TupleBinding {
             tupleOutput.writeByte(2);
             tupleOutput.writeString(mapper.convertToString((Node) object));
             tupleOutput.writeLong(((LocalizedNode) object).getId());
+        } else {
+            throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
         }
-        throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
     }
 }
