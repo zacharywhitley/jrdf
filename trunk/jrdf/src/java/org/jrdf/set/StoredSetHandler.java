@@ -8,13 +8,6 @@ import com.sleepycat.je.Environment;
 
 import java.util.Set;
 
-/**
- * Created by IntelliJ IDEA.
- * User: liyf
- * Date: Nov 19, 2007
- * Time: 10:54:40 AM
- * To change this template use File | Settings | File Templates.
- */
 public interface StoredSetHandler {
     Environment setUpEnvironment() throws DatabaseException;
 
