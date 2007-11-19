@@ -680,8 +680,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     /**
      * Tests iteration over a found set.
      *
-     * @throws Exception A generic exception - this should cause the tests to
-     *                   fail.
+     * @throws Exception A generic exception - this should cause the tests to fail.
      */
     public void testIteration() throws Exception {
         GraphElementFactory factory = graph.getElementFactory();
@@ -722,15 +721,15 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         //(iterator may return results in a different order)
         Set<Triple> statements = new HashSet<Triple>();
         ClosableIterator<Triple> iter = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        assertTrue("ClosableIterator is returning false for hasNext().",
-            iter.hasNext());
+        assertTrue("ClosableIterator is returning false for hasNext().", iter.hasNext());
         while (iter.hasNext()) {
-            statements.add(iter.next());
+            final Triple o = iter.next();
+            statements.add(o);
         }
         iter.close();
 
         //check that the iterator contained the correct number of statements
-        assertEquals("ClosableIterator is incomplete.", statements.size(), graph.getNumberOfTriples());
+        assertEquals("ClosableIterator is incomplete.", graph.getNumberOfTriples(), statements.size());
 
         //check the the set contains all the original triples
         for (Triple triple1 : triples) {

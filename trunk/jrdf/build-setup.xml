@@ -102,9 +102,6 @@
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.2.44.jar"/>
         <include name="${lib.dir}/db4o/db4o-6.3-java5.jar"/>
-        <include name="${lib.dir}/ehcache/ehcache-1.4.0-beta.jar"/>
-        <include name="${lib.dir}/ehcache/backport-util-concurrent-3.0.jar"/>
-        <include name="${lib.dir}/ehcache/jsr107cache-1.0.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
     </patternset>
@@ -127,9 +124,6 @@
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
         <include name="${lib.dir}/je/je-3.2.44.jar"/>
         <include name="${lib.dir}/db4o/db4o-6.3-java5.jar"/>
-        <include name="${lib.dir}/ehcache/ehcache-1.4.0-beta.jar"/>
-        <include name="${lib.dir}/ehcache/backport-util-concurrent-3.0.jar"/>
-        <include name="${lib.dir}/ehcache/jsr107cache-1.0.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
         <include name="${lib.dir}/emma/emma-2.0.5312.jar"/>

@@ -61,9 +61,10 @@ package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedSesameJRDFFactory;
-import org.jrdf.map.TempDirectoryHandler;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
+import org.jrdf.map.DirectoryHandler;
+import org.jrdf.map.TempDirectoryHandler;
 
 public class SesameGraphImplIntegrationTest extends AbstractGraphUnitTest {
     private static final JRDFFactory FACTORY = SortedSesameJRDFFactory.getFactory();
@@ -75,9 +76,13 @@ public class SesameGraphImplIntegrationTest extends AbstractGraphUnitTest {
      */
     @Override
     public Graph newGraph() throws Exception {
-        new TempDirectoryHandler().removeDir();
-        final Graph newGraph = FACTORY.getNewGraph();
-        return newGraph;
+        return FACTORY.getNewGraph();
+    }
+
+    public void setUp() throws Exception {
+        final DirectoryHandler handler = new TempDirectoryHandler();
+        handler.removeDir();
+        super.setUp();
     }
 
     public void tearDown() {
