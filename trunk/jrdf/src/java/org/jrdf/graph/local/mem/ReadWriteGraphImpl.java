@@ -66,7 +66,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.iterator.IteratorFactory;
+import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

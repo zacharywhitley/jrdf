@@ -59,8 +59,8 @@
 
 package org.jrdf.graph.local.mem;
 
-import org.jrdf.graph.local.mem.iterator.IteratorFactory;
 import org.jrdf.graph.GraphFactory;
+import org.jrdf.graph.local.iterator.IteratorFactory;
 
 public interface ReadWriteGraphFactory extends GraphFactory {
 

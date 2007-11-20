@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
@@ -72,15 +72,15 @@ import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
 import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.URIReference1;
+import static org.jrdf.util.test.ArgumentTestUtil.*;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
