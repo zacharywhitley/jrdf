@@ -41,8 +41,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedEhCacheJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="StoredMapHandlerImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="StoredSetHandlerImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
     <suppress checks="ParameterNumber" files="OrderedIteratorFactoryImpl"/>
 
     <!-- Import -->

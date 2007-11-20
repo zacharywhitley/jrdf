@@ -17,10 +17,13 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class MemSetFactory implements SetFactory {
+/**
+ * An in memory implementation that uses TreeSets and a small number of known types: Triples and PredicateNodes.
+ */
+public class MemSortedSetFactory implements SortedSetFactory {
     private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();
 
-    public MemSetFactory() {
+    public MemSortedSetFactory() {
         NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
         BlankNodeComparator comparator = new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl());
         NodeComparator newNodeComparator = new NodeComparatorImpl(nodeTypeComparator,

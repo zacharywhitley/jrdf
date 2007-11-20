@@ -61,13 +61,13 @@ package org.jrdf.graph.local.index.longindex.bdb;
 
 import org.jrdf.graph.local.index.longindex.AbstractLongIndexIntegrationTest;
 import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.set.BdbEnvironmentHandlerImpl;
 
 public class LongIndexBdbIntegrationTest extends AbstractLongIndexIntegrationTest {
 
     public void setUp() {
-        factory = new BdbMapFactory(new StoredMapHandlerImpl(new TempDirectoryHandler()), "database");
+        factory = new BdbMapFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), "database");
         longIndex = new LongIndexBdb(factory);
         longIndex.clear();
     }

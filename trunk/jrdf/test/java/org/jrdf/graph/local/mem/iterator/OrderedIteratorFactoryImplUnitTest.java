@@ -72,7 +72,7 @@ import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.set.SetFactory;
+import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
@@ -93,7 +93,7 @@ import java.util.TreeSet;
 
 public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private static final Class[] PARAM_TYPES = { IteratorFactory.class, NodePool.class, LongIndex.class,
-            GraphHandler.class, SetFactory.class};
+            GraphHandler.class, SortedSetFactory.class};
     private static final String[] PARAMETER_NAMES = new String[] {"newIteratorFactory", "newNodePool",
             "newLongIndex", "newGraphHandler", "newSetFactory"};
     private static final PredicateNode IMRAN = new URIReference1(URI.create("urn:imran"));
@@ -107,14 +107,14 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private NodePool nodePool;
     private LongIndex longIndex;
     private GraphHandler graphHandler;
-    private SetFactory setFactory;
+    private SortedSetFactory setFactory;
 
     public void setUp() {
         iteratorFactory = mockFactory.createMock(IteratorFactory.class);
         nodePool = mockFactory.createMock(NodePool.class);
         longIndex = mockFactory.createMock(LongIndex.class);
         graphHandler = mockFactory.createMock(GraphHandler.class);
-        setFactory = mockFactory.createMock(SetFactory.class);
+        setFactory = mockFactory.createMock(SortedSetFactory.class);
     }
 
     public void testClassProperties() throws Exception {

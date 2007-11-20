@@ -64,17 +64,18 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.set.BdbEnvironmentHandler;
 
 import java.util.Map;
 
 public final class BdbMapFactory implements MapFactory {
-    private final StoredMapHandler handler;
+    private final BdbEnvironmentHandler handler;
     private final String databaseName;
     private Environment env;
     private Database database;
     private long mapNumber;
 
-    public BdbMapFactory(StoredMapHandler newHandler, String newDatabaseName) {
+    public BdbMapFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
         checkNotNull(newHandler, newDatabaseName);
         this.handler = newHandler;
         this.databaseName = newDatabaseName;
@@ -87,7 +88,7 @@ public final class BdbMapFactory implements MapFactory {
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
             database = handler.setupDatabase(env, databaseName + mapNumber, dbConfig);
-            return handler.createMap(env, database, clazz1, clazz2);
+            return handler.createMap(database, clazz1, clazz2);
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }

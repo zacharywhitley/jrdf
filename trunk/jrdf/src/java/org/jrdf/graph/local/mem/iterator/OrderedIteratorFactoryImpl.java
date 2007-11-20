@@ -63,7 +63,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.set.SetFactory;
+import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -77,10 +77,10 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final NodePool nodePool;
     private final LongIndex longIndex;
     private final GraphHandler graphHandler;
-    private final SetFactory setFactory;
+    private final SortedSetFactory setFactory;
 
     public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
-            GraphHandler newGraphHandler, SetFactory newSetFactory) {
+            GraphHandler newGraphHandler, SortedSetFactory newSetFactory) {
         checkNotNull(newIteratorFactory, newNodePool, newLongIndex, newGraphHandler, newSetFactory);
         this.iteratorFactory = newIteratorFactory;
         this.nodePool = newNodePool;
