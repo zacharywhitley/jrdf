@@ -83,4 +83,8 @@ public abstract class AbstractBlankNode implements BlankNode, Serializable {
     public void accept(TypedNodeVisitor visitor) {
         visitor.visitBlankNode(this);
     }
+
+    public static boolean isBlankNode(Node node) {
+        return BlankNode.class.isAssignableFrom(node.getClass());
+    }
 }

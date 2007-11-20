@@ -103,7 +103,7 @@ public class AbstractTriple implements Triple, Serializable {
     }
 
     public boolean isGrounded() {
-        return !isBlankNode(subjectNode) && !isBlankNode(objectNode);
+        return !AbstractBlankNode.isBlankNode(subjectNode) && !AbstractBlankNode.isBlankNode(objectNode);
     }
 
     /**
@@ -170,9 +170,5 @@ public class AbstractTriple implements Triple, Serializable {
             return DEFAULT_HASH_VALUE;
         }
         return node.hashCode();
-    }
-
-    private boolean isBlankNode(Node node) {
-        return BlankNode.class.isAssignableFrom(node.getClass());
     }
 }

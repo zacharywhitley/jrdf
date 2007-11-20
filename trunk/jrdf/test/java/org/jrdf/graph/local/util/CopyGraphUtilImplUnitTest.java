@@ -77,6 +77,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
@@ -277,7 +278,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         while (it.hasNext()) {
             Triple tmpT = it.next();
             SubjectNode tmpSN = tmpT.getSubject();
-            if (GraphToGraphMapperImpl.isBlankNode(tmpSN)) {
+            if (AbstractBlankNode.isBlankNode(tmpSN)) {
                 if (tmpSN.hashCode() == bNode1Hash) {
                     
                 }
@@ -304,16 +305,16 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         if (pNode1.hashCode() == t1.getPredicate().hashCode()) {
             Node node1 = t1.getObject();
             Node node2 = t2.getSubject();
-            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node1));
-            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node2));
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(node1));
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(node2));
             assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
             assertTrue("Hahs values different", node2.hashCode() != t2.getObject().hashCode());
         }
         else if (pNode2.hashCode() == t1.getPredicate().hashCode()) {
             Node node1 = t1.getSubject();
             Node node2 = t2.getObject();
-            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node1));
-            assertTrue("BNode", GraphToGraphMapperImpl.isBlankNode(node2));
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(node1));
+            assertTrue("BNode", AbstractBlankNode.isBlankNode(node2));
             assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
         }
         mapFactory.close();
