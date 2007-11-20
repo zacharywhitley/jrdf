@@ -56,12 +56,13 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 
 import java.util.Iterator;
 

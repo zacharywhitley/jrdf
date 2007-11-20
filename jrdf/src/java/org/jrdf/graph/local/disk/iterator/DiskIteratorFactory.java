@@ -67,11 +67,11 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.local.iterator.EmptyClosableIterator;
+import org.jrdf.graph.local.iterator.TripleClosableIterator;
 import org.jrdf.graph.local.mem.iterator.AnyResourcePredicateIterator;
 import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
 import org.jrdf.graph.local.mem.iterator.OneFixedIterator;
 import org.jrdf.graph.local.mem.iterator.ThreeFixedIterator;
-import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
 import org.jrdf.graph.local.mem.iterator.TwoFixedIterator;
 
 import java.util.Iterator;

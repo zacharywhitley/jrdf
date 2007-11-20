@@ -72,7 +72,6 @@ import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
 import org.jrdf.set.SortedSetFactory;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
