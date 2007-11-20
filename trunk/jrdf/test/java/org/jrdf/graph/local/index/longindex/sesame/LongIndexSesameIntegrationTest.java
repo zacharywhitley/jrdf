@@ -1,7 +1,7 @@
 package org.jrdf.graph.local.index.longindex.sesame;
 
 import org.jrdf.graph.local.index.longindex.AbstractLongIndexIntegrationTest;
-import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 
 public class LongIndexSesameIntegrationTest extends AbstractLongIndexIntegrationTest {
 

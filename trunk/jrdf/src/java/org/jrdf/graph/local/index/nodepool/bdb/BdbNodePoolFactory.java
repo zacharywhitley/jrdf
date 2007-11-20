@@ -71,7 +71,7 @@ import org.jrdf.map.MapFactory;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.set.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 

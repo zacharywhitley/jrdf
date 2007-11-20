@@ -76,9 +76,9 @@ import org.jrdf.graph.local.mem.ReadWriteGraphImpl;
 import org.jrdf.graph.local.mem.ResourceFactory;
 import org.jrdf.graph.local.mem.ResourceFactoryImpl;
 import org.jrdf.graph.local.mem.iterator.IteratorFactory;
-import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.set.BdbSortedSetFactory;
-import org.jrdf.set.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
 /**
  * Creates a new Graph implementation based on required types.

@@ -1,12 +1,12 @@
-package org.jrdf.set;
+package org.jrdf.util.bdb;
 
 import com.sleepycat.bind.EntryBinding;
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
-import com.sleepycat.collections.StoredSortedKeySet;
 import com.sleepycat.collections.StoredMap;
+import com.sleepycat.collections.StoredSortedKeySet;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
@@ -16,11 +16,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.map.DirectoryHandler;
-import org.jrdf.util.bdb.BlankNodeBinding;
-import org.jrdf.util.bdb.LongListBinding;
-import org.jrdf.util.bdb.NodeBinding;
-import org.jrdf.util.bdb.TripleBinding;
+import org.jrdf.util.DirectoryHandler;
 
 import java.io.File;
 import java.util.HashMap;
@@ -59,7 +55,7 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
         return dbConfig;
     }
 
-    public StoredClassCatalog setupCatalog(Environment env, String classCatalogString,  DatabaseConfig dbConfig)
+    public StoredClassCatalog setupCatalog(Environment env, String classCatalogString, DatabaseConfig dbConfig)
         throws DatabaseException {
         Database catalogDb = env.openDatabase(null, classCatalogString, dbConfig);
         return new StoredClassCatalog(catalogDb);

@@ -1,4 +1,4 @@
-package org.jrdf.set;
+package org.jrdf.util.bdb;
 
 import com.sleepycat.bind.serial.StoredClassCatalog;
 import com.sleepycat.je.Database;

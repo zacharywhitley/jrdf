@@ -63,7 +63,7 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
-import org.jrdf.map.DirectoryHandler;
+import org.jrdf.util.DirectoryHandler;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;

@@ -1,6 +1,6 @@
 package org.jrdf.graph.local.index.longindex.sesame;
 
-import org.jrdf.map.DirectoryHandler;
+import org.jrdf.util.DirectoryHandler;
 
 import java.io.File;
 import java.io.IOException;

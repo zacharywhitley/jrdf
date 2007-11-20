@@ -80,9 +80,9 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
-import org.jrdf.map.TempDirectoryHandler;
-import org.jrdf.set.BdbEnvironmentHandler;
-import org.jrdf.set.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;

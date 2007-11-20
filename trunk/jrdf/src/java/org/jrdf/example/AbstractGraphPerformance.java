@@ -67,7 +67,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.map.MapFactory;
-import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
 import org.jrdf.util.ClosableIterator;
