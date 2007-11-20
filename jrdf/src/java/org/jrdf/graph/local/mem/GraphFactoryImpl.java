@@ -66,8 +66,8 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.local.mem.iterator.IteratorFactory;
-import org.jrdf.graph.local.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -89,7 +89,7 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         this.nodePool.clear();
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        this.iteratorFactory = new IteratorFactoryImpl(longIndexes, graphHandlers, nodePool);
+        this.iteratorFactory = new MemIteratorFactory(longIndexes, graphHandlers, nodePool);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
         this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
     }

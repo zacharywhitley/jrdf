@@ -58,70 +58,21 @@
  */
 package org.jrdf.graph.local.mem.iterator;
 
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.util.ClosableIterator;
+import junit.framework.TestCase;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.iterator.IteratorFactory;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-/**
- * Creates the iterators.  Allows different implementations of iterators to be used.
- *
- * @author Andrew Newman
- * @version $Id$
- */
-public interface IteratorFactory {
-    /**
-     * Return an new EmptyClosableIterator - indicates no results found.
-     *
-     * @return an empty closable iterator - always hasNext false and next throws exception.
-     */
-    ClosableIterator<Triple> newEmptyClosableIterator();
+import java.lang.reflect.Modifier;
 
-    /**
-     * Return an new GraphIterator - result of an unconstrained find.
-     *
-     * @return a graph iterator - goes through all triples in the graph.
-     */
-    ClosableIterator<Triple> newGraphIterator();
+public class MemIteratorFactoryUnitTest extends TestCase {
 
-    /**
-     * Return a new FixedIterator - bound by one node.
-     *
-     * @param fixedFirstNode the node to find.
-     * @param index which index (from the three) to use.
-     * @return a new FixedIterator - goes through the graph and returns all given triples with the given node.
-     */
-    ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index);
-
-    /**
-     * Return a new FixedItereator - bound by two nodes.
-     *
-     * @param fixedFirstNode the first node to find.
-     * @param fixedSecondNode the second node to find.
-     * @param index which index (from the three) to use.
-     * @return a new FixedIterator - goes through the graph and returns all given triples with the two given nodes.
-     */
-    ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index);
-
-    /**
-     * Return a new FixedIterator - bound by three nodes.
-     *
-     * @param nodes the triple to find.
-     * @return a new FixedIterator - either one or none triples.
-     */
-    ClosableIterator<Triple> newThreeFixedIterator(Long[] nodes);
-
-    /**
-     * Return a new PredicateIterator - all unique predicates.
-     *
-     * @return a new PredicateIterator - all unique predicates.
-     */
-    ClosableIterator<PredicateNode> newPredicateIterator();
-
-    /**
-     * Return a new PredicateIterator - all unique predicates for a given resource (subject and object).
-     *
-     * @param resource all unique predicate for a given resource.
-     * @return a new PredicateIterator - all unique predicate for a given resource (subject and object).
-     */
-    ClosableIterator<PredicateNode> newPredicateIterator(Long resource);
+    public void testClassProperties() throws Exception {
+        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, MemIteratorFactory.class);
+        checkConstructor(MemIteratorFactory.class, Modifier.PUBLIC, LongIndex[].class, GraphHandler[].class,
+            NodePool.class);
+    }
 }

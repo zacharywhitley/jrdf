@@ -42,6 +42,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="ParameterNumber" files="OrderedIteratorFactoryImpl"/>
 
     <!-- Import -->

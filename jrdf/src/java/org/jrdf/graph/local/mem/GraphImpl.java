@@ -79,9 +79,9 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
+import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
-import org.jrdf.graph.local.mem.iterator.IteratorFactory;
-import org.jrdf.graph.local.mem.iterator.IteratorFactoryImpl;
+import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
 import org.jrdf.graph.local.mem.iterator.URIReferenceResourceIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -258,7 +258,7 @@ public class GraphImpl implements Graph, Serializable {
 
     private void initFactoriesAndGraph(LongIndex[] indexes, GraphHandler[] handlers) {
         if (null == iteratorFactory) {
-            iteratorFactory = new IteratorFactoryImpl(indexes, handlers, nodePool);
+            iteratorFactory = new MemIteratorFactory(indexes, handlers, nodePool);
         }
 
         if (null == readWriteGraph) {

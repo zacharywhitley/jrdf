@@ -56,82 +56,77 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.disk.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.set.SortedSetFactory;
+import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.mem.iterator.AnyResourcePredicateIterator;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.local.mem.iterator.EmptyClosableIterator;
+import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
+import org.jrdf.graph.local.mem.iterator.OneFixedIterator;
+import org.jrdf.graph.local.mem.iterator.ThreeFixedIterator;
+import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
+import org.jrdf.graph.local.mem.iterator.TwoFixedIterator;
 import org.jrdf.util.ClosableIterator;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.SortedSet;
+import java.util.Iterator;
 
 /**
- * An ordered version of the iterator factory that sorts all results first.
+ * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
+ *
+ * @author Andrew Newman
+ * @version $Id$
  */
-public final class OrderedIteratorFactoryImpl implements IteratorFactory {
-    private final IteratorFactory iteratorFactory;
+public final class DiskIteratorFactory implements IteratorFactory {
+    private final LongIndex[] longIndexes;
+    private final GraphHandler[] graphHandlers;
     private final NodePool nodePool;
-    private final LongIndex longIndex;
-    private final GraphHandler graphHandler;
-    private final SortedSetFactory setFactory;
+    private final BTree spoBTree;
 
-    public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
-            GraphHandler newGraphHandler, SortedSetFactory newSetFactory) {
-        checkNotNull(newIteratorFactory, newNodePool, newLongIndex, newGraphHandler, newSetFactory);
-        this.iteratorFactory = newIteratorFactory;
-        this.nodePool = newNodePool;
-        this.longIndex = newLongIndex;
-        this.graphHandler = newGraphHandler;
-        this.setFactory = newSetFactory;
+    public DiskIteratorFactory(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers, NodePool nodePool,
+        final BTree spoBTree) {
+        this.longIndexes = longIndexes;
+        this.graphHandlers = graphHandlers;
+        this.nodePool = nodePool;
+        this.spoBTree = spoBTree;
     }
 
-    public ClosableIterator<Triple> newEmptyClosableIterator() {
-        return iteratorFactory.newEmptyClosableIterator();
+    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
+        return new EmptyClosableIterator();
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return sortResults(iteratorFactory.newGraphIterator());
+        return new BTreeGraphIterator(spoBTree, graphHandlers[0]);
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return sortResults(iteratorFactory.newOneFixedIterator(fixedFirstNode, index));
+        return wrapInTripleIterator(new OneFixedIterator(fixedFirstNode, graphHandlers[index]));
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return sortResults(iteratorFactory.newTwoFixedIterator(fixedFirstNode, fixedSecondNode, index));
+        return wrapInTripleIterator(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index],
+            graphHandlers[index]));
     }
 
-    public ClosableIterator<Triple> newThreeFixedIterator(Long[] nodes) {
-        return iteratorFactory.newThreeFixedIterator(nodes);
+    public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
+        return wrapInTripleIterator(new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]));
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return sortResults(iteratorFactory.newPredicateIterator());
+        return new AnyResourcePredicateIterator(longIndexes[1], nodePool);
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return sortResults(iteratorFactory.newPredicateIterator(resource));
+        return new FixedResourcePredicateIterator(longIndexes[1], nodePool, resource);
     }
 
-    private ClosableMemIterator<Triple> sortResults(ClosableIterator<Triple> closableMemIterator) {
-        SortedSet<Triple> orderedSet = setFactory.createSet(Triple.class);
-        while (closableMemIterator.hasNext()) {
-            orderedSet.add(closableMemIterator.next());
-        }
-        closableMemIterator.close();
-        return new TripleClosableIterator(orderedSet.iterator(), nodePool, longIndex, graphHandler);
-    }
-
-    private ClosableIterator<PredicateNode> sortResults(ClosableIterator<PredicateNode> closableIterator) {
-        SortedSet<PredicateNode> orderedSet = setFactory.createSet(PredicateNode.class);
-        while (closableIterator.hasNext()) {
-            orderedSet.add(closableIterator.next());
-        }
-        closableIterator.close();
-        return new PredicateClosableIterator(orderedSet.iterator());
+    private ClosableIterator<Triple> wrapInTripleIterator(Iterator<Triple> iterator) {
+        return new TripleClosableIterator(iterator, nodePool, longIndexes[0], graphHandlers[0]);
     }
 }
