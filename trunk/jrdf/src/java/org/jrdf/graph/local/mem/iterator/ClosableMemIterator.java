@@ -60,7 +60,7 @@
 
 package org.jrdf.graph.local.mem.iterator;
 
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 
 /**
  * An iterator that allows you to determine if an iterator comes from the in memory graph.

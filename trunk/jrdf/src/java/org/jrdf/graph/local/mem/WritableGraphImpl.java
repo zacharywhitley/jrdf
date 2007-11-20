@@ -95,7 +95,7 @@ public class WritableGraphImpl implements WritableGraph {
     }
 
     public void removeIterator(Iterator<Triple> triples) throws GraphException {
-        if (triples instanceof ClosableMemIterator) {
+        if (ClosableMemIterator.class.isAssignableFrom(triples.getClass())) {
             localIteratorRemove(triples);
         } else {
             globalIteratorRemove(triples);

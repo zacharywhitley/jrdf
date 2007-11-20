@@ -6,7 +6,7 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeIterator;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;

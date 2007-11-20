@@ -68,7 +68,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.util.EscapeURL;
 
 import java.io.InputStream;

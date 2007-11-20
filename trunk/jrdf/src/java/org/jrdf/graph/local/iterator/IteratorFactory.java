@@ -60,7 +60,6 @@ package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.ClosableIterator;
 
 /**
  * Creates the iterators.  Allows different implementations of iterators to be used.

@@ -58,6 +58,8 @@
  */
 package org.jrdf.util;
 
+import org.jrdf.graph.local.iterator.ClosableIterator;
+
 /**
  * A closable iterator that is sorted.
  *

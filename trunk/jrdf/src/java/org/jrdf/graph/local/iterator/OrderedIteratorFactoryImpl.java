@@ -63,11 +63,9 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
 import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
 import org.jrdf.set.SortedSetFactory;
-import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.SortedSet;
@@ -97,15 +95,15 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return sortResults(iteratorFactory.newGraphIterator());
+        return sortTriples(iteratorFactory.newGraphIterator());
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return sortResults(iteratorFactory.newOneFixedIterator(fixedFirstNode, index));
+        return sortTriples(iteratorFactory.newOneFixedIterator(fixedFirstNode, index));
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return sortResults(iteratorFactory.newTwoFixedIterator(fixedFirstNode, fixedSecondNode, index));
+        return sortTriples(iteratorFactory.newTwoFixedIterator(fixedFirstNode, fixedSecondNode, index));
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] nodes) {
@@ -113,23 +111,23 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return sortResults(iteratorFactory.newPredicateIterator());
+        return sortPredicates(iteratorFactory.newPredicateIterator());
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return sortResults(iteratorFactory.newPredicateIterator(resource));
+        return sortPredicates(iteratorFactory.newPredicateIterator(resource));
     }
 
-    private ClosableMemIterator<Triple> sortResults(ClosableIterator<Triple> closableMemIterator) {
+    private ClosableIterator<Triple> sortTriples(ClosableIterator<Triple> closableIterator) {
         SortedSet<Triple> orderedSet = setFactory.createSet(Triple.class);
-        while (closableMemIterator.hasNext()) {
-            orderedSet.add(closableMemIterator.next());
+        while (closableIterator.hasNext()) {
+            orderedSet.add(closableIterator.next());
         }
-        closableMemIterator.close();
+        closableIterator.close();
         return new TripleClosableIterator(orderedSet.iterator(), nodePool, longIndex, graphHandler);
     }
 
-    private ClosableIterator<PredicateNode> sortResults(ClosableIterator<PredicateNode> closableIterator) {
+    private ClosableIterator<PredicateNode> sortPredicates(ClosableIterator<PredicateNode> closableIterator) {
         SortedSet<PredicateNode> orderedSet = setFactory.createSet(PredicateNode.class);
         while (closableIterator.hasNext()) {
             orderedSet.add(closableIterator.next());

@@ -62,7 +62,7 @@ package org.jrdf.graph.global.iterator;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.global.index.MoleculeIndex;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 
 import java.util.Iterator;
 

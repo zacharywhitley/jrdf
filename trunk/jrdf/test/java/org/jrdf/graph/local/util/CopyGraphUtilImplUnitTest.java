@@ -78,13 +78,13 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.AbstractBlankNode;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
-import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
 import java.util.HashMap;

@@ -73,7 +73,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleFactoryException;
 import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 
 import java.net.URI;
 import java.util.Iterator;

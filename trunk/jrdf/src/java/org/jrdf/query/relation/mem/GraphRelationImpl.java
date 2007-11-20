@@ -74,7 +74,7 @@ import org.jrdf.query.relation.GraphRelation;
 import org.jrdf.query.relation.Tuple;
 import org.jrdf.query.relation.TupleComparator;
 import org.jrdf.query.relation.TupleFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.util.EqualsUtil;
 
 import java.util.List;

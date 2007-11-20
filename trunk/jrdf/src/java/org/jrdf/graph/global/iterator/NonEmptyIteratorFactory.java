@@ -66,10 +66,10 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
-import org.jrdf.util.ClosableIterator;
 
 /**
  * Reperesnts a facotry for creating non-empty iterators over

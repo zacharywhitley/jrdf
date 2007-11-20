@@ -63,11 +63,11 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.molecule.Molecule;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.NoSuchElementException;
 

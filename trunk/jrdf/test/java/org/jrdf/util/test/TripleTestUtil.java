@@ -81,7 +81,7 @@ import org.jrdf.query.relation.mem.AttributeValuePairHelper;
 import org.jrdf.query.relation.type.ObjectNodeType;
 import org.jrdf.query.relation.type.PredicateNodeType;
 import org.jrdf.query.relation.type.SubjectNodeType;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import static org.jrdf.util.test.NodeTestUtil.createResource;
 
 import java.net.URI;

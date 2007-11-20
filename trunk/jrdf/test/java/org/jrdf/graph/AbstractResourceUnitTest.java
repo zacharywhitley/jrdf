@@ -63,8 +63,8 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import org.jrdf.graph.local.mem.ReadWriteGraph;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.global.GlobalizedBlankNode;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 

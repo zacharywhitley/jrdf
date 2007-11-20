@@ -67,6 +67,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
 import org.jrdf.graph.global.index.POSMoleculeIndexMem;
@@ -75,7 +76,6 @@ import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
 import org.jrdf.graph.global.iterator.NonEmptyIteratorFactory;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
 import java.util.Map;

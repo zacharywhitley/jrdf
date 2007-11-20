@@ -66,8 +66,8 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.operation.Comparison;
-import org.jrdf.util.ClosableIterator;
 
 /**
  * Default in memory Comparison.
