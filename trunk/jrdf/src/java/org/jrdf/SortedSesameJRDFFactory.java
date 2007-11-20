@@ -61,7 +61,7 @@ package org.jrdf;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
-import org.jrdf.graph.local.disk.OrderedGraphFactoryImpl;
+import org.jrdf.graph.local.disk.GraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
@@ -69,14 +69,14 @@ import org.jrdf.graph.local.index.longindex.sesame.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
-import org.jrdf.util.DirectoryHandler;
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.builder.QueryBuilder;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -117,7 +117,7 @@ public final class SortedSesameJRDFFactory implements JRDFFactory {
         openIndexes.add(indexes[1]);
         openIndexes.add(indexes[2]);
         openFactories.add(nodePoolFactory);
-        orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory, bTrees[0], graphNumber);
+        orderedGraphFactory = new GraphFactoryImpl(indexes, nodePoolFactory, bTrees[0]);
         return orderedGraphFactory.getGraph();
     }
 
