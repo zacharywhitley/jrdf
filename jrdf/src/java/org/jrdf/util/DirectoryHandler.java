@@ -57,33 +57,12 @@
  *
  */
 
-package org.jrdf.map;
+package org.jrdf.util;
 
 import java.io.File;
 
-public class TempDirectoryHandler implements DirectoryHandler {
-    private static final String USERNAME = System.getProperty("user.name");
-    private static final File SYSTEM_TEMP_DIR = new File(System.getProperty("java.io.tmpdir"));
+public interface DirectoryHandler {
+    File getDir();
 
-    public File getDir() {
-        return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
-    }
-
-    public boolean removeDir() {
-        return deleteDirectory(getDir());
-    }
-
-    private boolean deleteDirectory(File directory) {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isFile()) {
-                    file.delete();
-                } else {
-                    deleteDirectory(file);
-                }
-            }
-        }
-        return directory.delete();
-    }
+    boolean removeDir();
 }

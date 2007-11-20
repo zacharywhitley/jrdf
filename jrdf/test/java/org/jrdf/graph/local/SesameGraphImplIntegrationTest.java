@@ -61,10 +61,10 @@ package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedSesameJRDFFactory;
+import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
-import org.jrdf.map.DirectoryHandler;
-import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.util.DirectoryHandler;
 
 public class SesameGraphImplIntegrationTest extends AbstractGraphUnitTest {
     private static final JRDFFactory FACTORY = SortedSesameJRDFFactory.getFactory();

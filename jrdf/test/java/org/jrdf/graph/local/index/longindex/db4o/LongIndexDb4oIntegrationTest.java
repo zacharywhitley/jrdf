@@ -61,7 +61,7 @@ package org.jrdf.graph.local.index.longindex.db4o;
 
 import org.jrdf.graph.local.index.longindex.AbstractLongIndexIntegrationTest;
 import org.jrdf.map.Db4oMapFactory;
-import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
 
 public class LongIndexDb4oIntegrationTest extends AbstractLongIndexIntegrationTest {
     public void setUp() {

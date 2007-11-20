@@ -60,8 +60,10 @@
 package org.jrdf.map;
 
 import junit.framework.TestCase;
-import org.jrdf.set.BdbEnvironmentHandler;
-import org.jrdf.set.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.DirectoryHandler;
 
 import java.util.Arrays;
 import java.util.LinkedList;

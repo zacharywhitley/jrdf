@@ -67,7 +67,7 @@ import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
 import org.jrdf.map.Db4oMapFactory;
-import org.jrdf.map.DirectoryHandler;
+import org.jrdf.util.DirectoryHandler;
 import org.jrdf.map.MapFactory;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;

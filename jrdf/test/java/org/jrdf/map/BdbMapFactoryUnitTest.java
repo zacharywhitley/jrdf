@@ -66,7 +66,7 @@ import com.sleepycat.je.Environment;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
-import org.jrdf.set.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import org.jrdf.util.test.AssertThrows;

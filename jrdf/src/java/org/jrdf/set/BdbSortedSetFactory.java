@@ -5,6 +5,7 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
 
 import java.util.SortedSet;
 import java.util.Comparator;

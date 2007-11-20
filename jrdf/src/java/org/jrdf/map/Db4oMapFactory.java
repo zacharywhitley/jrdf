@@ -67,6 +67,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import org.jrdf.util.DirectoryHandler;
+
 public class Db4oMapFactory implements MapFactory {
     private static final int INITIAL_MAP_SIZE = 1000;
     private ObjectContainer db;

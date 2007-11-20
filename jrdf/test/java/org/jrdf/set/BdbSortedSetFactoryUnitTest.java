@@ -1,8 +1,10 @@
 package org.jrdf.set;
 
 import junit.framework.TestCase;
-import org.jrdf.map.DirectoryHandler;
-import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
 
 import java.util.Set;
 
