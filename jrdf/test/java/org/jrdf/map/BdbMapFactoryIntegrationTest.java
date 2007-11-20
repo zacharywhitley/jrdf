@@ -60,6 +60,8 @@
 package org.jrdf.map;
 
 import junit.framework.TestCase;
+import org.jrdf.set.BdbEnvironmentHandler;
+import org.jrdf.set.BdbEnvironmentHandlerImpl;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -67,7 +69,7 @@ import java.util.Map;
 
 public class BdbMapFactoryIntegrationTest extends TestCase {
     private final DirectoryHandler directoryHandler = new TempDirectoryHandler();
-    private final StoredMapHandler mapHandler = new StoredMapHandlerImpl(directoryHandler);
+    private final BdbEnvironmentHandler mapHandler = new BdbEnvironmentHandlerImpl(directoryHandler);
     private MapFactory factory;
 
     public void setUp() throws Exception {

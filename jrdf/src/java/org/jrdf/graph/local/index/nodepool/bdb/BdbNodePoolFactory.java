@@ -67,24 +67,24 @@ import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
 import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.StoredMapHandler;
 import org.jrdf.map.MapFactory;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.set.BdbEnvironmentHandler;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 public class BdbNodePoolFactory implements NodePoolFactory {
     private static final String DB_NAME_NODEPOOL = "nodePool";
     private static final String DB_NAME_STRINGPOOL = "stringPool";
-    private final StoredMapHandler handler;
+    private final BdbEnvironmentHandler handler;
     private final long graphNumber;
     private MapFactory nodePoolMapFactory;
     private MapFactory stringPoolMapFactory;
 
 
-    public BdbNodePoolFactory(final StoredMapHandler newHandler, final long newGraphNumber) {
+    public BdbNodePoolFactory(final BdbEnvironmentHandler newHandler, final long newGraphNumber) {
         this.handler = newHandler;
         this.graphNumber = newGraphNumber;
     }

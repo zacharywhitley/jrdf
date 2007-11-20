@@ -9,14 +9,14 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.util.SortedSet;
 import java.util.Comparator;
 
-public class BdbSetFactory implements SetFactory {
-    private final StoredSetHandler handler;
+public class BdbSortedSetFactory implements SortedSetFactory {
+    private final BdbEnvironmentHandler handler;
     private final String databaseName;
     private Environment env;
     private Database database;
     private long setNumber;
 
-    public BdbSetFactory(StoredSetHandler newHandler, String newDatabaseName) {
+    public BdbSortedSetFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
         checkNotNull(newHandler, newDatabaseName);
         this.handler = newHandler;
         this.databaseName = newDatabaseName;

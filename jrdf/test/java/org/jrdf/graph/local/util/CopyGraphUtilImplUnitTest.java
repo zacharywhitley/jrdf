@@ -62,7 +62,6 @@ package org.jrdf.graph.local.util;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedBdbJRDFFactory;
-import org.jrdf.set.StoredSetHandlerImpl;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -81,9 +80,9 @@ import org.jrdf.graph.TripleFactory;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.TempDirectoryHandler;
+import org.jrdf.set.BdbEnvironmentHandler;
+import org.jrdf.set.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
@@ -95,7 +94,7 @@ import java.util.Set;
 
 public class CopyGraphUtilImplUnitTest extends TestCase {
     private static final TempDirectoryHandler DIR_HANDLER = new TempDirectoryHandler();
-    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl(DIR_HANDLER);
+    private static final BdbEnvironmentHandler HANDLER = new BdbEnvironmentHandlerImpl(DIR_HANDLER);
     private MapFactory mapFactory = null;
     private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
 

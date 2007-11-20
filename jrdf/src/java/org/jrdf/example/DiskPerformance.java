@@ -61,14 +61,14 @@ package org.jrdf.example;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedSesameJRDFFactory;
-import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.bdb.BdbBlankNodeRegistryImpl;
 import org.jrdf.graph.Graph;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
-import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.TempDirectoryHandler;
-import org.jrdf.map.StoredMapHandler;
+import org.jrdf.set.BdbEnvironmentHandler;
+import org.jrdf.set.BdbEnvironmentHandlerImpl;
+import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.writer.bdb.BdbBlankNodeRegistryImpl;
 
 public class DiskPerformance extends AbstractGraphPerformance {
     private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
@@ -81,12 +81,12 @@ public class DiskPerformance extends AbstractGraphPerformance {
     }
 
     protected BlankNodeRegistry getBlankNodeRegistry() {
-        final StoredMapHandler newHandler = new StoredMapHandlerImpl(dirHandler);
+        final BdbEnvironmentHandler newHandler = new BdbEnvironmentHandlerImpl(dirHandler);
         return new BdbBlankNodeRegistryImpl(new BdbMapFactory(newHandler, "foobarbaz"));
     }
 
     protected MapFactory getMapFactory() {
-        return new BdbMapFactory(new StoredMapHandlerImpl(new TempDirectoryHandler()), "database");
+        return new BdbMapFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), "database");
     }
 
     public static void main(String[] args) throws Exception {

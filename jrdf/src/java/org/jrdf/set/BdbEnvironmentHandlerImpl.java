@@ -6,6 +6,7 @@ import com.sleepycat.bind.tuple.LongBinding;
 import com.sleepycat.bind.tuple.StringBinding;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.collections.StoredSortedKeySet;
+import com.sleepycat.collections.StoredMap;
 import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
@@ -27,11 +28,11 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.SortedSet;
 
-public class StoredSetHandlerImpl implements StoredSetHandler {
+public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
     private Map<Class<?>, TupleBinding> binding = new HashMap<Class<?>, TupleBinding>();
     private final DirectoryHandler handler;
 
-    public StoredSetHandlerImpl(DirectoryHandler handler) {
+    public BdbEnvironmentHandlerImpl(DirectoryHandler handler) {
         this.handler = handler;
         binding.put(String.class, new StringBinding());
         binding.put(Long.class, new LongBinding());
@@ -72,6 +73,13 @@ public class StoredSetHandlerImpl implements StoredSetHandler {
     public <T> SortedSet<T> createSet(Database database, Class<T> clazz) {
         EntryBinding keyBinding = getBinding(clazz);
         return new StoredSortedKeySet(database, keyBinding, true);
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public <T, A, U extends A> Map<T, U> createMap(Database database, Class<T> clazz1, Class<A> clazz2) {
+        EntryBinding keyBinding = getBinding(clazz1);
+        EntryBinding dataBinding = getBinding(clazz2);
+        return new StoredMap(database, keyBinding, dataBinding, true);
     }
 
     private EntryBinding getBinding(Class<?> clazz) {

@@ -66,6 +66,7 @@ import com.sleepycat.je.Environment;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
+import org.jrdf.set.BdbEnvironmentHandler;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import org.jrdf.util.test.AssertThrows;
@@ -78,16 +79,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BdbMapFactoryUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = {StoredMapHandler.class, String.class};
+    private static final Class[] PARAM_TYPES = {BdbEnvironmentHandler.class, String.class};
     private static final String[] PARAMETER_NAMES = {"newHandler", "newDatabaseName"};
     private MockFactory mockFactory = new MockFactory();
-    private StoredMapHandler storedMapHandler;
+    private BdbEnvironmentHandler storedMapHandler;
     private String databaseName = "dbName" + System.currentTimeMillis();
     private Environment environment;
     private Database database;
 
     public void setUp() {
-        storedMapHandler = mockFactory.createMock(StoredMapHandler.class);
+        storedMapHandler = mockFactory.createMock(BdbEnvironmentHandler.class);
     }
 
     public void testClassProperties() throws Exception {
@@ -171,7 +172,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         expect(storedMapHandler.setUpDatabaseConfig(false)).andReturn(databaseConfig);
         database = mockFactory.createMock(Database.class);
         expect(storedMapHandler.setupDatabase(environment, databaseName + 1, databaseConfig)).andReturn(database);
-        expect(storedMapHandler.createMap(environment, database, String.class, String.class)).
+        expect(storedMapHandler.createMap(database, String.class, String.class)).
                 andReturn(expectedMap);
         return expectedMap;
     }

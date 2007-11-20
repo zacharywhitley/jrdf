@@ -6,21 +6,21 @@ import org.jrdf.map.TempDirectoryHandler;
 
 import java.util.Set;
 
-public class BdbSetFactoryUnitTest extends TestCase {
+public class BdbSortedSetFactoryUnitTest extends TestCase {
     private static DirectoryHandler handler = new TempDirectoryHandler();
-    private StoredSetHandler storedSetHandler;
+    private BdbEnvironmentHandler storedSetHandler;
     private String databaseName = "dbName" + System.currentTimeMillis();
-    private SetFactory factory;
+    private SortedSetFactory factory;
     private Set<String> strSet;
 
     public void setUp() throws Exception {
         super.setUp();
         handler.removeDir();
-        storedSetHandler = new StoredSetHandlerImpl(handler);
+        storedSetHandler = new BdbEnvironmentHandlerImpl(handler);
     }
 
     public void testInitialAddingToSet() {
-        factory = new BdbSetFactory(storedSetHandler, databaseName);
+        factory = new BdbSortedSetFactory(storedSetHandler, databaseName);
         strSet = factory.createSet(String.class);
         final int runs = 100000;
         long start = System.currentTimeMillis();
@@ -34,7 +34,7 @@ public class BdbSetFactoryUnitTest extends TestCase {
     }
 
     public void testAddDuplicates() {
-        factory = new BdbSetFactory(storedSetHandler, databaseName);
+        factory = new BdbSortedSetFactory(storedSetHandler, databaseName);
         strSet = factory.createSet(String.class);
         strSet.clear();
         strSet.add("triples");

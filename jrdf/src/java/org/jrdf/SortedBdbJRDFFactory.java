@@ -68,12 +68,12 @@ import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
-import org.jrdf.map.StoredMapHandler;
-import org.jrdf.map.StoredMapHandlerImpl;
 import org.jrdf.map.TempDirectoryHandler;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
+import org.jrdf.set.BdbEnvironmentHandler;
+import org.jrdf.set.BdbEnvironmentHandlerImpl;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.builder.QueryBuilder;
@@ -88,7 +88,7 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final StoredMapHandler HANDLER = new StoredMapHandlerImpl(new TempDirectoryHandler());
+    private static final BdbEnvironmentHandler HANDLER = new BdbEnvironmentHandlerImpl(new TempDirectoryHandler());
     private static long graphNumber;
     private GraphFactory orderedGraphFactory;
 
