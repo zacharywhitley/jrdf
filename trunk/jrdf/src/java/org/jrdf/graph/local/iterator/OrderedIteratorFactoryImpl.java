@@ -63,8 +63,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
-import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
 import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
