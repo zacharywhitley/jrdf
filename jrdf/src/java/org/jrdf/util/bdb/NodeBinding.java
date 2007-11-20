@@ -15,6 +15,9 @@ import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 public class NodeBinding extends TupleBinding {
+    private static final byte BLANK_NODE = 0;
+    private static final byte URI_REFERENCE = 1;
+    private static final byte LITERAL = 2;
     private RegexMatcherFactoryImpl regexFactory = new RegexMatcherFactoryImpl();
     private StringNodeMapper mapper = new StringNodeMapperImpl(new RegexLiteralMatcher(regexFactory,
         new NTripleUtilImpl(regexFactory)));
@@ -23,11 +26,11 @@ public class NodeBinding extends TupleBinding {
         Object object;
         byte b = tupleInput.readByte();
         String str = tupleInput.readString();
-        if (b == 0) {
+        if (b == BLANK_NODE) {
             object = mapper.convertToBlankNode(str);
-        } else if (b == 1) {
+        } else if (b == URI_REFERENCE) {
             object = mapper.convertToURIReference(str, tupleInput.readLong());
-        } else if (b == 2) {
+        } else if (b == LITERAL) {
             object = mapper.convertToLiteral(str, tupleInput.readLong());
         } else {
             throw new IllegalArgumentException("Cannot read class type");
@@ -37,18 +40,30 @@ public class NodeBinding extends TupleBinding {
 
     public void objectToEntry(Object object, TupleOutput tupleOutput) {
         if (BlankNode.class.isAssignableFrom(object.getClass())) {
-            tupleOutput.writeByte(0);
-            tupleOutput.writeString(mapper.convertToString((Node) object));
+            writeBlankNode(object, tupleOutput);
         } else if (URIReferenceImpl.class.isAssignableFrom(object.getClass())) {
-            tupleOutput.writeByte(1);
-            tupleOutput.writeString(mapper.convertToString((Node) object));
-            tupleOutput.writeLong(((LocalizedNode) object).getId());
+            writeURIReference(object, tupleOutput);
         } else if (LiteralImpl.class.isAssignableFrom(object.getClass())) {
-            tupleOutput.writeByte(2);
-            tupleOutput.writeString(mapper.convertToString((Node) object));
-            tupleOutput.writeLong(((LocalizedNode) object).getId());
+            writeLiteral(object, tupleOutput);
         } else {
             throw new IllegalArgumentException("Cannot persist class of type: " + object.getClass());
         }
+    }
+
+    private void writeBlankNode(Object object, TupleOutput tupleOutput) {
+        tupleOutput.writeByte(BLANK_NODE);
+        tupleOutput.writeString(mapper.convertToString((Node) object));
+    }
+
+    private void writeURIReference(Object object, TupleOutput tupleOutput) {
+        tupleOutput.writeByte(URI_REFERENCE);
+        tupleOutput.writeString(mapper.convertToString((Node) object));
+        tupleOutput.writeLong(((LocalizedNode) object).getId());
+    }
+
+    private void writeLiteral(Object object, TupleOutput tupleOutput) {
+        tupleOutput.writeByte(LITERAL);
+        tupleOutput.writeString(mapper.convertToString((Node) object));
+        tupleOutput.writeLong(((LocalizedNode) object).getId());
     }
 }
