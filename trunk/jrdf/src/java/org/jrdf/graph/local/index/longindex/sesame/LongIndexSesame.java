@@ -33,15 +33,11 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public void remove(Long... node) throws GraphException {
-        try {
-            BTreeIterator bTreeIterator = getIterator(node);
-            if (bTreeIterator.next() == null) {
-                throw new GraphException("Unable to remove nonexistent statement");
-            }
-            btree.remove(toBytes(node));
-        } catch (IOException e) {
-            throw new GraphException(e);
+        BTreeIterator bTreeIterator = getIterator(node);
+        if (getNextBytes(bTreeIterator) == null) {
+            throw new GraphException("Unable to remove nonexistent statement");
         }
+        removeBytes(toBytes(node));
     }
 
     public void clear() {
@@ -57,65 +53,40 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
-        try {
-            BTreeIterator bTreeIterator = getIterator(first, 0L, 0L);
-            byte[] bytes = bTreeIterator.next();
-            Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-            while (bytes != null) {
-                Long[] longs = fromBytes(bytes, TRIPLES);
-                Set<Long> longSet;
-                if (resultMap.containsKey(longs[1])) {
-                    longSet = resultMap.get(longs[1]);
-                } else {
-                    longSet = new HashSet<Long>();
-                }
-                longSet.add(longs[2]);
-                resultMap.put(longs[1], longSet);
-                bytes = bTreeIterator.next();
-            }
-            if (resultMap.isEmpty()) {
-                return null;
-            } else {
-                return resultMap;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
+        BTreeIterator bTreeIterator = getIterator(first, 0L, 0L);
+        byte[] bytes = getNextBytes(bTreeIterator);
+        while (bytes != null) {
+            Long[] longs = fromBytes(bytes, TRIPLES);
+            Set<Long> longSet = getLongSet(longs, resultMap);
+            longSet.add(longs[2]);
+            resultMap.put(longs[1], longSet);
+            bytes = getNextBytes(bTreeIterator);
         }
+        return resultMap.isEmpty() ? null : resultMap;
     }
 
     public boolean contains(Long first) {
-        try {
-            byte[] bytes = getIterator(first, 0L, 0L).next();
-            return bytes != null;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        byte[] bytes = getNextBytes(getIterator(first, 0L, 0L));
+        return bytes != null;
     }
 
     public boolean removeSubIndex(Long first) {
-        try {
-            BTreeIterator bTreeIterator = getIterator(first, 0L, 0L);
-            byte[] bytes = bTreeIterator.next();
-            boolean changed = bytes != null;
-            while (bytes != null) {
-                btree.remove(bytes);
-                bytes = bTreeIterator.next();
-            }
-            return changed;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        BTreeIterator bTreeIterator = getIterator(first, 0L, 0L);
+        byte[] bytes = getNextBytes(bTreeIterator);
+        boolean changed = bytes != null;
+        while (bytes != null) {
+            removeBytes(bytes);
+            bytes = getNextBytes(bTreeIterator);
         }
+        return changed;
     }
 
     public long getSize() {
         long counter = 0;
-        try {
-            BTreeIterator bTreeIterator = btree.iterateAll();
-            while (bTreeIterator.next() != null) {
-                counter++;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        BTreeIterator bTreeIterator = btree.iterateAll();
+        while (getNextBytes(bTreeIterator) != null) {
+            counter++;
         }
         return counter;
     }
@@ -140,6 +111,32 @@ public final class LongIndexSesame implements LongIndex {
     private void addToFilter(byte[] filter, int index, Long... node) {
         if (node[index] != 0) {
             putLong(MASK, filter, index * OFFSET);
+        }
+    }
+
+    private Set<Long> getLongSet(Long[] longs, Map<Long, Set<Long>> resultMap) {
+        Set<Long> longSet;
+        if (resultMap.containsKey(longs[1])) {
+            longSet = resultMap.get(longs[1]);
+        } else {
+            longSet = new HashSet<Long>();
+        }
+        return longSet;
+    }
+
+    private void removeBytes(byte[] bytes) {
+        try {
+            btree.remove(bytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private byte[] getNextBytes(BTreeIterator bTreeIterator) {
+        try {
+            return bTreeIterator.next();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }
