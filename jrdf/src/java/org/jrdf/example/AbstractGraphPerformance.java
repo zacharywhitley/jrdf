@@ -66,6 +66,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.parser.Parser;
@@ -86,15 +87,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractGraphPerformance {
-    private static final int NUMBER_OF_NODES_TO_ADD = 10000;
+    private static final int NUMBER_OF_NODES_TO_ADD = 50000;
     private static final int NUMBER_OF_NODES_TO_FIND = 100;
     private static final int NUMBER_OF_PREDICATES = 10;
     private static final int NO_PREDICATES = NUMBER_OF_PREDICATES;
     private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
     private static final String SUBJECT_PREFIX = "http://foo";
-    private static final String PREDICATE_PREFIX = "http://bar";
-    private static final String OBJECT_PREFIX = "http://foo";
-    private static final String URI_STRING = "http://foo/bar";
+    private static final String PREDICATE_PREFIX = "http://bar/asdfafffffffffffffffffffffffffffffffffffffffffff";
+    private static final String OBJECT_PREFIX = "http://foo/asdfasdfasdfaeqewrqwerqwe";
+    private static final String URI_STRING = "http://foo/bar/asdfkjasdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfas";
     private static final String PATH = "/org/jrdf/example/pizza.rdf";
     private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
     private List<URI> predicates = new ArrayList<URI>();
@@ -114,7 +115,7 @@ public abstract class AbstractGraphPerformance {
         //parsePerformance();
         addPerformance(NUMBER_OF_NODES_TO_ADD, graph);
         writePerformance(graph);
-        findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
+        //findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
     }
 
     protected abstract Graph getGraph();
@@ -143,8 +144,9 @@ public abstract class AbstractGraphPerformance {
     private void addPerformance(int numberOfNodes, Graph graph) throws Exception {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < numberOfNodes; i++) {
+            BlankNode subject = graphElementFactory.createBlankNode();
             for (int j = 0; j < NUMBER_OF_PREDICATES; j++) {
-                graph.add(graphElementFactory.createURIReference(URI.create(SUBJECT_PREFIX + i)),
+                graph.add(subject,
                         graphElementFactory.createURIReference(URI.create(PREDICATE_PREFIX + j)),
                         graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + j)));
             }
