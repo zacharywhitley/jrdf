@@ -28,7 +28,6 @@
     <suppress checks="JavaNCSS" files="NodePoolImpl"/>
     <suppress checks="JavaNCSS" files="SesameNodePool"/>
     <suppress checks="JavaNCSS" files="NodeBinding"/>
-    <suppress checks="JavaNCSS" files="LongIndexSesame"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl"/>
     <suppress checks="ReturnCount" files="SemiJoinImpl"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
