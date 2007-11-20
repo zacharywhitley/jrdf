@@ -16,20 +16,18 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     private Graph graph;
     private GraphElementFactory elementFactory;
     private TripleFactory tripleFactory;
     private Map<Long, BlankNode> newBNodeMap;
-    private Logger logger = Logger.getLogger("GGMapper");
-    private final int second = 1000;
 
     public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory) {
         graph = newGraph;
@@ -53,11 +51,11 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
 
     public void updateBlankNodes(Triple triple) throws GraphElementFactoryException {
         SubjectNode subjectNode = triple.getSubject();
-        if (isBlankNode(subjectNode)) {
+        if (AbstractBlankNode.isBlankNode(subjectNode)) {
             newBNodeMap.put((long) subjectNode.hashCode(), elementFactory.createBlankNode());
         }
         final ObjectNode objectNode = triple.getObject();
-        if (isBlankNode(objectNode)) {
+        if (AbstractBlankNode.isBlankNode(objectNode)) {
             newBNodeMap.put((long) objectNode.hashCode(), elementFactory.createBlankNode());
         }
     }
@@ -70,21 +68,10 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
      * @throws GraphElementFactoryException
      */
     public Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException {
-        int size = 0;
-        long start = System.currentTimeMillis() / second;
         while (it.hasNext()) {
             Triple triple = it.next();
-            size++;
             graph.add(createNewTriple(triple));
-            /*if (!triple.isGrounded()) {
-                graph.add(createNewTriple(triple));
-            }
-            else {
-                graph.add(createNewTriple(triple));
-            }*/
         }
-        long end = System.currentTimeMillis() / second;
-        logger.info("create " + size + " triples takes: " + (end - start));
         return graph;
     }
 
@@ -106,7 +93,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
      */
     public Node createNewNode(Node node) throws GraphElementFactoryException {
         Node newNode;
-        if (isBlankNode(node)) {
+        if (AbstractBlankNode.isBlankNode(node)) {
         //if (newBNodeMap.containsKey((long) node.hashCode())) {
             newNode = newBNodeMap.get((long) node.hashCode());
         } else {
@@ -128,10 +115,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
             newObjectNode = elementFactory.createURIReference(((URIReference) objectNode).getURI());
         }
         return newObjectNode;
-    }
-
-    public static boolean isBlankNode(Node node) {
-        return BlankNode.class.isAssignableFrom(node.getClass());
     }
 
     public void replaceObjectNode(ObjectNode node, ObjectNode newNode)

@@ -72,6 +72,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 
@@ -239,7 +240,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }
 
     private void addBlankNodeToSet(Graph graph, Set<BlankNode> bSet, Node sNode) throws GraphException {
-        if (GraphToGraphMapperImpl.isBlankNode(sNode) && !bSet.contains(sNode)) {
+        if (AbstractBlankNode.isBlankNode(sNode) && !bSet.contains(sNode)) {
             bSet.add((BlankNode) sNode);
             getAllBNodesForNode1(sNode, graph, bSet);
         }
