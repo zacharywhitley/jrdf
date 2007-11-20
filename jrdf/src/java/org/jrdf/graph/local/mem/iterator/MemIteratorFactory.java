@@ -64,7 +64,8 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.graph.local.iterator.EmptyClosableIterator;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -83,24 +84,24 @@ public final class MemIteratorFactory implements IteratorFactory {
         this.nodePool = nodePool;
     }
 
-    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
+    public ClosableIterator<Triple> newEmptyClosableIterator() {
         return new EmptyClosableIterator();
     }
 
-    public ClosableMemIterator<Triple> newGraphIterator() {
+    public ClosableIterator<Triple> newGraphIterator() {
         return new GraphIterator(graphHandlers[0]);
     }
 
     // TODO (AN) Long indexes and graph handler move into one object? (next one too).
-    public ClosableMemIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
+    public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
         return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
     }
 
-    public ClosableMemIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
+    public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
         return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], graphHandlers[index]);
     }
 
-    public ClosableMemIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
+    public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
         return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
     }
 

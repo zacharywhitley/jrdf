@@ -65,15 +65,14 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.graph.local.iterator.EmptyClosableIterator;
 import org.jrdf.graph.local.mem.iterator.AnyResourcePredicateIterator;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
-import org.jrdf.graph.local.mem.iterator.EmptyClosableIterator;
 import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
 import org.jrdf.graph.local.mem.iterator.OneFixedIterator;
 import org.jrdf.graph.local.mem.iterator.ThreeFixedIterator;
 import org.jrdf.graph.local.mem.iterator.TripleClosableIterator;
 import org.jrdf.graph.local.mem.iterator.TwoFixedIterator;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 
@@ -97,7 +96,7 @@ public final class DiskIteratorFactory implements IteratorFactory {
         this.spoBTree = spoBTree;
     }
 
-    public ClosableMemIterator<Triple> newEmptyClosableIterator() {
+    public ClosableIterator<Triple> newEmptyClosableIterator() {
         return new EmptyClosableIterator();
     }
 

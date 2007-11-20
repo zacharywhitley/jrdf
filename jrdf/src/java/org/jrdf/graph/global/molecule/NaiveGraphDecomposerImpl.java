@@ -27,8 +27,8 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.util.ClosableIterator;
 
 import java.util.HashSet;
 import java.util.Iterator;

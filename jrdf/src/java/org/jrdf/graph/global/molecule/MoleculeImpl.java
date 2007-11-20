@@ -23,7 +23,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.HashMap;

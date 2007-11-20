@@ -78,7 +78,7 @@ import org.jrdf.graph.datatype.SemanticComparator;
 import org.jrdf.graph.datatype.SemanticComparatorImpl;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParserBlankNodeFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 
 import java.io.IOException;

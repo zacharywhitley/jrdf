@@ -72,10 +72,9 @@ import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.local.mem.iterator.PredicateClosableIterator;
 import org.jrdf.set.SortedSetFactory;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.URIReference1;
@@ -127,7 +126,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
 
     @SuppressWarnings({"unchecked"})
     public void testEmptyClosableIterator() {
-        ClosableMemIterator<Triple> returnIterator = mockFactory.createMock(ClosableMemIterator.class);
+        ClosableIterator<Triple> returnIterator = mockFactory.createMock(ClosableIterator.class);
         expect(iteratorFactory.newEmptyClosableIterator()).andReturn(returnIterator);
         mockFactory.replay();
         IteratorFactory orderedIteratorFactory = createOrderedIteratorFactory();

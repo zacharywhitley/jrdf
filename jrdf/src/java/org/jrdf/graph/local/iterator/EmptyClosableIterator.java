@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Triple;
 
@@ -69,7 +69,7 @@ import java.util.NoSuchElementException;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class EmptyClosableIterator implements ClosableMemIterator<Triple> {
+public final class EmptyClosableIterator implements ClosableIterator<Triple> {
 
     public EmptyClosableIterator() {
     }

@@ -1,6 +1,6 @@
 package org.jrdf.graph;
 
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 
 import java.io.Serializable;
 

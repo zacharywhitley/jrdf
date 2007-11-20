@@ -64,9 +64,9 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
-import org.jrdf.util.ClosableIterator;
 
 /**
  * Represents a globalized graph, which maintains molecules. This allows us to better handle blank nodes

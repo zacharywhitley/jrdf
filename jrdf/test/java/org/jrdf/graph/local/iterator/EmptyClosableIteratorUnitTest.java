@@ -56,27 +56,20 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+package org.jrdf.graph.local.iterator;
 
-package org.jrdf.util;
+import junit.framework.TestCase;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.graph.local.iterator.EmptyClosableIterator;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 
-import java.util.Iterator;
+import static java.lang.reflect.Modifier.*;
 
-/**
- * An that intializes objects from a graph one at a time.
- * <p>The close method indicates that the resources being held by the iterator should be freed.
- * Based on Jena's CloseableIterator class.</p>
- *
- * @author Andrew Newman
- * @version $Id$
- */
-public interface ClosableIterator<Triple> extends Iterator<Triple> {
+public class EmptyClosableIteratorUnitTest extends TestCase {
 
-    /**
-     * Closes the iterator by freeing any resources that it current holds.
-     * <p>This must be done as soon as possible.  Once an iterator is closed none of the
-     * operations on a iterator will operate i.e. they will throw an exception.</p>
-     *
-     * @return true if it was successfully closed.
-     */
-    boolean close();
+    public void testClassProperties() throws Exception {
+        checkImplementationOfInterfaceAndFinal(ClosableIterator.class, EmptyClosableIterator.class);
+        checkConstructor(EmptyClosableIterator.class, PUBLIC);
+    }
 }

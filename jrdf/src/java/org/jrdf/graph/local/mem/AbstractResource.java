@@ -69,7 +69,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.mem.iterator.SubjectNodeIterator;
 import org.jrdf.graph.local.mem.iterator.ObjectNodeIterator;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public abstract class AbstractResource implements Resource, LocalizedNode {
