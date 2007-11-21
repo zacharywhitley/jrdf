@@ -165,8 +165,7 @@ public interface Graph {
     ClosableIterator<Resource> findURIReferences();
 
     /**
-     * Adds a triple to the graph.  The nodes must have already been created
-     * using {@link GraphElementFactory}.
+     * Adds a triple to the graph.  The nodes must have already been created using {@link GraphElementFactory}.
      *
      * @param subject   The subject.
      * @param predicate The predicate.
@@ -176,8 +175,7 @@ public interface Graph {
     void add(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException;
 
     /**
-     * Adds a triple to the graph.  The nodes must have already been created
-     * using {@link GraphElementFactory}.
+     * Adds a triple to the graph.  The nodes must have already been created using {@link GraphElementFactory}.
      *
      * @param triple The triple.
      * @throws GraphException If the statement can't be made.
@@ -267,8 +265,7 @@ public interface Graph {
      * Returns the number of triples in the graph.
      *
      * @return the number of triples in the graph.
-     * @throws GraphException If the statements number of statements in the graph
-     *                        fails to be found.
+     * @throws GraphException If the statements number of statements in the graph fails to be found.
      */
     long getNumberOfTriples() throws GraphException;
 
@@ -276,8 +273,7 @@ public interface Graph {
      * Returns true if the graph is empty i.e. the number of triples is 0.
      *
      * @return true if the graph is empty i.e. the number of triples is 0.
-     * @throws GraphException If the statements number of statements in the graph
-     *                        fails to be found.
+     * @throws GraphException If the statements number of statements in the graph fails to be found.
      */
     boolean isEmpty() throws GraphException;
 }

@@ -69,7 +69,7 @@ import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 
 /**
- * Represents a globalized graph, which maintains molecules. This allows us to better handle blank nodes
+ * Represents a globalized graph, which maintains molecules. This allows us to better handle blank nodes.
  */
 public interface GlobalizedGraph {
     /**
@@ -87,8 +87,6 @@ public interface GlobalizedGraph {
      */
     int OBJECT_INDEX = 2;
 
-
-
     // TODO Make sure we don't get false positives i.e. a blank node that's in a molecule being found here - should
     // only be found with the contains(molecule) call.
     // TODO Remove this when we're finished - it becomes a subset of the next method?  Where the context/set of triples
@@ -97,21 +95,19 @@ public interface GlobalizedGraph {
      * Check to see if the given triple exists within the graph.  If it contains blank nodes will only check ones
      * that are not in a molecule.
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @return
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
+     * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
+     * @param object    The object to find or AnyObjectNode to indicate any object.
+     * @return True if the statement is found in the model, otherwise false.
      */
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
-
-
 
     /**
      * Check to see if the given triple exists within the graph.  If it contains blank nodes will only check ones
      * that are not in a molecule.
      *
-     * @param triple
-     * @return
+     * @param triple The triple to find.
+     * @return True if the triple is found in the graph, otherwise false.
      */
     boolean contains(Triple triple);
 
@@ -121,8 +117,8 @@ public interface GlobalizedGraph {
      * Check to see if a given molecule exists - or part thereof.  So if there are more statements in the molecule it
      * will still match.
      *
-     * @param molecule
-     * @return
+     * @param molecule The triple to find.
+     * @return True if the triple is found in the graph, otherwise false.
      */
     boolean contains(Molecule molecule);
 
@@ -133,10 +129,10 @@ public interface GlobalizedGraph {
     /**
      * Find a triple that may contain wildcards - any subject, any predicate, and any object.
      *
-     * @param subject
-     * @param predicate
-     * @param object
-     * @return
+     * @param subject   The subject to find or AnySubjectNode to indicate any subject.
+     * @param predicate The predicate to find or AnyPredicateNode to indicate any predicate.
+     * @param object    The object to find or AnyObjectNode to indicate any object.
+     * @return an iterator of molecules.
      */
     ClosableIterator<Molecule> find(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
@@ -150,7 +146,7 @@ public interface GlobalizedGraph {
      * will be added in place.  A molecule with a single grounded node is equivalent to add(subject, predicate, object)
      * or add(triple).
      *
-     * @param molecule
+     * @param molecule the molecule to add.
      */
     void add(Molecule molecule);
 
@@ -159,16 +155,15 @@ public interface GlobalizedGraph {
      * for the molecules head triple, and then progressively remove the tail triples from the main index.   A molecule
      * with a single grounded node is equivalent to remove(subject, predicate, object) or remove(triple).
      *
-     * @param molecule
+     * @param molecule the molecule to remove.
      */
     void remove(Molecule molecule) throws GraphException;
 
-
     /**
-     * Retrieves the molecule with the given head triple. Returns null in case
-     * the head triple does not exist.
-     * @param headTriple
-     * @return
+     * Retrieves the molecule with the given head triple. Returns null in case the head triple does not exist.
+     *
+     * @param headTriple the head triple to use to get the molecule.
+     * @return the moelcule.
      */
     Molecule getMolecule(Triple headTriple);
 
@@ -183,30 +178,32 @@ public interface GlobalizedGraph {
     void clear();
 
     /**
-     * Checks to see if given graph is empty.
+     * Returns true if the graph is empty i.e. the number of triples is 0.
      *
-     * @return
+     * @return true if the graph is empty i.e. the number of triples is 0.
+     * @throws GraphException If the statements number of statements in the graph fails to be found.
      */
     boolean isEmpty();
 
     /**
      * Returns number of molecules in the graph.
      *
-     * @return
+     * @return the number of molecules in the graph.
      */
     long getNumberOfMolecules();
 
 
     /**
-     * Returns number of triples contained within the graph.
-     * @return
+     * Returns the number of triples in the graph.
+     *
+     * @return the number of triples in the graph.
      */
     long getNumberOfTriples();
 
     /**
-     * Returns a iterator factory for generating the various
-     * types of iterators required.
-     * @return
+     * Returns a iterator factory for generating the various types of iterators required.
+     *
+     * @return a iterator factory for generating the various types of iterators required.
      */
     MoleculeIteratorFactory getMoleculeIteratorFactory();
 
