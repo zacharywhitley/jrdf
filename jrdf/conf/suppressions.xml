@@ -11,7 +11,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
@@ -21,13 +20,11 @@
     <suppress checks="JavaNCSS" files="XSD"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
-    <suppress checks="JavaNCSS" files="NodePoolImpl"/>
     <suppress checks="JavaNCSS" files="SesameNodePool"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl"/>
     <suppress checks="ReturnCount" files="SemiJoinImpl"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
-    <suppress checks="ReturnCount" files="StringNodeMapperImpl"/>
 
     <!-- NTriples Parser -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
