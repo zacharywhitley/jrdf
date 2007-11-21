@@ -81,7 +81,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     public Node createNewNode(Node node) throws GraphElementFactoryException {
         Node newNode;
         if (AbstractBlankNode.isBlankNode(node)) {
-        //if (newBNodeMap.containsKey((long) node.hashCode())) {
             newNode = newBNodeMap.get((long) node.hashCode());
         } else {
             newNode = createLiteralOrURI((ObjectNode) node);
