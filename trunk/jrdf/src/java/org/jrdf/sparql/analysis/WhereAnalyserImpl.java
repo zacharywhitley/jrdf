@@ -113,7 +113,6 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         if (node.getOperationPattern() != null) {
             Expression<ExpressionVisitor> lhs = getExpression((Node) node.getFilteredBasicGraphPattern().clone());
             Expression<ExpressionVisitor> rhs = getExpression((Node) node.getOperationPattern().clone());
-
             handleExpressions(lhs, rhs);
         } else {
             super.caseAFilteredBasicGraphPatternGraphPattern(node);
