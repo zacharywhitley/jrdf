@@ -10,11 +10,16 @@
     <suppress checks="ClassDataAbstractionCoupling" files="GlobalizedGraphMemFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="TripleBuilderImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="WhereAnalyserImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="RdfXmlWriter"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="LongIndexSesame"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="IteratorFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedEhCacheJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="CyclomaticComplexity" files="WhereAnalyserImpl"/>
     <suppress checks="CyclomaticComplexity" files="NodePoolImpl"/>
     <suppress checks="CyclomaticComplexity" files="StringNodeMapperImpl"/>
@@ -32,24 +37,15 @@
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
     <suppress checks="ReturnCount" files="StringNodeMapperImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="SortedEhCacheJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="SortedDb4oJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
-    <suppress checks="ParameterNumber" files="OrderedIteratorFactoryImpl"/>
 
     <!-- NTriples Parser -->
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl"/>
 
     <!-- Cleanup molecule implementation -->
-    <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
     <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
+    <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
     <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
     <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />
 
