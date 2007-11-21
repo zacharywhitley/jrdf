@@ -8,12 +8,11 @@ import org.jrdf.graph.ObjectNode;
 
 public interface CopyGraphUtil {
     /**
-     * Copies all the triples in source graph to target graph,
-     * respecting the blank node "identifies".
+     * Copies all the triples in source graph to target graph, respecting the blank node "identifies".
      *
      * @param sourceGraph
      * @param targetGraph
-     * @return
+     * @return a merged graph.
      * @throws GraphException
      */
     Graph copyGraph(Graph sourceGraph, Graph targetGraph) throws GraphException;

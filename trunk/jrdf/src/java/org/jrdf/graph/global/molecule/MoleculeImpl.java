@@ -102,10 +102,6 @@ public class MoleculeImpl implements Molecule {
         }
     }
 
-    public ClosableIterator<Triple> find(Triple triple) {
-        throw new UnsupportedOperationException("Method not yet implemented");
-    }
-
     public boolean contains(Triple triple) {
         return contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
