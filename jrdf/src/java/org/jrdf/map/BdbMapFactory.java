@@ -63,16 +63,18 @@ import com.sleepycat.je.Database;
 import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public final class BdbMapFactory implements MapFactory {
     private final BdbEnvironmentHandler handler;
     private final String databaseName;
     private Environment env;
-    private Database database;
+    private List<Database> databases = new ArrayList<Database>();
     private long mapNumber;
 
     public BdbMapFactory(BdbEnvironmentHandler newHandler, String newDatabaseName) {
@@ -87,8 +89,11 @@ public final class BdbMapFactory implements MapFactory {
             mapNumber++;
             env = handler.setUpEnvironment();
             DatabaseConfig dbConfig = handler.setUpDatabaseConfig(false);
-            database = handler.setupDatabase(env, databaseName + mapNumber, dbConfig);
-            return handler.createMap(database, clazz1, clazz2);
+            Database database = handler.setupDatabase(env, databaseName + mapNumber, dbConfig);
+            databases.add(database);
+            final Map<T, U> map = handler.createMap(database, clazz1, clazz2);
+            map.clear();
+            return map;
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
@@ -96,6 +101,7 @@ public final class BdbMapFactory implements MapFactory {
 
     public void close() {
         try {
+            mapNumber = 0;
             closeDatabase();
         } finally {
             closeEnvironment();
@@ -104,9 +110,12 @@ public final class BdbMapFactory implements MapFactory {
 
     private void closeDatabase() {
         try {
-            if (database != null) {
-                database.close();
+            if (!databases.isEmpty()) {
+                for (Database database : databases) {
+                    database.close();
+                }
             }
+            databases.clear();
         } catch (DatabaseException e) {
             throw new RuntimeException(e);
         }
@@ -116,6 +125,7 @@ public final class BdbMapFactory implements MapFactory {
         try {
             if (env != null) {
                 env.close();
+                env = null;
             }
         } catch (DatabaseException e) {
             throw new RuntimeException(e);

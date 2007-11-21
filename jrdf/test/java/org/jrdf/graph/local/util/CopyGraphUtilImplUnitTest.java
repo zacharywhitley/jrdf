@@ -62,6 +62,7 @@ package org.jrdf.graph.local.util;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedBdbJRDFFactory;
+import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -77,11 +78,13 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
+import org.jrdf.set.BdbSortedSetFactory;
+import org.jrdf.set.MemSortedSetFactory;
+import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
@@ -95,9 +98,12 @@ import java.util.Set;
 
 public class CopyGraphUtilImplUnitTest extends TestCase {
     private static final TempDirectoryHandler DIR_HANDLER = new TempDirectoryHandler();
-    private static final BdbEnvironmentHandler HANDLER = new BdbEnvironmentHandlerImpl(DIR_HANDLER);
-    private MapFactory mapFactory = null;
     private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
+    private BdbEnvironmentHandler handler1;
+    private BdbEnvironmentHandler handler2;
+    private MapFactory mapFactory;
+    private SortedSetFactory setFactory;
+    private CopyGraphUtil cgUtil;
 
     private String url1 = "http://www.example.com/1#";
     private String url2 = "http://www.example.com/2#";
@@ -124,7 +130,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     private TripleFactory tFac2;
     private GraphElementFactory eFac1;
     private GraphElementFactory eFac2;
-    private CopyGraphUtil cgUtil;
 
     private Graph newGraph() {
         return FACTORY.getNewGraph();
@@ -155,14 +160,24 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         bNode2 = eFac1.createBlankNode();
         bNode3 = eFac1.createBlankNode();
         bNode4 = eFac1.createBlankNode();
+
+        handler1 = new BdbEnvironmentHandlerImpl(DIR_HANDLER);
+        handler2 = new BdbEnvironmentHandlerImpl(DIR_HANDLER);
+        mapFactory = new BdbMapFactory(handler1, "testDb");
+        setFactory = new BdbSortedSetFactory(handler2, "foo");
+        cgUtil = new CopyGraphUtilImpl(mapFactory, setFactory);
+    }
+
+    public void tearDown() {
+        mapFactory.close();
+        setFactory.close();
+        FACTORY.close();
     }
 
     public void testInitialInsert() throws GraphException, GraphElementFactoryException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, (ObjectNode) node2);
         graph1.add(triple1);
 
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         graph2 = cgUtil.copyGraph(graph1, graph2);
 
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -175,19 +190,12 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
             assertTrue("Objects match", node2.equals(n2));
             assertTrue("Predicates match", pNode1.equals(pn));
         }
-
-        mapFactory.close();
     }
 
     public void testAddOneBlankNodeAsObject() throws GraphException, GraphElementFactoryException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
-        //mapFactory = new MemMapFactory();
-        //DirectoryHandler handler = new TempDirectoryHandler();
-        //mapFactory = new Db4oMapFactory(handler, "mapDB");
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode2);
         graph1.add(triple1);
 
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         graph2 = cgUtil.copyGraph(graph1, graph2);
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         if (it.hasNext()) {
@@ -199,16 +207,12 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
             assertTrue("Predicates match", pNode1.equals(pn));
             assertTrue("Object is bn", BlankNode.class.isAssignableFrom(n2.getClass()));
         }
-
-        mapFactory.close();
     }
 
     public void testAddOneBlankNodeAsSubject() throws GraphException, GraphElementFactoryException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
         triple1 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node2);
         graph1.add(triple1);
 
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         cgUtil.copyGraph(graph1, graph2);
         graph2 = cgUtil.getGraph();
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -221,26 +225,20 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
             assertTrue("Predicates match", pNode1.equals(pn));
             assertTrue("Objects match", node2.equals(n2));
         }
-
-        mapFactory.close();
     }
 
     public void testLiteralCopy() throws GraphElementFactoryException, GraphException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
         String value = "whatever";
         URI typeURI = URI.create("xsd:string");
         Literal literal = eFac1.createLiteral(value, typeURI);
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, literal);
         graph1.add(triple1);
 
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         graph2 = cgUtil.copyGraph(graph1, graph2);
         ClosableIterator<Triple> triples = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Triple trip = triples.next();
         assertTrue("Value ok", ((Literal) trip.getObject()).getValue().equals("whatever"));
         assertTrue("Type ok", ((Literal) trip.getObject()).getDatatypeURI().toString().equals("xsd:string"));
-
-        mapFactory.close();
     }
 
     public void testInsertTwice() throws GraphException {
@@ -254,7 +252,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     }
 
     public void testBNodeReference() throws GraphException, GraphElementFactoryException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode1);
         triple2 = tFac1.createTriple(bNode1, pNode2, bNode2);
         graph1.add(triple1);
@@ -280,22 +277,18 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
             SubjectNode tmpSN = tmpT.getSubject();
             if (AbstractBlankNode.isBlankNode(tmpSN)) {
                 if (tmpSN.hashCode() == bNode1Hash) {
-                    
+
                 }
             }
         }
-
-        mapFactory.close();
     }
 
     public void testNestedBlankNodes() throws GraphException, GraphElementFactoryException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode1);
         triple2 = tFac1.createTriple(bNode1, pNode2, (ObjectNode) node2);
 
         graph1.add(triple1);
         graph1.add(triple2);
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         graph2 = cgUtil.copyGraph(graph1, graph2);
         ClosableIterator<Triple> it = graph2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         Triple t1 = it.next();
@@ -317,11 +310,9 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
             assertTrue("BNode", AbstractBlankNode.isBlankNode(node2));
             assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
         }
-        mapFactory.close();
     }
 
     public void testCopyFromNode() throws GraphException {
-        mapFactory = new MemMapFactory();//new BdbMapFactory(HANDLER, "testDb");
         triple1 = tFac1.createTriple(bNode1, pNode1, bNode1);
         triple2 = tFac1.createTriple(bNode1, pNode2, bNode2);
         triple3 = tFac1.createTriple(bNode2, pNode3, bNode3);
@@ -332,7 +323,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple3);
         graph1.add(triple4);
 
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         cgUtil.copyTriplesForNode(graph1, graph2, node1, null);
         graph2 = cgUtil.getGraph();
         assertEquals("graph2 size", 1, graph2.getNumberOfTriples());
@@ -340,11 +330,9 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         cgUtil.copyTriplesForNode(graph1, graph2, bNode1, null);
         graph2 = cgUtil.getGraph();
         assertEquals("graph2 size", 3, graph2.getNumberOfTriples());
-        mapFactory.close();
     }
 
     public void testCircularBlankNodes() throws GraphException, GraphElementFactoryException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
         triple1 = tFac1.createTriple(bNode1, pNode1, bNode2);
         triple2 = tFac1.createTriple(bNode2, pNode2, bNode3);
         triple3 = tFac1.createTriple(bNode3, pNode3, bNode1);
@@ -357,7 +345,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         PredicateNode np2Node = eFac2.createURIReference(URI.create(url1 + "p2"));
         PredicateNode np3Node = eFac2.createURIReference(URI.create(url1 + "p3"));
 
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         graph2 = cgUtil.copyGraph(graph1, graph2);
         ClosableIterator<Triple> trps1 = graph2.find(ANY_SUBJECT_NODE, np1Node, ANY_OBJECT_NODE);
         Triple trp1 = null;
@@ -379,15 +366,13 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
             assertTrue("Not empty", trp3 != null);
         }
         assertEquals("bNode2 the same", trp1.getObject(), trp2.getSubject());
-        assertTrue("1 and 2 diff", ! trp1.getSubject().equals(trp2.getSubject()));
+        assertTrue("1 and 2 diff", !trp1.getSubject().equals(trp2.getSubject()));
         assertEquals("bNode3 the same", trp2.getObject(), trp3.getSubject());
         assertTrue("2 and 3 diff", !trp2.getSubject().equals(trp3.getSubject()));
         assertEquals("bNode1 the same", trp1.getSubject(), trp3.getObject());
-        mapFactory.close();
     }
 
     public void testCopyGraphForSubject() throws GraphException, GraphElementFactoryException {
-        mapFactory = new BdbMapFactory(HANDLER, "testDb");
         triple1 = tFac1.createTriple(bNode1, pNode1, bNode1);
         triple2 = tFac1.createTriple((SubjectNode) node2, pNode2, bNode3);
         triple3 = tFac1.createTriple(bNode1, pNode1, bNode3);
@@ -400,19 +385,17 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple5);
 
         node5 = eFac2.createURIReference(URI.create(url2 + "node5"));
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
         cgUtil.copyTriplesForSubjectNode(graph1, graph2, (SubjectNode) node2, (SubjectNode) node5);
         assertEquals("Graph2 size should be 3", 3, graph2.getNumberOfTriples());
         ClosableIterator<Triple> iterator =
                 graph2.find(eFac2.createURIReference(URI.create(node2.toString())), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("Graph2 doesn't contain node2", !iterator.hasNext());
-        mapFactory.close();
     }
 
     public void testCopyGraphForObject() throws GraphException {
-        triple1 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) bNode1);
+        triple1 = tFac1.createTriple(bNode1, pNode1, bNode1);
         triple2 = tFac1.createTriple((SubjectNode) node2, pNode2, bNode3);
-        triple3 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) bNode3);
+        triple3 = tFac1.createTriple(bNode1, pNode1, bNode3);
         triple4 = tFac1.createTriple(bNode4, pNode3, (ObjectNode) node4);
         triple5 = tFac1.createTriple((SubjectNode) node5, pNode3, bNode4);
 
@@ -422,10 +405,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple4);
         graph1.add(triple5);
 
-        mapFactory = new MemMapFactory(); //new BdbMapFactory(HANDLER, "testDb");
-        cgUtil = new CopyGraphUtilImpl(mapFactory);
-        cgUtil.copyTriplesForObjectNode(graph1, graph2, (ObjectNode) bNode4, null);
+        cgUtil.copyTriplesForObjectNode(graph1, graph2, bNode4, null);
         assertEquals("Graph2 size should be 3", 2, graph2.getNumberOfTriples());
-        mapFactory.close();
     }
 }
