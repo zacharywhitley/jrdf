@@ -20,7 +20,6 @@
     <suppress checks="JavaNCSS" files="XSD"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
-    <suppress checks="JavaNCSS" files="SesameNodePool"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl"/>
     <suppress checks="ReturnCount" files="SemiJoinImpl"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>

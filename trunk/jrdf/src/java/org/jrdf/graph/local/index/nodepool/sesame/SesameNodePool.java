@@ -32,16 +32,7 @@ public class SesameNodePool implements NodePool {
             Node node = null;
             int nodeId = nodePool.hashIterator(id.intValue()).next();
             if (nodeId != -1) {
-                final byte[] bytes = nodePool.getData(nodeId);
-                final byte type = bytes[0];
-                final String value = new String(bytes, 1, bytes.length - 1);
-                if (type == BNODE_PREFIX) {
-                    node = mapper.convertToBlankNode(value);
-                } else if (type == URI_PREFIX) {
-                    node = mapper.convertToURIReference(value, new Long(nodeId));
-                } else if (type == LITERAL_PREFIX) {
-                    node = mapper.convertToLiteral(value, new Long(nodeId));
-                }
+                node = getNodeFromId(nodeId);
             }
             return node;
         } catch (IOException e) {
@@ -70,17 +61,7 @@ public class SesameNodePool implements NodePool {
     public void registerNode(LocalizedNode node) {
         try {
             String value = mapper.convertToString(node);
-            final byte[] bytes = new byte[value.length() + 1];
-            put(value.getBytes(), bytes, 1);
-            if (BlankNode.class.isAssignableFrom(node.getClass())) {
-                bytes[0] = BNODE_PREFIX;
-            } else if (URIReference.class.isAssignableFrom(node.getClass())) {
-                bytes[0] = URI_PREFIX;
-            } else if (Literal.class.isAssignableFrom(node.getClass())) {
-                bytes[0] = LITERAL_PREFIX;
-            } else {
-                throw new IllegalArgumentException("Failed to add node: " + node);
-            }
+            final byte[] bytes = nodeToBytes(node, value);
             nodePool.storeData(bytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -109,5 +90,35 @@ public class SesameNodePool implements NodePool {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Node getNodeFromId(int nodeId) throws IOException {
+        final byte[] bytes = nodePool.getData(nodeId);
+        final byte type = bytes[0];
+        final String value = new String(bytes, 1, bytes.length - 1);
+        Node node = null;
+        if (type == BNODE_PREFIX) {
+            node = mapper.convertToBlankNode(value);
+        } else if (type == URI_PREFIX) {
+            node = mapper.convertToURIReference(value, new Long(nodeId));
+        } else if (type == LITERAL_PREFIX) {
+            node = mapper.convertToLiteral(value, new Long(nodeId));
+        }
+        return node;
+    }
+
+    private byte[] nodeToBytes(Node node, String value) {
+        final byte[] bytes = new byte[value.length() + 1];
+        put(value.getBytes(), bytes, 1);
+        if (BlankNode.class.isAssignableFrom(node.getClass())) {
+            bytes[0] = BNODE_PREFIX;
+        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
+            bytes[0] = URI_PREFIX;
+        } else if (Literal.class.isAssignableFrom(node.getClass())) {
+            bytes[0] = LITERAL_PREFIX;
+        } else {
+            throw new IllegalArgumentException("Failed to add node: " + node);
+        }
+        return bytes;
     }
 }
