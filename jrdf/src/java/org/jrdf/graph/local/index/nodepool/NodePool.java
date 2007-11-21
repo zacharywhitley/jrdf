@@ -105,10 +105,11 @@ public interface NodePool {
     List<Map<Long, String>> getNodePoolValues();
 
     /**
-     * Returns a new node id.  That maybe based on the value.
+     * Returns a new node id.  That maybe based on the value - i.e. given the same value it will produce the same
+     * identifier - this is not guaranteed though (for performance or other reasons).
      *
-     * @param value
-     * @return
+     * @param value that can be used as the basis of the new node.
+     * @return a new node id
      */
     Long getNodeId(String value);
 
@@ -117,6 +118,11 @@ public interface NodePool {
      */
     void clear();
 
+    /**
+     * Registers a large number of nodes in ones go.
+     *
+     * @param values the map contains a list of longs to serialized nodes (as strings).
+     */
     void registerNodePoolValues(List<Map<Long, String>> values);
 
 }
