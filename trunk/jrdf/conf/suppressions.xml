@@ -15,7 +15,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
-    <suppress checks="CyclomaticComplexity" files="StringNodeMapperImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="RDF"/>
     <suppress checks="JavaNCSS" files="RDFS"/>
