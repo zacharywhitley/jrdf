@@ -64,6 +64,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Resource;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
@@ -142,6 +143,11 @@ public final class PredicateObjectWriterImpl implements PredicateObjectWriter {
     public void visitNode(Node node) {
         checkNotNull(node);
         exception = new WriteException("Unknown object node type: " + node.getClass().getName());
+    }
+
+    public void visitResource(Resource resource) {
+        checkNotNull(resource);
+        exception = new WriteException("Unknown object node type: " + resource.getClass().getName());
     }
 
     private void writePredicate(PredicateNode predicate) throws WriteException, XMLStreamException {

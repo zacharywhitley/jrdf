@@ -25,7 +25,6 @@
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="NodePoolImpl"/>
     <suppress checks="JavaNCSS" files="SesameNodePool"/>
-    <suppress checks="JavaNCSS" files="LocalizerImpl"/>
     <suppress checks="ReturnCount" files="NadicJoinImpl"/>
     <suppress checks="ReturnCount" files="SemiJoinImpl"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>

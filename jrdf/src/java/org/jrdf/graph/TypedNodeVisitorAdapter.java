@@ -60,49 +60,31 @@
 package org.jrdf.graph;
 
 /**
- * An adapter from {@link TypedNodeVisitor}.  Implements empty implementations
- * to reduce the burden of creating a concrete implementation that doesn't
- * need to implement all methods.
+ * An adapter from {@link TypedNodeVisitor}.  Implements empty implementations to reduce the burden of creating a
+ * concrete implementation that doesn't need to implement all methods.
  *
  * @author Andrew Newman
  * @version $Revision$
  */
 
 public class TypedNodeVisitorAdapter implements TypedNodeVisitor {
-
-    /**
-     * Visit blank node.
-     *
-     * @param blankNode the blank node to visit.
-     */
     public void visitBlankNode(BlankNode blankNode) {
         // this method is left intentionally blank.
     }
 
-    /**
-     * Visit URI Reference.
-     *
-     * @param uriReference the URI Reference to visit.
-     */
     public void visitURIReference(URIReference uriReference) {
         // this method is left intentionally blank.
     }
 
-    /**
-     * Visit Literal.
-     *
-     * @param literal the Literal to visit.
-     */
     public void visitLiteral(Literal literal) {
         // this method is left intentionally blank.
     }
 
-    /**
-     * Visit node.
-     *
-     * @param node the node to visit.
-     */
     public void visitNode(Node node) {
+        // this method is left intentionally blank.
+    }
+
+    public void visitResource(Resource resource) {
         // this method is left intentionally blank.
     }
 }
