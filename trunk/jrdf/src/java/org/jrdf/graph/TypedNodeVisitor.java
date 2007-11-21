@@ -95,4 +95,11 @@ public interface TypedNodeVisitor {
      * @param node the node to visit.
      */
     void visitNode(Node node);
+
+    /**
+     * Visit Resource.
+     *
+     * @param resource the node to visit.
+     */
+    void visitResource(Resource resource);
 }

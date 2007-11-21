@@ -64,6 +64,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Resource;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.IteratorStack;
 import org.jrdf.writer.BlankNodeRegistry;
@@ -161,6 +162,10 @@ public class ResourceWriterImpl implements ResourceWriter {
 
     public void visitNode(final Node node) {
         unknownType(node);
+    }
+
+    public void visitResource(Resource resource) {
+        unknownType(resource);
     }
 
     private void unknownType(final Node node) {

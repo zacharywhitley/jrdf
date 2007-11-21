@@ -61,8 +61,13 @@ package org.jrdf.graph.local.index.nodepool;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.TypedNodeVisitor;
 
-public interface Localizer {
+/**
+ * Tied to a NodePool the Localizer interface is reponsible for read only queries against the nodepool.  It converts
+ * nodes into longs.
+ */
+public interface Localizer extends TypedNodeVisitor {
     /**
      * Converts a globalized set of triple objects to an array of longs.
      *

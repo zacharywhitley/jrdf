@@ -60,8 +60,7 @@
 package org.jrdf.graph;
 
 /**
- * Indicates that a {@link BlankNode}, {@link URIReference} or
- * {@link Literal} are able to be visited.
+ * Indicates that a {@link BlankNode}, {@link URIReference} or {@link Literal} are able to be visited.
  *
  * @author Andrew Newman
  * @version $Revision$
