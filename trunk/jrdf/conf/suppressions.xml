@@ -3,29 +3,27 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ComparatorFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="QueryFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedSesameJRDFFactory"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="BdbEnvironmentHandlerImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
+    <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
+    <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
     <suppress checks="JavaNCSS" files="RDF"/>
     <suppress checks="JavaNCSS" files="RDFS"/>
     <suppress checks="JavaNCSS" files="XSD"/>
-    <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
-    <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="ReturnCount" files="TypeComparatorImpl"/>
     <suppress checks="ReturnCount" files="WhereAnalyserImpl"/>
-
-    <!-- NTriples Parser -->
-    <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl"/>
 
     <!-- Cleanup molecule implementation -->
     <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
