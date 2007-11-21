@@ -77,13 +77,16 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
+import org.jrdf.graph.local.index.nodepool.Localizer;
+import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
 import org.jrdf.graph.local.mem.iterator.URIReferenceResourceIterator;
+import org.jrdf.graph.local.mem.iterator.AnyResourceIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
@@ -266,7 +269,8 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (null == resourceFactory) {
-            resourceFactory = new ResourceFactoryImpl(nodePool, indexes, handlers, readWriteGraph);
+            Localizer localizer = new LocalizerImpl(nodePool);
+            resourceFactory = new ResourceFactoryImpl(localizer, readWriteGraph);
         }
 
         if (null == elementFactory) {
@@ -303,25 +307,25 @@ public class GraphImpl implements Graph, Serializable {
         return readWriteGraph.find(subject, predicate, object);
     }
 
+    public ClosableIterator<Resource> findResources() {
+        return new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
+    }
+
+    public ClosableIterator<Resource> findBlankNodes() {
+        return new BlankNodeResourceIterator(indexes, handlers, resourceFactory, nodePool);
+    }
+
+    public ClosableIterator<Resource> findURIReferences() {
+        return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
+    }
+
+    public ClosableIterator<PredicateNode> findUniquePredicates() {
+        return readWriteGraph.findUniquePredicates();
+    }
+
     public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
         checkNotNull(resource);
-        return iteratorFactory.newPredicateIterator(nodePool.localize(resource));
-    }
-
-    public ClosableIterator<Resource> getResources() {
-        return resourceFactory.getResources();
-    }
-
-    public ClosableIterator<Resource> getBlankNodes() {
-        return new BlankNodeResourceIterator(indexes, handlers, resourceFactory);
-    }
-
-    public ClosableIterator<Resource> getURIReferences() {
-        return new URIReferenceResourceIterator(indexes, handlers, resourceFactory);
-    }
-
-    public ClosableIterator<PredicateNode> getUniquePredicates() {
-        return iteratorFactory.newPredicateIterator();
+        return readWriteGraph.findUniquePredicates(resource);
     }
 
     public void add(Iterator<Triple> triples) throws GraphException {

@@ -32,7 +32,7 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
 
     public void load(Graph graph) throws GraphException {
         // check for blank nodes
-        ClosableIterator<PredicateNode> predicateIterator = graph.getUniquePredicates();
+        ClosableIterator<PredicateNode> predicateIterator = graph.findUniquePredicates();
         while (predicateIterator.hasNext()) {
             URIReference uriReference = (URIReference) predicateIterator.next();
             String partial = getPartialUri(uriReference.getURI().toString());

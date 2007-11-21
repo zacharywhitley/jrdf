@@ -62,7 +62,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -73,16 +73,16 @@ import java.util.SortedSet;
  */
 public final class OrderedIteratorFactoryImpl implements IteratorFactory {
     private final IteratorFactory iteratorFactory;
-    private final NodePool nodePool;
+    private final Localizer localizer;
     private final LongIndex longIndex;
     private final GraphHandler graphHandler;
     private final SortedSetFactory setFactory;
 
-    public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, NodePool newNodePool, LongIndex newLongIndex,
-            GraphHandler newGraphHandler, SortedSetFactory newSetFactory) {
-        checkNotNull(newIteratorFactory, newNodePool, newLongIndex, newGraphHandler, newSetFactory);
+    public OrderedIteratorFactoryImpl(IteratorFactory newIteratorFactory, Localizer newLocalizer,
+        LongIndex newLongIndex, GraphHandler newGraphHandler, SortedSetFactory newSetFactory) {
+        checkNotNull(newIteratorFactory, newLocalizer, newLongIndex, newGraphHandler, newSetFactory);
         this.iteratorFactory = newIteratorFactory;
-        this.nodePool = newNodePool;
+        this.localizer = newLocalizer;
         this.longIndex = newLongIndex;
         this.graphHandler = newGraphHandler;
         this.setFactory = newSetFactory;
@@ -122,7 +122,7 @@ public final class OrderedIteratorFactoryImpl implements IteratorFactory {
             orderedSet.add(closableIterator.next());
         }
         closableIterator.close();
-        return new TripleClosableIterator(orderedSet.iterator(), nodePool, longIndex, graphHandler);
+        return new TripleClosableIterator(orderedSet.iterator(), localizer, longIndex, graphHandler);
     }
 
     private ClosableIterator<PredicateNode> sortPredicates(ClosableIterator<PredicateNode> closableIterator) {

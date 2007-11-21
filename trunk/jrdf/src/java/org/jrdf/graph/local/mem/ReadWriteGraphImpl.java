@@ -62,12 +62,15 @@ package org.jrdf.graph.local.mem;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.Localizer;
+import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.graph.local.iterator.IteratorFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
@@ -79,8 +82,9 @@ public class ReadWriteGraphImpl implements ReadWriteGraph {
     // TODO Take in Readable and Writable graphs instead??
     public ReadWriteGraphImpl(LongIndex[] newIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
         checkNotNull(newIndexes, newNodePool, newIteratorFactory);
-        this.readableGraph = new ReadableGraphImpl(newIndexes, newNodePool, newIteratorFactory);
-        this.writableGraph = new WritableGraphImpl(newIndexes, newNodePool);
+        Localizer localizer = new LocalizerImpl(newNodePool);
+        this.readableGraph = new ReadableGraphImpl(newIndexes, localizer, newIteratorFactory);
+        this.writableGraph = new WritableGraphImpl(newIndexes, newNodePool, localizer);
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
@@ -93,6 +97,14 @@ public class ReadWriteGraphImpl implements ReadWriteGraph {
 
     public long getSize() {
         return readableGraph.getSize();
+    }
+
+    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
+        return readableGraph.findUniquePredicates(resource);
+    }
+
+    public ClosableIterator<PredicateNode> findUniquePredicates() {
+        return readableGraph.findUniquePredicates();
     }
 
     public void localizeAndAdd(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws GraphException {

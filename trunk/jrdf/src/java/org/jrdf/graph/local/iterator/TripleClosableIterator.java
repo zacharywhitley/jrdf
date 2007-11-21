@@ -61,7 +61,7 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 
 import java.util.Iterator;
@@ -75,15 +75,15 @@ import java.util.Iterator;
  */
 public class TripleClosableIterator implements ClosableMemIterator<Triple> {
     private Iterator<Triple> iter;
-    private NodePool nodePool;
+    private Localizer localizer;
     private LongIndex longIndex;
     private GraphHandler handler;
     private Triple triple;
 
-    public TripleClosableIterator(Iterator<Triple> newIter, NodePool newNodePool, LongIndex newLongIndex,
+    public TripleClosableIterator(Iterator<Triple> newIter, Localizer newLocalizer, LongIndex newLongIndex,
         GraphHandler newHandler) {
         this.iter = newIter;
-        this.nodePool = newNodePool;
+        this.localizer = newLocalizer;
         this.longIndex = newLongIndex;
         this.handler = newHandler;
     }
@@ -103,7 +103,7 @@ public class TripleClosableIterator implements ClosableMemIterator<Triple> {
 
     public void remove() {
         try {
-            Long[] longs = nodePool.localize(triple.getSubject(), triple.getPredicate(), triple.getObject());
+            Long[] longs = localizer.localize(triple.getSubject(), triple.getPredicate(), triple.getObject());
             longIndex.remove(longs);
             handler.remove(longs);
         } catch (Exception ise) {

@@ -64,27 +64,30 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
 
 public class WritableGraphImpl implements WritableGraph {
-    private NodePool nodePool;
-    private LongIndex[] longIndexes;
+    private final NodePool nodePool;
+    private final LongIndex[] longIndexes;
+    private final Localizer localizer;
 
-    public WritableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool) {
-        checkNotNull(newLongIndexes, newNodePool);
+    public WritableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool, Localizer newLocalizer) {
+        checkNotNull(newLongIndexes, newNodePool, newLocalizer);
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePool;
+        this.localizer = newLocalizer;
     }
 
     public void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
         throws GraphException {
         // Get local node values also tests that it's a valid subject, predicate and object.
-        Long[] values = nodePool.localize(subject, predicate, object);
+        Long[] values = localizer.localize(subject, predicate, object);
         longIndexes[0].remove(values[0], values[1], values[2]);
         try {
             // if the first one succeeded then try and attempt removal on both of the others
@@ -121,7 +124,7 @@ public class WritableGraphImpl implements WritableGraph {
         // Get local node values also tests that it's a valid subject, predicate
         // and object.
         try {
-            Long[] values = nodePool.localize(subject, predicate, object);
+            Long[] values = localizer.localize(subject, predicate, object);
             longIndexes[0].add(values);
             longIndexes[1].add(values[1], values[2], values[0]);
             longIndexes[2].add(values[2], values[0], values[1]);

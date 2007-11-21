@@ -66,6 +66,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
@@ -73,12 +74,13 @@ import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.set.SortedSetFactory;
-import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.util.NodeTypeComparatorImpl;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.URIReference1;
-import static org.jrdf.util.test.ArgumentTestUtil.*;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
 
 import java.lang.reflect.Modifier;
 import java.net.URI;
@@ -90,9 +92,9 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class OrderedIteratorFactoryImplUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = { IteratorFactory.class, NodePool.class, LongIndex.class,
+    private static final Class[] PARAM_TYPES = { IteratorFactory.class, Localizer.class, LongIndex.class,
             GraphHandler.class, SortedSetFactory.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"newIteratorFactory", "newNodePool",
+    private static final String[] PARAMETER_NAMES = new String[] {"newIteratorFactory", "newLocalizer",
             "newLongIndex", "newGraphHandler", "newSetFactory"};
     private static final PredicateNode IMRAN = new URIReference1(URI.create("urn:imran"));
     private static final PredicateNode FOO = new URIReference1(URI.create("urn:foo"));
@@ -102,14 +104,14 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     private static final Long RESOURCE_ID = System.currentTimeMillis();
     private final MockFactory mockFactory = new MockFactory();
     private IteratorFactory iteratorFactory;
-    private NodePool nodePool;
+    private Localizer localizer;
     private LongIndex longIndex;
     private GraphHandler graphHandler;
     private SortedSetFactory setFactory;
 
     public void setUp() {
         iteratorFactory = mockFactory.createMock(IteratorFactory.class);
-        nodePool = mockFactory.createMock(NodePool.class);
+        localizer = mockFactory.createMock(Localizer.class);
         longIndex = mockFactory.createMock(LongIndex.class);
         graphHandler = mockFactory.createMock(GraphHandler.class);
         setFactory = mockFactory.createMock(SortedSetFactory.class);
@@ -161,7 +163,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     }
 
     private IteratorFactory createOrderedIteratorFactory() {
-        return new OrderedIteratorFactoryImpl(iteratorFactory, nodePool, longIndex, graphHandler, setFactory);
+        return new OrderedIteratorFactoryImpl(iteratorFactory, localizer, longIndex, graphHandler, setFactory);
     }
 
     private PredicateClosableIterator createPredicateIterator() {

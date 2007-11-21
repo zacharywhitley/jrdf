@@ -79,13 +79,10 @@ import org.jrdf.map.MapFactory;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Logger;
 
 public class CopyGraphUtilImpl implements CopyGraphUtil {
     private final MapFactory mapFactory;
     private GraphToGraphMapper mapper;
-    private final Logger logger = Logger.getLogger("CopyGraphUtil");
-    private final long second = 1000;
 
     public CopyGraphUtilImpl(MapFactory newMapFactory) {
         this.mapFactory = newMapFactory;
@@ -97,14 +94,8 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
 
     public Graph copyGraph(Graph newSourceGraph, Graph newTargetGraph) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
-        long start = System.currentTimeMillis() / second;
         ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-        //long end = System.currentTimeMillis() / second;
-        logger.info("Read source graph time = " + ((System.currentTimeMillis() / second) - start));
-        start = System.currentTimeMillis() / second;
         readAndUpdateTripleIterator(triples);
-        //end = System.currentTimeMillis() / second;
-        logger.info("Updating blank nodes time = " + ((System.currentTimeMillis() / second) - start));
         triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         try {
             mapper.createNewTriples(triples);
