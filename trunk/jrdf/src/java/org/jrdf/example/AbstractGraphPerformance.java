@@ -93,9 +93,9 @@ public abstract class AbstractGraphPerformance {
     private static final int NO_PREDICATES = NUMBER_OF_PREDICATES;
     private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
     private static final String SUBJECT_PREFIX = "http://foo";
-    private static final String PREDICATE_PREFIX = "http://bar/asdfafffffffffffffffffffffffffffffffffffffffffff";
-    private static final String OBJECT_PREFIX = "http://foo/asdfasdfasdfaeqewrqwerqwe";
-    private static final String URI_STRING = "http://foo/bar/asdfkjasdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfas";
+    private static final String PREDICATE_PREFIX = "http://bar";
+    private static final String OBJECT_PREFIX = "http://foo";
+    private static final String URI_STRING = "http://foo/bar";
     private static final String PATH = "/org/jrdf/example/pizza.rdf";
     private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
     private List<URI> predicates = new ArrayList<URI>();
@@ -115,7 +115,7 @@ public abstract class AbstractGraphPerformance {
         //parsePerformance();
         addPerformance(NUMBER_OF_NODES_TO_ADD, graph);
         writePerformance(graph);
-        //findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
+        findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
     }
 
     protected abstract Graph getGraph();
