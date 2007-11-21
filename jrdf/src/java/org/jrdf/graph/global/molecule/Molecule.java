@@ -34,64 +34,82 @@ import java.util.SortedSet;
 public interface Molecule {
 
     /**
-     * Returns an iterator for any triples matching the given
-     * triple.
-     * @param triple
-     * @return
-     */
-    Iterator<Triple> find(Triple triple);
-
-    /**
-     * Checks to see if the given triple exists within the
-     * molecule.
-     * @param triple
-     * @return
+     * Checks to see if the given triple exists within the molecule.
+     *
+     * @param triple the triple to search for - does not currently support ANY_SUBJECT, etc.
+     *
+     * @return true if found.
      */
     boolean contains(Triple triple);
 
     /**
-     * Returns an iterator for the set of triples which make up this
-     * molecule.
-     * @return
+     * Checks to see if the given triple exists within the molecule.
+     *
+     * @param subject the subject to search for - does not currently support ANY_SUBJECT.
+     * @param predicate the predicate to search for - does not currently support ANY_PREDICATE.
+     * @param object the object to search for - does not currently support ANY_OBJECT.
+     *
+     * @return true if found.
+     */
+    boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
+
+    /**
+     * Returns an iterator for the set of triples which make up this molecule.
+     *
+     * @return all the triples in the molecule.
      */
     Iterator<Triple> iterator();
 
     /**
      * Adds the given triple to the molecule.
-     * @param triple
+     *
+     * @param triple the triple to add.
+     * @return a new molecule based on the current one plus the new triple.
      */
     Molecule add(Triple triple);
 
     /**
      * Adds a set of triples to this molecule.
-     * @param triples
+     *
+     * @param triples the set of triples.
+     * @return a new molecule based on the current one plus the new triples.
      */
     Molecule add(Set<Triple> triples);
 
     /**
      * Number of triples contained in the molecule.
      *
-     * @return
+     * @return the number of triples contains in the molecule.
      */
     int size();
 
     /**
      * Returns the head triple of the molecule.
-     * @return
+     *
+     * @return the head triple of the molecule.
      */
     Triple getHeadTriple();
 
-    boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
     /**
-     * Iterate through the tail triples.
-     * @return
+     * An iterator that contains tail triples i.e. all triples except head triple.
+     *
+     * @return the iterator of tail triples.
      */
     Iterator<Triple> tailTriples();
 
-    boolean equals(Object molecule);
-
+    /**
+     * Removes a triple from the molecule.
+     *
+     * @param triple the triple to remove.
+     * @return a new Molecule that contains all triples except the one removed.
+     */
     Molecule remove(Triple triple);
 
+    /**
+     * Returns all triples in the molecule.
+     *
+     * @return all triples in the molecule.
+     */
     SortedSet<Triple> getTriples();
 }

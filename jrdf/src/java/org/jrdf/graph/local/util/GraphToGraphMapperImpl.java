@@ -60,13 +60,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         }
     }
 
-    /**
-     * Adds those triples with blank nodes to the graph.
-     * @param it
-     * @return
-     * @throws GraphException
-     * @throws GraphElementFactoryException
-     */
     public Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException {
         while (it.hasNext()) {
             Triple triple = it.next();
@@ -85,12 +78,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return tripleFactory.createTriple(newSubjectNode, newPredicateNode, newObjectNode);
     }
 
-    /**
-     * The map may contain the subject (object) node that some triples may hang off from.
-     * @param node
-     * @return
-     * @throws GraphElementFactoryException
-     */
     public Node createNewNode(Node node) throws GraphElementFactoryException {
         Node newNode;
         if (AbstractBlankNode.isBlankNode(node)) {

@@ -124,5 +124,4 @@ public interface NodePool {
      * @param values the map contains a list of longs to serialized nodes (as strings).
      */
     void registerNodePoolValues(List<Map<Long, String>> values);
-
 }
