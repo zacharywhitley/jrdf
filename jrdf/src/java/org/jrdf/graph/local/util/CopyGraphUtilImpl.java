@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.local.util;
 
+import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -72,20 +73,21 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.AbstractBlankNode;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.map.MapFactory;
+import org.jrdf.set.SortedSetFactory;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
 public class CopyGraphUtilImpl implements CopyGraphUtil {
     private final MapFactory mapFactory;
+    private final SortedSetFactory setFactory;
     private GraphToGraphMapper mapper;
 
-    public CopyGraphUtilImpl(MapFactory newMapFactory) {
+    public CopyGraphUtilImpl(MapFactory newMapFactory, SortedSetFactory newSetFactory) {
         this.mapFactory = newMapFactory;
+        setFactory = newSetFactory;
     }
 
     public Graph getGraph() {
@@ -184,8 +186,10 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }*/
 
     private Set<Triple> getAllTriplesForNode(Node node, Graph graph) throws GraphException {
-        Set<Triple> set = new HashSet<Triple>();
-        Set<BlankNode> bSet = new HashSet<BlankNode>();
+        //Set<Triple> set = new HashSet<Triple>();
+        Set<Triple> set = setFactory.createSet(Triple.class);
+        //Set<BlankNode> bSet = new HashSet<BlankNode>();
+        Set<BlankNode> bSet = setFactory.createSet(BlankNode.class);
         addTriplesToSetForSubject(graph, set, (SubjectNode) node);
         addTriplesToSetForObject(graph, set, (ObjectNode) node);
         getAllTriplesForNode0(graph, set, bSet, node);
@@ -193,16 +197,20 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }
 
     private Set<Triple> getAllTriplesForSubjectNode(SubjectNode node, Graph graph) throws GraphException {
-        Set<Triple> set = new HashSet<Triple>();
-        Set<BlankNode> bSet = new HashSet<BlankNode>();
+        //Set<Triple> set = new HashSet<Triple>();
+        Set<Triple> set = setFactory.createSet(Triple.class);
+        //Set<BlankNode> bSet = new HashSet<BlankNode>();
+        Set<BlankNode> bSet = setFactory.createSet(BlankNode.class);
         addTriplesToSetForSubject(graph, set, node);
         getAllTriplesForNode0(graph, set, bSet, node);
         return set;
     }
 
     private Set<Triple> getAllTriplesForObjectNode(ObjectNode node, Graph graph) throws GraphException {
-        Set<Triple> set = new HashSet<Triple>();
-        Set<BlankNode> bSet = new HashSet<BlankNode>();
+        //Set<Triple> set = new HashSet<Triple>();
+        Set<Triple> set = setFactory.createSet(Triple.class);
+        //Set<BlankNode> bSet = new HashSet<BlankNode>();
+        Set<BlankNode> bSet = setFactory.createSet(BlankNode.class);
         addTriplesToSetForObject(graph, set, node);
         getAllTriplesForNode0(graph, set, bSet, node);
         return set;
@@ -217,7 +225,8 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
      * @throws GraphException
      */
     private void getAllBNodesForNode1(Node node, Graph graph, Set<BlankNode> bSet) throws GraphException {
-        Set<Triple> set = new HashSet<Triple>();
+        //Set<Triple> set = new HashSet<Triple>();
+        Set<Triple> set = setFactory.createSet(Triple.class);
         addTriplesToSetForSubject(graph, set, (SubjectNode) node);
         addTriplesToSetForObject(graph, set, (ObjectNode) node);
 
