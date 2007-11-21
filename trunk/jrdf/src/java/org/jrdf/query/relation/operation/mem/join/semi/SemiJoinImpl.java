@@ -78,22 +78,25 @@ public final class SemiJoinImpl implements DyadicJoin {
     }
 
     public Relation join(Relation relation1, Relation relation2) {
+        Relation relation = isDeeDumOrSame(relation1, relation2);
+        if (relation == null) {
+            LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
+            relations.add(relation1);
+            relations.add(relation2);
+            relation = relationProcessor.processRelations(relations, tupleEngine);
+        }
+        return relation;
+    }
+
+    private Relation isDeeDumOrSame(Relation relation1, Relation relation2) {
+        Relation relation = null;
         if (relation1 == RELATION_DUM || relation2 == RELATION_DUM) {
-            return RELATION_DUM;
+            relation = RELATION_DUM;
+        } else if (relation1 == RELATION_DEE) {
+            relation = RELATION_DEE;
+        } else if (relation1 == relation2) {
+            relation = relation1;
         }
-
-        if (relation1 == RELATION_DEE) {
-            return RELATION_DEE;
-        }
-
-        if (relation1 == relation2) {
-            return relation1;
-        }
-
-        LinkedHashSet<Relation> relations = new LinkedHashSet<Relation>();
-        relations.add(relation1);
-        relations.add(relation2);
-
-        return relationProcessor.processRelations(relations, tupleEngine);
+        return relation;
     }
 }
