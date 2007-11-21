@@ -116,10 +116,7 @@ public class MoleculeParserImpl implements MoleculeParser {
         return globalizedGraph;
     }
 
-    /**
-     * TODO SHOULD BE REPLACED WITH GLOBLIZEDGRAPHFACTORY
-     * @return
-     */
+    // TODO SHOULD BE REPLACED WITH GLOBLIZEDGRAPHFACTORY
     protected GlobalizedGraph getNewGlobalizedGraph() {
         TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
         return new GlobalizedGraphMemFactoryImpl(tripleComparator).getNewGlobalizedGraph();

@@ -75,45 +75,16 @@ import org.jrdf.graph.local.iterator.ClosableIterator;
  * @version $Revision: 1226 $
  */
 public interface MoleculeIteratorFactory {
-
-    /**
-     * This returns an iterator over the globalizedGraph using
-     * a molecule head triple to match.
-     * @return
-     */
     ClosableIterator<Molecule> globalizedGraphIterator();
 
-    /**
-     * Returns the predicates associated with the given resource.
-     * @param resource
-     * @return
-     */
     ClosableIterator<PredicateNode> findUniquePredicates(Resource resource);
 
-
-    /**
-     * Returns all of the unique predicates contained within the graph.
-     * @return
-     */
     ClosableIterator<PredicateNode> getUniquePredicates();
 
-
-    /**
-     * Returns all resources within the graph.
-     * @return
-     */
     ClosableIterator<Resource> getResources();
 
-    /**
-     * Returns an iterator over all of the URIReferences contained in the graph.
-     * @return
-     */
     ClosableIterator<URIReference> getURIReferences();
 
-    /**
-     * Returns an iterator over all of the BlankNodes contained within the graph.
-     * @return
-     */
     ClosableIterator<BlankNode> getBlankNodes();
 
     ClosableIterator<Molecule> newThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode);

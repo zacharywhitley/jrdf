@@ -79,11 +79,10 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
     }
 
     /**
-     * Given the specified triple, this method will return all
-     * other triples which hang off blank nodes which occur
+     * Given the specified triple, this method will return all other triples which hang off blank nodes which occur
      * either as the subject or object of the triple.
      *
-     * @return
+     * @return an interator of all triples with blank nodes.
      * @throws GraphException
      */
     protected Set<Triple> getHangingTriples() throws GraphException {
