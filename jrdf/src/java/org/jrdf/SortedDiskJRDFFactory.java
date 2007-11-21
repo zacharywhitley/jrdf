@@ -80,9 +80,11 @@ import org.jrdf.util.TempDirectoryHandler;
 
 import java.util.HashSet;
 import java.util.Set;
+import static java.util.Arrays.*;
 
 /**
- * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
+ * The optimal version of an on disk JRDF graph.  Currently, uses BDB for sorting intermedia results, Sesame for the on
+ * disk triple store and db4o for the ValueStore/NodePool/Stringpool.
  *
  * @author Andrew Newman
  * @version $Id: TestJRDFFactory.java 533 2006-06-04 17:50:31 +1000 (Sun, 04 Jun 2006) newmana $
@@ -113,9 +115,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         BTree[] bTrees = createBTrees();
         LongIndex[] indexes = createIndexes(bTrees);
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
-        openIndexes.add(indexes[0]);
-        openIndexes.add(indexes[1]);
-        openIndexes.add(indexes[2]);
+        openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
         orderedGraphFactory = new GraphFactoryImpl(indexes, nodePoolFactory, bTrees[0]);
         return orderedGraphFactory.getGraph();

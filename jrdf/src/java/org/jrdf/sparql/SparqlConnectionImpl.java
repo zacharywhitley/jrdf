@@ -78,9 +78,8 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
  * @version $Id: SparqlConnectionImpl.java 982 2006-12-08 08:42:51Z newmana $
  */
 public final class SparqlConnectionImpl implements SparqlConnection {
-
     // FIXME TJA: Ensure connections are threadsafe.
-    private QueryBuilder builder;
+    private final QueryBuilder builder;
     private final QueryEngine queryEngine;
 
     /**
