@@ -60,7 +60,7 @@
 package org.jrdf.example;
 
 import org.jrdf.JRDFFactory;
-import org.jrdf.SortedSesameJRDFFactory;
+import org.jrdf.SortedDiskJRDFFactory;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.graph.Graph;
@@ -72,7 +72,7 @@ import org.jrdf.writer.bdb.BdbBlankNodeRegistryImpl;
 
 public class DiskPerformance extends AbstractGraphPerformance {
     private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
-    private JRDFFactory factory = SortedSesameJRDFFactory.getFactory();
+    private JRDFFactory factory = SortedDiskJRDFFactory.getFactory();
 
     protected Graph getGraph() {
         Graph newGraph = factory.getNewGraph();
