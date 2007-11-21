@@ -61,12 +61,12 @@ package org.jrdf.example;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedDiskJRDFFactory;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.graph.Graph;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.bdb.BdbBlankNodeRegistryImpl;
 

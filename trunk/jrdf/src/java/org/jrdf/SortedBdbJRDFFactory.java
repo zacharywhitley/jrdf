@@ -62,12 +62,13 @@ package org.jrdf;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.bdb.LongIndexBdb;
+import org.jrdf.graph.local.index.longindex.sesame.BTree;
+import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
+import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
+import org.jrdf.graph.local.index.longindex.sesame.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
@@ -77,6 +78,10 @@ import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.builder.QueryBuilder;
+
+import java.util.Set;
+import java.util.HashSet;
+import static java.util.Arrays.asList;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -88,8 +93,12 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     private static final QueryFactory QUERY_FACTORY = new QueryFactoryImpl();
     private static final QueryEngine QUERY_ENGINE = QUERY_FACTORY.createQueryEngine();
     private static final QueryBuilder BUILDER = QUERY_FACTORY.createQueryBuilder();
-    private static final BdbEnvironmentHandler HANDLER = new BdbEnvironmentHandlerImpl(new TempDirectoryHandler());
+    private static final TempDirectoryHandler HANDLER = new TempDirectoryHandler();
+    private static final BdbEnvironmentHandler BDB_HANDLER = new BdbEnvironmentHandlerImpl(HANDLER);
     private static long graphNumber;
+    private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
+    private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
+    private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private GraphFactory orderedGraphFactory;
 
     private SortedBdbJRDFFactory() {
@@ -104,12 +113,11 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        MapFactory factory1 = new BdbMapFactory(HANDLER, "spo" + graphNumber);
-        MapFactory factory2 = new BdbMapFactory(HANDLER, "pos" + graphNumber);
-        MapFactory factory3 = new BdbMapFactory(HANDLER, "osp" + graphNumber);
-        LongIndex[] indexes = new LongIndex[]{new LongIndexBdb(factory1), new LongIndexBdb(factory2),
-            new LongIndexBdb(factory3)};
-        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(HANDLER, graphNumber);
+        BTree[] bTrees = createBTrees();
+        LongIndex[] indexes = createIndexes(bTrees);
+        NodePoolFactory nodePoolFactory = new BdbNodePoolFactory(BDB_HANDLER, graphNumber);
+        openIndexes.addAll(asList(indexes));
+        openFactories.add(nodePoolFactory);
         orderedGraphFactory = new OrderedGraphFactoryImpl(indexes, nodePoolFactory);
         return orderedGraphFactory.getGraph();
     }
@@ -119,5 +127,24 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     }
 
     public void close() {
+        for (LongIndex index : openIndexes) {
+            index.close();
+        }
+        for (NodePoolFactory openFactory : openFactories) {
+            openFactory.close();
+        }
+        openIndexes.clear();
+        openFactories.clear();
+    }
+
+    private BTree[] createBTrees() {
+        return new BTree[] {btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
+            btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
+            btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
+    }
+
+    private LongIndex[] createIndexes(BTree... btrees) {
+        return new LongIndex[]{new LongIndexSesame(btrees[0]), new LongIndexSesame(btrees[1]),
+            new LongIndexSesame(btrees[2])};
     }
 }
