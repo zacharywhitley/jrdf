@@ -4,6 +4,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Resource;
 import static org.jrdf.graph.AnySubjectNode.*;
 import static org.jrdf.graph.AnyPredicateNode.*;
 import static org.jrdf.graph.AnyObjectNode.*;
@@ -21,6 +22,7 @@ public class StringNodeMapperImpl implements StringNodeMapper {
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
         ").*";
     private final LiteralMatcher literalMatcher;
+    private String currentString;
 
     public StringNodeMapperImpl(LiteralMatcher newLiteralMatcher) {
         literalMatcher = newLiteralMatcher;
@@ -28,16 +30,12 @@ public class StringNodeMapperImpl implements StringNodeMapper {
     }
 
     public String convertToString(Node node) {
-        if (BlankNode.class.isAssignableFrom(node.getClass())) {
-            return node.toString();
-        } else if (URIReference.class.isAssignableFrom(node.getClass())) {
-            return ((URIReference) node).getURI().toString();
-        } else if (Literal.class.isAssignableFrom(node.getClass())) {
-            return ((Literal) node).getEscapedForm();
-        } else if (node == ANY_SUBJECT_NODE || node == ANY_PREDICATE_NODE || node == ANY_OBJECT_NODE) {
+        if (node != ANY_SUBJECT_NODE && node != ANY_PREDICATE_NODE && node != ANY_OBJECT_NODE) {
+            node.accept(this);
+            return currentString;
+        } else {
             return null;
         }
-        throw new IllegalArgumentException("Failed to conver node: " + node);
     }
 
     public BlankNode convertToBlankNode(String string) {
@@ -63,5 +61,29 @@ public class StringNodeMapperImpl implements StringNodeMapper {
         }
         ((LiteralMutableId) literal).setId(nodeId);
         return literal;
+    }
+
+    public void visitBlankNode(BlankNode blankNode) {
+        currentString = blankNode.toString();
+    }
+
+    public void visitURIReference(URIReference uriReference) {
+        currentString = uriReference.getURI().toString();
+    }
+
+    public void visitLiteral(Literal literal) {
+        currentString = literal.getEscapedForm();
+    }
+
+    public void visitNode(Node node) {
+        illegalNode(node);
+    }
+
+    public void visitResource(Resource resource) {
+        illegalNode(resource);
+    }
+
+    private void illegalNode(Node node) {
+        throw new IllegalArgumentException("Failed to convert node: " + node);
     }
 }
