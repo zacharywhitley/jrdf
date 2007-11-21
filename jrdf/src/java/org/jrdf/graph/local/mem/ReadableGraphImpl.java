@@ -67,31 +67,32 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.graph.local.iterator.IteratorFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Map;
 import java.util.Set;
 
 public class ReadableGraphImpl implements ReadableGraph {
-    private NodePool nodePool;
+    private Localizer localizer;
     private LongIndex[] longIndexes;
     private IteratorFactory iteratorFactory;
 
-    public ReadableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
-        checkNotNull(newLongIndexes, newNodePool, newIteratorFactory);
+    public ReadableGraphImpl(LongIndex[] newLongIndexes, Localizer newLocalizer, IteratorFactory newIteratorFactory) {
+        checkNotNull(newLongIndexes, newLocalizer, newIteratorFactory);
         this.longIndexes = newLongIndexes;
-        this.nodePool = newNodePool;
+        this.localizer = newLocalizer;
         this.iteratorFactory = newIteratorFactory;
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         try {
             // Get local node values
-            Long[] values = nodePool.localize(subject, predicate, object);
+            Long[] values = localizer.localize(subject, predicate, object);
             return containsValues(values, subject, predicate, object);
         } catch (GraphException ge) {
             // Graph exception on localize implies that the subject, predicate or
@@ -104,7 +105,7 @@ public class ReadableGraphImpl implements ReadableGraph {
         // Get local node values
         Long[] values;
         try {
-            values = nodePool.localize(subject, predicate, object);
+            values = localizer.localize(subject, predicate, object);
         } catch (GraphException ge) {
             // A graph exception implies that the subject, predicate or object does
             // not exist in the graph.
@@ -112,6 +113,15 @@ public class ReadableGraphImpl implements ReadableGraph {
         }
 
         return findNonEmptyIterator(subject, predicate, object, values);
+    }
+
+    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
+        Long value = localizer.localize(resource);
+        return iteratorFactory.newPredicateIterator(value);
+    }
+
+    public ClosableIterator<PredicateNode> findUniquePredicates() {
+        return iteratorFactory.newPredicateIterator();
     }
 
     public long getSize() {

@@ -66,6 +66,8 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
+import org.jrdf.graph.local.index.nodepool.Localizer;
+import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.iterator.IteratorFactory;
@@ -89,16 +91,18 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
     private ResourceFactory resourceFactory;
+    private Localizer localizer;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree spoTree) {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
+        this.localizer = new LocalizerImpl(nodePool);
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        this.iteratorFactory = new DiskIteratorFactory(longIndexes, graphHandlers, nodePool, spoTree);
+        this.iteratorFactory = new DiskIteratorFactory(longIndexes, graphHandlers, nodePool, localizer, spoTree);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
-        this.resourceFactory = new ResourceFactoryImpl(nodePool, longIndexes, graphHandlers, readWriteGraph);
+        this.resourceFactory = new ResourceFactoryImpl(localizer, readWriteGraph);
     }
 
     public Graph getGraph() {

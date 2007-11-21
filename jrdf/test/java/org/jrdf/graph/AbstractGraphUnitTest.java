@@ -778,7 +778,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     public void testResourceIteratorSimple() throws Exception {
-        final ClosableIterator<Resource> resources = graph.getResources();
+        final ClosableIterator<Resource> resources = graph.findResources();
         boolean b = resources.hasNext();
         assertFalse("Should be no resources for empty graph", b);
         assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
@@ -791,7 +791,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     public void testBlankNodeResourceIterator() throws Exception {
         addTestNodes();
 
-        ClosableIterator<Resource> blankNodes = graph.getBlankNodes();
+        ClosableIterator<Resource> blankNodes = graph.findBlankNodes();
         int counter = 0;
         while (blankNodes.hasNext()) {
             blankNodes.next();
@@ -804,7 +804,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
 
-        ClosableIterator<Resource> iterator = graph.getURIReferences();
+        ClosableIterator<Resource> iterator = graph.findURIReferences();
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
@@ -817,7 +817,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     public void testResourceIterators() throws Exception {
         addTestNodes();
 
-        ClosableIterator<Resource> resources = graph.getResources();
+        ClosableIterator<Resource> resources = graph.findResources();
         int counter = 0;
         while (resources.hasNext()) {
             resources.next();
@@ -829,7 +829,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testPredicateIterators() throws Exception {
         addTestNodes();
-        ClosableIterator<PredicateNode> uniquePredicates = graph.getUniquePredicates();
+        ClosableIterator<PredicateNode> uniquePredicates = graph.findUniquePredicates();
         int counter = 0;
         while (uniquePredicates.hasNext()) {
             uniquePredicates.next();

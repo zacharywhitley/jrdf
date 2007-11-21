@@ -64,33 +64,23 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.global.GlobalizedBlankNode;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.iterator.AnyResourceIterator;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class ResourceFactoryImpl implements ResourceFactory {
-    private NodePool nodePool;
-    private LongIndex[] longIndexes;
-    private GraphHandler[] graphHandlers;
+    private Localizer localizer;
     private ReadWriteGraph readWriteGraph;
 
-    public ResourceFactoryImpl(NodePool newNodePool, LongIndex[] newLongIndexes, GraphHandler[] newGraphHandlers,
-            ReadWriteGraph newReadWriteGraph) {
-        checkNotNull(newNodePool, newLongIndexes, newGraphHandlers, newReadWriteGraph);
-        this.nodePool = newNodePool;
-        this.longIndexes = newLongIndexes;
-        this.graphHandlers = newGraphHandlers;
+    public ResourceFactoryImpl(Localizer localizer, ReadWriteGraph newReadWriteGraph) {
+        checkNotNull(localizer, newReadWriteGraph);
+        this.localizer = localizer;
         this.readWriteGraph = newReadWriteGraph;
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         try {
-            nodePool.localize(node);
+            localizer.localize(node);
             if (GlobalizedBlankNode.class.isAssignableFrom(node.getClass())) {
                 return new BlankNodeResourceImpl((GlobalizedBlankNode) node, readWriteGraph);
             } else {
@@ -103,27 +93,10 @@ public class ResourceFactoryImpl implements ResourceFactory {
 
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
         try {
-            nodePool.localize(node);
+            localizer.localize(node);
             return new URIReferenceResourceImpl(node, readWriteGraph);
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
     }
-
-    public ClosableIterator<Resource> getResources() {
-        return new AnyResourceIterator(longIndexes, graphHandlers, this);
-    }
-
-    public ClosableIterator<Resource> getBlankNodes() {
-        return null;
-    }
-
-    public ClosableIterator<Resource> getURIReferences() {
-        return null;
-    }
-
-    public Node getNodeById(Long nodeId) {
-        return nodePool.getNodeById(nodeId);
-    }
-
 }

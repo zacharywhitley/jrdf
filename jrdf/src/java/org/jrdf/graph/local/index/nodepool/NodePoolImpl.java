@@ -58,14 +58,9 @@
  */
 package org.jrdf.graph.local.index.nodepool;
 
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.mem.LocalizedNode;
 import org.jrdf.map.MapFactory;
@@ -76,11 +71,6 @@ import java.util.Map;
 import java.util.Set;
 
 public final class NodePoolImpl implements NodePool {
-    /**
-     * Three being the number, and the number being 3.
-     */
-    private static final int TRIPLE = 3;
-
     /**
      * Maps nodes to node types.
      */
@@ -167,98 +157,10 @@ public final class NodePoolImpl implements NodePool {
         return values;
     }
 
-    public Long[] localize(Node first, Node second, Node third) throws GraphException {
-        Long[] localValues = new Long[TRIPLE];
-
-        // convert the nodes to local memory nodes for convenience
-        localValues[0] = convertSubject(first);
-        localValues[1] = convertPredicate(second);
-        localValues[2] = convertObject(third);
-        return localValues;
-    }
-
-    public Long localize(Node node) throws GraphException {
-        return convertObject(node);
-    }
-
     public void clear() {
         nodeTypePool.clear();
         stringPool.clear();
         nextNode = 1L;
-    }
-
-    // TODO Comeback and review this.
-    private Long convertSubject(Node first) throws GraphException {
-        Long subjectValue = null;
-        if (ANY_SUBJECT_NODE != first) {
-            if (LocalizedNode.class.isAssignableFrom(first.getClass())) {
-                if (BlankNode.class.isAssignableFrom(first.getClass())) {
-                    subjectValue = getBlankNode(first);
-                } else if (URIReference.class.isAssignableFrom(first.getClass())) {
-                    subjectValue = getNodeIdByString(((URIReference) first).getURI().toString());
-                }
-            }
-            if (null == subjectValue) {
-                throw new GraphException("Subject does not exist in graph: " + first);
-            }
-        }
-        return subjectValue;
-    }
-
-    private Long convertPredicate(Node second) throws GraphException {
-        Long predicateValue = null;
-        if (ANY_PREDICATE_NODE != second) {
-            predicateValue = getNodeIdByString(((URIReference) second).getURI().toString());
-            if (null == predicateValue) {
-                throw new GraphException("Predicate does not exist in graph: " + second);
-            }
-        }
-        return predicateValue;
-    }
-
-    // TODO (AN) String of instanceof should be changed to calls by type.
-    private Long convertObject(Node third) throws GraphException {
-        Long objectValue = null;
-        if (ANY_OBJECT_NODE != third) {
-            if (LocalizedNode.class.isAssignableFrom(third.getClass())) {
-                if (Resource.class.isAssignableFrom(third.getClass())) {
-                    objectValue = getResource(third);
-                } else if (BlankNode.class.isAssignableFrom(third.getClass())) {
-                    objectValue = getBlankNode(third);
-                } else if (Literal.class.isAssignableFrom(third.getClass())) {
-                    objectValue = getNodeIdByString(((Literal) third).getEscapedForm());
-                } else if (URIReference.class.isAssignableFrom(third.getClass())) {
-                    objectValue = getNodeIdByString(((URIReference) third).getURI().toString());
-                }
-            }
-            if (null == objectValue) {
-                throw new GraphException("Object does not exist in graph: " + third);
-            }
-        }
-        return objectValue;
-    }
-
-    private Long getResource(Node third) throws GraphException {
-        Long objectValue;
-        if (((Resource) third).isURIReference()) {
-            objectValue = getNodeIdByString(((URIReference) third).getURI().toString());
-        } else {
-            objectValue = getBlankNode(third);
-        }
-        return objectValue;
-    }
-
-    private Long getBlankNode(Node blankNode) throws GraphException {
-        Long nodeId = ((LocalizedNode) blankNode).getId();
-        Node node = nodeTypePool.get(nodeId);
-        if (node == null) {
-            throw new GraphException("The node id was not found in the graph: " + nodeId);
-        }
-        if (!blankNode.equals(node)) {
-            throw new GraphException("The node returned by the nodeId (" + nodeId + ") was not the same blank " +
-                "node.  Got: " + node + ", expected: " + blankNode);
-        }
-        return nodeId;
     }
 
     private void addEntries(Set<Map.Entry<Long, String>> entries) {

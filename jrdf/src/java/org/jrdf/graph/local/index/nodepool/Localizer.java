@@ -57,15 +57,30 @@
  *
  */
 
-package org.jrdf.graph.local.mem;
+package org.jrdf.graph.local.index.nodepool;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.GraphException;
 
-public interface ResourceFactory {
-    Resource createResource(BlankNode node) throws GraphElementFactoryException;
+public interface Localizer {
+    /**
+     * Converts a globalized set of triple objects to an array of longs.
+     *
+     * @param first  The first node.
+     * @param second The second node.
+     * @param third  The last node.
+     * @return an array of longs that match the given first, second and third nodes.
+     *
+     * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
+     */
+    Long[] localize(Node first, Node second, Node third) throws GraphException;
 
-    Resource createResource(URIReference node) throws GraphElementFactoryException;
+    /**
+     * Converts a node into it's localized version.
+     *
+     * @param node the node to localize.
+     * @return the unique node identifier.
+     * @throws GraphException if the node was not part of this node pool.
+     */
+    Long localize(Node node) throws GraphException;
 }

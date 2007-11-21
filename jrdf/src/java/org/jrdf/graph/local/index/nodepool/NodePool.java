@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.local.index.nodepool;
 
-import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.local.mem.LocalizedNode;
 
@@ -112,27 +111,6 @@ public interface NodePool {
      * @return
      */
     Long getNodeId(String value);
-
-    /**
-     * Converts a globalized set of triple objects to an array of longs.
-     *
-     * @param first  The first node.
-     * @param second The second node.
-     * @param third  The last node.
-     * @return an array of longs that match the given first, second and third nodes.
-     *
-     * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
-     */
-    Long[] localize(Node first, Node second, Node third) throws GraphException;
-
-    /**
-     * Converts a node into it's localized version.
-     *
-     * @param node the node to localize.
-     * @return the unique node identifier.
-     * @throws GraphException if the node was not part of this node pool.
-     */
-    Long localize(Node node) throws GraphException;
 
     /**
      * Removes all entries from the nodepool.

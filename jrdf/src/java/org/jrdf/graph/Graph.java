@@ -141,28 +141,28 @@ public interface Graph {
      *
      * @return all unique predicate.
      */
-    ClosableIterator<PredicateNode> getUniquePredicates();
+    ClosableIterator<PredicateNode> findUniquePredicates();
 
     /**
      * Return all unique resources (Subjects and Objects).
      *
      * @return all unique resources.
      */
-    ClosableIterator<Resource> getResources();
+    ClosableIterator<Resource> findResources();
 
     /**
      * Returns all unique blank nodes.
      *
      * @return all unique blank nodes.
      */
-    ClosableIterator<Resource> getBlankNodes();
+    ClosableIterator<Resource> findBlankNodes();
 
     /**
      * Returns all unique URIReferences (Subject and Object).
      *
      * @return all unique URIReference nodes.
      */
-    ClosableIterator<Resource> getURIReferences();
+    ClosableIterator<Resource> findURIReferences();
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created

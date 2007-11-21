@@ -87,7 +87,8 @@ public class AnyResourcePredicateIterator implements ClosableIterator<PredicateN
         if (!iterator.hasNext()) {
             throw new NoSuchElementException();
         }
-        final Node node = nodePool.getNodeById(iterator.next().getKey());
+        Long id = iterator.next().getKey();
+        final Node node = nodePool.getNodeById(id);
         // Add check to see if it's a predicate.
         return (PredicateNode) node;
     }

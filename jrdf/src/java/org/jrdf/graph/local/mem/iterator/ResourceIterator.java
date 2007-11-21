@@ -68,6 +68,7 @@ import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.mem.ResourceFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -85,16 +86,18 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
     protected Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
     protected Resource nextResource;
     protected boolean firstTime = true;
+    protected NodePool nodePool;
 
     public ResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final ResourceFactory newResourceFactory) {
-        checkNotNull(newLongIndexes, newGraphHandlers, newResourceFactory);
+        final ResourceFactory newResourceFactory, final NodePool newNodePool) {
+        checkNotNull(newLongIndexes, newGraphHandlers, newResourceFactory, newNodePool);
         graphHandler201 = newGraphHandlers[2];
         resourceFactory = newResourceFactory;
         longIndex012 = newLongIndexes[0];
         iterator201 = newLongIndexes[2].iterator();
         graphHandler012 = newGraphHandlers[0];
         iterator012 = newLongIndexes[0].iterator();
+        nodePool = newNodePool;
         nextResource = getNextNode();
     }
 
@@ -150,7 +153,7 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
 
             //check the SPO does not contain the given index and that we haven't reached the end of iterator
             if (nodeId != -1 && !longIndex012.contains(nodeId)) {
-                final Node node = resourceFactory.getNodeById(nodeId);
+                final Node node = nodePool.getNodeById(nodeId);
                 //check node is not a literal
                 if (!(node instanceof Literal)) {
                     return toResource(node);
@@ -169,7 +172,7 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
     private Resource getNextSPOElement() throws GraphElementFactoryException {
         final Long index = getNextNodeID(iterator012, graphHandler012);
         if (index != -1) {
-            final Node node = resourceFactory.getNodeById(index);
+            final Node node = nodePool.getNodeById(index);
             return toResource(node);
         }
         return null;
