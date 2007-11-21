@@ -78,30 +78,33 @@ public final class NadicJoinImpl implements NadicJoin {
     private final TupleEngine tupleEngine;
     private final RelationProcessor relationProcessor;
 
-    /**
-     * Cannot create process.
-     */
     public NadicJoinImpl(RelationProcessor relationProcessor, TupleEngine tupleEngine) {
         this.tupleEngine = tupleEngine;
         this.relationProcessor = relationProcessor;
     }
 
     public Relation join(Set<Relation> relations) {
+        Relation relation = isDeeDumOrSingle(relations);
+        if (relation == null) {
+            relation = relationProcessor.processRelations(relations, tupleEngine);
+        }
+        return relation;
+    }
+
+    private Relation isDeeDumOrSingle(Set<Relation> relations) {
+        Relation relation = null;
         // Is it the empty set return DEE.
         if (relations.equals(Collections.<Relation>emptySet())) {
-            return RELATION_DEE;
+            relation = RELATION_DEE;
         }
-
+        // Is it DUM - therefore return DUM
+        if (relations.contains(RELATION_DUM)) {
+            relation = RELATION_DUM;
+        }
         // Is it just one relations - if so just return it back.
         if (relations.size() == 1) {
-            return relations.iterator().next();
+            relation = relations.iterator().next();
         }
-
-        // If DEE is involved it can only be DEE in more than one operation.
-        if (relations.contains(RELATION_DUM)) {
-            return RELATION_DUM;
-        }
-
-        return relationProcessor.processRelations(relations, tupleEngine);
+        return relation;
     }
 }
