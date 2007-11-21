@@ -1,8 +1,9 @@
 JRDF Release 0.5.2
 ==================
-* Improved performance with on disk implementation.
-* Add on disk set implementation.  (Feature ).
-
+* Improved performance and scalability of on disk implementation with SortedDiskJRDFFactory.  Supports reading
+ and writing large RDF/XML files with over 1 million triples (Feature 1835709).
+* Add on disk set implementation (Feature 1835709).
+* Modified Graph interface from getUniquePredicates and get node type to find (Bug 1835711).
 
 JRDF Release 0.5.1
 ==================
