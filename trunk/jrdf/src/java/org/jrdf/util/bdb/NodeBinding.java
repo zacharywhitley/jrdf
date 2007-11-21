@@ -12,13 +12,14 @@ import org.jrdf.graph.local.mem.LocalizedNode;
 import org.jrdf.graph.local.mem.URIReferenceImpl;
 import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 public class NodeBinding extends TupleBinding {
     private static final byte BLANK_NODE = 0;
     private static final byte URI_REFERENCE = 1;
     private static final byte LITERAL = 2;
-    private RegexMatcherFactoryImpl regexFactory = new RegexMatcherFactoryImpl();
+    private RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
     private StringNodeMapper mapper = new StringNodeMapperImpl(new RegexLiteralMatcher(regexFactory,
         new NTripleUtilImpl(regexFactory)));
 
@@ -33,7 +34,7 @@ public class NodeBinding extends TupleBinding {
         } else if (b == LITERAL) {
             object = mapper.convertToLiteral(str, tupleInput.readLong());
         } else {
-            throw new IllegalArgumentException("Cannot read class type");
+            throw new IllegalArgumentException("Cannot read class type: " + b);
         }
         return object;
     }

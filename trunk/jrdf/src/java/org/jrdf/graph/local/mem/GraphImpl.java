@@ -430,6 +430,7 @@ public class GraphImpl implements Graph, Serializable {
      * @param in The stream to read from.
      * @throws IOException If an I/O error occurs while reading.
      */
+    @SuppressWarnings({ "unchecked" })
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         // read in the first index with the default reader
         in.defaultReadObject();

@@ -1,3 +1,9 @@
+JRDF Release 0.5.2
+==================
+* Improved performance with on disk implementation.
+* Add on disk set implementation.  (Feature ).
+
+
 JRDF Release 0.5.1
 ==================
 * Added db4o implementation and improved Bdb implementation.
