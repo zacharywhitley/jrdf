@@ -85,6 +85,7 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
         while (iterator.hasNext()) {
             Map.Entry<Long, Map<Long, Set<Long>>> predicateToObjectSubjectMap = iterator.next();
             Map<Long, Set<Long>> objectSubjectMap = predicateToObjectSubjectMap.getValue();
+            // TODO AN Review this - second part doesn't make sense.
             if (objectSubjectMap.containsKey(resource) || objectSubjectMap.containsValue(resource)) {
                 currentPredicate = predicateToObjectSubjectMap.getKey();
                 return true;
