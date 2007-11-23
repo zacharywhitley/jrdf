@@ -90,6 +90,9 @@ public class SesameNodePoolFactory implements NodePoolFactory {
             StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
             File file = new File(handler.getDir(), "nodepool");
             file.mkdirs();
+            if (!file.mkdirs()) {
+                throw new RuntimeException("Could not create directories to store file.");
+            }
             nodePool = new IterativeDataStore(file, "" + graphNumber, false);
             return new SesameNodePool(nodePool, mapper);
         } catch (IOException e) {

@@ -82,7 +82,6 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.Writer;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -126,8 +125,7 @@ public abstract class AbstractGraphPerformance {
     protected abstract BlankNodeRegistry getBlankNodeRegistry();
 
     public void parsePerformance() throws Exception {
-        URL source = getClass().getResource(PATH);
-        InputStream stream = source.openStream();
+        InputStream stream = getClass().getResource(PATH).openStream();
         final Graph graph = getGraph();
         Parser parser = new RdfXmlParser(graph.getElementFactory(), getMapFactory());
         long startTime = System.currentTimeMillis();

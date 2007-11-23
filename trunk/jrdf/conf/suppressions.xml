@@ -16,6 +16,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="SortedBdbJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedMemoryJRDFFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="SortedDiskJRDFFactory"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="AbstractGraphPerformance"/>
     <suppress checks="JavaNCSS" files="DatatypeFactoryImpl"/>
     <suppress checks="JavaNCSS" files="GraphImpl"/>
     <suppress checks="JavaNCSS" files="WhereAnalyserImpl"/>
