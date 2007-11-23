@@ -225,7 +225,6 @@ public abstract class AbstractGraphPerformance {
         final Random random = new Random(System.currentTimeMillis());
         return graph.find(subject,
                 graphElementFactory.createURIReference(predicates.get(random.nextInt(NO_PREDICATES))),
-                graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + (int) Math.random() *
-                        NUMBER_OF_PREDICATES)));
+                graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + random.nextInt(NO_PREDICATES))));
     }
 }
