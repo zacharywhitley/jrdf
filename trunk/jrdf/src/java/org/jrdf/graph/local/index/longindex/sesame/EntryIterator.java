@@ -30,7 +30,7 @@ public class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Lon
     public Map.Entry<Long, Map<Long, Set<Long>>> next() {
         try {
             Long key = fromBytes(currentValues, TRIPLES)[0];
-            Long currentKey = new Long(key);
+            Long currentKey = Long.valueOf(key);
             Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
             while (currentValues != null && currentKey.equals(key)) {
                 Long[] longs = fromBytes(currentValues, TRIPLES);
