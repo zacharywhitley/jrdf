@@ -59,6 +59,7 @@
 
 package org.jrdf.example;
 
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -66,12 +67,11 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.map.MapFactory;
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfWriter;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
@@ -85,6 +85,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class AbstractGraphPerformance {
     private static final int NUMBER_OF_NODES_TO_ADD = 50000;
@@ -223,8 +224,9 @@ public abstract class AbstractGraphPerformance {
     private ClosableIterator<Triple> findRandomPredicates(Graph graph, SubjectNode subject)
         throws GraphException, GraphElementFactoryException {
         noFinds++;
+        final Random random = new Random(System.currentTimeMillis());
         return graph.find(subject,
-                graphElementFactory.createURIReference(predicates.get((int) Math.random() * NO_PREDICATES)),
+                graphElementFactory.createURIReference(predicates.get(random.nextInt(NO_PREDICATES))),
                 graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + (int) Math.random() *
                         NUMBER_OF_PREDICATES)));
     }

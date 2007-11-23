@@ -224,7 +224,7 @@ public final class RdfXmlParser implements ConfigurableParser {
      * Flag indicating whether the parser should stop parsing when it finds
      * an error in the data.
      */
-    boolean stopAtFirstError = true;
+    private boolean stopAtFirstError = true;
 
     /**
      * Creates a new RdfXmlParser that will use the supplied GraphElementFactory to create objects for resources,
@@ -1204,7 +1204,7 @@ public final class RdfXmlParser implements ConfigurableParser {
         }
     }
 
-    void sendError(String msg) throws SAXException {
+    synchronized void sendError(String msg) throws SAXException {
         if (null != errorListener) {
             Locator loc = saxFilter.getLocator();
             if (null == loc) {

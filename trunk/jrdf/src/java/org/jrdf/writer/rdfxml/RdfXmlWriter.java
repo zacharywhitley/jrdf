@@ -156,7 +156,7 @@ public class RdfXmlWriter implements RdfWriter {
             try {
                 xmlStreamWriter = FACTORY.createXMLStreamWriter(printWriter);
             } catch (XMLStreamException e) {
-                new WriteException(e);
+                throw new WriteException(e);
             }
 
             // header
