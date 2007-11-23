@@ -100,9 +100,9 @@ public class SesameNodePool implements NodePool {
         if (type == BNODE_PREFIX) {
             node = mapper.convertToBlankNode(value);
         } else if (type == URI_PREFIX) {
-            node = mapper.convertToURIReference(value, new Long(nodeId));
+            node = mapper.convertToURIReference(value, Long.valueOf(nodeId));
         } else if (type == LITERAL_PREFIX) {
-            node = mapper.convertToLiteral(value, new Long(nodeId));
+            node = mapper.convertToLiteral(value, Long.valueOf(nodeId));
         }
         return node;
     }

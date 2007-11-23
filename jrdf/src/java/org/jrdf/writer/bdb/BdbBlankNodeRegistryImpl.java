@@ -80,7 +80,7 @@ public final class BdbBlankNodeRegistryImpl implements BlankNodeRegistry {
         checkNotNull(node);
         Long id = blankNodeList.get(node);
         if (id == null) {
-            id = new Long(blankNodeList.size());
+            id = (long) blankNodeList.size();
             blankNodeList.put(node, id);
         }
         return "bNode_" + id;
