@@ -114,12 +114,11 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return wrapInTripleIterator(new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index],
-            graphHandlers[index]));
+        return new BTreeGraphIterator(trees[index], graphHandlers[index], fixedFirstNode, fixedSecondNode, 0L);
     }
 
     public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return wrapInTripleIterator(new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]));
+        return new BTreeGraphIterator(trees[0], graphHandlers[0], newNodes);
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
@@ -128,9 +127,5 @@ public final class DiskIteratorFactory implements IteratorFactory {
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
         return new FixedResourcePredicateIterator(longIndexes[1], nodePool, resource);
-    }
-
-    private ClosableIterator<Triple> wrapInTripleIterator(Iterator<Triple> iterator) {
-        return new TripleClosableIterator(iterator, localizer, longIndexes[0], graphHandlers[0]);
     }
 }
