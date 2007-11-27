@@ -76,7 +76,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 @SuppressWarnings({ "unchecked" })
-public class BlankNodeRegistryImplUnitTest extends TestCase {
+public class MemBlankNodeRegistryImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
     private static final String[] PARAM_NAMES = {"node"};
     private static final Class[] PARAM_TYPES = {BlankNode.class};

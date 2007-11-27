@@ -84,4 +84,6 @@ public interface NewMolecule {
     void specialAdd(NewMolecule molecule);
 
     NewMolecule add(Triple triple, Triple newTriple);
+
+    boolean contains(Triple triple);
 }

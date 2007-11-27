@@ -80,7 +80,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
     }
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2) {
-        if (molecule1.getHeadTriple().equals(molecule2.getHeadTriple())) {
+        if ((matchingHeadTriple(molecule1, molecule2)) || (moleculeIsSubsumed(molecule1, molecule2))) {
             SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
             addRootTriples(molecule1, newRootTriples);
             addRootTriples(molecule2, newRootTriples);
@@ -94,6 +94,14 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         } else {
             throw new IllegalArgumentException("Cannot merge molecules with different head triples.");
         }
+    }
+
+    private boolean matchingHeadTriple(NewMolecule molecule1, NewMolecule molecule2) {
+        return molecule1.getHeadTriple().equals(molecule2.getHeadTriple());
+    }
+
+    private boolean moleculeIsSubsumed(NewMolecule molecule1, NewMolecule molecule2) {
+        return molecule1.contains(molecule2.getHeadTriple()) || (molecule2.contains(molecule1.getHeadTriple()));
     }
 
     public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {

@@ -97,7 +97,7 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
         int slashIndex = uri.lastIndexOf('/');
         int index = Math.max(hashIndex, slashIndex);
         // if there is no '#' or '/', return entire uri
-        return (index > 0 && index < uri.length()) ? uri.substring(0, ++index) : uri;
+        return (index > 0) && (index < uri.length()) ? uri.substring(0, ++index) : uri;
     }
 
     private void add(String name, String uri) {

@@ -192,8 +192,7 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public boolean contains(Triple triple) {
-        NewMolecule moleculeToFind = new HeadMoleculeImpl(triple);
-        return subMolecules.keySet().contains(moleculeToFind);
+        return subMolecules.keySet().contains(triple);
     }
 
     public boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
