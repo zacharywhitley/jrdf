@@ -106,11 +106,11 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return new BTreeGraphIterator(trees[0], graphHandlers[0]);
+        return new BTreeGraphIterator(trees[0], graphHandlers[0], 0L, 0L, 0L);
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return new BTreeOneFixedIterator(fixedFirstNode, trees[index], graphHandlers[index]);
+        return new BTreeGraphIterator(trees[index], graphHandlers[index], fixedFirstNode, 0L, 0L);
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
