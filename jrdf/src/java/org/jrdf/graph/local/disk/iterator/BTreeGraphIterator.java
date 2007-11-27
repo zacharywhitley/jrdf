@@ -14,17 +14,17 @@ import java.util.NoSuchElementException;
 
 public class BTreeGraphIterator implements ClosableIterator<Triple> {
     private static final int TRIPLES = 3;
-    private final GraphHandler handler;
     private final TripleBTree btree;
+    private final GraphHandler handler;
     private BTreeIterator bTreeIterator;
     private byte[] bytesToRemove;
     private byte[] currentBytes;
     private boolean nextCalled;
 
-    public BTreeGraphIterator(TripleBTree newBTree, GraphHandler newHandler) {
+    public BTreeGraphIterator(TripleBTree newBTree, GraphHandler newHandler, Long... nodes) {
         this.btree = newBTree;
         this.handler = newHandler;
-        bTreeIterator = btree.iterateAll();
+        bTreeIterator = btree.getIterator(nodes);
         getNextBytes();
     }
 
