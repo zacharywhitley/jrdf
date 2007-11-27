@@ -82,10 +82,13 @@ import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.checkSubmolecul
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMoleculeWithSubmolecule;
 import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.createMultiLevelMolecule;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
+import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.*;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
+import java.util.Set;
 import static java.util.Collections.EMPTY_SET;
 
 public class MergeSubmoleculesImplUnitTest extends TestCase {
@@ -162,6 +165,24 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1, b2r1r2, b2r2r2,
             b2r3b3), asSet(b3r1r3));
+        assertEquals(expectedMolecule, newMolecule);
+    }
+
+    public void testMoleculeSubsumption() {
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b2r2b3), EMPTY_SET, EMPTY_SET);
+        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b2r2b3, b2r1r2), EMPTY_SET, EMPTY_SET);
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b2r2b3, b2r2b3, b2r1r2), EMPTY_SET,
+            EMPTY_SET);
+        assertEquals(expectedMolecule, newMolecule);
+    }
+
+    public void testMoleculeSubsumptionLevel2() {
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r2b3, b2r1r2), asSet(b3r1r3));
+        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r2b2), asSet(b2r2b3), asSet(b3r1r2));
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r2b3, b2r1r2),
+            asSet(b3r1r3, b3r1r2));
         assertEquals(expectedMolecule, newMolecule);
     }
 
