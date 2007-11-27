@@ -1309,13 +1309,11 @@ public class BTree {
             }
         }
 
-        public void read()
-            throws IOException {
+        public void read() throws IOException {
             ByteBuffer buf = ByteBuffer.wrap(data);
             // Don't fill the spare slot in data:
             buf.limit(nodeSize);
             fileChannel.read(buf, offset);
-
             valueCount = ByteArrayUtil.getInt(data, 0);
         }
 
