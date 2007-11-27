@@ -84,7 +84,7 @@ import java.util.HashSet;
  */
 public final class AnswerImpl implements Answer, Serializable {
     private static final long serialVersionUID = 3778815984074679718L;
-    private LinkedHashSet<Attribute> heading;
+    private Set<Attribute> heading;
     private transient Relation results;
     private long timeTaken;
     private boolean hasProjected;
