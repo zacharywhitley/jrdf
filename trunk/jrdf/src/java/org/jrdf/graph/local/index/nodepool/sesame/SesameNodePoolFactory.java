@@ -88,11 +88,7 @@ public class SesameNodePoolFactory implements NodePoolFactory {
             RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
             LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
             StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
-            File file = new File(handler.getDir(), "nodepool");
-            file.mkdirs();
-            if (!file.mkdirs()) {
-                throw new RuntimeException("Could not create directories to store file.");
-            }
+            File file = handler.makeChildDir("nodepool");
             nodePool = new IterativeDataStore(file, "" + graphNumber, false);
             return new SesameNodePool(nodePool, mapper);
         } catch (IOException e) {

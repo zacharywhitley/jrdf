@@ -12,13 +12,8 @@ public class BTreeFactoryImpl implements BTreeFactory {
     public BTree createBTree(DirectoryHandler handler, String fileName) {
         BTreeValueComparator comparator = new DefaultBTreeValueComparator();
         try {
-            File parent = handler.getDir();
-            // TODO AN Review
-            parent.mkdirs();
-//            if (!parent.mkdirs()) {
-//                throw new RuntimeException("Could not create directories to store file.");
-//            }
-            File file = new File(handler.getDir(), fileName);
+            File parent = handler.makeDir();
+            File file = new File(parent, fileName);
             return new BTree(file, BLOCK_SIZE, VALUE_SIZE, comparator);
         } catch (IOException e) {
             throw new RuntimeException(e);

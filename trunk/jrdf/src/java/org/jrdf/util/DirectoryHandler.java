@@ -65,4 +65,8 @@ public interface DirectoryHandler {
     File getDir();
 
     boolean removeDir();
+
+    File makeDir();
+
+    File makeChildDir(String child);
 }
