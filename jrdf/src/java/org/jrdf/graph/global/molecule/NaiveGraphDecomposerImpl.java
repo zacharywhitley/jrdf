@@ -19,7 +19,6 @@ package org.jrdf.graph.global.molecule;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
@@ -27,8 +26,9 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import static org.jrdf.graph.AbstractBlankNode.*;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -133,9 +133,5 @@ public class NaiveGraphDecomposerImpl implements GraphDecomposer {
                 addBlankNode(hangingTriples, nextTriple, nextTriple.getObject());
             }
         }
-    }
-
-    private boolean isBlankNode(Node node) {
-        return BlankNode.class.isAssignableFrom(node.getClass());
     }
 }
