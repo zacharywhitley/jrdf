@@ -531,15 +531,6 @@
       <JAVADOC />
       <SOURCES />
     </library>
-    <library name="je-3.2.42">
-      <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/je/je-3.2.44.jar!/" />
-      </CLASSES>
-      <JAVADOC />
-      <SOURCES>
-        <root url="file://D:/Downloads/je-3.2.44/je-3.2.44/src" />
-      </SOURCES>
-    </library>
     <library name="wstx-asl-3.2.1">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/woodstox/wstx-asl-3.2.1.jar!/" />
@@ -551,6 +542,20 @@
     <library name="db4o-6.3-java5">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/db4o/db4o-6.3-java5.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="log4j">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/log4j/log4j-1.2.13.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES />
+    </library>
+    <library name="je">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/je/je-3.2.44.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES />

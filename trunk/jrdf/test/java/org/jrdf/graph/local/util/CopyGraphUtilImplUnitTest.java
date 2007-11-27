@@ -122,6 +122,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     private Node node3;
     private Node node4;
     private Node node5;
+    private Node node6;
     private BlankNode bNode1;
     private BlankNode bNode2;
     private BlankNode bNode3;
@@ -155,6 +156,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         node3 = eFac1.createURIReference(URI.create(url1 + "node3"));
         node4 = eFac1.createURIReference(URI.create(url1 + "node4"));
         node5 = eFac1.createURIReference(URI.create(url1 + "node5"));
+        node6 = eFac1.createURIReference(URI.create(url1 + "node6"));
 
         bNode1 = eFac1.createBlankNode();
         bNode2 = eFac1.createBlankNode();
@@ -324,10 +326,12 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple4);
 
         cgUtil.copyTriplesForNode(graph1, graph2, node1, null);
+        cgUtil.replaceNode(graph2, node1, null);
         graph2 = cgUtil.getGraph();
         assertEquals("graph2 size", 1, graph2.getNumberOfTriples());
         graph2.clear();
         cgUtil.copyTriplesForNode(graph1, graph2, bNode1, null);
+        cgUtil.replaceNode(graph2, node1, null);
         graph2 = cgUtil.getGraph();
         assertEquals("graph2 size", 3, graph2.getNumberOfTriples());
     }
@@ -386,6 +390,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
 
         node5 = eFac2.createURIReference(URI.create(url2 + "node5"));
         cgUtil.copyTriplesForSubjectNode(graph1, graph2, (SubjectNode) node2, (SubjectNode) node5);
+        cgUtil.replaceNode(graph2, node2, node5);
         assertEquals("Graph2 size should be 3", 3, graph2.getNumberOfTriples());
         ClosableIterator<Triple> iterator =
                 graph2.find(eFac2.createURIReference(URI.create(node2.toString())), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -406,6 +411,28 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple5);
 
         cgUtil.copyTriplesForObjectNode(graph1, graph2, bNode4, null);
+        cgUtil.replaceNode(graph2, bNode4, null);
         assertEquals("Graph2 size should be 3", 2, graph2.getNumberOfTriples());
+    }
+
+    public void testDuplicates() throws GraphException, GraphElementFactoryException {
+        triple1 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node1);
+        triple2 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node2);
+        triple3 = tFac1.createTriple((SubjectNode) node1, pNode2, (ObjectNode) node3);
+        triple4 = tFac1.createTriple((SubjectNode) node2, pNode2, (ObjectNode) node4);
+
+        graph1.add(triple1);
+        graph1.add(triple2);
+        graph1.add(triple3);
+        graph1.add(triple4);
+
+        node5 = eFac2.createResource(URI.create(url2 + "node5"));
+        node6 = eFac2.createResource(URI.create(url2 + "node6"));
+        cgUtil.copyTriplesForNode(graph1, graph2, node1, node5);
+
+        assertEquals("Graph size is 4", 3, graph2.getNumberOfTriples());
+        cgUtil.copyTriplesForNode(graph1, graph2, node2, node6);
+        
+        assertEquals("Graph size is 4", 4, graph2.getNumberOfTriples());
     }
 }

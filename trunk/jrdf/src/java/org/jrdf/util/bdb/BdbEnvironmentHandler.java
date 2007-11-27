@@ -6,8 +6,8 @@ import com.sleepycat.je.DatabaseConfig;
 import com.sleepycat.je.DatabaseException;
 import com.sleepycat.je.Environment;
 
-import java.util.SortedSet;
 import java.util.Map;
+import java.util.SortedSet;
 
 public interface BdbEnvironmentHandler {
     Environment setUpEnvironment() throws DatabaseException;

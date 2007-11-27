@@ -24,6 +24,8 @@
     <orderEntry type="library" name="jofti" level="project" />
     <orderEntry type="library" name="ehcache" level="project" />
     <orderEntry type="library" name="sesame" level="project" />
+    <orderEntry type="library" name="log4j" level="project" />
+    <orderEntry type="library" name="je" level="project" />
     <orderEntryProperties />
   </component>
   <component name="copyright">

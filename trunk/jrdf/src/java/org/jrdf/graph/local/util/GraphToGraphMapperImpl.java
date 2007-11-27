@@ -51,12 +51,19 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
 
     public void updateBlankNodes(Triple triple) throws GraphElementFactoryException {
         SubjectNode subjectNode = triple.getSubject();
+        long hashcode;
         if (AbstractBlankNode.isBlankNode(subjectNode)) {
-            newBNodeMap.put((long) subjectNode.hashCode(), elementFactory.createBlankNode());
+            hashcode = (long) subjectNode.hashCode();
+            if (!newBNodeMap.containsKey(hashcode)) {
+                newBNodeMap.put(hashcode, elementFactory.createBlankNode());
+            }
         }
         final ObjectNode objectNode = triple.getObject();
         if (AbstractBlankNode.isBlankNode(objectNode)) {
-            newBNodeMap.put((long) objectNode.hashCode(), elementFactory.createBlankNode());
+            hashcode = (long) objectNode.hashCode();
+            if (!newBNodeMap.containsKey(hashcode)) {
+                newBNodeMap.put(hashcode, elementFactory.createBlankNode());
+            }
         }
     }
 
@@ -110,7 +117,8 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
             ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, oldONode);
             while (iterator.hasNext()) {
                 Triple triple = iterator.next();
-                graph.add(triple.getSubject(), triple.getPredicate(), newNode);
+                Triple newTriple = tripleFactory.createTriple(triple.getSubject(), triple.getPredicate(), newNode);
+                graph.add(newTriple);
                 graph.remove(triple.getSubject(), triple.getPredicate(), oldONode);
             }
             iterator.close();

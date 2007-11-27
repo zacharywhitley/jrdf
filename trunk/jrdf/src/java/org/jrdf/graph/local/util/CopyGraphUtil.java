@@ -39,4 +39,6 @@ public interface CopyGraphUtil {
     ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph,
                                         ObjectNode node, ObjectNode newNode)
         throws GraphException;
+
+    void replaceNode(Graph newTargetGraph, Node oldNode, Node newNode) throws GraphException;
 }
