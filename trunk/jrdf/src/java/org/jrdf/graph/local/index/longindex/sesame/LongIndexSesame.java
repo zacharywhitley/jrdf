@@ -14,13 +14,10 @@ import java.util.Map;
 import java.util.Set;
 
 public final class LongIndexSesame implements LongIndex {
-    private static final int OFFSET = 8;
-    private static final long MASK = 0xffffffffffffffffL;
     private static final int TRIPLES = 3;
-    private static final int VALUE_SIZE = 24;
-    private BTree btree;
+    private TripleBTree btree;
 
-    public LongIndexSesame(BTree newBtree) {
+    public LongIndexSesame(TripleBTree newBtree) {
         this.btree = newBtree;
     }
 
@@ -33,7 +30,7 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public void remove(Long... node) throws GraphException {
-        BTreeIterator bTreeIterator = getIterator(node);
+        BTreeIterator bTreeIterator = btree.getIterator(node);
         if (getNextBytes(bTreeIterator) == null) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
@@ -54,7 +51,7 @@ public final class LongIndexSesame implements LongIndex {
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
         Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-        BTreeIterator bTreeIterator = getIterator(first, 0L, 0L);
+        BTreeIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
         byte[] bytes = getNextBytes(bTreeIterator);
         while (bytes != null) {
             Long[] longs = fromBytes(bytes, TRIPLES);
@@ -67,12 +64,12 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public boolean contains(Long first) {
-        byte[] bytes = getNextBytes(getIterator(first, 0L, 0L));
+        byte[] bytes = getNextBytes(btree.getIterator(first, 0L, 0L));
         return bytes != null;
     }
 
     public boolean removeSubIndex(Long first) {
-        BTreeIterator bTreeIterator = getIterator(first, 0L, 0L);
+        BTreeIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
         byte[] bytes = getNextBytes(bTreeIterator);
         boolean changed = bytes != null;
         while (bytes != null) {
@@ -96,21 +93,6 @@ public final class LongIndexSesame implements LongIndex {
             btree.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    private BTreeIterator getIterator(Long... node) {
-        byte[] key = toBytes(node[0], node[1], node[2]);
-        byte[] filter = new byte[VALUE_SIZE];
-        for (int i = 0; i < TRIPLES; i++) {
-            addToFilter(filter, i, node);
-        }
-        return btree.iterateValues(key, filter);
-    }
-
-    private void addToFilter(byte[] filter, int index, Long... node) {
-        if (node[index] != 0) {
-            putLong(MASK, filter, index * OFFSET);
         }
     }
 

@@ -13,11 +13,11 @@ import java.util.NoSuchElementException;
 
 public class BTreeGraphIterator implements ClosableIterator<Triple> {
     private static final int TRIPLES = 3;
+    private final GraphHandler handler;
     private final BTree btree;
     private BTreeIterator bTreeIterator;
     private byte[] bytesToRemove;
     private byte[] currentBytes;
-    private final GraphHandler handler;
     private boolean nextCalled;
 
     public BTreeGraphIterator(BTree newBTree, GraphHandler newHandler) {

@@ -67,6 +67,7 @@ import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
+import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.db4o.Db4oNodePoolFactory;
 import org.jrdf.query.QueryFactory;
@@ -112,7 +113,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
 
     public Graph getNewGraph() {
         graphNumber++;
-        BTree[] bTrees = createBTrees();
+        TripleBTree[] bTrees = createBTrees();
         LongIndex[] indexes = createIndexes(bTrees);
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         openIndexes.addAll(asList(indexes));
@@ -136,13 +137,13 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         openFactories.clear();
     }
 
-    private BTree[] createBTrees() {
-        return new BTree[] {btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
+    private TripleBTree[] createBTrees() {
+        return new TripleBTree[] {btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
             btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
             btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
     }
 
-    private LongIndex[] createIndexes(BTree... btrees) {
+    private LongIndex[] createIndexes(TripleBTree... btrees) {
         return new LongIndex[]{new LongIndexSesame(btrees[0]), new LongIndexSesame(btrees[1]),
             new LongIndexSesame(btrees[2])};
     }
