@@ -75,6 +75,7 @@ import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
 import org.jrdf.graph.local.mem.iterator.ThreeFixedIterator;
 import org.jrdf.graph.local.mem.iterator.TwoFixedIterator;
 import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.util.Iterator;
 
@@ -92,13 +93,13 @@ public final class DiskIteratorFactory implements IteratorFactory {
     private final TripleBTree[] trees;
 
     public DiskIteratorFactory(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final NodePool nodePool, final Localizer newLocalizer, final TripleBTree[] trees) {
-        ParameterUtil.checkNotNull(newLongIndexes, newGraphHandlers, nodePool, newLocalizer, trees);
+        final NodePool newNodePool, final Localizer newLocalizer, final TripleBTree[] newTrees) {
+        checkNotNull(newLongIndexes, newGraphHandlers, newNodePool, newLocalizer, newTrees);
         this.longIndexes = newLongIndexes;
         this.graphHandlers = newGraphHandlers;
         this.localizer = newLocalizer;
-        this.nodePool = nodePool;
-        this.trees = trees;
+        this.nodePool = newNodePool;
+        this.trees = newTrees;
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
