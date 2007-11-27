@@ -69,6 +69,21 @@ public class TempDirectoryHandler implements DirectoryHandler {
         return new File(SYSTEM_TEMP_DIR, "jrdf_" + USERNAME);
     }
 
+    public File makeDir() {
+        return reallyMakeDir(getDir());
+    }
+
+    public File makeChildDir(String child) {
+        return reallyMakeDir(new File(getDir(), child));
+    }
+
+    private File reallyMakeDir(File dir) {
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new RuntimeException("Could not create directories to store file: " + dir);
+        }
+        return dir;
+    }
+
     public boolean removeDir() {
         return deleteDirectory(getDir());
     }

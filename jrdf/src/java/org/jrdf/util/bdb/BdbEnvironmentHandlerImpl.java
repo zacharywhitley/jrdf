@@ -40,8 +40,7 @@ public class BdbEnvironmentHandlerImpl implements BdbEnvironmentHandler {
     }
 
     public Environment setUpEnvironment() throws DatabaseException {
-        File dir = handler.getDir();
-        dir.mkdirs();
+        File dir = handler.makeDir();
         EnvironmentConfig env = new EnvironmentConfig();
         env.setTransactional(true);
         env.setAllowCreate(true);
