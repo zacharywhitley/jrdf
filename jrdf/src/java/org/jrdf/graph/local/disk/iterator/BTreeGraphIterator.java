@@ -5,6 +5,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeIterator;
+import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 
@@ -14,13 +15,13 @@ import java.util.NoSuchElementException;
 public class BTreeGraphIterator implements ClosableIterator<Triple> {
     private static final int TRIPLES = 3;
     private final GraphHandler handler;
-    private final BTree btree;
+    private final TripleBTree btree;
     private BTreeIterator bTreeIterator;
     private byte[] bytesToRemove;
     private byte[] currentBytes;
     private boolean nextCalled;
 
-    public BTreeGraphIterator(BTree newBTree, GraphHandler newHandler) {
+    public BTreeGraphIterator(TripleBTree newBTree, GraphHandler newHandler) {
         this.btree = newBTree;
         this.handler = newHandler;
         bTreeIterator = btree.iterateAll();

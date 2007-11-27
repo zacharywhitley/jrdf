@@ -63,6 +63,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
+import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ClosableIterator;
@@ -71,7 +72,6 @@ import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.TripleClosableIterator;
 import org.jrdf.graph.local.mem.iterator.AnyResourcePredicateIterator;
 import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
-import org.jrdf.graph.local.mem.iterator.OneFixedIterator;
 import org.jrdf.graph.local.mem.iterator.ThreeFixedIterator;
 import org.jrdf.graph.local.mem.iterator.TwoFixedIterator;
 import org.jrdf.util.param.ParameterUtil;
@@ -89,16 +89,16 @@ public final class DiskIteratorFactory implements IteratorFactory {
     private final GraphHandler[] graphHandlers;
     private final NodePool nodePool;
     private final Localizer localizer;
-    private final BTree spoBTree;
+    private final TripleBTree[] trees;
 
     public DiskIteratorFactory(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final NodePool nodePool, final Localizer newLocalizer, final BTree spoBTree) {
-        ParameterUtil.checkNotNull(newLongIndexes, newGraphHandlers, nodePool, newLocalizer, spoBTree);
+        final NodePool nodePool, final Localizer newLocalizer, final TripleBTree[] trees) {
+        ParameterUtil.checkNotNull(newLongIndexes, newGraphHandlers, nodePool, newLocalizer, trees);
         this.longIndexes = newLongIndexes;
         this.graphHandlers = newGraphHandlers;
         this.localizer = newLocalizer;
         this.nodePool = nodePool;
-        this.spoBTree = spoBTree;
+        this.trees = trees;
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {
@@ -106,11 +106,11 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<Triple> newGraphIterator() {
-        return new BTreeGraphIterator(spoBTree, graphHandlers[0]);
+        return new BTreeGraphIterator(trees[0], graphHandlers[0]);
     }
 
     public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return wrapInTripleIterator(new OneFixedIterator(fixedFirstNode, graphHandlers[index]));
+        return new BTreeOneFixedIterator(fixedFirstNode, trees[index], graphHandlers[index]);
     }
 
     public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {

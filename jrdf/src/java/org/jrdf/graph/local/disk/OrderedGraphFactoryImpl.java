@@ -66,6 +66,7 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.longindex.sesame.BTree;
+import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
@@ -97,7 +98,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private ResourceFactory resourceFactory;
     private Localizer localizer;
 
-    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, BTree spoTree,
+    public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, TripleBTree[] trees,
             long graphNumber) {
         this.longIndexes = newLongIndexes;
         nodePool = newNodePoolFactory.createNodePool();
@@ -106,7 +107,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         IteratorFactory tmpIteratorFactory = new DiskIteratorFactory(newLongIndexes, graphHandlers, nodePool, localizer,
-            spoTree);
+            trees);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, localizer, newLongIndexes[0],
             graphHandlers[0], new BdbSortedSetFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()),
                 "tmpResults" + graphNumber));

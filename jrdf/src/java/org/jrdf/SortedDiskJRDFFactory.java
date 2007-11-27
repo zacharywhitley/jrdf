@@ -118,7 +118,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         openIndexes.addAll(asList(indexes));
         openFactories.add(nodePoolFactory);
-        orderedGraphFactory = new GraphFactoryImpl(indexes, nodePoolFactory, bTrees[0]);
+        orderedGraphFactory = new GraphFactoryImpl(indexes, nodePoolFactory, bTrees);
         return orderedGraphFactory.getGraph();
     }
 
