@@ -2,7 +2,6 @@ package org.jrdf.graph.local.index.longindex.sesame;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.putLong;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.toBytes;
 

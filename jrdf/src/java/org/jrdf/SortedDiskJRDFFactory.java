@@ -63,7 +63,6 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.local.disk.GraphFactoryImpl;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactoryImpl;
 import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
