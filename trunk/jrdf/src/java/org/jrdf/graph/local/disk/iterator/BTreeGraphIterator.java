@@ -3,7 +3,6 @@ package org.jrdf.graph.local.disk.iterator;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.sesame.BTree;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeIterator;
 import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
