@@ -60,9 +60,40 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.set.MemSortedSetFactory;
+
+import java.util.Set;
 
 public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
-    public void testGroundedGraph() {
-        assertTrue(true);
+    private final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private final NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(comparator);
+    private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
+    private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(comparator, moleculeComparator);
+    private final NewGraphDecomposer decomposer = new NewNaiveGraphDecomposerImpl(setFactory, moleculeFactory,
+        moleculeComparator);
+
+    public void setUp() throws Exception {
+        super.setUp();
+        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        GRAPH.remove(iterator);
+    }
+
+    public void testGroundedGraph() throws Exception {
+        GRAPH.add(R1R1R1, R2R1R1, R2R1R2);
+        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        assertEquals("Unexpected size of molecules", 3, molecules.size());
+        moleculeFactory.createMolecule(R1R1R1);
+        moleculeFactory.createMolecule(R2R1R1);
+        moleculeFactory.createMolecule(R2R1R2);
     }
 }

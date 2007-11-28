@@ -79,10 +79,11 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private Graph graph;
     private Triple currentTriple;
 
-    public NewNaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, NewMoleculeFactory newMoleculeFactory) {
+    public NewNaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, NewMoleculeFactory newMoleculeFactory,
+        NewMoleculeComparator comparator) {
         checkNotNull(newSetFactory, newMoleculeFactory);
         this.triplesChecked = newSetFactory.createSet(Triple.class);
-        this.molecules = newSetFactory.createSet(NewMolecule.class);
+        this.molecules = newSetFactory.createSet(NewMolecule.class, comparator);
         this.moleculeFactory = newMoleculeFactory;
     }
 
@@ -108,5 +109,6 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         if (blankSubject || blankObject) {
             throw new UnsupportedOperationException("Cannot handle ungrounded graph");
         }
+        molecules.add(molecule);
     }
 }

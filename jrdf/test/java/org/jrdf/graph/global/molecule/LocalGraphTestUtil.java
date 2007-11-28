@@ -86,17 +86,18 @@ public class LocalGraphTestUtil {
     private static final URIReference REF2;
     private static final BlankNode BNODE1;
     private static final BlankNode BNODE2;
-    public static final Triple r1r1b1;
-    public static final Triple r2r1r1;
-    public static final Triple r2r1r2;
-    public static final Triple b1r1r1;
-    public static final Triple b1r1r1_2;
-    public static final Triple b1r2r2;
-    public static final Triple b1r1b2;
-    public static final Triple b2r1r1;
-    public static final Triple b2r2r1;
-    public static final Triple b2r1b1;
-    public static final Triple b2r2r2;
+    public static final Triple R1R1R1;
+    public static final Triple R1R1B1;
+    public static final Triple R2R1R1;
+    public static final Triple R2R1R2;
+    public static final Triple B1R1R1;
+    public static final Triple B1R1R1_2;
+    public static final Triple B1R2R2;
+    public static final Triple B1R1B2;
+    public static final Triple B2R1R1;
+    public static final Triple B2R2R1;
+    public static final Triple B2R1B1;
+    public static final Triple B2R2R2;
 
     static {
         try {
@@ -104,17 +105,18 @@ public class LocalGraphTestUtil {
             REF2 = ELEMENT_FACTORY.createURIReference(URI.create("urn:bar"));
             BNODE1 = ELEMENT_FACTORY.createBlankNode();
             BNODE2 = ELEMENT_FACTORY.createBlankNode();
-            r1r1b1 = TRIPLE_FACTORY.createTriple(REF1, REF1, BNODE1);
-            r2r1r1 = TRIPLE_FACTORY.createTriple(REF2, REF1, REF1);
-            r2r1r2 = TRIPLE_FACTORY.createTriple(REF2, REF1, REF2);
-            b1r1r1 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, REF1);
-            b1r1r1_2 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, REF1);
-            b1r2r2 = TRIPLE_FACTORY.createTriple(BNODE1, REF2, REF2);
-            b1r1b2 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, BNODE2);
-            b2r1r1 = TRIPLE_FACTORY.createTriple(BNODE2, REF1, REF1);
-            b2r2r1 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF1);
-            b2r1b1 = TRIPLE_FACTORY.createTriple(BNODE2, REF1, BNODE1);
-            b2r2r2 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF2);
+            R1R1R1 = TRIPLE_FACTORY.createTriple(REF1, REF1, REF1);
+            R1R1B1 = TRIPLE_FACTORY.createTriple(REF1, REF1, BNODE1);
+            R2R1R1 = TRIPLE_FACTORY.createTriple(REF2, REF1, REF1);
+            R2R1R2 = TRIPLE_FACTORY.createTriple(REF2, REF1, REF2);
+            B1R1R1 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, REF1);
+            B1R1R1_2 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, REF1);
+            B1R2R2 = TRIPLE_FACTORY.createTriple(BNODE1, REF2, REF2);
+            B1R1B2 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, BNODE2);
+            B2R1R1 = TRIPLE_FACTORY.createTriple(BNODE2, REF1, REF1);
+            B2R2R1 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF1);
+            B2R1B1 = TRIPLE_FACTORY.createTriple(BNODE2, REF1, BNODE1);
+            B2R2R2 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF2);
         } catch (GraphElementFactoryException e) {
             throw new ExceptionInInitializerError("Failed to create required resources");
         }
