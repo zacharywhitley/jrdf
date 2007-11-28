@@ -59,8 +59,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-
 import java.net.URI;
 
 /**

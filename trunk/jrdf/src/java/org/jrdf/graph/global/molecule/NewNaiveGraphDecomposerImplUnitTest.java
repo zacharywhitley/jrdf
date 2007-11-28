@@ -60,20 +60,9 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
 
-import java.util.Set;
-
-public class MergeMoleculesImplUnitTest extends TestCase {
-    private MergeMolecules mergeMolecules = new MergeMoleculesImpl();
-
-    public void testMerge() {
-        NewMolecule m1 = createMolecule(b2r1r2, b2r2r2, b2r3b3);
-        NewMolecule m2 = createMolecule(b3r1r3, b3r2r3);
-        NewMolecule newMolecule = mergeMolecules.merge(m1, m2);
-        checkMoluculeContainsRootTriples(newMolecule, b2r1r2, b2r2r2, b2r3b3);
-        Set<NewMolecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
-        assertEquals(2, subMolecules.size());
-        checkSubmoleculesContainsHeadTriples(subMolecules, b3r1r3, b3r2r3);
+public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
+    public void testGroundedGraph() {
+        assertTrue(true);
     }
 }

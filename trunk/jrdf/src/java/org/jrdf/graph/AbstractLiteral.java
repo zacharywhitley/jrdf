@@ -59,8 +59,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard
-
 import org.jrdf.graph.datatype.DatatypeFactory;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
 import org.jrdf.graph.datatype.DatatypeValue;

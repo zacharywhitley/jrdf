@@ -59,8 +59,6 @@
 
 package org.jrdf.graph;
 
-// Java 2 standard packages
-
 /**
  * An Alt is a list of unordered statements which prevents duplicates.  It
  * represents objects which are semantically the same.  The order in which the

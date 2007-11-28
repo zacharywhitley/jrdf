@@ -60,88 +60,64 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.local.iterator.ClosableIterator;
+import static org.jrdf.graph.AnyObjectNode.*;
+import static org.jrdf.graph.AnyPredicateNode.*;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.MOLECULE_FACTORY;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b1r1b2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b1r1r1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b1r1r1_2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b1r2r2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b2r1b1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b2r1r1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b2r2r1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.b2r2r2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.r1r1b1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.r2r1r1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.r2r1r2;
 
-import java.net.URI;
 import java.util.Set;
 
 public class NaiveGraphDecomposerImplUnitTest extends TestCase {
-    private JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
-    private Graph newGraph = factory.getNewGraph();
-    private GraphElementFactory elementFactory = newGraph.getElementFactory();
-    private TripleFactory tripleFactory = newGraph.getTripleFactory();
-    private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private MoleculeFactory moleculeFactory = new MoleculeFactoryImpl(tripleComparator);
-    private Triple r2r1r2;
-    private Triple r1r1b1;
-    private Triple b1r1r1;
-    private Triple b2r1b1;
-    private Triple b2r2r1;
-    private Triple r2r1r1;
-    private Triple b1r1r1_2;
-    private Triple b1r1b2;
-    private Triple b2r1r1;
-    private Triple b1r2r2;
-    private Triple b2r2r2;
-    private GraphDecomposer decomposer;
+    private GraphDecomposer decomposer = new NaiveGraphDecomposerImpl();
 
     public void setUp() throws Exception {
         super.setUp();
-        newGraph.clear();
-        URIReference ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
-        URIReference ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
-        BlankNode blankNode1 = elementFactory.createBlankNode();
-        BlankNode blankNode2 = elementFactory.createBlankNode();
-        r2r1r2 = tripleFactory.createTriple(ref2, ref1, ref2);
-        r2r1r1 = tripleFactory.createTriple(ref2, ref1, ref1);
-        r1r1b1 = tripleFactory.createTriple(ref1, ref1, blankNode1);
-        b1r1r1 = tripleFactory.createTriple(blankNode1, ref1, ref1);
-        b1r2r2 = tripleFactory.createTriple(blankNode1, ref2, ref2);
-        b2r1r1 = tripleFactory.createTriple(blankNode2, ref1, ref1);
-        b2r2r2 = tripleFactory.createTriple(blankNode2, ref2, ref2);
-        b1r1r1_2 = tripleFactory.createTriple(blankNode1, ref1, ref1);
-        b2r2r1 = tripleFactory.createTriple(blankNode2, ref2, ref1);
-        b2r1b1 = tripleFactory.createTriple(blankNode2, ref1, blankNode1);
-        b1r1b2 = tripleFactory.createTriple(blankNode1, ref1, blankNode2);
-        decomposer = new NaiveGraphDecomposerImpl();
+        ClosableIterator<Triple> iterator = GRAPH.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        GRAPH.remove(iterator);
     }
 
     public void testGeneralDecomposeGraph() throws Exception {
-        newGraph.add(r2r1r2, r1r1b1, b1r1r1, b2r1b1, b2r2r1, r2r1r1);
-        Molecule expectedResults1 = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r1b1,
-            b2r2r1);
-        Molecule expectedResults2 = moleculeFactory.createMolecule(r2r1r1);
-        Molecule expectedResults3 = moleculeFactory.createMolecule(r2r1r2);
-        Set<Molecule> molecules = decomposer.decompose(newGraph);
+        GRAPH.add(r2r1r2, r1r1b1, b1r1r1, b2r1b1, b2r2r1, r2r1r1);
+        Molecule expectedResults1 = MOLECULE_FACTORY.createMolecule(r1r1b1, b1r1r1, b2r1b1, b2r2r1);
+        Molecule expectedResults2 = MOLECULE_FACTORY.createMolecule(r2r1r1);
+        Molecule expectedResults3 = MOLECULE_FACTORY.createMolecule(r2r1r2);
+        Set<Molecule> molecules = decomposer.decompose(GRAPH);
         checkMolecules(molecules, expectedResults1, expectedResults2, expectedResults3);
     }
 
     // TODO: Write test here for GlobalGraph - should get back only one result!!!
     public void testNoLeanificationOnLocalGraph() throws Exception {
-        newGraph.add(b1r1r1, b2r1r1, b1r2r2, b2r2r2);
-        Molecule expectedResult1 = moleculeFactory.createMolecule(b1r1r1, b1r2r2);
-        Molecule expectedResult2 = moleculeFactory.createMolecule(b2r1r1, b2r2r2);
-        Set<Molecule> molecules = decomposer.decompose(newGraph);
+        GRAPH.add(b1r1r1, b2r1r1, b1r2r2, b2r2r2);
+        Molecule expectedResult1 = MOLECULE_FACTORY.createMolecule(b1r1r1, b1r2r2);
+        Molecule expectedResult2 = MOLECULE_FACTORY.createMolecule(b2r1r1, b2r2r2);
+        Set<Molecule> molecules = decomposer.decompose(GRAPH);
         checkMolecules(molecules, expectedResult1, expectedResult2);
     }
 
     public void testBlankNodesWithSameReferenceTest() throws Exception {
-        newGraph.add(r1r1b1, b1r1r1, b2r1b1, b2r2r1, r2r1r1, b1r1r1_2, b1r1b2);
-        Molecule equivalentResult1a = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r2r1, b1r1b2, b1r1r1_2);
-        Molecule equivalentResult1b = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r1b1, b2r2r1, b1r1b2);
-        Molecule equivalentResult1c = moleculeFactory.createMolecule(r1r1b1, b1r1r1, b2r1b1, b2r2r1, b1r1b2, b1r1r1_2);
-        Molecule expectedResults2 = moleculeFactory.createMolecule(r2r1r1);
-        Set<Molecule> molecules = decomposer.decompose(newGraph);
+        GRAPH.add(r1r1b1, b1r1r1, b2r1b1, b2r2r1, r2r1r1, b1r1r1_2, b1r1b2);
+        Molecule equivalentResult1a = MOLECULE_FACTORY.createMolecule(r1r1b1, b1r1r1, b2r2r1, b1r1b2, b1r1r1_2);
+        Molecule equivalentResult1b = MOLECULE_FACTORY.createMolecule(r1r1b1, b1r1r1, b2r1b1, b2r2r1, b1r1b2);
+        Molecule equivalentResult1c = MOLECULE_FACTORY.createMolecule(r1r1b1, b1r1r1, b2r1b1, b2r2r1, b1r1b2, b1r1r1_2);
+        Molecule expectedResults2 = MOLECULE_FACTORY.createMolecule(r2r1r1);
+        Set<Molecule> molecules = decomposer.decompose(GRAPH);
         checkMolecules(molecules, equivalentResult1a, expectedResults2);
         checkMolecules(molecules, equivalentResult1b, expectedResults2);
         checkMolecules(molecules, equivalentResult1c, expectedResults2);
@@ -164,9 +140,9 @@ public class NaiveGraphDecomposerImplUnitTest extends TestCase {
     }
 
     private void checkForSingleTriple(Triple triple) throws GraphException {
-        newGraph.add(triple);
-        Set<Molecule> molecules = decomposer.decompose(newGraph);
-        Molecule expectedResults1 = moleculeFactory.createMolecule(triple);
+        GRAPH.add(triple);
+        Set<Molecule> molecules = decomposer.decompose(GRAPH);
+        Molecule expectedResults1 = MOLECULE_FACTORY.createMolecule(triple);
         checkMolecules(molecules, expectedResults1);
     }
 

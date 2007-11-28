@@ -59,8 +59,6 @@
 
 package org.jrdf.graph.local.mem;
 
-// Java 2 standard packages
-
 import org.jrdf.graph.Bag;
 import org.jrdf.graph.ObjectNode;
 

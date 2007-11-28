@@ -59,8 +59,6 @@
 
 package org.jrdf.vocabulary;
 
-// Java 2 standard
-
 import java.net.URI;
 import java.net.URISyntaxException;
 

@@ -59,21 +59,54 @@
 
 package org.jrdf.graph.global.molecule;
 
-import junit.framework.TestCase;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
+import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.set.SortedSetFactory;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 import java.util.Set;
 
-public class MergeMoleculesImplUnitTest extends TestCase {
-    private MergeMolecules mergeMolecules = new MergeMoleculesImpl();
+public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
+    private final NewMoleculeFactory moleculeFactory;
+    private final Set<Triple> triplesChecked;
+    private final Set<NewMolecule> molecules;
+    private Graph graph;
+    private Triple currentTriple;
 
-    public void testMerge() {
-        NewMolecule m1 = createMolecule(b2r1r2, b2r2r2, b2r3b3);
-        NewMolecule m2 = createMolecule(b3r1r3, b3r2r3);
-        NewMolecule newMolecule = mergeMolecules.merge(m1, m2);
-        checkMoluculeContainsRootTriples(newMolecule, b2r1r2, b2r2r2, b2r3b3);
-        Set<NewMolecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
-        assertEquals(2, subMolecules.size());
-        checkSubmoleculesContainsHeadTriples(subMolecules, b3r1r3, b3r2r3);
+    public NewNaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, NewMoleculeFactory newMoleculeFactory) {
+        checkNotNull(newSetFactory, newMoleculeFactory);
+        this.triplesChecked = newSetFactory.createSet(Triple.class);
+        this.molecules = newSetFactory.createSet(NewMolecule.class);
+        this.moleculeFactory = newMoleculeFactory;
+    }
+
+    public Set<NewMolecule> decompose(Graph newGraph) throws GraphException {
+        triplesChecked.clear();
+        molecules.clear();
+        graph = newGraph;
+        ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        while (iterator.hasNext()) {
+            currentTriple = iterator.next();
+            if (!triplesChecked.contains(currentTriple)) {
+                convertTripleToMolecule();
+            }
+        }
+        return molecules;
+    }
+
+    private void convertTripleToMolecule() {
+        boolean blankSubject = isBlankNode(currentTriple.getSubject());
+        boolean blankObject = isBlankNode(currentTriple.getObject());
+        NewMolecule molecule = moleculeFactory.createMolecue();
+        molecule = molecule.add(currentTriple);
+        if (blankSubject || blankObject) {
+            throw new UnsupportedOperationException("Cannot handle ungrounded graph");
+        }
     }
 }

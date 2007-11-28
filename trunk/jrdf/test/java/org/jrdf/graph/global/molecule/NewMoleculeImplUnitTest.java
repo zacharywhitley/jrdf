@@ -61,13 +61,13 @@ package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.MOLECULE_FACTORY;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b1r3r3;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.b2r2b1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r1r1b1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r1r1r1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r2r1r1;
-import static org.jrdf.graph.global.molecule.NewMoleculeTestUtil.r3r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.MOLECULE_FACTORY;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r3r1r1;
 
 import java.util.HashMap;
 import java.util.HashSet;
