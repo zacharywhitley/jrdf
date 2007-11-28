@@ -82,6 +82,7 @@ public class RdfXmlIntegrationTest extends TestCase {
 
     private static final Map<String, String[]> POSITIVE_TESTS = new HashMap<String, String[]>() {
         {
+            put("rdf-tests/jrdf/test001.nt", new String[] {"rdf-tests/jrdf/test001.rdf"});
             put("rdf-tests/amp-in-url/test001.nt", new String[] {"rdf-tests/amp-in-url/test001.rdf"});
             put("rdf-tests/datatypes/test001.nt", new String[] {"rdf-tests/datatypes/test001.rdf"});
             put("rdf-tests/datatypes/test002.nt", new String[] {"rdf-tests/datatypes/test002.rdf"});

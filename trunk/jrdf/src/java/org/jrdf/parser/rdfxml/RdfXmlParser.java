@@ -747,14 +747,12 @@ public final class RdfXmlParser implements ConfigurableParser {
                 } else {
                     // The next string is an rdf:XMLLiteral
                     predicate.setDatatype(RDF.XML_LITERAL.toString());
-
                     saxFilter.setParseLiteralMode();
                 }
             }
         } else if (isEmptyElt) {
             // empty element without an rdf:parseType attribute
-
-            if (0 == atts.size()) {
+            if (0 == atts.size() || 1 == atts.size() && atts.getAtt(RDF.BASE_URI.toString(), "datatype") != null) {
                 // element had no attributes, or only the optional rdf:ID
                 NodeElement subject = (NodeElement) peekStack(1);
                 Literal lit = createLiteral("", xmlLang, null);
