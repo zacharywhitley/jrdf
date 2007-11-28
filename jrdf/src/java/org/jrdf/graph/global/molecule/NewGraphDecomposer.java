@@ -59,21 +59,25 @@
 
 package org.jrdf.graph.global.molecule;
 
-import junit.framework.TestCase;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 
 import java.util.Set;
 
-public class MergeMoleculesImplUnitTest extends TestCase {
-    private MergeMolecules mergeMolecules = new MergeMoleculesImpl();
+/**
+ * Decompose a local graph into a global graph (set of Molecules).
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1226 $
+ */
+public interface NewGraphDecomposer {
 
-    public void testMerge() {
-        NewMolecule m1 = createMolecule(b2r1r2, b2r2r2, b2r3b3);
-        NewMolecule m2 = createMolecule(b3r1r3, b3r2r3);
-        NewMolecule newMolecule = mergeMolecules.merge(m1, m2);
-        checkMoluculeContainsRootTriples(newMolecule, b2r1r2, b2r2r2, b2r3b3);
-        Set<NewMolecule> subMolecules = newMolecule.getSubMolecules(b2r3b3);
-        assertEquals(2, subMolecules.size());
-        checkSubmoleculesContainsHeadTriples(subMolecules, b3r1r3, b3r2r3);
-    }
+    /**
+     * Given the graph, this method returns the graph as a set of Molecules conataining the Most Self Contained Graph.
+     *
+     * @param graph to decompose
+     * @return set of molecules (subgraphs) which make up the graph
+     * @throws GraphException
+     */
+    Set<NewMolecule> decompose(Graph graph) throws GraphException;
 }

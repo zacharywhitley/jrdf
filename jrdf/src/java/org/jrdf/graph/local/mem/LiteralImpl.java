@@ -59,8 +59,6 @@
 
 package org.jrdf.graph.local.mem;
 
-// Java 2 standard
-
 import org.jrdf.graph.AbstractLiteral;
 
 import java.net.URI;

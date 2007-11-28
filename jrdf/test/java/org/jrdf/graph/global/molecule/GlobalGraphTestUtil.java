@@ -75,47 +75,47 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class NewMoleculeTestUtil {
-    private static final TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    public static final URIReference ref1 = new URIReferenceImpl("urn:foo");
-    public static final URIReference ref2 = new URIReferenceImpl("urn:bar");
-    public static final URIReference ref3 = new URIReferenceImpl("urn:baz");
-    public static final BlankNode bNode1 = new BlankNodeImpl();
-    public static final BlankNode bNode2 = new BlankNodeImpl();
-    public static final BlankNode bNode3 = new BlankNodeImpl();
-    public static final Triple r1r1r1 = new TripleImpl(ref1, ref1, ref1);
-    public static final Triple r1r1b1 = new TripleImpl(ref1, ref1, bNode1);
-    public static final Triple r2r1r2 = new TripleImpl(ref2, ref1, ref2);
-    public static final Triple r2r1r1 = new TripleImpl(ref2, ref1, ref1);
-    public static final Triple r3r1r1 = new TripleImpl(ref3, ref1, ref1);
-    public static final Triple b1r1r1 = new TripleImpl(bNode1, ref1, ref1);
-    public static final Triple b1r1b2 = new TripleImpl(bNode1, ref1, bNode2);
-    public static final Triple b1r2r2 = new TripleImpl(bNode1, ref2, ref2);
-    public static final Triple b1r2b2 = new TripleImpl(bNode1, ref2, bNode2);
-    public static final Triple b1r3r3 = new TripleImpl(bNode1, ref3, ref3);
-    public static final Triple b1r2r3 = new TripleImpl(bNode1, ref2, ref3);
-    public static final Triple b1r3r2 = new TripleImpl(bNode1, ref3, ref2);
-    public static final Triple b2r1r1 = new TripleImpl(bNode2, ref1, ref1);
-    public static final Triple b2r1b1 = new TripleImpl(bNode2, ref1, bNode1);
-    public static final Triple b2r2r1 = new TripleImpl(bNode2, ref1, ref1);
-    public static final Triple b2r1r2 = new TripleImpl(bNode2, ref1, ref2);
-    public static final Triple b2r1b3 = new TripleImpl(bNode2, ref1, bNode3);
-    public static final Triple b2r3r1 = new TripleImpl(bNode2, ref3, ref1);
-    public static final Triple b2r2b1 = new TripleImpl(bNode2, ref2, bNode1);
-    public static final Triple b2r3b3 = new TripleImpl(bNode2, ref3, bNode3);
-    public static final Triple b2r2r2 = new TripleImpl(bNode2, ref2, ref2);
-    public static final Triple b2r2b3 = new TripleImpl(bNode2, ref2, bNode3);
-    public static final Triple b3r1r2 = new TripleImpl(bNode3, ref1, ref2);
-    public static final Triple b3r1r3 = new TripleImpl(bNode3, ref1, ref3);
-    public static final Triple b3r2r3 = new TripleImpl(bNode3, ref2, ref3);
-    public static final Triple b3r3r3 = new TripleImpl(bNode3, ref3, ref3);
-    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(comparator);
+public class GlobalGraphTestUtil {
+    private static final TripleComparator COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
+    public static final URIReference REF1 = new URIReferenceImpl("urn:foo");
+    public static final URIReference REF2 = new URIReferenceImpl("urn:bar");
+    public static final URIReference REF3 = new URIReferenceImpl("urn:baz");
+    public static final BlankNode BNODE1 = new BlankNodeImpl();
+    public static final BlankNode BNODE2 = new BlankNodeImpl();
+    public static final BlankNode BNODE3 = new BlankNodeImpl();
+    public static final Triple r1r1r1 = new TripleImpl(REF1, REF1, REF1);
+    public static final Triple r1r1b1 = new TripleImpl(REF1, REF1, BNODE1);
+    public static final Triple r2r1r2 = new TripleImpl(REF2, REF1, REF2);
+    public static final Triple r2r1r1 = new TripleImpl(REF2, REF1, REF1);
+    public static final Triple r3r1r1 = new TripleImpl(REF3, REF1, REF1);
+    public static final Triple b1r1r1 = new TripleImpl(BNODE1, REF1, REF1);
+    public static final Triple b1r1b2 = new TripleImpl(BNODE1, REF1, BNODE2);
+    public static final Triple b1r2r2 = new TripleImpl(BNODE1, REF2, REF2);
+    public static final Triple b1r2b2 = new TripleImpl(BNODE1, REF2, BNODE2);
+    public static final Triple b1r3r3 = new TripleImpl(BNODE1, REF3, REF3);
+    public static final Triple b1r2r3 = new TripleImpl(BNODE1, REF2, REF3);
+    public static final Triple b1r3r2 = new TripleImpl(BNODE1, REF3, REF2);
+    public static final Triple b2r1r1 = new TripleImpl(BNODE2, REF1, REF1);
+    public static final Triple b2r1b1 = new TripleImpl(BNODE2, REF1, BNODE1);
+    public static final Triple b2r2r1 = new TripleImpl(BNODE2, REF1, REF1);
+    public static final Triple b2r1r2 = new TripleImpl(BNODE2, REF1, REF2);
+    public static final Triple b2r1b3 = new TripleImpl(BNODE2, REF1, BNODE3);
+    public static final Triple b2r3r1 = new TripleImpl(BNODE2, REF3, REF1);
+    public static final Triple b2r2b1 = new TripleImpl(BNODE2, REF2, BNODE1);
+    public static final Triple b2r3b3 = new TripleImpl(BNODE2, REF3, BNODE3);
+    public static final Triple b2r2r2 = new TripleImpl(BNODE2, REF2, REF2);
+    public static final Triple b2r2b3 = new TripleImpl(BNODE2, REF2, BNODE3);
+    public static final Triple b3r1r2 = new TripleImpl(BNODE3, REF1, REF2);
+    public static final Triple b3r1r3 = new TripleImpl(BNODE3, REF1, REF3);
+    public static final Triple b3r2r3 = new TripleImpl(BNODE3, REF2, REF3);
+    public static final Triple b3r3r3 = new TripleImpl(BNODE3, REF3, REF3);
+    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(COMPARATOR);
     public static final MergeMolecules MERGE_MOLECULE = new MergeMoleculesImpl();
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
     public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(TRIPLE_COMPARATOR, MOLECULE_COMPARATOR);
 
-    private NewMoleculeTestUtil() {
+    private GlobalGraphTestUtil() {
     }
 
     public static NewMolecule createMolecule(Triple... triples) {
