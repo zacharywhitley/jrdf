@@ -89,7 +89,7 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     private final MemSortedSetFactory setFactory = new MemSortedSetFactory();
     private final NewMoleculeFactory moleculeFactory = new NewMoleculeFactoryImpl(comparator, moleculeComparator);
     private final NewGraphDecomposer decomposer = new NewNaiveGraphDecomposerImpl(setFactory, moleculeFactory,
-        moleculeComparator);
+        moleculeComparator, comparator);
 
     public void setUp() throws Exception {
         super.setUp();
@@ -148,6 +148,14 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m4 = createMolecule(r2r1r1);
         NewMolecule m5 = createMolecule(r2r1r2);
         checkMolecules(actualMolecules, m1, m2, m3, m4, m5);
+    }
+
+    public void testSingleNestingBothSides() throws Exception {
+        GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMolecule(r1r1b1, r2r1b1, b1r1r1, b1r2r2);
+        NewMolecule m2 = createMolecule(r1r2b2, r2r2b2, b2r2r1);
+        checkMolecules(actualMolecules, m1, m2);
     }
 
     private void checkMolecules(Set<NewMolecule> actualMolecules, NewMolecule... expectedMolecules) {
