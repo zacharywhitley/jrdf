@@ -97,7 +97,7 @@ public class GlobalGraphTestUtil {
     public static final Triple b1r3r2 = new TripleImpl(BNODE1, REF3, REF2);
     public static final Triple b2r1r1 = new TripleImpl(BNODE2, REF1, REF1);
     public static final Triple b2r1b1 = new TripleImpl(BNODE2, REF1, BNODE1);
-    public static final Triple b2r2r1 = new TripleImpl(BNODE2, REF1, REF1);
+    public static final Triple b2r2r1 = new TripleImpl(BNODE2, REF2, REF1);
     public static final Triple b2r1r2 = new TripleImpl(BNODE2, REF1, REF2);
     public static final Triple b2r1b3 = new TripleImpl(BNODE2, REF1, BNODE3);
     public static final Triple b2r3r1 = new TripleImpl(BNODE2, REF3, REF1);

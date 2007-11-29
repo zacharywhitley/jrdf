@@ -68,14 +68,15 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.SortedSetFactory;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.Iterator;
 
 public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
-    private final Set<Triple> triplesChecked;
-    private final Set<NewMolecule> molecules;
+    private final SortedSet<Triple> triplesChecked;
+    private final SortedSet<NewMolecule> molecules;
     private Graph graph;
     private Triple currentTriple;
 
@@ -87,7 +88,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         this.moleculeFactory = newMoleculeFactory;
     }
 
-    public Set<NewMolecule> decompose(Graph newGraph) throws GraphException {
+    public SortedSet<NewMolecule> decompose(Graph newGraph) throws GraphException {
         triplesChecked.clear();
         molecules.clear();
         graph = newGraph;
@@ -101,14 +102,36 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         return molecules;
     }
 
-    private void convertTripleToMolecule() {
+    private void convertTripleToMolecule() throws GraphException {
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
-        boolean blankObject = isBlankNode(currentTriple.getObject());
+        //boolean blankObject = isBlankNode(currentTriple.getObject());
         NewMolecule molecule = moleculeFactory.createMolecue();
         molecule = molecule.add(currentTriple);
-        if (blankSubject || blankObject) {
-            throw new UnsupportedOperationException("Cannot handle ungrounded graph");
+        if (blankSubject) {
+            findEnclosedTriples(molecule);
         }
+        addMoleculeTriplesToCheckedTriples(molecule);
         molecules.add(molecule);
+    }
+
+    private void findEnclosedTriples(NewMolecule molecule) throws GraphException {
+        ClosableIterator<Triple> closableIterator = graph.find(currentTriple.getSubject(), ANY_PREDICATE_NODE,
+            ANY_OBJECT_NODE);
+        while (closableIterator.hasNext()) {
+            Triple triple = closableIterator.next();
+            if (isBlankNode(triple.getObject())) {
+                throw new UnsupportedOperationException("Cannot handle linked blank nodes");
+            } else {
+                molecule.add(triple);
+            }
+        }
+    }
+
+    private void addMoleculeTriplesToCheckedTriples(NewMolecule molecule) {
+        Iterator<Triple> tripleIterator = molecule.getRootTriples();
+        while (tripleIterator.hasNext()) {
+            Triple t = tripleIterator.next();
+            triplesChecked.add(t);
+        }
     }
 }
