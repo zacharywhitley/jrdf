@@ -66,21 +66,38 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1b2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2r2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r2b2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1b1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r2b2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.MemSortedSetFactory;
-import static org.jrdf.util.test.SetUtil.*;
+import static org.jrdf.util.test.SetUtil.asSet;
 
+import java.util.Collections;
 import java.util.Set;
 
 public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
@@ -156,6 +173,14 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m1 = createMolecule(r1r1b1, r2r1b1, b1r1r1, b1r2r2);
         NewMolecule m2 = createMolecule(r1r2b2, r2r2b2, b2r2r1);
         checkMolecules(actualMolecules, m1, m2);
+    }
+
+    public void testLinkTwoGroups() throws Exception {
+        GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(r1r1b1, r2r1b1, b1r1r1, b1r2r2, b1r1b2),
+            asSet(r1r2b2, r2r2b2, b2r2r1), Collections.<Triple>emptySet());
+        checkMolecules(actualMolecules, m1);
     }
 
     private void checkMolecules(Set<NewMolecule> actualMolecules, NewMolecule... expectedMolecules) {
