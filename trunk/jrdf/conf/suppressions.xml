@@ -29,6 +29,7 @@
     <!-- Cleanup molecule implementation -->
     <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
+    <suppress checks="CyclomaticComplexity" files="NewNaiveGraphDecomposerImpl"/>
     <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
     <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
     <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />

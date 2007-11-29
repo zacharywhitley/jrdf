@@ -68,6 +68,7 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -83,9 +84,9 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private Triple currentTriple;
 
     public NewNaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, NewMoleculeFactory newMoleculeFactory,
-        NewMoleculeComparator comparator) {
+        NewMoleculeComparator comparator, TripleComparator tripleComparator) {
         checkNotNull(newSetFactory, newMoleculeFactory);
-        this.triplesChecked = newSetFactory.createSet(Triple.class);
+        this.triplesChecked = newSetFactory.createSet(Triple.class, tripleComparator);
         this.molecules = newSetFactory.createSet(NewMolecule.class, comparator);
         this.moleculeFactory = newMoleculeFactory;
     }
@@ -111,9 +112,11 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         molecule = molecule.add(currentTriple);
         if (blankSubject) {
             findEnclosedTriples(molecule, currentTriple.getSubject(), ANY_OBJECT_NODE);
+            findEnclosedTriples(molecule, ANY_SUBJECT_NODE, (ObjectNode) currentTriple.getSubject());
         }
         if (blankObject) {
             findEnclosedTriples(molecule, ANY_SUBJECT_NODE, currentTriple.getObject());
+            findEnclosedTriples(molecule, (SubjectNode) currentTriple.getObject(), ANY_OBJECT_NODE);
         }
         addMoleculeTriplesToCheckedTriples(molecule);
         molecules.add(molecule);
@@ -128,7 +131,9 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 object == ANY_OBJECT_NODE && isBlankNode(object)) {
                 throw new UnsupportedOperationException("Cannot handle linked blank nodes");
             } else {
-                molecule.add(triple);
+                if (!triplesChecked.contains(triple)) {
+                    molecule.add(triple);
+                }
             }
         }
     }
