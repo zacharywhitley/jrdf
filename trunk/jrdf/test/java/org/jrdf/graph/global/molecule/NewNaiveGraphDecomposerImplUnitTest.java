@@ -120,12 +120,34 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1, m2);
     }
 
+    public void testSingleNestingSubjectsExtraTriples() throws Exception {
+        GRAPH.add(B1R1R1, B1R2R2, B2R2R1, B2R2R2, R1R1R1, R2R1R1, R2R1R2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMolecule(b1r1r1, b1r2r2);
+        NewMolecule m2 = createMolecule(b2r2r1, b2r2r2);
+        NewMolecule m3 = moleculeFactory.createMolecule(R1R1R1);
+        NewMolecule m4 = moleculeFactory.createMolecule(R2R1R1);
+        NewMolecule m5 = moleculeFactory.createMolecule(R2R1R2);
+        checkMolecules(actualMolecules, m1, m2, m3, m4, m5);
+    }
+
     public void testSingleNestingObjects() throws Exception {
         GRAPH.add(R1R1B1, R2R1B1, R1R2B2, R2R2B2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = createMolecule(r1r1b1, r2r1b1);
         NewMolecule m2 = createMolecule(r1r2b2, r2r2b2);
         checkMolecules(actualMolecules, m1, m2);
+    }
+
+    public void testSingleNestingObjectsExtraTriples() throws Exception {
+        GRAPH.add(R1R1B1, R2R1B1, R1R2B2, R2R2B2, R1R1R1, R2R1R1, R2R1R2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMolecule(r1r1b1, r2r1b1);
+        NewMolecule m2 = createMolecule(r1r2b2, r2r2b2);
+        NewMolecule m3 = createMolecule(r1r1r1);
+        NewMolecule m4 = createMolecule(r2r1r1);
+        NewMolecule m5 = createMolecule(r2r1r2);
+        checkMolecules(actualMolecules, m1, m2, m3, m4, m5);
     }
 
     private void checkMolecules(Set<NewMolecule> actualMolecules, NewMolecule... expectedMolecules) {

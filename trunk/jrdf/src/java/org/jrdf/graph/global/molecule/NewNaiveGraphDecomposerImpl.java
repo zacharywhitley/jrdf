@@ -66,6 +66,8 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -108,34 +110,22 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         NewMolecule molecule = moleculeFactory.createMolecue();
         molecule = molecule.add(currentTriple);
         if (blankSubject) {
-            findEnclosedTriplesSubject(molecule);
+            findEnclosedTriples(molecule, currentTriple.getSubject(), ANY_OBJECT_NODE);
         }
         if (blankObject) {
-            findEnclosedTriplesObject(molecule);
+            findEnclosedTriples(molecule, ANY_SUBJECT_NODE, currentTriple.getObject());
         }
         addMoleculeTriplesToCheckedTriples(molecule);
         molecules.add(molecule);
     }
 
-    private void findEnclosedTriplesSubject(NewMolecule molecule) throws GraphException {
-        ClosableIterator<Triple> closableIterator = graph.find(currentTriple.getSubject(), ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE);
+    private void findEnclosedTriples(NewMolecule molecule, SubjectNode subject, ObjectNode object)
+        throws GraphException {
+        ClosableIterator<Triple> closableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
-            if (isBlankNode(triple.getObject())) {
-                throw new UnsupportedOperationException("Cannot handle linked blank nodes");
-            } else {
-                molecule.add(triple);
-            }
-        }
-    }
-
-    private void findEnclosedTriplesObject(NewMolecule molecule) throws GraphException {
-        ClosableIterator<Triple> closableIterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-            currentTriple.getObject());
-        while (closableIterator.hasNext()) {
-            Triple triple = closableIterator.next();
-            if (isBlankNode(triple.getSubject())) {
+            if (subject == ANY_SUBJECT_NODE && isBlankNode(subject) ||
+                object == ANY_OBJECT_NODE && isBlankNode(object)) {
                 throw new UnsupportedOperationException("Cannot handle linked blank nodes");
             } else {
                 molecule.add(triple);
