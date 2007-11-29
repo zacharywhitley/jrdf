@@ -65,23 +65,22 @@ import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.SortedSet;
 import java.util.Iterator;
+import java.util.SortedSet;
 
 public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
     private final SortedSet<Triple> triplesChecked;
     private final SortedSet<NewMolecule> molecules;
     private Graph graph;
-    private Triple currentTriple;
 
     public NewNaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, NewMoleculeFactory newMoleculeFactory,
         NewMoleculeComparator comparator, TripleComparator tripleComparator) {
@@ -97,15 +96,15 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         graph = newGraph;
         ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         while (iterator.hasNext()) {
-            currentTriple = iterator.next();
+            Triple currentTriple = iterator.next();
             if (!triplesChecked.contains(currentTriple)) {
-                convertTripleToMolecule();
+                molecules.add(convertTripleToMolecule(currentTriple));
             }
         }
         return molecules;
     }
 
-    private void convertTripleToMolecule() throws GraphException {
+    private NewMolecule convertTripleToMolecule(Triple currentTriple) throws GraphException {
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
         boolean blankObject = isBlankNode(currentTriple.getObject());
         NewMolecule molecule = moleculeFactory.createMolecue();
@@ -119,7 +118,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
             findEnclosedTriples(molecule, (SubjectNode) currentTriple.getObject(), ANY_OBJECT_NODE);
         }
         addMoleculeTriplesToCheckedTriples(molecule);
-        molecules.add(molecule);
+        return molecule;
     }
 
     private void findEnclosedTriples(NewMolecule molecule, SubjectNode subject, ObjectNode object)
@@ -127,13 +126,28 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         ClosableIterator<Triple> closableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
-            if (subject == ANY_SUBJECT_NODE && isBlankNode(subject) ||
-                object == ANY_OBJECT_NODE && isBlankNode(object)) {
-                throw new UnsupportedOperationException("Cannot handle linked blank nodes");
+            if (subject == ANY_SUBJECT_NODE && isBlankNode(triple.getSubject()) ||
+                object == ANY_OBJECT_NODE && isBlankNode(triple.getObject())) {
+                NewMolecule subMolecule = moleculeFactory.createMolecue();
+                findEnclosedTriplesNonLink(subMolecule, ANY_SUBJECT_NODE, triple.getObject(), triple);
+                findEnclosedTriplesNonLink(subMolecule, (SubjectNode) triple.getObject(), ANY_OBJECT_NODE, triple);
+                addMoleculeTriplesToCheckedTriples(subMolecule);
+                molecule.add(triple, subMolecule);
             } else {
                 if (!triplesChecked.contains(triple)) {
                     molecule.add(triple);
                 }
+            }
+        }
+    }
+
+    private void findEnclosedTriplesNonLink(NewMolecule molecule, SubjectNode subject, ObjectNode object,
+        Triple linkTriple) throws GraphException {
+        ClosableIterator<Triple> closableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
+        while (closableIterator.hasNext()) {
+            Triple triple = closableIterator.next();
+            if (!triplesChecked.contains(triple) && !linkTriple.equals(triple)) {
+                molecule.add(triple);
             }
         }
     }
