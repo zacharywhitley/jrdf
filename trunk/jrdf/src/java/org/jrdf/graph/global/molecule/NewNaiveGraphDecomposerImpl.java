@@ -104,22 +104,38 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
 
     private void convertTripleToMolecule() throws GraphException {
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
-        //boolean blankObject = isBlankNode(currentTriple.getObject());
+        boolean blankObject = isBlankNode(currentTriple.getObject());
         NewMolecule molecule = moleculeFactory.createMolecue();
         molecule = molecule.add(currentTriple);
         if (blankSubject) {
-            findEnclosedTriples(molecule);
+            findEnclosedTriplesSubject(molecule);
+        }
+        if (blankObject) {
+            findEnclosedTriplesObject(molecule);
         }
         addMoleculeTriplesToCheckedTriples(molecule);
         molecules.add(molecule);
     }
 
-    private void findEnclosedTriples(NewMolecule molecule) throws GraphException {
+    private void findEnclosedTriplesSubject(NewMolecule molecule) throws GraphException {
         ClosableIterator<Triple> closableIterator = graph.find(currentTriple.getSubject(), ANY_PREDICATE_NODE,
             ANY_OBJECT_NODE);
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
             if (isBlankNode(triple.getObject())) {
+                throw new UnsupportedOperationException("Cannot handle linked blank nodes");
+            } else {
+                molecule.add(triple);
+            }
+        }
+    }
+
+    private void findEnclosedTriplesObject(NewMolecule molecule) throws GraphException {
+        ClosableIterator<Triple> closableIterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            currentTriple.getObject());
+        while (closableIterator.hasNext()) {
+            Triple triple = closableIterator.next();
+            if (isBlankNode(triple.getSubject())) {
                 throw new UnsupportedOperationException("Cannot handle linked blank nodes");
             } else {
                 molecule.add(triple);

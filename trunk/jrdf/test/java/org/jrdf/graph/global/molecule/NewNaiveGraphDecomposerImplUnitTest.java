@@ -74,6 +74,9 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.MemSortedSetFactory;
 import static org.jrdf.util.test.SetUtil.*;
@@ -103,23 +106,30 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     public void testGroundedGraph() throws Exception {
         GRAPH.add(R1R1R1, R2R1R1, R2R1R2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        assertEquals("Unexpected size of molecules", 3, actualMolecules.size());
         NewMolecule m1 = moleculeFactory.createMolecule(R1R1R1);
         NewMolecule m2 = moleculeFactory.createMolecule(R2R1R1);
         NewMolecule m3 = moleculeFactory.createMolecule(R2R1R2);
         checkMolecules(actualMolecules, m1, m2, m3);
     }
 
-    public void testSingleNesting() throws Exception {
+    public void testSingleNestingSubjects() throws Exception {
         GRAPH.add(B1R1R1, B1R2R2, B2R2R1, B2R2R2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        assertEquals("Unexpected size of molecules", 2, actualMolecules.size());
-        NewMolecule m1 = GlobalGraphTestUtil.createMolecule(GlobalGraphTestUtil.b1r1r1, GlobalGraphTestUtil.b1r2r2);
-        NewMolecule m2 = GlobalGraphTestUtil.createMolecule(GlobalGraphTestUtil.b2r2r1, GlobalGraphTestUtil.b2r2r2);
+        NewMolecule m1 = createMolecule(b1r1r1, b1r2r2);
+        NewMolecule m2 = createMolecule(b2r2r1, b2r2r2);
+        checkMolecules(actualMolecules, m1, m2);
+    }
+
+    public void testSingleNestingObjects() throws Exception {
+        GRAPH.add(R1R1B1, R2R1B1, R1R2B2, R2R2B2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMolecule(r1r1b1, r2r1b1);
+        NewMolecule m2 = createMolecule(r1r2b2, r2r2b2);
         checkMolecules(actualMolecules, m1, m2);
     }
 
     private void checkMolecules(Set<NewMolecule> actualMolecules, NewMolecule... expectedMolecules) {
+        assertEquals("Unexpected size of molecules", expectedMolecules.length, actualMolecules.size());
         assertEquals(asSet(moleculeComparator, expectedMolecules), actualMolecules);
     }
 }
