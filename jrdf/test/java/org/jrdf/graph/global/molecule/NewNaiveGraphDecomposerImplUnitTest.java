@@ -125,10 +125,17 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     public void testGroundedGraph() throws Exception {
         GRAPH.add(R1R1R1, R2R1R1, R2R1R2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = moleculeFactory.createMolecule(R1R1R1);
-        NewMolecule m2 = moleculeFactory.createMolecule(R2R1R1);
-        NewMolecule m3 = moleculeFactory.createMolecule(R2R1R2);
+        NewMolecule m1 = moleculeFactory.createMolecule(r1r1r1);
+        NewMolecule m2 = moleculeFactory.createMolecule(r2r1r1);
+        NewMolecule m3 = moleculeFactory.createMolecule(r2r1r2);
         checkMolecules(actualMolecules, m1, m2, m3);
+    }
+    
+    public void testSimpleLeanification() throws Exception {
+        GRAPH.add(B1R1R1, B2R1R1, B3R1R1);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = moleculeFactory.createMolecule(b1r1r1);
+        checkMolecules(actualMolecules, m1);
     }
 
     public void testSingleNestingSubjects() throws Exception {
