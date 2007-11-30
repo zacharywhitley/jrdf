@@ -70,7 +70,7 @@ import static org.jrdf.util.test.AssertThrows.assertThrows;
 
 import java.net.URI;
 import java.util.ArrayList;
-import static java.util.Arrays.asList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -109,6 +109,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     protected URIReference ref2;
     protected URIReference ref3;
     protected URIReference ref4;
+    protected URIReference ref5;
 
     /**
      * Used to create literal.
@@ -160,10 +161,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         URI uri2 = new URI("http://namespace#someothervalue");
         URI uri3 = new URI("http://namespace#yetanothervalue");
         URI uri4 = new URI("http://namespace#yetanotheranothervalue");
+        URI uri5 = new URI("http://namespace#visforvalue");
         ref1 = elementFactory.createURIReference(uri1);
         ref2 = elementFactory.createURIReference(uri2);
         ref3 = elementFactory.createURIReference(uri3);
         ref4 = elementFactory.createURIReference(uri4);
+        ref5 = elementFactory.createURIReference(uri5);
 
         l1 = elementFactory.createLiteral(TEST_STR1);
         l2 = elementFactory.createLiteral(TEST_STR2);
@@ -790,28 +793,24 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testBlankNodeResourceIterator() throws Exception {
         addTestNodes();
-
         ClosableIterator<Resource> blankNodes = graph.findBlankNodes();
         int counter = 0;
         while (blankNodes.hasNext()) {
             blankNodes.next();
             counter++;
         }
-
-        assertEquals(counter, 2);
+        assertEquals("Incorrect number of blank nodes", 2, counter);
     }
 
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
-
         ClosableIterator<Resource> iterator = graph.findURIReferences();
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
             counter++;
         }
-
-        assertEquals(counter, 2);
+        assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
     }
 
     public void testResourceIterators() throws Exception {
@@ -823,8 +822,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             resources.next();
             counter++;
         }
-
-        assertEquals(counter, 4);
+        assertEquals("Unexpected number of unique resources (Blank Nodes and URIs)", 5, counter);
     }
 
     public void testPredicateIterators() throws Exception {
@@ -835,17 +833,27 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             uniquePredicates.next();
             counter++;
         }
-        assertEquals(counter, 3);
+        assertEquals("Unexpected number of unique predicates", 4, counter);
+    }
 
-        Resource resource = graph.getElementFactory().createResource(blank2);
+    public void testFixedUniquePredicateIterator() throws Exception {
+        addTestNodes();
+        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(blank2), ref1, ref2);
+        // Should have ref2
+        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref3, ref5);
+    }
+
+    private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
+        throws Exception {
         ClosableIterator<PredicateNode> resourcePredicates = graph.findUniquePredicates(resource);
-        Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(asList(ref1, ref2));
-        counter = 0;
+        int counter = 0;
+        Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
         while (resourcePredicates.hasNext()) {
-            assertTrue(expectedPredicates.contains(resourcePredicates.next()));
+            PredicateNode predicateNode = resourcePredicates.next();
+            assertTrue("Results should contain: " + predicateNode, expectedPredicates.contains(predicateNode));
             counter++;
         }
-        assertEquals(counter, 2);
+        assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
     }
 
     private void addTestNodes() throws GraphException {
@@ -861,6 +869,9 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(ref1, ref1, ref1);
         graph.add(ref1, ref3, ref1);
         graph.add(ref4, ref3, ref1);
+        graph.add(ref5, ref2, ref1);
+        graph.add(ref1, ref3, ref5);
+        graph.add(ref5, ref5, ref5);
     }
 
     public void testClear() throws Exception {
