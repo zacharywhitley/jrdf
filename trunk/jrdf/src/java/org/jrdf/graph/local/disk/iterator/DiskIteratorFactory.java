@@ -68,7 +68,6 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.local.iterator.EmptyClosableIterator;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.graph.local.mem.iterator.AnyResourcePredicateIterator;
 import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
 import static org.jrdf.util.param.ParameterUtil.*;
 
@@ -114,7 +113,7 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return new AnyResourcePredicateIterator(longIndexes[1], nodePool);
+        return new AnyResourcePredicateIterator(trees[1], graphHandlers[1]);
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
