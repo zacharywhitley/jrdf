@@ -117,6 +117,6 @@ public final class DiskIteratorFactory implements IteratorFactory {
     }
 
     public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return new FixedResourcePredicateIterator(longIndexes[1], nodePool, resource);
+        return new FixedResourcePredicateIterator(resource, longIndexes[0], longIndexes[1], nodePool);
     }
 }

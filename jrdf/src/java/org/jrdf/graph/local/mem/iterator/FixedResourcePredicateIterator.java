@@ -71,42 +71,72 @@ import java.util.Set;
 
 public class FixedResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private final Long resource;
-    private final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator;
+    private final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> posIterator;
     private final NodePool nodePool;
-    private Long currentPredicate;
+    private Iterator<Long> predicateIterator;
+    private Long nextPredicate;
+    private Set<Long> spoPredicates;
 
-    public FixedResourcePredicateIterator(LongIndex newLongIndex, NodePool newNodePool, Long newResource) {
-        iterator = newLongIndex.iterator();
-        this.nodePool = newNodePool;
+    public FixedResourcePredicateIterator(Long newResource, LongIndex spoIndex, LongIndex posIndex,
+        NodePool newNodePool) {
         this.resource = newResource;
+        this.spoPredicates = spoIndex.getSubIndex(resource).keySet();
+        if (spoPredicates != null) {
+            predicateIterator = spoPredicates.iterator();
+        }
+        this.posIterator = posIndex.iterator();
+        this.nodePool = newNodePool;
+        nextPredicate();
     }
 
     public boolean hasNext() {
-        while (iterator.hasNext()) {
-            Map.Entry<Long, Map<Long, Set<Long>>> predicateToObjectSubjectMap = iterator.next();
-            Map<Long, Set<Long>> objectSubjectMap = predicateToObjectSubjectMap.getValue();
-            // TODO AN Review this - second part doesn't make sense.
-//            if (objectSubjectMap.containsKey(resource)) {
-//                Set<Long> longs = objectSubjectMap.get(resource);
-//                if (longs.contains(resource)) {
-//                    currentPredicate = predicateToObjectSubjectMap.getKey();
-//                    return true;
-//                }
-//            }
-            if (objectSubjectMap.containsKey(resource) || objectSubjectMap.containsValue(resource)) {
-                currentPredicate = predicateToObjectSubjectMap.getKey();
-                return true;
-            }
-        }
-        currentPredicate = null;
-        return false;
+        return nextPredicate != null;
     }
 
     public PredicateNode next() {
-        if (currentPredicate == null) {
+        if (nextPredicate == null) {
             throw new NoSuchElementException();
         }
+        Long currentPredicate = nextPredicate;
+        nextPredicate();
         return (PredicateNode) nodePool.getNodeById(currentPredicate);
+    }
+
+    private void nextPredicate() {
+        Long newPredicate = nextPredicateFromSPO();
+        if (newPredicate ==  null) {
+            newPredicate = nextPredicateFromPOS();
+        }
+        this.nextPredicate = newPredicate;
+    }
+
+    private Long nextPredicateFromSPO() {
+        Long newPredicate = null;
+        if (predicateIterator != null) {
+            if (predicateIterator.hasNext()) {
+                newPredicate = predicateIterator.next();
+            } else {
+                predicateIterator = null;
+            }
+        }
+        return newPredicate;
+    }
+
+    private Long nextPredicateFromPOS() {
+        Long newPredicate = null;
+        boolean foundNextPredicate = false;
+        while (!foundNextPredicate && posIterator.hasNext()) {
+            Map.Entry<Long, Map<Long, Set<Long>>> predicateToObjectSubjectMap = posIterator.next();
+            Map<Long, Set<Long>> objectToSubjectMap = predicateToObjectSubjectMap.getValue();
+            if (objectToSubjectMap.containsKey(resource)) {
+                Long key = predicateToObjectSubjectMap.getKey();
+                if (!spoPredicates.contains(key)) {
+                    newPredicate = key;
+                    foundNextPredicate = true;
+                }
+            }
+        }
+        return newPredicate;
     }
 
     public void remove() {

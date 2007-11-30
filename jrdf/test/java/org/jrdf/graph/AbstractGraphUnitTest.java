@@ -839,18 +839,18 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     public void testFixedUniquePredicateIterator() throws Exception {
         addTestNodes();
         checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(blank2), ref1, ref2);
-        // Should have ref2
-        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref3, ref5);
+        checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref2, ref3, ref5);
     }
 
     private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
         throws Exception {
-        ClosableIterator<PredicateNode> resourcePredicates = graph.findUniquePredicates(resource);
         int counter = 0;
+        ClosableIterator<PredicateNode> resourcePredicates = graph.findUniquePredicates(resource);
         Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
         while (resourcePredicates.hasNext()) {
             PredicateNode predicateNode = resourcePredicates.next();
-            assertTrue("Results should contain: " + predicateNode, expectedPredicates.contains(predicateNode));
+            assertTrue("Results should not have: " + predicateNode + " expected: " + expectedPredicates,
+                expectedPredicates.contains(predicateNode));
             counter++;
         }
         assertEquals("Wrong number of unique predicates", expectedPredicates.size(), counter);
