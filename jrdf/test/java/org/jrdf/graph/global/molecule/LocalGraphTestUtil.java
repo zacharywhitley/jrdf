@@ -84,8 +84,10 @@ public class LocalGraphTestUtil {
     public static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(TRIPLE_COMPARATOR);
     private static final URIReference REF1;
     private static final URIReference REF2;
+    private static final URIReference REF3;
     private static final BlankNode BNODE1;
     private static final BlankNode BNODE2;
+    private static final BlankNode BNODE3;
     public static final Triple R1R1R1;
     public static final Triple R1R1B1;
     public static final Triple R1R2B2;
@@ -101,13 +103,17 @@ public class LocalGraphTestUtil {
     public static final Triple B2R2R1;
     public static final Triple B2R1B1;
     public static final Triple B2R2R2;
+    public static final Triple B2R2B3;
+    public static final Triple B3R2R3;
 
     static {
         try {
             REF1 = ELEMENT_FACTORY.createURIReference(URI.create("urn:foo"));
             REF2 = ELEMENT_FACTORY.createURIReference(URI.create("urn:bar"));
+            REF3 = ELEMENT_FACTORY.createURIReference(URI.create("urn:baz"));
             BNODE1 = ELEMENT_FACTORY.createBlankNode();
             BNODE2 = ELEMENT_FACTORY.createBlankNode();
+            BNODE3 = ELEMENT_FACTORY.createBlankNode();
             R1R1R1 = TRIPLE_FACTORY.createTriple(REF1, REF1, REF1);
             R1R1B1 = TRIPLE_FACTORY.createTriple(REF1, REF1, BNODE1);
             R1R2B2 = TRIPLE_FACTORY.createTriple(REF1, REF2, BNODE2);
@@ -123,6 +129,8 @@ public class LocalGraphTestUtil {
             B2R2R1 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF1);
             B2R1B1 = TRIPLE_FACTORY.createTriple(BNODE2, REF1, BNODE1);
             B2R2R2 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF2);
+            B2R2B3 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, BNODE3);
+            B3R2R3 = TRIPLE_FACTORY.createTriple(BNODE3, REF2, REF3);
         } catch (GraphElementFactoryException e) {
             throw new ExceptionInInitializerError("Failed to create required resources");
         }

@@ -126,30 +126,29 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         ClosableIterator<Triple> closableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
-            if (subject == ANY_SUBJECT_NODE && isBlankNode(triple.getSubject()) ||
-                object == ANY_OBJECT_NODE && isBlankNode(triple.getObject())) {
-                NewMolecule subMolecule = moleculeFactory.createMolecue();
-                findEnclosedTriplesNonLink(subMolecule, ANY_SUBJECT_NODE, triple.getObject(), triple);
-                findEnclosedTriplesNonLink(subMolecule, (SubjectNode) triple.getObject(), ANY_OBJECT_NODE, triple);
-                addMoleculeTriplesToCheckedTriples(subMolecule);
-                molecule.add(triple, subMolecule);
-            } else {
-                if (!triplesChecked.contains(triple)) {
+            if (!triplesChecked.contains(triple)) {
+                if (isLinkTriple(subject, object, triple)) {
+                    NewMolecule subMolecule = getSubMolecule(triple);
+                    molecule.add(triple, subMolecule);
+                } else {
                     molecule.add(triple);
                 }
             }
         }
     }
 
-    private void findEnclosedTriplesNonLink(NewMolecule molecule, SubjectNode subject, ObjectNode object,
-        Triple linkTriple) throws GraphException {
-        ClosableIterator<Triple> closableIterator = graph.find(subject, ANY_PREDICATE_NODE, object);
-        while (closableIterator.hasNext()) {
-            Triple triple = closableIterator.next();
-            if (!triplesChecked.contains(triple) && !linkTriple.equals(triple)) {
-                molecule.add(triple);
-            }
-        }
+    private boolean isLinkTriple(SubjectNode subject, ObjectNode object, Triple triple) {
+        return subject == ANY_SUBJECT_NODE && isBlankNode(triple.getSubject()) ||
+            object == ANY_OBJECT_NODE && isBlankNode(triple.getObject());
+    }
+
+    private NewMolecule getSubMolecule(Triple triple) throws GraphException {
+        NewMolecule subMolecule = moleculeFactory.createMolecue();
+        triplesChecked.add(triple);
+        findEnclosedTriples(subMolecule, ANY_SUBJECT_NODE, triple.getObject());
+        findEnclosedTriples(subMolecule, (SubjectNode) triple.getObject(), ANY_OBJECT_NODE);
+        addMoleculeTriplesToCheckedTriples(subMolecule);
+        return subMolecule;
     }
 
     private void addMoleculeTriplesToCheckedTriples(NewMolecule molecule) {

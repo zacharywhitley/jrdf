@@ -80,6 +80,7 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1b1;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r2b2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
@@ -93,6 +94,7 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.MemSortedSetFactory;
 import static org.jrdf.util.test.SetUtil.asSet;
@@ -180,6 +182,14 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = createMultiLevelMolecule(asSet(r1r1b1, r2r1b1, b1r1r1, b1r2r2, b1r1b2),
             asSet(r1r2b2, r2r2b2, b2r2r1), Collections.<Triple>emptySet());
+        checkMolecules(actualMolecules, m1);
+    }
+
+    public void testLinkThreeGroups() throws Exception {
+        GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2, B2R2B3, B3R2R3);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(r1r1b1, r2r1b1, b1r1r1, b1r2r2, b1r1b2),
+            asSet(r1r2b2, r2r2b2, b2r2r1, b2r2b3), asSet(b3r2r3));
         checkMolecules(actualMolecules, m1);
     }
 
