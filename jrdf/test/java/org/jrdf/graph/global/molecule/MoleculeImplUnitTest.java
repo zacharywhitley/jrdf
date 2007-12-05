@@ -102,6 +102,28 @@ public class MoleculeImplUnitTest extends TestCase {
         assertEquals(triple, molecule.getHeadTriple());
     }
 
+    // TODO: Lossy creation of molecules!
+    /*public void testNestedMoleculeBNodes() {
+        Molecule molecule = new MoleculeImpl(comparator);
+        URIReference ref0 = new URIReferenceImpl(URI.create("urn:subject"));
+        ref1 = new URIReferenceImpl(URI.create("urn:foo"));
+        ref2 = new URIReferenceImpl(URI.create("urn:bar"));
+        BlankNode bn2 = new BlankNodeImpl();
+        BlankNode bn3 = new BlankNodeImpl();
+
+        Triple t00 = new TripleImpl(ref0, ref2, bn2);
+        Triple t01 = new TripleImpl(ref0, ref2, bn3);
+        Triple t1 = new TripleImpl(bn2, ref1, ref1);
+        Triple t2 = new TripleImpl(bn3, ref1, ref2);
+
+        molecule = molecule.add(t00);
+        molecule = molecule.add(t01);
+        molecule = molecule.add(t1);
+        molecule = molecule.add(t2);
+        System.out.println(molecule.toString());
+        assertEquals("molecule has 4 triple", 4, molecule.size());
+    }*/
+
     public void testImmutable() throws Exception {
         Molecule molecule = new MoleculeImpl(comparator);
         ref1 = new URIReferenceImpl(URI.create("urn:foo"));

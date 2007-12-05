@@ -90,6 +90,7 @@ public class LocalGraphTestUtil {
     private static final BlankNode BNODE3;
     public static final Triple R1R1R1;
     public static final Triple R1R1B1;
+    public static final Triple R1R2B1;
     public static final Triple R1R2B2;
     public static final Triple R2R1R1;
     public static final Triple R2R1R2;
@@ -117,6 +118,7 @@ public class LocalGraphTestUtil {
             BNODE3 = ELEMENT_FACTORY.createBlankNode();
             R1R1R1 = TRIPLE_FACTORY.createTriple(REF1, REF1, REF1);
             R1R1B1 = TRIPLE_FACTORY.createTriple(REF1, REF1, BNODE1);
+            R1R2B1 = TRIPLE_FACTORY.createTriple(REF1, REF2, BNODE1);
             R1R2B2 = TRIPLE_FACTORY.createTriple(REF1, REF2, BNODE2);
             R2R1R1 = TRIPLE_FACTORY.createTriple(REF2, REF1, REF1);
             R2R1R2 = TRIPLE_FACTORY.createTriple(REF2, REF1, REF2);
