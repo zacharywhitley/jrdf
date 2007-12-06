@@ -63,42 +63,22 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1b2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r2b2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1b1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r2b2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1B1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.set.MemSortedSetFactory;
 import static org.jrdf.util.test.SetUtil.asSet;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.Set;
 
@@ -130,6 +110,35 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m3 = moleculeFactory.createMolecule(r2r1r2);
         checkMolecules(actualMolecules, m1, m2, m3);
     }
+
+    // TODO: incorrect decomposition of graph!
+    /*public void testNestedBlankNodeDecompose() throws GraphException, GraphElementFactoryException {
+        GraphElementFactory fac = GRAPH.getElementFactory();
+        TripleFactory tFac = GRAPH.getTripleFactory();
+        URIReference ref0 = fac.createURIReference(URI.create("urn:subject"));
+        URIReference ref1 = fac.createURIReference(URI.create("urn:ref1"));
+        URIReference ref2 = fac.createURIReference(URI.create("urn:ref2"));
+
+        BlankNode bn1 = fac.createBlankNode();
+        System.out.println("bn1 = " + bn1.toString());
+        BlankNode bn2 = fac.createBlankNode();
+        System.out.println("bn2 = " + bn2.toString());
+        BlankNode bn3 = fac.createBlankNode();
+        System.out.println("bn3 = " + bn3.toString());
+
+        Triple t00 = tFac.createTriple(bn1, ref2, bn2);
+        Triple t01 = tFac.createTriple(bn1, ref2, bn3);
+        Triple t1 = tFac.createTriple(bn2, ref1, ref1);
+        Triple t2 = tFac.createTriple(bn3, ref1, ref2);
+
+        GRAPH.add(t00, t01, t1, t2);
+        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        for (NewMolecule m : molecules) {
+            System.out.println(m.toString());
+        }
+
+        assertEquals("Only 1 molecule", 1, molecules.size());
+    }*/
     
     public void testSimpleLeanification() throws Exception {
         GRAPH.add(B1R1R1, B2R1R1, B3R1R1);
