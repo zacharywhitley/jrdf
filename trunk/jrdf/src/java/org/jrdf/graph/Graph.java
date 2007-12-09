@@ -64,11 +64,9 @@ import org.jrdf.graph.local.iterator.ClosableIterator;
 import java.util.Iterator;
 
 /**
- * An RDF Graph. As defined by the
- * <a href="http://www.w3.org/TR/2003/WD-rdf-concepts-20031010"><cite>Resource
- * Description Framework (RDF): Concepts and Abstract Syntax</cite> </a>
- * specification.  An RDF graph is a set of RDF triples.  The set of nodes of
- * an RDF graph is the set of subjects and objects of triples in the graph.
+ * An RDF Graph. As defined by the <a href="http://www.w3.org/TR/2003/WD-rdf-concepts-20031010"><cite>Resource
+ * Description Framework (RDF): Concepts and Abstract Syntax</cite> </a> specification.  An RDF graph is a set of RDF
+ * triples.  The set of nodes of an RDF graph is the set of subjects and objects of triples in the graph.
  *
  * @author <a href="http://staff.pisoftware.com/raboczi">Simon Raboczi</a>
  * @author Andrew Newman
