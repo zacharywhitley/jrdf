@@ -84,6 +84,7 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMoleculeW
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
 import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
@@ -96,7 +97,7 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
 
     public void setUp() {
         TripleComparator tripleComparator = TRIPLE_COMPARATOR_FACTORY.newComparator();
-        NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(tripleComparator);
+        NewMoleculeComparator moleculeComparator = new NewMoleculeMergingComparatorImpl(tripleComparator);
         NewMoleculeFactory factory = new NewMoleculeFactoryImpl(tripleComparator, moleculeComparator);
         mergeSubmolecules = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory);
     }
@@ -136,7 +137,7 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
     public void testMergeUnmatchedHeadTriples() {
         final NewMolecule molecule1 = createMolecule(b1r1r1, b1r2b2, b1r2r2);
         final NewMolecule molecule2 = createMolecule(b1r2b2, b1r3r3);
-        AssertThrows.assertThrows(IllegalArgumentException.class, "Cannot merge molecules with different head triples.",
+        assertThrows(IllegalArgumentException.class, "Cannot merge molecules with different head triples.",
             new AssertThrows.Block() {
                 public void execute() throws Throwable {
                     mergeSubmolecules.merge(molecule1, molecule2);
@@ -191,4 +192,13 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         assertEquals("Expected head triple to be", b1r1r1, newMolecule.getHeadTriple());
         checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
     }
+
+    // TODO AN Support this and other more complicated merge examples!
+//    public void testMergeDifferentMolecules() {
+//        NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1b2, b2r1r1);
+//        NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1b3, b3r1r2);
+//        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+//        assertEquals("Expected head triple to be", b1r1r1, newMolecule.getHeadTriple());
+//        checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+//    }
 }

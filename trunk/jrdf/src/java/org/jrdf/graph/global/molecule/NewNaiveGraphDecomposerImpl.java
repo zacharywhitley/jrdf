@@ -127,7 +127,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
             if (!triplesChecked.contains(triple)) {
-                if (isLinkTriple(subject, object, triple)) {
+                if (isLinkTriple(subject, object, triple) && !isEdge(subject, triple)) {
                     NewMolecule subMolecule = getSubMolecule(triple);
                     molecule.add(triple, subMolecule);
                 } else {
@@ -140,6 +140,10 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private boolean isLinkTriple(SubjectNode subject, ObjectNode object, Triple triple) {
         return subject == ANY_SUBJECT_NODE && isBlankNode(triple.getSubject()) ||
             object == ANY_OBJECT_NODE && isBlankNode(triple.getObject());
+    }
+
+    private boolean isEdge(SubjectNode subject, Triple triple) {
+        return triple.getSubject().equals(subject) && isBlankNode(triple.getObject());
     }
 
     private NewMolecule getSubMolecule(Triple triple) throws GraphException {
