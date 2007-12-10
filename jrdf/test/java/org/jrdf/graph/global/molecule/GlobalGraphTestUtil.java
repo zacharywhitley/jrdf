@@ -94,6 +94,7 @@ public class GlobalGraphTestUtil {
     public static final Triple r3r1r1 = new TripleImpl(REF3, REF1, REF1);
     public static final Triple b1r1r1 = new TripleImpl(BNODE1, REF1, REF1);
     public static final Triple b1r1b2 = new TripleImpl(BNODE1, REF1, BNODE2);
+    public static final Triple b1r1b3 = new TripleImpl(BNODE1, REF1, BNODE3);
     public static final Triple b1r2r2 = new TripleImpl(BNODE1, REF2, REF2);
     public static final Triple b1r2b2 = new TripleImpl(BNODE1, REF2, BNODE2);
     public static final Triple b1r3r3 = new TripleImpl(BNODE1, REF3, REF3);
@@ -113,7 +114,7 @@ public class GlobalGraphTestUtil {
     public static final Triple b3r1r3 = new TripleImpl(BNODE3, REF1, REF3);
     public static final Triple b3r2r3 = new TripleImpl(BNODE3, REF2, REF3);
     public static final Triple b3r3r3 = new TripleImpl(BNODE3, REF3, REF3);
-    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(COMPARATOR);
+    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeMergingComparatorImpl(COMPARATOR);
     public static final MergeMolecules MERGE_MOLECULE = new MergeMoleculesImpl();
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
