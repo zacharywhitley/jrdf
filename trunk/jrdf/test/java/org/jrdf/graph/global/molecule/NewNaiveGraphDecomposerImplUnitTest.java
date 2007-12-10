@@ -112,33 +112,27 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     }
 
     // TODO: incorrect decomposition of graph!
-    /*public void testNestedBlankNodeDecompose() throws GraphException, GraphElementFactoryException {
-        GraphElementFactory fac = GRAPH.getElementFactory();
-        TripleFactory tFac = GRAPH.getTripleFactory();
-        URIReference ref0 = fac.createURIReference(URI.create("urn:subject"));
-        URIReference ref1 = fac.createURIReference(URI.create("urn:ref1"));
-        URIReference ref2 = fac.createURIReference(URI.create("urn:ref2"));
-
-        BlankNode bn1 = fac.createBlankNode();
-        System.out.println("bn1 = " + bn1.toString());
-        BlankNode bn2 = fac.createBlankNode();
-        System.out.println("bn2 = " + bn2.toString());
-        BlankNode bn3 = fac.createBlankNode();
-        System.out.println("bn3 = " + bn3.toString());
-
-        Triple t00 = tFac.createTriple(bn1, ref2, bn2);
-        Triple t01 = tFac.createTriple(bn1, ref2, bn3);
-        Triple t1 = tFac.createTriple(bn2, ref1, ref1);
-        Triple t2 = tFac.createTriple(bn3, ref1, ref2);
-
-        GRAPH.add(t00, t01, t1, t2);
-        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
-        for (NewMolecule m : molecules) {
-            System.out.println(m.toString());
-        }
-
-        assertEquals("Only 1 molecule", 1, molecules.size());
-    }*/
+//    public void testNestedBlankNodeDecompose() throws GraphException, GraphElementFactoryException {
+//        GraphElementFactory fac = GRAPH.getElementFactory();
+//        TripleFactory tFac = GRAPH.getTripleFactory();
+//        URIReference ref1 = fac.createURIReference(URI.create("urn:ref1"));
+//        URIReference ref2 = fac.createURIReference(URI.create("urn:ref2"));
+//
+//        BlankNode bn1 = fac.createBlankNode();
+//        BlankNode bn2 = fac.createBlankNode();
+//        BlankNode bn3 = fac.createBlankNode();
+//
+//        Triple t00 = tFac.createTriple(bn1, ref2, bn2);
+//        Triple t01 = tFac.createTriple(bn1, ref2, bn3);
+//        Triple t1 = tFac.createTriple(bn2, ref1, ref1);
+//        Triple t2 = tFac.createTriple(bn3, ref1, ref2);
+//
+//        GRAPH.add(t00, t01, t1, t2);
+//        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+//        NewMolecule m1 = createMultiLevelMolecule(asSet(t00), asSet(t1), Collections.<Triple>emptySet());
+//        NewMolecule m2 = createMultiLevelMolecule(asSet(t01), asSet(t2), Collections.<Triple>emptySet());
+//        checkMolecules(actualMolecules, m1, m2);
+//    }
     
     public void testSimpleLeanification() throws Exception {
         GRAPH.add(B1R1R1, B2R1R1, B3R1R1);
