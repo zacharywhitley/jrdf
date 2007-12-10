@@ -199,6 +199,7 @@ public class NewMoleculeImpl implements NewMolecule {
         return contains(new TripleImpl(subject, predicate, object));
     }
 
+    // TODO: Molecule or NewMolecule?
     public boolean contains(Molecule molecule) {
         // Head triple comparison
         if (subMolecules.keySet().contains(molecule)) {
