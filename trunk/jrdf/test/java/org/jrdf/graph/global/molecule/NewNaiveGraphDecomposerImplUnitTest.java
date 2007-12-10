@@ -182,6 +182,26 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1, m2);
     }
 
+    public void testCircularBlankNodes() throws GraphElementFactoryException, GraphException {
+        GraphElementFactory fac = GRAPH.getElementFactory();
+        TripleFactory tFac = GRAPH.getTripleFactory();
+        URIReference r1 = fac.createURIReference(URI.create("urn:r1"));
+        URIReference r2 = fac.createURIReference(URI.create("urn:r2"));
+        URIReference r3 = fac.createURIReference(URI.create("urn:r3"));
+        BlankNode bn1 = fac.createBlankNode();
+        BlankNode bn2 = fac.createBlankNode();
+        BlankNode bn3 = fac.createBlankNode();
+
+        Triple t1 = tFac.createTriple(bn1, r1, bn2);
+        Triple t2 = tFac.createTriple(bn2, r2, bn3);
+        Triple t3 = tFac.createTriple(bn3, r3, bn1);
+        GRAPH.add(t1, t2, t3);
+
+        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(t1), asSet(t2), asSet(t3));
+        checkMolecules(molecules, m1);
+    }
+
     public void testNoSimpleLeanification() throws Exception {
         GRAPH.add(B1R1R1, B2R1R1, B3R1R1);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
