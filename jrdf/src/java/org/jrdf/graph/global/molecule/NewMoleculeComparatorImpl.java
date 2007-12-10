@@ -63,6 +63,7 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
 import static org.jrdf.graph.global.molecule.NullNewMolecule.*;
 
+// TODO AN Fix this comparison or use a different comparator in NewNaiveGraphDecomposerImpl.
 public class NewMoleculeComparatorImpl implements NewMoleculeComparator {
     private static final long serialVersionUID = 3376402602482439640L;
     private TripleComparator tripleComparator;
