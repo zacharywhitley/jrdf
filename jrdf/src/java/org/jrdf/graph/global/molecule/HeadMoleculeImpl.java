@@ -131,7 +131,7 @@ public class HeadMoleculeImpl implements NewMolecule {
         return null;
     }
 
-    public boolean contains(Molecule molecule) {
+    public boolean contains(NewMolecule molecule) {
         return false;
     }
 

@@ -200,7 +200,7 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     // TODO: Molecule or NewMolecule?
-    public boolean contains(Molecule molecule) {
+    public boolean contains(NewMolecule molecule) {
         // Head triple comparison
         if (subMolecules.keySet().contains(molecule)) {
             return true;
