@@ -77,7 +77,7 @@ public final class NullNewMolecule implements NewMolecule {
         throw new UnsupportedOperationException();
     }
 
-    public boolean contains(Molecule molecule) {
+    public boolean contains(NewMolecule molecule) {
         return false;
     }
 

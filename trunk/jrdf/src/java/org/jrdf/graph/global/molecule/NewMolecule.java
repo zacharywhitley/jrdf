@@ -67,7 +67,7 @@ import java.util.Set;
 public interface NewMolecule {
     Triple getHeadTriple();
 
-    boolean contains(Molecule molecule);
+    boolean contains(NewMolecule molecule);
 
     int size();
 
