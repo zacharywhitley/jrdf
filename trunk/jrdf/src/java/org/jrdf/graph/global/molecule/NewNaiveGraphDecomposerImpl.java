@@ -148,12 +148,13 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         if (isDoubleLinkedTriple(triple)) {
             NewMolecule subMolecule = moleculeFactory.createMolecue();
             subMolecule.add(triple);
+            triplesChecked.add(triple);
             getSubMolecule(subMolecule);
             molecule.add(molecule.getHeadTriple(), subMolecule);
         } else {
             molecule.add(molecule.getHeadTriple(), triple);
+            triplesChecked.add(triple);
         }
-        triplesChecked.add(triple);
     }
 
     private boolean isDoubleLinkedTriple(Triple triple) {
