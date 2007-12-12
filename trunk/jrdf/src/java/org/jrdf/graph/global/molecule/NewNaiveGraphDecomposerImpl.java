@@ -74,7 +74,6 @@ import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.SortedSet;
-import java.util.Iterator;
 
 public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
@@ -83,7 +82,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private Graph graph;
 
     public NewNaiveGraphDecomposerImpl(SortedSetFactory newSetFactory, NewMoleculeFactory newMoleculeFactory,
-        NewMoleculeComparator comparator, TripleComparator tripleComparator) {
+            NewMoleculeComparator comparator, TripleComparator tripleComparator) {
         checkNotNull(newSetFactory, newMoleculeFactory);
         this.triplesChecked = newSetFactory.createSet(Triple.class, tripleComparator);
         this.molecules = newSetFactory.createSet(NewMolecule.class, comparator);
@@ -115,12 +114,12 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         if (blankObject) {
             findEnclosedTriples(molecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, currentTriple.getObject()));
             findEnclosedTriples(molecule, graph.find((SubjectNode) currentTriple.getObject(), ANY_PREDICATE_NODE,
-                ANY_OBJECT_NODE));
+                    ANY_OBJECT_NODE));
         }
         if (blankSubject) {
             findEnclosedTriples(molecule, graph.find(currentTriple.getSubject(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
             findEnclosedTriples(molecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
-                (ObjectNode) currentTriple.getSubject()));
+                    (ObjectNode) currentTriple.getSubject()));
         }
         return molecule;
     }
@@ -130,7 +129,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
             if (!triplesChecked.contains(triple)) {
-                if (doesRootLinkToTriple(molecule, triple)) {
+                if (isDoubleLinkedTriple(triple)) {
                     addLinkedTriple(molecule, triple);
                 } else {
                     molecule.add(triple);
@@ -140,30 +139,16 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         }
     }
 
-    private boolean doesRootLinkToTriple(NewMolecule molecule, Triple triple) {
-        final Iterator<Triple> triples = molecule.getRootTriples();
-        while (triples.hasNext()) {
-            final Triple rootTriple = triples.next();
-            SubjectNode headTripleSubject = rootTriple.getSubject();
-            ObjectNode headTripleObject = rootTriple.getObject();
-            if (isBlankNode(headTripleSubject) && isBlankNode(headTripleObject) &&
-                    headTripleObject.equals(triple.getSubject())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void addLinkedTriple(NewMolecule molecule, Triple triple) throws GraphException {
-        if (isDoubleLinkedTriple(triple)) {
-            NewMolecule subMolecule = moleculeFactory.createMolecue();
-            subMolecule.add(triple);
-            triplesChecked.add(triple);
-            getSubMolecule(subMolecule);
+        NewMolecule subMolecule = moleculeFactory.createMolecue();
+        subMolecule.add(triple);
+        triplesChecked.add(triple);
+        getSubMolecule(subMolecule);
+        if (molecule.getHeadTriple().getObject().equals(triple.getSubject())) {
             molecule.add(molecule.getHeadTriple(), subMolecule);
         } else {
-            molecule.add(molecule.getHeadTriple(), triple);
-            triplesChecked.add(triple);
+            subMolecule.remove(triple);
+            molecule.add(triple, subMolecule);
         }
     }
 
@@ -174,7 +159,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private void getSubMolecule(NewMolecule subMolecule) throws GraphException {
         Triple triple = subMolecule.getHeadTriple();
         findEnclosedTriples(subMolecule, graph.find((SubjectNode) triple.getObject(), ANY_PREDICATE_NODE,
-            ANY_OBJECT_NODE));
+                ANY_OBJECT_NODE));
         findEnclosedTriples(subMolecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, triple.getObject()));
     }
 }

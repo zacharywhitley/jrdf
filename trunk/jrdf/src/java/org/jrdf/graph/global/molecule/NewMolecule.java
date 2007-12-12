@@ -86,4 +86,6 @@ public interface NewMolecule {
     NewMolecule add(Triple triple, Triple newTriple);
 
     boolean contains(Triple triple);
+
+    void remove(Triple triple);
 }

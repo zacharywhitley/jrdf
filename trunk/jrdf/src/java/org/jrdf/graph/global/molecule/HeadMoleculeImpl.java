@@ -123,8 +123,7 @@ public class HeadMoleculeImpl implements NewMolecule {
         return null;
     }
 
-    public Molecule remove(Triple triple) {
-        return null;
+    public void remove(Triple triple) {
     }
 
     public SortedSet<Triple> getTriples() {
