@@ -113,6 +113,9 @@ public final class NullNewMolecule implements NewMolecule {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public void remove(Triple triple) {
+    }
+
     public void specialAdd(NewMolecule molecule) {
     }
 

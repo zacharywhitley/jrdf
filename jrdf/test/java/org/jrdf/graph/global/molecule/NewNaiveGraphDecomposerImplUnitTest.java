@@ -175,9 +175,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
         GRAPH.add(t00, t01, t1, t2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(t1, t00), Collections.<Triple>emptySet(),
+        NewMolecule m1 = createMultiLevelMolecule(asSet(t00, t1), Collections.<Triple>emptySet(),
                 Collections.<Triple>emptySet());
-        NewMolecule m2 = createMultiLevelMolecule(asSet(t01, t2), Collections.<Triple>emptySet(), 
+        NewMolecule m2 = createMultiLevelMolecule(asSet(t01, t2), Collections.<Triple>emptySet(),
                 Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1, m2);
     }
@@ -257,22 +257,21 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1, m2);
     }
 
-//    public void testLinkTwoGroups() throws Exception {
-//        GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2);
-//        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-//        NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
-//            asSet(R1R2B2, R2R2B2, B2R2R1), Collections.<Triple>emptySet());
-//        System.err.println("Got: " + actualMolecules);
-//        checkMolecules(actualMolecules, m1);
-//    }
-//
-//    public void testLinkThreeGroups() throws Exception {
-//        GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2, B2R2B3, B3R2R3);
-//        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-//        NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
-//            asSet(R1R2B2, R2R2B2, B2R2R1, B2R2B3), asSet(B3R2R3));
-//        checkMolecules(actualMolecules, m1);
-//    }
+    public void testLinkTwoGroups() throws Exception {
+        GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
+            asSet(R1R2B2, R2R2B2, B2R2R1), Collections.<Triple>emptySet());
+        checkMolecules(actualMolecules, m1);
+    }
+
+    public void testLinkThreeGroups() throws Exception {
+        GRAPH.add(R1R1B1, R1R2B2, R2R1B1, R2R2B2, B1R1R1, B1R2R2, B2R2R1, B1R1B2, B2R2B3, B3R2R3);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(R1R1B1, R2R1B1, B1R1R1, B1R2R2, B1R1B2),
+            asSet(R1R2B2, R2R2B2, B2R2R1, B2R2B3), asSet(B3R2R3));
+        checkMolecules(actualMolecules, m1);
+    }
 
     private void checkMolecules(Set<NewMolecule> actualMolecules, NewMolecule... expectedMolecules) {
         assertEquals("Unexpected size of molecules", expectedMolecules.length, actualMolecules.size());
