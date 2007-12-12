@@ -105,7 +105,6 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 molecules.add(molecule);
             }
         }
-
         return molecules;
     }
 
@@ -133,8 +132,9 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
             if (!triplesChecked.contains(triple)) {
                 if (doesRootLinkToTriple(molecule, triple)) {
                     addLinkedTriple(molecule, triple);
-                } else if (!(isBlankNode(triple.getSubject()) && isBlankNode(triple.getObject()))) {
+                } else {
                     molecule.add(triple);
+                    triplesChecked.add(triple);
                 }
             }
         }
