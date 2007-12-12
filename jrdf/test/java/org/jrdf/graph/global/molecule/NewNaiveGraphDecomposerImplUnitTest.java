@@ -157,7 +157,6 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(actualMolecules, m1, m2, m3);
     }
 
-    // TODO: incorrect decomposition of graph!
     public void testNestedBlankNodeDecompose() throws GraphException, GraphElementFactoryException {
         GraphElementFactory fac = GRAPH.getElementFactory();
         TripleFactory tFac = GRAPH.getTripleFactory();
