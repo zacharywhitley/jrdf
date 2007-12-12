@@ -4,6 +4,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.ReverseGroundedTripleComparatorImpl;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
@@ -29,7 +30,8 @@ public class MemSortedSetFactory implements SortedSetFactory {
         BlankNodeComparator comparator = new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl());
         NodeComparator newNodeComparator = new NodeComparatorImpl(nodeTypeComparator,
             comparator);
-        defaultComparators.put(Triple.class, new TripleComparatorImpl(newNodeComparator));
+        TripleComparatorImpl tripleComparator = new TripleComparatorImpl(newNodeComparator);
+        defaultComparators.put(Triple.class, new ReverseGroundedTripleComparatorImpl(tripleComparator));
         defaultComparators.put(PredicateNode.class, newNodeComparator);
         defaultComparators.put(BlankNode.class, comparator);
     }
