@@ -59,6 +59,8 @@
 
 package org.jrdf.example;
 
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
@@ -84,10 +86,9 @@ import java.io.Writer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public abstract class AbstractGraphPerformance {
-    private static final int NUMBER_OF_NODES_TO_ADD = 50000;
+    private static final int NUMBER_OF_NODES_TO_ADD = 10000;
     private static final int NUMBER_OF_NODES_TO_FIND = 100;
     private static final int NUMBER_OF_PREDICATES = 10;
     private static final int NO_PREDICATES = NUMBER_OF_PREDICATES;
@@ -184,47 +185,54 @@ public abstract class AbstractGraphPerformance {
     }
 
     private void find1(Graph graph, URI subjectURI) throws GraphException, GraphElementFactoryException {
-        ClosableIterator<Triple> itr = findRandomPredicates(graph,
-                graphElementFactory.createURIReference(subjectURI));
-        while (itr.hasNext()) {
-            Triple triple1 = itr.next();
-            ObjectNode object1 = triple1.getObject();
-            if (!(object1 instanceof SubjectNode)) {
-                continue;
+        ClosableIterator<Triple> itr = findAllPredicates(graph, graphElementFactory.createURIReference(subjectURI));
+        try {
+            while (itr.hasNext()) {
+                Triple triple1 = itr.next();
+                ObjectNode object1 = triple1.getObject();
+                if (!(object1 instanceof SubjectNode)) {
+                    continue;
+                }
+                find2(graph, object1);
             }
-            find2(graph, object1);
+        } finally {
+            itr.close();
         }
     }
 
-    private void find2(Graph graph, ObjectNode object1) throws GraphException, GraphElementFactoryException {
-        ClosableIterator<Triple> itr2 = findRandomPredicates(graph, (SubjectNode) object1);
-        while (itr2.hasNext()) {
-            Triple triple2 = itr2.next();
-            ObjectNode object2 = triple2.getObject();
-            if (!(object2 instanceof SubjectNode)) {
-                continue;
+    private void find2(Graph graph, ObjectNode object1) throws GraphException {
+        ClosableIterator<Triple> itr2 = findAllPredicates(graph, (SubjectNode) object1);
+        try {
+            while (itr2.hasNext()) {
+                Triple triple2 = itr2.next();
+                ObjectNode object2 = triple2.getObject();
+                if (!(object2 instanceof SubjectNode)) {
+                    continue;
+                }
+                find3(graph, object2);
             }
-            find3(graph, object2);
+        } finally {
+            itr2.close();
         }
     }
 
-    private void find3(Graph graph, ObjectNode object2) throws GraphException, GraphElementFactoryException {
-        ClosableIterator<Triple> itr3 = findRandomPredicates(graph, (SubjectNode) object2);
-        while (itr3.hasNext()) {
-            Triple triple3 = itr3.next();
-            ObjectNode object3 = triple3.getObject();
-            if (!(object3 instanceof SubjectNode)) {
-                continue;
+    private void find3(Graph graph, ObjectNode object2) throws GraphException {
+        ClosableIterator<Triple> itr3 = findAllPredicates(graph, (SubjectNode) object2);
+        try {
+            while (itr3.hasNext()) {
+                Triple triple3 = itr3.next();
+                ObjectNode object3 = triple3.getObject();
+                if (!(object3 instanceof SubjectNode)) {
+                    continue;
+                }
             }
+        } finally {
+            itr3.close();
         }
     }
 
-    private ClosableIterator<Triple> findRandomPredicates(Graph graph, SubjectNode subject)
-        throws GraphException, GraphElementFactoryException {
+    private ClosableIterator<Triple> findAllPredicates(Graph graph, SubjectNode subject) throws GraphException {
         noFinds++;
-        final Random random = new Random(System.currentTimeMillis());
-        return graph.find(subject,
-                graphElementFactory.createURIReference(predicates.get(random.nextInt(NO_PREDICATES))),
-                graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + random.nextInt(NO_PREDICATES))));
+        return graph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
     }
 }
