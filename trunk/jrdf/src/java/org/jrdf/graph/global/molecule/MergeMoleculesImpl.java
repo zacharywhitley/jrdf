@@ -60,32 +60,10 @@
 package org.jrdf.graph.global.molecule;
 
 import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
-
 import java.util.Iterator;
 
 public class MergeMoleculesImpl implements MergeMolecules {
-//    public NewMolecule merge(NewMolecule m1, NewMolecule m2) {
-//        Iterator<Triple> m1RootTriples = m1.getRootTriples();
-//        while (m1RootTriples.hasNext()) {
-//            Triple m1Triple = m1RootTriples.next();
-//            Iterator<Triple> m2RootTriples = m2.getRootTriples();
-//            while (m2RootTriples.hasNext()) {
-//                Triple m2Triple = m2RootTriples.next();
-//                if (isBlankNode(m2Triple.getSubject()) && m1Triple.getObject().equals(m2Triple.getSubject())) {
-//                    Set<NewMolecule> molecules = m1.getSubMolecules(m1Triple);
-//                    for (NewMolecule molecule : molecules) {
-//                        if (m2.getHeadTriple().equals(molecule.getHeadTriple())) {
-//
-//                        }
-//                    }
-//                    m1.add(m1Triple, m2);
-//                }
-//            }
-//        }
-//        return m1;
-    //    }
     public NewMolecule merge(NewMolecule m1, NewMolecule m2) {
         Iterator<Triple> m1RootTriples = m1.getRootTriples();
         while (m1RootTriples.hasNext()) {
@@ -93,32 +71,11 @@ public class MergeMoleculesImpl implements MergeMolecules {
             Iterator<Triple> m2RootTriples = m2.getRootTriples();
             while (m2RootTriples.hasNext()) {
                 Triple m2Triple = m2RootTriples.next();
-                if (blankNodesMatch(m1Triple, m2Triple)) {
-                    m1.add(m1Triple, m2Triple);
-                    addSubmolecules(m1, m2, m1Triple, m2Triple);
+                if (isBlankNode(m2Triple.getSubject()) && m1Triple.getObject().equals(m2Triple.getSubject())) {
+                    m1.add(m1Triple, m2);
                 }
             }
         }
         return m1;
-    }
-
-    private void addSubmolecules(NewMolecule m1, NewMolecule m2, Triple m1Triple, Triple m2Triple) {
-        for (NewMolecule molecule : m1.getSubMolecules(m1Triple)) {
-            for (NewMolecule oldMolecule : m2.getSubMolecules(m2Triple)) {
-                Iterator<Triple> triples = oldMolecule.getRootTriples();
-                while (triples.hasNext()) {
-                    molecule.add(m1Triple, triples.next());
-                }
-            }
-        }
-    }
-
-    private boolean blankNodesMatch(Triple triple1, Triple triple2) {
-        return nodeMatchesSubjectOrObject(triple1.getSubject(), triple2) ||
-            nodeMatchesSubjectOrObject(triple1.getObject(), triple2);
-    }
-
-    private boolean nodeMatchesSubjectOrObject(Node node, Triple triple) {
-        return isBlankNode(node) && (node.equals(triple.getSubject()) || node.equals(triple.getObject()));
     }
 }

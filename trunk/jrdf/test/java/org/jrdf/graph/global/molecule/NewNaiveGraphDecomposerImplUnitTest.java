@@ -197,6 +197,8 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
         Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = createMultiLevelMolecule(asSet(t1), asSet(t2), asSet(t3));
+        System.err.println("M1 : " + m1);
+        System.err.println("M1 : " + molecules);
         checkMolecules(molecules, m1);
     }
 
