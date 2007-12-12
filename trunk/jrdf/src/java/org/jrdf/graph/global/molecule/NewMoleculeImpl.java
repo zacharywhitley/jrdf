@@ -81,7 +81,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class NewMoleculeImpl implements NewMolecule {
-    private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
     // This should be a set of molecules for the values.
     private final SortedMap<Triple, Set<NewMolecule>> subMolecules;
     private final NewMoleculeComparator moleculeComparator;
@@ -98,7 +98,7 @@ public class NewMoleculeImpl implements NewMolecule {
     public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger) {
         checkNotNull(newComparator);
         moleculeComparator = newComparator;
-        subMolecules = new TreeMap<Triple, Set<NewMolecule>>(comparator);
+        subMolecules = new TreeMap<Triple, Set<NewMolecule>>(tripleComparator);
         moleculeMerger = newMoleculeMerger;
     }
 
@@ -137,9 +137,10 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public NewMolecule add(Triple triple) {
-        subMolecules.put(triple, null);
-        return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
-            subMolecules.keySet().toArray(new Triple[subMolecules.size()]));
+        if (!subMolecules.keySet().contains(triple)) {
+            subMolecules.put(triple, null);
+        }
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);
     }
 
     public NewMolecule add(Triple triple, NewMolecule newMolecule) {

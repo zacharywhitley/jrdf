@@ -132,7 +132,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
             if (!triplesChecked.contains(triple)) {
                 if (doesHeadLinkToTriple(molecule, triple)) {
                     addLinkedTriple(molecule, triple);
-                } else {
+                } else if (!(isBlankNode(triple.getSubject()) && isBlankNode(triple.getObject()))) {
                     molecule.add(triple);
                 }
             }
