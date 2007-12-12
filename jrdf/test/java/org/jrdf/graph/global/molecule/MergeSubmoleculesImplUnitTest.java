@@ -146,24 +146,24 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
     }
 
     public void testMergeUnmatchedSecondLevelTriples() {
-        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1),
+        NewMolecule molecule1 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r3r1),
                 Collections.<Triple>emptySet());
-        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2),
+        NewMolecule molecule2 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r1r2),
                 Collections.<Triple>emptySet());
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1, b2r1r2),
-            Collections.<Triple>emptySet());
+        NewMolecule expectedMolecule = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2),
+            triplesAsSet(b2r1r2, b2r3r1), Collections.<Triple>emptySet());
         assertEquals(expectedMolecule, newMolecule);
     }
 
     public void testMergeUnmatchedLevelTriples() {
-        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1),
+        NewMolecule molecule1 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r3r1),
                 Collections.<Triple>emptySet());
-        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r1r2, b2r2r2, b2r3b3),
+        NewMolecule molecule2 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r1r2, b2r2r2, b2r3b3),
             asSet(b3r1r3));
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1r1, b1r2b2), asSet(b2r3r1, b2r1r2, b2r2r2,
-            b2r3b3), asSet(b3r1r3));
+        NewMolecule expectedMolecule = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2),
+            triplesAsSet(b2r3r1, b2r1r2, b2r2r2, b2r3b3), triplesAsSet(b3r1r3));
         assertEquals(expectedMolecule, newMolecule);
     }
 
