@@ -64,21 +64,21 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.local.iterator.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.Collection;
+import java.util.TreeSet;
 
 public class NewMoleculeImpl implements NewMolecule {
     private TripleComparator comparator = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -115,7 +115,7 @@ public class NewMoleculeImpl implements NewMolecule {
         this(newComparator, newMoleculeMerger);
         for (NewMolecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
-            HashSet<NewMolecule> submolecules = new HashSet<NewMolecule>();
+            Set<NewMolecule> submolecules = new TreeSet<NewMolecule>(moleculeComparator);
             submolecules.add(molecule);
             subMolecules.put(headTriple, submolecules);
         }
@@ -145,7 +145,7 @@ public class NewMoleculeImpl implements NewMolecule {
     public NewMolecule add(Triple triple, NewMolecule newMolecule) {
         Set<NewMolecule> moleculeSet = subMolecules.get(triple);
         if (moleculeSet == null) {
-            moleculeSet = new HashSet<NewMolecule>();
+            moleculeSet = new TreeSet<NewMolecule>(moleculeComparator);
         }
         moleculeSet.add(newMolecule);
         subMolecules.put(triple, moleculeSet);
@@ -156,7 +156,7 @@ public class NewMoleculeImpl implements NewMolecule {
     public NewMolecule add(Triple triple, Triple newTriple) {
         Set<NewMolecule> moleculeSet = subMolecules.get(triple);
         if (moleculeSet == null) {
-            moleculeSet = new HashSet<NewMolecule>();
+            moleculeSet = new TreeSet<NewMolecule>(moleculeComparator);
         }
         NewMolecule newMolecule = new NewMoleculeImpl(moleculeComparator, moleculeMerger, newTriple);
         moleculeSet.add(newMolecule);
@@ -184,7 +184,7 @@ public class NewMoleculeImpl implements NewMolecule {
             // a child molecule onto the head triple.
             // Also we can currently on store one submolecule off of any single triple.
             subMolecules.remove(headTriple);
-            HashSet<NewMolecule> containedMolecules = new HashSet<NewMolecule>();
+            Set<NewMolecule> containedMolecules = new TreeSet<NewMolecule>(moleculeComparator);
             containedMolecules.add(childMolecule);
             subMolecules.put(headTriple, containedMolecules);
             return new NewMoleculeImpl(moleculeComparator, moleculeMerger, subMolecules);

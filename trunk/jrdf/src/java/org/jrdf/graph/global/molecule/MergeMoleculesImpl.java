@@ -66,6 +66,26 @@ import org.jrdf.graph.Triple;
 import java.util.Iterator;
 
 public class MergeMoleculesImpl implements MergeMolecules {
+//    public NewMolecule merge(NewMolecule m1, NewMolecule m2) {
+//        Iterator<Triple> m1RootTriples = m1.getRootTriples();
+//        while (m1RootTriples.hasNext()) {
+//            Triple m1Triple = m1RootTriples.next();
+//            Iterator<Triple> m2RootTriples = m2.getRootTriples();
+//            while (m2RootTriples.hasNext()) {
+//                Triple m2Triple = m2RootTriples.next();
+//                if (isBlankNode(m2Triple.getSubject()) && m1Triple.getObject().equals(m2Triple.getSubject())) {
+//                    Set<NewMolecule> molecules = m1.getSubMolecules(m1Triple);
+//                    for (NewMolecule molecule : molecules) {
+//                        if (m2.getHeadTriple().equals(molecule.getHeadTriple())) {
+//
+//                        }
+//                    }
+//                    m1.add(m1Triple, m2);
+//                }
+//            }
+//        }
+//        return m1;
+    //    }
     public NewMolecule merge(NewMolecule m1, NewMolecule m2) {
         Iterator<Triple> m1RootTriples = m1.getRootTriples();
         while (m1RootTriples.hasNext()) {
