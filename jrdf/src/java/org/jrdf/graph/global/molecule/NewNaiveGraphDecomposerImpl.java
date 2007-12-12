@@ -104,6 +104,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 molecules.add(molecule);
             }
         }
+
         return molecules;
     }
 
