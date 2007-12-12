@@ -74,6 +74,7 @@ import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.SortedSet;
+import java.util.Iterator;
 
 public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
@@ -130,7 +131,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
             if (!triplesChecked.contains(triple)) {
-                if (doesHeadLinkToTriple(molecule, triple)) {
+                if (doesRootLinkToTriple(molecule, triple)) {
                     addLinkedTriple(molecule, triple);
                 } else if (!(isBlankNode(triple.getSubject()) && isBlankNode(triple.getObject()))) {
                     molecule.add(triple);
@@ -139,9 +140,18 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         }
     }
 
-    private boolean doesHeadLinkToTriple(NewMolecule molecule, Triple triple) {
-        ObjectNode headTripleObject = molecule.getHeadTriple().getObject();
-        return isBlankNode(headTripleObject) && headTripleObject.equals(triple.getSubject());
+    private boolean doesRootLinkToTriple(NewMolecule molecule, Triple triple) {
+        final Iterator<Triple> triples = molecule.getRootTriples();
+        while (triples.hasNext()) {
+            final Triple rootTriple = triples.next();
+            SubjectNode headTripleSubject = rootTriple.getSubject();
+            ObjectNode headTripleObject = rootTriple.getObject();
+            if (isBlankNode(headTripleSubject) && isBlankNode(headTripleObject) &&
+                    headTripleObject.equals(triple.getSubject())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addLinkedTriple(NewMolecule molecule, Triple triple) throws GraphException {
