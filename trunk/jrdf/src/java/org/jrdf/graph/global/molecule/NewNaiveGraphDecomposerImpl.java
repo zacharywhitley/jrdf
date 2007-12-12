@@ -74,6 +74,8 @@ import org.jrdf.set.SortedSetFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.SortedSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
     private final NewMoleculeFactory moleculeFactory;
@@ -100,7 +102,7 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
                 NewMolecule molecule = moleculeFactory.createMolecue();
                 molecule = molecule.add(currentTriple);
                 triplesChecked.add(currentTriple);
-                convertTripleToMolecule(molecule);
+                molecule = convertTripleToMolecule(molecule);
                 molecules.add(molecule);
             }
         }
@@ -112,43 +114,51 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         boolean blankSubject = isBlankNode(currentTriple.getSubject());
         boolean blankObject = isBlankNode(currentTriple.getObject());
         if (blankObject) {
-            findEnclosedTriples(molecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, currentTriple.getObject()));
-            findEnclosedTriples(molecule, graph.find((SubjectNode) currentTriple.getObject(), ANY_PREDICATE_NODE,
-                    ANY_OBJECT_NODE));
+            molecule = findEnclosedTriples(molecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+                currentTriple.getObject()));
+            molecule = findEnclosedTriples(molecule, graph.find((SubjectNode) currentTriple.getObject(),
+                ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
         }
         if (blankSubject) {
-            findEnclosedTriples(molecule, graph.find(currentTriple.getSubject(), ANY_PREDICATE_NODE, ANY_OBJECT_NODE));
-            findEnclosedTriples(molecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
+            molecule = findEnclosedTriples(molecule, graph.find(currentTriple.getSubject(), ANY_PREDICATE_NODE,
+                ANY_OBJECT_NODE));
+            molecule = findEnclosedTriples(molecule, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE,
                     (ObjectNode) currentTriple.getSubject()));
         }
         return molecule;
     }
 
-    private void findEnclosedTriples(NewMolecule molecule, ClosableIterator<Triple> closableIterator)
+    private NewMolecule findEnclosedTriples(NewMolecule molecule, ClosableIterator<Triple> closableIterator)
         throws GraphException {
         while (closableIterator.hasNext()) {
             Triple triple = closableIterator.next();
             if (!triplesChecked.contains(triple)) {
                 if (isDoubleLinkedTriple(triple)) {
-                    addLinkedTriple(molecule, triple);
+                    molecule = addLinkedTriple(molecule, triple);
                 } else {
-                    molecule.add(triple);
                     triplesChecked.add(triple);
+                    molecule.add(triple);
                 }
             }
         }
+        return molecule;
     }
 
-    private void addLinkedTriple(NewMolecule molecule, Triple triple) throws GraphException {
+    private NewMolecule addLinkedTriple(NewMolecule molecule, Triple triple) throws GraphException {
         NewMolecule subMolecule = moleculeFactory.createMolecue();
         subMolecule.add(triple);
         triplesChecked.add(triple);
         getSubMolecule(subMolecule);
+        // Put submolecule inside molecule's head triple
         if (molecule.getHeadTriple().getObject().equals(triple.getSubject())) {
-            molecule.add(molecule.getHeadTriple(), subMolecule);
+            return molecule.add(molecule.getHeadTriple(), subMolecule);
+        // Put molecule inside submolecule
+        } else if (triple.getObject().equals(molecule.getHeadTriple().getSubject())) {
+            return subMolecule.add(triple, molecule);
+        // Put submolecule inside molecule
         } else {
             subMolecule.remove(triple);
-            molecule.add(triple, subMolecule);
+            return molecule.add(triple, subMolecule);
         }
     }
 

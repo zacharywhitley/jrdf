@@ -174,10 +174,8 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
 
         GRAPH.add(t00, t01, t1, t2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(t00, t1), Collections.<Triple>emptySet(),
-                Collections.<Triple>emptySet());
-        NewMolecule m2 = createMultiLevelMolecule(asSet(t01, t2), Collections.<Triple>emptySet(),
-                Collections.<Triple>emptySet());
+        NewMolecule m1 = createMultiLevelMolecule(asSet(t00), asSet(t1), Collections.<Triple>emptySet());
+        NewMolecule m2 = createMultiLevelMolecule(asSet(t01), asSet(t2), Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1, m2);
     }
 
