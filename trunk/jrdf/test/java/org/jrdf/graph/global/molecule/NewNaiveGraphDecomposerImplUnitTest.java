@@ -153,9 +153,9 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     public void testGroundedGraph() throws Exception {
         GRAPH.add(R1R1R1, R2R1R1, R2R1R2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = moleculeFactory.createMolecule(r1r1r1);
-        NewMolecule m2 = moleculeFactory.createMolecule(r2r1r1);
-        NewMolecule m3 = moleculeFactory.createMolecule(r2r1r2);
+        NewMolecule m1 = moleculeFactory.createMolecule(R1R1R1);
+        NewMolecule m2 = moleculeFactory.createMolecule(R2R1R1);
+        NewMolecule m3 = moleculeFactory.createMolecule(R2R1R2);
         checkMolecules(actualMolecules, m1, m2, m3);
     }
 
@@ -189,44 +189,17 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
     }
 
     public void testNestedBlankNodeDecompose() throws GraphException, GraphElementFactoryException {
-        GraphElementFactory fac = GRAPH.getElementFactory();
-        TripleFactory tFac = GRAPH.getTripleFactory();
-        URIReference ref1 = fac.createURIReference(URI.create("urn:ref1"));
-        URIReference ref2 = fac.createURIReference(URI.create("urn:ref2"));
-
-        BlankNode bn1 = fac.createBlankNode();
-        BlankNode bn2 = fac.createBlankNode();
-        BlankNode bn3 = fac.createBlankNode();
-
-        Triple t00 = tFac.createTriple(bn1, ref2, bn2);
-        Triple t01 = tFac.createTriple(bn1, ref2, bn3);
-        Triple t1 = tFac.createTriple(bn2, ref1, ref1);
-        Triple t2 = tFac.createTriple(bn3, ref1, ref2);
-
-        GRAPH.add(t00, t01, t1, t2);
+        GRAPH.add(B1R1B2, B1R1B3, B2R2R2, B3R2R3);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(t00), asSet(t1), Collections.<Triple>emptySet());
-        NewMolecule m2 = createMultiLevelMolecule(asSet(t01), asSet(t2), Collections.<Triple>emptySet());
+        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
+        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1, m2);
     }
 
     public void testCircularBlankNodes() throws GraphElementFactoryException, GraphException {
-        GraphElementFactory fac = GRAPH.getElementFactory();
-        TripleFactory tFac = GRAPH.getTripleFactory();
-        URIReference r1 = fac.createURIReference(URI.create("urn:r1"));
-        URIReference r2 = fac.createURIReference(URI.create("urn:r2"));
-        URIReference r3 = fac.createURIReference(URI.create("urn:r3"));
-        BlankNode bn1 = fac.createBlankNode();
-        BlankNode bn2 = fac.createBlankNode();
-        BlankNode bn3 = fac.createBlankNode();
-
-        Triple t1 = tFac.createTriple(bn1, r1, bn2);
-        Triple t2 = tFac.createTriple(bn2, r2, bn3);
-        Triple t3 = tFac.createTriple(bn3, r3, bn1);
-        GRAPH.add(t1, t2, t3);
-
+        GRAPH.add(B1R1B2, B2R2B3, B3R3B1);
         Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
-        NewMolecule m1 = createMultiLevelMolecule(asSet(t1), asSet(t2), asSet(t3));
+        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2B3), asSet(B3R3B1));
         checkMolecules(molecules, m1);
     }
 
