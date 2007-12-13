@@ -150,15 +150,6 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         assertEquals("Unexpected size of molecules", 0, molecules.size());
     }
 
-    public void testLinkingTriple() throws GraphException {
-        assertEquals(0, GRAPH.getNumberOfTriples());
-        GRAPH.add(B1R1R1, B2R1B1);
-        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
-        assertEquals("1 molecule", 1, molecules.size());
-        NewMolecule m1 = createMultiLevelMolecule(asSet(B2R1B1), asSet(B1R1R1), Collections.<Triple>emptySet());
-        checkMolecules(molecules, m1);
-    }
-
     public void testGroundedGraph() throws Exception {
         GRAPH.add(R1R1R1, R2R1R1, R2R1R2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
@@ -173,6 +164,13 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = moleculeFactory.createMolecule(R1R1B1, B1R1B2);
         checkMolecules(actualMolecules, m1);
+    }
+
+    public void testLinkingTriple() throws GraphException {
+        GRAPH.add(B1R1R1, B2R1B1);
+        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(B2R1B1), asSet(B1R1R1), Collections.<Triple>emptySet());
+        checkMolecules(molecules, m1);
     }
 
 //    public void testOrderingSingleMolecule() throws Exception {
