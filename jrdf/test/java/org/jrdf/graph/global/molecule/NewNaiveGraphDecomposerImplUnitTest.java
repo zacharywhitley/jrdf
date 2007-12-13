@@ -96,6 +96,7 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
@@ -147,6 +148,15 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         assertEquals(0, GRAPH.getNumberOfTriples());
         Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
         assertEquals("Unexpected size of molecules", 0, molecules.size());
+    }
+
+    public void testLinkingTriple() throws GraphException {
+        assertEquals(0, GRAPH.getNumberOfTriples());
+        GRAPH.add(B1R1R1, B2R1B1);
+        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        assertEquals("1 molecule", 1, molecules.size());
+        NewMolecule m1 = createMultiLevelMolecule(asSet(B2R1B1), asSet(B1R1R1), Collections.<Triple>emptySet());
+        checkMolecules(molecules, m1);
     }
 
     public void testGroundedGraph() throws Exception {
