@@ -150,7 +150,8 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         triplesChecked.add(triple);
         getSubMolecule(subMolecule);
         // Put submolecule inside molecule's head triple
-        if (molecule.getHeadTriple().getObject().equals(triple.getSubject())) {
+        if (isDoubleLinkedTriple(molecule.getHeadTriple()) && 
+            molecule.getHeadTriple().getObject().equals(triple.getSubject())) {
             return molecule.add(molecule.getHeadTriple(), subMolecule);
         // Put molecule inside submolecule
         } else if (triple.getObject().equals(molecule.getHeadTriple().getSubject())) {
