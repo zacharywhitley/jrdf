@@ -148,7 +148,7 @@ public class GlobalGraphTestUtil {
     }
 
     public static NewMolecule createMolecule(Triple rootTriple, NewMolecule molecule) {
-        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecue();;
+        NewMolecule newMolecule = MOLECULE_FACTORY.createMolecue();
         newMolecule.add(rootTriple, molecule);
         return newMolecule;
     }

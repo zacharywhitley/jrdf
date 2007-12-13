@@ -107,6 +107,7 @@ import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
@@ -161,6 +162,21 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         GRAPH.add(R1R1B1, B1R1B2);
         Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
         NewMolecule m1 = moleculeFactory.createMolecule(R1R1B1, B1R1B2);
+        checkMolecules(actualMolecules, m1);
+    }
+
+//    public void testOrderingSingleMolecule() throws Exception {
+//        GRAPH.add(R2R2B2, R2R1B1, B1R1B2);
+//        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+//        NewMolecule m1 = createMultiLevelMolecule(asSet(R2R2B1, B1R1B2, R2R1B2), Collections.<Triple>emptySet(),
+//            Collections.<Triple>emptySet());
+//        checkMolecules(actualMolecules, m1);
+//    }
+
+    public void testOrderingMultiMolecule() throws Exception {
+        GRAPH.add(R2R2B1, R2R1B2, B1R1B2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(R2R2B1, B1R1B2), asSet(R2R1B2), Collections.<Triple>emptySet());
         checkMolecules(actualMolecules, m1);
     }
 

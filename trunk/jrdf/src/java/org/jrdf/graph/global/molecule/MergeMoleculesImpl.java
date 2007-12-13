@@ -69,13 +69,19 @@ public class MergeMoleculesImpl implements MergeMolecules {
         while (m1RootTriples.hasNext()) {
             Triple m1Triple = m1RootTriples.next();
             Iterator<Triple> m2RootTriples = m2.getRootTriples();
-            while (m2RootTriples.hasNext()) {
-                Triple m2Triple = m2RootTriples.next();
-                if (isBlankNode(m2Triple.getSubject()) && m1Triple.getObject().equals(m2Triple.getSubject())) {
-                    m1.add(m1Triple, m2);
-                }
-            }
+            mergeRootTriples(m2RootTriples, m1Triple, m1, m2);
         }
         return m1;
+    }
+
+    private void mergeRootTriples(Iterator<Triple> m2RootTriples, Triple m1Triple, NewMolecule m1, NewMolecule m2
+    ) {
+        while (m2RootTriples.hasNext()) {
+            Triple m2Triple = m2RootTriples.next();
+            if (isBlankNode(m2Triple.getSubject()) && m1Triple.getObject().equals(m2Triple.getSubject()) ||
+                isBlankNode(m2Triple.getObject()) && m1Triple.getObject().equals(m2Triple.getObject())) {
+                m1.add(m1Triple, m2);
+            }
+        }
     }
 }
