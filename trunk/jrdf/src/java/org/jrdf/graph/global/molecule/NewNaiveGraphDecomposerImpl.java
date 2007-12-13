@@ -157,12 +157,31 @@ public class NewNaiveGraphDecomposerImpl implements NewGraphDecomposer {
         // Put submolecule inside molecule
         } else {
             subMolecule.remove(triple);
+            getNewRootTriples(molecule, triple);
             return molecule.add(triple, subMolecule);
         }
     }
 
     private boolean isDoubleLinkedTriple(Triple triple) {
         return isBlankNode(triple.getSubject()) && isBlankNode(triple.getObject());
+    }
+
+    private void getNewRootTriples(NewMolecule molecule, Triple triple) throws GraphException {
+        addTriplesToMolecule(molecule, triple.getSubject(), ANY_OBJECT_NODE);
+        addTriplesToMolecule(molecule, ANY_SUBJECT_NODE, (ObjectNode) triple.getSubject());
+    }
+
+    private void addTriplesToMolecule(NewMolecule molecule, SubjectNode subject, ObjectNode object)
+        throws GraphException {
+        ClosableIterator<Triple> tripleClosableIterator = graph.find(subject, ANY_PREDICATE_NODE,
+            object);
+        while (tripleClosableIterator.hasNext()) {
+            Triple currentTriple = tripleClosableIterator.next();
+            if (!triplesChecked.contains(currentTriple)) {
+                molecule.add(currentTriple);
+                triplesChecked.add(currentTriple);
+            }
+        }
     }
 
     private void getSubMolecule(NewMolecule subMolecule) throws GraphException {

@@ -173,13 +173,13 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         checkMolecules(molecules, m1);
     }
 
-//    public void testOrderingSingleMolecule() throws Exception {
-//        GRAPH.add(R2R2B2, R2R1B1, B1R1B2);
-//        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
-//        NewMolecule m1 = createMultiLevelMolecule(asSet(R2R2B1, B1R1B2, R2R1B2), Collections.<Triple>emptySet(),
-//            Collections.<Triple>emptySet());
-//        checkMolecules(actualMolecules, m1);
-//    }
+    public void testOrderingSingleMolecule() throws Exception {
+        GRAPH.add(R2R2B2, R2R1B1, B1R1B2);
+        Set<NewMolecule> actualMolecules = decomposer.decompose(GRAPH);
+        NewMolecule m1 = createMultiLevelMolecule(asSet(R2R2B2, R2R1B1, B1R1B2), Collections.<Triple>emptySet(),
+            Collections.<Triple>emptySet());
+        checkMolecules(actualMolecules, m1);
+    }
 
     public void testOrderingMultiMolecule() throws Exception {
         GRAPH.add(R2R2B1, R2R1B2, B1R1B2);
