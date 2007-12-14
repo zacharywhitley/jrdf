@@ -68,46 +68,13 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1b2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b3;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r2r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1b1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r1r2b2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1b1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r1;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r1r2;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.r2r2b2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R2R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1B1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.GRAPH;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1B1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1B1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R1;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R1R2;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R2R2B2;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
@@ -211,6 +178,31 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         NewMolecule m2 = moleculeFactory.createMolecule(B2R1R1);
         NewMolecule m3 = moleculeFactory.createMolecule(B3R1R1);
         checkMolecules(actualMolecules, m1, m2, m3);
+    }
+
+    public void test3LevelMolecule() throws GraphElementFactoryException, GraphException {
+        GraphElementFactory fac = GRAPH.getElementFactory();
+        BlankNode b1 = fac.createBlankNode();
+        BlankNode b2 = fac.createBlankNode();
+        BlankNode b3 = fac.createBlankNode();
+        BlankNode b4 = fac.createBlankNode();
+        PredicateNode p1 = fac.createURIReference(URI.create("urn:p1"));
+        PredicateNode p2 = fac.createURIReference(URI.create("urn:p2"));
+        PredicateNode p3 = fac.createURIReference(URI.create("urn:p3"));
+        ObjectNode o1 = fac.createURIReference(URI.create("urn:o1"));
+        ObjectNode o2 = fac.createURIReference(URI.create("urn:o2"));
+        GRAPH.add(b1, p1, b2);
+        GRAPH.add(b2, p2, b3);
+        GRAPH.add(b3, p3, o1);
+
+        GRAPH.add(b1, p1, b2);
+        GRAPH.add(b2, p2, b4);
+        GRAPH.add(b4, p3, o2);
+        Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
+        System.out.println("molecule # = " + molecules.size());
+        for (NewMolecule m : molecules) {
+            System.out.println(m.toString());
+        }
     }
 
     public void testSingleNestingSubjects() throws Exception {
