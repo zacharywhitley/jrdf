@@ -71,16 +71,18 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
     private final TripleComparator comparator;
     private final NewMoleculeComparator moleculeComparator;
     private final NewMoleculeFactory moleculeFactory;
+    private final MoleculeSubsumption subsumption;
 
     public MergeSubmoleculesImpl(TripleComparator newComparator, NewMoleculeComparator newMoleculeComparator,
-        NewMoleculeFactory newMoleculeFactory) {
+        NewMoleculeFactory newMoleculeFactory, MoleculeSubsumption subsumption) {
         this.comparator = newComparator;
         this.moleculeComparator = newMoleculeComparator;
         this.moleculeFactory = newMoleculeFactory;
+        this.subsumption = subsumption;
     }
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2) {
-        if ((matchingHeadTriple(molecule1, molecule2)) || (moleculeIsSubsumed(molecule1, molecule2))) {
+        if ((matchingHeadTriple(molecule1, molecule2)) || (subsumption.subsumes(molecule1, molecule2))) {
             SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
             addRootTriples(molecule1, newRootTriples);
             addRootTriples(molecule2, newRootTriples);
@@ -98,10 +100,6 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
 
     private boolean matchingHeadTriple(NewMolecule molecule1, NewMolecule molecule2) {
         return molecule1.getHeadTriple().equals(molecule2.getHeadTriple());
-    }
-
-    private boolean moleculeIsSubsumed(NewMolecule molecule1, NewMolecule molecule2) {
-        return molecule1.contains(molecule2.getHeadTriple()) || (molecule2.contains(molecule1.getHeadTriple()));
     }
 
     public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
