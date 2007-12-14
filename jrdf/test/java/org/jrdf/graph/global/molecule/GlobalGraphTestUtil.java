@@ -116,11 +116,12 @@ public class GlobalGraphTestUtil {
     public static final Triple b3r1r3 = new TripleImpl(BNODE3, REF1, REF3);
     public static final Triple b3r2r3 = new TripleImpl(BNODE3, REF2, REF3);
     public static final Triple b3r3r3 = new TripleImpl(BNODE3, REF3, REF3);
-    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeMergingComparatorImpl(COMPARATOR);
+    public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(COMPARATOR);
     public static final MergeMolecules MERGE_MOLECULE = new MergeMoleculesImpl();
     private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
-    public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(TRIPLE_COMPARATOR, MOLECULE_COMPARATOR);
+    public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(TRIPLE_COMPARATOR,
+        MOLECULE_COMPARATOR, new MoleculeSubsumptionImpl());
 
     private GlobalGraphTestUtil() {
     }

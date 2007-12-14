@@ -97,9 +97,10 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
 
     public void setUp() {
         TripleComparator tripleComparator = TRIPLE_COMPARATOR_FACTORY.newComparator();
-        NewMoleculeComparator moleculeComparator = new NewMoleculeMergingComparatorImpl(tripleComparator);
-        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(tripleComparator, moleculeComparator);
-        mergeSubmolecules = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory);
+        NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(tripleComparator);
+        MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
+        NewMoleculeFactory factory = new NewMoleculeFactoryImpl(tripleComparator, moleculeComparator, subsumption);
+        mergeSubmolecules = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory, subsumption);
     }
 
     public void testMergeMolecules() {
@@ -114,6 +115,18 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
         NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1r1, b1r3r3);
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         checkSubmoleculesContainsHeadTriples(newMolecule.getSubMolecules(b1r1r1), b1r2r2, b1r3r3);
+    }
+
+    // TOODO While there is no way to construct this - the answer should be b1r1b2, b2r2r2 and b1r1b2, b3r1r2.
+    public void testMergeTwoMolecules() {
+        NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1b2, b2r2r2);
+        NewMolecule molecule2 = createMoleculeWithSubmolecule(b1r1b3, b3r1r2);
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
+        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b1r1b2, b1r1b3), Collections.<Triple>emptySet(),
+            Collections.<Triple>emptySet());
+        expectedMolecule.add(b1r1b2, createMolecule(b2r2r2));
+        expectedMolecule.add(b1r1b3, createMolecule(b3r1r2));
+        assertEquals(expectedMolecule, newMolecule);
     }
 
     public void testMergeM1SubsumesM2() {
