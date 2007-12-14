@@ -181,11 +181,13 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
 //    }
 
     public void testMoleculeSubsumption() {
-        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b2r2b3), EMPTY_SET, EMPTY_SET);
-        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b2r2b3, b2r1r2), EMPTY_SET, EMPTY_SET);
+        NewMolecule molecule1 = createMultiLevelMolecule(asSet(b2r2b3), Collections.<Triple>emptySet(),
+                Collections.<Triple>emptySet());
+        NewMolecule molecule2 = createMultiLevelMolecule(asSet(b2r2b3, b2r1r2), Collections.<Triple>emptySet(),
+                Collections.<Triple>emptySet());
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
-        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b2r2b3, b2r2b3, b2r1r2), EMPTY_SET,
-            EMPTY_SET);
+        NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b2r2b3, b2r2b3, b2r1r2),
+                Collections.<Triple>emptySet(), Collections.<Triple>emptySet());
         assertEquals(expectedMolecule, newMolecule);
     }
 
