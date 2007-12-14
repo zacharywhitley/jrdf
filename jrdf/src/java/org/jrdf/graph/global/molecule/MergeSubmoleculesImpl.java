@@ -98,10 +98,6 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
         }
     }
 
-    private boolean matchingHeadTriple(NewMolecule molecule1, NewMolecule molecule2) {
-        return molecule1.getHeadTriple().equals(molecule2.getHeadTriple());
-    }
-
     public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
         NewMolecule newMolecule = moleculeFactory.createMolecue();
         Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
