@@ -82,7 +82,7 @@ public class MergeSubmoleculesImpl implements MergeSubmolecules {
     }
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2) {
-        if ((matchingHeadTriple(molecule1, molecule2)) || (subsumption.subsumes(molecule1, molecule2))) {
+        if (subsumption.subsumes(molecule1, molecule2)) {
             SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
             addRootTriples(molecule1, newRootTriples);
             addRootTriples(molecule2, newRootTriples);
