@@ -84,9 +84,7 @@ public class MergeLocalSubmoleculesImpl implements LocalMergeSubmolecules {
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2, Map<BlankNode, BlankNode> map) {
         if (!map.isEmpty()) {
             this.map = map;
-            final NewMolecule molecule11 = convertMolecule(molecule1);
-            final NewMolecule molecule21 = convertMolecule(molecule2);
-            return merger.merge(molecule11, molecule21);
+            return merger.merge(convertMolecule(molecule1), convertMolecule(molecule2));
         } else {
             throw new IllegalArgumentException("Molecule 1 does not subsume Molecule 2.");
         }
