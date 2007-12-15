@@ -199,10 +199,6 @@ public class NewNaiveGraphDecomposerImplUnitTest extends TestCase {
         GRAPH.add(b2, p2, b4);
         GRAPH.add(b4, p3, o2);
         Set<NewMolecule> molecules = decomposer.decompose(GRAPH);
-        System.out.println("molecule # = " + molecules.size());
-        for (NewMolecule m : molecules) {
-            System.out.println(m.toString());
-        }
     }
 
     public void testSingleNestingSubjects() throws Exception {
