@@ -30,9 +30,11 @@
     <!-- Cleanup molecule implementation -->
     <suppress checks="ClassDataAbstractionCoupling" files="NewMoleculeImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="MoleculeParserImpl"/>
+    <suppress checks="ClassDataAbstractionCoupling" files="DecomposerPerformance"/>
     <suppress checks="CyclomaticComplexity" files="NewNaiveGraphDecomposerImpl"/>
     <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
     <suppress checks="CyclomaticComplexity" files="BlankNodeMapperImpl" />
+    <suppress checks="JavaNCSS" files="DecomposerPerformance"/>
     <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>
     <suppress checks="JavaNCSS" files="BlankNodeMapperImpl"/>
     <suppress checks="JavaNCSS" files="MergeSubmoleculesImpl" />

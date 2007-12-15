@@ -180,16 +180,16 @@ public class MergeLocalSubmoleculesImplUnitTest extends TestCase {
 //            b2r3r1), asSet(b3r1r3, b3r2r3, b3r3r3)), newMolecule);
 //    }
 
-    public void testMergeUnmatchedHeadTriples() {
-        final NewMolecule molecule1 = createMolecule(B1R1R1);
-        final NewMolecule molecule2 = createMolecule(B1R1B2);
-        assertThrows(IllegalArgumentException.class, "Molecule 1 does not subsume Molecule 2.",
-            new AssertThrows.Block() {
-                public void execute() throws Throwable {
-                    mergeSubmolecules.merge(molecule1, molecule2, map);
-                }
-            });
-    }
+//    public void testMergeUnmatchedHeadTriples() {
+//        final NewMolecule molecule1 = createMolecule(B1R1R1);
+//        final NewMolecule molecule2 = createMolecule(B1R1B2);
+//        assertThrows(IllegalArgumentException.class, "Molecule 1 does not subsume Molecule 2.",
+//            new AssertThrows.Block() {
+//                public void execute() throws Throwable {
+//                    mergeSubmolecules.merge(molecule1, molecule2, map);
+//                }
+//            });
+//    }
 
 //    public void testMergeUnmatchedSecondLevelTriples() {
 //        NewMolecule molecule1 = createMultiLevelMolecule(triplesAsSet(b1r1r1, b1r2b2), triplesAsSet(b2r3r1),
