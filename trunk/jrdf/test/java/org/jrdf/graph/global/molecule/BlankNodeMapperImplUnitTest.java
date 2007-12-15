@@ -95,21 +95,23 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     public void testIncompatibleMolecules() {
         NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
         NewMolecule m2 = moleculeFactory.createMolecule(B2R2B3);
-        Map<BlankNode,BlankNode> nodeBlankNodeMap = mapper.createMap(m1, m2);
-        assertTrue(nodeBlankNodeMap.isEmpty());
+        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        assertTrue(blankNodeMap.isEmpty());
     }
 
     public void testLevelOneMapping1() {
         NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
         NewMolecule m2 = moleculeFactory.createMolecule(B2R1R1);
-        Map<BlankNode,BlankNode> nodeBlankNodeMap = mapper.createMap(m1, m2);
-        assertFalse(nodeBlankNodeMap.isEmpty());
+        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        assertFalse(blankNodeMap.isEmpty());
+        assertEquals(BNODE1, blankNodeMap.get(BNODE2));
     }
 
     public void testLevelOneMapping2() {
         NewMolecule m1 = moleculeFactory.createMolecule(R1R2B1);
         NewMolecule m2 = moleculeFactory.createMolecule(R1R2B2);
-        Map<BlankNode,BlankNode> nodeBlankNodeMap = mapper.createMap(m1, m2);
-        assertFalse(nodeBlankNodeMap.isEmpty());
+        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        assertFalse(blankNodeMap.isEmpty());
+        assertEquals(BNODE1, blankNodeMap.get(BNODE2));
     }
 }
