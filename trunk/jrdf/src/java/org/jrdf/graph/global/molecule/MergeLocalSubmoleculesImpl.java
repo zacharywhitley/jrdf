@@ -74,6 +74,7 @@ import java.util.Set;
 public class MergeLocalSubmoleculesImpl implements LocalMergeSubmolecules {
     private final MergeSubmolecules merger;
     private final NewMoleculeFactory moleculeFactory;
+    private Map<BlankNode, BlankNode> map;
 
     public MergeLocalSubmoleculesImpl(MergeSubmolecules merger, NewMoleculeFactory moleculeFactory) {
         this.merger = merger;
@@ -82,40 +83,49 @@ public class MergeLocalSubmoleculesImpl implements LocalMergeSubmolecules {
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2, Map<BlankNode, BlankNode> map) {
         if (!map.isEmpty()) {
-            return merger.merge(molecule1, convertMolecule(molecule2, map));
+            this.map = map;
+            final NewMolecule molecule11 = convertMolecule(molecule1);
+            final NewMolecule molecule21 = convertMolecule(molecule2);
+            return merger.merge(molecule11, molecule21);
         } else {
             throw new IllegalArgumentException("Molecule 1 does not subsume Molecule 2.");
         }
     }
 
-    private NewMolecule convertMolecule(NewMolecule molecule, Map<BlankNode, BlankNode> map) {
-        final NewMolecule newMolecule = convertRootTriples(molecule, map);
+    private NewMolecule convertMolecule(NewMolecule molecule) {
+        final NewMolecule newMolecule = convertRootTriples(molecule);
         final Iterator<Triple> triples = molecule.getRootTriples();
         while (triples.hasNext()) {
-            Triple triple = triples.next();
+            final Triple triple = triples.next();
             final Set<NewMolecule> moleculeSet = molecule.getSubMolecules(triple);
-//            for (NewMolecule subMolecule : moleculeSet) {
-//            }
+            for (final NewMolecule subMolecule : moleculeSet) {
+                final NewMolecule convertedSubMolecule = convertMolecule(subMolecule);
+                newMolecule.add(convertTriple(triple), convertedSubMolecule);
+            }
         }
         return newMolecule;
     }
 
-    private NewMolecule convertRootTriples(NewMolecule molecule, Map<BlankNode, BlankNode> map) {
+    private NewMolecule convertRootTriples(NewMolecule molecule) {
         Set<Triple> triples = new HashSet<Triple>();
         final Iterator<Triple> iterator = molecule.getRootTriples();
         while (iterator.hasNext()) {
             final Triple triple = iterator.next();
-            SubjectNode subject = triple.getSubject();
-            PredicateNode predicate = triple.getPredicate();
-            ObjectNode object = triple.getObject();
-            if (map.containsKey(subject)) {
-                subject = map.get(subject);
-            }
-            if (map.containsKey(object)) {
-                object = map.get(object);
-            }
-            triples.add(new TripleImpl(subject, predicate, object));
+            triples.add(convertTriple(triple));
         }
         return moleculeFactory.createMolecule(triples);
+    }
+
+    private Triple convertTriple(Triple triple) {
+        SubjectNode subject = triple.getSubject();
+        PredicateNode predicate = triple.getPredicate();
+        ObjectNode object = triple.getObject();
+        if (map.containsKey(subject)) {
+            subject = map.get(subject);
+        }
+        if (map.containsKey(object)) {
+            object = map.get(object);
+        }
+        return new TripleImpl(subject, predicate, object);
     }
 }

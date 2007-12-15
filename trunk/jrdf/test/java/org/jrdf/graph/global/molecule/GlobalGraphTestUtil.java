@@ -114,6 +114,7 @@ public class GlobalGraphTestUtil {
     public static final Triple b2r3b3 = new TripleImpl(BNODE2, REF3, BNODE3);
     public static final Triple b2r2r2 = new TripleImpl(BNODE2, REF2, REF2);
     public static final Triple b2r2b3 = new TripleImpl(BNODE2, REF2, BNODE3);
+    public static final Triple b3r1r1 = new TripleImpl(BNODE3, REF1, REF1);
     public static final Triple b3r1r2 = new TripleImpl(BNODE3, REF1, REF2);
     public static final Triple b3r1r3 = new TripleImpl(BNODE3, REF1, REF3);
     public static final Triple b3r2r3 = new TripleImpl(BNODE3, REF2, REF3);
@@ -189,7 +190,7 @@ public class GlobalGraphTestUtil {
             headTriples.add(tmpMolecule.getHeadTriple());
         }
         for (Triple headTriple : expectedTriples) {
-            assertTrue(headTriples.contains(headTriple));
+            assertTrue("Looking for: " + headTriple + " in: " + headTriples, headTriples.contains(headTriple));
         }
     }
 }
