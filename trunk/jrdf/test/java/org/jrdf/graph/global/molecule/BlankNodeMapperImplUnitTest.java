@@ -99,9 +99,16 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
         assertTrue(nodeBlankNodeMap.isEmpty());
     }
 
-    public void testLevelOneMapping() {
+    public void testLevelOneMapping1() {
         NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
         NewMolecule m2 = moleculeFactory.createMolecule(B2R1R1);
+        Map<BlankNode,BlankNode> nodeBlankNodeMap = mapper.createMap(m1, m2);
+        assertFalse(nodeBlankNodeMap.isEmpty());
+    }
+
+    public void testLevelOneMapping2() {
+        NewMolecule m1 = moleculeFactory.createMolecule(R1R2B1);
+        NewMolecule m2 = moleculeFactory.createMolecule(R1R2B2);
         Map<BlankNode,BlankNode> nodeBlankNodeMap = mapper.createMap(m1, m2);
         assertFalse(nodeBlankNodeMap.isEmpty());
     }
