@@ -59,53 +59,76 @@
 
 package org.jrdf.graph.global.molecule;
 
+import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import static org.jrdf.graph.AbstractBlankNode.*;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class BlankNodeMapperImpl implements BlankNodeMapper {
     private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
+    private Map<BlankNode, BlankNode> map;
 
     public Map<BlankNode, BlankNode> createMap(NewMolecule m1, NewMolecule m2) {
-        Map<BlankNode, BlankNode> map = new HashMap<BlankNode, BlankNode>();
+        map = new HashMap<BlankNode, BlankNode>();
         Iterator<Triple> m1Triples = m1.getRootTriples();
         while (m1Triples.hasNext()) {
             Triple m1RootTriple = m1Triples.next();
             if (!m2.contains(m1RootTriple)) {
                 return map;
             } else {
-                Iterator<Triple> m2Triples = m2.getRootTriples();
-                while (m2Triples.hasNext()) {
-                    Triple m2RootTriple = m2Triples.next();
-                    if (tripleComparator.compare(m1RootTriple, m2RootTriple) == 0) {
-                        if (isBlankNode(m1RootTriple.getSubject())) {
-                            map.put((BlankNode) m2RootTriple.getSubject(), (BlankNode) m1RootTriple.getSubject());
-                        }
-                        if (isBlankNode(m2RootTriple.getObject())) {
-                            map.put((BlankNode) m2RootTriple.getObject(), (BlankNode) m1RootTriple.getObject());
-                        }
+                Set<NewMolecule> m1NewMolecules = m1.getSubMolecules(m1RootTriple);
+                Set<NewMolecule> m2NewMolecules = m2.getSubMolecules(m1RootTriple);
+                if (m1NewMolecules.isEmpty() && m2NewMolecules.isEmpty()) {
+                    addTerminatingBlankNodes(m2, m1RootTriple);
+                } else if (m2NewMolecules.size() == 1 && m1NewMolecules.size() == 1) {
+                    if (addNestedBlankNodes(m1NewMolecules, m2NewMolecules)) {
+                        return new HashMap<BlankNode, BlankNode>();
                     }
+                } else {
+                    throw new UnsupportedOperationException("Cannot handle more than one level of submolecules at " +
+                        "this time");
                 }
             }
         }
-//for each root triple in m1, t1, find it in m2, t2
-// if submolecule of t1, sm1, has the same or fewer submolecules of t2, sm2
-//   nm = blank nodes(sm1, sm2)
-//   if nm is empty
-//     return empty map
-//   else
-//     add nm to bm
-// else if t1 has no submolecule and t2 has no submolecules
-//   add map of blank nodes in m1 with blank nodes in t2
-// else
-//   return empty map (indicating m1 cannot be merged with m2)
-//end loop
         return map;
+    }
+
+    private boolean addNestedBlankNodes(Set<NewMolecule> m1NewMolecules, Set<NewMolecule> m2NewMolecules) {
+        NewMolecule sm1 = m1NewMolecules.iterator().next();
+        NewMolecule sm2 = m2NewMolecules.iterator().next();
+        if (sm2.size() >= sm1.size()) {
+            Map<BlankNode, BlankNode> newMap = createMap(sm1, sm2);
+            if (!newMap.isEmpty()) {
+                for (Map.Entry<BlankNode, BlankNode> entry : newMap.entrySet()) {
+                    if (map.keySet().contains(entry.getKey()) &&
+                        !map.get(entry.getKey()).equals(entry.getValue())) {
+                        return true;
+                    }
+                    map.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        return false;
+    }
+
+    private void addTerminatingBlankNodes(NewMolecule m2, Triple m1RootTriple) {
+        Iterator<Triple> m2Triples = m2.getRootTriples();
+        while (m2Triples.hasNext()) {
+            Triple m2RootTriple = m2Triples.next();
+            if (tripleComparator.compare(m1RootTriple, m2RootTriple) == 0) {
+                if (isBlankNode(m1RootTriple.getSubject())) {
+                    map.put((BlankNode) m2RootTriple.getSubject(), (BlankNode) m1RootTriple.getSubject());
+                }
+                if (isBlankNode(m2RootTriple.getObject())) {
+                    map.put((BlankNode) m2RootTriple.getObject(), (BlankNode) m1RootTriple.getObject());
+                }
+            }
+        }
     }
 }

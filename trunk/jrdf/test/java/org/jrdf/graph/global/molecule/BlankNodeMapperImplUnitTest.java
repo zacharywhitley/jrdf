@@ -62,6 +62,7 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
+import static org.jrdf.util.test.SetUtil.asSet;
 import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.BlankNodeComparator;
@@ -71,10 +72,13 @@ import org.jrdf.graph.local.mem.TripleComparatorImpl;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 
 import java.util.Map;
+import java.util.Collections;
 
 public class BlankNodeMapperImplUnitTest extends TestCase {
     private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
@@ -113,5 +117,20 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
         Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals(BNODE1, blankNodeMap.get(BNODE2));
+    }
+
+    public void testConflictingNestedNodes() {
+        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
+        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
+        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        assertTrue(blankNodeMap.isEmpty());
+    }
+
+    public void testNestedNodes() {
+        NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
+        NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R2), Collections.<Triple>emptySet());
+        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        assertFalse(blankNodeMap.isEmpty());
+        assertEquals(BNODE2, blankNodeMap.get(BNODE3));
     }
 }
