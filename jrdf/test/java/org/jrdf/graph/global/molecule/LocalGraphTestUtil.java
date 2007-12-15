@@ -111,6 +111,7 @@ public class LocalGraphTestUtil {
     public static final Triple B2R2R2;
     public static final Triple B2R2B3;
     public static final Triple B3R1R1;
+    public static final Triple B3R2R2;
     public static final Triple B3R2R3;
     public static final Triple B3R3B1;
 
@@ -145,6 +146,7 @@ public class LocalGraphTestUtil {
             B2R2R2 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF2);
             B2R2B3 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, BNODE3);
             B3R1R1 = TRIPLE_FACTORY.createTriple(BNODE3, REF1, REF1);
+            B3R2R2 = TRIPLE_FACTORY.createTriple(BNODE3, REF2, REF2);
             B3R2R3 = TRIPLE_FACTORY.createTriple(BNODE3, REF2, REF3);
             B3R3B1 = TRIPLE_FACTORY.createTriple(BNODE3, REF3, BNODE1);
         } catch (GraphElementFactoryException e) {
