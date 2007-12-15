@@ -70,12 +70,12 @@ import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
-import org.jrdf.util.test.SetUtil;
-import static org.jrdf.util.test.SetUtil.*;
+import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class GlobalGraphTestUtil {
     private static final TripleComparator COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
@@ -98,6 +98,8 @@ public class GlobalGraphTestUtil {
     public static final Triple b1r1b2 = new TripleImpl(BNODE1, REF1, BNODE2);
     public static final Triple b1r1b3 = new TripleImpl(BNODE1, REF1, BNODE3);
     public static final Triple b1r2r2 = new TripleImpl(BNODE1, REF2, REF2);
+    public static final Triple b1r2r1 = new TripleImpl(BNODE1, REF2, REF1);
+    public static final Triple b1r1b1 = new TripleImpl(BNODE1, REF1, BNODE1);
     public static final Triple b1r2b2 = new TripleImpl(BNODE1, REF2, BNODE2);
     public static final Triple b1r3r3 = new TripleImpl(BNODE1, REF3, REF3);
     public static final Triple b1r2r3 = new TripleImpl(BNODE1, REF2, REF3);
@@ -168,12 +170,13 @@ public class GlobalGraphTestUtil {
         }
         assertEquals("Unexpected size of root triples in molecule", expectedTriples.length, count);
         Iterator<Triple> iter = molecule.getRootTriples();
-        Set<Triple> rootTriples = new HashSet<Triple>();
+        Set<Triple> rootTriples = new TreeSet<Triple>(TRIPLE_COMPARATOR);
         while (iter.hasNext()) {
             rootTriples.add(iter.next());
         }
         for (Triple expectedTriple : expectedTriples) {
-            assertTrue(rootTriples.contains(expectedTriple));
+            assertTrue("Expected triple: " + expectedTriple + " but got: " + rootTriples,
+                    rootTriples.contains(expectedTriple));
         }
     }
 

@@ -82,12 +82,12 @@ public class LocalGraphTestUtil {
     private static final TripleFactory TRIPLE_FACTORY = GRAPH.getTripleFactory();
     private static final TripleComparator TRIPLE_COMPARATOR = new GroundedTripleComparatorFactoryImpl().newComparator();
     public static final MoleculeFactory MOLECULE_FACTORY = new MoleculeFactoryImpl(TRIPLE_COMPARATOR);
-    private static final URIReference REF1;
-    private static final URIReference REF2;
-    private static final URIReference REF3;
-    private static final BlankNode BNODE1;
-    private static final BlankNode BNODE2;
-    private static final BlankNode BNODE3;
+    public static final URIReference REF1;
+    public static final URIReference REF2;
+    public static final URIReference REF3;
+    public static final BlankNode BNODE1;
+    public static final BlankNode BNODE2;
+    public static final BlankNode BNODE3;
     public static final Triple R1R1R1;
     public static final Triple R1R1B1;
     public static final Triple R1R2B1;
@@ -101,6 +101,7 @@ public class LocalGraphTestUtil {
     public static final Triple B1R1R1;
     public static final Triple B1R1R1_2;
     public static final Triple B1R2R2;
+    public static final Triple B1R3R2;
     public static final Triple B1R1B2;
     public static final Triple B1R1B3;
     public static final Triple B2R1R1;
@@ -135,6 +136,7 @@ public class LocalGraphTestUtil {
             B1R2R2 = TRIPLE_FACTORY.createTriple(BNODE1, REF2, REF2);
             B1R1B2 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, BNODE2);
             B1R1B3 = TRIPLE_FACTORY.createTriple(BNODE1, REF1, BNODE3);
+            B1R3R2 = TRIPLE_FACTORY.createTriple(BNODE1, REF3, REF2);
             B2R1R1 = TRIPLE_FACTORY.createTriple(BNODE2, REF1, REF1);
             B2R2R1 = TRIPLE_FACTORY.createTriple(BNODE2, REF2, REF1);
             B2R1B1 = TRIPLE_FACTORY.createTriple(BNODE2, REF1, BNODE1);

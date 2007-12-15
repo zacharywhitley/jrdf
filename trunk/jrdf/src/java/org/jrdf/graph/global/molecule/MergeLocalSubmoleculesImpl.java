@@ -69,14 +69,14 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class MergeLocalSubmoleculesImpl implements MergeLocalSubmolecules {
+public class MergeLocalSubmoleculesImpl implements LocalMergeSubmolecules {
     private final TripleComparator comparator;
     private final NewMoleculeComparator moleculeComparator;
     private final NewMoleculeFactory moleculeFactory;
     private Map<BlankNode, BlankNode> map;
 
     public MergeLocalSubmoleculesImpl(TripleComparator newComparator, NewMoleculeComparator newMoleculeComparator,
-        NewMoleculeFactory newMoleculeFactory) {
+            NewMoleculeFactory newMoleculeFactory) {
         this.comparator = newComparator;
         this.moleculeComparator = newMoleculeComparator;
         this.moleculeFactory = newMoleculeFactory;
@@ -85,33 +85,23 @@ public class MergeLocalSubmoleculesImpl implements MergeLocalSubmolecules {
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2, Map<BlankNode, BlankNode> map) {
         if (!map.isEmpty()) {
             this.map = map;
-            NewMolecule newMolecule = mergeRootTriples(molecule1, molecule2);
+            SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
+            addRootTriples(molecule1, newRootTriples);
+            addRootTriples(molecule2, newRootTriples);
+            NewMolecule newMolecule = moleculeFactory.createMolecule(newRootTriples);
             Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
             while (subMoleculeIter.hasNext()) {
                 Triple currentTriple = subMoleculeIter.next();
-                newMolecule.specialAdd(merge(currentTriple, molecule1, molecule2));
+                newMolecule.specialAdd(merge(currentTriple, molecule1, molecule2, map));
             }
             return newMolecule;
         } else {
-            throw new IllegalArgumentException("Cannot merge incompatible molecules.");
+            throw new IllegalArgumentException("Cannot merge molecules with different head triples.");
         }
     }
 
-    private NewMolecule mergeRootTriples(NewMolecule molecule1, NewMolecule molecule2) {
-        SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
-        addRootTriples(molecule1, newRootTriples);
-        addRootTriples(molecule2, newRootTriples);
-        return moleculeFactory.createMolecule(newRootTriples);
-    }
-
-    private void addRootTriples(NewMolecule sourceMolecule, SortedSet<Triple> destinationRootTriples) {
-        Iterator<Triple> subMoleculeIter = sourceMolecule.getRootTriples();
-        while (subMoleculeIter.hasNext()) {
-            destinationRootTriples.add(subMoleculeIter.next());
-        }
-    }
-
-    public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2) {
+    public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2,
+            Map<BlankNode, BlankNode> map) {
         NewMolecule newMolecule = moleculeFactory.createMolecue();
         Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
         Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
@@ -120,7 +110,7 @@ public class MergeLocalSubmoleculesImpl implements MergeLocalSubmolecules {
     }
 
     private void iterateAndMergeMolecules(NewMolecule newMolecule, Triple currentTriple,
-            Iterator<NewMolecule> curr1Iterator, Iterator<NewMolecule> curr2Iterator) {
+        Iterator<NewMolecule> curr1Iterator, Iterator<NewMolecule> curr2Iterator) {
         boolean endIterator1 = curr1Iterator.hasNext();
         boolean endIterator2 = curr2Iterator.hasNext();
         NewMolecule currentMolecule1 = getNextFromIterator(curr1Iterator);
@@ -161,4 +151,10 @@ public class MergeLocalSubmoleculesImpl implements MergeLocalSubmolecules {
         return tmpMolecule;
     }
 
+    private void addRootTriples(NewMolecule sourceMolecule, SortedSet<Triple> destinationRootTriples) {
+        Iterator<Triple> subMoleculeIter = sourceMolecule.getRootTriples();
+        while (subMoleculeIter.hasNext()) {
+            destinationRootTriples.add(subMoleculeIter.next());
+        }
+    }
 }
