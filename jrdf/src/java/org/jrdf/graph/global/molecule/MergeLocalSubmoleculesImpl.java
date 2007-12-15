@@ -60,101 +60,50 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import static org.jrdf.graph.global.molecule.NullNewMolecule.NULL_MOLECULE;
+import org.jrdf.graph.global.TripleImpl;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.Set;
 
 public class MergeLocalSubmoleculesImpl implements LocalMergeSubmolecules {
-    private final TripleComparator comparator;
-    private final NewMoleculeComparator moleculeComparator;
+    private final MergeSubmolecules merger;
     private final NewMoleculeFactory moleculeFactory;
-    private Map<BlankNode, BlankNode> map;
 
-    public MergeLocalSubmoleculesImpl(TripleComparator newComparator, NewMoleculeComparator newMoleculeComparator,
-            NewMoleculeFactory newMoleculeFactory) {
-        this.comparator = newComparator;
-        this.moleculeComparator = newMoleculeComparator;
-        this.moleculeFactory = newMoleculeFactory;
+    public MergeLocalSubmoleculesImpl(MergeSubmolecules merger, NewMoleculeFactory moleculeFactory) {
+        this.merger = merger;
+        this.moleculeFactory = moleculeFactory;
     }
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2, Map<BlankNode, BlankNode> map) {
         if (!map.isEmpty()) {
-            this.map = map;
-            SortedSet<Triple> newRootTriples = new TreeSet<Triple>(comparator);
-            addRootTriples(molecule1, newRootTriples);
-            addRootTriples(molecule2, newRootTriples);
-            NewMolecule newMolecule = moleculeFactory.createMolecule(newRootTriples);
-            Iterator<Triple> subMoleculeIter = newMolecule.getRootTriples();
-            while (subMoleculeIter.hasNext()) {
-                Triple currentTriple = subMoleculeIter.next();
-                newMolecule.specialAdd(merge(currentTriple, molecule1, molecule2, map));
-            }
-            return newMolecule;
+            return merger.merge(molecule1, convert(molecule2, map));
         } else {
-            throw new IllegalArgumentException("Cannot merge molecules with different head triples.");
+            throw new IllegalArgumentException("Molecule 1 does not subsume Molecule 2.");
         }
     }
 
-    public NewMolecule merge(Triple currentTriple, NewMolecule molecule1, NewMolecule molecule2,
-            Map<BlankNode, BlankNode> map) {
-        NewMolecule newMolecule = moleculeFactory.createMolecue();
-        Iterator<NewMolecule> curr1Iterator = molecule1.getSubMolecules(currentTriple).iterator();
-        Iterator<NewMolecule> curr2Iterator = molecule2.getSubMolecules(currentTriple).iterator();
-        iterateAndMergeMolecules(newMolecule, currentTriple, curr1Iterator, curr2Iterator);
-        return newMolecule;
-    }
-
-    private void iterateAndMergeMolecules(NewMolecule newMolecule, Triple currentTriple,
-        Iterator<NewMolecule> curr1Iterator, Iterator<NewMolecule> curr2Iterator) {
-        boolean endIterator1 = curr1Iterator.hasNext();
-        boolean endIterator2 = curr2Iterator.hasNext();
-        NewMolecule currentMolecule1 = getNextFromIterator(curr1Iterator);
-        NewMolecule currentMolecule2 = getNextFromIterator(curr2Iterator);
-        while (endIterator1 || endIterator2) {
-            int result = moleculeComparator.compare(currentMolecule1, currentMolecule2);
-            if (result == 1) {
-                endIterator1 = curr1Iterator.hasNext();
-                currentMolecule1 = addMolecule(newMolecule, currentTriple, currentMolecule1, curr1Iterator);
-            } else if (result == -1) {
-                endIterator2 = curr2Iterator.hasNext();
-                currentMolecule2 = addMolecule(newMolecule, currentTriple, currentMolecule2, curr2Iterator);
-            } else {
-                newMolecule.add(currentTriple, merge(currentMolecule1, currentMolecule2, map));
-                endIterator1 = curr1Iterator.hasNext();
-                endIterator2 = curr2Iterator.hasNext();
-                currentMolecule1 = getNextFromIterator(curr1Iterator);
-                currentMolecule2 = getNextFromIterator(curr2Iterator);
+    private NewMolecule convert(NewMolecule molecule, Map<BlankNode, BlankNode> map) {
+        Set<Triple> triples = new HashSet<Triple>();
+        final Iterator<Triple> iterator = molecule.getRootTriples();
+        while (iterator.hasNext()) {
+            final Triple triple = iterator.next();
+            SubjectNode subject = triple.getSubject();
+            PredicateNode predicate = triple.getPredicate();
+            ObjectNode object = triple.getObject();
+            if (map.containsKey(subject)) {
+                subject = map.get(subject);
             }
+            if (map.containsKey(object)) {
+                object = map.get(object);
+            }
+            triples.add(new TripleImpl(subject, predicate, object));
         }
-    }
-
-    private NewMolecule addMolecule(NewMolecule newMolecule, Triple currentTriple, NewMolecule currentMolecule,
-        Iterator<NewMolecule> moleculeIterator) {
-        NewMolecule tmpMolecule = currentMolecule;
-        newMolecule.add(currentTriple, tmpMolecule);
-        tmpMolecule = getNextFromIterator(moleculeIterator);
-        return tmpMolecule;
-    }
-
-    private NewMolecule getNextFromIterator(Iterator<NewMolecule> moleculeIterator) {
-        NewMolecule tmpMolecule;
-        if (moleculeIterator.hasNext()) {
-            tmpMolecule = moleculeIterator.next();
-        } else {
-            tmpMolecule = NULL_MOLECULE;
-        }
-        return tmpMolecule;
-    }
-
-    private void addRootTriples(NewMolecule sourceMolecule, SortedSet<Triple> destinationRootTriples) {
-        Iterator<Triple> subMoleculeIter = sourceMolecule.getRootTriples();
-        while (subMoleculeIter.hasNext()) {
-            destinationRootTriples.add(subMoleculeIter.next());
-        }
+        return moleculeFactory.createMolecule(triples);
     }
 }

@@ -116,7 +116,8 @@ public class MergeLocalSubmoleculesImplUnitTest extends TestCase {
         NewMoleculeComparator moleculeComparator = new NewMoleculeComparatorImpl(tripleComparator);
         MoleculeSubsumption subsumption = new MoleculeSubsumptionImpl();
         NewMoleculeFactory factory = new NewMoleculeFactoryImpl(tripleComparator, moleculeComparator, subsumption);
-        mergeSubmolecules = new MergeLocalSubmoleculesImpl(tripleComparator, moleculeComparator, factory);
+        MergeSubmolecules globalMerger = new MergeSubmoleculesImpl(tripleComparator, moleculeComparator, factory, subsumption);
+        mergeSubmolecules = new MergeLocalSubmoleculesImpl(globalMerger, factory);
         map = new HashMap<BlankNode, BlankNode>();
     }
 
@@ -128,13 +129,13 @@ public class MergeLocalSubmoleculesImplUnitTest extends TestCase {
         checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r3r2);
     }
 
-//    public void testMergeMoleculesDifferentBlankNodes() {
-//        NewMolecule molecule1 = createMolecule(B1R1R1, B1R2R2);
-//        NewMolecule molecule2 = createMolecule(B2R1R1, B2R1R1);
-//        map.put(BNODE1, BNODE2);
-//        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2, map);
-//        checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r1r1);
-//    }
+    public void testMergeMoleculesDifferentBlankNodes() {
+        NewMolecule molecule1 = createMolecule(B1R1R1, B1R2R2);
+        NewMolecule molecule2 = createMolecule(B2R1R1, B2R2R1);
+        map.put(BNODE2, BNODE1);
+        NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2, map);
+        checkMoluculeContainsRootTriples(newMolecule, b1r1r1, b1r2r2, b1r1r1);
+    }
 
 //    public void testMergeHeadMoleculesWithSubMolecules() {
 //        NewMolecule molecule1 = createMoleculeWithSubmolecule(b1r1r1, b1r2r2);
@@ -176,7 +177,7 @@ public class MergeLocalSubmoleculesImplUnitTest extends TestCase {
     public void testMergeUnmatchedHeadTriples() {
         final NewMolecule molecule1 = createMolecule(B1R1R1);
         final NewMolecule molecule2 = createMolecule(B1R1B2);
-        assertThrows(IllegalArgumentException.class, "Cannot merge molecules with different head triples.",
+        assertThrows(IllegalArgumentException.class, "Molecule 1 does not subsume Molecule 2.",
             new AssertThrows.Block() {
                 public void execute() throws Throwable {
                     mergeSubmolecules.merge(molecule1, molecule2, map);
