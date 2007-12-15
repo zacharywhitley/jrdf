@@ -82,13 +82,25 @@ public class MergeLocalSubmoleculesImpl implements LocalMergeSubmolecules {
 
     public NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2, Map<BlankNode, BlankNode> map) {
         if (!map.isEmpty()) {
-            return merger.merge(molecule1, convert(molecule2, map));
+            return merger.merge(molecule1, convertMolecule(molecule2, map));
         } else {
             throw new IllegalArgumentException("Molecule 1 does not subsume Molecule 2.");
         }
     }
 
-    private NewMolecule convert(NewMolecule molecule, Map<BlankNode, BlankNode> map) {
+    private NewMolecule convertMolecule(NewMolecule molecule, Map<BlankNode, BlankNode> map) {
+        final NewMolecule newMolecule = convertRootTriples(molecule, map);
+        final Iterator<Triple> triples = molecule.getRootTriples();
+        while (triples.hasNext()) {
+            Triple triple = triples.next();
+            final Set<NewMolecule> moleculeSet = molecule.getSubMolecules(triple);
+//            for (NewMolecule subMolecule : moleculeSet) {
+//            }
+        }
+        return newMolecule;
+    }
+
+    private NewMolecule convertRootTriples(NewMolecule molecule, Map<BlankNode, BlankNode> map) {
         Set<Triple> triples = new HashSet<Triple>();
         final Iterator<Triple> iterator = molecule.getRootTriples();
         while (iterator.hasNext()) {

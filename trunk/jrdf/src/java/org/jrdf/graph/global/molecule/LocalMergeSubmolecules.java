@@ -1,7 +1,6 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Triple;
 
 import java.util.Map;
 
