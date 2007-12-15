@@ -62,6 +62,7 @@ package org.jrdf.graph.global.molecule;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import static org.jrdf.graph.AbstractBlankNode.*;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 
 import java.util.HashMap;
@@ -69,17 +70,30 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class BlankNodeMapperImpl implements BlankNodeMapper {
+    private TripleComparator tripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
 
     public Map<BlankNode, BlankNode> createMap(NewMolecule m1, NewMolecule m2) {
         Map<BlankNode, BlankNode> map = new HashMap<BlankNode, BlankNode>();
-        Iterator<Triple> triples = m1.getRootTriples();
-        while (triples.hasNext()) {
-            Triple triple = triples.next();
-            if (!m2.contains(triple)) {
+        Iterator<Triple> m1Triples = m1.getRootTriples();
+        while (m1Triples.hasNext()) {
+            Triple m1RootTriple = m1Triples.next();
+            if (!m2.contains(m1RootTriple)) {
                 return map;
+            } else {
+                Iterator<Triple> m2Triples = m2.getRootTriples();
+                while (m2Triples.hasNext()) {
+                    Triple m2RootTriple = m2Triples.next();
+                    if (tripleComparator.compare(m1RootTriple, m2RootTriple) == 0) {
+                        if (isBlankNode(m1RootTriple.getSubject())) {
+                            map.put((BlankNode) m2RootTriple.getSubject(), (BlankNode) m1RootTriple.getSubject());
+                        }
+                        if (isBlankNode(m2RootTriple.getObject())) {
+                            map.put((BlankNode) m2RootTriple.getObject(), (BlankNode) m1RootTriple.getObject());
+                        }
+                    }
+                }
             }
         }
-        map.put((BlankNode) m2.getHeadTriple().getSubject(), (BlankNode) m1.getHeadTriple().getSubject());
 //for each root triple in m1, t1, find it in m2, t2
 // if submolecule of t1, sm1, has the same or fewer submolecules of t2, sm2
 //   nm = blank nodes(sm1, sm2)
