@@ -63,6 +63,7 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -210,6 +211,18 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         assertEquals(ref1.getURI(), uri1);
     }
 
+    /**
+     * Test using the other methods of resource
+     */
+    public void testResourceUsage() throws Exception {
+        final Resource supplier = elementFactory.createResource();
+        final URIReference sno = elementFactory.createURIReference(URI.create("urn:sno"));
+        supplier.addValue(sno, elementFactory.convertToLiteral("sno"));
+        assertEquals(1, graph.getNumberOfTriples());
+        final Triple triple = new TripleImpl((SubjectNode) supplier.getUnderlyingNode(), sno,
+                elementFactory.convertToLiteral("sno"));
+        assertEquals(true, graph.contains(triple));
+    }
 
     /**
      * Tests that each of the createResource methods work as expected.
