@@ -280,7 +280,6 @@ public class NewMoleculeImpl implements NewMolecule {
             NewMoleculeImpl tmpMolecule = (NewMoleculeImpl) obj;
             return tmpMolecule.subMolecules.equals(subMolecules);
         } catch (ClassCastException cce) {
-            System.err.println("Happening!");
             return false;
         }
     }
