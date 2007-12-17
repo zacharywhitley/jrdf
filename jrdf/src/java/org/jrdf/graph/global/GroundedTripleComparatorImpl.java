@@ -114,11 +114,13 @@ public class GroundedTripleComparatorImpl implements TripleComparator {
 
     private int countGroundNodes(Triple o1) {
         int grounded = MAXIMUM_NUMBER_OF_GROUNDED_NODES;
-        if (isBlankNode(o1.getSubject())) {
-            grounded--;
-        }
-        if (isBlankNode(o1.getObject())) {
-            grounded--;
+        if (!o1.isGrounded()) {
+            if (isBlankNode(o1.getSubject())) {
+                grounded--;
+            }
+            if (isBlankNode(o1.getObject())) {
+                grounded--;
+            }
         }
         return grounded;
     }

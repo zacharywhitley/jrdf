@@ -90,6 +90,7 @@ public class GroundedTripleComparatorImplUnitTest extends TestCase {
         assertEquals(0, comparator.compare(triple1, triple4));
         assertEquals(-1, comparator.compare(triple2, triple4));
         assertEquals(1, comparator.compare(triple1, triple2));
+        assertEquals(-1, comparator.compare(triple2, triple1));
         assertEquals(-1, comparator.compare(triple3, triple1));
         assertEquals(1, comparator.compare(triple1, triple3));
     }
