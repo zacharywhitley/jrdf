@@ -218,7 +218,8 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         final Resource supplier = elementFactory.createResource();
         final URIReference sno = elementFactory.createURIReference(URI.create("urn:sno"));
         supplier.addValue(sno, elementFactory.convertToLiteral("sno"));
-        assertEquals(1, graph.getNumberOfTriples());
+        supplier.addValue(sno, elementFactory.convertToLiteral(20));
+        assertEquals(2, graph.getNumberOfTriples());
         final Triple triple = new TripleImpl((SubjectNode) supplier.getUnderlyingNode(), sno,
                 elementFactory.convertToLiteral("sno"));
         assertEquals(true, graph.contains(triple));
