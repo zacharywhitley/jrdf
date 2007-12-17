@@ -286,7 +286,7 @@ public class NewMoleculeImpl implements NewMolecule {
 
     @Override
     public int hashCode() {
-        return subMolecules != null ? subMolecules.hashCode() : 0;
+        return subMolecules == null ? 0 : subMolecules.hashCode();
     }
 
     @Override
