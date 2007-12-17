@@ -59,18 +59,24 @@
 
 package org.jrdf.graph.global;
 
-import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.URIReference;
 
 /**
  * A different implementation of TripleComparator.  Where the number of blank nodes in a triple makes it less than
  * triples without blank nodes.  Triples with the same number of blank nodes are then compared by node type.
  */
-public class GroundedTripleComparatorImpl implements TripleComparator {
+public class GroundedTripleComparatorImpl implements TripleComparator, TypedNodeVisitor {
     private static final long serialVersionUID = 678535114447666636L;
     private static final int MAXIMUM_NUMBER_OF_GROUNDED_NODES = 3;
     private TripleComparator tripleComparator;
+    private boolean isBlankNode;
 
     private GroundedTripleComparatorImpl() {
     }
@@ -80,24 +86,11 @@ public class GroundedTripleComparatorImpl implements TripleComparator {
     }
 
     public int compare(Triple o1, Triple o2) {
-        int result = differentlyGrounded(o1, o2);
+        int result = compareTriples(o1, o2);
         if (result == 0) {
-            result = compareTriples(o1, o2);
-            if (result == 0) {
-                result = tripleComparator.compare(o1, o2);
-            }
+            result = tripleComparator.compare(o1, o2);
         }
         return result;
-    }
-
-    private int differentlyGrounded(Triple o1, Triple o2) {
-        if (o1.isGrounded() && !o2.isGrounded()) {
-            return 1;
-        } else if (!o1.isGrounded() && o2.isGrounded()) {
-            return -1;
-        } else {
-            return 0;
-        }
     }
 
     private int compareTriples(Triple o1, Triple o2) {
@@ -112,16 +105,36 @@ public class GroundedTripleComparatorImpl implements TripleComparator {
         }
     }
 
-    private int countGroundNodes(Triple o1) {
+    private int countGroundNodes(Triple triple) {
         int grounded = MAXIMUM_NUMBER_OF_GROUNDED_NODES;
-        if (!o1.isGrounded()) {
-            if (isBlankNode(o1.getSubject())) {
-                grounded--;
-            }
-            if (isBlankNode(o1.getObject())) {
-                grounded--;
-            }
+        if (isBlankNode(triple.getSubject())) {
+            grounded--;
+        }
+        if (isBlankNode(triple.getObject())) {
+            grounded--;
         }
         return grounded;
+    }
+
+    private boolean isBlankNode(Node node) {
+        isBlankNode = false;
+        node.accept(this);
+        return isBlankNode;
+    }
+
+    public void visitBlankNode(BlankNode blankNode) {
+        isBlankNode = true;
+    }
+
+    public void visitURIReference(URIReference uriReference) {
+    }
+
+    public void visitLiteral(Literal literal) {
+    }
+
+    public void visitNode(Node node) {
+    }
+
+    public void visitResource(Resource resource) {
     }
 }
