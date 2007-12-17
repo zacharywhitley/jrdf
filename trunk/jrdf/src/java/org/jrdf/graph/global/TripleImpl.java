@@ -63,6 +63,8 @@ import org.jrdf.graph.AbstractTriple;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.AbstractBlankNode;
+import static org.jrdf.util.param.ParameterUtil.*;
 
 public class TripleImpl extends AbstractTriple {
     /**
@@ -72,6 +74,7 @@ public class TripleImpl extends AbstractTriple {
      * deleted.
      */
     private static final long serialVersionUID = -3378905394296330572L;
+    private boolean isGrounded;
 
     private TripleImpl() {
     }
@@ -84,8 +87,14 @@ public class TripleImpl extends AbstractTriple {
      * @param object    The object node of this triple.
      */
     public TripleImpl(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
+        checkNotNull(subject, predicate, object);
         subjectNode = subject;
         predicateNode = predicate;
         objectNode = object;
+        isGrounded = !AbstractBlankNode.isBlankNode(subjectNode) && !AbstractBlankNode.isBlankNode(objectNode);
+    }
+
+    public boolean isGrounded() {
+        return isGrounded;
     }
 }
