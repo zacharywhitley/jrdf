@@ -71,6 +71,9 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.net.URI;
 import java.util.UUID;
 
+// TODO Move localization and creation to another method so it can be added to AbstractResource to provide shortcuts
+// much like TripleFactories methods.
+
 /**
  * A SkipListNode Factory is a class which create the various components of a graph.
  * It is tied to a specific instance of GraphImpl.
