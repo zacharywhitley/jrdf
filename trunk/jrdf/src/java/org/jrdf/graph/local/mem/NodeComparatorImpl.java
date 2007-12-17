@@ -63,6 +63,8 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.Resource;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeEnum;
 
@@ -73,10 +75,11 @@ import org.jrdf.util.NodeTypeEnum;
  * @author Andrew Newman
  * @version $Id$
  */
-public final class NodeComparatorImpl implements NodeComparator {
+public final class NodeComparatorImpl implements NodeComparator, TypedNodeVisitor {
     private static final long serialVersionUID = 1941872400257968398L;
     private NodeTypeComparator nodeTypeComparator;
     private BlankNodeComparator blankNodeComparator;
+    private NodeTypeEnum currentEnum;
 
     private NodeComparatorImpl() {
     }
@@ -89,8 +92,8 @@ public final class NodeComparatorImpl implements NodeComparator {
     public int compare(Node o1, Node o2) {
         int result = 0;
         if (!o1.equals(o2)) {
-            NodeTypeEnum nodeType1Enum = getNodeType(o1.getClass());
-            NodeTypeEnum nodeType2Enum = getNodeType(o2.getClass());
+            NodeTypeEnum nodeType1Enum = getNodeType(o1);
+            NodeTypeEnum nodeType2Enum = getNodeType(o2);
             if (areNodesDifferentType(nodeType1Enum, nodeType2Enum)) {
                 result = nodeTypeComparator.compare(nodeType1Enum, nodeType2Enum);
             } else {
@@ -129,19 +132,6 @@ public final class NodeComparatorImpl implements NodeComparator {
         return !nodeType1Enum.equals(nodeType2Enum);
     }
 
-    // TODO (AN) Move to different class.
-    private NodeTypeEnum getNodeType(Class nodeClass) {
-        if (BlankNode.class.isAssignableFrom(nodeClass)) {
-            return NodeTypeEnum.BLANK_NODE;
-        } else if (URIReference.class.isAssignableFrom(nodeClass)) {
-            return NodeTypeEnum.URI_REFERENCE;
-        } else if (Literal.class.isAssignableFrom(nodeClass)) {
-            return NodeTypeEnum.LITERAL;
-        } else {
-            throw new IllegalArgumentException("Illegal node: " + nodeClass);
-        }
-    }
-
     private int compareByString(String str1, String str2) {
         int result = str1.compareTo(str2);
         if (result > 0) {
@@ -150,5 +140,31 @@ public final class NodeComparatorImpl implements NodeComparator {
             result = -1;
         }
         return result;
+    }
+
+    private NodeTypeEnum getNodeType(Node node) {
+        node.accept(this);
+        NodeTypeEnum nodeType1Enum = currentEnum;
+        return nodeType1Enum;
+    }
+
+    public void visitBlankNode(BlankNode blankNode) {
+        currentEnum = NodeTypeEnum.BLANK_NODE;
+    }
+
+    public void visitURIReference(URIReference uriReference) {
+        currentEnum = NodeTypeEnum.URI_REFERENCE;
+    }
+
+    public void visitLiteral(Literal literal) {
+        currentEnum = NodeTypeEnum.LITERAL;
+    }
+
+    public void visitNode(Node node) {
+        throw new IllegalArgumentException("Illegal node: " + node.getClass());
+    }
+
+    public void visitResource(Resource resource) {
+        throw new IllegalArgumentException("Illegal node: " + resource.getClass());
     }
 }
