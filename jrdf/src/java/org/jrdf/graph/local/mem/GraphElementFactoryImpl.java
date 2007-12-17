@@ -121,7 +121,11 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return node;
     }
 
-    public URIReference createResource(URI uri) throws GraphElementFactoryException {
+    public Resource createResource(URI uri) throws GraphElementFactoryException {
+        return createResource(createURIReference(uri));
+    }
+
+    public Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException {
         return createResource(createURIReference(uri));
     }
 
@@ -145,10 +149,6 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         URIReference node = new URIReferenceImpl(uri, validate, nodeId);
         nodePool.registerNode((LocalizedNode) node);
         return node;
-    }
-
-    public URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException {
-        return createResource(createURIReference(uri));
     }
 
     public Literal convertToLiteral(Object object) {
