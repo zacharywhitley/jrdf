@@ -112,7 +112,18 @@ public interface GraphElementFactory {
      * @return the newly created resource wrapping a URI reference value.
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
-    URIReference createResource(URI uri) throws GraphElementFactoryException;
+    Resource createResource(URI uri) throws GraphElementFactoryException;
+
+    /**
+     * Create a URI reference wrapped in a Resource without checking if the URI given is a valid RDF
+     * URI, currently if the URI is absolute.
+     *
+     * @param uri The URI of the resource.
+     * @param validate true if we disbale checking to see if the URI is valid.
+     * @return The newly created URI reference value.
+     * @throws GraphElementFactoryException If the resource failed to be created.
+     */
+    Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException;
 
     /**
      * Create a URI reference.
@@ -122,17 +133,6 @@ public interface GraphElementFactory {
      * @throws GraphElementFactoryException If the resource failed to be created.
      */
     URIReference createURIReference(URI uri) throws GraphElementFactoryException;
-
-    /**
-     * Create a URI reference without checking if the URI given is a valid RDF
-     * URI, currently if the URI is absolute.
-     *
-     * @param uri The URI of the resource.
-     * @param validate true if we disbale checking to see if the URI is valid.
-     * @return The newly created URI reference value.
-     * @throws GraphElementFactoryException If the resource failed to be created.
-     */
-    URIReference createResource(URI uri, boolean validate) throws GraphElementFactoryException;
 
     /**
      * Create a URI reference without checking if the URI given is a valid RDF
