@@ -119,7 +119,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
                 Triple triple = iterator.next();
                 Triple newTriple = tripleFactory.createTriple(triple.getSubject(), triple.getPredicate(), newNode);
                 graph.add(newTriple);
-                graph.remove(triple.getSubject(), triple.getPredicate(), oldONode);
+                removeTriple(triple.getSubject(), triple.getPredicate(), oldONode);
             }
             iterator.close();
         }
@@ -133,9 +133,17 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
             while (iterator.hasNext()) {
                 Triple triple = iterator.next();
                 graph.add(newNode, triple.getPredicate(), triple.getObject());
-                graph.remove(oldSNode, triple.getPredicate(), triple.getObject());
+                removeTriple(oldSNode, triple.getPredicate(), triple.getObject());
             }
             iterator.close();
+        }
+    }
+
+    private void removeTriple(SubjectNode subj, PredicateNode pred, ObjectNode obj) {
+        try {
+            graph.remove(subj, pred, obj);
+        } catch (GraphException e) {
+            ;
         }
     }
 }
