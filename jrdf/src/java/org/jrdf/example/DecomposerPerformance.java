@@ -99,7 +99,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class DecomposerPerformance {
-    private static final int NUMBER_OF_MOLECULES = 100;
+    private static final int NUMBER_OF_MOLECULES = 400;
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph graph = factory.getNewGraph();
     private final GraphElementFactory elementFactory = graph.getElementFactory();
@@ -122,7 +122,7 @@ public class DecomposerPerformance {
 
     private void testPerformance() throws Exception {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
-            addLoop(URI.create("urn:foo"));
+            addGrounded("urn:foo" + i);
         }
         long startTime = System.currentTimeMillis();
         Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
@@ -142,36 +142,45 @@ public class DecomposerPerformance {
                 count++;
             }
         }
-        System.err.println("Got: " + results + " Time taken " + (System.currentTimeMillis() - startTime) +
+        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) +
             " comparisons: " + count);
     }
 
-    private void addTriple(URI predicate) throws Exception {
+    private void addGrounded(String predicate) throws Exception {
+        URIReference p = elementFactory.createURIReference(URI.create(predicate));
+        graph.add(p, p, p);
+    }
+
+    private void addTriple(String predicate) throws Exception {
         BlankNode s = elementFactory.createBlankNode();
-        URIReference p = elementFactory.createURIReference(predicate);
+        URIReference p = elementFactory.createURIReference(URI.create(predicate));
         BlankNode o = elementFactory.createBlankNode();
         graph.add(s, p, o);
     }
 
-    private void addChain(URI predicate) throws Exception {
+    private void addChain(String predicate) throws Exception {
         BlankNode s = elementFactory.createBlankNode();
-        URIReference p = elementFactory.createURIReference(predicate);
+        URIReference p1 = elementFactory.createURIReference(URI.create(predicate));
+        URIReference p2 = elementFactory.createURIReference(URI.create(predicate));
+        URIReference p3 = elementFactory.createURIReference(URI.create(predicate));
         BlankNode o1 = elementFactory.createBlankNode();
         BlankNode o2 = elementFactory.createBlankNode();
         BlankNode o3 = elementFactory.createBlankNode();
-        graph.add(s, p, o1);
-        graph.add(o1, p, o2);
-        graph.add(o2, p, o3);
+        graph.add(s, p1, o1);
+        graph.add(o1, p2, o2);
+        graph.add(o2, p3, o3);
     }
 
-    private void addLoop(URI predicate) throws Exception {
-        URIReference p = elementFactory.createURIReference(predicate);
+    private void addLoop(String predicate) throws Exception {
+        URIReference p1 = elementFactory.createURIReference(URI.create(predicate));
+        URIReference p2 = elementFactory.createURIReference(URI.create(predicate));
+        URIReference p3 = elementFactory.createURIReference(URI.create(predicate));
         BlankNode o1 = elementFactory.createBlankNode();
         BlankNode o2 = elementFactory.createBlankNode();
         BlankNode o3 = elementFactory.createBlankNode();
-        graph.add(o1, p, o2);
-        graph.add(o2, p, o3);
-        graph.add(o3, p, o1);
+        graph.add(o1, p1, o2);
+        graph.add(o2, p2, o3);
+        graph.add(o3, p3, o1);
     }
 
     public static void main(String[] args) throws Exception {

@@ -102,6 +102,7 @@ public class BlankNodeMapperImpl implements BlankNodeMapper {
     private boolean addNestedBlankNodes(Set<NewMolecule> m1NewMolecules, Set<NewMolecule> m2NewMolecules) {
         NewMolecule sm1 = m1NewMolecules.iterator().next();
         NewMolecule sm2 = m2NewMolecules.iterator().next();
+        // possible remove this comparison - doesn't break any tests.
         if (sm2.size() >= sm1.size()) {
             Map<BlankNode, BlankNode> newMap = createMap(sm1, sm2);
             if (!newMap.isEmpty()) {

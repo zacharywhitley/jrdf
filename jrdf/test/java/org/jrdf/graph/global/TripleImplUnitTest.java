@@ -108,10 +108,6 @@ public final class TripleImplUnitTest extends AbstractTripleUnitTest {
         return NodeTestUtil.createTriple(subject, predicate, object, dataType);
     }
 
-    public Triple createTriple(URI subject, URI predicate) {
-        return NodeTestUtil.createTriple(createResource(subject), createResource(predicate), null);
-    }
-
     public URIReference createResource(URI uri) {
         return NodeTestUtil.createResource(uri);
     }

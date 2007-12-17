@@ -59,7 +59,7 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.graph.BlankNode;
+import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 
@@ -80,11 +80,24 @@ public class GroundedTripleComparatorImpl implements TripleComparator {
     }
 
     public int compare(Triple o1, Triple o2) {
-        int result = compareTriples(o1, o2);
+        int result = differentlyGrounded(o1, o2);
         if (result == 0) {
-            result = tripleComparator.compare(o1, o2);
+            result = compareTriples(o1, o2);
+            if (result == 0) {
+                result = tripleComparator.compare(o1, o2);
+            }
         }
         return result;
+    }
+
+    private int differentlyGrounded(Triple o1, Triple o2) {
+        if (o1.isGrounded() && !o2.isGrounded()) {
+            return 1;
+        } else if (!o1.isGrounded() && o2.isGrounded()) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 
     private int compareTriples(Triple o1, Triple o2) {
@@ -101,10 +114,10 @@ public class GroundedTripleComparatorImpl implements TripleComparator {
 
     private int countGroundNodes(Triple o1) {
         int grounded = MAXIMUM_NUMBER_OF_GROUNDED_NODES;
-        if (BlankNode.class.isAssignableFrom(o1.getSubject().getClass())) {
+        if (isBlankNode(o1.getSubject())) {
             grounded--;
         }
-        if (BlankNode.class.isAssignableFrom(o1.getObject().getClass())) {
+        if (isBlankNode(o1.getObject())) {
             grounded--;
         }
         return grounded;
