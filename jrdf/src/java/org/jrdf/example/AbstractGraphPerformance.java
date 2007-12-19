@@ -88,7 +88,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractGraphPerformance {
-    private static final int NUMBER_OF_NODES_TO_ADD = 10000;
+    private static final int NUMBER_OF_NODES_TO_ADD = 1000;
     private static final int NUMBER_OF_NODES_TO_FIND = 100;
     private static final int NUMBER_OF_PREDICATES = 10;
     private static final int NO_PREDICATES = NUMBER_OF_PREDICATES;
