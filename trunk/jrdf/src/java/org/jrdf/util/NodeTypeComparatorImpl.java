@@ -77,21 +77,11 @@ public final class NodeTypeComparatorImpl implements NodeTypeComparator {
         if (nodeType1Enum.isBlankNode()) {
             result = -1;
         } else if (nodeType1Enum.isURIReferenceNode()) {
-            result = compareUriReferenceNode(nodeType2Enum, nodeType1Enum);
+            result = uriComparison(nodeType1Enum, nodeType2Enum);
         } else if (nodeType1Enum.isLiteralNode()) {
             result = 1;
         } else {
             throw new IllegalArgumentException("Could not compare: " + nodeType1Enum + " and " + nodeType2Enum);
-        }
-        return result;
-    }
-
-    private int compareUriReferenceNode(NodeTypeEnum nodeType2Enum, NodeTypeEnum nodeType1Enum) {
-        int result;
-        if (nodeType2Enum.isBlankNode()) {
-            result = 1;
-        } else {
-            result = uriComparison(nodeType1Enum, nodeType2Enum);
         }
         return result;
     }
