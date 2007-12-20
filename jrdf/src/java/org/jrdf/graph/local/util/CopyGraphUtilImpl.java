@@ -77,6 +77,7 @@ import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.set.SortedSetFactory;
 
+import java.net.URI;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -182,8 +183,9 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     private Set<Triple> getAllTriplesForNode(Node node, Graph graph) throws GraphException {
         Set<Triple> set = setFactory.createSet(Triple.class);
         Set<BlankNode> bSet = setFactory.createSet(BlankNode.class);
-        addTriplesToSetForSubject(graph, set, (SubjectNode) node);
-        addTriplesToSetForObject(graph, set, (ObjectNode) node);
+        addTriplesToSetForSubject(graph, set, node);
+        addTriplesToSetForPredicate(graph, set, node);
+        addTriplesToSetForObject(graph, set, node);
         getAllTriplesForNode0(graph, set, bSet, node);
         return set;
     }
@@ -253,15 +255,21 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         }
     }
 
-    private void addTriplesToSetForSubject(Graph graph, Set<Triple> set, SubjectNode node) throws GraphException {
+    private void addTriplesToSetForSubject(Graph graph, Set<Triple> set, Node node) throws GraphException {
         if (!Literal.class.isAssignableFrom(node.getClass())) {
-            addTriplesToSet(graph, set, node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            addTriplesToSet(graph, set, (SubjectNode) node, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         }
     }
 
-    private void addTriplesToSetForObject(Graph graph, Set<Triple> set, ObjectNode node) throws GraphException {
+    private void addTriplesToSetForPredicate(Graph graph, Set<Triple> set, Node node) throws GraphException {
+        if (URI.class.isAssignableFrom(node.getClass())) {
+            addTriplesToSet(graph, set, ANY_SUBJECT_NODE, (PredicateNode) node, ANY_OBJECT_NODE);
+        }
+    }
+
+    private void addTriplesToSetForObject(Graph graph, Set<Triple> set, Node node) throws GraphException {
         // add all triples that have node as object
-        addTriplesToSet(graph, set, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, node);
+        addTriplesToSet(graph, set, ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, (ObjectNode) node);
     }
 
     private void addTriplesToSet(Graph graph, Set<Triple> set, SubjectNode subjectNode,

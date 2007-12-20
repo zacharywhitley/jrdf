@@ -132,8 +132,8 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
             ClosableIterator<Triple> iterator = graph.find(oldSNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
             while (iterator.hasNext()) {
                 Triple triple = iterator.next();
-                graph.add(newNode, triple.getPredicate(), triple.getObject());
                 removeTriple(oldSNode, triple.getPredicate(), triple.getObject());
+                graph.add(newNode, triple.getPredicate(), triple.getObject());
             }
             iterator.close();
         }
@@ -143,7 +143,8 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         try {
             graph.remove(subj, pred, obj);
         } catch (GraphException e) {
-            ;
+            System.err.println("Removing non-existent triple: " +
+                    subj.toString() + " " + pred.toString() + " " + obj.toString());
         }
     }
 }

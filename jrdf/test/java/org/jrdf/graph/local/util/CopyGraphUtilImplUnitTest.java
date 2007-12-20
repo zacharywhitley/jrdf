@@ -426,8 +426,8 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple3);
         graph1.add(triple4);
 
-        node5 = eFac2.createResource(URI.create(url2 + "node5"));
-        node6 = eFac2.createResource(URI.create(url2 + "node6"));
+        node5 = eFac2.createURIReference(URI.create(url2 + "node5"));
+        node6 = eFac2.createURIReference(URI.create(url2 + "node6"));
         cgUtil.copyTriplesForNode(graph1, graph2, node1, node5);
 
         assertEquals("Graph size is 4", 3, graph2.getNumberOfTriples());
