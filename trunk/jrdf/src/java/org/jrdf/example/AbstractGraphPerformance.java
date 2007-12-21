@@ -60,8 +60,6 @@
 package org.jrdf.example;
 
 import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -69,6 +67,10 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.AnyPredicateNode;
+import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.local.iterator.ClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.parser.Parser;
@@ -88,8 +90,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractGraphPerformance {
-    private static final int NUMBER_OF_NODES_TO_ADD = 1000;
-    private static final int NUMBER_OF_NODES_TO_FIND = 100;
+    private static final int NUMBER_OF_NODES_TO_ADD = 10000;
+    private static final int NUMBER_OF_NODES_TO_FIND = 10;
+    private static final int NUMBER_OF_NODES_TO_UPDATE = 10;
     private static final int NUMBER_OF_PREDICATES = 10;
     private static final int NO_PREDICATES = NUMBER_OF_PREDICATES;
     private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
@@ -102,6 +105,7 @@ public abstract class AbstractGraphPerformance {
     private List<URI> predicates = new ArrayList<URI>();
     private GraphElementFactory graphElementFactory;
     private int noFinds;
+    private int noUpdates;
 
     public AbstractGraphPerformance() {
         for (int i = 0; i < NO_PREDICATES; i++) {
@@ -117,6 +121,7 @@ public abstract class AbstractGraphPerformance {
         addPerformance(NUMBER_OF_NODES_TO_ADD, graph);
         writePerformance(graph);
         findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
+        updatePerformance(NUMBER_OF_NODES_TO_UPDATE, graph);
     }
 
     protected abstract Graph getGraph();
@@ -144,11 +149,10 @@ public abstract class AbstractGraphPerformance {
     private void addPerformance(int numberOfNodes, Graph graph) throws Exception {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < numberOfNodes; i++) {
-            BlankNode subject = graphElementFactory.createBlankNode();
             for (int j = 0; j < NUMBER_OF_PREDICATES; j++) {
-                graph.add(subject,
-                        graphElementFactory.createURIReference(URI.create(PREDICATE_PREFIX + j)),
-                        graphElementFactory.createURIReference(URI.create(OBJECT_PREFIX + j)));
+                TripleFactory tripleFactory = graph.getTripleFactory();
+                tripleFactory.addTriple(URI.create(SUBJECT_PREFIX + i), URI.create(PREDICATE_PREFIX + j),
+                    URI.create(OBJECT_PREFIX + j));
             }
         }
         outputResult(graph, startTime, "Testing Add Performance:");
@@ -161,6 +165,38 @@ public abstract class AbstractGraphPerformance {
             find1(graph, subjectURI);
         }
         outputResult(graph, startTime, "Testing Find Performance: " + noFinds);
+    }
+
+    private void updatePerformance(int nodes, Graph graph) throws Exception {
+        long startTime = System.currentTimeMillis();
+        for (int index = 0; index < nodes; index++) {
+            URI subjectURI = URI.create(SUBJECT_PREFIX + index);
+            List<Triple> triplesToChange = addTriplesToArray(graph, subjectURI);
+            for (Triple triple : triplesToChange) {
+                URIReference subjectNode = (URIReference) triple.getSubject();
+                URIReference newSubject = graphElementFactory.createURIReference(URI.create(
+                    subjectNode.getURI().toString() + "hello"));
+                Triple newTriple = new TripleImpl(newSubject, triple.getPredicate(), triple.getObject());
+                graph.add(newTriple);
+                graph.remove(triple);
+                noUpdates++;
+            }
+        }
+        outputResult(graph, startTime, "Testing Update Performance: " + noUpdates);
+    }
+
+    private List<Triple> addTriplesToArray(Graph graph, URI subjectURI) throws Exception {
+        ClosableIterator<Triple> itr = findAllPredicates(graph, graphElementFactory.createURIReference(subjectURI));
+        List<Triple> triplesToChange = new ArrayList<Triple>();
+        try {
+            while (itr.hasNext()) {
+                Triple triple = itr.next();
+                triplesToChange.add(triple);
+            }
+        } finally {
+            itr.close();
+        }
+        return triplesToChange;
     }
 
     private void writePerformance(Graph graph) throws Exception {
@@ -185,15 +221,13 @@ public abstract class AbstractGraphPerformance {
     }
 
     private void find1(Graph graph, URI subjectURI) throws GraphException, GraphElementFactoryException {
-        ClosableIterator<Triple> itr = findAllPredicates(graph, graphElementFactory.createURIReference(subjectURI));
+        URIReference predicate = graphElementFactory.createURIReference(subjectURI);
+        ClosableIterator<Triple> itr = findAllPredicates(graph, predicate);
         try {
             while (itr.hasNext()) {
-                Triple triple1 = itr.next();
-                ObjectNode object1 = triple1.getObject();
-                if (!(object1 instanceof SubjectNode)) {
-                    continue;
-                }
-                find2(graph, object1);
+                Triple triple = itr.next();
+                ObjectNode object = triple.getObject();
+                find2(graph, object);
             }
         } finally {
             itr.close();

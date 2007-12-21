@@ -66,6 +66,7 @@ import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
@@ -82,12 +83,12 @@ public class MoleculeParserImplUnitTest extends TestCase {
     private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
     private final Graph jrdfGraph = factory.getNewGraph();
     private MoleculeParser moleculeParser;
-    private final URIReferenceImpl BANGLADESH_URI =
+    private final URIReference BANGLADESH_URI =
         new URIReferenceImpl(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#Bangladesh"));
-    private final URIReferenceImpl AMERICAN_URI =
+    private final URIReference AMERICAN_URI =
         new URIReferenceImpl(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"));
-    private final URIReferenceImpl TYPE_URI = new URIReferenceImpl(RDF.TYPE);
-    private final URIReferenceImpl CLASS_URI = new URIReferenceImpl(URI.create("http://www.w3.org/2002/07/owl#Class"));
+    private final URIReference TYPE_URI = new URIReferenceImpl(RDF.TYPE);
+    private final URIReference CLASS_URI = new URIReferenceImpl(URI.create("http://www.w3.org/2002/07/owl#Class"));
     private final URL resource = getClass().getResource("/org/jrdf/example/pizza.rdf");
 
     public void setUp() throws Exception {
