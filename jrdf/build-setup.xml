@@ -100,7 +100,7 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-0.2.1.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.2.44.jar"/>
+        <include name="${lib.dir}/je/je-3.2.68.jar"/>
         <include name="${lib.dir}/db4o/db4o-6.3-java5.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
@@ -122,7 +122,7 @@
         <include name="${lib.dir}/spring-rcp/spring-richclient-full-0.2.1.jar"/>
         <include name="${lib.dir}/spring-rcp/swingx-0.2005-06-02.jar"/>
         <include name="${lib.dir}/jakarta-commons/commons-logging-1.0.4.jar"/>
-        <include name="${lib.dir}/je/je-3.2.44.jar"/>
+        <include name="${lib.dir}/je/je-3.2.68.jar"/>
         <include name="${lib.dir}/db4o/db4o-6.3-java5.jar"/>
         <include name="${lib.dir}/woodstox/stax-api-1.0.1.jar"/>
         <include name="${lib.dir}/woodstox/wstx-asl-3.2.1.jar"/>
