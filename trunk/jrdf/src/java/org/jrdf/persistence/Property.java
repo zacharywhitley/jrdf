@@ -57,21 +57,42 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
  */
-public interface SparqlConnection {
+@Target({ ElementType.FIELD, ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Property {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    /**
+     * The local name of the RDF predicate. Optional only if the URI of the
+     * predicate is specified.
+     */
+    String name() default "";
+
+    /**
+     * The namespace of the RDF predicate. Defaults to the namespace specified
+     * for the entity class that declare annotated field or property.
+     */
+    String namespace() default "";
+
+    /**
+     * The URI of the RDF predicate.
+     */
+    String URI() default "";
+
+    /**
+     * The entity class that is the target of the RDF relation. Defaults to the
+     * type of the field or property that stores the relation. Must be specified
+     * for collections (multivalued properties).
+     */
+    Class targetEntity() default void.class;
 }
+

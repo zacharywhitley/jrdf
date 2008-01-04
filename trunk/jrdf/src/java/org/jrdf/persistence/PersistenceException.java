@@ -57,21 +57,23 @@
  *
  */
 
-package org.jrdf.sparql;
-
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+package org.jrdf.persistence;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
  */
-public interface SparqlConnection {
+public class PersistenceException extends Exception {
+    private static final long serialVersionUID = -1469726165711345477L;
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    public PersistenceException() {
+    }
+
+    public PersistenceException(String message) {
+        super(message);
+    }
+
+    public PersistenceException(Throwable cause) {
+        super(cause);
+    }
+
 }

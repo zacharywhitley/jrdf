@@ -57,21 +57,47 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.persistence.lazy.LazyList;
+import org.jrdf.persistence.lazy.LazySet;
+
+import java.util.List;
+import java.util.Set;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
  */
-public interface SparqlConnection {
+class QueryImpl implements Query {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    protected String rqul;
+    protected Class resultClass;
+    protected EntityManager manager;
+
+    public QueryImpl(String rqul, EntityManagerImpl manager) {
+        this(rqul, null, manager);
+    }
+
+    public QueryImpl(String rqul, Class resultClass, EntityManagerImpl manager) {
+        this.rqul = rqul;
+        this.resultClass = resultClass;
+        this.manager = manager;
+    }
+
+    public List getResultList() throws PersistenceException {
+        return new LazyList(manager.getResultSet(rqul), resultClass, manager);
+    }
+
+    public Set getResultSet() throws PersistenceException {
+        return new LazySet(manager.getResultSet(rqul), resultClass, manager);
+    }
+
+    public Object getSingleResult() throws PersistenceException {
+        return getResultList().get(0);
+    }
+
+    public int executeUpdate() throws PersistenceException {
+        manager.executeUpdate(rqul);
+        return 1;
+    }
 }

@@ -57,21 +57,33 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence.lazy;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import java.util.Iterator;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Jozef Wagner, http://wagjo.com/
  */
-public interface SparqlConnection {
+public class LazyIterator<E> implements Iterator<E> {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    protected LazyList elements;
+    protected int whereIAm;
+
+    public LazyIterator(LazyList elements) {
+        this.elements = elements;
+        this.whereIAm = 0;
+    }
+
+    public boolean hasNext() {
+        return whereIAm < elements.size();
+    }
+
+    public E next() {
+        return (E) elements.get(whereIAm++);
+    }
+
+    public void remove() {
+        elements.remove(whereIAm);
+    }
+
 }

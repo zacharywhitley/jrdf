@@ -57,21 +57,44 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import java.util.List;
+import java.util.Set;
 
 /**
- * A connection through which to send SPARQL queries.
+ * Interface used to control query execution.
  *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
  */
-public interface SparqlConnection {
+public interface Query {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    /**
+     * Execute the query and return the query result as a Set.
+     *
+     * @return a set of the results
+     */
+    Set getResultSet() throws PersistenceException;
+
+    /**
+     * Execute the query and return the query result as a List.
+     *
+     * @return a list of the results
+     */
+    List getResultList() throws PersistenceException;
+
+    /**
+     * Execute the query that returns a single result.
+     *
+     * @return the result
+     * @throws IndexOutOfBoundsException if there is no result
+     */
+    Object getSingleResult() throws PersistenceException;
+
+    /**
+     * Execute an update or delete statements.
+     *
+     * @return the number of triples updated or deleted
+     */
+    int executeUpdate() throws PersistenceException;
 }

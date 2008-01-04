@@ -41,6 +41,19 @@
     <suppress checks="JavaNCSS" files="MergeLocalSubmoleculesImpl" />
 
     <!-- Import -->
+    <!-- Persistence -->
+    <suppress checks="JavaNCSS" files="ClassMapping"/>
+    <suppress checks="JavaNCSS" files="EntityManagerImpl"/>
+    <suppress checks="JavaNCSS" files="PropertyMapping"/>
+    <suppress checks="JavaNCSS" files="Statements"/>
+    <suppress checks="CyclomaticComplexity" files="ClassMapping"/>
+    <suppress checks="CyclomaticComplexity" files="EntityManagerImpl"/>
+    <suppress checks="CyclomaticComplexity" files="PropertyManagerImpl"/>
+    <suppress checks="CyclomaticComplexity" files="RDFIntrospector"/>
+    <suppress checks="CyclomaticComplexity" files="PropertyMapping"/>
+    <suppress checks="CyclomaticComplexity" files="Statements"/>
+    <suppress checks="ReturnCount" files="RDFIntrospector"/>
+
     <!-- BTree -->
     <suppress checks="BooleanExpressionComplexity" files="ByteArrayUtil"/>
     <suppress checks="BooleanExpressionComplexity" files="ByteHandler"/>
