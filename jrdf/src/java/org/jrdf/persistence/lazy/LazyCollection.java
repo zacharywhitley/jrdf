@@ -57,21 +57,13 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence.lazy;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import java.util.Collection;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
  */
-public interface SparqlConnection {
-
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+public interface LazyCollection {
+    Collection elements();
 }

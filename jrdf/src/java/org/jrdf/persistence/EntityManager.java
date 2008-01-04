@@ -57,21 +57,69 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+
+import java.net.URI;
+import java.util.List;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
+ * @author Jozef Wagner, http://wagjo.com/
  */
-public interface SparqlConnection {
+public interface EntityManager {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    /**
+     * Create or update entity in SWKM repository.
+     */
+    URI persist(Object entity) throws PersistenceException;
+
+    /**
+     * Find resource in SWKM repository and load it as entity of class T.
+     */
+    <T> T find(Class<T> entityClass, URI uri) throws PersistenceException;
+
+    /**
+     * Add entity to the list of managed entities, so you can call persist
+     * method with this entity.
+     */
+    void merge(Object entity) throws PersistenceException;
+
+    /**
+     * Remove entity from the SWKM repository.
+     */
+    void remove(Object entity) throws PersistenceException;
+
+    /**
+     * Remove entity identified by URI from the SWKM repository.
+     */
+    void remove(URI uri) throws PersistenceException;
+
+    /**
+     * Checks whether this manager has not been closed.
+     */
+    boolean isOpen();
+
+    /**
+     * Close the manager. Call this method after you're done with Persistence API.
+     */
+    void close();
+
+    /**
+     * Remove list of all managed entities. Note that does not delete any entity
+     * in SWKM repository, it just clears local 'cache'.
+     */
+    void clear();
+
+    // TODO AN These go away?
+    Query createNativeQuery(String rulString);
+
+    Query createNativeQuery(String rqlString, Class entityClass);
+
+    List<URI> getResultSet(String rql) throws PersistenceException;
+
+    void executeUpdate(String rulString) throws PersistenceException;
+
+    Graph executeQuery(String rqlString) throws PersistenceException;
 }

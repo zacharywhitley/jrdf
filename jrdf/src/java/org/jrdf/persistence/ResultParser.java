@@ -57,21 +57,87 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.vocabulary.RDF;
+
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
  */
-public interface SparqlConnection {
+public class ResultParser {
+    private static final URI FIRST = RDF.BASE_URI;
+    private static final URI SECOND = RDF.TYPE;
+    private static final String BASE_URI = "http://www.kp-lab.org/ontologies/systemModel";
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    public static Resource getResource(Graph result, URI uri) throws GraphElementFactoryException {
+        // TODO Implement this method.
+        //Resource bag = result.getResource(BASE_URI + "#Bag_1");
+        Resource bag = null;
+        SubjectNode subject = result.getElementFactory().createResource(uri);
+
+        // TODO Implement this as well.
+//        for (URI i : bag.getProperties()) {
+//            if (i.equals(RDF.TYPE)) {
+//                continue;
+//            }
+//
+//            for (PropertyValue seq : bag.getPropertyValues(i)) {
+//                URI predicate = getFirst((Resource) seq).getURI();
+//                copyValues(getSecond((Resource) seq), subject, predicate, result);
+//            }
+//        }
+
+//        return result.getResource(uri);
+        return null;
+    }
+
+    public static List<URI> getResultSet(Graph result) {
+        List<URI> set = new LinkedList<URI>();
+        // TODO Implement this as well.
+//        Resource bag = result.getResource(BASE_URI + "#Bag_1");
+//
+//        for (URI i : bag.getProperties()) {
+//            if (i.equals(RDF.TYPE)) {
+//                continue;
+//            }
+//
+//            set.add(((Resource) bag.getPropertyValue(i)).getURI());
+//        }
+//
+        return set;
+    }
+
+    private static Resource getFirst(Resource collection) {
+        //return (Resource) collection.getPropertyValue(FIRST);
+        return null;
+    }
+
+    private static Resource getSecond(Resource collection) {
+        //return (Resource) collection.getPropertyValue(SECOND);
+        return null;
+    }
+
+    private static void copyValues(Resource source, SubjectNode subject, URI predicate, Graph target) {
+//        for (URI index : source.getProperties()) {
+//            if (index.equals(RDF.TYPE)) {
+//                continue;
+//            }
+//
+//            for (PropertyValue value : source.getPropertyValues(index)) {
+//                ObjectNode object = value instanceof Resource ?
+//                    ((Resource) value).asObject() :
+//                    (Literal) value;
+//
+//                target.add(subject, predicate, object);
+//            }
+//        }
+    }
 }

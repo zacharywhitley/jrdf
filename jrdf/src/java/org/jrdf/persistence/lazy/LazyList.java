@@ -57,21 +57,95 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence.lazy;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.persistence.EntityManager;
+import org.jrdf.persistence.PersistenceException;
+import org.jrdf.persistence.RDFIntrospector;
+
+import java.net.URI;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
+ * @author Jozef Wagner, http://wagjo.com/
  */
-public interface SparqlConnection {
+public class LazyList<E> extends AbstractList<E> implements LazyCollection {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    protected List elements;
+    protected Class<E> resultClass;
+    protected EntityManager manager;
+
+    public LazyList(Collection<URI> elements, Class<E> resultClass,
+        EntityManager manager) {
+        this.resultClass = resultClass;
+        this.manager = manager;
+        this.elements = new ArrayList(elements);
+    }
+
+    public int size() {
+        return elements.size();
+    }
+
+    public void add(int index, Object element) {
+        elements.add(index, element);
+    }
+
+    public E remove(int index) {
+        E prev = get(index);
+        elements.remove(index);
+        return prev;
+    }
+
+    public E get(int index) {
+        Object elm = elements.get(index);
+        if (elm == null) {
+            return null;
+        }
+        if (resultClass != elm.getClass()) {
+            try {
+                elm = manager.find(resultClass, (URI) elm);
+            } catch (PersistenceException e) {
+                throw new IllegalStateException(e);
+            }
+            if (elm == null) {
+                throw new NoSuchElementException();
+            }
+            elements.set(index, elm);
+        }
+        return (E) elm;
+    }
+
+    public Object set(int index, Object element) {
+        Object prev = get(index);
+        elements.set(index, element);
+        return prev;
+    }
+
+    public Collection elements() {
+        return elements;
+    }
+
+    public boolean contains(Object o) {
+        return indexOf(o) != -1;
+    }
+
+    public int indexOf(Object o) {
+        if (o.getClass() != resultClass) {
+            return -1;
+        }
+        int index = elements.indexOf(o);
+        if (index == -1) {
+            URI uri = RDFIntrospector.getURI(o);
+            if (uri != null) {
+                return elements.indexOf(uri);
+            }
+        }
+        return index;
+    }
+
 }

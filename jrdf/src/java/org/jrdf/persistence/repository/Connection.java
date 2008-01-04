@@ -57,21 +57,19 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence.repository;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
 
+// TODO Same as SPARQL Connection?
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
  */
-public interface SparqlConnection {
+public interface Connection {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    Graph executeQuery(String rql) throws RQULException;
+
+    void executeUpdate(String rul) throws RQULException;
+
+    void close();
 }

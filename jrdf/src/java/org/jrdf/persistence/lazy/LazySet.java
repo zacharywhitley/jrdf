@@ -57,21 +57,59 @@
  *
  */
 
-package org.jrdf.sparql;
+package org.jrdf.persistence.lazy;
 
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.query.Answer;
-import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.persistence.EntityManager;
+
+import java.net.URI;
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 
 /**
- * A connection through which to send SPARQL queries.
- *
- * @author Tom Adams
- * @version $Revision: 982 $
+ * @author Peter Bednar
+ * @author Jozef Wagner, http://wagjo.com/
  */
-public interface SparqlConnection {
+public class LazySet<E> extends AbstractSet<E> implements LazyCollection {
 
-    // Make the a Connection exception - see org.jrdf.persistence.repository.
-    Answer executeQuery(Graph graph, String queryText) throws InvalidQuerySyntaxException, GraphException;
+    protected LazyList elements;
+    protected Class<E> resultClass;
+    protected EntityManager manager;
+
+    public LazySet(Collection<URI> elements, Class<E> resultClass, EntityManager manager) {
+        this.resultClass = resultClass;
+        this.manager = manager;
+        this.elements = new LazyList(new HashSet(elements), resultClass, manager);
+    }
+
+    public Iterator<E> iterator() {
+        return new LazyIterator(elements);
+    }
+
+    public int size() {
+        return elements.size();
+    }
+
+    public boolean add(E element) {
+        if (elements.contains(element)) {
+            return false;
+        }
+        elements.add(element);
+        return true;
+    }
+
+    public boolean remove(Object o) {
+        int index = elements.indexOf(o);
+        if (index == -1) {
+            return false;
+        }
+        elements.remove(index);
+        return true;
+    }
+
+    public Collection elements() {
+        return elements.elements();
+    }
+
 }
