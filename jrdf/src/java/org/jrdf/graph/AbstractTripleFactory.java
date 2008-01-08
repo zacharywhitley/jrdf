@@ -59,8 +59,8 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.vocabulary.RDF;
 import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -131,7 +131,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     public void reifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-            SubjectNode reificationNode) throws TripleFactoryException {
+        SubjectNode reificationNode) throws TripleFactoryException {
 
         // create the reification node
         try {
@@ -150,7 +150,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     private SubjectNode reallyReifyTriple(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-            SubjectNode reificationNode) throws GraphElementFactoryException, AlreadyReifiedException {
+        SubjectNode reificationNode) throws GraphElementFactoryException, AlreadyReifiedException {
 
         // get the nodes used for reification
         PredicateNode hasSubject = elementFactory.createURIReference(RDF.SUBJECT);
@@ -164,9 +164,9 @@ public abstract class AbstractTripleFactory implements TripleFactory {
 
             // An error if ru already reifies anything but the given s, p, o.
             if (graph.contains(reificationNode, rdfType, rdfStatement) &&
-                    !(graph.contains(reificationNode, hasSubject, (ObjectNode) subjectNode) &&
-                            graph.contains(reificationNode, hasPredicate, (ObjectNode) predicateNode) &&
-                            graph.contains(reificationNode, hasObject, objectNode))) {
+                !(graph.contains(reificationNode, hasSubject, (ObjectNode) subjectNode) &&
+                    graph.contains(reificationNode, hasPredicate, (ObjectNode) predicateNode) &&
+                    graph.contains(reificationNode, hasObject, objectNode))) {
                 throw new AlreadyReifiedException("Node: " + reificationNode + " already used in reification");
             }
 
@@ -198,7 +198,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     public void addBag(SubjectNode subjectNode, Bag bag) throws TripleFactoryException {
         try {
             graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
-                    elementFactory.createURIReference(RDF.BAG));
+                elementFactory.createURIReference(RDF.BAG));
             addContainer(subjectNode, bag);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
@@ -210,7 +210,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     public void addSequence(SubjectNode subjectNode, Sequence sequence) throws TripleFactoryException {
         try {
             graph.add(subjectNode, elementFactory.createURIReference(RDF.TYPE),
-                    elementFactory.createURIReference(RDF.SEQ));
+                elementFactory.createURIReference(RDF.SEQ));
             addContainer(subjectNode, sequence);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
@@ -226,7 +226,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             long counter = 1L;
             for (ObjectNode object : container) {
                 graph.add(subjectNode, elementFactory.createURIReference(new URI(RDF.BASE_URI + "_" + counter++)),
-                        object);
+                    object);
             }
         } catch (URISyntaxException e) {
             throw new TripleFactoryException(e);
@@ -254,7 +254,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     private void addElementsToCollection(Collection collection, SubjectNode subject, PredicateNode rdfFirst,
-            PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException, GraphElementFactoryException {
+        PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException, GraphElementFactoryException {
         // Iterate through all elements in the Collection.
         Iterator<ObjectNode> iter = collection.iterator();
         SubjectNode currentSubjectNode = subject;
