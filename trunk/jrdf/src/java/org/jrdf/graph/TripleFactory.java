@@ -112,7 +112,7 @@ public interface TripleFactory {
      * @param object The lexical value of the literal.
      * @param language The language of the object.
      * @return the newly created triple object.
-     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate and object.
      */
     Triple addTriple(URI subject, URI predicate, String object, String language) throws GraphElementFactoryException;
 
@@ -124,7 +124,7 @@ public interface TripleFactory {
      * @param object The lexical value of the literal.
      * @param dataType The datatype of the object.
      * @return the newly created triple object.
-     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate and object.
      */
     Triple addTriple(URI subject, URI predicate, String object, URI dataType) throws GraphElementFactoryException;
 

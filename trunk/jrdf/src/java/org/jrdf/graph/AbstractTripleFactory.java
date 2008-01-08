@@ -96,56 +96,35 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     public Triple addTriple(URI subject, URI predicate, URI object) throws GraphElementFactoryException {
-        URIReference subjectNode = elementFactory.createURIReference(subject);
-        URIReference predicateNode = elementFactory.createURIReference(predicate);
-        URIReference objectNode = elementFactory.createURIReference(object);
-        Triple triple = new TripleImpl(subjectNode, predicateNode, objectNode);
-        addTriple(triple);
-        return triple;
+        return addTriple(subject, predicate, elementFactory.createURIReference(object));
     }
 
     public Triple addTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException {
-        URIReference subjectNode = elementFactory.createURIReference(subject);
-        URIReference predicateNode = elementFactory.createURIReference(predicate);
-        Literal literal = elementFactory.createLiteral(object);
-        Triple triple = new TripleImpl(subjectNode, predicateNode, literal);
-        addTriple(triple);
-        return triple;
+        return addTriple(subject, predicate, elementFactory.createLiteral(object));
     }
 
     public Triple addTriple(URI subject, URI predicate, Object object)
         throws GraphElementFactoryException {
-        URIReference subjectNode = elementFactory.createURIReference(subject);
-        URIReference predicateNode = elementFactory.createURIReference(predicate);
-        Literal literal = elementFactory.convertToLiteral(object);
-        Triple triple = new TripleImpl(subjectNode, predicateNode, literal);
-        addTriple(triple);
-        return triple;
+        return addTriple(subject, predicate, elementFactory.convertToLiteral(object));
     }
 
     public Triple addTriple(URI subject, URI predicate, String object, String language)
         throws GraphElementFactoryException {
-        URIReference subjectNode = elementFactory.createURIReference(subject);
-        URIReference predicateNode = elementFactory.createURIReference(predicate);
-        Literal literal = elementFactory.createLiteral(object, language);
-        Triple triple = new TripleImpl(subjectNode, predicateNode, literal);
-        addTriple(triple);
-        return triple;
+        return addTriple(subject, predicate, elementFactory.createLiteral(object, language));
     }
 
     public Triple addTriple(URI subject, URI predicate, String object, URI dataType)
         throws GraphElementFactoryException {
-        URIReference subjectNode = elementFactory.createURIReference(subject);
-        URIReference predicateNode = elementFactory.createURIReference(predicate);
-        Literal literal = elementFactory.createLiteral(object, dataType);
-        Triple triple = new TripleImpl(subjectNode, predicateNode, literal);
-        addTriple(triple);
-        return triple;
+        return addTriple(subject, predicate, elementFactory.createLiteral(object, dataType));
     }
 
-    private void addTriple(Triple triple) throws GraphElementFactoryException {
+    private Triple addTriple(URI subject, URI predicate, ObjectNode objectNode) throws GraphElementFactoryException {
         try {
+            SubjectNode subjectNode = elementFactory.createURIReference(subject);
+            PredicateNode predicateNode = elementFactory.createURIReference(predicate);
+            Triple triple = new TripleImpl(subjectNode, predicateNode, objectNode);
             graph.add(triple);
+            return triple;
         } catch (GraphException e) {
             throw new GraphElementFactoryException(e);
         }
