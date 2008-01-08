@@ -59,7 +59,7 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 
@@ -153,14 +153,14 @@ public interface Graph {
      *
      * @return all unique blank nodes.
      */
-    ClosableIterator<Resource> findBlankNodes();
+    ClosableIterator<BlankNode> findBlankNodes();
 
     /**
      * Returns all unique URIReferences (Subject and Object).
      *
      * @return all unique URIReference nodes.
      */
-    ClosableIterator<Resource> findURIReferences();
+    ClosableIterator<URIReference> findURIReferences();
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created using {@link GraphElementFactory}.

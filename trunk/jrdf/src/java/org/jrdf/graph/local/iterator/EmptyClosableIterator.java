@@ -60,6 +60,7 @@
 package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.NoSuchElementException;
 

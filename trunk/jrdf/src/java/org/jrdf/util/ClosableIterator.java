@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.util;
 
 import java.util.Iterator;
 
@@ -69,7 +69,7 @@ import java.util.Iterator;
  * @author Andrew Newman
  * @version $Id$
  */
-public interface ClosableIterator<Triple> extends Iterator<Triple> {
+public interface ClosableIterator<E> extends Iterator<E> {
 
     /**
      * Closes the iterator by freeing any resources that it current holds.

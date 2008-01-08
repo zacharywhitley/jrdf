@@ -61,8 +61,8 @@ package org.jrdf.graph.local.iterator;
 import junit.framework.TestCase;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.local.iterator.EmptyClosableIterator;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 
 import static java.lang.reflect.Modifier.*;
 

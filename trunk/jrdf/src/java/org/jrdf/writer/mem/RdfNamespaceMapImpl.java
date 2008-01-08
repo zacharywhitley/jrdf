@@ -63,7 +63,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.RDFS;
 import org.jrdf.writer.NamespaceException;

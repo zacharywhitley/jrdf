@@ -71,7 +71,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import static org.jrdf.graph.AbstractBlankNode.*;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.HashSet;
 import java.util.Iterator;

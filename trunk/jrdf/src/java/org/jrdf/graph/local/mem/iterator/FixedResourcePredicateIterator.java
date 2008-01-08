@@ -62,7 +62,7 @@ package org.jrdf.graph.local.mem.iterator;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;

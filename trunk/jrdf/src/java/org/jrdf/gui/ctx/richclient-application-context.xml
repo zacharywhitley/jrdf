@@ -63,29 +63,19 @@
 <beans>
     <bean id="application"
           class="org.springframework.richclient.application.Application">
-        <constructor-arg index="0">
-            <ref bean="applicationDescriptor"/>
-        </constructor-arg>
-        <constructor-arg index="1">
-            <ref bean="jrdfGuiLifecycleAdvisor"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="applicationDescriptor"/>
+        <constructor-arg index="1" ref="jrdfGuiLifecycleAdvisor"/>
     </bean>
 
     <bean id="applicationDescriptor"
           class="org.springframework.richclient.application.support.DefaultApplicationDescriptor">
-        <property name="version">
-            <value>0.3.1</value>
-        </property>
+        <property name="version" value="0.5.3"/>
     </bean>
 
     <bean id="jrdfGuiLifecycleAdvisor"
           class="org.springframework.richclient.application.config.DefaultApplicationLifecycleAdvisor">
-        <property name="windowCommandBarDefinitions">
-            <value>org/jrdf/gui/commands-context.xml</value>
-        </property>
-        <property name="startingPageId">
-            <value>queryView</value>
-        </property>
+        <property name="windowCommandBarDefinitions" value="org/jrdf/gui/commands-context.xml"/>
+        <property name="startingPageId" value="queryView"/>
     </bean>
 
     <bean id="serviceLocator" class="org.springframework.richclient.application.ApplicationServicesLocator">
@@ -104,23 +94,11 @@
 
     <bean id="queryView"
           class="org.springframework.richclient.application.support.DefaultViewDescriptor">
-        <property name="viewClass">
-            <value>org.jrdf.gui.view.QueryViewImpl</value>
-        </property>
+        <property name="viewClass" value="org.jrdf.gui.view.QueryViewImpl"/>
         <property name="viewProperties">
             <map>
-                <entry>
-                    <key>
-                        <value>queryPanel</value>
-                    </key>
-                    <ref bean="queryPanelView"/>
-                </entry>
-                <entry>
-                    <key>
-                        <value>resultsPanel</value>
-                    </key>
-                    <ref bean="resultsPanelView"/>
-                </entry>
+                <entry value-ref="queryPanelView" key="queryPanel"/>
+                <entry value-ref="resultsPanelView" key="resultsPanel"/>
             </map>
         </property>
     </bean>
@@ -130,19 +108,12 @@
 
     <bean id="applicationObjectConfigurer"
           class="org.springframework.richclient.application.config.DefaultApplicationObjectConfigurer">
-        <constructor-arg index="0">
-            <ref bean="messageSource"/>
-        </constructor-arg>
-        <constructor-arg index="1">
-            <ref bean="imageSource"/>
-        </constructor-arg>
-        <constructor-arg index="2">
-            <ref bean="iconSource"/>
-        </constructor-arg>
+        <constructor-arg index="0" ref="messageSource"/>
+        <constructor-arg index="1" ref="imageSource"/>
+        <constructor-arg index="2" ref="iconSource"/>
     </bean>
 
-    <bean id="messageSource"
-          class="org.springframework.context.support.ResourceBundleMessageSource">
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basenames">
             <list>
                 <value>org.jrdf.gui.messages</value>
@@ -151,33 +122,21 @@
         </property>
     </bean>
 
-    <bean id="imageSource"
-          class="org.springframework.richclient.image.DefaultImageSource">
-        <constructor-arg index="0">
-            <ref bean="imageResourcesFactory"/>
-        </constructor-arg>
-        <property name="brokenImageIndicator">
-            <value>images/alert/error_obj.gif</value>
-        </property>
+    <bean id="imageSource" class="org.springframework.richclient.image.DefaultImageSource">
+        <constructor-arg index="0" ref="imageResourcesFactory"/>
     </bean>
 
-    <bean id="imageResourcesFactory"
-          class="org.springframework.context.support.ResourceMapFactoryBean">
+    <bean id="imageResourcesFactory" class="org.springframework.context.support.ResourceMapFactoryBean">
         <property name="locations">
             <list>
                 <value>classpath:org/springframework/richclient/image/images.properties</value>
                 <value>classpath:org/jrdf/gui/image/images.properties</value>
             </list>
         </property>
-        <property name="resourceBasePath">
-            <value>images/</value>
-        </property>
+        <property name="resourceBasePath" value="images/"/>
     </bean>
 
-    <bean id="iconSource"
-          class="org.springframework.richclient.image.DefaultIconSource">
-        <constructor-arg index="0">
-            <ref bean="imageSource"/>
-        </constructor-arg>
+    <bean id="iconSource" class="org.springframework.richclient.image.DefaultIconSource">
+        <constructor-arg index="0" ref="imageSource"/>
     </bean>
 </beans>

@@ -108,9 +108,7 @@
     </bean>
 
     <bean id="loadRdfCommand" class="org.jrdf.gui.command.LoadRdfCommand">
-        <property name="JRDFModel">
-            <ref bean="jrdfModel"/>
-        </property>
+        <property name="JRDFModel" ref="jrdfModel"/>
     </bean>
 
     <bean id="jrdfModel" class="org.jrdf.gui.model.JRDFModelImpl">
@@ -141,9 +139,7 @@
     </bean>
 
     <bean id="runQueryCommand" class="org.jrdf.gui.command.RunQueryCommand">
-        <property name="JRDFModel">
-            <ref bean="jrdfModel"/>
-        </property>
+        <property name="JRDFModel" ref="jrdfModel"/>
         <property name="queryPanelView">
             <ref bean="queryPanelView"/>
         </property>
@@ -158,8 +154,6 @@
     </bean>
 
     <bean id="aboutCommand" class="org.springframework.richclient.command.support.AboutCommand">
-        <property name="aboutTextPath">
-            <value>org/jrdf/gui/about.txt</value>
-        </property>
+        <property name="aboutTextPath" value="org/jrdf/gui/about.txt"/>
     </bean>
 </beans>

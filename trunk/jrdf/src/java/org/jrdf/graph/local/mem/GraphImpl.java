@@ -71,6 +71,8 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
@@ -81,7 +83,7 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
@@ -311,11 +313,11 @@ public class GraphImpl implements Graph, Serializable {
         return new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
     }
 
-    public ClosableIterator<Resource> findBlankNodes() {
+    public ClosableIterator<BlankNode> findBlankNodes() {
         return new BlankNodeResourceIterator(indexes, handlers, resourceFactory, nodePool);
     }
 
-    public ClosableIterator<Resource> findURIReferences() {
+    public ClosableIterator<URIReference> findURIReferences() {
         return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
     }
 

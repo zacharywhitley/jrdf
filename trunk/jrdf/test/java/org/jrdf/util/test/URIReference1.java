@@ -59,7 +59,7 @@
 
 package org.jrdf.util.test;
 
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.AbstractURIReference;
 import org.jrdf.graph.PredicateNode;
 

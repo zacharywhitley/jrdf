@@ -63,7 +63,7 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
@@ -793,7 +793,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testBlankNodeResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<Resource> blankNodes = graph.findBlankNodes();
+        ClosableIterator<BlankNode> blankNodes = graph.findBlankNodes();
         int counter = 0;
         while (blankNodes.hasNext()) {
             blankNodes.next();
@@ -804,7 +804,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<Resource> iterator = graph.findURIReferences();
+        ClosableIterator<URIReference> iterator = graph.findURIReferences();
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
