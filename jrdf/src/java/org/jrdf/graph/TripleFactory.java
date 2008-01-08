@@ -71,7 +71,7 @@ import java.net.URI;
 public interface TripleFactory {
 
     /**
-     * Creates and adds new triple to graph.
+     * Creates and adds a new triple to the graph.
      *
      * @param subject The subject of the statement.
      * @param predicate The predicate of the statement.
@@ -82,18 +82,30 @@ public interface TripleFactory {
     Triple addTriple(URI subject, URI predicate, URI object) throws GraphElementFactoryException;
 
     /**
-     * Creates and adds new triple to graph.
+     * Creates and adds a new triple to the graph.
      *
      * @param subject The subject of the statement.
      * @param predicate The predicate of the statement.
      * @param object The object of the statement.
      * @return the newly created triple object.
-     * @throws GraphElementFactoryException if it fails to create the given subject, predicate object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate and object.
      */
     Triple addTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException;
 
     /**
-     * Creates and adds new triple to graph.
+     * Creates and adds a new triple to the graph.
+     *
+     * @param subject The subject of the statement.
+     * @param predicate The predicate of the statement.
+     * @param object The native value of the object of the statement.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate and object.  The object
+     *   must have a type registered in the DatatypeFactory.
+     */
+    Triple addTriple(URI subject, URI predicate, Object object) throws GraphElementFactoryException;
+
+    /**
+     * Creates and adds new triple to the graph.
      *
      * @param subject The subject of the statement.
      * @param predicate The predicate of the statement.
@@ -128,8 +140,8 @@ public interface TripleFactory {
     Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
     /**
-     * Reifies a triple.  A triple made up of the first three nodes is added to graph and the reificationNode is used
-     * to reify the triple.
+     * Reifies a triple.  4 statements are added with the given subject, predicate and object.  These are added as
+     * objects to the the reified triple.  The triple being reified is not added to the graph.
      *
      * @param subjectNode the subject of the triple.
      * @param predicateNode the predicate of the triple.
@@ -142,7 +154,8 @@ public interface TripleFactory {
         SubjectNode reificationNode) throws TripleFactoryException;
 
     /**
-     * Reifies a triple.  The triple added to the graph and the reificationNode is used to reify the triple.
+     * Reifies a triple.  4 statements are added with the triple's subject, predicate and object.  These are added as
+     * objects to the reified triple.  The triple being reified is not added to the graph.
      *
      * @param triple the triple to be reified.
      * @param reificationNode a node denoting the reified triple.
@@ -161,8 +174,8 @@ public interface TripleFactory {
     void addAlternative(SubjectNode subjectNode, Alternative alternative) throws TripleFactoryException;
 
     /**
-     * Inserts a bag using the given subject.  The subject is also
-     * the object of a proceeding statement that identifies the container.
+     * Inserts a bag using the given subject.  The subject is also the object of a proceeding statement that
+     * identifies the container.
      *
      * @param subjectNode the subject node of the triple.
      * @param bag         the bag to add.
@@ -171,8 +184,8 @@ public interface TripleFactory {
     void addBag(SubjectNode subjectNode, Bag bag) throws TripleFactoryException;
 
     /**
-     * Inserts a sequence using the given subject.  The subject is also
-     * the object of a proceeding statement that identifies the container.
+     * Inserts a sequence using the given subject.  The subject is also the object of a proceeding statement that
+     * identifies the container.
      *
      * @param subjectNode the subject node of the triple.
      * @param sequence    the sequence to add.
@@ -181,8 +194,8 @@ public interface TripleFactory {
     void addSequence(SubjectNode subjectNode, Sequence sequence) throws TripleFactoryException;
 
     /**
-     * Inserts a collection using the given subject.  The subject is also
-     * the object of a proceeding statement that identifies the collection.
+     * Inserts a collection using the given subject.  The subject is also the object of a proceeding statement that
+     * identifies the collection.
      *
      * @param firstNode  the subject node of the triple.
      * @param collection the collection to add.
