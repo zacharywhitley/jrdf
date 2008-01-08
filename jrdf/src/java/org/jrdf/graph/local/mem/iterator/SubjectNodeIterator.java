@@ -61,7 +61,7 @@ package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 
 public class SubjectNodeIterator  implements ClosableIterator<SubjectNode> {
     private ClosableIterator<Triple> iterator;

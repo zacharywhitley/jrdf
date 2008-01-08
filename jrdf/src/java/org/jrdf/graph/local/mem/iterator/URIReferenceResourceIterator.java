@@ -61,6 +61,7 @@ package org.jrdf.graph.local.mem.iterator;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
@@ -70,11 +71,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class URIReferenceResourceIterator extends ResourceIterator {
+public class URIReferenceResourceIterator extends ResourceIterator<URIReference> {
 
     public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
         final ResourceFactory newResourceFactory, final NodePool newNodePool) {
         super(newLongIndexes, newGraphHandlers, newResourceFactory, newNodePool);
+    }
+
+    public URIReference next() {
+        Resource resource = getNextResource();
+        return (URIReference) resource.getUnderlyingNode();
     }
 
     protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,

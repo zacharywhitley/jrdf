@@ -76,7 +76,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.AbstractBlankNode;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.map.MapFactory;
 
 import java.util.Iterator;

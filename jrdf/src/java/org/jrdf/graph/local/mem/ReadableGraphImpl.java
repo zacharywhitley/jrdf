@@ -70,7 +70,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

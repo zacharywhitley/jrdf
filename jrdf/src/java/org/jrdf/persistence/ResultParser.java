@@ -84,7 +84,7 @@ public class ResultParser {
         SubjectNode subject = result.getElementFactory().createResource(uri);
 
         // TODO Implement this as well.
-//        for (URI i : bag.getProperties()) {
+//        for (URI i : result.findURIReferences()) {
 //            if (i.equals(RDF.TYPE)) {
 //                continue;
 //            }

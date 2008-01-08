@@ -59,7 +59,7 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 
 import java.io.Serializable;
 

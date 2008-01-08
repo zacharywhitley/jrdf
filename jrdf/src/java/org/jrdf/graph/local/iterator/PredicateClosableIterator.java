@@ -59,6 +59,7 @@
 package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.PredicateNode;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 

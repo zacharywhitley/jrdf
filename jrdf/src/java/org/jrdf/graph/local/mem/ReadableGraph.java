@@ -65,7 +65,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 
 public interface ReadableGraph {
     boolean contains(SubjectNode subject, PredicateNode predicate, ObjectNode object);

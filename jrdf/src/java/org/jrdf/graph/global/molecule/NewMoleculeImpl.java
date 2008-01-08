@@ -66,7 +66,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.TripleImpl;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.ArrayList;

@@ -66,7 +66,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * Iterator factory for the molecules contained within a GlobalizedGraph.

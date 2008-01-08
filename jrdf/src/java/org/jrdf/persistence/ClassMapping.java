@@ -66,7 +66,7 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.persistence.lazy.LazyCollection;
 import org.jrdf.persistence.lazy.LazyList;
 import org.jrdf.persistence.lazy.LazySet;

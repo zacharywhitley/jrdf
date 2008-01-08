@@ -69,7 +69,7 @@ import org.jrdf.graph.local.mem.ResourceFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
@@ -77,7 +77,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-abstract class ResourceIterator implements ClosableIterator<Resource> {
+abstract class ResourceIterator<E> implements ClosableIterator<E> {
     protected final LongIndex longIndex012;
     protected final GraphHandler graphHandler012;
     protected final ResourceFactory resourceFactory;
@@ -109,18 +109,6 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
         return nextResource != null;
     }
 
-    public Resource next() {
-        //for the first time retrieve the current one as well as the next one
-        final Resource resource;
-        if (nextResource == null) {
-            throw new NoSuchElementException();
-        } else {
-            resource = nextResource;
-            nextResource = getNextNode();
-        }
-        return resource;
-    }
-
     private Resource getNextNode() {
         Resource resource = null;
         try {
@@ -138,7 +126,6 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
         }
         return resource;
     }
-
 
     /**
      * Get the next object element from the OSP index.
@@ -162,6 +149,7 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
         }
         return null;
     }
+
 
     /**
      * Get the next subject element in the SPO index.
@@ -197,6 +185,18 @@ abstract class ResourceIterator implements ClosableIterator<Resource> {
             return resourceFactory.createResource((URIReference) node);
         } else if (node instanceof Literal) {
             throw new UnsupportedOperationException("Cannot convert Literals to Resources");
+        }
+        return resource;
+    }
+
+    protected Resource getNextResource() {
+        //for the first time retrieve the current one as well as the next one
+        final Resource resource;
+        if (nextResource == null) {
+            throw new NoSuchElementException();
+        } else {
+            resource = nextResource;
+            nextResource = getNextNode();
         }
         return resource;
     }

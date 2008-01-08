@@ -60,7 +60,7 @@
 package org.jrdf.graph.global.iterator;
 
 import org.jrdf.graph.Node;
-import org.jrdf.graph.local.iterator.ClosableIterator;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.molecule.Molecule;
