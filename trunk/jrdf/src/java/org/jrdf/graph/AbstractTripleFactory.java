@@ -103,8 +103,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         return addTriple(subject, predicate, elementFactory.createLiteral(object));
     }
 
-    public Triple addTriple(URI subject, URI predicate, Object object)
-        throws GraphElementFactoryException {
+    public Triple addTriple(URI subject, URI predicate, Object object) throws GraphElementFactoryException {
         return addTriple(subject, predicate, elementFactory.convertToLiteral(object));
     }
 
