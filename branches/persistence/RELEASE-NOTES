@@ -1,0 +1,173 @@
+JRDF Release 0.5.2
+==================
+* Improved performance and scalability of on disk implementation with SortedDiskJRDFFactory.  Supports reading
+ and writing large RDF/XML files with over 1 million triples (Feature 1835709).
+* Add on disk set implementation (Feature 1835709).
+* Modified Graph interface from getUniquePredicates and get node type to find (Bug 1835711).
+
+JRDF Release 0.5.1
+==================
+* Added db4o implementation and improved Bdb implementation.
+* Added Graph copying between two local graphs (Feature 1805283).
+* Added Resource creation on GraphElementFactory (Feature 1805285).
+* Fixed confusing semantics of getNewGraph on factories.  Previously,
+it would create a new graph object with the same indices and
+node/string pools.  Now it creates new indices and node/string pools.
+(Bug 1821049).
+* Fixed behaviour of equality of resources (Bug 1783063).
+* getValue() on literals not returns the underlying Java class -
+getDatatypeValue() has been added to return the wrapper class
+(Bug 1793803).
+* Fixed bugs associated with data types including: equals on
+some datatypes was missing or incorrect and serialization
+(Bug 1793814, 1802351).
+* BdbFactory bugs fixed (Bugs 1793822, 1827349).
+* Remove and close incorrectly implemented (Bug 1793822).
+* Inefficient creation of RDF/XML (Bug 1800829).
+* Allowed correct serialization of Answers (Bug 1802319).
+* Creation of NullURI instead of returning null when calling
+getURI on a blank node resource (Bug 1805264).
+
+JRDF Release 0.5.0
+==================
+* First support for Java 6.  Will run under Java 5 but requires StAX library
+  for RDF/XML writer.
+* Datatype support with support for all XSD builtin datatypes except
+  base64Binary, hexBinary, and NOTATION and derived types nonPositiveInteger,
+  nonNegativeInteger, integer, long, int, short and byte (Feature 1748820).
+* Resource interface - allows nodes to be treated as both Subject and
+  Objects.  Also supports gets/finds, adds and deletes (Feature 1766052).
+* Persistent maps using Berkeley DB Java edition (Feature 1766047).  Requires
+  Berkeley DB jar.
+* Node type operations on graph to allow getting unique predicates,
+  resources, blank nodes and uri references (Feature 1778255).
+* Modifications to Literal interface.  Includes isXXX for which type of
+  literal it is and use of datatypes and value interface (Feature 1751594).
+* Add clear and close method to maps (Feature 1758597).
+* Corrected escaping of RDF/XML writer (Bug 1762434).
+* Removed use of null in AbstractLitearl (Bug 1751593).
+
+JRDF Release 0.4.1.1
+====================
+* Fixed JRDFModelImpl re-wires components (Bug 1731097).
+* Fixed error in SortedMemoryJRDFFactoryImpl (Bug 1731094).
+
+JRDF Release 0.4.1
+==================
+* Initial SPARQL: PREFIX, SELECT, WHERE, OPTIONAL, . (JOIN) and UNION
+  supported (Feature 1236476).
+* User interface for SPARQL Querying (Feature 1505272).
+* Allows sorted results from the Graph API's find() method (Feature 1475502).
+* RDF/XML Writer by Robert Turner (Feature 1499471).
+* Push and Pull NTriples parser (Feature 1669796).
+* Added visit(Node) (Feature 1624471).
+* Fixed lazy implementation of Hashcode and Equals (Bug 1564442).
+* Now displays the line number when creating a URI from an RDF/XML file
+  fails (Bug 1564355).
+* Changed to use Java 1.5 UUID generator instead of own implementation
+  (Bug 1560109).
+* Fixed JrdfExample (Bug 1467546).
+* Fixed AbstractTriple.equals handling null nodes (Bug 1273310).
+
+JRDF Release 0.3.4.3
+====================
+* Still doesn't parser XML Literals correctly - can fail to parse who
+triples due to not flushing the output stream. Due to typo (and no test).
+(Bug 1511751).
+
+JRDF Release 0.4
+================
+* Finished converting over to use Generics and Java 1.5 (Feature 1238378).
+* Began work on SPARQL support, graph and relational operations.
+* Began work on a NTriples parser.
+* Using an iterator from the result of a find to remove nodes from the
+same graph no longer produces a concurrent modification exception
+(Bug 1457621).
+* NTriple escaping now correctly handles surrogates in Java 1.5. (Bug 1364927).
+* Large XML Literals are now correctly parsed (Bug 1362611).
+* Fixed incorrect resolving of relative URIs correctly (Bug 1315291).
+* Fixed processing stacked xml:base directives with relative URIs
+(Bug 1314147).
+* The createTriple method was moved to be on TripleFactory (Bug 1294602).
+* Removed the use of nulls as valid parameters in finds for example (Bug 1265743).
+* MemNode now extends Node (Bug 1243510).
+
+JRDF Release 0.3.4.1
+====================
+* Fixed build problems (Bug 1314770).
+* Back ported stack xml:base directives with relative URIs not processed
+(Bug 1314750).
+* Does not resolve relative URIs correctly (Bug 1315285).
+
+JRDF Release 0.3.4
+==================
+* Initial work on remote querying and SPARQL support (RFE 1236476).
+* Added port of Sesame's RIO RDF/XML parser and associated interfaces (RFE
+1075768).
+* Added protected constructor to Literals (RFE 1075771).
+* Added close method to graphs (RFE 1075740).
+* Added ability to generate globally unique IDs for blank nodes (RFE 1048971).
+* No exception thrown when calling remove before next. (Bug 1231518).
+* Parsing RDF/XML literals removes spaces (Bug 1116687).
+* Literals should return n3 when toString is called, getEscapedForm return
+properly escape n3.  (Bug 1077343).
+* Serial version (Bug 1048968) and protected constructors added to
+AbstractLiteral (Bug 1059228).
+* Javadoc enhanced, general style improved, build files refactored and
+preparation for move to Java 1.5 (Generics and Concurrency).
+
+JRDF Release 0.3.3
+==================
+* Reification prevented from existing statements (Bug 1034837).  Reification
+should not add the statement being reified.
+
+JRDF Release 0.3.2
+==================
+* Bug fixes to the in memory implementation including
+serialization/deserialization (Bug 1020911) and Literal equality (Bug 1016576).
+* All nodes for the in memory implementation are now localized (RFE 1016579)
+allowing any JRDF object to be added/removed or used in a find/contains.
+This should be the semantics for all implementations of Graph.
+* The iterators returned by the in memory Graph implementation can now have
+remove called on them (RFE 1027563).
+
+JRDF Release 0.3.1
+==================
+* Bug fixes to the in memory implementation: creating the same Literal by
+value resulted in a different node ID (1014115) and preventing one in
+memory graph adding nodes to another in memory graph (1014054).
+* Updated javadoc for Graph.
+
+JRDF Release 0.3
+================
+* New memory implementation by Paul Gearon.
+* Abstract unit tests to test implementations.
+* Split out NodeFactory into TripleFactory and GraphElementFactory.
+* Added Container (Bag, Alternative and Sequence support) and Collection
+support.
+* Added visitor pattern for typed nodes (URIReference, BlankNode and
+Literals).
+* Creating literals is restricted to only valid construction: lexical value,
+lexical value and datatype or lexical value and language.
+* AbstractLiteral now has a getEscapedForm which returns an N-Triples
+escaped version of the Literal.  The toString now simply returns
+getLexicalValue (no escaping).
+* Modified AbstractURIReference to allow unchecked URIs to be added.
+* Added AbstractBlankNode.
+
+JRDF Release 0.2.1
+==================
+* AbstractLiteral has improved toString.
+* AbstractURIReference has a constructor that enforces a non-null URI.
+* Graph now has find, getNumberOfTriples and isEmpty methods.
+* Triple and Nodes are now Serializable.
+* NodeFactory now supports reification.
+* Added ClosableIterator for results.
+* Added RDF and RDFS vocabularies.
+
+JRDF Release 0.2
+================
+* Node, SubjectNode, PredicateNode and ObjectNode marker interfaces.
+* Renaming of Statement to Triple and other renaming.
+* Defining hashCode and equals.
+* Refication added to NodeFactory.
