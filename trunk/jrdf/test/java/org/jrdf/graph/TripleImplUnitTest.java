@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.graph;
 
 import org.jrdf.graph.AbstractTripleUnitTest;
 import org.jrdf.graph.ObjectNode;
@@ -65,8 +65,9 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.util.test.NodeTestUtil;
+import static org.jrdf.util.test.NodeTestUtil.*;
 
 import java.net.URI;
 
@@ -89,27 +90,27 @@ public final class TripleImplUnitTest extends AbstractTripleUnitTest {
     }
 
     public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return NodeTestUtil.createTriple(subject, predicate, object);
+        return createTriple(subject, predicate, object);
     }
 
     public Triple createTriple (URI subject, URI predicate, URI object) {
-        return NodeTestUtil.createTriple(subject, predicate, object);
+        return createTriple(subject, predicate, object);
     }
 
     public Triple createTriple (URI subject, URI predicate, String object) {
-        return NodeTestUtil.createTriple(subject, predicate, object);
+        return createTriple(subject, predicate, object);
     }
 
     public Triple createTriple (URI subject, URI predicate, String object, String language) {
-        return NodeTestUtil.createTriple(subject, predicate, object, language);
+        return createTriple(subject, predicate, object, language);
     }
 
     public Triple createTriple (URI subject, URI predicate, String object, URI dataType) {
-        return NodeTestUtil.createTriple(subject, predicate, object, dataType);
+        return createTriple(subject, predicate, object, dataType);
     }
 
     public URIReference createResource(URI uri) {
-        return NodeTestUtil.createResource(uri);
+        return createResource(uri);
     }
 
     public void testClassProperties() {

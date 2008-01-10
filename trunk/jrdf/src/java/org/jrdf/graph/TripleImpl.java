@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global;
+package org.jrdf.graph;
 
 import org.jrdf.graph.AbstractTriple;
 import org.jrdf.graph.ObjectNode;

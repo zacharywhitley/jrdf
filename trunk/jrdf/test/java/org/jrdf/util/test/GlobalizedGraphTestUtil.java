@@ -65,7 +65,7 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.LiteralImpl;
-import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeImpl;
