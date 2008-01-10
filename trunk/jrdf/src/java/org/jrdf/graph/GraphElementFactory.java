@@ -72,6 +72,14 @@ import java.net.URI;
 public interface GraphElementFactory {
 
     /**
+     * Create a resource, wrapping a blank node that is associated with a specific graph.
+     *
+     * @return the newly created resource wrapping a blank node value.
+     * @throws GraphElementFactoryException if adding a blank node fails.
+     */
+    Resource createResource() throws GraphElementFactoryException;
+
+    /**
      * Wrap a blank node in a resource.
      *
      * @param node the node to wrap.
@@ -88,14 +96,6 @@ public interface GraphElementFactory {
      * @throws GraphElementFactoryException if the URIReference does not exist.
      */
     Resource createResource(URIReference node) throws GraphElementFactoryException;
-
-    /**
-     * Create a resource, wrapping a blank node that is associated with a specific graph.
-     *
-     * @return the newly created resource wrapping a blank node value.
-     * @throws GraphElementFactoryException if adding a blank node fails.
-     */
-    Resource createResource() throws GraphElementFactoryException;
 
     /**
      * Create a blank node that is associated with a specific graph.
@@ -126,7 +126,7 @@ public interface GraphElementFactory {
     Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException;
 
     /**
-     * Create a URI reference.
+     * Create a URI reference.  Checks the validity of the URI (must be absolute).
      *
      * @param uri The URI of the resource.
      * @return the newly created URI reference value.
@@ -154,7 +154,7 @@ public interface GraphElementFactory {
      * @throws IllegalArgumentException if there is no registered class to value creator mapping in the datatype
      *   factory.
      */
-    Literal convertToLiteral(Object object) throws GraphElementFactoryException;
+    Literal createLiteral(Object object) throws GraphElementFactoryException;
 
     /**
      * Creates a new literal with the given lexical value, with no language or

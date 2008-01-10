@@ -86,7 +86,8 @@ public interface TripleFactory {
      *
      * @param subject The subject of the statement.
      * @param predicate The predicate of the statement.
-     * @param object The object of the statement.
+     * @param object The object of the statement.  Creates a literal without a language or datatype with the given
+     *      lexical value.
      * @return the newly created triple object.
      * @throws GraphElementFactoryException if it fails to create the given subject, predicate and object.
      */
