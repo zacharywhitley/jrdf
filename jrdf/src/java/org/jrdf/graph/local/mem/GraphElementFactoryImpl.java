@@ -95,6 +95,11 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         this.resourceFactory = resourceFactory;
     }
 
+    public Resource createResource() throws GraphElementFactoryException {
+        BlankNode blankNode = createBlankNode();
+        return createResource(blankNode);
+    }
+
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
         return resourceFactory.createResource(node);
     }
@@ -103,9 +108,12 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return resourceFactory.createResource(node);
     }
 
-    public Resource createResource() throws GraphElementFactoryException {
-        BlankNode blankNode = createBlankNode();
-        return createResource(blankNode);
+    public Resource createResource(URI uri) throws GraphElementFactoryException {
+        return createResource(createURIReference(uri));
+    }
+
+    public Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException {
+        return createResource(createURIReference(uri));
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {
@@ -122,14 +130,6 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         BlankNode node = new BlankNodeImpl(nodeId, uid);
         nodePool.registerNode((LocalizedNode) node);
         return node;
-    }
-
-    public Resource createResource(URI uri) throws GraphElementFactoryException {
-        return createResource(createURIReference(uri));
-    }
-
-    public Resource createResource(URI uri, boolean validate) throws GraphElementFactoryException {
-        return createResource(createURIReference(uri));
     }
 
     public URIReference createURIReference(URI uri) throws GraphElementFactoryException {
@@ -154,7 +154,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return node;
     }
 
-    public Literal convertToLiteral(Object object) {
+    public Literal createLiteral(Object object) {
         LiteralMutableId literal = new LiteralImpl(object);
         addNodeId(literal);
         return literal;
