@@ -68,7 +68,7 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.util.EscapeURL;
 import org.jrdf.vocabulary.RDF;

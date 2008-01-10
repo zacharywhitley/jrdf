@@ -64,7 +64,7 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.TripleImpl;
 
 import java.util.HashSet;
 import java.util.Iterator;

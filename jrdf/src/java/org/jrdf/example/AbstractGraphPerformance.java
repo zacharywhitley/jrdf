@@ -70,7 +70,7 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.global.TripleImpl;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.parser.Parser;
