@@ -90,7 +90,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      * Package scope constructor.
      */
     GraphElementFactoryImpl(NodePool nodePool, ResourceFactory resourceFactory) {
-        checkNotNull(nodePool);
+        checkNotNull(nodePool, resourceFactory);
         this.nodePool = nodePool;
         this.resourceFactory = resourceFactory;
     }
@@ -178,7 +178,6 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         addNodeId(newLiteral);
         return newLiteral;
     }
-
 
     /**
      * Creates a new node id for the given Literal.  Sets the node id of the
