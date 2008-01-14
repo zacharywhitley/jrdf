@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2008 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -90,27 +90,27 @@ public final class TripleImplUnitTest extends AbstractTripleUnitTest {
     }
 
     public Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
-        return createTriple(subject, predicate, object);
+        return new TripleImpl(subject, predicate, object);
     }
 
     public Triple createTriple (URI subject, URI predicate, URI object) {
-        return createTriple(subject, predicate, object);
+        return NodeTestUtil.createTriple(subject, predicate, object);
     }
 
     public Triple createTriple (URI subject, URI predicate, String object) {
-        return createTriple(subject, predicate, object);
+        return NodeTestUtil.createTriple(subject, predicate, object);
     }
 
     public Triple createTriple (URI subject, URI predicate, String object, String language) {
-        return createTriple(subject, predicate, object, language);
+        return NodeTestUtil.createTriple(subject, predicate, object, language);
     }
 
     public Triple createTriple (URI subject, URI predicate, String object, URI dataType) {
-        return createTriple(subject, predicate, object, dataType);
+        return NodeTestUtil.createTriple(subject, predicate, object, dataType);
     }
 
     public URIReference createResource(URI uri) {
-        return createResource(uri);
+        return NodeTestUtil.createResource(uri);
     }
 
     public void testClassProperties() {
