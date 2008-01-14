@@ -63,12 +63,6 @@ import org.jrdf.graph.AbstractLiteral;
 
 import java.net.URI;
 
-/**
- * Globalized implementation of a Literal.
- * User: imrank
- * Date: 13/09/2007
- * Time: 14:10:53
- */
 public class LiteralImpl extends AbstractLiteral {
     private static final long serialVersionUID = -4852789761273819886L;
 
