@@ -124,4 +124,12 @@ public interface NodePool {
      * @param values the map contains a list of longs to serialized nodes (as strings).
      */
     void registerNodePoolValues(List<Map<Long, String>> values);
+
+    /**
+     * Remove a node from the node pool.
+     *
+     * @param value the value to remove.
+     * @return null if not delete or the value.
+     */
+    String removeNode(Long value);
 }

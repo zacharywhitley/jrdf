@@ -62,20 +62,25 @@ package org.jrdf.graph.local.index.nodepool;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Node;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.local.mem.BlankNodeImpl;
 import org.jrdf.graph.local.mem.LocalizedNode;
+import org.jrdf.graph.local.mem.URIReferenceImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
+import java.util.UUID;
 
 public class LocalizerImpl implements Localizer {
     private static final int TRIPLE = 3;
     private Long currentId;
-    private NodePool nodePool;
     private GraphException exception;
+    private final NodePool nodePool;
 
     public LocalizerImpl(NodePool newNodePool) {
         checkNotNull(newNodePool);
@@ -102,7 +107,22 @@ public class LocalizerImpl implements Localizer {
         Long nodeId = ((LocalizedNode) blankNode).getId();
         Node node = nodePool.getNodeById(nodeId);
         if (node == null) {
-            exception = new GraphException("The node id was not found in the graph: " + nodeId);
+            try {
+                String uid;
+                try {
+                    uid = UUID.randomUUID().toString();
+                } catch (Exception exception) {
+                    throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.",
+                        exception);
+                }
+
+                // create the node identifier and add
+                nodeId = nodePool.getNodeId(uid);
+                node = new BlankNodeImpl(nodeId, uid);
+                nodePool.registerNode((LocalizedNode) node);
+            } catch (GraphElementFactoryException e) {
+                exception = e;
+            }
         }
         if (!blankNode.equals(node)) {
             exception = new GraphException("The node returned by the nodeId (" + nodeId + ") was not the same blank " +
@@ -113,10 +133,16 @@ public class LocalizerImpl implements Localizer {
 
     public void visitURIReference(URIReference uriReference) {
         currentId = nodePool.getNodeIdByString(uriReference.getURI().toString());
+        if (currentId == null) {
+            currentId = nodePool.getNodeId("");
+            URIReference node = new URIReferenceImpl(uriReference.getURI(), currentId);
+            nodePool.registerNode((LocalizedNode) node);
+        }
     }
 
     public void visitLiteral(Literal literal) {
         currentId = nodePool.getNodeIdByString(literal.getEscapedForm());
+        // TODO Fix it up here to create literals as well.
     }
 
     public void visitNode(Node node) {

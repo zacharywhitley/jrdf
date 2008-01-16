@@ -189,8 +189,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             addContainer(subjectNode, alternative);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
-        } catch (GraphElementFactoryException e) {
-            throw new TripleFactoryException(e);
         }
     }
 
@@ -201,8 +199,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
             addContainer(subjectNode, bag);
         } catch (GraphException e) {
             throw new TripleFactoryException(e);
-        } catch (GraphElementFactoryException e) {
-            throw new TripleFactoryException(e);
         }
     }
 
@@ -212,8 +208,6 @@ public abstract class AbstractTripleFactory implements TripleFactory {
                 elementFactory.createURIReference(RDF.SEQ));
             addContainer(subjectNode, sequence);
         } catch (GraphException e) {
-            throw new TripleFactoryException(e);
-        } catch (GraphElementFactoryException e) {
             throw new TripleFactoryException(e);
         }
     }

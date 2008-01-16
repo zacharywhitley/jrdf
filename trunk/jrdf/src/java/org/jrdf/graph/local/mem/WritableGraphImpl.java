@@ -95,6 +95,15 @@ public class WritableGraphImpl implements WritableGraph {
         } finally {
             longIndexes[2].remove(values[2], values[0], values[1]);
         }
+        for (Long value : values) {
+            if (nodeFreed(value)) {
+                nodePool.removeNode(value);
+            }
+        }
+    }
+
+    private boolean nodeFreed(Long value) {
+        return !longIndexes[0].contains(value) && !longIndexes[1].contains(value) && !longIndexes[2].contains(value);
     }
 
     public void removeIterator(Iterator<Triple> triples) throws GraphException {

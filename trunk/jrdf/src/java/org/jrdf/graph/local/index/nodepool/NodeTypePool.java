@@ -79,4 +79,6 @@ public interface NodeTypePool {
     Map<Long, String> getLiteralNodeValues();
 
     void addNodeValues(NodePool nodePool, List<Map<Long, String>> values);
+
+    String removeNode(Long value);
 }

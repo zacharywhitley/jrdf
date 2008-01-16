@@ -116,6 +116,18 @@ public class NodeTypePoolImpl implements NodeTypePool {
         literalNodePool = values.get(2);
     }
 
+    public String removeNode(Long nodeId) {
+        String node = null;
+        if (blankNodePool.keySet().contains(nodeId)) {
+            node = blankNodePool.remove(nodeId);
+        } else if (uriNodePool.keySet().contains(nodeId)) {
+            node = uriNodePool.remove(nodeId);
+        } else if (literalNodePool.keySet().contains(nodeId)) {
+            node = literalNodePool.remove(nodeId);
+        }
+        return node;
+    }
+
     public Map<Long, String> getBNodeValues() {
         return blankNodePool;
     }

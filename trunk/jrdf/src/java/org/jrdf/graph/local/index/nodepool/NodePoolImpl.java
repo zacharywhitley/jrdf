@@ -149,6 +149,14 @@ public final class NodePoolImpl implements NodePool {
         nodeTypePool.addNodeValues(this, values);
     }
 
+    public String removeNode(Long value) {
+        String node = nodeTypePool.removeNode(value);
+        if (node != null) {
+            stringPool.remove(node);
+        }
+        return node;
+    }
+
     public List<Map<Long, String>> getNodePoolValues() {
         List<Map<Long, String>> values = new ArrayList<Map<Long, String>>();
         values.add(nodeTypePool.getBNodeValues());
