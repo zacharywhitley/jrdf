@@ -70,15 +70,15 @@ public interface Index<T> {
     /**
      * Adds a triple to a single index.  This method defines the internal structure.
      *
-     * @param node Consists of three longs.
-     * @throws org.jrdf.graph.GraphException If there was an error adding the statement.
+     * @param node The nodes to add.
+     * @throws GraphException If there was an error adding the statement.
      */
     void add(T... node) throws GraphException;
 
     /**
      * Removes a triple from a single index.
      *
-     * @param node
+     * @param node the nodes to remove.
      * @throws GraphException If there was an error revoking the statement, for example if it didn't exist.
      */
     void remove(T... node) throws GraphException;

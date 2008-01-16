@@ -150,6 +150,10 @@ public abstract class AbstractGraphUnitTest extends TestCase {
      *                   fail.
      */
     public void setUp() throws Exception {
+        setGlobalValues();
+    }
+
+    private void setGlobalValues() throws Exception {
         graph = newGraph();
         GraphElementFactory elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();
@@ -369,6 +373,8 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals(0, graph.getNumberOfTriples());
 
         // Check removal using iterator
+        ref1 = graph.getElementFactory().createURIReference(ref1.getURI());
+        ref2 = graph.getElementFactory().createURIReference(ref2.getURI());
         graph.add(tripleFactory.createTriple(ref1, ref1, ref1));
         graph.add(tripleFactory.createTriple(ref2, ref2, ref2));
 
@@ -428,14 +434,18 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testRemoveIterator() throws Exception {
         // Test removing using the iterator from a find.
+        setGlobalValues();
         checkRemoveIterator(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 0);
+        setGlobalValues();
         checkRemoveIterator(ref1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
+        setGlobalValues();
         checkRemoveIterator(blank1, ANY_PREDICATE_NODE, blank2, 1);
+        setGlobalValues();
         checkRemoveIterator(ref1, ref2, l2, 2);
     }
 
     private void checkRemoveIterator(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        int expectedNumberOfTriples) throws GraphException {
+        int expectedNumberOfTriples) throws Exception {
         addTriplesToGraph();
         ClosableIterator<Triple> iterator = graph.find(subjectNode, predicateNode, objectNode);
         graph.remove(iterator);
@@ -751,10 +761,15 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         // TODO AN Add a test for fulliterative add.
         // add some test data
         checkFullIteratorRemoval(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 6);
+        setGlobalValues();
         checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, ANY_OBJECT_NODE, 2);
+        setGlobalValues();
         checkFullIteratorRemoval(blank2, ref1, ANY_OBJECT_NODE, 2);
+        setGlobalValues();
         checkFullIteratorRemoval(ANY_SUBJECT_NODE, ref2, ANY_OBJECT_NODE, 3);
+        setGlobalValues();
         checkFullIteratorRemoval(blank1, ANY_PREDICATE_NODE, blank2, 2);
+        setGlobalValues();
         checkFullIteratorRemoval(ref1, ref2, l2, 1);
     }
 
@@ -793,13 +808,22 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testBlankNodeResourceIterator() throws Exception {
         addTestNodes();
+        assertEquals("Incorrect number of blank nodes", 2, getNumberOfBlankNodes());
+        graph.remove(blank1, ref1, blank2);
+        graph.remove(blank1, ref2, blank2);
+        graph.remove(blank1, ref1, l1);
+        graph.remove(blank1, ref1, l2);
+        assertEquals("Incorrect number of blank nodes", 1, getNumberOfBlankNodes());
+    }
+
+    private int getNumberOfBlankNodes() {
         ClosableIterator<BlankNode> blankNodes = graph.findBlankNodes();
         int counter = 0;
         while (blankNodes.hasNext()) {
             blankNodes.next();
             counter++;
         }
-        assertEquals("Incorrect number of blank nodes", 2, counter);
+        return counter;
     }
 
     public void testURIReferenceResourceIterator() throws Exception {
@@ -884,7 +908,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-        int expectedFoundTriples) throws GraphException, TripleFactoryException {
+        int expectedFoundTriples) throws Exception {
 
         addTriplesToGraph();
         addFullTriplesToGraph();
@@ -963,7 +987,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
 
-    private void addTriplesToGraph() throws GraphException {
+    private void addTriplesToGraph() throws Exception {
         graph.add(blank1, ref1, blank2);
         graph.add(blank1, ref2, blank2);
         graph.add(ref1, ref2, l2);

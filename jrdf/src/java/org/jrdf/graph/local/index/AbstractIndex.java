@@ -137,6 +137,10 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         }
     }
 
+    public boolean keyExists(T node) {
+        return index.containsKey(node);
+    }
+
     public Map<T, Set<T>> getSubIndex(T first) {
         return index.get(first);
     }

@@ -103,7 +103,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      * @param newId  The id to be used for this node.
      * @param newUid String Globally Unique Identifier for external communication.
      */
-    BlankNodeImpl(Long newId, String newUid) {
+    public BlankNodeImpl(Long newId, String newUid) {
         id = newId;
         uid = newUid;
     }

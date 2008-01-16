@@ -140,8 +140,6 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
             mapper.replaceObjectNode((ObjectNode) oldNode, (ObjectNode) newNode);
         } catch (GraphException e) {
             throw new GraphException("Cannot replace old node: " + oldNode.toString(), e);
-        } catch (GraphElementFactoryException e) {
-            throw new GraphException("Cannot replace old node: " + oldNode.toString(), e);
         }
     }
 

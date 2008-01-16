@@ -65,7 +65,7 @@ package org.jrdf.graph;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class GraphElementFactoryException extends Exception {
+public final class GraphElementFactoryException extends GraphException {
 
     /**
      * Allow newer compiled version of the stub to operate when changes
