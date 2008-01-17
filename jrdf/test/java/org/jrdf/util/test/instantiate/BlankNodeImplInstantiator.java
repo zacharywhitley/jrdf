@@ -79,6 +79,6 @@ final class BlankNodeImplInstantiator implements Instantiator {
     }
 
     private ParamSpec createParams() {
-        return new ParamSpec(new Long(NODE_ID), NODE_ID);
+        return new ParamSpec(NODE_ID, new Long(NODE_ID));
     }
 }
