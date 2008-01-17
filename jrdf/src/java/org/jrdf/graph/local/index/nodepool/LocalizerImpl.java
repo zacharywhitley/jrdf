@@ -105,6 +105,11 @@ public class LocalizerImpl implements Localizer {
 
     public void visitBlankNode(BlankNode blankNode) {
         Long nodeId = ((LocalizedNode) blankNode).getId();
+        nodeId = getBlankNode(blankNode, nodeId);
+        currentId = nodeId;
+    }
+
+    private Long getBlankNode(BlankNode blankNode, Long nodeId) {
         Node node = nodePool.getNodeById(nodeId);
         if (node == null) {
             try {
@@ -115,7 +120,6 @@ public class LocalizerImpl implements Localizer {
                     throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.",
                         exception);
                 }
-
                 // create the node identifier and add
                 nodeId = nodePool.getNodeId(uid);
                 node = new BlankNodeImpl(nodeId, uid);
@@ -128,7 +132,7 @@ public class LocalizerImpl implements Localizer {
             exception = new GraphException("The node returned by the nodeId (" + nodeId + ") was not the same blank " +
                 "node.  Got: " + node + ", expected: " + blankNode);
         }
-        currentId = nodeId;
+        return nodeId;
     }
 
     public void visitURIReference(URIReference uriReference) {

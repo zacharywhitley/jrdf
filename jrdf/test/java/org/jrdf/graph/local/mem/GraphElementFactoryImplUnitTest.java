@@ -88,15 +88,6 @@ public class GraphElementFactoryImplUnitTest extends AbstractGraphElementFactory
     }
 
     /**
-     * Default test runner.
-     *
-     * @param args The command line arguments
-     */
-    public static void main(String[] args) throws Exception {
-        TestRunner.run(GraphElementFactoryImplUnitTest.class);
-    }
-
-    /**
      * Return the default literal type from the implementation.
      *
      * @return The default Literal type.
