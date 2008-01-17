@@ -82,8 +82,12 @@ import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
@@ -95,6 +99,9 @@ import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -271,7 +278,10 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (null == resourceFactory) {
-            Localizer localizer = new LocalizerImpl(nodePool);
+            RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
+            LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
+            StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+            Localizer localizer = new LocalizerImpl(nodePool, mapper);
             resourceFactory = new ResourceFactoryImpl(localizer, readWriteGraph);
         }
 

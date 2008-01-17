@@ -68,8 +68,15 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
+import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
+import org.jrdf.parser.ntriples.parser.LiteralMatcher;
+import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
+import org.jrdf.util.boundary.RegexMatcherFactory;
+import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 /**
  * Creates a new Graph implementation based on required types.
@@ -90,7 +97,10 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePoolFactory.createNodePool();
         this.nodePool.clear();
-        this.localizer = new LocalizerImpl(nodePool);
+        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
+        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
+        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+        this.localizer = new LocalizerImpl(nodePool, mapper);
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         this.iteratorFactory = new MemIteratorFactory(longIndexes, graphHandlers, nodePool);

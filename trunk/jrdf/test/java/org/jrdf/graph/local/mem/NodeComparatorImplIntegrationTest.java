@@ -84,8 +84,8 @@ import java.util.Comparator;
 public class NodeComparatorImplIntegrationTest extends TestCase {
     public static final URIReference URI_1 = new URIReferenceImpl(RDF.ALT, 1l);
     public static final URIReference URI_2 = new URIReferenceImpl(RDF.BAG, 2l);
-    public static final BlankNode BNODE_1 = new BlankNodeImpl(1l, "a");
-    public static final BlankNode BNODE_2 = new BlankNodeImpl(2l, "b");
+    public static final BlankNode BNODE_1 = new BlankNodeImpl("a", 1l);
+    public static final BlankNode BNODE_2 = new BlankNodeImpl("b", 2l);
     public static final Literal LITERAL_1 = new LiteralImpl("bar");
     public static final Literal LITERAL_2 = new LiteralImpl("foo");
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
@@ -130,7 +130,7 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
     public void testBlankNodeComparison() {
         assertEquals(BEFORE, nodeComparator.compare(BNODE_1, BNODE_2));
         assertEquals(AFTER, nodeComparator.compare(BNODE_2, BNODE_1));
-        assertEquals(EQUAL, nodeComparator.compare(BNODE_2, new BlankNodeImpl(2l, "b")));
+        assertEquals(EQUAL, nodeComparator.compare(BNODE_2, new BlankNodeImpl("b", 2l)));
     }
 
     public void testURIComparisonByString() {
