@@ -100,7 +100,7 @@ public final class NodePoolImpl implements NodePool {
         return stringPool.get(str);
     }
 
-    public Long getNodeId(String value) {
+    public Long getNewNodeId() {
         return nextNode++;
     }
 

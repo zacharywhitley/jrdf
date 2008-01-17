@@ -105,13 +105,11 @@ public interface NodePool {
     List<Map<Long, String>> getNodePoolValues();
 
     /**
-     * Returns a new node id.  That maybe based on the value - i.e. given the same value it will produce the same
-     * identifier - this is not guaranteed though (for performance or other reasons).
+     * Returns a new node id.
      *
-     * @param value that can be used as the basis of the new node.
      * @return a new node id
      */
-    Long getNodeId(String value);
+    Long getNewNodeId();
 
     /**
      * Removes all entries from the nodepool.

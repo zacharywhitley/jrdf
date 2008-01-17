@@ -111,7 +111,7 @@ public class LocalizerImpl implements Localizer {
         try {
             String uid = UUID.randomUUID().toString();
             // create the node identifier and add
-            currentId = nodePool.getNodeId("");
+            currentId = nodePool.getNewNodeId();
             BlankNode node = new BlankNodeImpl(uid, currentId);
             nodePool.registerNode((LocalizedNode) node);
             return node;
@@ -121,14 +121,14 @@ public class LocalizerImpl implements Localizer {
     }
 
     public URIReference createLocalURIReference(URI uri, boolean validate) {
-        currentId = nodePool.getNodeId("");
+        currentId = nodePool.getNewNodeId();
         URIReference node = new URIReferenceImpl(uri, validate, currentId);
         nodePool.registerNode((LocalizedNode) node);
         return node;
     }
 
     public Literal createLocalLiteral(String escapedForm) {
-        currentId = nodePool.getNodeId("");
+        currentId = nodePool.getNewNodeId();
         Literal node = mapper.convertToLiteral(escapedForm, currentId);
         nodePool.registerNode((LocalizedNode) node);
         return node;
