@@ -72,12 +72,9 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
 
-// TODO Move localization and creation to another method so it can be added to AbstractResource to provide shortcuts
-// much like TripleFactories methods.
-
 /**
- * A SkipListNode Factory is a class which create the various components of a graph.
- * It is tied to a specific instance of GraphImpl.
+ * A GraphElementFactory is a class which create the various components of a graph. It is tied to a specific instance
+ * of GraphImpl.
  *
  * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
@@ -99,8 +96,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public Resource createResource() throws GraphElementFactoryException {
-        BlankNode blankNode = createBlankNode();
-        return createResource(blankNode);
+        return createResource(createBlankNode());
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
@@ -162,10 +158,10 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     /**
-     * Creates a new node id for the given Literal.  Sets the node id of the
-     * given newLiteral.
+     * Creates a new node id for the given Literal.  Sets the node id of the given newLiteral.
      *
      * @param newLiteral A newly created newLiteral.
+     * @return the literal with the newly created or existing node id.
      */
     private Literal getLocalLiteral(LiteralMutableId newLiteral) {
         String escapedForm = newLiteral.getEscapedForm();
