@@ -59,11 +59,6 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.AbstractTriple;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.util.param.ParameterUtil.*;
 
 public class TripleImpl extends AbstractTriple {

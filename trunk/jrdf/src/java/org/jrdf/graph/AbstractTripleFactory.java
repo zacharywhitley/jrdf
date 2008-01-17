@@ -59,7 +59,6 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;

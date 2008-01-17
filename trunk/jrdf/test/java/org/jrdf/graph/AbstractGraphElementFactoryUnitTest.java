@@ -298,7 +298,6 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
      * @throws Exception if query fails when it should have succeeded
      */
     public void testTwoGraphs() throws Exception {
-
         Graph g1 = newGraph();
         Graph g2 = newGraph();
 
@@ -312,68 +311,47 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         URIReference g1u1 = gef1.createURIReference(uri1);
         URIReference g1u2 = gef1.createURIReference(uri2);
         URIReference g1u3 = gef1.createURIReference(uri3);
+        BlankNode g1b1 = gef1.createBlankNode();
 
         GraphElementFactory gef2 = g2.getElementFactory();
         Literal g2l1 = gef2.createLiteral(TEST_STR1);
         Literal g2l2 = gef2.createLiteral(TEST_STR2);
         URIReference g2u1 = gef2.createURIReference(uri2);
 
-//        // Test inserting a subject and predicate that do not exist in g2.
-//        boolean isOkay = false;
-//        try {
-//            g2.add(new TripleImpl(g1u1, g1u1, g2l1));
-//        }
-//        catch (GraphException ge) {
-//            isOkay = true;
-//        }
-//        assertTrue("Should fail to insert node", isOkay);
-//
-//        // Test inserting a predicate that does no exist in g2.
-//        isOkay = false;
-//        try {
-//            g2.add(g2u1, g1u1, g2l1);
-//        }
-//        catch (GraphException ge) {
-//            isOkay = true;
-//        }
-//        assertTrue("Should fail to insert node", isOkay);
-//
-//        // Test inserting an object that does not exist g2.
-//        isOkay = false;
-//        try {
-//            g2.add(g2u1, g1u1, g2l2);
-//        }
-//        catch (GraphException ge) {
-//            isOkay = true;
-//        }
-//        assertTrue("Should fail to insert node", isOkay);
-//
-//        // Test inserting a predicate and object that come from another graph but
-//        // do exist.
-//        try {
-//            g2.add(g2u1, g1u2, g1u2);
-//            assertTrue("Should contain the statemet", g2.contains(g2u1, g2u1, g2u1));
-//        }
-//        catch (GraphException ge) {
-//            ge.printStackTrace();
-//            fail("Should allow nodes to be inserted from other graphs which have the same value but different node " +
-//                "ids");
-//        }
-//
-//        // Test inserting a statements using objects from the correct graph and then
-//        // using find and contains with the same, by value, object from another.
-//        URIReference g2u3 = gef2.createURIReference(uri3);
-//        g2.add(g2u3, g2u3, g2u3);
-//
-//        assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));
-//        assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).hasNext());
-//
-//        // Test the find(<foo>, *, *) works.
-//        ClosableIterator iter = g2.find(g2u3, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-//        assertTrue("Should get back at least one result", iter.hasNext());
-//
-//        // Test the find(*, *, *) works.
-//        iter = g2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
-//        assertTrue("Should get back at least one result", iter.hasNext());
+        g2.add(new TripleImpl(g1u1, g1u1, g2l1));
+        assertTrue(g2.contains(g1u1, g1u1, g2l1));
+        g2.add(g2u1, g1u1, g2l1);
+        assertTrue(g2.contains(g2u1, g1u1, g2l1));
+        g2.add(g2u1, g1u1, g2l2);
+        assertTrue(g2.contains(g2u1, g1u1, g2l2));
+        g2.add(g2u1, g1u2, g1u2);
+        assertTrue(g2.contains(g2u1, g1u2, g1u2));
+
+        try {
+            g2.add(g1b1, g1u2, g1b1);
+            fail("Should not allow foreign blank nodes into the graph");
+        } catch (GraphException ge) {
+        }
+        assertFalse(g2.contains(g1b1, g1u2, g1b1));
+
+        // Test inserting a predicate and object that come from another graph but
+        // do exist.
+        assertTrue("Should contain the statemet", g2.contains(g2u1, g2u1, g2u1));
+
+        // Test inserting a statements using objects from the correct graph and then
+        // using find and contains with the same, by value, object from another.
+        URIReference g2u3 = gef2.createURIReference(uri3);
+        g2.add(g2u3, g2u3, g2u3);
+
+        assertTrue("Contains should work by value", g2.contains(g1u3, g1u3, g1u3));
+        assertTrue("Find should work by value", g2.find(g1u3, g1u3, g1u3).hasNext());
+
+        // Test the find(<foo>, *, *) works.
+        ClosableIterator iter = g2.find(g2u3, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        assertTrue("Should get back at least one result", iter.hasNext());
+
+        // Test the find(*, *, *) works.
+        iter = g2.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+        assertTrue("Should get back at least one result", iter.hasNext());
     }
 }
