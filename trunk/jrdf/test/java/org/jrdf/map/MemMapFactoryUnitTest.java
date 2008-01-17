@@ -11,7 +11,7 @@ public class MemMapFactoryUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(MapFactory.class, MemMapFactory.class);
         checkConstructor(MemMapFactory.class, Modifier.PUBLIC);
     }
-    
+
     public void testClose() {
         new MemMapFactory().close();
     }

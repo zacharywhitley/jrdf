@@ -62,20 +62,20 @@ import junit.framework.TestCase;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.test.ClassPropertiesTestUtil;
 
-import java.lang.reflect.Modifier;
 import java.io.Serializable;
+import java.lang.reflect.Modifier;
 
 public class AttributeValuePairComparatorImplUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(AttributeValuePairComparator.class,
-                AttributeValuePairComparatorImpl.class);
+            AttributeValuePairComparatorImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AttributeValuePairComparator.class);
         checkConstructor(AttributeValuePairComparatorImpl.class, Modifier.PUBLIC,
-                AttributeComparator.class, NodeComparator.class);
+            AttributeComparator.class, NodeComparator.class);
     }
 
     // TODO (AN) Test drive the combining of the node comparator and the attribute comparator.

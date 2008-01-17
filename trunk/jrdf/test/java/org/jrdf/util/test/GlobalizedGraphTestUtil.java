@@ -62,10 +62,10 @@ package org.jrdf.util.test;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.LiteralImpl;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeImpl;
@@ -102,7 +102,7 @@ public class GlobalizedGraphTestUtil {
     }
 
     public static void addMolecules(List<Triple> headTriples, GlobalizedGraph globalizedGraph,
-                                    TripleComparator comparator) {
+        TripleComparator comparator) {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
             Molecule m = createMolecule(headTriples.get(i), comparator);
             globalizedGraph.add(m);

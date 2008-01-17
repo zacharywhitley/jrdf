@@ -62,14 +62,14 @@ package org.jrdf.sparql.analysis;
 import org.jrdf.graph.Graph;
 import org.jrdf.query.Query;
 import org.jrdf.query.QueryImpl;
-import org.jrdf.query.relation.mem.GraphRelationFactory;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
+import org.jrdf.query.relation.mem.GraphRelationFactory;
+import static org.jrdf.sparql.analysis.NoQuery.NO_QUERY;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.Start;
 import org.jrdf.sparql.parser.parser.ParserException;
-import static org.jrdf.sparql.analysis.NoQuery.*;
 import org.jrdf.util.param.ParameterUtil;
 
 /**

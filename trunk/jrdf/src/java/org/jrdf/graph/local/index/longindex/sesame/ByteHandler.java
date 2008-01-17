@@ -59,7 +59,8 @@
 
 package org.jrdf.graph.local.index.longindex.sesame;
 
-import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.*;
+import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.getLong;
+import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.putLong;
 
 public final class ByteHandler {
     private static final int BITS = 8;
@@ -77,7 +78,7 @@ public final class ByteHandler {
 
     public static Long[] fromBytes(byte[] b, int size) {
         Long[] results = new Long[size];
-        for (int i  = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             results[i] = getLong(b, BITS * i);
         }
         return results;

@@ -60,12 +60,11 @@
 package org.jrdf.map;
 
 import junit.framework.TestCase;
-
-import java.util.Map;
-import java.util.LinkedList;
-
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
+
+import java.util.LinkedList;
+import java.util.Map;
 
 public class Db4oMapFactoryIntegrationTest extends TestCase {
     private DirectoryHandler handler = new TempDirectoryHandler();

@@ -59,13 +59,13 @@
 
 package org.jrdf.graph.local.mem;
 
+import org.jrdf.JRDFFactory;
+import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Literal;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

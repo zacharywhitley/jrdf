@@ -65,5 +65,5 @@ import org.jrdf.sparql.parser.node.Switch;
 import org.jrdf.sparql.parser.parser.ParserException;
 
 public interface WhereAnalyser extends Switch {
-    Expression<ExpressionVisitor>getExpression() throws ParserException;
+    Expression<ExpressionVisitor> getExpression() throws ParserException;
 }

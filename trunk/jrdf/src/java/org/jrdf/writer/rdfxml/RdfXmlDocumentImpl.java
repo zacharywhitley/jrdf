@@ -102,7 +102,7 @@ public class RdfXmlDocumentImpl implements RdfXmlDocument {
      * @param xmlStreamWriter the writer to add new elements to.
      */
     public RdfXmlDocumentImpl(final String encoding, final RdfNamespaceMap names,
-            final XMLStreamWriter xmlStreamWriter) {
+        final XMLStreamWriter xmlStreamWriter) {
         checkNotNull(encoding, names, xmlStreamWriter);
         this.encoding = encoding;
         this.names = names;

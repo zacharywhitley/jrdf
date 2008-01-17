@@ -9,6 +9,6 @@ public class OSPMoleculeIndexMemUnitTest extends AbstractMoleculeIndexMemUnitTes
     }
 
     protected Node[] getNodes(Triple triple) {
-        return new Node[] {triple.getObject(), triple.getSubject(), triple.getPredicate()};
+        return new Node[]{triple.getObject(), triple.getSubject(), triple.getPredicate()};
     }
 }

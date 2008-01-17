@@ -62,14 +62,14 @@ package org.jrdf.graph.global.molecule;
 import junit.framework.TestCase;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.parser.Parser;
+import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
 import org.jrdf.util.EscapeURL;
 import org.jrdf.vocabulary.RDF;
 

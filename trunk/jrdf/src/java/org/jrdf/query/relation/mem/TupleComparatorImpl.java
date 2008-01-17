@@ -108,12 +108,12 @@ public final class TupleComparatorImpl implements TupleComparator {
     }
 
     private boolean areDifferentLengths(Set<AttributeValuePair> attributeValues1,
-                                        Set<AttributeValuePair> attributeValues2) {
+        Set<AttributeValuePair> attributeValues2) {
         return (attributeValues1.size() != attributeValues2.size());
     }
 
     private int compareDifferentLengths(Iterator<AttributeValuePair> iterator1,
-                                        Iterator<AttributeValuePair> iterator2) {
+        Iterator<AttributeValuePair> iterator2) {
         int result = 0;
         if (iterator1.hasNext()) {
             result = 1;

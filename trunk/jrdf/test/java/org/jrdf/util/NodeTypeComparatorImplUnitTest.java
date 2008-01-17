@@ -73,9 +73,10 @@ import java.lang.reflect.Modifier;
  */
 public class NodeTypeComparatorImplUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeTypeComparator.class, NodeTypeComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(NodeTypeComparator.class,
+            NodeTypeComparatorImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, NodeTypeComparator.class);
         ClassPropertiesTestUtil.checkConstructor(NodeTypeComparatorImpl.class, Modifier.PUBLIC,
-                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+            ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 }

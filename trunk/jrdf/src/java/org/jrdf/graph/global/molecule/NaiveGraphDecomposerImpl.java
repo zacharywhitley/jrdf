@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.global.molecule;
 
+import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -69,7 +70,6 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import static org.jrdf.graph.AbstractBlankNode.*;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
 

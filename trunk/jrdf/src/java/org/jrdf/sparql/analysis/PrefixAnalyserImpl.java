@@ -65,10 +65,10 @@ import org.jrdf.query.expression.ExpressionVisitor;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APrefixdeclProlog;
+import org.jrdf.sparql.parser.node.AVariableListSelectClause;
+import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PPrefixdecl;
-import org.jrdf.sparql.parser.node.AWildcardSelectClause;
-import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.LinkedList;

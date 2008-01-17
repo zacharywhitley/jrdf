@@ -65,15 +65,10 @@ import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
 import org.jrdf.graph.local.index.nodepool.NodeTypePool;
 import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 public class BdbNodePoolFactory implements NodePoolFactory {
     private static final String DB_NAME_NODEPOOL = "nodePool";
@@ -93,9 +88,7 @@ public class BdbNodePoolFactory implements NodePoolFactory {
     public NodePool createNodePool() {
         nodePoolMapFactory = new BdbMapFactory(handler, DB_NAME_NODEPOOL + graphNumber);
         stringPoolMapFactory = new BdbMapFactory(handler, DB_NAME_STRINGPOOL + graphNumber);
-        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
-        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
         final NodeTypePool nodeTypePool = new NodeTypePoolImpl(nodePoolMapFactory, mapper);
         return new NodePoolImpl(nodeTypePool, stringPoolMapFactory);
     }

@@ -59,11 +59,10 @@
 package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Literal;
 import org.jrdf.parser.ParseException;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.MockFactory;
@@ -75,8 +74,8 @@ import java.net.URI;
 public class LiteralParserImplUnitTest extends TestCase {
     private static final Class<LiteralParser> TARGET_INTERFACE = LiteralParser.class;
     private static final Class<LiteralParserImpl> TEST_CLASS = LiteralParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, LiteralMatcher.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "literalMatcher"};
+    private static final Class[] PARAM_TYPES = new Class[]{GraphElementFactory.class, LiteralMatcher.class};
+    private static final String[] PARAMETER_NAMES = new String[]{"graphElementFactory", "literalMatcher"};
     private static final String LINE = "line" + Math.random();
     private static final String LITERAL = "unescapedLiteral" + Math.random();
     private static final String LANGUAGE = "language" + Math.random();
@@ -100,7 +99,7 @@ public class LiteralParserImplUnitTest extends TestCase {
 
     public void testMethodProperties() {
         checkMethodNullAndEmptyAssertions(parser, "parseLiteral", new ParameterDefinition(
-                new String[] {"s"}, new Class[]{String.class}));
+            new String[]{"s"}, new Class[]{String.class}));
     }
 
     public void testParseLiteralWithException() throws Exception {

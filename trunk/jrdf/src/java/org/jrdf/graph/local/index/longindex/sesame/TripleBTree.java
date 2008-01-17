@@ -59,8 +59,8 @@
 
 package org.jrdf.graph.local.index.longindex.sesame;
 
-import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.toBytes;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteArrayUtil.putLong;
+import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.toBytes;
 
 import java.io.File;
 import java.io.IOException;

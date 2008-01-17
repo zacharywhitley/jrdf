@@ -101,6 +101,7 @@ public final class EscapeUtil {
      */
     private static final Map<Character, String> CHAR_ESCAPE_LOOKUP = new HashMap<Character, String>() {
         private static final long serialVersionUID = 321L;
+
         {
             put('\t', "\\\\t");
             put('\n', "\\\\n");

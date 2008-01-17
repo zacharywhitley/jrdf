@@ -62,6 +62,7 @@ package org.jrdf.graph.local.mem;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -71,7 +72,6 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
@@ -82,26 +82,20 @@ import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.graph.local.mem.iterator.AnyResourceIterator;
 import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
 import org.jrdf.graph.local.mem.iterator.URIReferenceResourceIterator;
-import org.jrdf.graph.local.mem.iterator.AnyResourceIterator;
+import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -218,7 +212,7 @@ public class GraphImpl implements Graph, Serializable {
      * Default constructor.
      */
     public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory,
-            ReadWriteGraph newWritableGraph, ResourceFactory newResourceFactory) {
+        ReadWriteGraph newWritableGraph, ResourceFactory newResourceFactory) {
         this.longIndex012 = longIndexes[0];
         this.longIndex120 = longIndexes[1];
         this.longIndex201 = longIndexes[2];
@@ -278,10 +272,7 @@ public class GraphImpl implements Graph, Serializable {
         }
 
         if (null == resourceFactory) {
-            RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-            LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
-            StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
-            Localizer localizer = new LocalizerImpl(nodePool, mapper);
+            Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
             resourceFactory = new ResourceFactoryImpl(localizer, readWriteGraph);
         }
 
@@ -314,7 +305,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-            GraphException {
+        GraphException {
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
         return readWriteGraph.find(subject, predicate, object);
     }
@@ -404,7 +395,7 @@ public class GraphImpl implements Graph, Serializable {
 
     // TODO AN Move this to a helper utility perhaps.
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
-                                          String nullMessage, String anyNodeMessage) {
+        String nullMessage, String anyNodeMessage) {
         checkForNulls(subject, predicate, object, nullMessage);
         checkForAnyNodes(subject, predicate, object, anyNodeMessage);
     }

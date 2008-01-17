@@ -69,16 +69,10 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
+import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 
 import java.util.Iterator;
 
@@ -89,10 +83,7 @@ public class ReadWriteGraphImpl implements ReadWriteGraph {
     // TODO Take in Readable and Writable graphs instead??
     public ReadWriteGraphImpl(LongIndex[] newIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory) {
         checkNotNull(newIndexes, newNodePool, newIteratorFactory);
-        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
-        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
-        Localizer localizer = new LocalizerImpl(newNodePool, mapper);
+        Localizer localizer = new LocalizerImpl(newNodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.readableGraph = new ReadableGraphImpl(newIndexes, localizer, newIteratorFactory);
         this.writableGraph = new WritableGraphImpl(newIndexes, newNodePool, localizer);
     }

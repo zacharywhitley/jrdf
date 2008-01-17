@@ -70,9 +70,7 @@ import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_3;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_4;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_5;
 import static org.jrdf.query.relation.mem.TupleImplUnitTest.TEST_TUPLE_6;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ComparatorTestUtil;
-import static org.jrdf.util.test.ComparatorTestUtil.*;
+import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
 
 /**
  * Test for the implementation of TupleComparatorImpl.

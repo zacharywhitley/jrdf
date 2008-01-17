@@ -59,9 +59,9 @@
 
 package org.jrdf.graph.datatype;
 
+import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
-import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

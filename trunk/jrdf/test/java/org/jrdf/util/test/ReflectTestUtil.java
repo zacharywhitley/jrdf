@@ -121,7 +121,8 @@ public final class ReflectTestUtil {
         return invokeConstructor(constructor, params);
     }
 
-    public static Object callMethod(Object obj, String methodName, Class[] parameterTypes, Object...args) throws Throwable {
+    public static Object callMethod(Object obj, String methodName, Class[] parameterTypes, Object... args)
+        throws Throwable {
         Method method = tryCallMethod(obj, methodName, parameterTypes);
         return tryInvoke(method, obj, args);
     }
@@ -156,7 +157,7 @@ public final class ReflectTestUtil {
         }
     }
 
-    private static Method tryCallMethod(Object obj, String methodName, Class...parameterTypes) {
+    private static Method tryCallMethod(Object obj, String methodName, Class... parameterTypes) {
         try {
             return obj.getClass().getDeclaredMethod(methodName, parameterTypes);
         } catch (NoSuchMethodException e) {

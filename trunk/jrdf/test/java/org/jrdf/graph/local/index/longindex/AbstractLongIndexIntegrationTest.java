@@ -63,10 +63,10 @@ import junit.framework.TestCase;
 import org.jrdf.map.MapFactory;
 import static org.jrdf.util.test.SetUtil.asSet;
 
-import java.util.Set;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractLongIndexIntegrationTest extends TestCase {
     protected LongIndex longIndex;
@@ -106,7 +106,7 @@ public abstract class AbstractLongIndexIntegrationTest extends TestCase {
         longIndex.add(1L, 2L, 4L);
         longIndex.add(2L, 2L, 4L);
         longIndex.add(2L, 2L, 5L);
-        Iterator<Map.Entry<Long,Map<Long,Set<Long>>>> entryIterator = longIndex.iterator();
+        Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> entryIterator = longIndex.iterator();
     }
 
     public void testAddition() throws Exception {
@@ -136,7 +136,7 @@ public abstract class AbstractLongIndexIntegrationTest extends TestCase {
     }
 
     private void checkSubIndexResult(long subject, long predicate, Set<Long> objects) {
-        Map<Long,Set<Long>> result = longIndex.getSubIndex(subject);
+        Map<Long, Set<Long>> result = longIndex.getSubIndex(subject);
         Map<Long, Set<Long>> expectedResult = new HashMap<Long, Set<Long>>();
         expectedResult.put(predicate, objects);
         assertEquals(expectedResult, result);

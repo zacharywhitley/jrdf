@@ -73,8 +73,8 @@ import org.jrdf.util.test.StandardClassPropertiesTestUtil;
 public class PredicateParserImplUnitTest extends TestCase {
     private static final Class<PredicateParser> TARGET_INTERFACE = PredicateParser.class;
     private static final Class<PredicateParserImpl> TEST_CLASS = PredicateParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {URIReferenceParser.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"uriReferenceParser"};
+    private static final Class[] PARAM_TYPES = new Class[]{URIReferenceParser.class};
+    private static final String[] PARAMETER_NAMES = new String[]{"uriReferenceParser"};
     private static final String MATCHER = "match" + Math.random();
     private static final String LINE = "line" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
@@ -89,12 +89,13 @@ public class PredicateParserImplUnitTest extends TestCase {
     }
 
     public void testClassProperties() {
-        StandardClassPropertiesTestUtil.hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+        StandardClassPropertiesTestUtil.hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES,
+            PARAMETER_NAMES);
     }
 
     public void testMethodProperties() {
         ArgumentTestUtil.checkMethodNullAssertions(predicateParser, "parsePredicate", new ParameterDefinition(
-                new String[] {"regexMatcher"}, new Class[]{RegexMatcher.class}));
+            new String[]{"regexMatcher"}, new Class[]{RegexMatcher.class}));
     }
 
     public void testParseObjectURI() throws Exception {

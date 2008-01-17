@@ -115,20 +115,27 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     private static final Graph GRAPH = FACTORY.getNewGraph();
     private static final Literal LITERAL = NodeTestUtil.createLiteral("The Pragmatic Programmer");
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_CONJUNCTION
-            = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+        = new Conjunction<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_CONJUNCTION
-            = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
+        = new Conjunction<ExpressionVisitor>(BOOK1_AND_2_CONJUNCTION, BOOK_3_DC_TITLE_ID_3);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_UNION
-            = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
+        = new Union<ExpressionVisitor>(BOOK_1_DC_TITLE_ID_1, BOOK_2_DC_TITLE_ID_2);
     private static final Expression<ExpressionVisitor> BOOK1_AND_2_AND_3_UNION
-            = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
-    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME, "name", 1);
-    private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK, "nick", 2);
-    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK, "alias", 2);
-    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX, "mbox", 3);
-    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX, "alias", 3);
-    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME, "name", 3);
-    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX, "mbox", 4);
+        = new Union<ExpressionVisitor>(BOOK1_AND_2_UNION, BOOK_3_DC_TITLE_ID_3);
+    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_1 = createConstraintExpression("x", FOAF_NAME,
+        "name", 1);
+    private static final Expression<ExpressionVisitor> FOAF_NICK_EXP_2 = createConstraintExpression("x", FOAF_NICK,
+        "nick", 2);
+    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_2 = createConstraintExpression("x", FOAF_NICK,
+        "alias", 2);
+    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
+        "mbox", 3);
+    private static final Expression<ExpressionVisitor> FOAF_ALIAS_EXP_3 = createConstraintExpression("x", FOAF_MBOX,
+        "alias", 3);
+    private static final Expression<ExpressionVisitor> FOAF_NAME_EXP_3 = createConstraintExpression("x", FOAF_NAME,
+        "name", 3);
+    private static final Expression<ExpressionVisitor> FOAF_MBOX_EXP_4 = createConstraintExpression("x", FOAF_MBOX,
+        "mbox", 4);
     private static final Expression<ExpressionVisitor> TITLE_EXP_1 = createConstraintExpression("s", "p", LITERAL, 1);
     private QueryParser parser;
 
@@ -136,7 +143,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         parser = new SableCcSparqlParser(FACTORY.getNewParserFactory(), FACTORY.getNewGraphRelationFactory(),
-                FACTORY.getNewAttributeValuePairHelper(), newSortedAttributeFactory);
+            FACTORY.getNewAttributeValuePairHelper(), newSortedAttributeFactory);
     }
 
     public void testSingleConstraint() {
@@ -215,7 +222,7 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
     public void testDoubleQuotedLiteralWithNoDataTypeOrLanguage() {
         checkConstraintExpression(SparqlQueryTestUtil.QUERY_LITERAL_DOUBLE_QUOTES, TITLE_EXP_1);
     }
-    
+
     private void checkConstraintExpression(String queryString, Expression expectedExpression) {
         Query query = parseQuery(queryString);
         Expression<ExpressionVisitor> actualExpression = getExpression(query);
@@ -231,7 +238,8 @@ public final class SableCcSparqlParserIntegrationTest extends TestCase {
         }
     }
 
-    private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName) throws IllegalAccessException {
+    private Expression<ExpressionVisitor> getExpressionField(Object obj, Class<?> cls, String fieldName)
+        throws IllegalAccessException {
         Field field = ReflectTestUtil.getField(cls, fieldName);
         field.setAccessible(true);
         return (Expression<ExpressionVisitor>) field.get(obj);

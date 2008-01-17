@@ -59,15 +59,7 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.graph.AbstractTripleUnitTest;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.util.test.NodeTestUtil;
-import static org.jrdf.util.test.NodeTestUtil.*;
 
 import java.net.URI;
 
@@ -93,19 +85,19 @@ public final class TripleImplUnitTest extends AbstractTripleUnitTest {
         return new TripleImpl(subject, predicate, object);
     }
 
-    public Triple createTriple (URI subject, URI predicate, URI object) {
+    public Triple createTriple(URI subject, URI predicate, URI object) {
         return NodeTestUtil.createTriple(subject, predicate, object);
     }
 
-    public Triple createTriple (URI subject, URI predicate, String object) {
+    public Triple createTriple(URI subject, URI predicate, String object) {
         return NodeTestUtil.createTriple(subject, predicate, object);
     }
 
-    public Triple createTriple (URI subject, URI predicate, String object, String language) {
+    public Triple createTriple(URI subject, URI predicate, String object, String language) {
         return NodeTestUtil.createTriple(subject, predicate, object, language);
     }
 
-    public Triple createTriple (URI subject, URI predicate, String object, URI dataType) {
+    public Triple createTriple(URI subject, URI predicate, String object, URI dataType) {
         return NodeTestUtil.createTriple(subject, predicate, object, dataType);
     }
 

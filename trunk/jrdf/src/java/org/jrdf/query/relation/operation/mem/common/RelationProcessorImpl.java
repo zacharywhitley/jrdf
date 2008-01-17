@@ -95,7 +95,7 @@ public final class RelationProcessorImpl implements RelationProcessor {
         SortedSet<Attribute> headings = tupleEngine.getHeading(relation1, relation2);
 
         SortedSet<Tuple> tuples = processTuples(headings, relation1.getSortedTuples(), relation2.getSortedTuples(),
-                tupleEngine);
+            tupleEngine);
         Relation resultRelation = relationFactory.getRelation(headings, tuples);
 
         while (iterator.hasNext()) {
@@ -120,7 +120,7 @@ public final class RelationProcessorImpl implements RelationProcessor {
     }
 
     private SortedSet<Tuple> processTuples(SortedSet<Attribute> headings, SortedSet<Tuple> tuples1,
-            SortedSet<Tuple> tuples2, TupleEngine tupleEngine) {
+        SortedSet<Tuple> tuples2, TupleEngine tupleEngine) {
         SortedSet<Tuple> result = new TreeSet<Tuple>(tupleComparator);
         for (Tuple tuple1 : tuples1) {
             for (Tuple tuple2 : tuples2) {
@@ -131,7 +131,7 @@ public final class RelationProcessorImpl implements RelationProcessor {
     }
 
     private void processRhs(SortedSet<Attribute> headings, Tuple tuple1, Tuple tuple2, SortedSet<Tuple> result,
-            TupleEngine tupleEngine) {
+        TupleEngine tupleEngine) {
         SortedSet<AttributeValuePair> avps1 = tuple1.getSortedAttributeValues();
         SortedSet<AttributeValuePair> avps2 = tuple2.getSortedAttributeValues();
         tupleEngine.process(headings, avps1, avps2, result);

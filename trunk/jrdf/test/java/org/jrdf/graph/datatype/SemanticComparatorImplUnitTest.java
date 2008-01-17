@@ -61,8 +61,8 @@ package org.jrdf.graph.datatype;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Literal;
-import org.jrdf.vocabulary.XSD;
 import org.jrdf.util.test.Literal1;
+import org.jrdf.vocabulary.XSD;
 
 public class SemanticComparatorImplUnitTest extends TestCase {
     private SemanticComparator semanticComparator;

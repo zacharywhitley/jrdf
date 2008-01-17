@@ -83,7 +83,7 @@ public class BlankNodeResourceIterator extends ResourceIterator<BlankNode> {
     }
 
     protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
-            final GraphHandler graphHandler) {
+        final GraphHandler graphHandler) {
         while (iterator.hasNext()) {
             final Long id = iterator.next().getKey();
             final Node node = nodePool.getNodeById(id);

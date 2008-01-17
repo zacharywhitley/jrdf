@@ -61,15 +61,15 @@ package org.jrdf.writer.rdfxml;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Resource;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.URIReference;
 import org.jrdf.util.IteratorStack;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.WriteException;
 import org.jrdf.writer.RdfNamespaceMap;
+import org.jrdf.writer.WriteException;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -89,7 +89,7 @@ public class ResourceWriterImpl implements ResourceWriter {
     private Exception exception;
 
     public ResourceWriterImpl(final RdfNamespaceMap names, final BlankNodeRegistry newRegistry,
-            final XMLStreamWriter newXmlStreamWriter) {
+        final XMLStreamWriter newXmlStreamWriter) {
         checkNotNull(names, newRegistry, newXmlStreamWriter);
         this.registry = newRegistry;
         this.xmlStreamWriter = newXmlStreamWriter;

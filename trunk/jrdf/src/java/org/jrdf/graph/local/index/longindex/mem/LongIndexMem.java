@@ -71,7 +71,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision: 1247 $
  */
-public final class LongIndexMem extends AbstractIndex<Long> implements LongIndex   {
+public final class LongIndexMem extends AbstractIndex<Long> implements LongIndex {
     private static final long serialVersionUID = -5048829267886339451L;
 
     public LongIndexMem() {

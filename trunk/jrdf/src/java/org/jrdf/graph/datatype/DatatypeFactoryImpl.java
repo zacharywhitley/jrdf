@@ -224,7 +224,7 @@ public class DatatypeFactoryImpl implements DatatypeFactory {
     private boolean isBuggyJava() {
         // Overcome bug in Sun's and Apple's JDK 1.5 Bug ID 6360782.  Fixed in Java 6.
         return (System.getProperty("java.vendor").toUpperCase().contains("SUN") ||
-                System.getProperty("java.vendor").toUpperCase().contains("APPLE")) &&
-                System.getProperty("java.version").contains("1.5.0");
+            System.getProperty("java.vendor").toUpperCase().contains("APPLE")) &&
+            System.getProperty("java.version").contains("1.5.0");
     }
 }

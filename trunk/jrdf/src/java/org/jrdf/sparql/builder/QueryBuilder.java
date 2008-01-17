@@ -61,8 +61,8 @@ package org.jrdf.sparql.builder;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.query.Query;
 import org.jrdf.query.InvalidQuerySyntaxException;
+import org.jrdf.query.Query;
 
 /**
  * Builds queries in {@link String} form into {@link org.jrdf.query.Query} objects.

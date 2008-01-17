@@ -97,7 +97,7 @@ public final class GraphRelationImpl implements GraphRelation {
     private final AttributeValuePairHelper avpHelper;
 
     public GraphRelationImpl(Graph graph, SortedAttributeFactory attributeFactory,
-            AttributeValuePairHelper avpHelper, TupleComparator tupleComparator, TupleFactory tupleFactory) {
+        AttributeValuePairHelper avpHelper, TupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.graph = graph;
         this.attributeFactory = attributeFactory;
         this.avpHelper = avpHelper;
@@ -147,7 +147,7 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     private Set<Tuple> getTuplesFromGraph(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
-            Attribute[] attributes) {
+        Attribute[] attributes) {
         ClosableIterator<Triple> closableIterator = tryGetTriples(subjectNode, predicateNode, objectNode);
         Set<Tuple> tuples = new TreeSet<Tuple>(tupleComparator);
         while (closableIterator.hasNext()) {
@@ -158,7 +158,7 @@ public final class GraphRelationImpl implements GraphRelation {
     }
 
     private ClosableIterator<Triple> tryGetTriples(SubjectNode subjectNode, PredicateNode predicateNode,
-            ObjectNode objectNode) {
+        ObjectNode objectNode) {
         try {
             return graph.find(subjectNode, predicateNode, objectNode);
         } catch (GraphException e) {

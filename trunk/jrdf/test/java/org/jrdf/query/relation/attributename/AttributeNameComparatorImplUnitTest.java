@@ -74,9 +74,9 @@ import java.lang.reflect.Modifier;
 public class AttributeNameComparatorImplUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil
-                .checkImplementationOfInterfaceAndFinal(AttributeNameComparator.class, AttributeNameComparatorImpl.class);
+            .checkImplementationOfInterfaceAndFinal(AttributeNameComparator.class, AttributeNameComparatorImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, AttributeNameComparator.class);
         ClassPropertiesTestUtil.checkConstructor(AttributeNameComparatorImpl.class, Modifier.PUBLIC,
-                ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
+            ClassPropertiesTestUtil.NO_ARG_CONSTRUCTOR);
     }
 }

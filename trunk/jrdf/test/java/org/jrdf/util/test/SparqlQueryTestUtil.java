@@ -61,7 +61,14 @@ package org.jrdf.util.test;
 
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
-import static org.jrdf.util.test.TripleTestUtil.*;
+import static org.jrdf.util.test.TripleTestUtil.FOAF_MBOX;
+import static org.jrdf.util.test.TripleTestUtil.FOAF_NAME;
+import static org.jrdf.util.test.TripleTestUtil.FOAF_NICK;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_1;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_2;
+import static org.jrdf.util.test.TripleTestUtil.URI_BOOK_3;
+import static org.jrdf.util.test.TripleTestUtil.URI_DC_TITLE;
+import static org.jrdf.util.test.TripleTestUtil.createBookDcTitleExpression;
 
 /**
  * Artefacts used in tests.
@@ -80,51 +87,51 @@ public final class SparqlQueryTestUtil {
     private static final String SUBJECT_URI_3 = URI_BOOK_3.toString();
     private static final String PREDICATE_URI_1 = URI_DC_TITLE.toString();
     public static final String QUERY_BOOK_1_DC_TITLE =
-            createQueryString(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE);
+        createQueryString(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE);
     public static final String QUERY_BOOK_2_DC_TITLE =
-            createQueryString(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE);
+        createQueryString(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE);
     public static final String QUERY_BOOK_1_AND_2 =
-            createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
-                    PREDICATE_URI_1, VARIABLE_TITLE});
+        createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
+            PREDICATE_URI_1, VARIABLE_TITLE});
     public static final String QUERY_BOOK_1_AND_2_AND_3 =
-            createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
-                    PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE});
+        createQueryString(new String[]{SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_2,
+            PREDICATE_URI_1, VARIABLE_TITLE, SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE});
     public static final String QUERY_BOOK_1_UNION_2 = createSelectClause() + "\nWHERE {{ " +
-            createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) +  "} \nUNION {" +
-            createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
+        createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) + "} \nUNION {" +
+        createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
     public static final String QUERY_BOOK_1_UNION_2_UNION_3 = createSelectClause() + "\nWHERE {{ " +
-            createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) +  "} \nUNION {" +
-            createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " } \nUNION {" +
-            createTriple(SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
+        createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) + "} \nUNION {" +
+        createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " } \nUNION {" +
+        createTriple(SUBJECT_URI_3, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
     public static final String QUERY_BOOK_1_AND_2_INNER_RIGHT = createSelectClause() + "\n" +
-            "WHERE { " + createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) + " . {" +
-            createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
+        "WHERE { " + createTriple(SUBJECT_URI_1, PREDICATE_URI_1, VARIABLE_TITLE) + " . {" +
+        createTriple(SUBJECT_URI_2, PREDICATE_URI_1, VARIABLE_TITLE) + " }}";
 
-    public static final String QUERY_OPTIONAL_1 =  createSelectClause() +
-                "WHERE  { ?x <" + FOAF_NAME + "> ?name . \n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick\n" +
-                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
-                "       }";
-    public static final String QUERY_OPTIONAL_2 =  createSelectClause() +
-                "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?alias }\n" +
-                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?alias }\n" +
-                "       }";
-    public static final String QUERY_OPTIONAL_3 =  createSelectClause() +
-                "WHERE  { { ?x <" + FOAF_NAME + "> ?name } .\n" +
-                "         OPTIONAL { ?x <" + FOAF_NICK + "> ?alias }\n" +
-                "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?alias }\n" +
-                "       }";
+    public static final String QUERY_OPTIONAL_1 = createSelectClause() +
+        "WHERE  { ?x <" + FOAF_NAME + "> ?name . \n" +
+        "         OPTIONAL { ?x <" + FOAF_NICK + "> ?nick\n" +
+        "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?mbox } }\n" +
+        "       }";
+    public static final String QUERY_OPTIONAL_2 = createSelectClause() +
+        "WHERE  { ?x <" + FOAF_NAME + "> ?name .\n" +
+        "         OPTIONAL { ?x <" + FOAF_NICK + "> ?alias }\n" +
+        "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?alias }\n" +
+        "       }";
+    public static final String QUERY_OPTIONAL_3 = createSelectClause() +
+        "WHERE  { { ?x <" + FOAF_NAME + "> ?name } .\n" +
+        "         OPTIONAL { ?x <" + FOAF_NICK + "> ?alias }\n" +
+        "         OPTIONAL { ?x <" + FOAF_MBOX + "> ?alias }\n" +
+        "       }";
     public static final String QUERY_OPTION_4 = createSelectClause() +
-            "WHERE  { \n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} .\n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
-            "}";
+        "WHERE  { \n" +
+        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} .\n" +
+        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
+        "}";
     public static final String QUERY_OPTIONAL_5 = createSelectClause() +
-            "WHERE  { \n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} OPTIONAL\n" +
-            "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
-            "}";
+        "WHERE  { \n" +
+        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x <" + FOAF_NICK + "> ?nick }} OPTIONAL\n" +
+        "  { ?x <" + FOAF_NAME + "> ?name OPTIONAL { ?x  <" + FOAF_MBOX + "> ?mbox }}\n" +
+        "}";
     public static final String QUERY_BOOK_1_AND_2_WITH_PREFIX = "PREFIX examplebook: <http://example.org/book/> \n" +
         "PREFIX dc: <http://purl.org/dc/elements/1.1/> \n" +
         createSelectClause() +
@@ -182,7 +189,7 @@ public final class SparqlQueryTestUtil {
         StringBuffer buffer = new StringBuffer();
         String str1 = delimitUri(uriConstant1);
         String str2 = delimitUri(uriConstant);
-        buffer.append(str1).append(" ").append(str2) .append(" ").append(variable);
+        buffer.append(str1).append(" ").append(str2).append(" ").append(variable);
         return buffer.toString();
     }
 
@@ -191,7 +198,7 @@ public final class SparqlQueryTestUtil {
     }
 
     private static void appendAnd(int i, String[] constraints, StringBuffer buffer) {
-        if (i < (constraints.length / 3 -1)) {
+        if (i < (constraints.length / 3 - 1)) {
             buffer.append(" . ");
         }
     }

@@ -59,10 +59,10 @@
   -->
 
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
-        "http://www.springframework.org/dtd/spring-beans.dtd">
+    "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-  <bean id="splashScreen"
+    <bean id="splashScreen"
           class="org.springframework.richclient.application.splash.SimpleSplashScreen"
           singleton="false">
-  </bean>
+    </bean>
 </beans>

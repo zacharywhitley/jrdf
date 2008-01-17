@@ -100,7 +100,7 @@ public final class TypeComparatorImpl implements TypeComparator {
 
     private boolean bothPositionalOrNode(NodeType type1, NodeType type2) {
         return (isPositionNodeType(type1) && isPositionNodeType(type2)) ||
-                (!isPositionNodeType(type1) && !isPositionNodeType(type2));
+            (!isPositionNodeType(type1) && !isPositionNodeType(type2));
     }
 
     private int compareDifferentCategoryOfTypes(NodeType type1, NodeType type2) {

@@ -60,9 +60,9 @@
 package org.jrdf.graph.global.iterator;
 
 import org.jrdf.graph.Node;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -79,7 +79,7 @@ public class TwoFixedIterator implements ClosableIterator<Molecule> {
     private Iterator<Molecule> moleculeIterator;
     private boolean hasNext;
 
-    public TwoFixedIterator(Node first, Node second, MoleculeIndex [] indexes, int searchIndex) {
+    public TwoFixedIterator(Node first, Node second, MoleculeIndex[] indexes, int searchIndex) {
         Map<Node, Map<Node, Molecule>> subIndex = indexes[searchIndex].getSubIndex(first);
 
         if (null != subIndex) {

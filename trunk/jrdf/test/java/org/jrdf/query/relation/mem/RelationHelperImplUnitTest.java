@@ -82,8 +82,8 @@ import java.util.Set;
 import java.util.SortedSet;
 
 public class RelationHelperImplUnitTest extends TestCase {
-    private static final Class[] PARAMETERS = { AttributeComparator.class };
-    private static final String[] PARAMETER_NAMES = { "attributeComparator" };
+    private static final Class[] PARAMETERS = {AttributeComparator.class};
+    private static final String[] PARAMETER_NAMES = {"attributeComparator"};
     private MockFactory factory;
     private AttributeComparator mockAttributeComparator;
     private AttributeComparator realAttributeComparator;

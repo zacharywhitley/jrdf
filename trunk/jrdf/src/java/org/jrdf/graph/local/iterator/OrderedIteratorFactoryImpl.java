@@ -64,8 +64,8 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.set.SortedSetFactory;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.SortedSet;
 

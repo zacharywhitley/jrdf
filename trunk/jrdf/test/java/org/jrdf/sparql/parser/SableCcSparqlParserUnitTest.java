@@ -88,7 +88,7 @@ import java.lang.reflect.Modifier;
 public final class SableCcSparqlParserUnitTest extends TestCase {
     private static final String QUERY_BOOK_1_DC_TITLE = SparqlQueryTestUtil.QUERY_BOOK_1_DC_TITLE;
     private static final String ERROR_MSG = "Unable to parse query syntax";
-    private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1,1), "bar");
+    private static final ParserException PARSER_EXECPTION = new ParserException(new TBlank("foo", 1, 1), "bar");
     private static final LexerException LEXER_EXECPTION = new LexerException("foo");
     private static final Exception IO_EXCEPTION = new IOException();
     private static final String[] PARAM_NAMES = {"graph", "queryText"};
@@ -113,7 +113,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(SparqlParser.class, SableCcSparqlParser.class);
         checkConstructor(SableCcSparqlParser.class, Modifier.PUBLIC, ParserFactory.class, GraphRelationFactory.class,
-                AttributeValuePairHelper.class, SortedAttributeFactory.class);
+            AttributeValuePairHelper.class, SortedAttributeFactory.class);
     }
 
     public void testParseQueryFailsWithBadInput() {
@@ -152,7 +152,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
         return start;
     }
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     private Parser createParser(Start start) throws Exception {
         Parser parser = mockFactory.createMock(Parser.class);
         parser.parse();
@@ -168,7 +168,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     private ParserFactory createParserFactory(Parser parser) {
         ParserFactory parserFactory = mockFactory.createMock(ParserFactory.class);
         parserFactory.getParser(QUERY_BOOK_1_DC_TITLE);
@@ -181,7 +181,7 @@ public final class SableCcSparqlParserUnitTest extends TestCase {
     }
 
     private void checkThrowsException(Exception exception, String errorMsg)
-            throws Exception {
+        throws Exception {
         Parser parser = createParser(exception);
         ParserFactory parserFactory = createParserFactory(parser);
         final SableCcSparqlParser ccSparqlParser = createSableCcSparqlParser(parserFactory);

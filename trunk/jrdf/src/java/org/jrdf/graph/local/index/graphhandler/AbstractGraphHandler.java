@@ -80,7 +80,7 @@ public abstract class AbstractGraphHandler implements GraphHandler {
     private static final int STATEMENT_OFFSET = 5;
 
     public void reconstructIndices(LongIndex firstIndex, LongIndex secondIndex, LongIndex thirdIndex) throws
-            GraphException {
+        GraphException {
         BasicOperations.reconstruct(firstIndex, secondIndex, thirdIndex);
     }
 

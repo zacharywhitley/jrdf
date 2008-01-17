@@ -63,11 +63,11 @@ import org.jrdf.TestJRDFFactory;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.Literal;
 import org.jrdf.query.expression.Constraint;
 import org.jrdf.query.expression.Expression;
 import org.jrdf.query.expression.ExpressionVisitor;
@@ -119,7 +119,7 @@ public class TripleTestUtil {
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
 
     public static final List<AttributeValuePair> AVP_BOOK_1_DC_SUBJECT_LITERAL =
-            createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
+        createAvp(TRIPLE_BOOK_1_DC_SUBJECT_LITERAL);
 
     public static Expression<ExpressionVisitor> createBookDcTitleExpression(URI bookUri, long suffix) {
         Triple dcTitleTriple = createDcTitleTriple(bookUri);
@@ -128,18 +128,18 @@ public class TripleTestUtil {
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, URI predicate,
-            String varObject, long suffix) {
+        String varObject, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, NodeTestUtil.createResource(predicate), ANY_OBJECT_NODE);
         List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectObjectVariableAttributes(varSubject,
-                varObject, suffix));
+            varObject, suffix));
         return new Constraint<ExpressionVisitor>(avp);
     }
 
     public static Expression<ExpressionVisitor> createConstraintExpression(String varSubject, String varPredicate,
-            Literal constLiteral, long suffix) {
+        Literal constLiteral, long suffix) {
         Triple triple = createTriple(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, constLiteral);
         List<AttributeValuePair> avp = AVP_HELPER.createAvp(triple, createSubjectPredicateVariableAttributes(
-                varSubject, varPredicate, suffix));
+            varSubject, varPredicate, suffix));
         return new Constraint<ExpressionVisitor>(avp);
     }
 

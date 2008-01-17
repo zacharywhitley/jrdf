@@ -58,9 +58,11 @@
 
 package org.jrdf.util.test;
 
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
+import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassFinal;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkClassPublic;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
 
 /**
  * Tests a class follows the standard properties for the JRDF project.
@@ -70,7 +72,7 @@ public final class StandardClassPropertiesTestUtil {
     }
 
     public static void hasClassStandardProperties(Class<?> targetInterface, Class<?> implementationClass,
-            Class[] parameterTypes, String[] parameterNames) {
+        Class[] parameterTypes, String[] parameterNames) {
         checkClassFinal(implementationClass);
         checkClassPublic(implementationClass);
         checkImplementationOfInterface(targetInterface, implementationClass);

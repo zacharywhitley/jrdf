@@ -62,26 +62,26 @@ package org.jrdf;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactory;
 import org.jrdf.graph.local.index.longindex.sesame.BTreeFactoryImpl;
+import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
 import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.sparql.SparqlConnection;
 import org.jrdf.sparql.SparqlConnectionImpl;
 import org.jrdf.sparql.builder.QueryBuilder;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
-import java.util.Set;
-import java.util.HashSet;
 import static java.util.Arrays.asList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Uses default in memory constructors to create JRDF entry points.  Returns sorted results.
@@ -138,7 +138,7 @@ public final class SortedBdbJRDFFactory implements JRDFFactory {
     }
 
     private TripleBTree[] createBTrees() {
-        return new TripleBTree[] {btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
+        return new TripleBTree[]{btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
             btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
             btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
     }

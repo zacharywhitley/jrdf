@@ -69,6 +69,7 @@ import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.query.relation.operation.SemiDifference;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R1;
+import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO2_PREDICATE_R2;
@@ -77,7 +78,6 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO3_OBJECT_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R3;
-import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.POS_FOO1_SUBJECT_R3;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.VAR_BAR1_PREDICATE_R4;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createASingleTuple;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createHeading;
@@ -175,7 +175,7 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 
         checkMinus(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }
-    
+
     public void testSemiDifferenceUnequalTuples() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3);
@@ -185,7 +185,8 @@ public class SemiDifferenceImplIntegrationTest extends TestCase {
 
     public void testSemiDifferenceUnequalTuples2() {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4);
-        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4, POS_FOO3_OBJECT_R3);
+        Set<Tuple> tuple2 = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4,
+            POS_FOO3_OBJECT_R3);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R4, VAR_BAR1_PREDICATE_R3, POS_FOO3_OBJECT_R4);
         checkMinus(createRelation(resultTuple), createRelation(tuple1), createRelation(tuple2));
     }

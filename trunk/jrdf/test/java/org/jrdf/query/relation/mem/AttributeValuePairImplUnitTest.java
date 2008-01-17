@@ -109,7 +109,7 @@ public class AttributeValuePairImplUnitTest extends TestCase {
         AttributeValuePair notEqual = TEST_ATTRIBUTE_VALUE_2;
         new EqualsTester(original, equal, notEqual, null);
     }
-    
+
     private void checkStandardConstructor(Attribute attributeName, Node node) {
         AttributeValuePair attributeValuePair = new AttributeValuePairImpl(attributeName, node);
         checkFieldValue(attributeValuePair, ATTRIBUTE_NAME, attributeName);

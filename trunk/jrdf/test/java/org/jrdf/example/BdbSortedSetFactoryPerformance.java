@@ -1,12 +1,12 @@
 package org.jrdf.example;
 
 import junit.framework.TestCase;
+import org.jrdf.set.BdbSortedSetFactory;
+import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.set.SortedSetFactory;
-import org.jrdf.set.BdbSortedSetFactory;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class BdbSortedSetFactoryPerformance extends TestCase {
             strSet.add(new String(Integer.toString(i)));
         }
         long end = System.currentTimeMillis();
-        System.out.println("Inserting " + RUNS + " strings takes " + (end - start)/(float) 1000 + " seconds");
+        System.out.println("Inserting " + RUNS + " strings takes " + (end - start) / (float) 1000 + " seconds");
         assertEquals("Set have " + RUNS + " entries", RUNS, strSet.size());
         factory.close();
     }

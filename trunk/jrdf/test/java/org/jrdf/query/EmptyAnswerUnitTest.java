@@ -60,27 +60,17 @@
 package org.jrdf.query;
 
 import junit.framework.TestCase;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
-import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivate;
-import org.jrdf.util.test.SerializationTestUtil;
-import org.jrdf.util.test.FieldPropertiesTestUtil;
-import static org.jrdf.util.test.SerializationTestUtil.*;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
-import org.jrdf.query.relation.Relation;
-import org.jrdf.query.relation.AttributeValuePairComparator;
-import org.jrdf.query.relation.mem.TupleImpl;
-import org.jrdf.graph.AnyNode;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstant;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.Arrays;
 
 public class EmptyAnswerUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES ={};
+    private static final Class[] PARAM_TYPES = {};
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(Answer.class, EmptyAnswer.class);

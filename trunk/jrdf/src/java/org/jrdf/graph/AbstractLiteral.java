@@ -59,10 +59,10 @@
 
 package org.jrdf.graph;
 
+import static org.jrdf.graph.NullURI.NULL_URI;
 import org.jrdf.graph.datatype.DatatypeFactory;
 import org.jrdf.graph.datatype.DatatypeFactoryImpl;
 import org.jrdf.graph.datatype.DatatypeValue;
-import static org.jrdf.graph.NullURI.*;
 import static org.jrdf.util.EqualsUtil.hasSuperClassOrInterface;
 import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
@@ -331,7 +331,7 @@ public abstract class AbstractLiteral implements Literal, Serializable {
         // If datatypes are null and languages are equal by value.
         if (dataTypesNull(tmpLiteral) && languagesEqual(tmpLiteral)) {
             returnValue = true;
-        // If datatype URIs are not null and equal by their string values.
+            // If datatype URIs are not null and equal by their string values.
         } else if (dataTypesEqual(tmpLiteral)) {
             returnValue = true;
         }

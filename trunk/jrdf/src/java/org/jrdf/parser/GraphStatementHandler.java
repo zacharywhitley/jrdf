@@ -86,7 +86,7 @@ public class GraphStatementHandler implements StatementHandler {
             graph.add(subject, predicate, object);
         } catch (Exception e) {
             throw new RuntimeException("Failed to add: " + subject + ", " + predicate + ", " + object +
-                    " to the graph.");
+                " to the graph.");
         }
     }
 

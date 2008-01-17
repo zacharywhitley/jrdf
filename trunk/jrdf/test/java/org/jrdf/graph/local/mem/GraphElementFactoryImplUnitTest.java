@@ -59,7 +59,6 @@
 
 package org.jrdf.graph.local.mem;
 
-import junit.textui.TestRunner;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractGraphElementFactoryUnitTest;
 import org.jrdf.graph.Graph;

@@ -111,7 +111,7 @@ public class NewMoleculeImplUnitTest extends TestCase {
         assertEquals(2, newMolecule.size());
         checkHasHeadMolecules(newMolecule, b2r2b1, b1r3r3);
     }
-    
+
 
     public void testCombineSubMolecules() {
         NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1b1);
@@ -138,7 +138,7 @@ public class NewMoleculeImplUnitTest extends TestCase {
     }
 
     private void checkHasSubMolecule(NewMolecule actualMolecule, HashMap<Triple, NewMolecule> expectedSubMolecules) {
-        for (Map.Entry<Triple,NewMolecule> entry : expectedSubMolecules.entrySet()) {
+        for (Map.Entry<Triple, NewMolecule> entry : expectedSubMolecules.entrySet()) {
             Set<NewMolecule> newMolecule = actualMolecule.getSubMolecules(entry.getKey());
             HashSet<NewMolecule> actualMolecules = new HashSet<NewMolecule>();
             actualMolecules.add(entry.getValue());

@@ -60,10 +60,12 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1b2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1b3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r1r1;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2b2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2r2;
@@ -71,9 +73,11 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r2r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b1r3r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r1r2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2b3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r3b3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r3r1;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r1r2;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r1r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r2r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r3r3;
@@ -82,16 +86,15 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmolecul
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMoleculeWithSubmolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
 import org.jrdf.util.test.AssertThrows;
-import static org.jrdf.util.test.AssertThrows.*;
+import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.Collections;
-import static java.util.Collections.EMPTY_SET;
 
 public class MergeSubmoleculesImplUnitTest extends TestCase {
-    private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
+    private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY =
+        new GroundedTripleComparatorFactoryImpl();
     private MergeSubmolecules mergeSubmolecules;
 
 
@@ -182,12 +185,12 @@ public class MergeSubmoleculesImplUnitTest extends TestCase {
 
     public void testMoleculeSubsumption() {
         NewMolecule molecule1 = createMultiLevelMolecule(asSet(b2r2b3), Collections.<Triple>emptySet(),
-                Collections.<Triple>emptySet());
+            Collections.<Triple>emptySet());
         NewMolecule molecule2 = createMultiLevelMolecule(asSet(b2r2b3, b2r1r2), Collections.<Triple>emptySet(),
-                Collections.<Triple>emptySet());
+            Collections.<Triple>emptySet());
         NewMolecule newMolecule = mergeSubmolecules.merge(molecule1, molecule2);
         NewMolecule expectedMolecule = createMultiLevelMolecule(asSet(b2r2b3, b2r2b3, b2r1r2),
-                Collections.<Triple>emptySet(), Collections.<Triple>emptySet());
+            Collections.<Triple>emptySet(), Collections.<Triple>emptySet());
         assertEquals(expectedMolecule, newMolecule);
     }
 

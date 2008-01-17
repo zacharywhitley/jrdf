@@ -101,7 +101,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
         this.collector = collector;
     }
 
-    public Expression<ExpressionVisitor>getExpression() throws ParserException {
+    public Expression<ExpressionVisitor> getExpression() throws ParserException {
         if (exception != null) {
             throw exception;
         }
@@ -127,7 +127,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
                 ((Conjunction<ExpressionVisitor>) rhs).setLhs(lhs);
                 expression = rhs;
             } else if (rhs.getClass().isAssignableFrom(Constraint.class) &&
-                    (lhs.getClass().isAssignableFrom(Constraint.class))) {
+                (lhs.getClass().isAssignableFrom(Constraint.class))) {
                 expression = new Conjunction<ExpressionVisitor>(lhs, rhs);
             }
         } else {
@@ -218,7 +218,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     }
 
     private Expression<ExpressionVisitor> handleExistingLhsRhs(Expression<ExpressionVisitor> lhs,
-            Expression<ExpressionVisitor> rhs) {
+        Expression<ExpressionVisitor> rhs) {
         if (lhs instanceof Optional && rhs instanceof Optional) {
             return joinTwoOptionals(lhs, rhs);
         } else if (rhs instanceof Optional) {
@@ -229,7 +229,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     }
 
     private Expression<ExpressionVisitor> joinTwoOptionals(Expression<ExpressionVisitor> lhs,
-            Expression<ExpressionVisitor> rhs) {
+        Expression<ExpressionVisitor> rhs) {
         Optional<ExpressionVisitor> lhsOptional = (Optional<ExpressionVisitor>) lhs;
         Optional<ExpressionVisitor> rhsOptional = (Optional<ExpressionVisitor>) rhs;
         if (lhsOptional.getLhs() == null && rhsOptional.getLhs() == null) {
@@ -257,7 +257,7 @@ public final class WhereAnalyserImpl extends DepthFirstAdapter implements WhereA
     }
 
     private Optional<ExpressionVisitor> createNewOptional(Expression<ExpressionVisitor> lhs,
-            Optional<ExpressionVisitor> rhsOptional) {
+        Optional<ExpressionVisitor> rhsOptional) {
         Optional<ExpressionVisitor> optional = new Optional<ExpressionVisitor>(lhs, rhsOptional.getLhs());
         return new Optional<ExpressionVisitor>(optional, rhsOptional.getRhs());
     }

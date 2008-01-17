@@ -63,8 +63,8 @@ import junit.framework.TestCase;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.TripleImpl;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
@@ -149,7 +149,7 @@ public class MoleculeImplUnitTest extends TestCase {
     }
 
 
-    public void testImmutableConstructor() throws Exception  {
+    public void testImmutableConstructor() throws Exception {
         ref1 = new URIReferenceImpl(URI.create("urn:foo"));
         ref2 = new URIReferenceImpl(URI.create("urn:bar"));
         BlankNode blankNode = new BlankNodeImpl();

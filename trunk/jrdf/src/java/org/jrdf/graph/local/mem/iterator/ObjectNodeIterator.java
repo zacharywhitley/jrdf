@@ -65,9 +65,11 @@ import org.jrdf.util.ClosableIterator;
 
 public class ObjectNodeIterator implements ClosableIterator<ObjectNode> {
     private ClosableIterator<Triple> iterator;
+
     public ObjectNodeIterator(ClosableIterator<Triple> itr) {
         iterator = itr;
     }
+
     public boolean close() {
         return iterator.close();
     }

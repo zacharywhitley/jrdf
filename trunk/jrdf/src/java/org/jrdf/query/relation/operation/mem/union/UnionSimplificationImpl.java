@@ -60,8 +60,8 @@
 package org.jrdf.query.relation.operation.mem.union;
 
 import org.jrdf.query.relation.Relation;
-import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import static org.jrdf.query.relation.constants.RelationDEE.RELATION_DEE;
+import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 
 import java.util.LinkedHashSet;
 

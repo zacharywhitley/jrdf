@@ -88,7 +88,7 @@ public class SemiJoinEngine implements TupleEngine {
     }
 
     public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         SortedSet<AttributeValuePair> allAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
         SortedSet<AttributeValuePair> lhsAttributeValuePairs = new TreeSet<AttributeValuePair>(avpComparator);
         boolean contradiction = false;
@@ -122,8 +122,8 @@ public class SemiJoinEngine implements TupleEngine {
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
-            SortedSet<AttributeValuePair> resultantAttributeValues,
-            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
+        SortedSet<AttributeValuePair> resultantAttributeValues,
+        SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
 
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
@@ -135,8 +135,8 @@ public class SemiJoinEngine implements TupleEngine {
     }
 
     private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1,
-            SortedSet<AttributeValuePair> resultantAttributeValues,
-            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
+        SortedSet<AttributeValuePair> resultantAttributeValues,
+        SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         if (avp2 == null) {
             addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
             return false;
@@ -149,7 +149,7 @@ public class SemiJoinEngine implements TupleEngine {
     }
 
     private boolean avp1Null(AttributeValuePair avp2, SortedSet<AttributeValuePair> resultantAttributeValues,
-            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
+        SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         if (avp2 != null) {
             addResults(avp2, resultantAttributeValues, lhsAttributeValuePairs);
         }
@@ -157,8 +157,8 @@ public class SemiJoinEngine implements TupleEngine {
     }
 
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
-            SortedSet<AttributeValuePair> resultantAttributeValues,
-            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
+        SortedSet<AttributeValuePair> resultantAttributeValues,
+        SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         if (!(avp1 instanceof NullaryAttributeValuePair)) {
             addResults(avp1, resultantAttributeValues, lhsAttributeValuePairs);
         } else {
@@ -167,7 +167,7 @@ public class SemiJoinEngine implements TupleEngine {
     }
 
     private void addResults(AttributeValuePair avp, SortedSet<AttributeValuePair> resultantAttributeValues,
-            SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
+        SortedSet<AttributeValuePair> lhsAttributeValuePairs) {
         resultantAttributeValues.add(avp);
         lhsAttributeValuePairs.add(avp);
     }

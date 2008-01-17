@@ -100,22 +100,25 @@ public abstract class AbstractTripleUnitTest extends TestCase {
     public void setUp() throws Exception {
         triple2 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE, TripleTestUtil.URI_BOOK_1);
         triple3 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE, TripleTestUtil.URI_BOOK_1);
-        triple4 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE, TripleTestUtil.LITERAL_BOOK_TITLE);
-        triple5 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE, TripleTestUtil.LITERAL_BOOK_TITLE, XSD.STRING);
-        triple6 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE, TripleTestUtil.LITERAL_BOOK_TITLE, "en");
+        triple4 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE,
+            TripleTestUtil.LITERAL_BOOK_TITLE);
+        triple5 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE,
+            TripleTestUtil.LITERAL_BOOK_TITLE, XSD.STRING);
+        triple6 = createTriple(TripleTestUtil.URI_BOOK_3, TripleTestUtil.URI_DC_TITLE,
+            TripleTestUtil.LITERAL_BOOK_TITLE, "en");
 
         uriUrnFoo = createResource(URI.create("urn:foo"));
     }
 
     public abstract Triple createTriple(SubjectNode subject, PredicateNode predicate, ObjectNode object);
 
-    public abstract Triple createTriple (URI subject, URI predicate, URI object);
+    public abstract Triple createTriple(URI subject, URI predicate, URI object);
 
-    public abstract Triple createTriple (URI subject, URI predicate, String object);
+    public abstract Triple createTriple(URI subject, URI predicate, String object);
 
-    public abstract Triple createTriple (URI subject, URI predicate, String object, String language);
+    public abstract Triple createTriple(URI subject, URI predicate, String object, String language);
 
-    public abstract Triple createTriple (URI subject, URI predicate, String object, URI dataType);
+    public abstract Triple createTriple(URI subject, URI predicate, String object, URI dataType);
 
     public abstract URIReference createResource(URI uri);
 

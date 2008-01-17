@@ -74,8 +74,8 @@ import org.jrdf.graph.local.mem.LocalizedNode;
 import org.jrdf.graph.local.mem.URIReferenceImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.UUID;
 import java.net.URI;
+import java.util.UUID;
 
 public class LocalizerImpl implements Localizer {
     private static final int TRIPLE = 3;

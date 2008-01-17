@@ -60,8 +60,8 @@
 package org.jrdf.util.test.instantiate;
 
 import org.jrdf.query.AnswerImpl;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.Relation;
 import static org.jrdf.query.relation.constants.RelationDUM.RELATION_DUM;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
@@ -83,6 +83,6 @@ final class AnswerInstantiator implements Instantiator {
 
     private ParamSpec createParams() {
         return new ParamSpec(new Class[]{LinkedHashSet.class, Relation.class, Long.TYPE, Boolean.TYPE},
-                new Object[]{new LinkedHashSet<Attribute>(), RELATION_DUM, 0L, Boolean.FALSE});
+            new Object[]{new LinkedHashSet<Attribute>(), RELATION_DUM, 0L, Boolean.FALSE});
     }
 }

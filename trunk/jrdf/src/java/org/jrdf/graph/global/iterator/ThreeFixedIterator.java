@@ -64,10 +64,10 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.global.GlobalizedGraph;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.molecule.Molecule;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.NoSuchElementException;
 
@@ -83,7 +83,7 @@ public class ThreeFixedIterator implements ClosableIterator<Molecule> {
     private MoleculeIndex[] indexes;
 
     public ThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode, ObjectNode objNode,
-                              MoleculeIndex[] newIndexes) {
+        MoleculeIndex[] newIndexes) {
         indexes = newIndexes;
         createMolecule(new TripleImpl(subjNode, predNode, objNode));
     }

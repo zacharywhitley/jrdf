@@ -63,8 +63,8 @@ import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.Tuple;
 import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;
-import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 import org.jrdf.query.relation.mem.ComparatorFactory;
+import org.jrdf.query.relation.mem.ComparatorFactoryImpl;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;

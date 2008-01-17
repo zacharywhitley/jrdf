@@ -78,7 +78,7 @@ public class LiteralUtilImplUnitTest extends TestCase {
     private static final Class[] PARAM_TYPES = {RegexMatcherFactory.class};
     private static final String[] PARAMETER_NAMES = {"regexMatcherFactory"};
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
-            "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
+        "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private MockFactory factory = new MockFactory();
     private RegexMatcherFactory regexMatcherFactory;
     private RegexMatcher matcher;
@@ -97,7 +97,7 @@ public class LiteralUtilImplUnitTest extends TestCase {
 
     public void testMethodProperties() {
         ArgumentTestUtil.checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
-                new String[] {"literal"}, new Class[]{String.class}));
+            new String[]{"literal"}, new Class[]{String.class}));
     }
 
     public void testUnescapeLiteral() {

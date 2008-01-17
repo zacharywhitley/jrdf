@@ -98,7 +98,7 @@ public final class VariableTripleSpec implements TripleSpec {
         attributes.add(predciateAtt);
         Attribute objectAtt = new AttributeImpl(new VariableName(variableName), new ObjectNodeType());
         attributes.add(objectAtt);
-        return attributes.toArray(new Attribute[] {});
+        return attributes.toArray(new Attribute[]{});
     }
 
     public ATriple getTriple() {

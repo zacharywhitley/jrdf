@@ -59,8 +59,8 @@
 
 package org.jrdf.sparql.builder;
 
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Literal;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 
 public interface LiteralBuilder {

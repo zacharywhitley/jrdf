@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.local.util;
 
+import org.jrdf.graph.AbstractBlankNode;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
@@ -75,9 +76,8 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.AbstractBlankNode;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.map.MapFactory;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -203,7 +203,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
             graph.remove(subj, pred, obj);
         } catch (GraphException e) {
             System.err.println("Removing non-existent triple: " +
-                    subj.toString() + " " + pred.toString() + " " + obj.toString());
+                subj.toString() + " " + pred.toString() + " " + obj.toString());
         }
     }
 }

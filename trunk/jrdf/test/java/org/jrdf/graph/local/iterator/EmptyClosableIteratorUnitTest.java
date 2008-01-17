@@ -59,12 +59,11 @@
 package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
+import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.util.ClosableIterator;
-import org.jrdf.graph.local.iterator.EmptyClosableIterator;
 
-import static java.lang.reflect.Modifier.*;
+import static java.lang.reflect.Modifier.PUBLIC;
 
 public class EmptyClosableIteratorUnitTest extends TestCase {
 

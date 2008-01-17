@@ -83,7 +83,7 @@ public class OuterUnionEngine implements TupleEngine {
     }
 
     public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         Tuple tuple1 = tupleFactory.getTuple(avps1);
         Tuple tuple2 = tupleFactory.getTuple(avps2);
         result.add(tuple1);

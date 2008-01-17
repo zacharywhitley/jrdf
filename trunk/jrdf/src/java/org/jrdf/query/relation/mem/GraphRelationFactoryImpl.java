@@ -77,7 +77,7 @@ public class GraphRelationFactoryImpl implements GraphRelationFactory {
     private TupleFactory tupleFactory;
 
     public GraphRelationFactoryImpl(SortedAttributeFactory attributeFactory, AttributeValuePairHelper avpHelper,
-            TupleComparator tupleComparator, TupleFactory tupleFactory) {
+        TupleComparator tupleComparator, TupleFactory tupleFactory) {
         this.attributeFactory = attributeFactory;
         this.tupleComparator = tupleComparator;
         this.avpHelper = avpHelper;

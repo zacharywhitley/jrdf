@@ -73,5 +73,5 @@ public interface TupleEngine {
     SortedSet<Attribute> getHeading(Relation relation1, Relation relation2);
 
     void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result);
+        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result);
 }

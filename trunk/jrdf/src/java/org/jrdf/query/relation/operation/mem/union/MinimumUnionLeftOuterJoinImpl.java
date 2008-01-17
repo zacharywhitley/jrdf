@@ -59,12 +59,12 @@
 
 package org.jrdf.query.relation.operation.mem.union;
 
+import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.operation.NadicJoin;
 import org.jrdf.query.relation.operation.Union;
-import org.jrdf.query.relation.Relation;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 public class MinimumUnionLeftOuterJoinImpl implements MinimumUnionLeftOuterJoin {
     private final NadicJoin naturalJoin;

@@ -61,13 +61,12 @@ package org.jrdf.query.relation.type;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.MockFactory;
-import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import org.jrdf.util.NodeTypeComparator;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterface;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
+import org.jrdf.util.test.MockFactory;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;

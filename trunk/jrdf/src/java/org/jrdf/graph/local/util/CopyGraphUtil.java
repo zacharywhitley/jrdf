@@ -62,8 +62,8 @@ package org.jrdf.graph.local.util;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
 
 public interface CopyGraphUtil {
     /**
@@ -92,11 +92,11 @@ public interface CopyGraphUtil {
     Graph getGraph();
 
     SubjectNode copyTriplesForSubjectNode(Graph newSourceGraph, Graph newTargetGraph,
-                                          SubjectNode node, SubjectNode newNode)
+        SubjectNode node, SubjectNode newNode)
         throws GraphException;
 
     ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph,
-                                        ObjectNode node, ObjectNode newNode)
+        ObjectNode node, ObjectNode newNode)
         throws GraphException;
 
     void replaceNode(Graph newTargetGraph, Node oldNode, Node newNode) throws GraphException;

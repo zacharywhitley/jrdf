@@ -94,17 +94,17 @@ public final class TripleBuilderImplUnitTest extends TestCase {
     // FIXME TJA: Add test for subject and predicate being non-resources (literal & variable). Should fail in defined way.
 
     private static final TripleSpec BOOK_1_DC_TITLE_VARIABLE =
-            new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+        new VariableTripleSpec(URI_BOOK_1, URI_DC_TITLE, VARIABLE_NAME_TITLE);
     private static final TripleSpec BOOK_2_DC_TITLE_VARIABLE =
-            new VariableTripleSpec(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
+        new VariableTripleSpec(URI_BOOK_2, URI_DC_TITLE, VARIABLE_NAME_TITLE);
     private static final TripleSpec BOOK_1_DC_SUBJECT_VARIABLE =
-            new VariableTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
+        new VariableTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, VARIABLE_NAME_SUBJECT);
     private static final TripleSpec BOOK_1_DC_SUBJECT_BOOK_TITLE =
-            new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
+        new LiteralTripleSpec(URI_BOOK_1, URI_DC_SUBJECT, LITERAL_BOOK_TITLE);
     private static final TripleSpec VARIABLE_VARIABLE_BOOK_TITLE =
-            new VariableResourceTripleSpec(VARIABLE_NAME_SUBJECT, VARIABLE_NAME_TITLE, URI_DC_SUBJECT);
+        new VariableResourceTripleSpec(VARIABLE_NAME_SUBJECT, VARIABLE_NAME_TITLE, URI_DC_SUBJECT);
     private static final Class[] PARAM_TYPES = {Graph.class, AttributeValuePairHelper.class,
-            SortedAttributeFactory.class};
+        SortedAttributeFactory.class};
     private static final String[] PARAMETER_NAMES = {"graph", "avpHelper", "sortedAttributeFactory"};
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final AttributeValuePairHelper AVP_HELPER = FACTORY.getNewAttributeValuePairHelper();
@@ -116,7 +116,7 @@ public final class TripleBuilderImplUnitTest extends TestCase {
         AttributeComparator newAttributeComparator = FACTORY.getNewAttributeComparator();
         SortedAttributeFactory newSortedAttributeFactory = new SortedAttributeFactoryImpl(newAttributeComparator, 1);
         tripleBuilder = new TripleBuilderImpl(FACTORY.getNewGraph(), FACTORY.getNewAttributeValuePairHelper(),
-                newSortedAttributeFactory);
+            newSortedAttributeFactory);
     }
 
     public void testClassProperties() {

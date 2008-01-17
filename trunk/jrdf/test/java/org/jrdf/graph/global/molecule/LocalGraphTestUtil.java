@@ -59,19 +59,17 @@
 
 package org.jrdf.graph.global.molecule;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 
 import java.net.URI;
 

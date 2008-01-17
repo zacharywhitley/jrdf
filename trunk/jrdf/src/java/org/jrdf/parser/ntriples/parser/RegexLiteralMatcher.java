@@ -59,10 +59,10 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.boundary.RegexMatcher;
-import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.regex.Pattern;
 

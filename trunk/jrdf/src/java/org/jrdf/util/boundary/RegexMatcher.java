@@ -63,7 +63,10 @@ import java.util.regex.MatchResult;
 
 public interface RegexMatcher extends MatchResult {
     boolean find();
+
     boolean matches();
+
     void appendReplacement(StringBuffer sb, String replacement);
+
     void appendTail(StringBuffer sb);
 }

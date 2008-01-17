@@ -104,7 +104,7 @@ public class FixedResourcePredicateIterator implements ClosableIterator<Predicat
 
     private void nextPredicate() {
         Long newPredicate = nextPredicateFromSPO();
-        if (newPredicate ==  null) {
+        if (newPredicate == null) {
             newPredicate = nextPredicateFromPOS();
         }
         this.nextPredicate = newPredicate;

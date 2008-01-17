@@ -91,7 +91,7 @@ public class SubsumptionEngine implements TupleEngine {
      * @param result   the tuples to be subsumed.
      */
     public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         int subsumes = subsumes(headings, avps1, avps2);
         if (tuple2SubsumesTuple1(subsumes)) {
             result.add(tupleFactory.getTuple(avps1));
@@ -110,7 +110,7 @@ public class SubsumptionEngine implements TupleEngine {
      *         common values or are equal.
      */
     public int subsumes(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2) {
+        SortedSet<AttributeValuePair> avps2) {
 
         // Don't subsume if all the values are set.
         int noHeadings = headings.size();
@@ -153,7 +153,7 @@ public class SubsumptionEngine implements TupleEngine {
     }
 
     private boolean onlyContainsAttributesValues(SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2) {
+        SortedSet<AttributeValuePair> avps2) {
         boolean onlyContainsValues = false;
         for (AttributeValuePair avp : avps2) {
             onlyContainsValues = avps1.contains(avp);

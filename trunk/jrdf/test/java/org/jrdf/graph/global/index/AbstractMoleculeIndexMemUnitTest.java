@@ -97,7 +97,7 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
     private final String LITERAL1 = "xyz";
     private final String LITERAL2 = "abc";
     private final TripleComparator groundedTripleComparator = new GroundedTripleComparatorFactoryImpl().newComparator();
-    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(), 
+    private NodeComparator nodeComparator = new NodeComparatorImpl(new NodeTypeComparatorImpl(),
         new GlobalizedBlankNodeComparatorImpl());
     private final TripleComparator tripleComparator = new TripleComparatorImpl(nodeComparator);
     protected MoleculeIndex moleculeIndex;
@@ -245,9 +245,11 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
         Molecule m = new MoleculeImpl(groundedTripleComparator);
         double random = Math.random();
         BlankNodeImpl blankNode = new BlankNodeImpl();
-        Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(URI.create(BASE_URL)), blankNode);
+        Triple triple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(
+            URI.create(BASE_URL)), blankNode);
         random = Math.random();
-        Triple triple2 = new TripleImpl(blankNode, new URIReferenceImpl(URI.create(BASE_URL)), new LiteralImpl(LITERAL2));
+        Triple triple2 = new TripleImpl(blankNode, new URIReferenceImpl(URI.create(BASE_URL)), new LiteralImpl(
+            LITERAL2));
         m = m.add(triple);
         m = m.add(triple2);
         Triple headTriple = m.getHeadTriple();
@@ -260,8 +262,10 @@ public abstract class AbstractMoleculeIndexMemUnitTest extends TestCase {
         Molecule m = new MoleculeImpl(groundedTripleComparator);
         double random = Math.random();
         BlankNodeImpl blankNode = new BlankNodeImpl();
-        Triple headTriple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(URI.create(BASE_URL)), blankNode);
-        TripleImpl tailTriple = new TripleImpl(blankNode, new URIReferenceImpl(URI.create(BASE_URL)), new LiteralImpl(LITERAL1));
+        Triple headTriple = new TripleImpl(new URIReferenceImpl(URI.create(BASE_URL + random)), new URIReferenceImpl(
+            URI.create(BASE_URL)), blankNode);
+        TripleImpl tailTriple = new TripleImpl(blankNode, new URIReferenceImpl(URI.create(BASE_URL)), new LiteralImpl(
+            LITERAL1));
         m = m.add(headTriple);
         m = m.add(tailTriple);
 

@@ -65,9 +65,9 @@ import org.jrdf.parser.ConfigurableParser;
 import org.jrdf.parser.GraphStatementHandler;
 import org.jrdf.parser.ParseException;
 import org.jrdf.parser.Parser;
+import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.parser.ParserConfiguration.DT_IGNORE;
 import org.jrdf.parser.StatementHandlerException;
-import org.jrdf.parser.ParserBlankNodeFactory;
 
 import java.io.IOException;
 import java.io.InputStream;

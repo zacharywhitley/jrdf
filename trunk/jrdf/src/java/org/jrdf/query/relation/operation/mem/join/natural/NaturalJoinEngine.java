@@ -100,7 +100,7 @@ public class NaturalJoinEngine implements TupleEngine {
     private final RelationHelper relationHelper;
 
     public NaturalJoinEngine(TupleFactory tupleFactory, AttributeValuePairComparator avpComparator,
-            RelationHelper relationHelper) {
+        RelationHelper relationHelper) {
         this.tupleFactory = tupleFactory;
         this.avpComparator = avpComparator;
         this.relationHelper = relationHelper;
@@ -111,7 +111,7 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     public void process(SortedSet<Attribute> headings, SortedSet<AttributeValuePair> avps1,
-            SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
+        SortedSet<AttributeValuePair> avps2, SortedSet<Tuple> result) {
         SortedSet<AttributeValuePair> resultantAttributeValues = new TreeSet<AttributeValuePair>(avpComparator);
         boolean contradiction = false;
         for (Attribute attribute : headings) {
@@ -142,7 +142,7 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private boolean addAttributeValuePair(AttributeValuePair avp1, AttributeValuePair avp2,
-            SortedSet<AttributeValuePair> resultantAttributeValues) {
+        SortedSet<AttributeValuePair> resultantAttributeValues) {
         // Add if avp1 is not null and avp2 is or they are both equal.
         if (avp1 != null) {
             return avp1NotNull(avp2, avp1, resultantAttributeValues);
@@ -153,7 +153,7 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private boolean avp1NotNull(AttributeValuePair avp2, AttributeValuePair avp1,
-            SortedSet<AttributeValuePair> resultantAttributeValues) {
+        SortedSet<AttributeValuePair> resultantAttributeValues) {
         if (avp2 == null) {
             addResults(avp1, resultantAttributeValues);
             return false;
@@ -173,7 +173,7 @@ public class NaturalJoinEngine implements TupleEngine {
     }
 
     private void addNonNullaryAvp(AttributeValuePair avp1, AttributeValuePair avp2,
-            SortedSet<AttributeValuePair> resultantAttributeValues) {
+        SortedSet<AttributeValuePair> resultantAttributeValues) {
         if (!(avp1 instanceof NullaryAttributeValuePair)) {
             addResults(avp1, resultantAttributeValues);
         } else {
