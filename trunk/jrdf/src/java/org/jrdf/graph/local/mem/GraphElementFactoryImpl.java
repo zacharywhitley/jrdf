@@ -71,7 +71,6 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
-import java.util.UUID;
 
 // TODO Move localization and creation to another method so it can be added to AbstractResource to provide shortcuts
 // much like TripleFactories methods.
@@ -147,28 +146,19 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public Literal createLiteral(Object object) {
-        LiteralMutableId literal = new LiteralImpl(object);
-        addNodeId(literal);
-        return literal;
+        return getLocalLiteral(new LiteralImpl(object));
     }
 
     public Literal createLiteral(String lexicalValue) {
-        LiteralMutableId literal = new LiteralImpl(lexicalValue);
-        addNodeId(literal);
-        return literal;
+        return getLocalLiteral(new LiteralImpl(lexicalValue));
     }
 
     public Literal createLiteral(String lexicalValue, String languageType) {
-        LiteralMutableId newLiteral = new LiteralImpl(lexicalValue, languageType);
-        addNodeId(newLiteral);
-        return newLiteral;
+        return getLocalLiteral(new LiteralImpl(lexicalValue, languageType));
     }
 
     public Literal createLiteral(String lexicalValue, URI datatypeURI) {
-        // create the node identifier
-        LiteralMutableId newLiteral = new LiteralImpl(lexicalValue, datatypeURI);
-        addNodeId(newLiteral);
-        return newLiteral;
+        return getLocalLiteral(new LiteralImpl(lexicalValue, datatypeURI));
     }
 
     /**
@@ -177,24 +167,15 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
      *
      * @param newLiteral A newly created newLiteral.
      */
-    private void addNodeId(LiteralMutableId newLiteral) {
-
-        // find the string identifier for this node
-        String strId = newLiteral.getEscapedForm();
-
-        // check if the node already exists in the string pool
-        Long tmpNodeId = nodePool.getNodeIdByString(strId);
-
+    private Literal getLocalLiteral(LiteralMutableId newLiteral) {
+        String escapedForm = newLiteral.getEscapedForm();
+        Long tmpNodeId = nodePool.getNodeIdByString(escapedForm);
         if (null != tmpNodeId) {
-
             // return the existing node instead
             newLiteral.setId(tmpNodeId);
+            return newLiteral;
         } else {
-
-            // create the node identifier
-            Long nextNode = nodePool.getNodeId(strId);
-            newLiteral.setId(nextNode);
-            nodePool.registerNode(newLiteral);
+            return localizer.createLocalLiteral(escapedForm);
         }
     }
 }
