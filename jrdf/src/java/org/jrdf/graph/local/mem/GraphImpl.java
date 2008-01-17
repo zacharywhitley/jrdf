@@ -220,7 +220,8 @@ public class GraphImpl implements Graph, Serializable {
         this.iteratorFactory = newIteratorFactory;
         this.readWriteGraph = newWritableGraph;
         this.resourceFactory = newResourceFactory;
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
+        LocalizerImpl newLocalizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+        this.elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory, newLocalizer);
         init();
     }
 
@@ -271,13 +272,14 @@ public class GraphImpl implements Graph, Serializable {
             readWriteGraph = new ReadWriteGraphImpl(indexes, nodePool, iteratorFactory);
         }
 
+        Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
+
         if (null == resourceFactory) {
-            Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
             resourceFactory = new ResourceFactoryImpl(localizer, readWriteGraph);
         }
 
         if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
+            elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory, localizer);
         }
 
         if (null == tripleFactory) {

@@ -62,6 +62,11 @@ package org.jrdf.graph.local.index.nodepool;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Literal;
+
+import java.net.URI;
 
 /**
  * Tied to a NodePool the Localizer interface is reponsible for read only queries against the nodepool.  It converts
@@ -88,4 +93,10 @@ public interface Localizer extends TypedNodeVisitor {
      * @throws GraphException if the node was not part of this node pool.
      */
     Long localize(Node node) throws GraphException;
+
+    BlankNode createLocalBlankNode() throws GraphException;
+
+    URIReference createLocalURIReference(URI uri, boolean validate);
+
+    Literal createLocalLiteral(String escapedForm);
 }

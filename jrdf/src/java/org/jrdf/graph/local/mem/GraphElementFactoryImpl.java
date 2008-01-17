@@ -65,7 +65,9 @@ import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.Localizer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
@@ -85,14 +87,16 @@ import java.util.UUID;
 public final class GraphElementFactoryImpl implements GraphElementFactory {
     private final NodePool nodePool;
     private final ResourceFactory resourceFactory;
+    private final Localizer localizer;
 
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool nodePool, ResourceFactory resourceFactory) {
-        checkNotNull(nodePool, resourceFactory);
-        this.nodePool = nodePool;
-        this.resourceFactory = resourceFactory;
+    GraphElementFactoryImpl(NodePool newNodePool, ResourceFactory newResourceFactory, Localizer newLocalizer) {
+        checkNotNull(newNodePool, newResourceFactory, newLocalizer);
+        this.nodePool = newNodePool;
+        this.resourceFactory = newResourceFactory;
+        this.localizer = newLocalizer;
     }
 
     public Resource createResource() throws GraphElementFactoryException {
@@ -117,19 +121,11 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public BlankNode createBlankNode() throws GraphElementFactoryException {
-        //get an Unique Identifier
-        String uid;
         try {
-            uid = UUID.randomUUID().toString();
-        } catch (Exception exception) {
-            throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.", exception);
+            return localizer.createLocalBlankNode();
+        } catch (GraphException e) {
+            throw new GraphElementFactoryException(e);
         }
-
-        // create the node identifier and add
-        Long nodeId = nodePool.getNodeId(uid);
-        BlankNode node = new BlankNodeImpl(uid, nodeId);
-        nodePool.registerNode((LocalizedNode) node);
-        return node;
     }
 
     public URIReference createURIReference(URI uri) throws GraphElementFactoryException {
@@ -145,13 +141,9 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         Long nodeId = nodePool.getNodeIdByString(uri.toString());
         if (null != nodeId) {
             return (URIReference) nodePool.getNodeById(nodeId);
+        } else {
+            return localizer.createLocalURIReference(uri, validate);
         }
-
-        // create the node identifier and add
-        nodeId = nodePool.getNodeId(uri.toString());
-        URIReference node = new URIReferenceImpl(uri, validate, nodeId);
-        nodePool.registerNode((LocalizedNode) node);
-        return node;
     }
 
     public Literal createLiteral(Object object) {
