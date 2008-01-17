@@ -75,16 +75,19 @@ import org.jrdf.graph.local.mem.URIReferenceImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.UUID;
+import java.net.URI;
 
 public class LocalizerImpl implements Localizer {
     private static final int TRIPLE = 3;
     private Long currentId;
     private GraphException exception;
     private final NodePool nodePool;
+    private final StringNodeMapper mapper;
 
-    public LocalizerImpl(NodePool newNodePool) {
-        checkNotNull(newNodePool);
+    public LocalizerImpl(NodePool newNodePool, StringNodeMapper newMapper) {
+        checkNotNull(newNodePool, newMapper);
         this.nodePool = newNodePool;
+        this.mapper = newMapper;
     }
 
     public Long[] localize(Node first, Node second, Node third) throws GraphException {
@@ -96,57 +99,71 @@ public class LocalizerImpl implements Localizer {
     }
 
     public Long localize(Node node) throws GraphException {
-        if (ANY_SUBJECT_NODE != node && ANY_PREDICATE_NODE != node && ANY_OBJECT_NODE != node) {
-            return getId(node);
+        if (ANY_SUBJECT_NODE != node && ANY_PREDICATE_NODE != node && ANY_OBJECT_NODE != node &&
+            LocalizedNode.class.isAssignableFrom(node.getClass())) {
+            return getId((LocalizedNode) node);
         } else {
             return null;
         }
     }
 
-    public void visitBlankNode(BlankNode blankNode) {
-        Long nodeId = ((LocalizedNode) blankNode).getId();
-        nodeId = getBlankNode(blankNode, nodeId);
-        currentId = nodeId;
+    public BlankNode createLocalBlankNode() throws GraphException {
+        try {
+            String uid = UUID.randomUUID().toString();
+            // create the node identifier and add
+            currentId = nodePool.getNodeId("");
+            BlankNode node = new BlankNodeImpl(uid, currentId);
+            nodePool.registerNode((LocalizedNode) node);
+            return node;
+        } catch (Exception e) {
+            throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.", e);
+        }
     }
 
-    private Long getBlankNode(BlankNode blankNode, Long nodeId) {
-        Node node = nodePool.getNodeById(nodeId);
-        if (node == null) {
+    public URIReference createLocalURIReference(URI uri) {
+        currentId = nodePool.getNodeId("");
+        URIReference node = new URIReferenceImpl(uri, currentId);
+        nodePool.registerNode((LocalizedNode) node);
+        return node;
+    }
+
+    public Literal createLocalLiteral(String escapedForm) {
+        currentId = nodePool.getNodeId("");
+        Literal node = mapper.convertToLiteral(escapedForm, currentId);
+        nodePool.registerNode((LocalizedNode) node);
+        return node;
+    }
+
+    public void visitBlankNode(BlankNode blankNode) {
+        currentId = ((LocalizedNode) blankNode).getId();
+        Node node = nodePool.getNodeById(currentId);
+        if (currentId == null) {
             try {
-                String uid;
-                try {
-                    uid = UUID.randomUUID().toString();
-                } catch (Exception exception) {
-                    throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.",
-                        exception);
-                }
-                // create the node identifier and add
-                nodeId = nodePool.getNodeId(uid);
-                node = new BlankNodeImpl(nodeId, uid);
-                nodePool.registerNode((LocalizedNode) node);
-            } catch (GraphElementFactoryException e) {
+                node = createLocalBlankNode();
+                currentId = ((LocalizedNode) node).getId();
+            } catch (GraphException e) {
                 exception = e;
             }
         }
         if (!blankNode.equals(node)) {
-            exception = new GraphException("The node returned by the nodeId (" + nodeId + ") was not the same blank " +
-                "node.  Got: " + node + ", expected: " + blankNode);
+            exception = new GraphException("The node returned by the nodeId (" + currentId + ") was not the same " +
+                "blank node.  Got: " + node + ", expected: " + blankNode);
         }
-        return nodeId;
     }
 
     public void visitURIReference(URIReference uriReference) {
         currentId = nodePool.getNodeIdByString(uriReference.getURI().toString());
         if (currentId == null) {
-            currentId = nodePool.getNodeId("");
-            URIReference node = new URIReferenceImpl(uriReference.getURI(), currentId);
-            nodePool.registerNode((LocalizedNode) node);
+            currentId = ((LocalizedNode) createLocalURIReference(uriReference.getURI())).getId();
         }
     }
 
     public void visitLiteral(Literal literal) {
-        currentId = nodePool.getNodeIdByString(literal.getEscapedForm());
-        // TODO Fix it up here to create literals as well.
+        String escapedForm = literal.getEscapedForm();
+        currentId = nodePool.getNodeIdByString(escapedForm);
+        if (currentId == null) {
+            currentId = ((LocalizedNode) createLocalLiteral(escapedForm)).getId();
+        }
     }
 
     public void visitNode(Node node) {
@@ -161,7 +178,7 @@ public class LocalizerImpl implements Localizer {
         }
     }
 
-    private Long getId(Node node) throws GraphException {
+    private Long getId(LocalizedNode node) throws GraphException {
         exception = null;
         currentId = null;
         node.accept(this);

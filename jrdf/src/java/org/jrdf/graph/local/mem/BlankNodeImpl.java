@@ -100,10 +100,10 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
      * The constructor for this node.  Package scope so that only NodeFactory and
      * static methods can call it.
      *
-     * @param newId  The id to be used for this node.
      * @param newUid String Globally Unique Identifier for external communication.
+     * @param newId  The id to be used for this node.
      */
-    public BlankNodeImpl(Long newId, String newUid) {
+    public BlankNodeImpl(String newUid, Long newId) {
         id = newId;
         uid = newUid;
     }
@@ -192,6 +192,6 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
                     "of the format: uid#id");
         }
 
-        return new BlankNodeImpl(Long.valueOf(split[1]), split[0]);
+        return new BlankNodeImpl(split[0], Long.valueOf(split[1]));
     }
 }
