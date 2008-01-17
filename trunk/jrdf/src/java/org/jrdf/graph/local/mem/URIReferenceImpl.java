@@ -111,7 +111,7 @@ public class URIReferenceImpl extends AbstractURIReference implements LocalizedN
      * @param validate whether to enforce valid RDF URIs.
      * @param newId    The internal identifier for this node.
      */
-    URIReferenceImpl(URI newUri, boolean validate, Long newId) {
+    public URIReferenceImpl(URI newUri, boolean validate, Long newId) {
         super(newUri, validate);
         checkNotNull(newUri, validate, newId);
         id = newId;

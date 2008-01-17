@@ -120,9 +120,9 @@ public class LocalizerImpl implements Localizer {
         }
     }
 
-    public URIReference createLocalURIReference(URI uri) {
+    public URIReference createLocalURIReference(URI uri, boolean validate) {
         currentId = nodePool.getNodeId("");
-        URIReference node = new URIReferenceImpl(uri, currentId);
+        URIReference node = new URIReferenceImpl(uri, validate, currentId);
         nodePool.registerNode((LocalizedNode) node);
         return node;
     }
@@ -154,7 +154,7 @@ public class LocalizerImpl implements Localizer {
     public void visitURIReference(URIReference uriReference) {
         currentId = nodePool.getNodeIdByString(uriReference.getURI().toString());
         if (currentId == null) {
-            currentId = ((LocalizedNode) createLocalURIReference(uriReference.getURI())).getId();
+            currentId = ((LocalizedNode) createLocalURIReference(uriReference.getURI(), false)).getId();
         }
     }
 
