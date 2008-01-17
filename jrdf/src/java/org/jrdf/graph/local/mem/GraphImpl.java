@@ -306,8 +306,8 @@ public class GraphImpl implements Graph, Serializable {
         return find(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 
-    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws
-        GraphException {
+    public ClosableIterator<Triple> find(SubjectNode subject, PredicateNode predicate, ObjectNode object)
+        throws GraphException {
         checkForNulls(subject, predicate, object, FIND_CANT_USE_NULLS);
         return readWriteGraph.find(subject, predicate, object);
     }
