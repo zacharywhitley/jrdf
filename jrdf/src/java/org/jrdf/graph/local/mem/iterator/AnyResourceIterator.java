@@ -59,11 +59,11 @@
 
 package org.jrdf.graph.local.mem.iterator;
 
+import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.mem.ResourceFactory;
-import org.jrdf.graph.Resource;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -80,7 +80,7 @@ public class AnyResourceIterator extends ResourceIterator<Resource> {
     }
 
     protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
-            final GraphHandler graphHandler) {
+        final GraphHandler graphHandler) {
         return iterator.next().getKey();
     }
 }

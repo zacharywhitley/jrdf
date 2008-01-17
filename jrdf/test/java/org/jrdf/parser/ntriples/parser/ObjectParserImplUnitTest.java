@@ -60,23 +60,23 @@ package org.jrdf.parser.ntriples.parser;
 
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.URIReference;
+import org.jrdf.parser.ParseException;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
-import org.jrdf.parser.ParseException;
 
 public class ObjectParserImplUnitTest extends TestCase {
     private static final Class<ObjectParser> TARGET_INTERFACE = ObjectParser.class;
     private static final Class<ObjectParserImpl> TEST_CLASS = ObjectParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {URIReferenceParser.class, BlankNodeParser.class,
+    private static final Class[] PARAM_TYPES = new Class[]{URIReferenceParser.class, BlankNodeParser.class,
         LiteralParser.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"uriReferenceParser", "blankNodeParser",
+    private static final String[] PARAMETER_NAMES = new String[]{"uriReferenceParser", "blankNodeParser",
         "literalParser"};
     private static final String MATCHER = "match" + Math.random();
     private static final String LINE = "line" + Math.random();
@@ -101,7 +101,7 @@ public class ObjectParserImplUnitTest extends TestCase {
 
     public void testMethodProperties() {
         ArgumentTestUtil.checkMethodNullAssertions(objectParser, "parseObject", new ParameterDefinition(
-                new String[] {"regexMatcher"}, new Class[]{RegexMatcher.class}));
+            new String[]{"regexMatcher"}, new Class[]{RegexMatcher.class}));
     }
 
     public void testParseObjectURI() throws Exception {

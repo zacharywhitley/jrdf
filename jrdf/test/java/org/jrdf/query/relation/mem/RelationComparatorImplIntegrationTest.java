@@ -60,14 +60,11 @@ package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.RelationComparator;
 import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_1;
 import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_2;
 import static org.jrdf.query.relation.mem.RelationImplUnitTest.TEST_RELATION_3;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ComparatorTestUtil;
-import static org.jrdf.util.test.ComparatorTestUtil.*;
+import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
 
 /**
  * Test for the implementation of NodeComparatorImpl.

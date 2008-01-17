@@ -86,7 +86,7 @@ public final class SableCcSparqlParser implements SparqlParser {
     private GraphRelationFactory graphRelationFactory;
 
     public SableCcSparqlParser(ParserFactory parserFactory, GraphRelationFactory graphRelationFactory,
-            AttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
+        AttributeValuePairHelper avpHelper, SortedAttributeFactory sortedAttributeFactory) {
         this.parserFactory = parserFactory;
         this.graphRelationFactory = graphRelationFactory;
         this.avpHelper = avpHelper;

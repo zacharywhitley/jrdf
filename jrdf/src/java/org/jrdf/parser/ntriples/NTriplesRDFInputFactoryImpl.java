@@ -97,7 +97,7 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     private ObjectParser objectParser;
 
     public RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph,
-            ParserBlankNodeFactory blankNodeFactory) {
+        ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
         TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
             graph.getTripleFactory());
@@ -105,7 +105,7 @@ public class NTriplesRDFInputFactoryImpl implements RDFInputFactory {
     }
 
     public RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph,
-            ParserBlankNodeFactory blankNodeFactory) {
+        ParserBlankNodeFactory blankNodeFactory) {
         init(graph, blankNodeFactory);
         TripleParser tripleParser = new TripleParserImpl(subjectParser, predicateParser, objectParser,
             graph.getTripleFactory());

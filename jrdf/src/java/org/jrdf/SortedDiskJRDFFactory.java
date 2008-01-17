@@ -78,9 +78,9 @@ import org.jrdf.sparql.builder.QueryBuilder;
 import org.jrdf.util.DirectoryHandler;
 import org.jrdf.util.TempDirectoryHandler;
 
+import static java.util.Arrays.asList;
 import java.util.HashSet;
 import java.util.Set;
-import static java.util.Arrays.*;
 
 /**
  * The optimal version of an on disk JRDF graph.  Currently, uses BDB for sorting intermedia results, Sesame for the on
@@ -137,7 +137,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     }
 
     private TripleBTree[] createBTrees() {
-        return new TripleBTree[] {btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
+        return new TripleBTree[]{btreeFactory.createBTree(HANDLER, "spo" + graphNumber),
             btreeFactory.createBTree(HANDLER, "pos" + graphNumber),
             btreeFactory.createBTree(HANDLER, "osp" + graphNumber)};
     }

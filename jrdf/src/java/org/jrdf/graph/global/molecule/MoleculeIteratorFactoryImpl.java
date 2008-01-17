@@ -66,12 +66,12 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.iterator.GlobalizedGraphIterator;
 import org.jrdf.graph.global.iterator.OneFixedIterator;
 import org.jrdf.graph.global.iterator.ThreeFixedIterator;
 import org.jrdf.graph.global.iterator.TwoFixedIterator;
+import org.jrdf.util.ClosableIterator;
 
 public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
     private final MoleculeIndex[] indexes;
@@ -105,7 +105,7 @@ public class MoleculeIteratorFactoryImpl implements MoleculeIteratorFactory {
     }
 
     public ClosableIterator<Molecule> newThreeFixedIterator(SubjectNode subjNode, PredicateNode predNode,
-                                                            ObjectNode objNode) {
+        ObjectNode objNode) {
         return new ThreeFixedIterator(subjNode, predNode, objNode, indexes);
     }
 

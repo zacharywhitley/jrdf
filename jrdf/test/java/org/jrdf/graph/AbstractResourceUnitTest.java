@@ -62,9 +62,9 @@ package org.jrdf.graph;
 import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import org.jrdf.graph.global.GlobalizedBlankNode;
 import org.jrdf.graph.local.mem.ReadWriteGraph;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.graph.global.GlobalizedBlankNode;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 
@@ -87,10 +87,13 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     private Resource uriRef1;
 
     public abstract ReadWriteGraph getReadWriteGraph();
+
     public abstract GraphElementFactory getElementFactory();
+
     public abstract Resource createBlankNodeResource(GlobalizedBlankNode node, ReadWriteGraph readWriteGraph);
+
     public abstract Resource createURIReferenceResource(URIReference node,
-            ReadWriteGraph readWriteGraph);
+        ReadWriteGraph readWriteGraph);
 
     public void setUp() throws Exception {
         elementFactory = getElementFactory();
@@ -150,14 +153,15 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testBlankNodeOverrideSetValue() throws Exception {
-        checkSetValueOverride(blankNode1, predicate1, new ObjectNode[] {object1, object2, object3});
+        checkSetValueOverride(blankNode1, predicate1, new ObjectNode[]{object1, object2, object3});
     }
 
     public void testURIReferenceOverrideSetValue() throws Exception {
-        checkSetValueOverride(uriRef1, predicate2, new ObjectNode[] {object1, object2, object3});
+        checkSetValueOverride(uriRef1, predicate2, new ObjectNode[]{object1, object2, object3});
     }
 
-    private void checkSetValueOverride(Resource node, PredicateNode predicate, ObjectNode[] objects) throws GraphException {
+    private void checkSetValueOverride(Resource node, PredicateNode predicate, ObjectNode[] objects)
+        throws GraphException {
         node.addValue(predicate, objects[0]);
         node.addValue(predicate, objects[1]);
         node.setValue(predicate, objects[2]);
@@ -231,7 +235,8 @@ public abstract class AbstractResourceUnitTest extends TestCase {
     }
 
     public void testGetSubjects() throws Exception {
-        Resource object = createBlankNodeResource((GlobalizedBlankNode) elementFactory.createBlankNode(), readWriteGraph);
+        Resource object = createBlankNodeResource((GlobalizedBlankNode) elementFactory.createBlankNode(),
+            readWriteGraph);
         blankNode1.addValue(predicate1, object);
         blankNode2.addValue(predicate1, object);
         blankNode3.addValue(predicate1, object);

@@ -86,7 +86,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     private static final Attribute ATTRIBUTE = factory.createMock(Attribute.class);
     private static final TypeComparator NODE_COMPARATOR = factory.createMock(TypeComparator.class);
     private static final AttributeNameComparator ATTRIBUTE_NAME_COMPARATOR
-            = factory.createMock(AttributeNameComparator.class);
+        = factory.createMock(AttributeNameComparator.class);
     private static final int BEFORE = 1;
     private static final int AFTER = -1;
 
@@ -99,7 +99,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
         checkImplementationOfInterfaceAndFinal(AttributeComparator.class, AttributeComparatorImpl.class);
         checkImplementationOfInterface(Serializable.class, AttributeComparator.class);
         checkConstructor(AttributeComparatorImpl.class, Modifier.PUBLIC,
-                TypeComparator.class, AttributeNameComparator.class);
+            TypeComparator.class, AttributeNameComparator.class);
     }
 
     public void testNullPointerException() {
@@ -155,7 +155,7 @@ public class AttributeComparatorImplUnitTest extends TestCase {
     }
 
     private AttributeComparator createComparator(TypeComparator nodeComparator,
-            AttributeNameComparator attributeNameComparator) {
+        AttributeNameComparator attributeNameComparator) {
         return new AttributeComparatorImpl(nodeComparator, attributeNameComparator);
     }
 

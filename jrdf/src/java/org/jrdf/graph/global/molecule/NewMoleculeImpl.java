@@ -64,8 +64,8 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.TripleImpl;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -88,7 +88,7 @@ public class NewMoleculeImpl implements NewMolecule {
     private final MergeSubmolecules moleculeMerger;
 
     private NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
-            SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
+        SortedMap<Triple, Set<NewMolecule>> newSubMolecules) {
         checkNotNull(newComparator, newSubMolecules);
         moleculeComparator = newComparator;
         subMolecules = newSubMolecules;
@@ -103,7 +103,7 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
-            Triple... rootTriples) {
+        Triple... rootTriples) {
         this(newComparator, newMoleculeMerger);
         for (Triple rootTriple : rootTriples) {
             subMolecules.put(rootTriple, new TreeSet<NewMolecule>(moleculeComparator));
@@ -111,7 +111,7 @@ public class NewMoleculeImpl implements NewMolecule {
     }
 
     public NewMoleculeImpl(NewMoleculeComparator newComparator, MergeSubmolecules newMoleculeMerger,
-            NewMolecule... childMolecules) {
+        NewMolecule... childMolecules) {
         this(newComparator, newMoleculeMerger);
         for (NewMolecule molecule : childMolecules) {
             Triple headTriple = molecule.getHeadTriple();
@@ -237,7 +237,7 @@ public class NewMoleculeImpl implements NewMolecule {
             newMolecules.add(triple);
         }
         return new NewMoleculeImpl(moleculeComparator, moleculeMerger,
-                newMolecules.toArray(new Triple[newMolecules.size()]));
+            newMolecules.toArray(new Triple[newMolecules.size()]));
     }
 
     public int size() {

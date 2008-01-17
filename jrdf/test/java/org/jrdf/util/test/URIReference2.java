@@ -59,9 +59,9 @@
 
 package org.jrdf.util.test;
 
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.AbstractURIReference;
 import org.jrdf.graph.PredicateNode;
+import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
 

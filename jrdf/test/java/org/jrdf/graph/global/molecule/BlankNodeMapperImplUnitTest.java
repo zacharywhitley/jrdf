@@ -60,25 +60,37 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.TripleComparator;
+import org.jrdf.graph.global.GroundedTripleComparatorImpl;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B1R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R1R1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2B3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B2R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.B3R2R3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE2;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.BNODE3;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B1;
+import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.R1R2B2;
+import org.jrdf.graph.local.mem.BlankNodeComparator;
+import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.mem.LocalizedNodeComparator;
+import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.mem.NodeComparatorImpl;
+import org.jrdf.graph.local.mem.TripleComparatorImpl;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.GroundedTripleComparatorImpl;
-import static org.jrdf.graph.global.molecule.LocalGraphTestUtil.*;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
 
-import java.util.Map;
 import java.util.Collections;
+import java.util.Map;
 
 public class BlankNodeMapperImplUnitTest extends TestCase {
     private final NodeTypeComparator typeComparator = new NodeTypeComparatorImpl();
@@ -99,14 +111,14 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     public void testIncompatibleMolecules() {
         NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
         NewMolecule m2 = moleculeFactory.createMolecule(B2R2B3);
-        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertTrue(blankNodeMap.isEmpty());
     }
 
     public void testLevelOneMapping1() {
         NewMolecule m1 = moleculeFactory.createMolecule(B1R1R1);
         NewMolecule m2 = moleculeFactory.createMolecule(B2R1R1);
-        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals(BNODE1, blankNodeMap.get(BNODE2));
     }
@@ -114,7 +126,7 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     public void testLevelOneMapping2() {
         NewMolecule m1 = moleculeFactory.createMolecule(R1R2B1);
         NewMolecule m2 = moleculeFactory.createMolecule(R1R2B2);
-        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals(BNODE1, blankNodeMap.get(BNODE2));
     }
@@ -122,14 +134,14 @@ public class BlankNodeMapperImplUnitTest extends TestCase {
     public void testConflictingNestedNodes() {
         NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
         NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R3), Collections.<Triple>emptySet());
-        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertTrue(blankNodeMap.isEmpty());
     }
 
     public void testNestedNodes() {
         NewMolecule m1 = createMultiLevelMolecule(asSet(B1R1B2), asSet(B2R2R2), Collections.<Triple>emptySet());
         NewMolecule m2 = createMultiLevelMolecule(asSet(B1R1B3), asSet(B3R2R2), Collections.<Triple>emptySet());
-        Map<BlankNode,BlankNode> blankNodeMap = mapper.createMap(m1, m2);
+        Map<BlankNode, BlankNode> blankNodeMap = mapper.createMap(m1, m2);
         assertFalse(blankNodeMap.isEmpty());
         assertEquals(BNODE2, blankNodeMap.get(BNODE3));
     }

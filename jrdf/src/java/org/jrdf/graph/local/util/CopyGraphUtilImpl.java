@@ -73,9 +73,9 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.set.SortedSetFactory;
+import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
 import java.util.Iterator;
@@ -158,7 +158,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
     }
 
     public ObjectNode copyTriplesForObjectNode(Graph newSourceGraph, Graph newTargetGraph, ObjectNode node,
-            ObjectNode newNode) throws GraphException {
+        ObjectNode newNode) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory);
         try {
             Set<Triple> set = getAllTriplesForObjectNode(node, newSourceGraph);

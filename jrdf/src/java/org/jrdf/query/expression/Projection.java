@@ -92,7 +92,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
     }
 
     public Projection(VariableCollector collector, LinkedHashSet<AttributeName> declaredVariables,
-            Expression<ExpressionVisitor> nextExpression) throws ParserException {
+        Expression<ExpressionVisitor> nextExpression) throws ParserException {
         checkNotNull(collector, declaredVariables, nextExpression);
         this.variableCollector = collector;
         this.declaredVariables = declaredVariables;
@@ -149,7 +149,7 @@ public final class Projection<V extends ExpressionVisitor> implements Expression
             if (type == null) {
                 String literal = variable.getLiteral();
                 throw new ParserException(new TIdentifier(literal), "Failed to find variable " +
-                        literal + " in where clause. ");
+                    literal + " in where clause. ");
             } else {
                 Attribute attribute = new AttributeImpl(variable, type);
                 newAttributes.add(attribute);

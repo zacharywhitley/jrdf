@@ -114,9 +114,11 @@ public class RelationIntegrationTestUtil {
     public static final Attribute VAR_BAR1_SUBJECT = new AttributeImpl(VAR_BAR1, new SubjectNodeType());
     public static final Attribute VAR_BAR1_PREDICATE = new AttributeImpl(VAR_BAR1, new PredicateNodeType());
     public static final Attribute VAR_BAR1_OBJECT = new AttributeImpl(VAR_BAR1, new ObjectNodeType());
-    public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1, new SubjectPredicateNodeType());
+    public static final Attribute VAR_BAR1_SUBJECTPREDICATE = new AttributeImpl(VAR_BAR1,
+        new SubjectPredicateNodeType());
     public static final Attribute VAR_BAR1_SUBJECTOBJECT = new AttributeImpl(VAR_BAR1, new SubjectObjectNodeType());
-    public static final Attribute VAR_BAR1_SUBJECTPREDICATEOBJECT = new AttributeImpl(VAR_BAR1, new SubjectPredicateObjectNodeType());
+    public static final Attribute VAR_BAR1_SUBJECTPREDICATEOBJECT = new AttributeImpl(VAR_BAR1,
+        new SubjectPredicateObjectNodeType());
     public static final Attribute VAR_BAR2_PREDICATE = new AttributeImpl(VAR_BAR2, new PredicateNodeType());
     public static final Attribute POS_BAR3_OBJECT = new AttributeImpl(POS_BAR3, new ObjectNodeType());
     public static final URIReference RESOURCE_1 = NodeTestUtil.createResource(RDF.ALT);
@@ -127,71 +129,71 @@ public class RelationIntegrationTestUtil {
     public static final URIReference RESOURCE_6 = NodeTestUtil.createResource(RDF.PREDICATE);
 
     public static final AttributeValuePair POS_FOO1_SUBJECT_R1 =
-            new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_1);
+        new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_1);
     public static final AttributeValuePair POS_FOO1_SUBJECT_R3 =
-            new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_3);
+        new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_3);
     public static final AttributeValuePair POS_FOO1_SUBJECT_R4 =
-            new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_4);
+        new AttributeValuePairImpl(POS_FOO1_SUBJECT, RESOURCE_4);
 
     public static final AttributeValuePair POS_FOO2_PREDICATE_R2 =
-            new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_2);
+        new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_2);
     public static final AttributeValuePair POS_FOO2_PREDICATE_R4 =
-            new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_4);
+        new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_4);
     public static final AttributeValuePair POS_FOO2_PREDICATE_R6 =
-            new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_6);
+        new AttributeValuePairImpl(POS_FOO2_PREDICATE, RESOURCE_6);
     public static final AttributeValuePair POS_FOO4_PREDICATE_R2 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_2);
+        new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_2);
     public static final AttributeValuePair POS_FOO4_PREDICATE_R3 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_3);
+        new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_3);
     public static final AttributeValuePair POS_FOO4_PREDICATE_R5 =
-            new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_5);
+        new AttributeValuePairImpl(POS_FOO4_PREDICATE, RESOURCE_5);
     public static final AttributeValuePair POS_FOO5_OBJECT_R6 =
-            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_6);
+        new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_6);
 
     public static final AttributeValuePair POS_FOO3_OBJECT_R3 =
-            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_3);
+        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_3);
     public static final AttributeValuePair POS_FOO3_OBJECT_R4 =
-            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
+        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_4);
     public static final AttributeValuePair POS_FOO3_OBJECT_R5 =
-            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_5);
+        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_5);
     public static final AttributeValuePair POS_FOO3_OBJECT_R6 =
-            new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_6);
+        new AttributeValuePairImpl(POS_FOO3_OBJECT, RESOURCE_6);
     public static final AttributeValuePair POS_FOO5_OBJECT_R4 =
-            new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
+        new AttributeValuePairImpl(POS_FOO5_OBJECT, RESOURCE_4);
 
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R3 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECT_R4 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECT, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R1 =
-            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_1);
+        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_1);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R2 =
-            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_2);
+        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_2);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R3 =
-            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_3);
+        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_PREDICATE_R4 =
-            new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_4);
+        new AttributeValuePairImpl(VAR_BAR1_PREDICATE, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR2_PREDICATE_R4 =
-            new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
+        new AttributeValuePairImpl(VAR_BAR2_PREDICATE, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR1_OBJECT_R3 =
-            new AttributeValuePairImpl(VAR_BAR1_OBJECT, RESOURCE_3);
+        new AttributeValuePairImpl(VAR_BAR1_OBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_OBJECT_R4 =
-            new AttributeValuePairImpl(VAR_BAR1_OBJECT, RESOURCE_4);
+        new AttributeValuePairImpl(VAR_BAR1_OBJECT, RESOURCE_4);
     public static final AttributeValuePair POS_BAR3_OBJECT_R1 =
-            new AttributeValuePairImpl(POS_BAR3_OBJECT, RESOURCE_1);
+        new AttributeValuePairImpl(POS_BAR3_OBJECT, RESOURCE_1);
 
     public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATE_R3 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATE_R4 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATE, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATEOBJECT_R3 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_3);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECTPREDICATEOBJECT_R4 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_4);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECTPREDICATEOBJECT, RESOURCE_4);
     public static final AttributeValuePair VAR_BAR1_SUBJECTOBJECT_R3 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_3);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_3);
     public static final AttributeValuePair VAR_BAR1_SUBJECTOBJECT_R4 =
-            new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
+        new AttributeValuePairImpl(VAR_BAR1_SUBJECTOBJECT, RESOURCE_4);
 
     public static Set<Tuple> createASingleTuple(AttributeValuePair... attributeValuePairs) {
         AttributeValuePairComparator avpComparator = FACTORY.getNewAttributeValuePairComparator();
@@ -229,7 +231,7 @@ public class RelationIntegrationTestUtil {
         return newAttributes;
     }
 
-    @SuppressWarnings({ "unchecked" })
+    @SuppressWarnings({"unchecked"})
     public static Relation createEmptyRelation(Set<Attribute> newAttributes) {
         RelationFactory rf = new RelationFactoryImpl(ATTRIBUTE_COMPARATOR, FACTORY.getNewTupleComparator());
         return rf.getRelation(newAttributes, Collections.EMPTY_SET);

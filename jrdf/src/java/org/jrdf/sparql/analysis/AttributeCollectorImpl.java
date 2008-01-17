@@ -66,13 +66,13 @@ import org.jrdf.query.relation.attributename.VariableName;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.PositionalNodeType;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.io.ObjectInputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 /**
  * A variable collector takes the attribute value pairs from constraints and add them to a map.  Used to construct

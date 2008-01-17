@@ -59,8 +59,8 @@
 
 package org.jrdf.parser;
 
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.Triple;
+import org.jrdf.util.ClosableIterator;
 
 public interface RDFEventReader extends ClosableIterator<Triple> {
 }

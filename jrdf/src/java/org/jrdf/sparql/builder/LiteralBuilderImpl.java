@@ -60,18 +60,18 @@
 package org.jrdf.sparql.builder;
 
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.GraphElementFactoryException;
+import org.jrdf.graph.Literal;
 import org.jrdf.sparql.parser.analysis.AnalysisAdapter;
+import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
+import org.jrdf.sparql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import org.jrdf.sparql.parser.node.ALiteralObjectTripleElement;
 import org.jrdf.sparql.parser.node.AQuotedLiteralLiteral;
 import org.jrdf.sparql.parser.node.AQuotedUnescapedQuotedStrand;
+import org.jrdf.sparql.parser.node.PDbQuotedStrand;
 import org.jrdf.sparql.parser.node.PLiteral;
 import org.jrdf.sparql.parser.node.PQuotedStrand;
 import org.jrdf.sparql.parser.node.Switch;
-import org.jrdf.sparql.parser.node.ADbQuotedLiteralLiteral;
-import org.jrdf.sparql.parser.node.PDbQuotedStrand;
-import org.jrdf.sparql.parser.node.ADbQuotedUnescapedDbQuotedStrand;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.LinkedList;

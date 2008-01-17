@@ -84,5 +84,5 @@ public interface StatementHandler {
      *                                   encountered an unrecoverable error.
      */
     void handleStatement(SubjectNode subject, PredicateNode predicate,
-                         ObjectNode object) throws StatementHandlerException;
+        ObjectNode object) throws StatementHandlerException;
 }

@@ -58,8 +58,8 @@
 
 package org.jrdf.util.boundary;
 
-import org.easymock.IArgumentMatcher;
 import org.easymock.EasyMock;
+import org.easymock.IArgumentMatcher;
 
 import java.util.regex.Pattern;
 
@@ -82,7 +82,7 @@ public class PatternArgumentMatcher implements IArgumentMatcher {
         buffer.append("Expected: " + expectedPattern.pattern());
     }
 
-    public static <T extends Pattern>T eqPattern(T in) {
+    public static <T extends Pattern> T eqPattern(T in) {
         EasyMock.reportMatcher(new PatternArgumentMatcher(in));
         return null;
     }

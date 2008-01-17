@@ -64,8 +64,8 @@ import static junit.framework.Assert.assertTrue;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.TripleImpl;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
@@ -121,7 +121,8 @@ public class GlobalGraphTestUtil {
     public static final Triple b3r3r3 = new TripleImpl(BNODE3, REF3, REF3);
     public static final NewMoleculeComparator MOLECULE_COMPARATOR = new NewMoleculeComparatorImpl(COMPARATOR);
     public static final MergeMolecules MERGE_MOLECULE = new MergeMoleculesImpl();
-    private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY = new GroundedTripleComparatorFactoryImpl();
+    private static final GroundedTripleComparatorFactory TRIPLE_COMPARATOR_FACTORY =
+        new GroundedTripleComparatorFactoryImpl();
     private static final TripleComparator TRIPLE_COMPARATOR = TRIPLE_COMPARATOR_FACTORY.newComparator();
     public static final NewMoleculeFactory MOLECULE_FACTORY = new NewMoleculeFactoryImpl(TRIPLE_COMPARATOR,
         MOLECULE_COMPARATOR, new MoleculeSubsumptionImpl());
@@ -177,7 +178,7 @@ public class GlobalGraphTestUtil {
         }
         for (Triple expectedTriple : expectedTriples) {
             assertTrue("Expected triple: " + expectedTriple + " but got: " + rootTriples,
-                    rootTriples.contains(expectedTriple));
+                rootTriples.contains(expectedTriple));
         }
     }
 

@@ -59,8 +59,8 @@
 
 package org.jrdf.graph.local.index.nodepool;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.TypedNodeVisitor;
 
 /**

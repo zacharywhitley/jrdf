@@ -102,7 +102,8 @@ public class NodeComparatorImplIntegrationTest extends TestCase {
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(NodeComparator.class, NodeComparatorImpl.class);
         checkExtensionOf(Comparator.class, NodeComparator.class);
-        checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class, BlankNodeComparator.class);
+        checkConstructor(NodeComparatorImpl.class, Modifier.PUBLIC, NodeTypeComparator.class,
+            BlankNodeComparator.class);
     }
 
     public void testNullPointerException() {

@@ -91,7 +91,8 @@ public class MinimumUnionFullOuterJoinImplIntegrationTest extends TestCase {
     }
 
     private void checkJoin(Relation expectedResult, Relation relation1, Relation relation2) {
-        Relation relation = org.jrdf.query.relation.operation.mem.union.MinimumUnionFullOuterJoinImplIntegrationTest.FULL_OUTER_JOIN.join(relation1, relation2);
+        Relation relation = org.jrdf.query.relation.operation.mem.union.MinimumUnionFullOuterJoinImplIntegrationTest
+            .FULL_OUTER_JOIN.join(relation1, relation2);
 
 //        Set<Tuple> sortedTuples = relation.getSortedTuples();
 //        Set<Tuple> sortedTuples2 = expected.getSortedTuples();

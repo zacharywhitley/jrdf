@@ -59,7 +59,7 @@
 
 package org.jrdf.graph;
 
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class TripleImpl extends AbstractTriple {
     /**

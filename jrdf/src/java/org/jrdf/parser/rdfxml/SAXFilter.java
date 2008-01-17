@@ -63,9 +63,9 @@ import org.jrdf.parser.NamespaceListener;
 import org.jrdf.parser.ParseLocationListener;
 import org.jrdf.vocabulary.RDF;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.ContentHandler;
 
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.sax.SAXTransformerFactory;

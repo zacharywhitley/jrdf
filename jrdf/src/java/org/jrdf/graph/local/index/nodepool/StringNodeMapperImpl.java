@@ -59,14 +59,14 @@
 
 package org.jrdf.graph.local.index.nodepool;
 
+import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
+import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
+import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Resource;
-import static org.jrdf.graph.AnySubjectNode.*;
-import static org.jrdf.graph.AnyPredicateNode.*;
-import static org.jrdf.graph.AnyObjectNode.*;
+import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.mem.BlankNodeImpl;
 import org.jrdf.graph.local.mem.LiteralImpl;
 import org.jrdf.graph.local.mem.LiteralMutableId;

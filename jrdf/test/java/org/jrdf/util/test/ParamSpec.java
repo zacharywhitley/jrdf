@@ -71,7 +71,7 @@ public final class ParamSpec {
     private Object[] params;
     private Class[] types;
 
-    public ParamSpec(Object ...  params) {
+    public ParamSpec(Object... params) {
         this.params = params;
         setTypes(this.params);
     }
@@ -92,11 +92,11 @@ public final class ParamSpec {
         return types;
     }
 
-    private void setTypes(Object ... params) {
+    private void setTypes(Object... params) {
         types = guessParameterTypes(params);
     }
 
-    private static Class<?>[] guessParameterTypes(Object ... params) {
+    private static Class<?>[] guessParameterTypes(Object... params) {
         Class<?>[] types = new Class<?>[params.length];
         for (int i = 0; i < params.length; i++) {
             types[i] = params[i].getClass();

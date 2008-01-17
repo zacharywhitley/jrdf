@@ -59,12 +59,13 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
-import static org.jrdf.graph.global.molecule.NullNewMolecule.*;
+import org.jrdf.graph.TripleComparator;
+import static org.jrdf.graph.global.molecule.NullNewMolecule.NULL_MOLECULE;
 
 // TODO AN Fix this comparator to do recursive equality on blank nodes - that is HeadTriples must match plus the LHS
 // Level X must exist in RHS and so on recursively.  Possibly -1 and 1 values record if RHS is subsumed by LHS and
+
 // RHS subsumed LHS.
 public class NewMoleculeHeadTripleComparatorImpl implements NewMoleculeComparator {
     private static final long serialVersionUID = 3376402602482439640L;

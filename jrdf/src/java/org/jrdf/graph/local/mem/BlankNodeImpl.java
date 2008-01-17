@@ -189,7 +189,7 @@ public class BlankNodeImpl extends AbstractBlankNode implements GlobalizedBlankN
         //validate
         if (null == split || 2 > split.length) {
             throw new IllegalArgumentException("String: " + nodeString + " is not " +
-                    "of the format: uid#id");
+                "of the format: uid#id");
         }
 
         return new BlankNodeImpl(split[0], Long.valueOf(split[1]));

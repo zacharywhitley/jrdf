@@ -63,20 +63,21 @@ import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
-import java.util.regex.Pattern;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 // TODO AN Rename to something a bit more correct - escapes strings.
 public final class NTripleUtilImpl implements NTripleUtil {
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
-            "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
+        "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private static final int LITERAL_ESCAPE_INDEX = 0;
     private static final int UNICODE_4DIGIT_INDEX = 9;
     private static final int UNICODE_8DIGIT_INDEX = 11;
     private static final int HEX_RADIX = 16;
     private static final Map<String, String> LITERAL_ESCAPE_LOOKUP = new HashMap<String, String>() {
         private static final long serialVersionUID = 321L;
+
         {
             put("\\\\", "\\\\");
             put("\\\"", "\\\"");

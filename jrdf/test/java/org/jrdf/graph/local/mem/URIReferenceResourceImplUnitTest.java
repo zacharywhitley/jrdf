@@ -59,13 +59,13 @@
 
 package org.jrdf.graph.local.mem;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.URIReference;
-import org.jrdf.TestJRDFFactory;
 import com.gargoylesoftware.base.testing.EqualsTester;
+import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
+import org.jrdf.graph.Resource;
+import org.jrdf.graph.URIReference;
 
 import java.net.URI;
 

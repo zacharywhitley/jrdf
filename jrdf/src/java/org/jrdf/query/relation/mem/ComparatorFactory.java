@@ -59,8 +59,8 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.AttributeComparator;
+import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.TupleComparator;
 
 public interface ComparatorFactory {

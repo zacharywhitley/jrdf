@@ -64,14 +64,14 @@ import static org.jrdf.util.EqualsUtil.isNull;
 import static org.jrdf.util.EqualsUtil.sameReference;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
-import java.io.Serializable;
-import java.io.ObjectInputStream;
 
 public class DateTimeValue implements DatatypeValue {
     private static final long serialVersionUID = 3135119000595034019L;

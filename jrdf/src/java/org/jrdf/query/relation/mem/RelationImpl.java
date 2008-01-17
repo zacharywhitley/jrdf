@@ -97,13 +97,13 @@ public final class RelationImpl implements Relation {
     }
 
     RelationImpl(Set<Attribute> heading, Set<Tuple> tuples, AttributeComparator attributeComparator,
-            TupleComparator tupleComparator) {
+        TupleComparator tupleComparator) {
         checkNotNull(heading, tuples, attributeComparator, tupleComparator);
         create(heading, tuples, attributeComparator, tupleComparator);
     }
 
     private void create(Set<Attribute> heading, Set<Tuple> tuples, AttributeComparator attributeComparator,
-            TupleComparator tupleComparator) {
+        TupleComparator tupleComparator) {
         this.heading = heading;
         this.tuples = tuples;
         this.attributeComparator = attributeComparator;

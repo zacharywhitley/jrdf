@@ -65,10 +65,10 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.mem.ResourceFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.mem.ResourceFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -210,5 +210,5 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * @return the next node identifier.
      */
     protected abstract long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
-            GraphHandler graphHandler);
+        GraphHandler graphHandler);
 }

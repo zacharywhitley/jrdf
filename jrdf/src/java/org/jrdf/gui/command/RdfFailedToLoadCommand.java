@@ -59,8 +59,8 @@
 
 package org.jrdf.gui.command;
 
-import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 import org.jrdf.gui.view.QueryView;
+import org.springframework.richclient.command.support.ApplicationWindowAwareCommand;
 
 /**
  * Failed to load an RDF file from the file system.

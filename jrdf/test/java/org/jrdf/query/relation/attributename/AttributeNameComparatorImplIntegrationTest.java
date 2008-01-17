@@ -59,11 +59,9 @@
 
 package org.jrdf.query.relation.attributename;
 
-import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.test.AssertThrows;
-import org.jrdf.util.test.ComparatorTestUtil;
-import static org.jrdf.util.test.ComparatorTestUtil.*;
 import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
+import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
 
 /**
  * Test that position names comes before variable names and if the same by name.

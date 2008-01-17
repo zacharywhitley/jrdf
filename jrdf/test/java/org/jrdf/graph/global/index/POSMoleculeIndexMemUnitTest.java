@@ -9,6 +9,6 @@ public class POSMoleculeIndexMemUnitTest extends AbstractMoleculeIndexMemUnitTes
     }
 
     protected Node[] getNodes(Triple triple) {
-        return new Node[] {triple.getPredicate(), triple.getObject(), triple.getSubject()};
+        return new Node[]{triple.getPredicate(), triple.getObject(), triple.getSubject()};
     }
 }

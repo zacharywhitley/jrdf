@@ -61,6 +61,7 @@ package org.jrdf.graph.global.molecule;
 
 import static org.jrdf.graph.AbstractBlankNode.isBlankNode;
 import org.jrdf.graph.Triple;
+
 import java.util.Iterator;
 
 public class MergeMoleculesImpl implements MergeMolecules {

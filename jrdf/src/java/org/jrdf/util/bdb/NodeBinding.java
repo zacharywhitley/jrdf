@@ -65,22 +65,16 @@ import com.sleepycat.bind.tuple.TupleOutput;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.mem.LiteralImpl;
 import org.jrdf.graph.local.mem.LocalizedNode;
 import org.jrdf.graph.local.mem.URIReferenceImpl;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
 
 public class NodeBinding extends TupleBinding {
     private static final byte BLANK_NODE = 0;
     private static final byte URI_REFERENCE = 1;
     private static final byte LITERAL = 2;
-    private RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-    private StringNodeMapper mapper = new StringNodeMapperImpl(new RegexLiteralMatcher(regexFactory,
-        new NTripleUtilImpl(regexFactory)));
+    private StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
 
     public Object entryToObject(TupleInput tupleInput) {
         Object object;

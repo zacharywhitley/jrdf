@@ -60,21 +60,18 @@
 package org.jrdf.sparql.analysis;
 
 import junit.framework.TestCase;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstant;
-import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
-import org.jrdf.util.test.MockFactory;
-import org.jrdf.query.Answer;
+import org.jrdf.graph.Graph;
 import org.jrdf.query.EmptyAnswer;
 import org.jrdf.query.Query;
 import org.jrdf.query.execute.QueryEngine;
-import org.jrdf.graph.Graph;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPublicConstant;
+import org.jrdf.util.test.MockFactory;
+import static org.jrdf.util.test.SerializationTestUtil.checkSerialialVersionUid;
 
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class NoQueryUnitTest extends TestCase {
     private static final Class[] PARAM_TYPES = {};

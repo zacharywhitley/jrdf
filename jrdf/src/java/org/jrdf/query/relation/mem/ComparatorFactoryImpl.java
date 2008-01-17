@@ -59,11 +59,11 @@
 
 package org.jrdf.query.relation.mem;
 
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
+import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.local.mem.BlankNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.NodeComparator;
+import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.TupleComparator;
@@ -71,8 +71,8 @@ import org.jrdf.query.relation.attributename.AttributeNameComparator;
 import org.jrdf.query.relation.attributename.AttributeNameComparatorImpl;
 import org.jrdf.query.relation.type.TypeComparator;
 import org.jrdf.query.relation.type.TypeComparatorImpl;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.NodeTypeComparator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 
 
 public class ComparatorFactoryImpl implements ComparatorFactory {

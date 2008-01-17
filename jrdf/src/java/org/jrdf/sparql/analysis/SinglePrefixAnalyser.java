@@ -59,9 +59,9 @@
 
 package org.jrdf.sparql.analysis;
 
+import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
 import org.jrdf.sparql.parser.node.APrefixPrefixdecl;
-import org.jrdf.sparql.builder.TripleBuilder;
 
 public class SinglePrefixAnalyser extends DepthFirstAdapter {
     private final TripleBuilder tripleBuilder;

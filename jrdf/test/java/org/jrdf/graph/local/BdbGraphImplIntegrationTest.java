@@ -61,9 +61,9 @@ package org.jrdf.graph.local;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedBdbJRDFFactory;
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
+import org.jrdf.util.TempDirectoryHandler;
 
 // TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
 

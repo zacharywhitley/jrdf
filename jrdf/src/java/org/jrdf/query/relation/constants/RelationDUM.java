@@ -63,11 +63,11 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.Relation;
 import org.jrdf.query.relation.Tuple;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.io.Serializable;
 
 /**
  * Dum is a relation with no tuples and is the base relation for FALSE.

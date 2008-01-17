@@ -60,7 +60,7 @@
 package org.jrdf.graph;
 
 import org.jrdf.util.EqualsUtil;
-import static org.jrdf.util.param.ParameterUtil.*;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.io.Serializable;
 import java.net.URI;

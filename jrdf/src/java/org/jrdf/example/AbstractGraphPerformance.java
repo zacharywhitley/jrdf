@@ -60,6 +60,7 @@
 package org.jrdf.example;
 
 import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -67,14 +68,13 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.TripleImpl;
-import org.jrdf.util.ClosableIterator;
+import org.jrdf.graph.URIReference;
 import org.jrdf.map.MapFactory;
 import org.jrdf.parser.Parser;
 import org.jrdf.parser.rdfxml.RdfXmlParser;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.writer.BlankNodeRegistry;
 import org.jrdf.writer.RdfWriter;
@@ -217,7 +217,7 @@ public abstract class AbstractGraphPerformance {
         long finishTime = System.currentTimeMillis();
         System.out.println("\n" + what);
         System.out.println("Triples: " + graph.getNumberOfTriples() + " Took: " + (finishTime - startTime) +
-                " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
+            " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
     }
 
     private void find1(Graph graph, URI subjectURI) throws GraphException, GraphElementFactoryException {

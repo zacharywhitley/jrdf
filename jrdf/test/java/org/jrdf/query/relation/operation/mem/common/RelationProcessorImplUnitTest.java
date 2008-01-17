@@ -70,8 +70,8 @@ import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfIn
 import java.lang.reflect.Modifier;
 
 public class RelationProcessorImplUnitTest extends TestCase {
-    private static final Class[] PARAMETERS = { RelationFactory.class, TupleComparator.class };
-    private static final String[] PARAMETER_NAMES = { "relationFactory", "tupleComparator"};
+    private static final Class[] PARAMETERS = {RelationFactory.class, TupleComparator.class};
+    private static final String[] PARAMETER_NAMES = {"relationFactory", "tupleComparator"};
 
     public void testClassProperties() {
         checkImplementationOfInterfaceAndFinal(RelationProcessor.class, RelationProcessorImpl.class);

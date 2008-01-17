@@ -102,7 +102,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         HashMap<String, String> expectedMap = creatMapExpectations();
         mockFactory.replay();
         BdbMapFactory factory = new BdbMapFactory(storedMapHandler, databaseName);
-        Map<String,String> actualMap = factory.createMap(String.class, String.class);
+        Map<String, String> actualMap = factory.createMap(String.class, String.class);
         assertTrue(expectedMap == actualMap);
         mockFactory.verify();
     }
@@ -173,7 +173,7 @@ public class BdbMapFactoryUnitTest extends TestCase {
         database = mockFactory.createMock(Database.class);
         expect(storedMapHandler.setupDatabase(environment, databaseName + 1, databaseConfig)).andReturn(database);
         expect(storedMapHandler.createMap(database, String.class, String.class)).
-                andReturn(expectedMap);
+            andReturn(expectedMap);
         return expectedMap;
     }
 }

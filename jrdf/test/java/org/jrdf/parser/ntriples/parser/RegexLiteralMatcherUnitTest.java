@@ -61,10 +61,6 @@ package org.jrdf.parser.ntriples.parser;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
-import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.Literal;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.parser.ParseException;
 import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
@@ -73,18 +69,18 @@ import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
 import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
 
-import java.util.regex.Pattern;
 import java.net.URI;
+import java.util.regex.Pattern;
 
 public class RegexLiteralMatcherUnitTest extends TestCase {
     private static final Class<LiteralMatcher> TARGET_INTERFACE = LiteralMatcher.class;
     private static final Class<RegexLiteralMatcher> TEST_CLASS = RegexLiteralMatcher.class;
-    private static final Class[] PARAM_TYPES = new Class[] { RegexMatcherFactory.class, NTripleUtil.class};
-    private static final String[] PARAMETER_NAMES = new String[] { "regexFactory", "nTripleUtil"};
+    private static final Class[] PARAM_TYPES = new Class[]{RegexMatcherFactory.class, NTripleUtil.class};
+    private static final String[] PARAMETER_NAMES = new String[]{"regexFactory", "nTripleUtil"};
     private static final Pattern LANGUAGE_REGEX = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
-            "(" +
-            "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
-            ").*");
+        "(" +
+        "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
+        ").*");
     private static final int LITERAL_INDEX = 1;
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
@@ -111,9 +107,9 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
 
     public void testMethodProperties() {
         checkMethodNullAndEmptyAssertions(parser, "matches", new ParameterDefinition(
-                new String[] {"s"}, new Class[]{String.class}));
+            new String[]{"s"}, new Class[]{String.class}));
         checkMethodNullAndEmptyAssertions(parser, "parse", new ParameterDefinition(
-                new String[] {"s"}, new Class[]{String.class}));
+            new String[]{"s"}, new Class[]{String.class}));
     }
 
     public void testMatches() {

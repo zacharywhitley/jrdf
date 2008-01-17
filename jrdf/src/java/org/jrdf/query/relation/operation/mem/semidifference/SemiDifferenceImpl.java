@@ -69,10 +69,10 @@ import org.jrdf.query.relation.operation.SemiDifference;
 import org.jrdf.query.relation.operation.mem.common.RelationProcessor;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Iterator;
 
 public class SemiDifferenceImpl implements SemiDifference {
 

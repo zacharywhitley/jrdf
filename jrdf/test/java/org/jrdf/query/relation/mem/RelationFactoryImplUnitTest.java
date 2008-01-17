@@ -90,7 +90,7 @@ public class RelationFactoryImplUnitTest extends TestCase {
         checkConstructor(RelationFactoryImpl.class, Modifier.PUBLIC, CONSTRUCTOR_TYPES);
         checkConstructNullAssertion(RelationFactoryImpl.class, CONSTRUCTOR_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivateFinal(RelationFactoryImpl.class, CONSTRUCTOR_TYPES,
-                CONSTRUCTOR_NAMES);
+            CONSTRUCTOR_NAMES);
     }
 
     public void testGetRelation() {

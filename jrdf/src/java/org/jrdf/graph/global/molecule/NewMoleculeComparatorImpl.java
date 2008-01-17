@@ -59,9 +59,9 @@
 
 package org.jrdf.graph.global.molecule;
 
-import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
-import static org.jrdf.graph.global.molecule.NullNewMolecule.*;
+import org.jrdf.graph.TripleComparator;
+import static org.jrdf.graph.global.molecule.NullNewMolecule.NULL_MOLECULE;
 
 // TODO AN Fix this comparison or use a different comparator in NewNaiveGraphDecomposerImpl.
 public class NewMoleculeComparatorImpl implements NewMoleculeComparator {

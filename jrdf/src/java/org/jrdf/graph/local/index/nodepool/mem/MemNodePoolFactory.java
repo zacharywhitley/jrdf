@@ -62,24 +62,17 @@ package org.jrdf.graph.local.index.nodepool.mem;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.NodePoolImpl;
-import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import org.jrdf.graph.local.index.nodepool.NodeTypePool;
+import org.jrdf.graph.local.index.nodepool.NodeTypePoolImpl;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.map.MapFactory;
 import org.jrdf.map.MemMapFactory;
-import org.jrdf.util.boundary.RegexMatcherFactory;
-import org.jrdf.util.boundary.RegexMatcherFactoryImpl;
-import org.jrdf.parser.ntriples.parser.LiteralMatcher;
-import org.jrdf.parser.ntriples.parser.RegexLiteralMatcher;
-import org.jrdf.parser.ntriples.parser.NTripleUtilImpl;
 
 public class MemNodePoolFactory implements NodePoolFactory {
     public NodePool createNodePool() {
         MapFactory mapFactory = new MemMapFactory();
-        RegexMatcherFactory regexFactory = new RegexMatcherFactoryImpl();
-        LiteralMatcher matcher = new RegexLiteralMatcher(regexFactory, new NTripleUtilImpl(regexFactory));
-        StringNodeMapper mapper = new StringNodeMapperImpl(matcher);
+        StringNodeMapper mapper = new StringNodeMapperFactoryImpl().createMapper();
         final NodeTypePool nodeTypePool = new NodeTypePoolImpl(mapFactory, mapper);
         return new NodePoolImpl(nodeTypePool, mapFactory);
     }

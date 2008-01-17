@@ -59,9 +59,9 @@
 
 package org.jrdf.query.relation;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
-import java.io.Serializable;
 
 /**
  * Allows the decoupling of the type of tuple to create at runtime - so classes that need to create Tuples do not

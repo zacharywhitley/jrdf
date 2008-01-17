@@ -66,8 +66,8 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.operation.Comparison;
+import org.jrdf.util.ClosableIterator;
 
 /**
  * Default in memory Comparison.
@@ -140,7 +140,7 @@ public final class ComparisonImpl implements Comparison {
 
     private boolean tripleContainsBlankNode(Triple triple) {
         return triple.getSubject() instanceof BlankNode || triple.getPredicate() instanceof BlankNode ||
-                triple.getObject() instanceof BlankNode;
+            triple.getObject() instanceof BlankNode;
     }
 
     private boolean compareNonEmptyGraphs(Graph g1, Graph g2) throws GraphException {

@@ -170,7 +170,7 @@ public class RDFS extends Vocabulary {
             DATATYPE = new URI(BASE_URI + "Datatype");
             CONTAINER = new URI(BASE_URI + "Container");
             CONTAINER_MEMBERSHIP_PROPERTY =
-                    new URI(BASE_URI + "ContainerMembershipProperty");
+                new URI(BASE_URI + "ContainerMembershipProperty");
 
             // Properties
             RANGE = new URI(BASE_URI + "range");

@@ -65,12 +65,9 @@ import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAsserti
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldIsOfTypePrivateAndFinal;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldStatic;
-import static org.jrdf.util.test.FieldPropertiesTestUtil.*;
+import static org.jrdf.util.test.FieldPropertiesTestUtil.checkFieldPrivateConstant;
 import org.jrdf.util.test.ParameterDefinition;
-import org.jrdf.util.test.ReflectTestUtil;
-import org.jrdf.util.test.FieldPropertiesTestUtil;
-import static org.jrdf.util.test.ReflectTestUtil.*;
+import static org.jrdf.util.test.ReflectTestUtil.checkFieldValue;
 
 import java.lang.reflect.Modifier;
 
@@ -92,7 +89,7 @@ public final class ParserFactoryImplUnitTest extends TestCase {
     public void testCreateParserBadQuery() {
         ParserFactory parserFactory = new ParserFactoryImpl();
         checkMethodNullAndEmptyAssertions(parserFactory, "getParser", new ParameterDefinition(
-                new String[]{"queryText"}, new Class[]{String.class}));
+            new String[]{"queryText"}, new Class[]{String.class}));
     }
 
     public void testCreateParser() {

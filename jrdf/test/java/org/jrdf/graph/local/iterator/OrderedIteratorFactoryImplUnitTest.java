@@ -73,8 +73,8 @@ import org.jrdf.graph.local.mem.LocalizedNodeComparator;
 import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
 import org.jrdf.graph.local.mem.NodeComparatorImpl;
 import org.jrdf.set.SortedSetFactory;
-import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.NodeTypeComparatorImpl;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructNullAssertion;
 import static org.jrdf.util.test.ArgumentTestUtil.checkConstructorSetsFieldsAndFieldsPrivateFinal;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
@@ -92,10 +92,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class OrderedIteratorFactoryImplUnitTest extends TestCase {
-    private static final Class[] PARAM_TYPES = { IteratorFactory.class, Localizer.class, LongIndex.class,
-            GraphHandler.class, SortedSetFactory.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"newIteratorFactory", "newLocalizer",
-            "newLongIndex", "newGraphHandler", "newSetFactory"};
+    private static final Class[] PARAM_TYPES = {IteratorFactory.class, Localizer.class, LongIndex.class,
+        GraphHandler.class, SortedSetFactory.class};
+    private static final String[] PARAMETER_NAMES = new String[]{"newIteratorFactory", "newLocalizer",
+        "newLongIndex", "newGraphHandler", "newSetFactory"};
     private static final PredicateNode IMRAN = new URIReference1(URI.create("urn:imran"));
     private static final PredicateNode FOO = new URIReference1(URI.create("urn:foo"));
     private static final PredicateNode BAR = new URIReference1(URI.create("urn:bar"));
@@ -122,7 +122,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
         checkConstructor(OrderedIteratorFactoryImpl.class, Modifier.PUBLIC, PARAM_TYPES);
         checkConstructNullAssertion(OrderedIteratorFactoryImpl.class, PARAM_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivateFinal(OrderedIteratorFactoryImpl.class, PARAM_TYPES,
-                PARAMETER_NAMES);
+            PARAMETER_NAMES);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -181,7 +181,7 @@ public class OrderedIteratorFactoryImplUnitTest extends TestCase {
     }
 
     private void checkValuesAreSorted(ClosableIterator<PredicateNode> actualIterator,
-            List<PredicateNode> expectedValues) {
+        List<PredicateNode> expectedValues) {
         int index = 0;
         while (actualIterator.hasNext()) {
             assertEquals(expectedValues.get(index), actualIterator.next());

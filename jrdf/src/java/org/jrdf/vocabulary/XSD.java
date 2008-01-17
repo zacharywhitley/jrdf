@@ -61,8 +61,8 @@ package org.jrdf.vocabulary;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A set of constants for the standard XSD vocabulary.

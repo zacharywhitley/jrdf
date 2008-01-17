@@ -68,6 +68,6 @@ public class SPOMoleculeIndexMemUnitTest extends AbstractMoleculeIndexMemUnitTes
     }
 
     protected Node[] getNodes(Triple triple) {
-        return new Node[] {triple.getSubject(), triple.getPredicate(), triple.getObject()};
+        return new Node[]{triple.getSubject(), triple.getPredicate(), triple.getObject()};
     }
 }

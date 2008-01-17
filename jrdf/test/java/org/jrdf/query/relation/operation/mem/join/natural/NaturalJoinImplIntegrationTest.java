@@ -90,11 +90,11 @@ import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelation;
 import static org.jrdf.query.relation.operation.mem.RelationIntegrationTestUtil.createRelations;
 
+import java.util.Collections;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import java.util.List;
 import java.util.Set;
-import java.util.Collections;
 
 /**
  * Tests the integration between process and other classes such as RelationDEE, RelationDUM and other relations.
@@ -102,7 +102,7 @@ import java.util.Collections;
  * @author Andrew Newman
  * @version $Revision$
  */
-@SuppressWarnings({ "unchecked" })
+@SuppressWarnings({"unchecked"})
 public class NaturalJoinImplIntegrationTest extends TestCase {
     private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
     private static final NadicJoin NADIC_JOIN = FACTORY.getNewNaturalJoin();
@@ -141,7 +141,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple1 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2);
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, VAR_BAR2_PREDICATE_R4);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR1_SUBJECT_R3,
-                VAR_BAR2_PREDICATE_R4);
+            VAR_BAR2_PREDICATE_R4);
         checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
 
@@ -154,15 +154,15 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         tuple2.addAll(tmpTuple);
 
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, POS_FOO4_PREDICATE_R3,
-                POS_FOO5_OBJECT_R4);
+            POS_FOO5_OBJECT_R4);
         tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, POS_FOO4_PREDICATE_R5,
-                POS_FOO5_OBJECT_R6);
+            POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
         tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4, POS_FOO4_PREDICATE_R3,
-                POS_FOO5_OBJECT_R4);
+            POS_FOO5_OBJECT_R4);
         resultTuple.addAll(tmpTuple);
         tmpTuple = createASingleTuple(POS_FOO1_SUBJECT_R3, POS_FOO2_PREDICATE_R4, POS_FOO4_PREDICATE_R5,
-                POS_FOO5_OBJECT_R6);
+            POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
         checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2));
     }
@@ -216,7 +216,7 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple3 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO3_OBJECT_R3);
         Set<Tuple> tuple4 = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_BAR3_OBJECT_R1);
         Set<Tuple> resultTuple = createASingleTuple(POS_FOO1_SUBJECT_R1, POS_FOO2_PREDICATE_R2, VAR_BAR2_PREDICATE_R4,
-                POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
+            POS_FOO3_OBJECT_R3, POS_BAR3_OBJECT_R1);
         checkJoin(createRelation(resultTuple), createRelation(tuple1, tuple2, tuple3, tuple4));
     }
 
@@ -227,9 +227,9 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         tuple2.addAll(tmpTuple);
 
         Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
-                POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+            POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
         tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
-                POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+            POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
 
         Relation relation = createRelation(resultTuple);
@@ -243,9 +243,9 @@ public class NaturalJoinImplIntegrationTest extends TestCase {
         Set<Tuple> tuple2 = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3);
 
         Set<Tuple> resultTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
-                POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
+            POS_FOO4_PREDICATE_R3, POS_FOO5_OBJECT_R4);
         tmpTuple = createASingleTuple(VAR_BAR1_SUBJECT_R3, POS_FOO2_PREDICATE_R2, POS_FOO3_OBJECT_R3,
-                POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
+            POS_FOO4_PREDICATE_R5, POS_FOO5_OBJECT_R6);
         resultTuple.addAll(tmpTuple);
 
         Relation relation = createRelation(resultTuple);

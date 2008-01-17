@@ -34,7 +34,7 @@ public class BdbBlankNodeRegistryImplUnitTest extends TestCase {
         checkConstructNullAssertion(BdbBlankNodeRegistryImpl.class, PARAM_TYPES);
         checkConstructorSetsFieldsAndFieldsPrivateFinal(BdbBlankNodeRegistryImpl.class, PARAM_TYPES, PARAMETER_NAMES);
         checkMethodNullAssertions(new BdbBlankNodeRegistryImpl(mapFactory), "getNodeId", new ParameterDefinition(
-                new String[] {"node"}, new Class[] {BlankNode.class}));
+            new String[]{"node"}, new Class[]{BlankNode.class}));
     }
 
     public void testGetNodeIdAndClear() {

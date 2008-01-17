@@ -59,12 +59,11 @@
 package org.jrdf.graph.local.index.nodepool;
 
 import junit.framework.TestCase;
+import org.jrdf.map.MapFactory;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
-import org.jrdf.map.MapFactory;
 
 import static java.lang.reflect.Modifier.PUBLIC;
-import java.util.Map;
 
 /**
  * Checks several implementation details of NodePoolMem implementation of LongIndex.

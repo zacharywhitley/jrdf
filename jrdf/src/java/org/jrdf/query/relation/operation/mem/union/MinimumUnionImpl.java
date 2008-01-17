@@ -73,7 +73,7 @@ public class MinimumUnionImpl implements Union {
     private TupleEngine subsumptionTupleEngine;
 
     public MinimumUnionImpl(RelationProcessor relationProcessor, TupleEngine unionTupleEngine,
-            TupleEngine subsumptionTupleEngine) {
+        TupleEngine subsumptionTupleEngine) {
         this.relationProcessor = relationProcessor;
         this.unionTupleEngine = unionTupleEngine;
         this.subsumptionTupleEngine = subsumptionTupleEngine;

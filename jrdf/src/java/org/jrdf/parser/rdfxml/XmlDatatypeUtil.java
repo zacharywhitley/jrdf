@@ -71,25 +71,25 @@ public class XmlDatatypeUtil {
      */
     public static boolean isPrimitiveDatatype(String datatype) {
         return
-                datatype.equals(XmlSchema.DURATION) ||
-                        datatype.equals(XmlSchema.DATETIME) ||
-                        datatype.equals(XmlSchema.TIME) ||
-                        datatype.equals(XmlSchema.DATE) ||
-                        datatype.equals(XmlSchema.GYEARMONTH) ||
-                        datatype.equals(XmlSchema.GYEAR) ||
-                        datatype.equals(XmlSchema.GMONTHDAY) ||
-                        datatype.equals(XmlSchema.GDAY) ||
-                        datatype.equals(XmlSchema.GMONTH) ||
-                        datatype.equals(XmlSchema.STRING) ||
-                        datatype.equals(XmlSchema.BOOLEAN) ||
-                        datatype.equals(XmlSchema.BASE64BINARY) ||
-                        datatype.equals(XmlSchema.HEXBINARY) ||
-                        datatype.equals(XmlSchema.FLOAT) ||
-                        datatype.equals(XmlSchema.DECIMAL) ||
-                        datatype.equals(XmlSchema.DOUBLE) ||
-                        datatype.equals(XmlSchema.ANYURI) ||
-                        datatype.equals(XmlSchema.QNAME) ||
-                        datatype.equals(XmlSchema.NOTATION);
+            datatype.equals(XmlSchema.DURATION) ||
+                datatype.equals(XmlSchema.DATETIME) ||
+                datatype.equals(XmlSchema.TIME) ||
+                datatype.equals(XmlSchema.DATE) ||
+                datatype.equals(XmlSchema.GYEARMONTH) ||
+                datatype.equals(XmlSchema.GYEAR) ||
+                datatype.equals(XmlSchema.GMONTHDAY) ||
+                datatype.equals(XmlSchema.GDAY) ||
+                datatype.equals(XmlSchema.GMONTH) ||
+                datatype.equals(XmlSchema.STRING) ||
+                datatype.equals(XmlSchema.BOOLEAN) ||
+                datatype.equals(XmlSchema.BASE64BINARY) ||
+                datatype.equals(XmlSchema.HEXBINARY) ||
+                datatype.equals(XmlSchema.FLOAT) ||
+                datatype.equals(XmlSchema.DECIMAL) ||
+                datatype.equals(XmlSchema.DOUBLE) ||
+                datatype.equals(XmlSchema.ANYURI) ||
+                datatype.equals(XmlSchema.QNAME) ||
+                datatype.equals(XmlSchema.NOTATION);
     }
 
     /**
@@ -98,31 +98,31 @@ public class XmlDatatypeUtil {
      */
     public static boolean isDerivedDatatype(String datatype) {
         return
-                datatype.equals(XmlSchema.NORMALIZEDSTRING) ||
-                        datatype.equals(XmlSchema.TOKEN) ||
-                        datatype.equals(XmlSchema.LANGUAGE) ||
-                        datatype.equals(XmlSchema.NMTOKEN) ||
-                        datatype.equals(XmlSchema.NMTOKENS) ||
-                        datatype.equals(XmlSchema.NAME) ||
-                        datatype.equals(XmlSchema.NCNAME) ||
-                        datatype.equals(XmlSchema.ID) ||
-                        datatype.equals(XmlSchema.IDREF) ||
-                        datatype.equals(XmlSchema.IDREFS) ||
-                        datatype.equals(XmlSchema.ENTITY) ||
-                        datatype.equals(XmlSchema.ENTITIES) ||
-                        datatype.equals(XmlSchema.INTEGER) ||
-                        datatype.equals(XmlSchema.LONG) ||
-                        datatype.equals(XmlSchema.INT) ||
-                        datatype.equals(XmlSchema.SHORT) ||
-                        datatype.equals(XmlSchema.BYTE) ||
-                        datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.UNSIGNED_LONG) ||
-                        datatype.equals(XmlSchema.UNSIGNED_INT) ||
-                        datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
-                        datatype.equals(XmlSchema.UNSIGNED_BYTE);
+            datatype.equals(XmlSchema.NORMALIZEDSTRING) ||
+                datatype.equals(XmlSchema.TOKEN) ||
+                datatype.equals(XmlSchema.LANGUAGE) ||
+                datatype.equals(XmlSchema.NMTOKEN) ||
+                datatype.equals(XmlSchema.NMTOKENS) ||
+                datatype.equals(XmlSchema.NAME) ||
+                datatype.equals(XmlSchema.NCNAME) ||
+                datatype.equals(XmlSchema.ID) ||
+                datatype.equals(XmlSchema.IDREF) ||
+                datatype.equals(XmlSchema.IDREFS) ||
+                datatype.equals(XmlSchema.ENTITY) ||
+                datatype.equals(XmlSchema.ENTITIES) ||
+                datatype.equals(XmlSchema.INTEGER) ||
+                datatype.equals(XmlSchema.LONG) ||
+                datatype.equals(XmlSchema.INT) ||
+                datatype.equals(XmlSchema.SHORT) ||
+                datatype.equals(XmlSchema.BYTE) ||
+                datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
+                datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
+                datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
+                datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
+                datatype.equals(XmlSchema.UNSIGNED_LONG) ||
+                datatype.equals(XmlSchema.UNSIGNED_INT) ||
+                datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
+                datatype.equals(XmlSchema.UNSIGNED_BYTE);
     }
 
     /**
@@ -139,8 +139,8 @@ public class XmlDatatypeUtil {
      */
     public static boolean isDecimalDatatype(String datatype) {
         return
-                datatype.equals(XmlSchema.DECIMAL) ||
-                        isIntegerDatatype(datatype);
+            datatype.equals(XmlSchema.DECIMAL) ||
+                isIntegerDatatype(datatype);
     }
 
     /**
@@ -150,19 +150,19 @@ public class XmlDatatypeUtil {
      */
     public static boolean isIntegerDatatype(String datatype) {
         return
-                datatype.equals(XmlSchema.INTEGER) ||
-                        datatype.equals(XmlSchema.LONG) ||
-                        datatype.equals(XmlSchema.INT) ||
-                        datatype.equals(XmlSchema.SHORT) ||
-                        datatype.equals(XmlSchema.BYTE) ||
-                        datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
-                        datatype.equals(XmlSchema.UNSIGNED_LONG) ||
-                        datatype.equals(XmlSchema.UNSIGNED_INT) ||
-                        datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
-                        datatype.equals(XmlSchema.UNSIGNED_BYTE);
+            datatype.equals(XmlSchema.INTEGER) ||
+                datatype.equals(XmlSchema.LONG) ||
+                datatype.equals(XmlSchema.INT) ||
+                datatype.equals(XmlSchema.SHORT) ||
+                datatype.equals(XmlSchema.BYTE) ||
+                datatype.equals(XmlSchema.NON_POSITIVE_INTEGER) ||
+                datatype.equals(XmlSchema.NEGATIVE_INTEGER) ||
+                datatype.equals(XmlSchema.NON_NEGATIVE_INTEGER) ||
+                datatype.equals(XmlSchema.POSITIVE_INTEGER) ||
+                datatype.equals(XmlSchema.UNSIGNED_LONG) ||
+                datatype.equals(XmlSchema.UNSIGNED_INT) ||
+                datatype.equals(XmlSchema.UNSIGNED_SHORT) ||
+                datatype.equals(XmlSchema.UNSIGNED_BYTE);
     }
 
     /**
@@ -171,8 +171,8 @@ public class XmlDatatypeUtil {
      */
     public static boolean isFloatingPointDatatype(String datatype) {
         return
-                datatype.equals(XmlSchema.FLOAT) ||
-                        datatype.equals(XmlSchema.DOUBLE);
+            datatype.equals(XmlSchema.FLOAT) ||
+                datatype.equals(XmlSchema.DOUBLE);
     }
 
     /**
@@ -182,8 +182,8 @@ public class XmlDatatypeUtil {
      */
     public static boolean isOrderedDatatype(String datatype) {
         return
-                isDecimalDatatype(datatype) ||
-                        isFloatingPointDatatype(datatype);
+            isDecimalDatatype(datatype) ||
+                isFloatingPointDatatype(datatype);
     }
 
     /*--------------------+
@@ -620,7 +620,7 @@ public class XmlDatatypeUtil {
      */
     public static String normalizeLong(String value) {
         return normalizeIntegerValue(value, "-9223372036854775808",
-                "9223372036854775807");
+            "9223372036854775807");
     }
 
     /**
@@ -747,7 +747,7 @@ public class XmlDatatypeUtil {
      */
     public static String normalizeFloat(String value) {
         return normalizeFPNumber(value,
-                "-16777215.0", "16777215.0", "-149", "104");
+            "-16777215.0", "16777215.0", "-149", "104");
     }
 
     /**
@@ -760,7 +760,7 @@ public class XmlDatatypeUtil {
      */
     public static String normalizeDouble(String value) {
         return normalizeFPNumber(value,
-                "-9007199254740991.0", "9007199254740991.0", "-1075", "970");
+            "-9007199254740991.0", "9007199254740991.0", "-1075", "970");
     }
 
     /**
@@ -794,8 +794,8 @@ public class XmlDatatypeUtil {
      *                                  is not a legal floating point number.
      */
     private static String normalizeFPNumber(String value,
-                                            String minMantissa, String maxMantissa,
-                                            String minExponent, String maxExponent) {
+        String minMantissa, String maxMantissa,
+        String minExponent, String maxExponent) {
         // handle special values
         if ("INF".equals(value) || "-INF".equals(value) || "NaN".equals(value)) {
             return value;
@@ -886,7 +886,7 @@ public class XmlDatatypeUtil {
             // search first non-zero digit
             int nonZeroIdx = 2;
             while (nonZeroIdx < mantissa.length() &&
-                    '0' == mantissa.charAt(nonZeroIdx)) {
+                '0' == mantissa.charAt(nonZeroIdx)) {
                 nonZeroIdx++;
             }
 

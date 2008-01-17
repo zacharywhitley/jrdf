@@ -60,9 +60,9 @@
 package org.jrdf.graph.local.mem;
 
 import junit.framework.TestCase;
+import org.jrdf.graph.GraphFactory;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
-import org.jrdf.graph.GraphFactory;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
 import java.lang.reflect.Modifier;
@@ -70,6 +70,7 @@ import java.lang.reflect.Modifier;
 public class GraphFactoryImplUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(GraphFactory.class, GraphFactoryImpl.class);
-        ClassPropertiesTestUtil.checkConstructor(GraphFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class, NodePoolFactory.class);
+        ClassPropertiesTestUtil.checkConstructor(GraphFactoryImpl.class, Modifier.PUBLIC, LongIndex[].class,
+            NodePoolFactory.class);
     }
 }

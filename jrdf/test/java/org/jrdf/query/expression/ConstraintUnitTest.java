@@ -72,8 +72,8 @@ import org.jrdf.util.test.SerializationTestUtil;
 import java.io.Serializable;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Unit test for {@link Constraint}.
@@ -81,10 +81,10 @@ import java.util.Collections;
  * @author Tom Adams
  * @version $Revision$
  */
-@SuppressWarnings({ "unchecked" })
+@SuppressWarnings({"unchecked"})
 public final class ConstraintUnitTest extends TestCase {
-    private static final List<AttributeValuePair> AVP_1 =  createAvpSet(TEST_ATTRIBUTE_VALUE_1);
-    private static final List<AttributeValuePair> AVP_2 =  createAvpSet(TEST_ATTRIBUTE_VALUE_2);
+    private static final List<AttributeValuePair> AVP_1 = createAvpSet(TEST_ATTRIBUTE_VALUE_1);
+    private static final List<AttributeValuePair> AVP_2 = createAvpSet(TEST_ATTRIBUTE_VALUE_2);
     private static final Constraint CONSTRAINT_TRIPLE_1 = new Constraint<ExpressionVisitor>(AVP_1);
     private static final Constraint CONSTRAINT_TRIPLE_2 = new Constraint<ExpressionVisitor>(AVP_2);
     private static final Class[] PARAM_TYPES = {List.class};

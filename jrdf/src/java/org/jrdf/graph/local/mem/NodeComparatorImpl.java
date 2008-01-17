@@ -62,9 +62,9 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.TypedNodeVisitor;
 import org.jrdf.graph.Resource;
+import org.jrdf.graph.TypedNodeVisitor;
+import org.jrdf.graph.URIReference;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeEnum;
 

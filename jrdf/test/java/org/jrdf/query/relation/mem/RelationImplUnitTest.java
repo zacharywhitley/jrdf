@@ -59,7 +59,6 @@
 package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeComparator;
@@ -92,7 +91,8 @@ public class RelationImplUnitTest extends TestCase {
     private static final AttributeComparator ATTRIBUTE_COMPARATOR = FACTORY.getNewAttributeComparator();
     private static final TupleComparator TUPLE_COMPARATOR = FACTORY.getNewTupleComparator();
     private static final Class[] PARAM_TYPES_1 = {Set.class, AttributeComparator.class, TupleComparator.class};
-    private static final Class[] PARAM_TYPES_2 = {Set.class, Set.class, AttributeComparator.class, TupleComparator.class};
+    private static final Class[] PARAM_TYPES_2 =
+        {Set.class, Set.class, AttributeComparator.class, TupleComparator.class};
     private static final String[] PARAM_NAMES_1 = {"tuples", "attributeComparator", "tupleComparator"};
     private static final String[] PARAM_NAMES_2 = {"heading", "tuples", "attributeComparator", "tupleComparator"};
 

@@ -63,6 +63,6 @@ package org.jrdf.graph;
  * Indicates a slightly difference comparison operation - one that takes into account the semantics of the data type.
  * For example, 7.0 and 7 will be considered equal (return 0).  Where the normal equals and compareTo would not.
  */
-public interface EquivComparable<T>   {
+public interface EquivComparable<T> {
     int equivCompareTo(T t);
 }

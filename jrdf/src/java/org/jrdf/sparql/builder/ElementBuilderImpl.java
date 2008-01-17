@@ -97,7 +97,7 @@ public final class ElementBuilderImpl extends DepthFirstAdapter implements Eleme
     private ParserException exception;
 
     public ElementBuilderImpl(NodeType nodeType, Node graphNode, Attribute attribute, Graph currentGraph,
-            Map<String, String> prefixMap) {
+        Map<String, String> prefixMap) {
         this.nodeType = nodeType;
         this.graphNode = graphNode;
         this.attribute = attribute;

@@ -84,7 +84,8 @@ public class GroundedTripleComparatorImplUnitTest extends TestCase {
         ref1 = elementFactory.createURIReference(URI.create("urn:foo"));
         ref2 = elementFactory.createURIReference(URI.create("urn:bar"));
         Triple triple1 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
-        Triple triple2 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, elementFactory.createBlankNode());
+        Triple triple2 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1,
+            elementFactory.createBlankNode());
         Triple triple3 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref2);
         Triple triple4 = tripleFactory.createTriple(elementFactory.createBlankNode(), ref1, ref1);
         assertEquals(0, comparator.compare(triple1, triple4));

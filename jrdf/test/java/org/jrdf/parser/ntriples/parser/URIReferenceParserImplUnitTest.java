@@ -58,8 +58,8 @@
 
 package org.jrdf.parser.ntriples.parser;
 
-import static org.easymock.EasyMock.anyObject;
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
@@ -75,8 +75,8 @@ import java.net.URI;
 public class URIReferenceParserImplUnitTest extends TestCase {
     private static final Class<URIReferenceParser> TARGET_INTERFACE = URIReferenceParser.class;
     private static final Class<URIReferenceParserImpl> TEST_CLASS = URIReferenceParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {GraphElementFactory.class, NTripleUtil.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"graphElementFactory", "nTripleUtil"};
+    private static final Class[] PARAM_TYPES = new Class[]{GraphElementFactory.class, NTripleUtil.class};
+    private static final String[] PARAMETER_NAMES = new String[]{"graphElementFactory", "nTripleUtil"};
     private static final String LINE = "string" + Math.random();
     private static final String ESCAPED_LINE = "escaped" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
@@ -98,7 +98,7 @@ public class URIReferenceParserImplUnitTest extends TestCase {
 
     public void testMethodProperties() {
         checkMethodNullAndEmptyAssertions(uriReferenceParser, "parseURIReference", new ParameterDefinition(
-                new String[] {"s"}, new Class[]{String.class}));
+            new String[]{"s"}, new Class[]{String.class}));
     }
 
     public void testCreateURIReference() throws Exception {
@@ -112,7 +112,8 @@ public class URIReferenceParserImplUnitTest extends TestCase {
 
     public void testCreateURIReferenceWithException() throws Exception {
         expect(nTripleUtil.unescapeLiteral(LINE)).andReturn(ESCAPED_LINE);
-        expect(graphElementFactory.createURIReference(URI.create(ESCAPED_LINE))).andThrow(new GraphElementFactoryException(""));
+        expect(graphElementFactory.createURIReference(URI.create(ESCAPED_LINE))).andThrow(
+            new GraphElementFactoryException(""));
         mockFactory.replay();
         checkThrowsException(LINE);
         mockFactory.verify();

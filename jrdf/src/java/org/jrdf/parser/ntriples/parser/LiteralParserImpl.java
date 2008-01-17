@@ -65,6 +65,7 @@ import org.jrdf.graph.Literal;
 import org.jrdf.parser.ParseException;
 import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
+
 import java.net.URI;
 
 public final class LiteralParserImpl implements LiteralParser {

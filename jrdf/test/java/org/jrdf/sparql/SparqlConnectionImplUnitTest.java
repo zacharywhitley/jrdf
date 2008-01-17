@@ -94,11 +94,11 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     private static final Graph GRAPH = factory.createMock(Graph.class);
     private static final QueryEngine QUERY_ENGINE = factory.createMock(QueryEngine.class);
     private static final String METHOD_NAME = "executeQuery";
-    private static final Class[] PARAM_TYPES = { QueryBuilder.class, QueryEngine.class};
+    private static final Class[] PARAM_TYPES = {QueryBuilder.class, QueryEngine.class};
     private static final String[] METHOD_PARAM_NAMES = {"graph", "queryText"};
     private static final Class[] METHOD_PARAM_TYPES = {Graph.class, String.class};
     private static final ParameterDefinition PARAM_DEFINITION = new ParameterDefinition(METHOD_PARAM_NAMES,
-            METHOD_PARAM_TYPES);
+        METHOD_PARAM_TYPES);
     private static final InvalidQuerySyntaxException INVALID_QUERY_EXCEPTION = new InvalidQuerySyntaxException("");
 
     public void setUp() {
@@ -108,7 +108,7 @@ public class SparqlConnectionImplUnitTest extends TestCase {
     public void testClassProperties() {
         ClassPropertiesTestUtil.checkExtensionOf(SparqlConnection.class, SparqlConnectionImpl.class);
         ClassPropertiesTestUtil.checkConstructor(SparqlConnectionImpl.class, Modifier.PUBLIC, QueryBuilder.class,
-                QueryEngine.class);
+            QueryEngine.class);
     }
 
     public void testNullsInConstructor() {

@@ -59,14 +59,14 @@
 
 package org.jrdf.graph.local.index.longindex.sesame;
 
-import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.*;
+import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
     private static final int TRIPLES = 3;

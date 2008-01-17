@@ -61,9 +61,9 @@ package org.jrdf.graph.local.index;
 
 import org.jrdf.graph.GraphException;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Iterator;
 
 public interface Index<T> {
 

@@ -59,10 +59,10 @@
 
 package org.jrdf.gui.view;
 
+import org.jrdf.gui.command.InvalidQueryCommand;
 import org.jrdf.gui.command.QueryRanCommand;
 import org.jrdf.gui.command.RdfFailedToLoadCommand;
 import org.jrdf.gui.command.RdfLoadedCommand;
-import org.jrdf.gui.command.InvalidQueryCommand;
 import org.jrdf.query.Answer;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;

@@ -57,41 +57,8 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.index.nodepool;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.ResourceFactory;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-public class URIReferenceResourceIterator extends ResourceIterator<URIReference> {
-
-    public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final ResourceFactory newResourceFactory, final NodePool newNodePool) {
-        super(newLongIndexes, newGraphHandlers, newResourceFactory, newNodePool);
-    }
-
-    public URIReference next() {
-        Resource resource = getNextResource();
-        return (URIReference) resource.getUnderlyingNode();
-    }
-
-    protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
-        final GraphHandler graphHandler) {
-        while (iterator.hasNext()) {
-            final long id = iterator.next().getKey();
-            final Node node = nodePool.getNodeById(id);
-            if (node != null && node instanceof URIReference) {
-                return id;
-            }
-        }
-        return -1;
-    }
+public interface StringNodeMapperFactory {
+    StringNodeMapper createMapper();
 }

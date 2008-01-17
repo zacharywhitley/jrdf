@@ -88,10 +88,10 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({ "unchecked" })
+@SuppressWarnings({"unchecked"})
 public class LiteralBuilderImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
-    private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[] {GraphElementFactory.class};
+    private static final Class[] CONSTRUCTOR_PARAM_TYPES = new Class[]{GraphElementFactory.class};
     private static final String[] PARAM_NAMES = {"element"};
     private static final Class[] PARAM_TYPES = {ALiteralObjectTripleElement.class};
     private static final ParameterDefinition BUILD_PARAM_DEFINITION = new ParameterDefinition(PARAM_NAMES, PARAM_TYPES);
@@ -104,7 +104,7 @@ public class LiteralBuilderImplUnitTest extends TestCase {
 
     public void testBadParams() throws Exception {
         checkConstructorSetsFieldsAndFieldsPrivateFinal(LiteralBuilderImpl.class,
-                CONSTRUCTOR_PARAM_TYPES, new String[] {"factory"});
+            CONSTRUCTOR_PARAM_TYPES, new String[]{"factory"});
         checkConstructNullAssertion(LiteralBuilderImpl.class, CONSTRUCTOR_PARAM_TYPES);
         checkMethodNullAssertions(BUILDER, "createLiteral", BUILD_PARAM_DEFINITION);
     }
@@ -137,7 +137,8 @@ public class LiteralBuilderImplUnitTest extends TestCase {
         factory.verify();
     }
 
-    private void checkReturnsLiteral(LiteralBuilder builder, ALiteralObjectTripleElement element, Literal expectedLiteral) throws GraphElementFactoryException {
+    private void checkReturnsLiteral(LiteralBuilder builder, ALiteralObjectTripleElement element,
+        Literal expectedLiteral) throws GraphElementFactoryException {
         Literal actualLiteral = builder.createLiteral(element);
         assertNotNull(actualLiteral);
         assertEquals(expectedLiteral, actualLiteral);

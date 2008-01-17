@@ -59,6 +59,13 @@
 
 package org.jrdf.sparql.builder;
 
+import org.jrdf.query.relation.Attribute;
+import org.jrdf.query.relation.attributename.PositionName;
+import org.jrdf.query.relation.attributename.VariableName;
+import org.jrdf.query.relation.mem.AttributeImpl;
+import org.jrdf.query.relation.type.ObjectNodeType;
+import org.jrdf.query.relation.type.PredicateNodeType;
+import org.jrdf.query.relation.type.SubjectNodeType;
 import org.jrdf.sparql.parser.node.AResourceObjectTripleElement;
 import org.jrdf.sparql.parser.node.ATriple;
 import org.jrdf.sparql.parser.node.AVariable;
@@ -67,13 +74,6 @@ import org.jrdf.sparql.parser.node.PObjectTripleElement;
 import org.jrdf.sparql.parser.node.PResourceTripleElement;
 import org.jrdf.sparql.parser.node.TIdentifier;
 import org.jrdf.sparql.parser.node.TResource;
-import org.jrdf.query.relation.Attribute;
-import org.jrdf.query.relation.attributename.PositionName;
-import org.jrdf.query.relation.attributename.VariableName;
-import org.jrdf.query.relation.mem.AttributeImpl;
-import org.jrdf.query.relation.type.ObjectNodeType;
-import org.jrdf.query.relation.type.PredicateNodeType;
-import org.jrdf.query.relation.type.SubjectNodeType;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public final class VariableResourceTripleSpec implements TripleSpec {
         attributes.add(predciateAtt);
         Attribute objectAtt = new AttributeImpl(new PositionName("OBJECT1"), new ObjectNodeType());
         attributes.add(objectAtt);
-        return attributes.toArray(new Attribute[] {});
+        return attributes.toArray(new Attribute[]{});
     }
 
     public ATriple getTriple() {

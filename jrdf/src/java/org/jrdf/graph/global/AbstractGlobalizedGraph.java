@@ -67,15 +67,15 @@ import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.graph.global.index.MoleculeIndex;
 import org.jrdf.graph.global.index.OSPMoleculeIndexMem;
 import org.jrdf.graph.global.index.POSMoleculeIndexMem;
 import org.jrdf.graph.global.index.SPOMoleculeIndexMem;
+import org.jrdf.graph.global.iterator.NonEmptyIteratorFactory;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactory;
 import org.jrdf.graph.global.molecule.MoleculeIteratorFactoryImpl;
-import org.jrdf.graph.global.iterator.NonEmptyIteratorFactory;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -144,7 +144,6 @@ public abstract class AbstractGlobalizedGraph implements GlobalizedGraph {
     protected ClosableIterator<Molecule> findValue(SubjectNode subject, PredicateNode predicate, ObjectNode object) {
         return new NonEmptyIteratorFactory(iteratorFactory).getIterator(subject, predicate, object);
     }
-
 
     //private ClosableIterator<Tripl>
 

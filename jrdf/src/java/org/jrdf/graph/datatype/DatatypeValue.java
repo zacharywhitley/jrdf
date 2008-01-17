@@ -67,5 +67,5 @@ import java.io.Serializable;
  * Datatypes are values and create themselves.
  */
 public interface DatatypeValue extends Serializable, Value, ValueCreator, Comparable<DatatypeValue>,
-        EquivComparable<DatatypeValue> {
+    EquivComparable<DatatypeValue> {
 }

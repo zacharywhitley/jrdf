@@ -67,6 +67,8 @@ import java.net.URI;
 
 public interface RDFInputFactory {
     RDFEventReader createRDFEventReader(InputStream stream, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
+
     RDFEventReader createRDFEventReader(Reader reader, URI baseURI, Graph graph, ParserBlankNodeFactory factory);
+
     ParseErrorListener getRDFReporter();
 }

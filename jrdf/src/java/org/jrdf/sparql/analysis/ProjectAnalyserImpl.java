@@ -66,10 +66,10 @@ import org.jrdf.query.expression.Projection;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.sparql.builder.TripleBuilder;
 import org.jrdf.sparql.parser.analysis.DepthFirstAdapter;
+import org.jrdf.sparql.parser.node.AVariableListSelectClause;
+import org.jrdf.sparql.parser.node.AWildcardSelectClause;
 import org.jrdf.sparql.parser.node.Node;
 import org.jrdf.sparql.parser.node.PVariable;
-import org.jrdf.sparql.parser.node.AWildcardSelectClause;
-import org.jrdf.sparql.parser.node.AVariableListSelectClause;
 import org.jrdf.sparql.parser.parser.ParserException;
 
 import java.util.LinkedHashSet;

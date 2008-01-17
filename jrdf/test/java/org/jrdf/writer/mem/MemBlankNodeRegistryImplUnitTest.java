@@ -75,7 +75,7 @@ import org.jrdf.writer.BlankNodeRegistry;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-@SuppressWarnings({ "unchecked" })
+@SuppressWarnings({"unchecked"})
 public class MemBlankNodeRegistryImplUnitTest extends TestCase {
     private static final MockFactory factory = new MockFactory();
     private static final String[] PARAM_NAMES = {"node"};

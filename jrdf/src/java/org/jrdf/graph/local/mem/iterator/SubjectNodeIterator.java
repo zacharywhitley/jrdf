@@ -63,11 +63,13 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
-public class SubjectNodeIterator  implements ClosableIterator<SubjectNode> {
+public class SubjectNodeIterator implements ClosableIterator<SubjectNode> {
     private ClosableIterator<Triple> iterator;
+
     public SubjectNodeIterator(ClosableIterator<Triple> itr) {
         iterator = itr;
     }
+
     public boolean close() {
         return iterator.close();
     }

@@ -62,8 +62,8 @@ import junit.framework.TestCase;
 import static org.easymock.EasyMock.expect;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.parser.ParserBlankNodeFactory;
 import org.jrdf.parser.ParseException;
+import org.jrdf.parser.ParserBlankNodeFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
@@ -72,8 +72,8 @@ import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandar
 public class BlankNodeParserImplUnitTest extends TestCase {
     private static final Class<BlankNodeParser> TARGET_INTERFACE = BlankNodeParser.class;
     private static final Class<BlankNodeParserImpl> TEST_CLASS = BlankNodeParserImpl.class;
-    private static final Class[] PARAM_TYPES = new Class[] {ParserBlankNodeFactory.class};
-    private static final String[] PARAMETER_NAMES = new String[] {"parserBlankNodeFactory"};
+    private static final Class[] PARAM_TYPES = new Class[]{ParserBlankNodeFactory.class};
+    private static final String[] PARAMETER_NAMES = new String[]{"parserBlankNodeFactory"};
     private static final String NODE_ID = "string" + Math.random();
     private final MockFactory mockFactory = new MockFactory();
     private ParserBlankNodeFactory nodeFactory;
@@ -92,7 +92,7 @@ public class BlankNodeParserImplUnitTest extends TestCase {
 
     public void testMethodProperties() {
         checkMethodNullAndEmptyAssertions(parser, "parseBlankNode", new ParameterDefinition(
-                new String[] {"s"}, new Class[]{String.class}));
+            new String[]{"s"}, new Class[]{String.class}));
     }
 
     public void testCreateBlankNode() throws Exception {

@@ -61,7 +61,6 @@ package org.jrdf.query.relation.type;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import org.jrdf.util.test.AssertThrows;
 
 /**
  * Tests the ordering of types - first comes S, P, O and then BNode, URI, Literal.

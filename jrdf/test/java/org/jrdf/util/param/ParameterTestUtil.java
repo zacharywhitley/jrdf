@@ -78,7 +78,7 @@ public final class ParameterTestUtil {
     }
 
     public static void checkBadStringParam(final Object ref, final String methodName, final String param)
-            throws Exception {
+        throws Exception {
         AssertThrows.assertThrows(IllegalArgumentException.class, new AssertThrows.Block() {
             public void execute() throws Throwable {
                 invokeMethod(ref, methodName, String.class, param);
@@ -87,7 +87,7 @@ public final class ParameterTestUtil {
     }
 
     private static void invokeMethod(Object cls, String methodName, Class paramClass, String paramValue)
-            throws Exception {
+        throws Exception {
         try {
             Method method = cls.getClass().getMethod(methodName, paramClass);
             method.invoke(cls, paramValue);

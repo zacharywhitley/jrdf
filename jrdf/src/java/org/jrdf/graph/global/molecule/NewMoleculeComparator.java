@@ -59,8 +59,8 @@
 
 package org.jrdf.graph.global.molecule;
 
-import java.util.Comparator;
 import java.io.Serializable;
+import java.util.Comparator;
 
 public interface NewMoleculeComparator extends Comparator<NewMolecule>, Serializable {
 }

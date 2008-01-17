@@ -59,14 +59,14 @@
 
 package org.jrdf.graph.local.mem;
 
+import com.gargoylesoftware.base.testing.EqualsTester;
 import junit.framework.TestCase;
+import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Resource;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.TestJRDFFactory;
+import org.jrdf.graph.Resource;
 import org.jrdf.util.test.AssertThrows;
-import com.gargoylesoftware.base.testing.EqualsTester;
 
 public class BlankNodeResourceImplUnitTest extends TestCase {
     private Graph newGraph;
@@ -94,7 +94,7 @@ public class BlankNodeResourceImplUnitTest extends TestCase {
 
     public void testGetURI() {
         AssertThrows.assertThrows(UnsupportedOperationException.class, "Blank nodes resource, does not have a URI",
-            new AssertThrows.Block(){
+            new AssertThrows.Block() {
                 public void execute() throws Throwable {
                     resource1.getURI();
                 }

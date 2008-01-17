@@ -60,7 +60,14 @@
 package org.jrdf.graph.global.molecule;
 
 import junit.framework.TestCase;
-import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.*;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r1r2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r2r2;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b2r3b3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r1r3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r2r3;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkMoluculeContainsRootTriples;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmoleculesContainsHeadTriples;
+import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
 
 import java.util.Set;
 

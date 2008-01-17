@@ -265,7 +265,7 @@ public class XmlSchema {
      * <tt>http://www.w3.org/2001/XMLSchema#nonPositiveInteger</tt> *
      */
     public static final String NON_POSITIVE_INTEGER = NAMESPACE +
-            "nonPositiveInteger";
+        "nonPositiveInteger";
 
     /**
      * <tt>http://www.w3.org/2001/XMLSchema#negativeInteger</tt> *
@@ -276,7 +276,7 @@ public class XmlSchema {
      * <tt>http://www.w3.org/2001/XMLSchema#nonNegativeInteger</tt> *
      */
     public static final String NON_NEGATIVE_INTEGER = NAMESPACE +
-            "nonNegativeInteger";
+        "nonNegativeInteger";
 
     /**
      * <tt>http://www.w3.org/2001/XMLSchema#positiveInteger</tt> *

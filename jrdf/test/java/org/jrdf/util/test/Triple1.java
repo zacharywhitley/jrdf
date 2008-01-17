@@ -60,9 +60,9 @@
 package org.jrdf.util.test;
 
 import org.jrdf.graph.AbstractTriple;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.SubjectNode;
 
 public class Triple1 extends AbstractTriple {
 

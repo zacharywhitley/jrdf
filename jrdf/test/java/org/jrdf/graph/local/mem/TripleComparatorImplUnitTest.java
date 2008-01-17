@@ -75,7 +75,8 @@ import java.lang.reflect.Modifier;
  */
 public class TripleComparatorImplUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
-        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleComparator.class, TripleComparatorImpl.class);
+        ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal(TripleComparator.class,
+            TripleComparatorImpl.class);
         ClassPropertiesTestUtil.checkImplementationOfInterface(Serializable.class, TripleComparator.class);
         ClassPropertiesTestUtil.checkConstructor(TripleComparatorImpl.class, Modifier.PUBLIC, NodeComparator.class);
     }

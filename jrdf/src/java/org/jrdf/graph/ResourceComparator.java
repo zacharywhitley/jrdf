@@ -61,8 +61,8 @@ package org.jrdf.graph;
 
 import org.jrdf.util.param.ParameterUtil;
 
-import java.util.Comparator;
 import java.io.Serializable;
+import java.util.Comparator;
 
 public class ResourceComparator implements Comparator<Resource>, Serializable {
     private static final long serialVersionUID = -3609445587014680658L;

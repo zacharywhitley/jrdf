@@ -63,7 +63,6 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.TripleImpl;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.ClassPropertiesTestUtil;
 
@@ -221,7 +220,7 @@ public abstract class AbstractGraphElementFactoryUnitTest extends TestCase {
         supplier.addValue(sno, elementFactory.createLiteral(20));
         assertEquals(2, graph.getNumberOfTriples());
         final Triple triple = new TripleImpl((SubjectNode) supplier.getUnderlyingNode(), sno,
-                elementFactory.createLiteral("sno"));
+            elementFactory.createLiteral("sno"));
         assertEquals(true, graph.contains(triple));
     }
 

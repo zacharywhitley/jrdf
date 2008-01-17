@@ -67,7 +67,7 @@ import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_BAR_LITERAL;
 import static org.jrdf.query.relation.mem.AttributeComparatorImplIntegrationTest.TEST_VAR_FOO_LITERAL;
-import static org.jrdf.util.test.ComparatorTestUtil.*;
+import static org.jrdf.util.test.ComparatorTestUtil.checkNullPointerException;
 
 /**
  * Test for the implementation of NodeComparatorImpl.

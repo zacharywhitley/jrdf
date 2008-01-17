@@ -75,7 +75,7 @@ public final class EscapeURL {
     private static URI tryEncode(URL url) {
         try {
             return new URI(url.getProtocol(), url.getUserInfo(), url.getHost(),
-                    url.getPort(), url.getPath(), url.getQuery(), url.getRef());
+                url.getPort(), url.getPath(), url.getQuery(), url.getRef());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

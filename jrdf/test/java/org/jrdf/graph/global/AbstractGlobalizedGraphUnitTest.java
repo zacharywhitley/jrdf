@@ -144,7 +144,7 @@ public abstract class AbstractGlobalizedGraphUnitTest extends TestCase {
 
     public void testContains() throws Exception {
         // Goes through all 8 possibilities and checks contains.
-        for (int i = 0 ; i < 8; i++) {
+        for (int i = 0; i < 8; i++) {
             // 4 falses then 4 trues.
             boolean findAnySubject = (i & 4) != 0;
             // 2 falses then 2 trues.
