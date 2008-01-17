@@ -7,7 +7,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2008 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -78,11 +78,11 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.map.BdbMapFactory;
 import org.jrdf.map.MapFactory;
 import org.jrdf.set.BdbSortedSetFactory;
 import org.jrdf.set.SortedSetFactory;
+import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
@@ -257,10 +257,10 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple1);
         graph1.add(triple2);
 
-        Map<Integer, HashSet<Triple>> bNodeMap = new HashMap<Integer, HashSet<Triple>> ();
+        Map<Integer, HashSet<Triple>> bNodeMap = new HashMap<Integer, HashSet<Triple>>();
         int bNode1Hash = bNode1.hashCode();
         int bNode2Hash = bNode2.hashCode();
-        HashSet<Triple> set1 = new HashSet<Triple> ();
+        HashSet<Triple> set1 = new HashSet<Triple>();
         set1.add(triple1);
         set1.add(triple2);
         bNodeMap.put(bNode1Hash, set1);
@@ -302,8 +302,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
             assertTrue("BNode", AbstractBlankNode.isBlankNode(node2));
             assertTrue("Hash values equal", node1.hashCode() == node2.hashCode());
             assertTrue("Hahs values different", node2.hashCode() != t2.getObject().hashCode());
-        }
-        else if (pNode2.hashCode() == t1.getPredicate().hashCode()) {
+        } else if (pNode2.hashCode() == t1.getPredicate().hashCode()) {
             Node node1 = t1.getSubject();
             Node node2 = t2.getObject();
             assertTrue("BNode", AbstractBlankNode.isBlankNode(node1));
@@ -391,7 +390,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         cgUtil.replaceNode(graph2, node2, node5);
         assertEquals("Graph2 size should be 3", 3, graph2.getNumberOfTriples());
         ClosableIterator<Triple> iterator =
-                graph2.find(eFac2.createURIReference(URI.create(node2.toString())), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
+            graph2.find(eFac2.createURIReference(URI.create(node2.toString())), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("Graph2 doesn't contain node2", !iterator.hasNext());
     }
 
@@ -430,7 +429,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
 
         assertEquals("Graph size is 4", 3, graph2.getNumberOfTriples());
         cgUtil.copyTriplesForNode(graph1, graph2, node2, node6);
-        
+
         assertEquals("Graph size is 4", 4, graph2.getNumberOfTriples());
     }
 }
