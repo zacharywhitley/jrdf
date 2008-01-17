@@ -131,14 +131,7 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         if (null == uri) {
             throw new GraphElementFactoryException("URI may not be null for a URIReference");
         }
-
-        // check if the node already exists in the string pool
-        Long nodeId = nodePool.getNodeIdByString(uri.toString());
-        if (null != nodeId) {
-            return (URIReference) nodePool.getNodeById(nodeId);
-        } else {
-            return localizer.createLocalURIReference(uri, validate);
-        }
+        return getLocalURIReference(uri, validate);
     }
 
     public Literal createLiteral(Object object) {
@@ -157,21 +150,28 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return getLocalLiteral(new LiteralImpl(lexicalValue, datatypeURI));
     }
 
-    /**
-     * Creates a new node id for the given Literal.  Sets the node id of the given newLiteral.
-     *
-     * @param newLiteral A newly created newLiteral.
-     * @return the literal with the newly created or existing node id.
-     */
-    private Literal getLocalLiteral(LiteralMutableId newLiteral) {
-        String escapedForm = newLiteral.getEscapedForm();
-        Long tmpNodeId = nodePool.getNodeIdByString(escapedForm);
-        if (null != tmpNodeId) {
-            // return the existing node instead
-            newLiteral.setId(tmpNodeId);
-            return newLiteral;
+    private URIReference getLocalURIReference(URI uri, boolean validate) {
+        // check if the node already exists in the string pool
+        Long nodeId = nodePool.getNodeIdByString(uri.toString());
+        URIReference newURIReference;
+        if (null != nodeId) {
+            newURIReference = (URIReference) nodePool.getNodeById(nodeId);
         } else {
-            return localizer.createLocalLiteral(escapedForm);
+            newURIReference = localizer.createLocalURIReference(uri, validate);
         }
+        return newURIReference;
+    }
+
+    private Literal getLocalLiteral(LiteralMutableId literal) {
+        String escapedForm = literal.getEscapedForm();
+        Long nodeId = nodePool.getNodeIdByString(escapedForm);
+        Literal newLiteral;
+        if (null != nodeId) {
+            literal.setId(nodeId);
+            newLiteral = literal;
+        } else {
+            newLiteral = localizer.createLocalLiteral(escapedForm);
+        }
+        return newLiteral;
     }
 }
