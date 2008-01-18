@@ -816,16 +816,6 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals("Incorrect number of blank nodes", 1, getNumberOfBlankNodes());
     }
 
-    private int getNumberOfBlankNodes() {
-        ClosableIterator<BlankNode> blankNodes = graph.findBlankNodes();
-        int counter = 0;
-        while (blankNodes.hasNext()) {
-            blankNodes.next();
-            counter++;
-        }
-        return counter;
-    }
-
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
         ClosableIterator<URIReference> iterator = graph.findURIReferences();
@@ -866,6 +856,46 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         checkFixedUniquePredicateIterator(graph.getElementFactory().createResource(ref5), ref2, ref3, ref5);
     }
 
+    public void testClear() throws Exception {
+        addTriplesToGraph();
+        assertEquals(3, graph.getNumberOfTriples());
+        assertEquals(true, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
+        graph.clear();
+        assertEquals(0, graph.getNumberOfTriples());
+        assertEquals(false, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
+    }
+
+    public void testSeparateGraphs() throws Exception {
+        graph.add(blank2, ref1, l2);
+        assertEquals(1, graph.getNumberOfTriples());
+        newGraph();
+        assertEquals(1, graph.getNumberOfTriples());
+    }
+
+    private void checkInvalidRemove(ClosableIterator ci) {
+        try {
+            ci.remove();
+            fail("Must throw an exception.");
+        } catch (IllegalStateException ise) {
+            assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
+        }
+    }
+
+    private void addTriplesToGraph() throws Exception {
+        graph.add(blank1, ref1, blank2);
+        graph.add(blank1, ref2, blank2);
+        graph.add(ref1, ref2, l2);
+    }
+
+    private void addFullTriplesToGraph() throws GraphException {
+        t1 = tripleFactory.createTriple(blank2, ref1, blank1);
+        graph.add(t1);
+        t2 = tripleFactory.createTriple(blank2, ref2, blank1);
+        graph.add(t2);
+        t3 = tripleFactory.createTriple(blank2, ref1, l1);
+        graph.add(t3);
+    }
+
     private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
         throws Exception {
         int counter = 0;
@@ -898,13 +928,14 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         graph.add(ref5, ref5, ref5);
     }
 
-    public void testClear() throws Exception {
-        addTriplesToGraph();
-        assertEquals(3, graph.getNumberOfTriples());
-        assertEquals(true, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
-        graph.clear();
-        assertEquals(0, graph.getNumberOfTriples());
-        assertEquals(false, graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE).hasNext());
+    private int getNumberOfBlankNodes() {
+        ClosableIterator<BlankNode> blankNodes = graph.findBlankNodes();
+        int counter = 0;
+        while (blankNodes.hasNext()) {
+            blankNodes.next();
+            counter++;
+        }
+        return counter;
     }
 
     private void checkFullIteratorRemoval(SubjectNode subjectNode, PredicateNode predicateNode, ObjectNode objectNode,
@@ -948,58 +979,5 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             catch (GraphException e) { /* no-op */
             }
         }
-    }
-
-    public void testSeparateGraphs() throws Exception {
-        graph.add(blank2, ref1, l2);
-        assertEquals(1, graph.getNumberOfTriples());
-        newGraph();
-        assertEquals(1, graph.getNumberOfTriples());
-    }
-
-    private void checkInvalidRemove(ClosableIterator ci) {
-        try {
-            ci.remove();
-            fail("Must throw an exception.");
-        } catch (IllegalStateException ise) {
-            assertTrue(ise.getMessage().indexOf("Next not called or beyond end of data") != -1);
-        }
-    }
-
-    /**
-     * Checks that an iterator matches a set exactly.
-     * The set will be emptied and the iterator will be closed.
-     *
-     * @param execptedTriples the expected set of execptedTriples.
-     * @param actualTriples   the iterator containing the actual execptedTriples.
-     */
-    private void checkSet(Set execptedTriples, ClosableIterator actualTriples) {
-        while (actualTriples.hasNext()) {
-            Triple t = (Triple) actualTriples.next();
-            assertTrue(execptedTriples.contains(t));
-            execptedTriples.remove(t);
-        }
-        if (!execptedTriples.isEmpty()) {
-            System.out.println("execptedTriples still contains: " + execptedTriples.toString());
-        }
-        assertTrue(execptedTriples.isEmpty());
-        actualTriples.close();
-    }
-
-
-    private void addTriplesToGraph() throws Exception {
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(ref1, ref2, l2);
-    }
-
-
-    private void addFullTriplesToGraph() throws GraphException {
-        t1 = tripleFactory.createTriple(blank2, ref1, blank1);
-        graph.add(t1);
-        t2 = tripleFactory.createTriple(blank2, ref2, blank1);
-        graph.add(t2);
-        t3 = tripleFactory.createTriple(blank2, ref1, l1);
-        graph.add(t3);
     }
 }
