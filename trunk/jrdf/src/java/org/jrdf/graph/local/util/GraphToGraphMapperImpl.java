@@ -99,7 +99,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return graph;
     }
 
-    public void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException {
+    public void addTripleToGraph(Triple triple) throws GraphException {
         SubjectNode subjectNode = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
         PredicateNode predicateNode = elementFactory.createURIReference(
             ((URIReference) triple.getPredicate()).getURI());
@@ -126,7 +126,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         }
     }
 
-    public Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException {
+    public Graph createNewTriples(Iterator<Triple> it) throws GraphException {
         while (it.hasNext()) {
             Triple triple = it.next();
             graph.add(createNewTriple(triple));
@@ -169,8 +169,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return newObjectNode;
     }
 
-    public void replaceObjectNode(ObjectNode node, ObjectNode newNode)
-        throws GraphException, GraphElementFactoryException {
+    public void replaceObjectNode(ObjectNode node, ObjectNode newNode) throws GraphException {
         if (newNode != null) {
             final ObjectNode oldONode = (ObjectNode) createNewNode(node);
             ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, oldONode);
@@ -184,8 +183,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         }
     }
 
-    public void replaceSubjectNode(SubjectNode node, SubjectNode newNode)
-        throws GraphException, GraphElementFactoryException {
+    public void replaceSubjectNode(SubjectNode node, SubjectNode newNode) throws GraphException {
         if (newNode != null) {
             final SubjectNode oldSNode = (SubjectNode) createNewNode(node);
             ClosableIterator<Triple> iterator = graph.find(oldSNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
