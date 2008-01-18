@@ -63,6 +63,7 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Literal;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.List;
 import java.util.Map;
@@ -130,4 +131,6 @@ public interface NodePool {
     void registerURIReference(URIReference node);
 
     void registerLiteral(Literal node);
+
+    ClosableIterator<BlankNode> getBlankNodeIterator();
 }
