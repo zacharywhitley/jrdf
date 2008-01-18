@@ -101,7 +101,7 @@ public class LocalizerImpl implements Localizer {
     public Long localize(Node node) throws GraphException {
         if (ANY_SUBJECT_NODE != node && ANY_PREDICATE_NODE != node && ANY_OBJECT_NODE != node &&
             LocalizedNode.class.isAssignableFrom(node.getClass())) {
-            return getId((LocalizedNode) node);
+            return getId(node);
         } else {
             return null;
         }
@@ -179,7 +179,7 @@ public class LocalizerImpl implements Localizer {
         }
     }
 
-    private Long getId(LocalizedNode node) throws GraphException {
+    private Long getId(Node node) throws GraphException {
         exception = null;
         currentId = null;
         node.accept(this);
