@@ -110,10 +110,9 @@ public class LocalizerImpl implements Localizer {
     public BlankNode createLocalBlankNode() throws GraphException {
         try {
             String uid = UUID.randomUUID().toString();
-            // create the node identifier and add
             currentId = nodePool.getNewNodeId();
             BlankNode node = new BlankNodeImpl(uid, currentId);
-            nodePool.registerNode((LocalizedNode) node);
+            nodePool.registerLocalBlankNode(node);
             return node;
         } catch (Exception e) {
             throw new GraphElementFactoryException("Could not generate Unique Identifier for BlankNode.", e);
@@ -123,14 +122,14 @@ public class LocalizerImpl implements Localizer {
     public URIReference createLocalURIReference(URI uri, boolean validate) {
         currentId = nodePool.getNewNodeId();
         URIReference node = new URIReferenceImpl(uri, validate, currentId);
-        nodePool.registerNode((LocalizedNode) node);
+        nodePool.registerURIReference(node);
         return node;
     }
 
     public Literal createLocalLiteral(String escapedForm) {
         currentId = nodePool.getNewNodeId();
         Literal node = mapper.convertToLiteral(escapedForm, currentId);
-        nodePool.registerNode((LocalizedNode) node);
+        nodePool.registerLiteral(node);
         return node;
     }
 

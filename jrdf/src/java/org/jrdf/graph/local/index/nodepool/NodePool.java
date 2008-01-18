@@ -60,7 +60,9 @@
 package org.jrdf.graph.local.index.nodepool;
 
 import org.jrdf.graph.Node;
-import org.jrdf.graph.local.mem.LocalizedNode;
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Literal;
 
 import java.util.List;
 import java.util.Map;
@@ -88,14 +90,6 @@ public interface NodePool {
      * @return The id of the node with the given string.
      */
     Long getNodeIdByString(String str);
-
-    /**
-     * Adds a node that was not created by this pool but still uses the MemNode interface.
-     *
-     * @param node The node to add.
-     * @throws IllegalArgumentException The node conflicts with one already in use.
-     */
-    void registerNode(LocalizedNode node);
 
     /**
      * Returns all the nodes in the node pool.
@@ -130,4 +124,10 @@ public interface NodePool {
      * @return null if not delete or the value.
      */
     String removeNode(Long value);
+
+    void registerLocalBlankNode(BlankNode node);
+
+    void registerURIReference(URIReference node);
+
+    void registerLiteral(Literal node);
 }
