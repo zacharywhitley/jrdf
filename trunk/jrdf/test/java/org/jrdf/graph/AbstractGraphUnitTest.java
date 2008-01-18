@@ -829,13 +829,22 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testURIReferencesIterator() throws Exception {
         addTestNodes();
+        assertEquals("Unexpected number of unique URIs", 5, countURIRefs());
+        graph.remove(ref5, ref2, ref1);
+        assertEquals("Unexpected number of unique URIs", 5, countURIRefs());
+        graph.remove(ref1, ref3, ref5);
+        graph.remove(ref5, ref5, ref5);
+        assertEquals("Unexpected number of unique URIs", 4, countURIRefs());
+    }
+
+    private int countURIRefs() {
         ClosableIterator<URIReference> iterator = graph.findURIReferences();
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
             counter++;
         }
-        assertEquals("Unexpected number of unique URIs", 5, counter);
+        return counter;
     }
 
     public void testResourceIterators() throws Exception {
