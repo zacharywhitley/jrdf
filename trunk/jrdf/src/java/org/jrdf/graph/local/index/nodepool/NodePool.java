@@ -133,4 +133,6 @@ public interface NodePool {
     void registerLiteral(Literal node);
 
     ClosableIterator<BlankNode> getBlankNodeIterator();
+
+    ClosableIterator<URIReference> getURIReferenceIterator();
 }

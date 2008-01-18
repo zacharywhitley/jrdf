@@ -63,7 +63,7 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.mem.LocalizedNode;
-import org.jrdf.graph.local.iterator.BlankNodeIterator;
+import org.jrdf.graph.local.iterator.NodeTypeIterator;
 import org.jrdf.map.MapFactory;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
@@ -108,7 +108,11 @@ public final class NodePoolImpl implements NodePool {
     }
 
     public ClosableIterator<BlankNode> getBlankNodeIterator() {
-        return new BlankNodeIterator(nodeTypePool.getBNodeValues().keySet().iterator(), this);
+        return new NodeTypeIterator<BlankNode>(nodeTypePool.getBNodeValues().keySet().iterator(), this);
+    }
+
+    public ClosableIterator<URIReference> getURIReferenceIterator() {
+        return new NodeTypeIterator<URIReference>(nodeTypePool.getURINodeValues().keySet().iterator(), this);
     }
 
     public void registerLocalBlankNode(BlankNode node) {

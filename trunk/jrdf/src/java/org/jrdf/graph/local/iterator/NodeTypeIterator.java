@@ -57,40 +57,38 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.ResourceFactory;
+import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
-public class BlankNodeResourceIterator extends ResourceIterator<BlankNode> {
-    public BlankNodeResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final ResourceFactory newResourceFactory, final NodePool newNodePool) {
-        super(newLongIndexes, newGraphHandlers, newResourceFactory, newNodePool);
+public class NodeTypeIterator<T> implements ClosableIterator<T> {
+    private final Iterator<Long> iterator;
+    private final NodePool nodePool;
+
+    public NodeTypeIterator(Iterator<Long> newIterator, NodePool newNodePool) {
+        checkNotNull(newIterator, newNodePool);
+        this.iterator = newIterator;
+        this.nodePool = newNodePool;
     }
 
-    public BlankNode next() {
-        Resource resource = getNextResource();
-        return (BlankNode) resource.getUnderlyingNode();
+    public boolean hasNext() {
+        return iterator.hasNext();
     }
 
-    protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
-        final GraphHandler graphHandler) {
-        while (iterator.hasNext()) {
-            final Long id = iterator.next().getKey();
-            final Node node = nodePool.getNodeById(id);
-            if (node != null && node instanceof BlankNode) {
-                return id;
-            }
-        }
-        return -1;
+    @SuppressWarnings({ "unchecked" })
+    public T next() {
+        return (T) nodePool.getNodeById(iterator.next());
+    }
+
+    public boolean close() {
+        return true;
+    }
+
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }
