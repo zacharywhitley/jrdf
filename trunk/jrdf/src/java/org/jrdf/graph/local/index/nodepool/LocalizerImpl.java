@@ -152,7 +152,8 @@ public class LocalizerImpl implements Localizer {
     }
 
     public void visitURIReference(URIReference uriReference) {
-        currentId = nodePool.getNodeIdByString(uriReference.getURI().toString());
+        String uriAsString = uriReference.getURI().toString();
+        currentId = nodePool.getNodeIdByString(uriAsString);
         if (currentId == null) {
             currentId = ((LocalizedNode) createLocalURIReference(uriReference.getURI(), false)).getId();
         }

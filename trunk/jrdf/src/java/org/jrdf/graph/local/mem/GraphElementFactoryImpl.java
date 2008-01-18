@@ -135,23 +135,26 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public Literal createLiteral(Object object) {
-        return getLocalLiteral(new LiteralImpl(object));
+        final LiteralImpl literal = new LiteralImpl(object);
+        return getLocalLiteral(literal.getEscapedForm());
     }
 
     public Literal createLiteral(String lexicalValue) {
-        return getLocalLiteral(new LiteralImpl(lexicalValue));
+        final LiteralImpl literal = new LiteralImpl(lexicalValue);
+        return getLocalLiteral(literal.getEscapedForm());
     }
 
     public Literal createLiteral(String lexicalValue, String languageType) {
-        return getLocalLiteral(new LiteralImpl(lexicalValue, languageType));
+        final LiteralImpl literal = new LiteralImpl(lexicalValue, languageType);
+        return getLocalLiteral(literal.getEscapedForm());
     }
 
     public Literal createLiteral(String lexicalValue, URI datatypeURI) {
-        return getLocalLiteral(new LiteralImpl(lexicalValue, datatypeURI));
+        final LiteralImpl literal = new LiteralImpl(lexicalValue, datatypeURI);
+        return getLocalLiteral(literal.getEscapedForm());
     }
 
     private URIReference getLocalURIReference(URI uri, boolean validate) {
-        // check if the node already exists in the string pool
         Long nodeId = nodePool.getNodeIdByString(uri.toString());
         URIReference newURIReference;
         if (null != nodeId) {
@@ -162,13 +165,11 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
         return newURIReference;
     }
 
-    private Literal getLocalLiteral(LiteralMutableId literal) {
-        String escapedForm = literal.getEscapedForm();
+    private Literal getLocalLiteral(String escapedForm) {
         Long nodeId = nodePool.getNodeIdByString(escapedForm);
         Literal newLiteral;
         if (null != nodeId) {
-            literal.setId(nodeId);
-            newLiteral = literal;
+            newLiteral = (Literal) nodePool.getNodeById(nodeId);
         } else {
             newLiteral = localizer.createLocalLiteral(escapedForm);
         }
