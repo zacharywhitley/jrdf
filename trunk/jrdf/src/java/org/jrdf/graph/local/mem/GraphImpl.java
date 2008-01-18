@@ -86,7 +86,6 @@ import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.mem.iterator.AnyResourceIterator;
-import org.jrdf.graph.local.mem.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
 import org.jrdf.graph.local.mem.iterator.URIReferenceResourceIterator;
 import org.jrdf.util.ClosableIterator;
@@ -317,7 +316,7 @@ public class GraphImpl implements Graph, Serializable {
     }
 
     public ClosableIterator<BlankNode> findBlankNodes() {
-        return new BlankNodeResourceIterator(indexes, handlers, resourceFactory, nodePool);
+        return nodePool.getBlankNodeIterator();
     }
 
     public ClosableIterator<URIReference> findURIReferences() {
