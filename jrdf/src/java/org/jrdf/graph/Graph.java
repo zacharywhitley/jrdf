@@ -126,6 +126,13 @@ public interface Graph {
         GraphException;
 
     /**
+     * Return all unique predicates.
+     *
+     * @return all unique predicate.
+     */
+    ClosableIterator<PredicateNode> findUniquePredicates();
+
+    /**
      * Return predicates that are part of an RDF triple where resource is either a subject or object.
      *
      * @param resource the resource that is either a subject or object in a triple.
@@ -135,18 +142,18 @@ public interface Graph {
     ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException;
 
     /**
-     * Return all unique predicates.
-     *
-     * @return all unique predicate.
-     */
-    ClosableIterator<PredicateNode> findUniquePredicates();
-
-    /**
      * Return all unique resources (Subjects and Objects).
      *
      * @return all unique resources.
      */
     ClosableIterator<Resource> findResources();
+
+    /**
+     * Returns all unique URIReferences (Subject and Object).
+     *
+     * @return all unique URIReference nodes.
+     */
+    ClosableIterator<URIReference> findURIReferenceResources();
 
     /**
      * Returns all unique blank nodes.
@@ -156,7 +163,7 @@ public interface Graph {
     ClosableIterator<BlankNode> findBlankNodes();
 
     /**
-     * Returns all unique URIReferences (Subject and Object).
+     * Returns all unique URIReferences (Subject, Predicate and Object).
      *
      * @return all unique URIReference nodes.
      */

@@ -818,7 +818,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<URIReference> iterator = graph.findURIReferences();
+        ClosableIterator<URIReference> iterator = graph.findURIReferenceResources();
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
@@ -827,9 +827,19 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
     }
 
+    public void testURIReferencesIterator() throws Exception {
+        addTestNodes();
+        ClosableIterator<URIReference> iterator = graph.findURIReferences();
+        int counter = 0;
+        while (iterator.hasNext()) {
+            iterator.next();
+            counter++;
+        }
+        assertEquals("Unexpected number of unique URIs", 5, counter);
+    }
+
     public void testResourceIterators() throws Exception {
         addTestNodes();
-
         ClosableIterator<Resource> resources = graph.findResources();
         int counter = 0;
         while (resources.hasNext()) {

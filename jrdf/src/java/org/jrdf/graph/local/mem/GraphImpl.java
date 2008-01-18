@@ -315,12 +315,16 @@ public class GraphImpl implements Graph, Serializable {
         return new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
     }
 
+    public ClosableIterator<URIReference> findURIReferenceResources() {
+        return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
+    }
+
     public ClosableIterator<BlankNode> findBlankNodes() {
         return nodePool.getBlankNodeIterator();
     }
 
     public ClosableIterator<URIReference> findURIReferences() {
-        return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
+        return nodePool.getURIReferenceIterator();
     }
 
     public ClosableIterator<PredicateNode> findUniquePredicates() {
