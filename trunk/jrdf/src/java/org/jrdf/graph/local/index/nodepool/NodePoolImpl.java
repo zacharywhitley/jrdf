@@ -95,7 +95,6 @@ public final class NodePoolImpl implements NodePool {
         return nodeTypePool.get(id);
     }
 
-    // TODO - Review these two methods.
     public Long getNodeIdByString(String str) {
         return stringPool.get(str);
     }
@@ -104,37 +103,18 @@ public final class NodePoolImpl implements NodePool {
         return nextNode++;
     }
 
-    public void registerNode(LocalizedNode node) {
-        // get the id for this node
-        Long id = node.getId();
+    public void registerLocalBlankNode(BlankNode node) {
+        registerNode((LocalizedNode) node);
+    }
 
-        // look the node up to see if it already exists in the graph
-        LocalizedNode existingNode = (LocalizedNode) nodeTypePool.get(id);
-        if (null != existingNode) {
-            // check that the node is equal to the one that is already in the graph
-            if (existingNode.equals(node)) {
-                return;
-            }
-            // node does not match
-            throw new IllegalArgumentException("Node conflicts with one already in the graph. " +
-                "Existing node: " + existingNode + ", new node: " + node);
-        }
-        // add the node
-        nodeTypePool.put(id, node);
+    public void registerURIReference(URIReference node) {
+        registerNode((LocalizedNode) node);
+        stringPool.put(node.getURI().toString(), ((LocalizedNode) node).getId());
+    }
 
-        // check if the node has a string representation
-        if (!(node instanceof BlankNode)) {
-            if (node instanceof Literal) {
-                stringPool.put(((Literal) node).getEscapedForm(), node.getId());
-            } else {
-                stringPool.put(((URIReference) node).getURI().toString(), node.getId());
-            }
-        }
-
-        // update the nextNode counter to a unique number
-        if (!(id < nextNode)) {
-            nextNode = id + 1L;
-        }
+    public void registerLiteral(Literal node) {
+        registerNode((LocalizedNode) node);
+        stringPool.put(node.getEscapedForm(), ((LocalizedNode) node).getId());
     }
 
     public void registerNodePoolValues(List<Map<Long, String>> values) {
@@ -174,6 +154,24 @@ public final class NodePoolImpl implements NodePool {
     private void addEntries(Set<Map.Entry<Long, String>> entries) {
         for (Map.Entry<Long, String> entry : entries) {
             stringPool.put(entry.getValue(), entry.getKey());
+        }
+    }
+
+    private void registerNode(LocalizedNode node) {
+        Long id = node.getId();
+        LocalizedNode existingNode = (LocalizedNode) nodeTypePool.get(id);
+        if (null != existingNode) {
+            if (existingNode.equals(node)) {
+                return;
+            }
+            throw new IllegalArgumentException("Node conflicts with one already in the graph. Existing node: " +
+                existingNode + ", new node: " + node);
+        }
+        nodeTypePool.put(id, node);
+
+        // update the nextNode counter to a unique number
+        if (!(id < nextNode)) {
+            nextNode = id + 1L;
         }
     }
 }
