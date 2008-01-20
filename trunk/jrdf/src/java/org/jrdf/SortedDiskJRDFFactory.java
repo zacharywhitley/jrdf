@@ -99,6 +99,7 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     private BTreeFactory btreeFactory = new BTreeFactoryImpl();
     private Set<LongIndex> openIndexes = new HashSet<LongIndex>();
     private Set<NodePoolFactory> openFactories = new HashSet<NodePoolFactory>();
+    private TripleBTree[] bTrees;
 
     private SortedDiskJRDFFactory() {
     }
@@ -110,9 +111,13 @@ public final class SortedDiskJRDFFactory implements JRDFFactory {
     public void refresh() {
     }
 
+    public TripleBTree[] getBTrees() {
+        return bTrees;
+    }
+
     public Graph getNewGraph() {
         graphNumber++;
-        TripleBTree[] bTrees = createBTrees();
+        bTrees = createBTrees();
         LongIndex[] indexes = createIndexes(bTrees);
         NodePoolFactory nodePoolFactory = new Db4oNodePoolFactory(HANDLER, graphNumber);
         openIndexes.addAll(asList(indexes));
