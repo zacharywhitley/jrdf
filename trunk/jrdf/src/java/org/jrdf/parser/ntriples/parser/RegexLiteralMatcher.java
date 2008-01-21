@@ -77,8 +77,11 @@ public final class RegexLiteralMatcher implements LiteralMatcher, Serializable {
     private static final int LITERAL_INDEX = 1;
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
-    private final RegexMatcherFactory regexFactory;
-    private final NTripleUtil nTripleUtil;
+    private RegexMatcherFactory regexFactory;
+    private NTripleUtil nTripleUtil;
+
+    private RegexLiteralMatcher() {
+    }
 
     public RegexLiteralMatcher(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil) {
         checkNotNull(newRegexFactory, newNTripleUtil);

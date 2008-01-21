@@ -78,6 +78,10 @@ public final class LiteralNodeType implements NodeType {
         return COMPOSITION_NODE_TYPE;
     }
 
+    public void accept(NodeTypeVisitor visitor) {
+        visitor.visitLiteralNodeType(this);
+    }
+
     public String getName() {
         return "Literal";
     }

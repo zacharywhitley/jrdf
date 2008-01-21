@@ -90,6 +90,9 @@ public final class SubjectPredicateNodeType implements PositionalNodeType {
         return nodeTypes;
     }
 
+    public void accept(NodeTypeVisitor visitor) {
+    }
+
     public PositionalNodeType upgrade(PositionalNodeType newNodeType) {
         Class<? extends PositionalNodeType> newClazz = newNodeType.getClass();
         if (newClazz.equals(ObjectNodeType.class)) {

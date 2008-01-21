@@ -68,7 +68,9 @@ import org.jrdf.util.boundary.RegexMatcherFactory;
 import org.jrdf.util.test.ArgumentTestUtil;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ArgumentTestUtil.*;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
 
 import java.util.regex.Pattern;
 
@@ -92,11 +94,14 @@ public class LiteralUtilImplUnitTest extends TestCase {
     }
 
     public void testClassProperties() {
-        hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+        checkClassFinal(TEST_CLASS);
+        checkClassPublic(TEST_CLASS);
+        checkImplementationOfInterface(TARGET_INTERFACE, TEST_CLASS);
+        checkConstructNullAssertion(TEST_CLASS, PARAM_TYPES);
     }
 
     public void testMethodProperties() {
-        ArgumentTestUtil.checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
+        checkMethodNullAssertions(util, "unescapeLiteral", new ParameterDefinition(
             new String[]{"literal"}, new Class[]{String.class}));
     }
 

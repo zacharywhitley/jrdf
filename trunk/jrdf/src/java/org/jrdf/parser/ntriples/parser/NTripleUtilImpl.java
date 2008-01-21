@@ -88,7 +88,10 @@ public final class NTripleUtilImpl implements NTripleUtil, Serializable {
             put("\\t", "\t");
         }
     };
-    private final RegexMatcherFactory regexMatcherFactory;
+    private RegexMatcherFactory regexMatcherFactory;
+
+    private NTripleUtilImpl() {
+    }
 
     public NTripleUtilImpl(RegexMatcherFactory regexMatcherFactory) {
         checkNotNull(regexMatcherFactory);

@@ -65,6 +65,7 @@ import org.jrdf.query.relation.Attribute;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.attributename.AttributeName;
 import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.NodeTypeVisitor;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -148,6 +149,9 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
         @SuppressWarnings({ "unchecked" })
         public Set<NodeType> composedOf() {
             return Collections.EMPTY_SET;
+        }
+
+        public void accept(NodeTypeVisitor visitor) {
         }
 
         @Override
