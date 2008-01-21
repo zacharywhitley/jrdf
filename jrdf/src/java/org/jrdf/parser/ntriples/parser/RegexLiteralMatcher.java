@@ -65,8 +65,11 @@ import static org.jrdf.util.param.ParameterUtil.checkNotEmptyString;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.regex.Pattern;
+import java.io.Serializable;
 
-public final class RegexLiteralMatcher implements LiteralMatcher {
+public final class RegexLiteralMatcher implements LiteralMatcher, Serializable {
+    private static final long serialVersionUID = 71365287225809670L;
+    private static final int LITERAL_VALUES_LENGTH = 3;
     private Pattern pattern = Pattern.compile("\\\"([\\x20-\\x7E]*)\\\"" +
         "(" +
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
@@ -76,7 +79,6 @@ public final class RegexLiteralMatcher implements LiteralMatcher {
     private static final int DATATYPE_INDEX = 8;
     private final RegexMatcherFactory regexFactory;
     private final NTripleUtil nTripleUtil;
-    private static final int LITERAL_VALUES_LENGTH = 3;
 
     public RegexLiteralMatcher(RegexMatcherFactory newRegexFactory, NTripleUtil newNTripleUtil) {
         checkNotNull(newRegexFactory, newNTripleUtil);

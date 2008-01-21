@@ -80,6 +80,7 @@ import java.net.URI;
  * @version $Revision$
  */
 public final class NodeTestUtil {
+    private static final TestJRDFFactory FACTORY = TestJRDFFactory.getFactory();
 
     private NodeTestUtil() {
     }
@@ -164,6 +165,6 @@ public final class NodeTestUtil {
 
     // FIXME TJA: Remove dependence on GraphImpl. Should be able to Mock this out.
     private static Graph createGraph() {
-        return TestJRDFFactory.getFactory().getNewGraph();
+        return FACTORY.getNewGraph();
     }
 }

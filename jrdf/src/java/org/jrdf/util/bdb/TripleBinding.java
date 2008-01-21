@@ -68,7 +68,10 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleImpl;
 
-public class TripleBinding extends TupleBinding {
+import java.io.Serializable;
+
+public class TripleBinding extends TupleBinding implements Serializable {
+    private static final long serialVersionUID = 6518054866571995110L;
     TupleBinding nodeBinding = new NodeBinding();
 
     public Object entryToObject(TupleInput input) {
