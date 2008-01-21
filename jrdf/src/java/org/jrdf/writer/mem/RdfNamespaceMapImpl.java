@@ -68,6 +68,7 @@ import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.RDFS;
 import org.jrdf.writer.NamespaceException;
 import org.jrdf.writer.RdfNamespaceMap;
+import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -91,7 +92,7 @@ public class RdfNamespaceMapImpl implements RdfNamespaceMap {
 
     public void load(Graph graph) throws GraphException {
         // check for blank nodes
-        ClosableIterator<PredicateNode> predicateIterator = graph.findUniquePredicates();
+        ClosableIterator<PredicateNode> predicateIterator = graph.findNodes(PREDICATE_TYPE);
         while (predicateIterator.hasNext()) {
             URIReference uriReference = (URIReference) predicateIterator.next();
             String partial = getPartialUri(uriReference.getURI().toString());

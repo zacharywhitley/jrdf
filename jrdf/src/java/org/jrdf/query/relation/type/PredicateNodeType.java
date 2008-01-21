@@ -70,8 +70,11 @@ import java.util.Set;
  * @version $Revision$
  */
 public final class PredicateNodeType implements PositionalNodeType {
-    private static final NodeType INSTANCE = new PredicateNodeType();
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
+    /**
+     *  PredicateNodeType constant.
+     */
+    public static final NodeType PREDICATE_TYPE = new PredicateNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(PREDICATE_TYPE);
     private static final long serialVersionUID = -5313315028523572144L;
 
     public String getName() {
