@@ -143,25 +143,11 @@ public interface Graph {
     ClosableIterator<PredicateNode> find(Resource resource) throws GraphException;
 
     /**
-     * Return all unique resources (Subjects and Objects).
-     *
-     * @return all unique resources.
-     */
-    ClosableIterator<Resource> findResources();
-
-    /**
      * Returns all unique URIReferences (Subject and Object).
      *
      * @return all unique URIReference nodes.
      */
     ClosableIterator<URIReference> findURIReferenceResources();
-
-    /**
-     * Returns all unique URIReferences (Subject, Predicate and Object).
-     *
-     * @return all unique URIReference nodes.
-     */
-    ClosableIterator<URIReference> findURIReferences();
 
     /**
      * Returns all unique values of a given type.

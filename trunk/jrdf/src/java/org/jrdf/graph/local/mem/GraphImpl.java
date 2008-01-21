@@ -96,6 +96,7 @@ import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
 import org.jrdf.query.relation.type.NodeType;
+import static org.jrdf.query.relation.type.ResourceNodeType.*;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
 import static org.jrdf.query.relation.type.BlankNodeType.*;
 
@@ -314,16 +315,8 @@ public class GraphImpl implements Graph, Serializable {
         return readWriteGraph.find(subject, predicate, object);
     }
 
-    public ClosableIterator<Resource> findResources() {
-        return new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
-    }
-
     public ClosableIterator<URIReference> findURIReferenceResources() {
         return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
-    }
-
-    public ClosableIterator<URIReference> findURIReferences() {
-        return nodePool.getURIReferenceIterator();
     }
 
     @SuppressWarnings({ "unchecked" })
@@ -332,6 +325,8 @@ public class GraphImpl implements Graph, Serializable {
             return (ClosableIterator<T>) nodePool.getBlankNodeIterator();
         } else if (type.equals(URI_REFERENCE_TYPE)) {
             return (ClosableIterator<T>) nodePool.getURIReferenceIterator();
+        } else if (type.equals(RESOURCE_TYPE)) {
+            return (ClosableIterator<T>) new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
         } else {
             throw new UnsupportedOperationException("Cannot find with node type: " + type);
         }
