@@ -82,6 +82,10 @@ public final class PredicateNodeType implements PositionalNodeType {
         return COMPOSITION_NODE_TYPE;
     }
 
+    public void accept(NodeTypeVisitor visitor) {
+        visitor.visitPredicateNodeType(this);
+    }
+
     public int hashCode() {
         return getName().hashCode();
     }

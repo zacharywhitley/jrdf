@@ -67,6 +67,8 @@ import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
+import org.jrdf.query.relation.type.BlankNodeType;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -838,7 +840,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     private int countURIRefs() {
-        ClosableIterator<URIReference> iterator = graph.findURIReferences();
+        ClosableIterator<URIReference> iterator = graph.find(URI_REFERENCE_TYPE);
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
@@ -918,7 +920,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
         throws Exception {
         int counter = 0;
-        ClosableIterator<PredicateNode> resourcePredicates = graph.findUniquePredicates(resource);
+        ClosableIterator<PredicateNode> resourcePredicates = graph.find(resource);
         Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
         while (resourcePredicates.hasNext()) {
             PredicateNode predicateNode = resourcePredicates.next();
@@ -948,7 +950,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     private int getNumberOfBlankNodes() {
-        ClosableIterator<BlankNode> blankNodes = graph.findBlankNodes();
+        ClosableIterator<BlankNode> blankNodes = graph.find(new BlankNodeType());
         int counter = 0;
         while (blankNodes.hasNext()) {
             blankNodes.next();

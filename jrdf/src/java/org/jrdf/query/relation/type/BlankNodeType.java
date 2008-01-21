@@ -70,12 +70,19 @@ import java.util.Set;
  * @version $Revision$
  */
 public final class BlankNodeType implements NodeType {
-    private static final NodeType INSTANCE = new BlankNodeType();
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
+    /**
+     *  BlankNodeType constant.
+     */
+    public static final NodeType BNODE_TYPE = new BlankNodeType();
+    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(BNODE_TYPE);
     private static final long serialVersionUID = 1645735853855887744L;
 
     public Set<NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
+    }
+
+    public void accept(NodeTypeVisitor visitor) {
+        visitor.visitBlankNodeType(this);
     }
 
     public String getName() {

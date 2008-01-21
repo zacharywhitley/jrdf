@@ -82,8 +82,11 @@ public class StringNodeMapperImpl implements StringNodeMapper, Serializable {
         "(" +
         "((\\@(\\p{Lower}+(\\-a-z0-9]+)*))|(\\^\\^\\<([\\x20-\\x7E]+)\\>))?" +
         ").*";
-    private final LiteralMatcher literalMatcher;
+    private LiteralMatcher literalMatcher;
     private String currentString;
+
+    private StringNodeMapperImpl() {
+    }
 
     public StringNodeMapperImpl(LiteralMatcher newLiteralMatcher) {
         literalMatcher = newLiteralMatcher;

@@ -91,6 +91,9 @@ public final class SubjectPredicateObjectNodeType implements PositionalNodeType 
         return nodeTypes;
     }
 
+    public void accept(NodeTypeVisitor visitor) {
+    }
+
     public PositionalNodeType upgrade(PositionalNodeType newNodeType) {
         return this;
     }

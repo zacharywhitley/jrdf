@@ -69,8 +69,11 @@ import com.sleepycat.bind.tuple.TupleInput;
 
 public class ByteTripleComparatorImpl implements Comparator<byte[]>, Serializable {
     private static final long serialVersionUID = 8029585962398122344L;
-    private final TripleComparator tripleComparator;
-    private final TripleBinding tripleBinding;
+    private TripleComparator tripleComparator;
+    private TripleBinding tripleBinding;
+
+    private ByteTripleComparatorImpl() {
+    }
 
     public ByteTripleComparatorImpl(TripleComparator newTripleComparator, TripleBinding newTripleBinding) {
         this.tripleComparator = newTripleComparator;

@@ -82,6 +82,9 @@ public final class PredicateObjectNodeType implements PositionalNodeType {
         return nodeTypes;
     }
 
+    public void accept(NodeTypeVisitor visitor) {
+    }
+
     public int hashCode() {
         return getName().hashCode();
     }

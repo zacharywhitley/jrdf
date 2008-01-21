@@ -82,6 +82,10 @@ public final class SubjectNodeType implements PositionalNodeType {
         return COMPOSITION_NODE_TYPE;
     }
 
+    public void accept(NodeTypeVisitor visitor) {
+        visitor.visitSubjectNodeType(this);
+    }
+
     public int hashCode() {
         return getName().hashCode();
     }

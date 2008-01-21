@@ -60,6 +60,7 @@
 package org.jrdf.graph;
 
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.query.relation.type.NodeType;
 
 import java.util.Iterator;
 
@@ -139,7 +140,7 @@ public interface Graph {
      * @return the unique predicates associated with the resource.
      * @throws GraphException If there was an error accessing the graph.
      */
-    ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException;
+    ClosableIterator<PredicateNode> find(Resource resource) throws GraphException;
 
     /**
      * Return all unique resources (Subjects and Objects).
@@ -156,18 +157,19 @@ public interface Graph {
     ClosableIterator<URIReference> findURIReferenceResources();
 
     /**
-     * Returns all unique blank nodes.
-     *
-     * @return all unique blank nodes.
-     */
-    ClosableIterator<BlankNode> findBlankNodes();
-
-    /**
      * Returns all unique URIReferences (Subject, Predicate and Object).
      *
      * @return all unique URIReference nodes.
      */
     ClosableIterator<URIReference> findURIReferences();
+
+    /**
+     * Returns all unique values of a given type.
+     *
+     * @param type the node type can be positional (SPO) or node type (URIReference, Literal or BNode).
+     * @return all unique values of a given type.
+     */
+    <T extends Node> ClosableIterator<T> find(NodeType type);
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created using {@link GraphElementFactory}.

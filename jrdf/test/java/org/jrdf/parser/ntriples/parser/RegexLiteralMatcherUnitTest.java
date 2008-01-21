@@ -65,11 +65,13 @@ import static org.jrdf.util.boundary.PatternArgumentMatcher.eqPattern;
 import org.jrdf.util.boundary.RegexMatcher;
 import org.jrdf.util.boundary.RegexMatcherFactory;
 import static org.jrdf.util.test.ArgumentTestUtil.checkMethodNullAndEmptyAssertions;
+import static org.jrdf.util.test.ArgumentTestUtil.*;
 import org.jrdf.util.test.MockFactory;
 import org.jrdf.util.test.ParameterDefinition;
-import static org.jrdf.util.test.StandardClassPropertiesTestUtil.hasClassStandardProperties;
+import org.jrdf.util.test.ArgumentTestUtil;
+import org.jrdf.util.test.ClassPropertiesTestUtil;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.*;
 
-import java.net.URI;
 import java.util.regex.Pattern;
 
 public class RegexLiteralMatcherUnitTest extends TestCase {
@@ -85,9 +87,6 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
     private static final int LANGUAGE_INDEX = 5;
     private static final int DATATYPE_INDEX = 8;
     private static final String LINE = "line" + Math.random();
-    private static final String UNESCAPED_LITERAL = "unescapedLiteral" + Math.random();
-    private static final String LANGUAGE = "language" + Math.random();
-    private static final URI DATATYPE = URI.create("datatype" + Math.random());
     private final MockFactory mockFactory = new MockFactory();
     private RegexMatcherFactory regexMatcherFactory;
     private RegexMatcher matcher;
@@ -102,7 +101,10 @@ public class RegexLiteralMatcherUnitTest extends TestCase {
     }
 
     public void testClassProperties() {
-        hasClassStandardProperties(TARGET_INTERFACE, TEST_CLASS, PARAM_TYPES, PARAMETER_NAMES);
+        checkClassFinal(TEST_CLASS);
+        checkClassPublic(TEST_CLASS);
+        checkImplementationOfInterface(TARGET_INTERFACE, TEST_CLASS);
+        checkConstructNullAssertion(TEST_CLASS, PARAM_TYPES);
     }
 
     public void testMethodProperties() {

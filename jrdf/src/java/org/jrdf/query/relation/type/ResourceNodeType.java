@@ -1,13 +1,13 @@
 /*
  * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * $Revision$
+ * $Date$
  *
  * ====================================================================
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003-2007 The JRDF Project.  All rights reserved.
+ * Copyright (c) 2003-2008 The JRDF Project.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -57,14 +57,41 @@
  *
  */
 
-package org.jrdf.util.test;
+
+package org.jrdf.query.relation.type;
+
+import java.util.Set;
+import java.util.HashSet;
 
 /**
- * Create a mock with no expectations.
+ * A Resource node type - a URIReference or BlankNode.
  *
  * @author Andrew Newman
- * @version $Revision:$
+ * @version $Revision$
  */
-public class MockTestUtil {
+public final class ResourceNodeType implements NodeType {
+    private static final long serialVersionUID = -6788108639466970775L;
 
+    public String getName() {
+        return "Resource";
+    }
+
+    public Set<NodeType> composedOf() {
+        HashSet<NodeType> nodeTypes = new HashSet<NodeType>();
+        nodeTypes.add(new URIReferenceNodeType());
+        nodeTypes.add(new BlankNodeType());
+        return nodeTypes;
+    }
+
+    public void accept(NodeTypeVisitor visitor) {
+        visitor.visitResourceNodeType(this);
+    }
+
+    public int hashCode() {
+        return getName().hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        return obj instanceof ResourceNodeType;
+    }
 }

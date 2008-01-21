@@ -62,7 +62,6 @@ package org.jrdf.graph.local.mem;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
@@ -73,6 +72,7 @@ import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
@@ -95,6 +95,9 @@ import org.jrdf.writer.RdfNamespaceMap;
 import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
+import org.jrdf.query.relation.type.NodeType;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
+import static org.jrdf.query.relation.type.BlankNodeType.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -319,19 +322,26 @@ public class GraphImpl implements Graph, Serializable {
         return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
     }
 
-    public ClosableIterator<BlankNode> findBlankNodes() {
-        return nodePool.getBlankNodeIterator();
-    }
-
     public ClosableIterator<URIReference> findURIReferences() {
         return nodePool.getURIReferenceIterator();
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    public <T extends Node> ClosableIterator<T> find(NodeType type) {
+        if (type.equals(BNODE_TYPE)) {
+            return (ClosableIterator<T>) nodePool.getBlankNodeIterator();
+        } else if (type.equals(URI_REFERENCE_TYPE)) {
+            return (ClosableIterator<T>) nodePool.getURIReferenceIterator();
+        } else {
+            throw new UnsupportedOperationException("Cannot find with node type: " + type);
+        }
     }
 
     public ClosableIterator<PredicateNode> findUniquePredicates() {
         return readWriteGraph.findUniquePredicates();
     }
 
-    public ClosableIterator<PredicateNode> findUniquePredicates(Resource resource) throws GraphException {
+    public ClosableIterator<PredicateNode> find(Resource resource) throws GraphException {
         checkNotNull(resource);
         return readWriteGraph.findUniquePredicates(resource);
     }
