@@ -127,11 +127,12 @@ public interface Graph {
         GraphException;
 
     /**
-     * Return all unique predicates.
+     * Returns all unique values of a given type.
      *
-     * @return all unique predicate.
+     * @param type the node type can be positional (SPO) or node type (URIReference, Literal or BNode).
+     * @return all unique values of a given type.
      */
-    ClosableIterator<PredicateNode> findUniquePredicates();
+    <T extends Node> ClosableIterator<T> findNodes(NodeType type);
 
     /**
      * Return predicates that are part of an RDF triple where resource is either a subject or object.
@@ -140,7 +141,7 @@ public interface Graph {
      * @return the unique predicates associated with the resource.
      * @throws GraphException If there was an error accessing the graph.
      */
-    ClosableIterator<PredicateNode> find(Resource resource) throws GraphException;
+    ClosableIterator<PredicateNode> findNodes(Resource resource) throws GraphException;
 
     /**
      * Returns all unique URIReferences (Subject and Object).
@@ -148,14 +149,6 @@ public interface Graph {
      * @return all unique URIReference nodes.
      */
     ClosableIterator<URIReference> findURIReferenceResources();
-
-    /**
-     * Returns all unique values of a given type.
-     *
-     * @param type the node type can be positional (SPO) or node type (URIReference, Literal or BNode).
-     * @return all unique values of a given type.
-     */
-    <T extends Node> ClosableIterator<T> find(NodeType type);
 
     /**
      * Adds a triple to the graph.  The nodes must have already been created using {@link GraphElementFactory}.
