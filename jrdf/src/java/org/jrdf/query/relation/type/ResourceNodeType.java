@@ -70,6 +70,10 @@ import java.util.HashSet;
  * @version $Revision$
  */
 public final class ResourceNodeType implements NodeType {
+    /**
+     *  ResourceNodeType constant.
+     */
+    public static final NodeType RESOURCE_TYPE = new ResourceNodeType();
     private static final long serialVersionUID = -6788108639466970775L;
 
     public String getName() {

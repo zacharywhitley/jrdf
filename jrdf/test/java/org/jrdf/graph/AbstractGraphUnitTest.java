@@ -68,6 +68,9 @@ import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.jrdf.query.relation.type.BlankNodeType;
+import org.jrdf.query.relation.type.ResourceNodeType;
+import static org.jrdf.query.relation.type.ResourceNodeType.*;
+import static org.jrdf.query.relation.type.ResourceNodeType.*;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
 
 import java.net.URI;
@@ -798,7 +801,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     public void testResourceIteratorSimple() throws Exception {
-        final ClosableIterator<Resource> resources = graph.findResources();
+        final ClosableIterator<Resource> resources = graph.find(RESOURCE_TYPE);
         boolean b = resources.hasNext();
         assertFalse("Should be no resources for empty graph", b);
         assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
@@ -851,7 +854,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testResourceIterators() throws Exception {
         addTestNodes();
-        ClosableIterator<Resource> resources = graph.findResources();
+        ClosableIterator<Resource> resources = graph.find(RESOURCE_TYPE);
         int counter = 0;
         while (resources.hasNext()) {
             resources.next();
