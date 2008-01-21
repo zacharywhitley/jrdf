@@ -57,60 +57,29 @@
  *
  */
 
-package org.jrdf.set;
+package org.jrdf.util.bdb;
 
-import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.ReverseGroundedTripleComparatorImpl;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
-import org.jrdf.util.NodeTypeComparator;
-import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.Collection;
+import java.io.Serializable;
 
-/**
- * An in memory implementation that uses TreeSets and a small number of known types: Triples and PredicateNodes.
- */
-public class MemSortedSetFactory implements SortedSetFactory {
-    private Map<Class<?>, Comparator<?>> defaultComparators = new HashMap<Class<?>, Comparator<?>>();
+import com.sleepycat.bind.tuple.TupleInput;
 
-    public MemSortedSetFactory() {
-        NodeTypeComparator nodeTypeComparator = new NodeTypeComparatorImpl();
-        BlankNodeComparator comparator = new LocalizedBlankNodeComparatorImpl(new LocalizedNodeComparatorImpl());
-        NodeComparator newNodeComparator = new NodeComparatorImpl(nodeTypeComparator,
-            comparator);
-        TripleComparatorImpl tripleComparator = new TripleComparatorImpl(newNodeComparator);
-        defaultComparators.put(Triple.class, new ReverseGroundedTripleComparatorImpl(tripleComparator));
-        defaultComparators.put(PredicateNode.class, newNodeComparator);
-        defaultComparators.put(BlankNode.class, comparator);
+public class ByteTripleComparatorImpl implements Comparator<byte[]>, Serializable {
+    private static final long serialVersionUID = 8029585962398122344L;
+    private final TripleComparator tripleComparator;
+    private final TripleBinding tripleBinding;
+
+    public ByteTripleComparatorImpl(TripleComparator newTripleComparator, TripleBinding newTripleBinding) {
+        this.tripleComparator = newTripleComparator;
+        this.tripleBinding = newTripleBinding;
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T> SortedSet<T> createSet(Class<T> clazz) {
-        if (defaultComparators.containsKey(clazz)) {
-            Comparator<T> comparator = (Comparator<T>) defaultComparators.get(clazz);
-            return new TreeSet<T>(comparator);
-        } else {
-            return new TreeSet<T>();
-        }
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    public <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator) {
-        return new TreeSet<T>((Comparator<? super T>) comparator);
-    }
-
-    public void close() {
+    public int compare(byte[] o1, byte[] o2) {
+        Triple triple1 = (Triple) tripleBinding.entryToObject(new TupleInput(o1));
+        Triple triple2 = (Triple) tripleBinding.entryToObject(new TupleInput(o2));
+        return tripleComparator.compare(triple1, triple2);
     }
 }

@@ -70,7 +70,10 @@ import org.jrdf.graph.local.mem.LiteralImpl;
 import org.jrdf.graph.local.mem.LocalizedNode;
 import org.jrdf.graph.local.mem.URIReferenceImpl;
 
-public class NodeBinding extends TupleBinding {
+import java.io.Serializable;
+
+public class NodeBinding extends TupleBinding implements Serializable {
+    private static final long serialVersionUID = 2361309903891433676L;
     private static final byte BLANK_NODE = 0;
     private static final byte URI_REFERENCE = 1;
     private static final byte LITERAL = 2;

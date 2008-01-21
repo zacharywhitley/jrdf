@@ -85,7 +85,7 @@ public interface SortedSetFactory {
      * @param comparator The comparator to use to determine the sort order.
      * @return A sorted set.
      */
-    <T> SortedSet<T> createSet(Class<T> clazz, Comparator<? super T> comparator);
+    <T> SortedSet<T> createSet(Class<T> clazz, Comparator<?> comparator);
 
     /**
      * Close any resources used by the factory - possibly database connections, file handles and the like.  It is

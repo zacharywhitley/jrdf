@@ -66,9 +66,11 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.io.Serializable;
 
 // TODO AN Rename to something a bit more correct - escapes strings.
-public final class NTripleUtilImpl implements NTripleUtil {
+public final class NTripleUtilImpl implements NTripleUtil, Serializable {
+    private static final long serialVersionUID = 4088891841006085382L;
     private static final Pattern LITERAL_ESCAPE_REGEX = Pattern.compile(
         "(\\\\((\\\\)|(\")|(n)|(r)|(t)|(u(\\p{XDigit}{4}))|(U(\\p{XDigit}{8}))))");
     private static final int LITERAL_ESCAPE_INDEX = 0;

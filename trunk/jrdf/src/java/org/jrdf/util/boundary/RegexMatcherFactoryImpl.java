@@ -61,8 +61,11 @@ package org.jrdf.util.boundary;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.io.Serializable;
 
-public class RegexMatcherFactoryImpl implements RegexMatcherFactory {
+public class RegexMatcherFactoryImpl implements RegexMatcherFactory, Serializable {
+    private static final long serialVersionUID = 9219479794140687933L;
+
     public RegexMatcher createMatcher(Pattern pattern, CharSequence input) {
         Matcher matcher = pattern.matcher(input);
         return new RegexMatcherImpl(matcher);
