@@ -99,7 +99,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return graph;
     }
 
-    public void addTripleToGraph(Triple triple) throws GraphException {
+    public void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException {
         SubjectNode subjectNode = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
         PredicateNode predicateNode = elementFactory.createURIReference(
             ((URIReference) triple.getPredicate()).getURI());
