@@ -81,7 +81,7 @@ public final class PredicateNodeType implements PositionalNodeType {
         return "Predicate";
     }
 
-    public Set<NodeType> composedOf() {
+    public Set<? extends NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
     }
 

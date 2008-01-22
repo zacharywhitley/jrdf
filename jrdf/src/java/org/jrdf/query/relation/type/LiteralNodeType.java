@@ -69,12 +69,12 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class LiteralNodeType implements NodeType {
+public final class LiteralNodeType implements ValueNodeType {
     private static final NodeType INSTANCE = new LiteralNodeType();
     private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
     private static final long serialVersionUID = 8059107808615405657L;
 
-    public Set<NodeType> composedOf() {
+    public Set<? extends NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
     }
 

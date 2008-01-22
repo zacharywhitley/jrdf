@@ -78,7 +78,7 @@ public final class ObjectNodeType implements PositionalNodeType {
         return "Object";
     }
 
-    public Set<NodeType> composedOf() {
+    public Set<? extends NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
     }
 

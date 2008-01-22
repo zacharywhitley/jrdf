@@ -83,7 +83,7 @@ public final class SubjectPredicateNodeType implements PositionalNodeType {
         return obj instanceof SubjectPredicateNodeType;
     }
 
-    public Set<NodeType> composedOf() {
+    public Set<? extends NodeType> composedOf() {
         HashSet<NodeType> nodeTypes = new HashSet<NodeType>();
         nodeTypes.add(new SubjectNodeType());
         nodeTypes.add(new PredicateNodeType());

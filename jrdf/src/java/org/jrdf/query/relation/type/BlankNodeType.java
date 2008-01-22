@@ -69,15 +69,15 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class BlankNodeType implements NodeType {
+public final class BlankNodeType implements ValueNodeType {
     /**
      *  BlankNodeType constant.
      */
-    public static final NodeType BNODE_TYPE = new BlankNodeType();
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(BNODE_TYPE);
+    public static final ValueNodeType BNODE_TYPE = new BlankNodeType();
+    private static final Set<? extends NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(BNODE_TYPE);
     private static final long serialVersionUID = 1645735853855887744L;
 
-    public Set<NodeType> composedOf() {
+    public Set<? extends NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
     }
 

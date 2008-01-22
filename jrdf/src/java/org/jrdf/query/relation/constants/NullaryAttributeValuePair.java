@@ -147,7 +147,7 @@ public final class NullaryAttributeValuePair implements AttributeValuePair, Seri
         }
 
         @SuppressWarnings({ "unchecked" })
-        public Set<NodeType> composedOf() {
+        public Set<? extends NodeType> composedOf() {
             return Collections.EMPTY_SET;
         }
 

@@ -69,19 +69,19 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class URIReferenceNodeType implements NodeType {
+public final class URIReferenceNodeType implements ValueNodeType {
     /**
      *  URIReferenceNodeType constant.
      */
-    public static final NodeType URI_REFERENCE_TYPE = new URIReferenceNodeType();
+    public static final ValueNodeType URI_REFERENCE_TYPE = new URIReferenceNodeType();
     private static final long serialVersionUID = -46947819855688266L;
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(URI_REFERENCE_TYPE);
+    private static final Set<? extends NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(URI_REFERENCE_TYPE);
 
     public String getName() {
         return "URI Reference";
     }
 
-    public Set<NodeType> composedOf() {
+    public Set<? extends NodeType> composedOf() {
         return COMPOSITION_NODE_TYPE;
     }
 

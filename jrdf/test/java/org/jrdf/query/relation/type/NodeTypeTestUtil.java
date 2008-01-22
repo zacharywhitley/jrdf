@@ -85,7 +85,7 @@ public class NodeTypeTestUtil extends TestCase {
     }
 
     public static void checkComposedOf(NodeType actualNodeType, NodeType... expectedNodeTypes) {
-        Set<NodeType> nodeTypes = actualNodeType.composedOf();
+        Set<? extends NodeType> nodeTypes = actualNodeType.composedOf();
         assertEquals(expectedNodeTypes.length, nodeTypes.size());
         for (NodeType expectedNodeType : expectedNodeTypes) {
             assertTrue(nodeTypes.contains(expectedNodeType));

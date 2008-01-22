@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -57,51 +57,14 @@
  *
  */
 
-
 package org.jrdf.query.relation.type;
 
-import java.util.Collections;
-import java.util.Set;
-
 /**
- * An subject node type.
+ * Node types - data types belong to RDF nodes.  Value node types are those grouped by their possible values - Blank,
+ * URI References or Literals.
  *
  * @author Andrew Newman
- * @version $Revision$
+ * @version $Revision: 1045 $
  */
-public final class SubjectNodeType implements PositionalNodeType {
-    private static final long serialVersionUID = 2422061978414712391L;
-    private static final NodeType INSTANCE = new SubjectNodeType();
-    private static final Set<NodeType> COMPOSITION_NODE_TYPE = Collections.singleton(INSTANCE);
-
-    public String getName() {
-        return "Subject";
-    }
-
-    public Set<? extends NodeType> composedOf() {
-        return COMPOSITION_NODE_TYPE;
-    }
-
-    public void accept(NodeTypeVisitor visitor) {
-        visitor.visitSubjectNodeType(this);
-    }
-
-    public int hashCode() {
-        return getName().hashCode();
-    }
-
-    public boolean equals(Object obj) {
-        return obj instanceof SubjectNodeType;
-    }
-
-    public PositionalNodeType upgrade(PositionalNodeType newNodeType) {
-        Class<? extends PositionalNodeType> newClazz = newNodeType.getClass();
-        if (newClazz.equals(PredicateNodeType.class)) {
-            return new SubjectPredicateNodeType();
-        } else if (newClazz.equals(ObjectNodeType.class)) {
-            return new SubjectObjectNodeType();
-        } else {
-            return this;
-        }
-    }
+public interface ValueNodeType extends NodeType {
 }
