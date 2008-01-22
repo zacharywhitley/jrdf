@@ -803,7 +803,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     public void testResourceIteratorSimple() throws Exception {
-        final ClosableIterator<Resource> resources = graph.findNodes(RESOURCE_TYPE);
+        final ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
         boolean b = resources.hasNext();
         assertFalse("Should be no resources for empty graph", b);
         assertThrows(NoSuchElementException.class, new AssertThrows.Block() {
@@ -825,7 +825,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<URIReference> iterator = graph.findResources(URI_REFERENCE_TYPE);
+        ClosableIterator<? super Resource> iterator = graph.findResources(URI_REFERENCE_TYPE);
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
@@ -845,7 +845,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     private int countURIRefs() {
-        ClosableIterator<URIReference> iterator = graph.findNodes(URI_REFERENCE_TYPE);
+        ClosableIterator<? extends Node> iterator = graph.findNodes(URI_REFERENCE_TYPE);
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
@@ -856,7 +856,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testResourceIterators() throws Exception {
         addTestNodes();
-        ClosableIterator<Resource> resources = graph.findNodes(RESOURCE_TYPE);
+        ClosableIterator<? extends Node> resources = graph.findNodes(RESOURCE_TYPE);
         int counter = 0;
         while (resources.hasNext()) {
             resources.next();
@@ -867,7 +867,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testPredicateIterators() throws Exception {
         addTestNodes();
-        ClosableIterator<PredicateNode> uniquePredicates = graph.findNodes(PREDICATE_TYPE);
+        ClosableIterator<? extends Node> uniquePredicates = graph.findNodes(PREDICATE_TYPE);
         int counter = 0;
         while (uniquePredicates.hasNext()) {
             uniquePredicates.next();
@@ -955,7 +955,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     }
 
     private int getNumberOfBlankNodes() {
-        ClosableIterator<BlankNode> blankNodes = graph.findNodes(new BlankNodeType());
+        ClosableIterator<? extends Node> blankNodes = graph.findNodes(new BlankNodeType());
         int counter = 0;
         while (blankNodes.hasNext()) {
             blankNodes.next();
