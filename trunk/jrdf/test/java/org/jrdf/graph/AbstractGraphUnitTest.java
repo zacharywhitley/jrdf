@@ -68,8 +68,11 @@ import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import org.jrdf.query.relation.type.BlankNodeType;
+import org.jrdf.query.relation.type.URIReferenceNodeType;
+import org.jrdf.query.relation.type.ValueNodeType;
 import static org.jrdf.query.relation.type.PredicateNodeType.*;
 import static org.jrdf.query.relation.type.ResourceNodeType.*;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
 
 import java.net.URI;
@@ -822,7 +825,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
 
     public void testURIReferenceResourceIterator() throws Exception {
         addTestNodes();
-        ClosableIterator<URIReference> iterator = graph.findURIReferenceResources();
+        ClosableIterator<URIReference> iterator = graph.findResources(URI_REFERENCE_TYPE);
         int counter = 0;
         while (iterator.hasNext()) {
             iterator.next();
@@ -922,7 +925,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
     private void checkFixedUniquePredicateIterator(Resource resource, PredicateNode... predicates)
         throws Exception {
         int counter = 0;
-        ClosableIterator<PredicateNode> resourcePredicates = graph.findNodes(resource);
+        ClosableIterator<PredicateNode> resourcePredicates = graph.findPredicates(resource);
         Set<PredicateNode> expectedPredicates = new HashSet<PredicateNode>(Arrays.asList(predicates));
         while (resourcePredicates.hasNext()) {
             PredicateNode predicateNode = resourcePredicates.next();

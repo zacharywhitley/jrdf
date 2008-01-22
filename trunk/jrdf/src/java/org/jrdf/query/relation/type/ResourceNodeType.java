@@ -80,7 +80,7 @@ public final class ResourceNodeType implements NodeType {
         return "Resource";
     }
 
-    public Set<NodeType> composedOf() {
+    public Set<? extends NodeType> composedOf() {
         HashSet<NodeType> nodeTypes = new HashSet<NodeType>();
         nodeTypes.add(new URIReferenceNodeType());
         nodeTypes.add(new BlankNodeType());

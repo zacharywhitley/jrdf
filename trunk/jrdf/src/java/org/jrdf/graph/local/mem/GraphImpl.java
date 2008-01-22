@@ -71,7 +71,6 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
@@ -96,6 +95,7 @@ import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
 import org.jrdf.query.relation.type.NodeType;
+import org.jrdf.query.relation.type.ValueNodeType;
 import static org.jrdf.query.relation.type.PredicateNodeType.*;
 import static org.jrdf.query.relation.type.ResourceNodeType.*;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
@@ -316,32 +316,35 @@ public class GraphImpl implements Graph, Serializable {
         return readWriteGraph.find(subject, predicate, object);
     }
 
-    @SuppressWarnings({ "unchecked" })
-    public <T extends Node> ClosableIterator<T> findNodes(NodeType type) {
-        ClosableIterator<T> result;
+    public ClosableIterator<? extends Node> findNodes(NodeType type) {
+        ClosableIterator<? extends Node> result;
         if (type.equals(BNODE_TYPE)) {
-            result = (ClosableIterator<T>) nodePool.getBlankNodeIterator();
+            result = nodePool.getBlankNodeIterator();
         } else if (type.equals(URI_REFERENCE_TYPE)) {
-            result = (ClosableIterator<T>) nodePool.getURIReferenceIterator();
+            result = nodePool.getURIReferenceIterator();
         } else if (type.equals(RESOURCE_TYPE)) {
-            // TODO AN - Change this to be off of readWriteGraph.
-            result = (ClosableIterator<T>) new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
+            // TODO AN - Change this to be off of readWriteGraph if possible.
+            result = new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
         } else if (type.equals(PREDICATE_TYPE)) {
-            result = (ClosableIterator<T>) readWriteGraph.findUniquePredicates();
+            result = readWriteGraph.findUniquePredicates();
         } else {
             throw new UnsupportedOperationException("Cannot find with node type: " + type);
         }
         return result;
     }
 
-    public ClosableIterator<PredicateNode> findNodes(Resource resource) throws GraphException {
+    public ClosableIterator<PredicateNode> findPredicates(Resource resource) throws GraphException {
         checkNotNull(resource);
         return readWriteGraph.findUniquePredicates(resource);
     }
 
-    public ClosableIterator<URIReference> findURIReferenceResources() {
-        // TODO AN - Change this to be off of readWriteGraph.
-        return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
+    public ClosableIterator<? super Resource> findResources(ValueNodeType type) {
+        // TODO AN - Change this to be off of readWriteGraph if possible.
+        if (type.equals(URI_REFERENCE_TYPE)) {
+            return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
+        } else {
+            throw new UnsupportedOperationException("Cannot find with node type: " + type);
+        }
     }
 
     public void add(Iterator<Triple> triples) throws GraphException {

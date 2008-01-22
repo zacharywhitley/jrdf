@@ -83,7 +83,7 @@ public interface NodeType extends Serializable {
      *
      * @return the sub-types of a composite type.
      */
-    Set<NodeType> composedOf();
+    Set<? extends NodeType> composedOf();
 
     /**
      * Accept a call from a NodeTypeVisitor.
