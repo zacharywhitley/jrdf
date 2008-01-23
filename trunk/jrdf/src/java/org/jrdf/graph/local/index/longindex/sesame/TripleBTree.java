@@ -113,6 +113,10 @@ public class TripleBTree extends BTree {
     }
 
     private void addToMaxValue(byte[] maxValue, int index, Long... node) {
-        putLong(node[index] == 0 ? ON_MASK : node[index], maxValue, index * OFFSET);
+        if (node[index] == 0) {
+            putLong(ON_MASK, maxValue, index * OFFSET);
+        } else {
+            putLong(node[index], maxValue, index * OFFSET);
+        }
     }
 }
