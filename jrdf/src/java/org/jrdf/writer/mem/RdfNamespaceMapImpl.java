@@ -61,15 +61,14 @@ package org.jrdf.writer.mem;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.PredicateNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
+import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.vocabulary.RDF;
 import org.jrdf.vocabulary.RDFS;
 import org.jrdf.writer.NamespaceException;
 import org.jrdf.writer.RdfNamespaceMap;
-import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 
 import java.net.URI;
 import java.util.HashMap;
