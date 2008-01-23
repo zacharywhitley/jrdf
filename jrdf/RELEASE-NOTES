@@ -1,9 +1,29 @@
+JRDF Release 0.5.3
+==================
+* Consolidated find methods for node types.  Allow findNodes(NodeType) and
+ findResources(ValueNodeType) (Feature 1876230).
+* Improved performance for node type queries now use the maps in the
+ NodeTypePool rather than filtering (Feature 1783776).
+* Improved performance (100 times) of find() with on disk implementation
+ (SortedDiskJRDFFactory) (Bug 1877861).
+* Allows URIReferences and Literals to be added across one graph to another
+ without using GraphElementFactory (Bug 1874230).
+* TripleImpl moved to top level graph package as it is a global and local class (Bug 1868957).
+* TripleFactory lacked an addTriple(URI, URI, Object) (Bug 1866496).
+* Wrong types returned by methods (Bug 1866490 and 1866488).
+* TripleImpl shouldn't allow null values (Bug 1852071).
+* findUniquePredicate() did not count subjects that matched (Bug 1841443).
+* RDF/XML parser failed to handle empty rdf:datatype element (Bug 1840082).
+* db4o can now be used as a blank node map (Bug 1829741).
+
 JRDF Release 0.5.2
 ==================
-* Improved performance and scalability of on disk implementation with SortedDiskJRDFFactory.  Supports reading
- and writing large RDF/XML files with over 1 million triples (Feature 1835709).
+* Improved performance and scalability of on disk implementation with
+ SortedDiskJRDFFactory.  Supports reading and writing large RDF/XML
+ files with over 1 million triples (Feature 1835709).
 * Add on disk set implementation (Feature 1835709).
-* Modified Graph interface from getUniquePredicates and get node type to find (Bug 1835711).
+* Modified Graph interface from getUniquePredicates and get node type
+ to find (Bug 1835711).
 
 JRDF Release 0.5.1
 ==================
