@@ -65,8 +65,6 @@ import org.jrdf.graph.AbstractGraphUnitTest;
 import org.jrdf.graph.Graph;
 import org.jrdf.util.TempDirectoryHandler;
 
-// TODO AN: Comeback and reinstate - cleanup dir afterwards - just to get checkin.
-
 public class BdbGraphImplIntegrationTest extends AbstractGraphUnitTest {
     private static final JRDFFactory FACTORY = SortedBdbJRDFFactory.getFactory();
 
