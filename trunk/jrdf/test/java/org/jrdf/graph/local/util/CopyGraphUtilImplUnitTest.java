@@ -385,6 +385,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         graph1.add(triple4);
         graph1.add(triple5);
 
+        assertEquals("graph1 size", 5, graph1.getNumberOfTriples());
         node5 = eFac2.createURIReference(URI.create(url2 + "node5"));
         cgUtil.copyTriplesForSubjectNode(graph1, graph2, (SubjectNode) node2, (SubjectNode) node5);
         cgUtil.replaceNode(graph2, node2, node5);
@@ -392,6 +393,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         ClosableIterator<Triple> iterator =
             graph2.find(eFac2.createURIReference(URI.create(node2.toString())), ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
         assertTrue("Graph2 doesn't contain node2", !iterator.hasNext());
+        iterator.close();
     }
 
     public void testCopyGraphForObject() throws GraphException {

@@ -75,34 +75,43 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.map.MapFactory;
+import org.jrdf.set.SortedSetFactory;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     private Graph graph;
     private GraphElementFactory elementFactory;
     private TripleFactory tripleFactory;
     private Map<Long, BlankNode> newBNodeMap;
+    private Set<Triple> triplesToRemove;
+    private Set<Triple> triplesToAdd;
+    private SortedSetFactory setFactory;
 
-    public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory) {
+    public GraphToGraphMapperImpl(Graph newGraph, MapFactory mapFactory, SortedSetFactory sFac) {
         graph = newGraph;
         elementFactory = graph.getElementFactory();
         tripleFactory = graph.getTripleFactory();
         newBNodeMap = mapFactory.createMap(Long.class, BlankNode.class);
+        setFactory = sFac;
+        triplesToRemove = setFactory.createSet(Triple.class);
+        triplesToAdd = setFactory.createSet(Triple.class);
     }
 
     public Graph getGraph() {
         return graph;
     }
 
-    public void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException {
+    public void addTripleToGraph(Triple triple) throws GraphException {
         SubjectNode subjectNode = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
         PredicateNode predicateNode = elementFactory.createURIReference(
-            ((URIReference) triple.getPredicate()).getURI());
+                ((URIReference) triple.getPredicate()).getURI());
         ObjectNode objectNode = createLiteralOrURI(triple.getObject());
         final Triple triple1 = tripleFactory.createTriple(subjectNode, predicateNode, objectNode);
         graph.add(triple1);
@@ -169,39 +178,88 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return newObjectNode;
     }
 
-    public void replaceObjectNode(ObjectNode node, ObjectNode newNode) throws GraphException {
-        if (newNode != null) {
+    public void replaceNode(Node node, Node newNode) throws GraphException {
+        replaceSubjectNode(node, newNode);
+        replaceObjectNode(node, newNode);
+        replacePredicateNode(node, newNode);
+    }
+
+    public void replaceObjectNode(Node node, Node newNode) throws GraphException {
+        if (node == null || newNode == null) {
+            return;
+        }
+        if (ObjectNode.class.isAssignableFrom(node.getClass()) &&
+                ObjectNode.class.isAssignableFrom(newNode.getClass())) {
             final ObjectNode oldONode = (ObjectNode) createNewNode(node);
             ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, oldONode);
             while (iterator.hasNext()) {
                 Triple triple = iterator.next();
-                Triple newTriple = tripleFactory.createTriple(triple.getSubject(), triple.getPredicate(), newNode);
-                graph.add(newTriple);
-                removeTriple(triple.getSubject(), triple.getPredicate(), oldONode);
+                Triple newTriple =
+                        tripleFactory.createTriple(triple.getSubject(), triple.getPredicate(), (ObjectNode) newNode);
+                triplesToAdd.add(newTriple);
+                triplesToRemove.add(new TripleImpl(triple.getSubject(), triple.getPredicate(), oldONode));
+                //graph.add(newTriple);
+                //removeTriple(triple.getSubject(), triple.getPredicate(), oldONode);
             }
             iterator.close();
+            addRemoveTriples();
         }
     }
 
-    public void replaceSubjectNode(SubjectNode node, SubjectNode newNode) throws GraphException {
-        if (newNode != null) {
+    public void replacePredicateNode(Node node, Node newNode) throws GraphException {
+        if (node == null || newNode == null) {
+            return;
+        }
+        if (PredicateNode.class.isAssignableFrom(node.getClass()) &&
+                PredicateNode.class.isAssignableFrom(newNode.getClass())) {
+            final PredicateNode oldONode = (PredicateNode) createNewNode(node);
+            ClosableIterator<Triple> iterator = graph.find(ANY_SUBJECT_NODE, oldONode, ANY_OBJECT_NODE);
+            while (iterator.hasNext()) {
+                Triple triple = iterator.next();
+                Triple newTriple =
+                        tripleFactory.createTriple(triple.getSubject(), (PredicateNode) newNode, triple.getObject());
+                triplesToAdd.add(newTriple);
+                triplesToRemove.add(new TripleImpl(triple.getSubject(), oldONode, triple.getObject()));
+            }
+            iterator.close();
+            addRemoveTriples();
+        }
+    }
+
+    public void replaceSubjectNode(Node node, Node newNode) throws GraphException {
+        if (node == null || newNode == null) {
+            return;
+        }
+        if (SubjectNode.class.isAssignableFrom(node.getClass()) &&
+                SubjectNode.class.isAssignableFrom(newNode.getClass())) {
             final SubjectNode oldSNode = (SubjectNode) createNewNode(node);
             ClosableIterator<Triple> iterator = graph.find(oldSNode, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
             while (iterator.hasNext()) {
                 Triple triple = iterator.next();
-                removeTriple(oldSNode, triple.getPredicate(), triple.getObject());
-                graph.add(newNode, triple.getPredicate(), triple.getObject());
+                Triple newTriple =
+                        tripleFactory.createTriple((SubjectNode) newNode, triple.getPredicate(), triple.getObject());
+                triplesToAdd.add(newTriple);
+                triplesToRemove.add(new TripleImpl(oldSNode, triple.getPredicate(), triple.getObject()));
+//                graph.add(newTriple);
+//                removeTriple(oldSNode, triple.getPredicate(), triple.getObject());
             }
             iterator.close();
+            addRemoveTriples();
         }
     }
 
-    private void removeTriple(SubjectNode subj, PredicateNode pred, ObjectNode obj) {
-        try {
-            graph.remove(subj, pred, obj);
-        } catch (GraphException e) {
-            System.err.println("Removing non-existent triple: " +
-                subj.toString() + " " + pred.toString() + " " + obj.toString());
+    private void addRemoveTriples() throws GraphException {
+        for (Triple tr : triplesToAdd) {
+            graph.add(tr);
         }
+        for (Triple tr : triplesToRemove) {
+            try {
+                graph.remove(tr);
+            } catch (GraphException e) {
+                System.err.println("Removing non-existent triple: " + tr.toString());
+            }
+        }
+        triplesToAdd.clear();
+        triplesToRemove.clear();
     }
 }

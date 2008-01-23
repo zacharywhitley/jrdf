@@ -63,8 +63,6 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
-import org.jrdf.graph.ObjectNode;
-import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 
 import java.util.Iterator;
@@ -84,15 +82,19 @@ public interface GraphToGraphMapper {
      * @throws GraphElementFactoryException if there was an error creating the new resources.
      * @throws GraphException if there was an error adding the new resources.
      */
-    void addTripleToGraph(Triple triple) throws GraphElementFactoryException, GraphException;
+    void addTripleToGraph(Triple triple) throws GraphException;
 
     void updateBlankNodes(Triple triple) throws GraphElementFactoryException;
 
-    Graph createNewTriples(Iterator<Triple> it) throws GraphException, GraphElementFactoryException;
+    Graph createNewTriples(Iterator<Triple> it) throws GraphException;
 
     Node createNewNode(Node node) throws GraphElementFactoryException;
 
-    void replaceObjectNode(ObjectNode node, ObjectNode newNode) throws GraphException, GraphElementFactoryException;
+    void replaceObjectNode(Node node, Node newNode) throws GraphException;
 
-    void replaceSubjectNode(SubjectNode node, SubjectNode newNode) throws GraphException, GraphElementFactoryException;
+    void replaceSubjectNode(Node node, Node newNode) throws GraphException;
+
+    void replacePredicateNode(Node node, Node newNode) throws GraphException;
+
+    void replaceNode(Node node, Node newNode) throws GraphException;
 }
