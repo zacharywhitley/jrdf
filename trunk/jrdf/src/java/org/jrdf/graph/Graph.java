@@ -59,9 +59,9 @@
 
 package org.jrdf.graph;
 
-import org.jrdf.util.ClosableIterator;
 import org.jrdf.query.relation.type.NodeType;
 import org.jrdf.query.relation.type.ValueNodeType;
+import org.jrdf.util.ClosableIterator;
 
 import java.util.Iterator;
 
@@ -133,7 +133,7 @@ public interface Graph {
      * @param type the node type can be positional (SPO) or node type (URIReference, Literal or BNode).
      * @return all unique values of a given type.
      */
-     ClosableIterator<? extends Node> findNodes(NodeType type);
+    ClosableIterator<? extends Node> findNodes(NodeType type);
 
     /**
      * Return predicates that are part of an RDF triple where resource is either a subject or object.

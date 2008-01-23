@@ -93,11 +93,13 @@ public class TripleBTree extends BTree {
         byte[] key = toBytes(node);
         byte[] filter = new byte[VALUE_SIZE];
         byte[] minValue = new byte[VALUE_SIZE];
+        byte[] maxValue = new byte[VALUE_SIZE];
         for (int i = 0; i < TRIPLES; i++) {
             addToFilter(filter, i, node);
             addToMinValue(minValue, i, node);
+            addToMaxValue(maxValue, i, node);
         }
-        return iterateRangedValues(key, filter, minValue, getMaxValue(node));
+        return iterateRangedValues(key, filter, minValue, maxValue);
     }
 
     private void addToFilter(byte[] filter, int index, Long... node) {
@@ -110,11 +112,7 @@ public class TripleBTree extends BTree {
         putLong(node[index], minValue, index * OFFSET);
     }
 
-    private byte[] getMaxValue(Long... node) {
-        byte[] maxValue = new byte[VALUE_SIZE];
-        putLong(node[0] == 0 ? ON_MASK : node[0], maxValue, 0);
-        putLong(node[1] == 0 ? ON_MASK : node[1], maxValue, 1 * OFFSET);
-        putLong(node[2] == 0 ? ON_MASK : node[2], maxValue, 2 * OFFSET);
-        return maxValue;
+    private void addToMaxValue(byte[] maxValue, int index, Long... node) {
+        putLong(node[index] == 0 ? ON_MASK : node[index], maxValue, index * OFFSET);
     }
 }
