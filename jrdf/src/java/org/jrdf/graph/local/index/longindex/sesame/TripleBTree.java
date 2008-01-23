@@ -69,7 +69,7 @@ public class TripleBTree extends BTree {
     private static final int TRIPLES = 3;
     private static final int VALUE_SIZE = 24;
     private static final int OFFSET = 8;
-    private static final long MASK = 0xffffffffffffffffL;
+    private static final long ON_MASK = 0xffffffffffffffffL;
 
     public TripleBTree(File dataFile, int blockSize, int valueSize) throws IOException {
         super(dataFile, blockSize, valueSize);
@@ -93,14 +93,31 @@ public class TripleBTree extends BTree {
         byte[] key = toBytes(node);
         byte[] filter = new byte[VALUE_SIZE];
         for (int i = 0; i < TRIPLES; i++) {
-            addToFilter(filter, i, node);
+            addToFilter(filter, i, ON_MASK, node);
         }
-        return iterateValues(key, filter);
+        return iterateRangedValues(key, filter, getMinValue(node), getMaxValue(node));
+//        return iterateValues(key, filter);
     }
 
-    private void addToFilter(byte[] filter, int index, Long... node) {
+    private void addToFilter(byte[] filter, int index, long mask, Long... node) {
         if (node[index] != 0) {
-            putLong(MASK, filter, index * OFFSET);
+            putLong(mask, filter, index * OFFSET);
         }
+    }
+
+    private byte[] getMinValue(Long... node) {
+        byte[] minValue = new byte[VALUE_SIZE];
+        putLong(node[0], minValue, 0);
+        putLong(node[1], minValue, 1 * OFFSET);
+        putLong(node[2], minValue, 2 * OFFSET);
+        return minValue;
+    }
+
+    private byte[] getMaxValue(Long... node) {
+        byte[] maxValue = new byte[VALUE_SIZE];
+        putLong(node[0] == 0 ? ON_MASK : node[0], maxValue, 0);
+        putLong(node[1] == 0 ? ON_MASK : node[1], maxValue, 1 * OFFSET);
+        putLong(node[2] == 0 ? ON_MASK : node[2], maxValue, 2 * OFFSET);
+        return maxValue;
     }
 }
