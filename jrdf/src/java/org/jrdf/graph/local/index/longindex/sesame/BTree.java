@@ -1297,7 +1297,7 @@ public class BTree {
                         listenersToDeregister.add(listener);
                     }
                 }
-                listenersToDeregister.removeAll(listenersToDeregister);
+                listeners.removeAll(listenersToDeregister);
             }
         }
 
