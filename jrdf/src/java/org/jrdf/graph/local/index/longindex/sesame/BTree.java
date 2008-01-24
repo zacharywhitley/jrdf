@@ -1,5 +1,7 @@
 /*
- * Copyright Aduna (http://www.aduna-software.com/) (c) 1997-2007.
+ * $Header$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * Licensed under the Aduna BSD-style license.
  */
@@ -1683,7 +1685,7 @@ public class BTree {
 
                         if (parentIdx > medianIdx) {
                             parentNode.release();
-                            parentNode.deregister(this);
+                            //parentNode.deregister(this);
 
                             newNode.use();
                             newNode.register(this);
@@ -1692,7 +1694,7 @@ public class BTree {
                             parentIndexStack.set(i, parentIdx - medianIdx - 1);
                         }
 
-                        break;
+                        return this;
                     }
                 }
             }
