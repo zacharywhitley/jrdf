@@ -56,6 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+
 package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.PredicateNode;
