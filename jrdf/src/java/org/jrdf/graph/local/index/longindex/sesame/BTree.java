@@ -1342,7 +1342,7 @@ public class BTree {
             throws IOException {
             synchronized (listeners) {
                 Set<NodeListener> listenersToDeregister = new HashSet<NodeListener>();
-                for (NodeListener l : listenersToDeregister) {
+                for (NodeListener l : listeners) {
                     NodeListener listener = l.nodeSplit(this, rightNode, medianIdx);
                     if (listener != null) {
                         listenersToDeregister.add(listener);
