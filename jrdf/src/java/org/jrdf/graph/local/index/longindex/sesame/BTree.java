@@ -1041,8 +1041,7 @@ public class BTree {
             usageCount++;
         }
 
-        public void release()
-            throws IOException {
+        public void release() throws IOException {
             assert usageCount > 0 : "Releasing node while usage count is " + usageCount;
 
             usageCount--;
@@ -1342,9 +1341,14 @@ public class BTree {
         private void notifyNodeSplit(Node rightNode, int medianIdx)
             throws IOException {
             synchronized (listeners) {
-                for (NodeListener l : listeners) {
-                    l.nodeSplit(this, rightNode, medianIdx);
+                Set<NodeListener> listenersToDeregister = new HashSet<NodeListener>();
+                for (NodeListener l : listenersToDeregister) {
+                    NodeListener listener = l.nodeSplit(this, rightNode, medianIdx);
+                    if (listener != null) {
+                        listenersToDeregister.add(listener);
+                    }
                 }
+                listenersToDeregister.removeAll(listenersToDeregister);
             }
         }
 
@@ -1423,7 +1427,7 @@ public class BTree {
 
         void valueChanged(Node node, int index);
 
-        void nodeSplit(Node node, Node newNode, int medianIdx) throws IOException;
+        NodeListener nodeSplit(Node node, Node newNode, int medianIdx) throws IOException;
 
         void nodesMerged(Node leftNode, Node rightNode, int rightIdx) throws IOException;
     }
@@ -1709,18 +1713,19 @@ public class BTree {
         public void valueChanged(Node node, int index) {
         }
 
-        public void nodeSplit(Node node, Node newNode, int medianIdx)
-            throws IOException {
+        public NodeListener nodeSplit(Node node, Node newNode, int medianIdx) throws IOException {
             if (node == currentNode) {
                 if (currentIdx > medianIdx) {
                     currentNode.release();
-                    currentNode.deregister(this);
+                    //currentNode.deregister(this);
 
                     newNode.use();
                     newNode.register(this);
 
                     currentNode = newNode;
                     currentIdx -= medianIdx + 1;
+
+                    return this;
                 }
             } else {
                 for (int i = 0; i < parentNodeStack.size(); i++) {
@@ -1744,6 +1749,7 @@ public class BTree {
                     }
                 }
             }
+            return null;
         }
 
         public void nodesMerged(Node leftNode, Node rightNode, int rightIdx)
