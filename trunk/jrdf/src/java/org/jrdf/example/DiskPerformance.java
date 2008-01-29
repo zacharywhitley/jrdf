@@ -91,6 +91,6 @@ public class DiskPerformance extends AbstractGraphPerformance {
 
     public static void main(String[] args) throws Exception {
         DiskPerformance diskPerformance = new DiskPerformance();
-        diskPerformance.testPerformance();
+        diskPerformance.testPerformance(args);
     }
 }
