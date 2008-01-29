@@ -134,7 +134,11 @@ public class DecomposerPerformance {
             for (int j = i; j < molecules.length; j++) {
                 Map<BlankNode, BlankNode> map = mapper.createMap(molecules[i], molecules[j]);
                 NewMolecule molecule = localMerger.merge(molecules[i], molecules[j], map);
-                if (molecule == null) {
+                if (molecule != null) {
+                    if (!results.contains(molecule)) {
+                        results.add(molecule);
+                    }
+                } else {
                     if (!results.contains(molecules[i])) {
                         results.add(molecules[i]);
                     }
@@ -143,7 +147,7 @@ public class DecomposerPerformance {
             }
         }
         System.err.println("Time taken " + (System.currentTimeMillis() - startTime) +
-            " comparisons: " + count);
+            " comparisons: " + count + " results: " + results);
     }
 
     private void addGrounded(String predicate) throws Exception {
