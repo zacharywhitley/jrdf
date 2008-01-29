@@ -68,40 +68,27 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleFactory;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.URIReference;
 import org.jrdf.map.MapFactory;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.RdfXmlParser;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfWriter;
-import org.jrdf.writer.mem.RdfNamespaceMapImpl;
-import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.Writer;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractGraphPerformance {
+public abstract class AbstractGraphPerformance implements GraphPerformance {
     private static final int NUMBER_OF_NODES_TO_ADD = 10000;
     private static final int NUMBER_OF_NODES_TO_FIND = 1000;
     private static final int NUMBER_OF_NODES_TO_UPDATE = 1000;
     private static final int NUMBER_OF_PREDICATES = 10;
+    private static final int EXPECTED_ARGS = 3;
     private static final int NO_PREDICATES = NUMBER_OF_PREDICATES;
     private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
     private static final String SUBJECT_PREFIX = "http://foo";
     private static final String PREDICATE_PREFIX = "http://bar";
     private static final String OBJECT_PREFIX = "http://foo";
-    private static final String URI_STRING = "http://foo/bar";
-    private static final String PATH = "/org/jrdf/example/pizza.rdf";
-    private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
     private List<URI> predicates = new ArrayList<URI>();
     private GraphElementFactory graphElementFactory;
     private int noFinds;
@@ -115,7 +102,7 @@ public abstract class AbstractGraphPerformance {
     }
 
     public void testPerformance(String[] args) throws Exception {
-        if (args.length != 3) {
+        if (args.length != EXPECTED_ARGS) {
             testPerformance(0, 0, 0);
         } else {
             testPerformance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
@@ -123,16 +110,21 @@ public abstract class AbstractGraphPerformance {
     }
 
     private void testPerformance(int numberToAdd, int numberToFind, int numberToUpdate) throws Exception {
+        checkParameters(numberToAdd, numberToFind, numberToUpdate);
+        Graph graph = getGraph();
+        graphElementFactory = graph.getElementFactory();
+        //new ParsePerformanceImpl(getMapFactory()).parse(graph, this);
+        new AddPerformanceImpl(NUMBER_OF_PREDICATES, SUBJECT_PREFIX, PREDICATE_PREFIX, OBJECT_PREFIX).addPerformance(
+            numberToAdd == 0 ? NUMBER_OF_NODES_TO_ADD : numberToAdd, graph, this);
+        new WritePerformanceImpl().writePerformance(graph, this, getBlankNodeRegistry());
+        findPerformance(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, graph);
+        updatePerformance(numberToUpdate == 0 ? NUMBER_OF_NODES_TO_UPDATE : numberToUpdate, graph);
+    }
+
+    private void checkParameters(int numberToAdd, int numberToFind, int numberToUpdate) {
         if (numberToAdd != 0 && (numberToAdd < numberToFind || numberToAdd < numberToUpdate)) {
             throw new IllegalArgumentException("Can't find or update more than the number to add: " + numberToAdd);
         }
-        Graph graph = getGraph();
-        graphElementFactory = graph.getElementFactory();
-        //parsePerformance();
-        addPerformance(numberToAdd == 0 ? NUMBER_OF_NODES_TO_ADD : numberToAdd, graph);
-        writePerformance(graph);
-        findPerformance(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, graph);
-        updatePerformance(numberToUpdate == 0 ? NUMBER_OF_NODES_TO_UPDATE : numberToUpdate, graph);
     }
 
     protected abstract Graph getGraph();
@@ -141,32 +133,11 @@ public abstract class AbstractGraphPerformance {
 
     protected abstract BlankNodeRegistry getBlankNodeRegistry();
 
-    public void parsePerformance() throws Exception {
-        InputStream stream = getClass().getResource(PATH).openStream();
-        final Graph graph = getGraph();
-        Parser parser = new RdfXmlParser(graph.getElementFactory(), getMapFactory());
-        long startTime = System.currentTimeMillis();
-        parser.parse(stream, URI_STRING);
-        outputResult(graph, startTime, "Testing Parsing Performance (" + PATH + "): ");
-    }
-
-    /**
-     * Creates 10 times the given number of nodes for a given graph.
-     *
-     * @param numberOfNodes the number of nodes to create with 10 objects.
-     * @param graph         the graph to add.
-     * @throws Exception if there is an exception adding the nodes.
-     */
-    private void addPerformance(int numberOfNodes, Graph graph) throws Exception {
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < numberOfNodes; i++) {
-            for (int j = 0; j < NUMBER_OF_PREDICATES; j++) {
-                TripleFactory tripleFactory = graph.getTripleFactory();
-                tripleFactory.addTriple(URI.create(SUBJECT_PREFIX + i), URI.create(PREDICATE_PREFIX + j),
-                    URI.create(OBJECT_PREFIX + j));
-            }
-        }
-        outputResult(graph, startTime, "Testing Add Performance:");
+    public void outputResult(Graph graph, long startTime, String what) throws GraphException {
+        long finishTime = System.currentTimeMillis();
+        System.out.println("\n" + what);
+        System.out.println("Triples: " + graph.getNumberOfTriples() + " Took: " + (finishTime - startTime) +
+            " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
     }
 
     private void findPerformance(int nodes, Graph graph) throws Exception {
@@ -208,27 +179,6 @@ public abstract class AbstractGraphPerformance {
             itr.close();
         }
         return triplesToChange;
-    }
-
-    private void writePerformance(Graph graph) throws Exception {
-        long startTime = System.currentTimeMillis();
-        Writer out = new FileWriter(new File(dirHandler.getDir(), "foo.rdf"));
-        try {
-            BlankNodeRegistry nodeRegistry = getBlankNodeRegistry();
-            nodeRegistry.clear();
-            RdfWriter writer = new RdfXmlWriter(nodeRegistry, new RdfNamespaceMapImpl());
-            writer.write(graph, out);
-        } finally {
-            out.close();
-        }
-        outputResult(graph, startTime, "Testing RDF/XML Write Performance:");
-    }
-
-    private void outputResult(Graph graph, long startTime, String what) throws GraphException {
-        long finishTime = System.currentTimeMillis();
-        System.out.println("\n" + what);
-        System.out.println("Triples: " + graph.getNumberOfTriples() + " Took: " + (finishTime - startTime) +
-            " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
     }
 
     private void find1(Graph graph, URI subjectURI) throws GraphException, GraphElementFactoryException {
