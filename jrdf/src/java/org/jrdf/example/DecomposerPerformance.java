@@ -67,6 +67,7 @@ import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorImpl;
 import org.jrdf.graph.global.molecule.BlankNodeMapper;
 import org.jrdf.graph.global.molecule.BlankNodeMapperImpl;
@@ -93,10 +94,9 @@ import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class DecomposerPerformance {
     private static final int NUMBER_OF_MOLECULES = 400;
@@ -122,11 +122,13 @@ public class DecomposerPerformance {
 
     private void testPerformance() throws Exception {
         for (int i = 0; i < NUMBER_OF_MOLECULES; i++) {
-            addGrounded("urn:foo" + i);
+            addChain("urn:foo");
         }
         long startTime = System.currentTimeMillis();
         Set<NewMolecule> moleculeSet = decomposer.decompose(graph);
-        List<NewMolecule> results = new ArrayList<NewMolecule>();
+        NewMoleculeHeadTripleComparatorImpl tripleComparator = new NewMoleculeHeadTripleComparatorImpl(
+            new GroundedTripleComparatorFactoryImpl().newComparator());
+        Set<NewMolecule> results = new TreeSet<NewMolecule>(tripleComparator);
         NewMolecule[] molecules = moleculeSet.toArray(new NewMolecule[]{});
         results.add(molecules[0]);
         int count = 0;
@@ -146,8 +148,8 @@ public class DecomposerPerformance {
                 count++;
             }
         }
-        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) +
-            " comparisons: " + count + " results: " + results);
+        System.err.println("Time taken " + (System.currentTimeMillis() - startTime) + " comparisons: " + count +
+            " results: " + results);
     }
 
     private void addGrounded(String predicate) throws Exception {
