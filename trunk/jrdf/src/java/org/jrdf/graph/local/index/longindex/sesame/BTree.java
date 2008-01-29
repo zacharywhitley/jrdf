@@ -225,7 +225,7 @@ public class BTree {
      * @throws IOException In case the initialization of the B-Tree file failed.
      */
     public BTree(File dataFile, int blockSize, int valueSize, BTreeValueComparator comparator, boolean forceSync)
-        throws IOException {
+            throws IOException {
         if (dataFile == null) {
             throw new IllegalArgumentException("dataFile must not be null");
         }
