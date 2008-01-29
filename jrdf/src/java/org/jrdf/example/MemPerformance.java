@@ -84,6 +84,7 @@ public class MemPerformance extends AbstractGraphPerformance {
 
     public static void main(String[] args) throws Exception {
         MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance();
+        memPerformance.testPerformance(args);
     }
+
 }

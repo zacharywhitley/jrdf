@@ -91,8 +91,8 @@ import java.util.List;
 
 public abstract class AbstractGraphPerformance {
     private static final int NUMBER_OF_NODES_TO_ADD = 10000;
-    private static final int NUMBER_OF_NODES_TO_FIND = 10;
-    private static final int NUMBER_OF_NODES_TO_UPDATE = 10;
+    private static final int NUMBER_OF_NODES_TO_FIND = 1000;
+    private static final int NUMBER_OF_NODES_TO_UPDATE = 1000;
     private static final int NUMBER_OF_PREDICATES = 10;
     private static final int NO_PREDICATES = NUMBER_OF_PREDICATES;
     private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
@@ -114,14 +114,25 @@ public abstract class AbstractGraphPerformance {
         }
     }
 
-    public void testPerformance() throws Exception {
+    public void testPerformance(String[] args) throws Exception {
+        if (args.length != 3) {
+            testPerformance(0, 0, 0);
+        } else {
+            testPerformance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        }
+    }
+
+    private void testPerformance(int numberToAdd, int numberToFind, int numberToUpdate) throws Exception {
+        if (numberToAdd != 0 && (numberToAdd < numberToFind || numberToAdd < numberToUpdate)) {
+            throw new IllegalArgumentException("Can't find or update more than the number to add: " + numberToAdd);
+        }
         Graph graph = getGraph();
         graphElementFactory = graph.getElementFactory();
         //parsePerformance();
-        addPerformance(NUMBER_OF_NODES_TO_ADD, graph);
+        addPerformance(numberToAdd == 0 ? NUMBER_OF_NODES_TO_ADD : numberToAdd, graph);
         writePerformance(graph);
-        findPerformance(NUMBER_OF_NODES_TO_FIND, graph);
-        updatePerformance(NUMBER_OF_NODES_TO_UPDATE, graph);
+        findPerformance(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, graph);
+        updatePerformance(numberToUpdate == 0 ? NUMBER_OF_NODES_TO_UPDATE : numberToUpdate, graph);
     }
 
     protected abstract Graph getGraph();
