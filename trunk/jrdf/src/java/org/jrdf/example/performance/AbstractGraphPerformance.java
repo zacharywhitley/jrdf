@@ -57,34 +57,61 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 import org.jrdf.map.MapFactory;
-import org.jrdf.map.MemMapFactory;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 
-public class MemPerformance extends AbstractGraphPerformance {
-    private static final JRDFFactory FACTORY = SortedMemoryJRDFFactory.getFactory();
+public abstract class AbstractGraphPerformance implements GraphPerformance {
+    private static final int NUMBER_OF_NODES_TO_ADD = 10000;
+    private static final int NUMBER_OF_NODES_TO_FIND = 1000;
+    private static final int NUMBER_OF_NODES_TO_UPDATE = 1000;
+    private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
+    private static final int NUMBER_OF_PREDICATES = 10;
+    private static final int EXPECTED_ARGS = 3;
+    private static final String SUBJECT_PREFIX = "http://foo";
+    private static final String PREDICATE_PREFIX = "http://bar";
+    private static final String OBJECT_PREFIX = "http://foo";
 
-    protected Graph getGraph() {
-        return FACTORY.getNewGraph();
+    public void testPerformance(String[] args) throws Exception {
+        if (args.length != EXPECTED_ARGS) {
+            testPerformance(0, 0, 0);
+        } else {
+            testPerformance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+        }
     }
 
-    protected MapFactory getMapFactory() {
-        return new MemMapFactory();
+    private void testPerformance(int numberToAdd, int numberToFind, int numberToUpdate) throws Exception {
+        checkParameters(numberToAdd, numberToFind, numberToUpdate);
+        Graph graph = getGraph();
+        //new ParsePerformanceImpl(getMapFactory()).parse(graph, this);
+        new AddPerformanceImpl(NUMBER_OF_PREDICATES, SUBJECT_PREFIX, PREDICATE_PREFIX, OBJECT_PREFIX).addPerformance(
+            numberToAdd == 0 ? NUMBER_OF_NODES_TO_ADD : numberToAdd, graph, this);
+        new WritePerformanceImpl().writePerformance(graph, this, getBlankNodeRegistry());
+        new FindPerformanceImpl(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, SUBJECT_PREFIX,
+            PREDICATE_PREFIX, OBJECT_PREFIX).findPerformance(graph, this);
+        new UpdatePerformanceImpl(numberToUpdate == 0 ? NUMBER_OF_NODES_TO_UPDATE : numberToUpdate, SUBJECT_PREFIX).
+            updatePerformance(graph, this);
     }
 
-    protected BlankNodeRegistry getBlankNodeRegistry() {
-        return new MemBlankNodeRegistryImpl();
+    private void checkParameters(int numberToAdd, int numberToFind, int numberToUpdate) {
+        if (numberToAdd != 0 && (numberToAdd < numberToFind || numberToAdd < numberToUpdate)) {
+            throw new IllegalArgumentException("Can't find or update more than the number to add: " + numberToAdd);
+        }
     }
 
-    public static void main(String[] args) throws Exception {
-        MemPerformance memPerformance = new MemPerformance();
-        memPerformance.testPerformance(args);
-    }
+    protected abstract Graph getGraph();
 
+    protected abstract MapFactory getMapFactory();
+
+    protected abstract BlankNodeRegistry getBlankNodeRegistry();
+
+    public void outputResult(Graph graph, long startTime, String what) throws GraphException {
+        long finishTime = System.currentTimeMillis();
+        System.out.println("\n" + what);
+        System.out.println("Triples: " + graph.getNumberOfTriples() + " Took: " + (finishTime - startTime) +
+            " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
+    }
 }

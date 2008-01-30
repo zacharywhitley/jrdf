@@ -57,37 +57,91 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.TripleFactory;
+import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.URIReference;
+import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
 
-public class AddPerformanceImpl implements AddPerformance {
-    private final int numberOfPredicates;
+public class FindPerformanceImpl implements FindPerformance {
+    private final int nodesToFind;
     private final String subjectPrefix;
     private final String predicatePrefix;
     private final String objectPrefix;
+    private int noFinds;
 
-    public AddPerformanceImpl(int numberOfPredicates, String subjectPrefix, String predicatePrefix,
+    public FindPerformanceImpl(int nodesToFind, String subjectPrefix, String predicatePrefix,
         String objectPrefix) {
-        this.numberOfPredicates = numberOfPredicates;
+        this.nodesToFind = nodesToFind;
         this.subjectPrefix = subjectPrefix;
         this.predicatePrefix = predicatePrefix;
         this.objectPrefix = objectPrefix;
     }
 
-    public void addPerformance(int numberOfNodes, Graph graph, GraphPerformance performance) throws GraphException {
+    public void findPerformance(Graph graph, GraphPerformance performance) throws Exception {
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < numberOfNodes; i++) {
-            for (int j = 0; j < numberOfPredicates; j++) {
-                TripleFactory tripleFactory = graph.getTripleFactory();
-                tripleFactory.addTriple(URI.create(subjectPrefix + i), URI.create(predicatePrefix + j),
-                    URI.create(objectPrefix + j));
-            }
+        for (int index = 0; index < nodesToFind; index++) {
+            URI subjectURI = URI.create(subjectPrefix + index);
+            find1(graph, subjectURI);
         }
-        performance.outputResult(graph, startTime, "Testing Add Performance:");
+        performance.outputResult(graph, startTime, "Testing Find Performance: " + noFinds);
+    }
+
+    private void find1(Graph graph, URI subjectURI) throws GraphException {
+        URIReference predicate = graph.getElementFactory().createURIReference(subjectURI);
+        ClosableIterator<Triple> itr = findAllPredicates(graph, predicate);
+        try {
+            while (itr.hasNext()) {
+                Triple triple = itr.next();
+                ObjectNode object = triple.getObject();
+                find2(graph, object);
+            }
+        } finally {
+            itr.close();
+        }
+    }
+
+    private void find2(Graph graph, ObjectNode object1) throws GraphException {
+        ClosableIterator<Triple> itr2 = findAllPredicates(graph, (SubjectNode) object1);
+        try {
+            while (itr2.hasNext()) {
+                Triple triple2 = itr2.next();
+                ObjectNode object2 = triple2.getObject();
+                if (!(object2 instanceof SubjectNode)) {
+                    continue;
+                }
+                find3(graph, object2);
+            }
+        } finally {
+            itr2.close();
+        }
+    }
+
+    private void find3(Graph graph, ObjectNode object2) throws GraphException {
+        ClosableIterator<Triple> itr3 = findAllPredicates(graph, (SubjectNode) object2);
+        try {
+            while (itr3.hasNext()) {
+                Triple triple3 = itr3.next();
+                ObjectNode object3 = triple3.getObject();
+                if (!(object3 instanceof SubjectNode)) {
+                    continue;
+                }
+            }
+        } finally {
+            itr3.close();
+        }
+    }
+
+    private ClosableIterator<Triple> findAllPredicates(Graph graph, SubjectNode subject) throws GraphException {
+        noFinds++;
+        return graph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
     }
 }

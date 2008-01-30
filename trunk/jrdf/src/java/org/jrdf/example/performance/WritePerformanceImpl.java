@@ -57,40 +57,33 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedDiskJRDFFactory;
 import org.jrdf.graph.Graph;
-import org.jrdf.map.BdbMapFactory;
-import org.jrdf.map.MapFactory;
-import org.jrdf.util.TempDirectoryHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandler;
-import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.bdb.BdbBlankNodeRegistryImpl;
+import org.jrdf.writer.RdfWriter;
+import org.jrdf.writer.mem.RdfNamespaceMapImpl;
+import org.jrdf.writer.rdfxml.RdfXmlWriter;
+import org.jrdf.util.TempDirectoryHandler;
 
-public class DiskPerformance extends AbstractGraphPerformance {
+import java.io.Writer;
+import java.io.FileWriter;
+import java.io.File;
+
+public class WritePerformanceImpl implements WritePerformance {
     private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
-    private JRDFFactory factory = SortedDiskJRDFFactory.getFactory();
 
-    protected Graph getGraph() {
-        Graph newGraph = factory.getNewGraph();
-        newGraph.clear();
-        return newGraph;
-    }
-
-    protected BlankNodeRegistry getBlankNodeRegistry() {
-        final BdbEnvironmentHandler newHandler = new BdbEnvironmentHandlerImpl(dirHandler);
-        return new BdbBlankNodeRegistryImpl(new BdbMapFactory(newHandler, "foobarbaz"));
-    }
-
-    protected MapFactory getMapFactory() {
-        return new BdbMapFactory(new BdbEnvironmentHandlerImpl(new TempDirectoryHandler()), "database");
-    }
-
-    public static void main(String[] args) throws Exception {
-        DiskPerformance diskPerformance = new DiskPerformance();
-        diskPerformance.testPerformance(args);
+    public void writePerformance(Graph graph, GraphPerformance performance, BlankNodeRegistry registry)
+        throws Exception {
+        long startTime = System.currentTimeMillis();
+        Writer out = new FileWriter(new File(dirHandler.getDir(), "foo.rdf"));
+        try {
+            registry.clear();
+            RdfWriter writer = new RdfXmlWriter(registry, new RdfNamespaceMapImpl());
+            writer.write(graph, out);
+        } finally {
+            out.close();
+        }
+        performance.outputResult(graph, startTime, "Testing RDF/XML Write Performance:");
     }
 }

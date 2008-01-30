@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;

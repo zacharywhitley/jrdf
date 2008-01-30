@@ -57,64 +57,7 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
-import org.jrdf.graph.AnyObjectNode;
-import org.jrdf.graph.AnyPredicateNode;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.SubjectNode;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.URIReference;
-import org.jrdf.util.ClosableIterator;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-public class UpdatePerformanceImpl implements UpdatePerformance {
-    private final int nodesToUpdate;
-    private final String subjectPrefix;
-    private int noUpdates;
-
-    public UpdatePerformanceImpl(int nodesToUpdate, String subjectPrefix) {
-        this.nodesToUpdate = nodesToUpdate;
-        this.subjectPrefix = subjectPrefix;
-    }
-
-    public void updatePerformance(Graph graph, GraphPerformance performance) throws Exception {
-        long startTime = System.currentTimeMillis();
-        for (int index = 0; index < nodesToUpdate; index++) {
-            URI subjectURI = URI.create(subjectPrefix + index);
-            List<Triple> triplesToChange = addTriplesToArray(graph, subjectURI);
-            for (Triple triple : triplesToChange) {
-                URI subject = ((URIReference) triple.getSubject()).getURI();
-                URIReference newSubject = graph.getElementFactory().createURIReference(
-                    URI.create(subject.toString() + "hello"));
-                graph.add(newSubject, triple.getPredicate(), triple.getObject());
-                graph.remove(triple);
-                noUpdates++;
-            }
-        }
-        performance.outputResult(graph, startTime, "Testing Update Performance: " + noUpdates);
-    }
-
-    private List<Triple> addTriplesToArray(Graph graph, URI subjectURI) throws Exception {
-        URIReference newSubject = graph.getElementFactory().createURIReference(subjectURI);
-        ClosableIterator<Triple> itr = findAllPredicates(graph, newSubject);
-        List<Triple> triplesToChange = new ArrayList<Triple>();
-        try {
-            while (itr.hasNext()) {
-                Triple triple = itr.next();
-                triplesToChange.add(triple);
-            }
-        } finally {
-            itr.close();
-        }
-        return triplesToChange;
-    }
-
-    private ClosableIterator<Triple> findAllPredicates(Graph graph, SubjectNode subject) throws GraphException {
-        return graph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
-    }
+public interface UpdatePerformance {
 }
