@@ -59,59 +59,62 @@
 
 package org.jrdf.example;
 
+import org.jrdf.graph.AnyObjectNode;
+import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.map.MapFactory;
-import org.jrdf.writer.BlankNodeRegistry;
+import org.jrdf.graph.SubjectNode;
+import org.jrdf.graph.Triple;
+import org.jrdf.graph.URIReference;
+import org.jrdf.util.ClosableIterator;
 
-public abstract class AbstractGraphPerformance implements GraphPerformance {
-    private static final int NUMBER_OF_NODES_TO_ADD = 10000;
-    private static final int NUMBER_OF_NODES_TO_FIND = 1000;
-    private static final int NUMBER_OF_NODES_TO_UPDATE = 1000;
-    private static final int NO_MILLISECONDS_IN_A_SECOND = 1000;
-    private static final int NUMBER_OF_PREDICATES = 10;
-    private static final int EXPECTED_ARGS = 3;
-    private static final String SUBJECT_PREFIX = "http://foo";
-    private static final String PREDICATE_PREFIX = "http://bar";
-    private static final String OBJECT_PREFIX = "http://foo";
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
-    public void testPerformance(String[] args) throws Exception {
-        if (args.length != EXPECTED_ARGS) {
-            testPerformance(0, 0, 0);
-        } else {
-            testPerformance(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+public class UpdatePerformanceImpl implements UpdatePerformance {
+    private final int nodesToUpdate;
+    private final String subjectPrefix;
+    private int noUpdates;
+
+    public UpdatePerformanceImpl(int nodesToUpdate, String subjectPrefix) {
+        this.nodesToUpdate = nodesToUpdate;
+        this.subjectPrefix = subjectPrefix;
+    }
+
+    public void updatePerformance(Graph graph, GraphPerformance performance) throws Exception {
+        long startTime = System.currentTimeMillis();
+        for (int index = 0; index < nodesToUpdate; index++) {
+            URI subjectURI = URI.create(subjectPrefix + index);
+            List<Triple> triplesToChange = addTriplesToArray(graph, subjectURI);
+            for (Triple triple : triplesToChange) {
+                URI subject = ((URIReference) triple.getSubject()).getURI();
+                URIReference newSubject = graph.getElementFactory().createURIReference(
+                    URI.create(subject.toString() + "hello"));
+                graph.add(newSubject, triple.getPredicate(), triple.getObject());
+                graph.remove(triple);
+                noUpdates++;
+            }
         }
+        performance.outputResult(graph, startTime, "Testing Update Performance: " + noUpdates);
     }
 
-    private void testPerformance(int numberToAdd, int numberToFind, int numberToUpdate) throws Exception {
-        checkParameters(numberToAdd, numberToFind, numberToUpdate);
-        Graph graph = getGraph();
-        //new ParsePerformanceImpl(getMapFactory()).parse(graph, this);
-        new AddPerformanceImpl(NUMBER_OF_PREDICATES, SUBJECT_PREFIX, PREDICATE_PREFIX, OBJECT_PREFIX).addPerformance(
-            numberToAdd == 0 ? NUMBER_OF_NODES_TO_ADD : numberToAdd, graph, this);
-        new WritePerformanceImpl().writePerformance(graph, this, getBlankNodeRegistry());
-        new FindPerformanceImpl(numberToFind == 0 ? NUMBER_OF_NODES_TO_FIND : numberToFind, SUBJECT_PREFIX,
-            PREDICATE_PREFIX, OBJECT_PREFIX).findPerformance(graph, this);
-        new UpdatePerformanceImpl(numberToUpdate == 0 ? NUMBER_OF_NODES_TO_UPDATE : numberToUpdate, SUBJECT_PREFIX).
-            updatePerformance(graph, this);
-    }
-
-    private void checkParameters(int numberToAdd, int numberToFind, int numberToUpdate) {
-        if (numberToAdd != 0 && (numberToAdd < numberToFind || numberToAdd < numberToUpdate)) {
-            throw new IllegalArgumentException("Can't find or update more than the number to add: " + numberToAdd);
+    private List<Triple> addTriplesToArray(Graph graph, URI subjectURI) throws Exception {
+        URIReference newSubject = graph.getElementFactory().createURIReference(subjectURI);
+        ClosableIterator<Triple> itr = findAllPredicates(graph, newSubject);
+        List<Triple> triplesToChange = new ArrayList<Triple>();
+        try {
+            while (itr.hasNext()) {
+                Triple triple = itr.next();
+                triplesToChange.add(triple);
+            }
+        } finally {
+            itr.close();
         }
+        return triplesToChange;
     }
 
-    protected abstract Graph getGraph();
-
-    protected abstract MapFactory getMapFactory();
-
-    protected abstract BlankNodeRegistry getBlankNodeRegistry();
-
-    public void outputResult(Graph graph, long startTime, String what) throws GraphException {
-        long finishTime = System.currentTimeMillis();
-        System.out.println("\n" + what);
-        System.out.println("Triples: " + graph.getNumberOfTriples() + " Took: " + (finishTime - startTime) +
-            " ms = " + ((finishTime - startTime) / NO_MILLISECONDS_IN_A_SECOND) + " s");
+    private ClosableIterator<Triple> findAllPredicates(Graph graph, SubjectNode subject) throws GraphException {
+        return graph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
     }
 }
