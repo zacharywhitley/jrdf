@@ -57,33 +57,37 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
 import org.jrdf.graph.Graph;
-import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfWriter;
-import org.jrdf.writer.mem.RdfNamespaceMapImpl;
-import org.jrdf.writer.rdfxml.RdfXmlWriter;
-import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.graph.GraphException;
+import org.jrdf.graph.TripleFactory;
 
-import java.io.Writer;
-import java.io.FileWriter;
-import java.io.File;
+import java.net.URI;
 
-public class WritePerformanceImpl implements WritePerformance {
-    private final TempDirectoryHandler dirHandler = new TempDirectoryHandler();
+public class AddPerformanceImpl implements AddPerformance {
+    private final int numberOfPredicates;
+    private final String subjectPrefix;
+    private final String predicatePrefix;
+    private final String objectPrefix;
 
-    public void writePerformance(Graph graph, GraphPerformance performance, BlankNodeRegistry registry)
-        throws Exception {
+    public AddPerformanceImpl(int numberOfPredicates, String subjectPrefix, String predicatePrefix,
+        String objectPrefix) {
+        this.numberOfPredicates = numberOfPredicates;
+        this.subjectPrefix = subjectPrefix;
+        this.predicatePrefix = predicatePrefix;
+        this.objectPrefix = objectPrefix;
+    }
+
+    public void addPerformance(int numberOfNodes, Graph graph, GraphPerformance performance) throws GraphException {
         long startTime = System.currentTimeMillis();
-        Writer out = new FileWriter(new File(dirHandler.getDir(), "foo.rdf"));
-        try {
-            registry.clear();
-            RdfWriter writer = new RdfXmlWriter(registry, new RdfNamespaceMapImpl());
-            writer.write(graph, out);
-        } finally {
-            out.close();
+        for (int i = 0; i < numberOfNodes; i++) {
+            for (int j = 0; j < numberOfPredicates; j++) {
+                TripleFactory tripleFactory = graph.getTripleFactory();
+                tripleFactory.addTriple(URI.create(subjectPrefix + i), URI.create(predicatePrefix + j),
+                    URI.create(objectPrefix + j));
+            }
         }
-        performance.outputResult(graph, startTime, "Testing RDF/XML Write Performance:");
+        performance.outputResult(graph, startTime, "Testing Add Performance:");
     }
 }

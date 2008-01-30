@@ -57,47 +57,11 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.map.MapFactory;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.RdfXmlParser;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-public class ParsePerformanceImpl implements ParsePerformance {
-    private static final String URI_STRING = "http://foo/bar";
-    private static final String PATH = "/org/jrdf/example/pizza.rdf";
-    private final MapFactory mapFactory;
-
-    public ParsePerformanceImpl(MapFactory mapFactory) {
-        this.mapFactory = mapFactory;
-    }
-
-    public void parse(Graph graph, GraphPerformance performance) throws GraphException {
-        InputStream stream = getResource();
-        Parser parser = new RdfXmlParser(graph.getElementFactory(), mapFactory);
-        long startTime = System.currentTimeMillis();
-        parse(stream, parser);
-        performance.outputResult(graph, startTime, "Testing Parsing Performance (" + PATH + "): ");
-    }
-
-    private void parse(InputStream stream, Parser parser) {
-        try {
-            parser.parse(stream, URI_STRING);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private InputStream getResource() {
-        try {
-            return getClass().getResource(PATH).openStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+public interface ParsePerformance {
+    void parse(Graph graph, GraphPerformance performance) throws GraphException;
 }

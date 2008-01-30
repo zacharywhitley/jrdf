@@ -57,11 +57,11 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 
-public interface ParsePerformance {
-    void parse(Graph graph, GraphPerformance performance) throws GraphException;
+public interface GraphPerformance {
+    void outputResult(Graph graph, long startTime, String what) throws GraphException;
 }

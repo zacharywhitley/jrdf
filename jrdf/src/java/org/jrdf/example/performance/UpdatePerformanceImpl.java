@@ -57,91 +57,64 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
 import org.jrdf.graph.AnyObjectNode;
 import org.jrdf.graph.AnyPredicateNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
-public class FindPerformanceImpl implements FindPerformance {
-    private final int nodesToFind;
+public class UpdatePerformanceImpl implements UpdatePerformance {
+    private final int nodesToUpdate;
     private final String subjectPrefix;
-    private final String predicatePrefix;
-    private final String objectPrefix;
-    private int noFinds;
+    private int noUpdates;
 
-    public FindPerformanceImpl(int nodesToFind, String subjectPrefix, String predicatePrefix,
-        String objectPrefix) {
-        this.nodesToFind = nodesToFind;
+    public UpdatePerformanceImpl(int nodesToUpdate, String subjectPrefix) {
+        this.nodesToUpdate = nodesToUpdate;
         this.subjectPrefix = subjectPrefix;
-        this.predicatePrefix = predicatePrefix;
-        this.objectPrefix = objectPrefix;
     }
 
-    public void findPerformance(Graph graph, GraphPerformance performance) throws Exception {
+    public void updatePerformance(Graph graph, GraphPerformance performance) throws Exception {
         long startTime = System.currentTimeMillis();
-        for (int index = 0; index < nodesToFind; index++) {
+        for (int index = 0; index < nodesToUpdate; index++) {
             URI subjectURI = URI.create(subjectPrefix + index);
-            find1(graph, subjectURI);
+            List<Triple> triplesToChange = addTriplesToArray(graph, subjectURI);
+            for (Triple triple : triplesToChange) {
+                URI subject = ((URIReference) triple.getSubject()).getURI();
+                URIReference newSubject = graph.getElementFactory().createURIReference(
+                    URI.create(subject.toString() + "hello"));
+                graph.add(newSubject, triple.getPredicate(), triple.getObject());
+                graph.remove(triple);
+                noUpdates++;
+            }
         }
-        performance.outputResult(graph, startTime, "Testing Find Performance: " + noFinds);
+        performance.outputResult(graph, startTime, "Testing Update Performance: " + noUpdates);
     }
 
-    private void find1(Graph graph, URI subjectURI) throws GraphException {
-        URIReference predicate = graph.getElementFactory().createURIReference(subjectURI);
-        ClosableIterator<Triple> itr = findAllPredicates(graph, predicate);
+    private List<Triple> addTriplesToArray(Graph graph, URI subjectURI) throws Exception {
+        URIReference newSubject = graph.getElementFactory().createURIReference(subjectURI);
+        ClosableIterator<Triple> itr = findAllPredicates(graph, newSubject);
+        List<Triple> triplesToChange = new ArrayList<Triple>();
         try {
             while (itr.hasNext()) {
                 Triple triple = itr.next();
-                ObjectNode object = triple.getObject();
-                find2(graph, object);
+                triplesToChange.add(triple);
             }
         } finally {
             itr.close();
         }
-    }
-
-    private void find2(Graph graph, ObjectNode object1) throws GraphException {
-        ClosableIterator<Triple> itr2 = findAllPredicates(graph, (SubjectNode) object1);
-        try {
-            while (itr2.hasNext()) {
-                Triple triple2 = itr2.next();
-                ObjectNode object2 = triple2.getObject();
-                if (!(object2 instanceof SubjectNode)) {
-                    continue;
-                }
-                find3(graph, object2);
-            }
-        } finally {
-            itr2.close();
-        }
-    }
-
-    private void find3(Graph graph, ObjectNode object2) throws GraphException {
-        ClosableIterator<Triple> itr3 = findAllPredicates(graph, (SubjectNode) object2);
-        try {
-            while (itr3.hasNext()) {
-                Triple triple3 = itr3.next();
-                ObjectNode object3 = triple3.getObject();
-                if (!(object3 instanceof SubjectNode)) {
-                    continue;
-                }
-            }
-        } finally {
-            itr3.close();
-        }
+        return triplesToChange;
     }
 
     private ClosableIterator<Triple> findAllPredicates(Graph graph, SubjectNode subject) throws GraphException {
-        noFinds++;
         return graph.find(subject, AnyPredicateNode.ANY_PREDICATE_NODE, AnyObjectNode.ANY_OBJECT_NODE);
     }
 }

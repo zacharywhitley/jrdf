@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
 import org.jrdf.graph.Graph;
 import org.jrdf.writer.BlankNodeRegistry;

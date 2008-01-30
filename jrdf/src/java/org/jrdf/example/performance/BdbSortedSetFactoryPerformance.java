@@ -57,67 +57,54 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.example.performance;
 
 import junit.framework.TestCase;
-import org.jrdf.JRDFFactory;
-import org.jrdf.SortedMemoryJRDFFactory;
-import org.jrdf.graph.Graph;
-import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleImpl;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.global.GlobalizedGraph;
-import org.jrdf.graph.global.URIReferenceImpl;
-import org.jrdf.parser.Parser;
-import org.jrdf.parser.rdfxml.GraphRdfXmlParser;
-import org.jrdf.util.EscapeURL;
-import org.jrdf.vocabulary.RDF;
+import org.jrdf.set.BdbSortedSetFactory;
+import org.jrdf.set.SortedSetFactory;
+import org.jrdf.util.DirectoryHandler;
+import org.jrdf.util.TempDirectoryHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandler;
+import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;
 
-import java.net.URI;
-import java.net.URL;
+import java.util.Set;
 
-public class MoleculeParserImplUnitTest extends TestCase {
-    private static final int NUMBER_OF_MOLECULES_IN_PIZZA = 1384;
-    private static final int NUMBER_OF_TRIPLES_IN_PIZZA = 2332;
-    private static final String BASE_URI = "http://example.org";
-    private final JRDFFactory factory = SortedMemoryJRDFFactory.getFactory();
-    private final Graph jrdfGraph = factory.getNewGraph();
-    private MoleculeParser moleculeParser;
-    private final URIReference BANGLADESH_URI =
-        new URIReferenceImpl(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#Bangladesh"));
-    private final URIReference AMERICAN_URI =
-        new URIReferenceImpl(URI.create("http://www.co-ode.org/ontologies/pizza/pizza.owl#American"));
-    private final URIReference TYPE_URI = new URIReferenceImpl(RDF.TYPE);
-    private final URIReference CLASS_URI = new URIReferenceImpl(URI.create("http://www.w3.org/2002/07/owl#Class"));
-    private final URL resource = getClass().getResource("/org/jrdf/example/performance/pizza.rdf");
+public class BdbSortedSetFactoryPerformance extends TestCase {
+    private static final int RUNS = 100000;
+    private static final int MILLISECONDS = 1000;
+    private static final DirectoryHandler HANDLER = new TempDirectoryHandler();
+    private BdbEnvironmentHandler storedSetHandler;
+    private String databaseName = "dbName" + System.currentTimeMillis();
+    private SortedSetFactory factory;
+    private Set<String> strSet;
 
     public void setUp() throws Exception {
-        // Work out why we need to do this.
-        jrdfGraph.clear();
-        moleculeParser = new MoleculeParserImpl(jrdfGraph);
+        super.setUp();
+        HANDLER.removeDir();
+        storedSetHandler = new BdbEnvironmentHandlerImpl(HANDLER);
     }
 
-    public void testParse() throws Exception {
-        moleculeParser.parse(resource.openStream(), BASE_URI);
+    public void testInitialAddingToSet() {
+        factory = new BdbSortedSetFactory(storedSetHandler, databaseName);
+        strSet = factory.createSet(String.class);
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < RUNS; i++) {
+            strSet.add(new String(Integer.toString(i)));
+        }
+        long end = System.currentTimeMillis();
+        System.out.println("Inserting " + RUNS + " strings takes " + (end - start) / (float) MILLISECONDS + " seconds");
+        assertEquals("Set have " + RUNS + " entries", RUNS, strSet.size());
+        factory.close();
     }
 
-    public void testNormalParser() throws Exception {
-        Parser parser = new GraphRdfXmlParser(jrdfGraph);
-        parser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
-    }
-
-    public void testGetGlobalizedGraph() throws Exception {
-        moleculeParser.parse(resource.openStream(), EscapeURL.toEscapedString(resource));
-        GlobalizedGraph globalizedGraph = moleculeParser.getGlobalizedGraph();
-        assertEquals(NUMBER_OF_TRIPLES_IN_PIZZA, globalizedGraph.getNumberOfTriples());
-        assertEquals(NUMBER_OF_MOLECULES_IN_PIZZA, globalizedGraph.getNumberOfMolecules());
-
-        Triple triple = new TripleImpl(AMERICAN_URI, TYPE_URI, CLASS_URI);
-        boolean result = globalizedGraph.contains(triple);
-        assertTrue(result);
-
-        triple = new TripleImpl(BANGLADESH_URI, TYPE_URI, CLASS_URI);
-        result = globalizedGraph.contains(triple.getSubject(), triple.getPredicate(), triple.getObject());
-        assertFalse(result);
+    public void testAddDuplicates() {
+        factory = new BdbSortedSetFactory(storedSetHandler, databaseName);
+        strSet = factory.createSet(String.class);
+        strSet.clear();
+        strSet.add("triples");
+        strSet.add("triples");
+        assertEquals("set only has 1 entry", 1, strSet.size());
+        assertEquals("set only contains \"triples\"", "triples", strSet.iterator().next());
+        factory.close();
     }
 }

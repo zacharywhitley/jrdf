@@ -57,7 +57,18 @@
  *
  */
 
-package org.jrdf.example;
+package org.jrdf.example.performance;
 
-public interface UpdatePerformance {
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+
+public interface AddPerformance {
+    /**
+     * Creates 10 times the given number of nodes for a given graph.
+     *
+     * @param numberOfNodes the number of nodes to create with 10 objects.
+     * @param graph         the graph to add.
+     * @throws Exception if there is an exception adding the nodes.
+     */
+    void addPerformance(int numberOfNodes, Graph graph, GraphPerformance performance) throws GraphException;
 }
