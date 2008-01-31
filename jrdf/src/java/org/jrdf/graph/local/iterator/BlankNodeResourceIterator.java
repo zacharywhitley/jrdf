@@ -57,30 +57,44 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
+import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.ResourceFactory;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.param.ParameterUtil;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.NoSuchElementException;
 
-public class AnyResourceIterator extends ResourceIterator<Resource> {
-    public AnyResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final ResourceFactory newResourceFactory, final NodePool newNodePool) {
-        super(newLongIndexes, newGraphHandlers, newResourceFactory, newNodePool);
+public class BlankNodeResourceIterator implements ClosableIterator<Resource> {
+    private final ClosableIterator<BlankNode> blankNodeIterator;
+    private final ResourceFactory resourceFactory;
+
+    public BlankNodeResourceIterator(ClosableIterator<BlankNode> blankNodeIterator, ResourceFactory resourceFactory) {
+        ParameterUtil.checkNotNull(blankNodeIterator, resourceFactory);
+        this.blankNodeIterator = blankNodeIterator;
+        this.resourceFactory = resourceFactory;
+    }
+
+    public boolean close() {
+        return true;
+    }
+
+    public boolean hasNext() {
+        return blankNodeIterator.hasNext();
     }
 
     public Resource next() {
-        return getNextResource();
+        try {
+            return resourceFactory.createResource(blankNodeIterator.next());
+        } catch (GraphElementFactoryException e) {
+            throw new NoSuchElementException();
+        }
     }
 
-    protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
-        final GraphHandler graphHandler) {
-        return iterator.next().getKey();
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

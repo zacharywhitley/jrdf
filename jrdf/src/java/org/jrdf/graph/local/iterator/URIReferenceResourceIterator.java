@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
@@ -88,7 +88,7 @@ public class URIReferenceResourceIterator extends ResourceIterator<URIReference>
         while (iterator.hasNext()) {
             final long id = iterator.next().getKey();
             final Node node = nodePool.getNodeById(id);
-            if (node != null && node instanceof URIReference) {
+            if (URIReference.class.isAssignableFrom(node.getClass())) {
                 return id;
             }
         }

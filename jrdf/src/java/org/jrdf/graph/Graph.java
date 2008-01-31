@@ -146,6 +146,7 @@ public interface Graph {
 
     /**
      * Returns all unique resources for a given ValueNodeType (BNode or URIReference is currently supported).
+     * Resources are nodes that appear in either the subject or object position.
      *
      * @param type either BlankNodeType or URIReferenceNodeType.
      * @return all unique resources.

@@ -63,17 +63,15 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.query.relation.type.BlankNodeType;
+import static org.jrdf.query.relation.type.BlankNodeType.*;
+import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
+import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
+import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.Block;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
-import org.jrdf.query.relation.type.BlankNodeType;
-import org.jrdf.query.relation.type.URIReferenceNodeType;
-import org.jrdf.query.relation.type.ValueNodeType;
-import static org.jrdf.query.relation.type.PredicateNodeType.*;
-import static org.jrdf.query.relation.type.ResourceNodeType.*;
-import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
-import static org.jrdf.query.relation.type.URIReferenceNodeType.*;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -813,7 +811,7 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         });
     }
 
-    public void testBlankNodeResourceIterator() throws Exception {
+    public void testBlankNodeTypeIterator() throws Exception {
         addTestNodes();
         assertEquals("Incorrect number of blank nodes", 2, getNumberOfBlankNodes());
         graph.remove(blank1, ref1, blank2);
@@ -832,6 +830,17 @@ public abstract class AbstractGraphUnitTest extends TestCase {
             counter++;
         }
         assertEquals("Unexpected number of unique URIs in the subject and object position", 3, counter);
+    }
+
+    public void testBlankNodeResourceIterator() throws Exception {
+        addTestNodes();
+        ClosableIterator<? super Resource> iterator = graph.findResources(BNODE_TYPE);
+        int counter = 0;
+        while (iterator.hasNext()) {
+            iterator.next();
+            counter++;
+        }
+        assertEquals("Unexpected number of unique blank nodes in the subject and object position", 2, counter);
     }
 
     public void testURIReferencesIterator() throws Exception {

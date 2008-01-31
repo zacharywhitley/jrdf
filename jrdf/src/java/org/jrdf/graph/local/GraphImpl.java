@@ -84,9 +84,10 @@ import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.graph.local.mem.iterator.AnyResourceIterator;
+import org.jrdf.graph.local.iterator.BlankNodeResourceIterator;
+import org.jrdf.graph.local.iterator.AnyResourceIterator;
 import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
-import org.jrdf.graph.local.mem.iterator.URIReferenceResourceIterator;
+import org.jrdf.graph.local.iterator.URIReferenceResourceIterator;
 import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
@@ -342,6 +343,8 @@ public class GraphImpl implements Graph, Serializable {
         // TODO AN - Change this to be off of readWriteGraph if possible.
         if (type.equals(URI_REFERENCE_TYPE)) {
             return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
+        } else if (type.equals(BNODE_TYPE)) {
+            return new BlankNodeResourceIterator(nodePool.getBlankNodeIterator(), resourceFactory);
         } else {
             throw new UnsupportedOperationException("Cannot find with node type: " + type);
         }
