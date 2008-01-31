@@ -69,9 +69,9 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.mem.BlankNodeImpl;
-import org.jrdf.graph.local.mem.LocalizedNode;
-import org.jrdf.graph.local.mem.URIReferenceImpl;
+import org.jrdf.graph.local.BlankNodeImpl;
+import org.jrdf.graph.local.LocalizedNode;
+import org.jrdf.graph.local.URIReferenceImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;

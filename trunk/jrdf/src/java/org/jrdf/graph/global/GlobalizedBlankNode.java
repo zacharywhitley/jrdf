@@ -59,7 +59,7 @@
 
 package org.jrdf.graph.global;
 
-import org.jrdf.graph.local.mem.LocalizedNode;
+import org.jrdf.graph.local.LocalizedNode;
 
 public interface GlobalizedBlankNode extends LocalizedNode {
     /**

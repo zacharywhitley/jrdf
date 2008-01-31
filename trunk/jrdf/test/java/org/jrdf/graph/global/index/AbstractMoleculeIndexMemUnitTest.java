@@ -75,9 +75,9 @@ import org.jrdf.graph.global.LiteralImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
 import org.jrdf.graph.global.molecule.Molecule;
 import org.jrdf.graph.global.molecule.MoleculeImpl;
-import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
+import org.jrdf.graph.local.GlobalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.NodeComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorImpl;
 import org.jrdf.util.NodeTypeComparatorImpl;
 import org.jrdf.vocabulary.RDF;
 

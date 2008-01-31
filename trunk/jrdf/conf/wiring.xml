@@ -10,7 +10,7 @@
 
     <bean class="org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory" singleton="true"/>
 
-    <bean id="graphFactory" class="org.jrdf.graph.local.mem.OrderedGraphFactoryImpl" singleton="false">
+    <bean id="graphFactory" class="org.jrdf.graph.local.OrderedGraphFactoryImpl" singleton="false">
         <constructor-arg>
             <list>
                 <ref bean="org.jrdf.graph.local.index.longindex.mem.LongIndexMem"/>
@@ -23,8 +23,8 @@
 
     <!-- Relational Classes -->
     <bean id="nodeTypeComparator" class="org.jrdf.util.NodeTypeComparatorImpl"/>
-    <bean id="localizedNodeComparator" class="org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl"/>
-    <bean id="blankNodeComparator" class="org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl">
+    <bean id="localizedNodeComparator" class="org.jrdf.graph.local.LocalizedNodeComparatorImpl"/>
+    <bean id="blankNodeComparator" class="org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl">
         <constructor-arg ref="localizedNodeComparator"/>
     </bean>
 
@@ -39,7 +39,7 @@
         <constructor-arg ref="attributeNameComparator"/>
     </bean>
 
-    <bean id="nodeComparator" class="org.jrdf.graph.local.mem.NodeComparatorImpl">
+    <bean id="nodeComparator" class="org.jrdf.graph.local.NodeComparatorImpl">
         <constructor-arg ref="nodeTypeComparator"/>
         <constructor-arg ref="blankNodeComparator"/>
     </bean>

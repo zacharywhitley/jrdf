@@ -60,7 +60,7 @@
 package org.jrdf.graph.local.index.nodepool;
 
 import org.jrdf.graph.Node;
-import org.jrdf.graph.local.mem.LocalizedNode;
+import org.jrdf.graph.local.LocalizedNode;
 
 import java.util.List;
 import java.util.Map;

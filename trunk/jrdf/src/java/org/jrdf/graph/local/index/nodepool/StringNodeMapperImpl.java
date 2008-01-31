@@ -67,14 +67,14 @@ import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.mem.BlankNodeImpl;
-import org.jrdf.graph.local.mem.LiteralImpl;
-import org.jrdf.graph.local.mem.LiteralMutableId;
-import org.jrdf.graph.local.mem.URIReferenceImpl;
+import org.jrdf.graph.local.BlankNodeImpl;
+import org.jrdf.graph.local.LiteralImpl;
+import org.jrdf.graph.local.LiteralMutableId;
+import org.jrdf.graph.local.URIReferenceImpl;
 import org.jrdf.parser.ntriples.parser.LiteralMatcher;
 
-import java.net.URI;
 import java.io.Serializable;
+import java.net.URI;
 
 public class StringNodeMapperImpl implements StringNodeMapper, Serializable {
     private static final long serialVersionUID = 6290485805443126422L;

@@ -59,7 +59,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.local.mem.URIReferenceImpl;
+import org.jrdf.graph.local.URIReferenceImpl;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 

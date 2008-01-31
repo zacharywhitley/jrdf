@@ -60,11 +60,11 @@
 package org.jrdf.query;
 
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
+import org.jrdf.graph.local.BlankNodeComparator;
+import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.LocalizedNodeComparator;
+import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.query.execute.NaiveQueryEngineImpl;
 import org.jrdf.query.execute.QueryEngine;
 import org.jrdf.query.relation.AttributeComparator;

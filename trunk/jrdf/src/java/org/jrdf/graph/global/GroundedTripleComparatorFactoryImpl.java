@@ -61,10 +61,10 @@ package org.jrdf.graph.global;
 
 import org.jrdf.graph.NodeComparator;
 import org.jrdf.graph.TripleComparator;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.GlobalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
-import org.jrdf.graph.local.mem.TripleComparatorImpl;
+import org.jrdf.graph.local.BlankNodeComparator;
+import org.jrdf.graph.local.GlobalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.NodeComparatorImpl;
+import org.jrdf.graph.local.TripleComparatorImpl;
 import org.jrdf.util.NodeTypeComparator;
 import org.jrdf.util.NodeTypeComparatorImpl;
 

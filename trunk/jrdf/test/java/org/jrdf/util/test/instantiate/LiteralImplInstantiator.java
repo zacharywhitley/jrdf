@@ -59,7 +59,7 @@
 
 package org.jrdf.util.test.instantiate;
 
-import org.jrdf.graph.local.mem.LiteralImpl;
+import org.jrdf.graph.local.LiteralImpl;
 import org.jrdf.util.test.ParamSpec;
 import org.jrdf.util.test.ReflectTestUtil;
 

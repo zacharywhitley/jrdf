@@ -62,7 +62,7 @@ package org.jrdf.util.bdb;
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
-import org.jrdf.graph.local.mem.BlankNodeImpl;
+import org.jrdf.graph.local.BlankNodeImpl;
 
 public class BlankNodeBinding extends TupleBinding {
     public Object entryToObject(TupleInput tupleInput) {
