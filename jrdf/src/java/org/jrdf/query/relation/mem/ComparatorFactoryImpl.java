@@ -60,10 +60,10 @@
 package org.jrdf.query.relation.mem;
 
 import org.jrdf.graph.NodeComparator;
-import org.jrdf.graph.local.mem.BlankNodeComparator;
-import org.jrdf.graph.local.mem.LocalizedBlankNodeComparatorImpl;
-import org.jrdf.graph.local.mem.LocalizedNodeComparatorImpl;
-import org.jrdf.graph.local.mem.NodeComparatorImpl;
+import org.jrdf.graph.local.BlankNodeComparator;
+import org.jrdf.graph.local.LocalizedBlankNodeComparatorImpl;
+import org.jrdf.graph.local.LocalizedNodeComparatorImpl;
+import org.jrdf.graph.local.NodeComparatorImpl;
 import org.jrdf.query.relation.AttributeComparator;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import org.jrdf.query.relation.TupleComparator;

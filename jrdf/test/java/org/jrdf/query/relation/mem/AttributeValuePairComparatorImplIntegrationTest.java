@@ -60,8 +60,8 @@ package org.jrdf.query.relation.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.TestJRDFFactory;
-import static org.jrdf.graph.local.mem.NodeComparatorImplIntegrationTest.LITERAL_1;
-import static org.jrdf.graph.local.mem.NodeComparatorImplIntegrationTest.LITERAL_2;
+import static org.jrdf.graph.local.NodeComparatorImplIntegrationTest.LITERAL_1;
+import static org.jrdf.graph.local.NodeComparatorImplIntegrationTest.LITERAL_2;
 import org.jrdf.query.relation.AttributeValuePair;
 import org.jrdf.query.relation.AttributeValuePairComparator;
 import static org.jrdf.query.relation.constants.NullaryAttributeValuePair.NULLARY_ATTRIBUTE_VALUE_PAIR;

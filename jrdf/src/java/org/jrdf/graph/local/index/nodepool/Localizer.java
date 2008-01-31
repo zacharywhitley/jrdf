@@ -59,12 +59,12 @@
 
 package org.jrdf.graph.local.index.nodepool;
 
+import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.TypedNodeVisitor;
-import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.Literal;
 
 import java.net.URI;
 

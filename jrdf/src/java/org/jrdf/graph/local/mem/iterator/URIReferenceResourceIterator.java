@@ -62,10 +62,10 @@ package org.jrdf.graph.local.mem.iterator;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
+import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.ResourceFactory;
 
 import java.util.Iterator;
 import java.util.Map;

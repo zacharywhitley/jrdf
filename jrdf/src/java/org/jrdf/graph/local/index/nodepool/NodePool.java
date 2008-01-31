@@ -59,10 +59,10 @@
 
 package org.jrdf.graph.local.index.nodepool;
 
-import org.jrdf.graph.Node;
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.URIReference;
 import org.jrdf.graph.Literal;
+import org.jrdf.graph.Node;
+import org.jrdf.graph.URIReference;
 import org.jrdf.util.ClosableIterator;
 
 import java.util.List;

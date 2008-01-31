@@ -68,7 +68,7 @@ import org.jrdf.graph.local.index.longindex.sesame.LongIndexSesame;
 import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.bdb.BdbNodePoolFactory;
-import org.jrdf.graph.local.mem.OrderedGraphFactoryImpl;
+import org.jrdf.graph.local.OrderedGraphFactoryImpl;
 import org.jrdf.query.QueryFactory;
 import org.jrdf.query.QueryFactoryImpl;
 import org.jrdf.query.execute.QueryEngine;

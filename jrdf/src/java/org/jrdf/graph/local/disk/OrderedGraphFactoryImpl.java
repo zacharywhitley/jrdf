@@ -59,6 +59,12 @@
 package org.jrdf.graph.local.disk;
 
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.local.GraphImpl;
+import org.jrdf.graph.local.ReadWriteGraph;
+import org.jrdf.graph.local.ReadWriteGraphFactory;
+import org.jrdf.graph.local.ReadWriteGraphImpl;
+import org.jrdf.graph.local.ResourceFactory;
+import org.jrdf.graph.local.ResourceFactoryImpl;
 import org.jrdf.graph.local.disk.iterator.DiskIteratorFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
@@ -73,12 +79,6 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.OrderedIteratorFactoryImpl;
-import org.jrdf.graph.local.mem.GraphImpl;
-import org.jrdf.graph.local.mem.ReadWriteGraph;
-import org.jrdf.graph.local.mem.ReadWriteGraphFactory;
-import org.jrdf.graph.local.mem.ReadWriteGraphImpl;
-import org.jrdf.graph.local.mem.ResourceFactory;
-import org.jrdf.graph.local.mem.ResourceFactoryImpl;
 import org.jrdf.set.BdbSortedSetFactory;
 import org.jrdf.util.TempDirectoryHandler;
 import org.jrdf.util.bdb.BdbEnvironmentHandlerImpl;

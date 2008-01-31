@@ -66,9 +66,9 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapper;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.graph.local.mem.LiteralImpl;
-import org.jrdf.graph.local.mem.LocalizedNode;
-import org.jrdf.graph.local.mem.URIReferenceImpl;
+import org.jrdf.graph.local.LiteralImpl;
+import org.jrdf.graph.local.LocalizedNode;
+import org.jrdf.graph.local.URIReferenceImpl;
 
 import java.io.Serializable;
 

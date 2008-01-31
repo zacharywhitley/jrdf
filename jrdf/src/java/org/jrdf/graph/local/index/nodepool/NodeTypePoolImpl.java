@@ -63,7 +63,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.mem.LocalizedNode;
+import org.jrdf.graph.local.LocalizedNode;
 import org.jrdf.map.MapFactory;
 
 import java.util.List;
