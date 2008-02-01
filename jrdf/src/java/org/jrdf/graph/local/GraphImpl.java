@@ -317,7 +317,7 @@ public class GraphImpl implements Graph, Serializable {
         return readWriteGraph.find(subject, predicate, object);
     }
 
-    // TODO AN Missing Literal type and s, o and combinations. 
+    // TODO AN Missing Literal type and s, o and combinations.
     public ClosableIterator<? extends Node> findNodes(NodeType type) {
         ClosableIterator<? extends Node> result;
         if (type.equals(BNODE_TYPE)) {

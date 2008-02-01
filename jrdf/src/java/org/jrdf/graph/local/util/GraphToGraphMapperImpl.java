@@ -68,7 +68,6 @@ import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -138,7 +137,9 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
     public Graph createNewTriples(Iterator<Triple> it) throws GraphException {
         while (it.hasNext()) {
             Triple triple = it.next();
-            graph.add(createNewTriple(triple));
+            final Triple newTriple = createNewTriple(triple);
+            System.err.println("Adding triple: " + newTriple.toString());
+            graph.add(newTriple);
         }
         return graph;
     }
@@ -148,7 +149,7 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         PredicateNode predicateNode = triple.getPredicate();
         ObjectNode objectNode = triple.getObject();
         SubjectNode newSubjectNode = (SubjectNode) createNewNode(subjectNode);
-        PredicateNode newPredicateNode = elementFactory.createURIReference(((URIReference) predicateNode).getURI());
+        PredicateNode newPredicateNode = predicateNode;
         ObjectNode newObjectNode = (ObjectNode) createNewNode(objectNode);
         return tripleFactory.createTriple(newSubjectNode, newPredicateNode, newObjectNode);
     }
@@ -163,19 +164,8 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return newNode;
     }
 
-    private ObjectNode createLiteralOrURI(ObjectNode objectNode) throws GraphElementFactoryException {
-        ObjectNode newObjectNode;
-        if (Literal.class.isAssignableFrom(objectNode.getClass())) {
-            Literal lit = (Literal) objectNode;
-            if (lit.isDatatypedLiteral()) {
-                newObjectNode = elementFactory.createLiteral(lit.getValue().toString(), lit.getDatatypeURI());
-            } else {
-                newObjectNode = elementFactory.createLiteral(lit.getValue().toString());
-            }
-        } else {
-            newObjectNode = elementFactory.createURIReference(((URIReference) objectNode).getURI());
-        }
-        return newObjectNode;
+    private ObjectNode createLiteralOrURI(ObjectNode objectNode) {
+        return objectNode;
     }
 
     public void replaceNode(Node node, Node newNode) throws GraphException {
@@ -198,8 +188,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
                     tripleFactory.createTriple(triple.getSubject(), triple.getPredicate(), (ObjectNode) newNode);
                 triplesToAdd.add(newTriple);
                 triplesToRemove.add(new TripleImpl(triple.getSubject(), triple.getPredicate(), oldONode));
-                //graph.add(newTriple);
-                //removeTriple(triple.getSubject(), triple.getPredicate(), oldONode);
             }
             iterator.close();
             addRemoveTriples();
@@ -240,8 +228,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
                     tripleFactory.createTriple((SubjectNode) newNode, triple.getPredicate(), triple.getObject());
                 triplesToAdd.add(newTriple);
                 triplesToRemove.add(new TripleImpl(oldSNode, triple.getPredicate(), triple.getObject()));
-//                graph.add(newTriple);
-//                removeTriple(oldSNode, triple.getPredicate(), triple.getObject());
             }
             iterator.close();
             addRemoveTriples();

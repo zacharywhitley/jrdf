@@ -69,7 +69,6 @@ import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphElementFactory;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
@@ -174,7 +173,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         FACTORY.close();
     }
 
-    public void testInitialInsert() throws GraphException, GraphElementFactoryException {
+    public void testInitialInsert() throws GraphException {
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, (ObjectNode) node2);
         graph1.add(triple1);
 
@@ -192,7 +191,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         }
     }
 
-    public void testAddOneBlankNodeAsObject() throws GraphException, GraphElementFactoryException {
+    public void testAddOneBlankNodeAsObject() throws GraphException {
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode2);
         graph1.add(triple1);
 
@@ -209,7 +208,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         }
     }
 
-    public void testAddOneBlankNodeAsSubject() throws GraphException, GraphElementFactoryException {
+    public void testAddOneBlankNodeAsSubject() throws GraphException {
         triple1 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node2);
         graph1.add(triple1);
 
@@ -227,7 +226,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         }
     }
 
-    public void testLiteralCopy() throws GraphElementFactoryException, GraphException {
+    public void testLiteralCopy() throws GraphException {
         String value = "whatever";
         URI typeURI = URI.create("xsd:string");
         Literal literal = eFac1.createLiteral(value, typeURI);
@@ -251,7 +250,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         assertTrue("Only 1 triple", graph1.contains(triple2));
     }
 
-    public void testBNodeReference() throws GraphException, GraphElementFactoryException {
+    public void testBNodeReference() throws GraphException {
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode1);
         triple2 = tFac1.createTriple(bNode1, pNode2, bNode2);
         graph1.add(triple1);
@@ -283,7 +282,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         }
     }
 
-    public void testNestedBlankNodes() throws GraphException, GraphElementFactoryException {
+    public void testNestedBlankNodes() throws GraphException {
         triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode1);
         triple2 = tFac1.createTriple(bNode1, pNode2, (ObjectNode) node2);
 
@@ -333,7 +332,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         assertEquals("graph2 size", 3, graph2.getNumberOfTriples());
     }
 
-    public void testCircularBlankNodes() throws GraphException, GraphElementFactoryException {
+    public void testCircularBlankNodes() throws GraphException {
         triple1 = tFac1.createTriple(bNode1, pNode1, bNode2);
         triple2 = tFac1.createTriple(bNode2, pNode2, bNode3);
         triple3 = tFac1.createTriple(bNode3, pNode3, bNode1);
@@ -373,7 +372,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         assertEquals("bNode1 the same", trp1.getSubject(), trp3.getObject());
     }
 
-    public void testCopyGraphForSubject() throws GraphException, GraphElementFactoryException {
+    public void testCopyGraphForSubject() throws GraphException {
         triple1 = tFac1.createTriple(bNode1, pNode1, bNode1);
         triple2 = tFac1.createTriple((SubjectNode) node2, pNode2, bNode3);
         triple3 = tFac1.createTriple(bNode1, pNode1, bNode3);
@@ -414,7 +413,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         assertEquals("Graph2 size should be 3", 2, graph2.getNumberOfTriples());
     }
 
-    public void testDuplicates() throws GraphException, GraphElementFactoryException {
+    public void testDuplicates() throws GraphException {
         triple1 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node1);
         triple2 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node2);
         triple3 = tFac1.createTriple((SubjectNode) node1, pNode2, (ObjectNode) node3);
@@ -427,11 +426,23 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
 
         node5 = eFac2.createURIReference(URI.create(url2 + "node5"));
         node6 = eFac2.createURIReference(URI.create(url2 + "node6"));
+
         cgUtil.copyTriplesForNode(graph1, graph2, node1, node5);
-
         assertEquals("Graph size is 4", 3, graph2.getNumberOfTriples());
-        cgUtil.copyTriplesForNode(graph1, graph2, node2, node6);
 
+        cgUtil.copyTriplesForNode(graph1, graph2, node2, node6);
         assertEquals("Graph size is 4", 4, graph2.getNumberOfTriples());
+    }
+
+    public void testCopyNonExistentNode() throws GraphException {
+        triple1 = tFac1.createTriple(bNode1, pNode1, (ObjectNode) node1);
+        graph1.add(triple1);
+        node5 = eFac2.createURIReference(URI.create(node3.toString()));
+
+        cgUtil.copyTriplesForNode(graph1, graph2, node2, node5);
+        assertEquals("Graph size is 0", 0, graph2.getNumberOfTriples());
+
+        cgUtil.copyTriplesForNode(graph1, graph2, node1, null);
+        assertEquals("Graph size is 1", 1, graph2.getNumberOfTriples());
     }
 }
