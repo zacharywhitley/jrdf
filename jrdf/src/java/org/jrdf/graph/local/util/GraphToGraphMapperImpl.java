@@ -138,7 +138,6 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         while (it.hasNext()) {
             Triple triple = it.next();
             final Triple newTriple = createNewTriple(triple);
-            System.err.println("Adding triple: " + newTriple.toString());
             graph.add(newTriple);
         }
         return graph;
