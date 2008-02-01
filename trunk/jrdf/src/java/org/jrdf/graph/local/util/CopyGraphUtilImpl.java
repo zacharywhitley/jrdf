@@ -119,9 +119,6 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         try {
             Set<Triple> set = getAllTriplesForNode(node, newSourceGraph);
             createNewGraph(set);
-            //mapper.replaceSubjectNode((SubjectNode) node, (SubjectNode) newNode);
-            //mapper.replaceObjectNode((ObjectNode) node, (ObjectNode) newNode);
-            //return mapper.createNewNode(node);
             return newNode;
         } catch (Exception e) {
             throw new GraphException("Cannot copy RDF graph with node", e);
@@ -133,11 +130,6 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
             if (mapper == null) {
                 mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory, setFactory);
             }
-/*
-            mapper.replaceSubjectNode((SubjectNode) oldNode, (SubjectNode) newNode);
-            mapper.replacePredicateNode((PredicateNode) oldNode, (PredicateNode) newNode);
-            mapper.replaceObjectNode((ObjectNode) oldNode, (ObjectNode) newNode);
-*/
             mapper.replaceNode(oldNode, newNode);
         } catch (GraphException e) {
             throw new GraphException("Cannot replace old node: " + oldNode.toString(), e);
@@ -170,7 +162,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         }
     }
 
-    private void createNewGraph(Set<Triple> set) throws GraphException, GraphElementFactoryException {
+    private void createNewGraph(Set<Triple> set) throws GraphException {
         Iterator<Triple> triples = set.iterator();
         readAndUpdateTripleIterator(triples);
         triples = set.iterator();
