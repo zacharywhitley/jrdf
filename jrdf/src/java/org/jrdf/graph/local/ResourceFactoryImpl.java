@@ -60,43 +60,29 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
-import org.jrdf.graph.GraphException;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.global.GlobalizedBlankNode;
-import org.jrdf.graph.local.index.nodepool.Localizer;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class ResourceFactoryImpl implements ResourceFactory {
-    private Localizer localizer;
-    private ReadWriteGraph readWriteGraph;
+    private Graph graph;
 
-    public ResourceFactoryImpl(Localizer localizer, ReadWriteGraph newReadWriteGraph) {
-        checkNotNull(localizer, newReadWriteGraph);
-        this.localizer = localizer;
-        this.readWriteGraph = newReadWriteGraph;
+    public ResourceFactoryImpl(Graph newGraph) {
+        checkNotNull(newGraph);
+        this.graph = newGraph;
     }
 
-    public Resource createResource(BlankNode node) throws GraphElementFactoryException {
-        try {
-            localizer.localize(node);
-            if (GlobalizedBlankNode.class.isAssignableFrom(node.getClass())) {
-                return new BlankNodeResourceImpl((GlobalizedBlankNode) node, readWriteGraph);
-            } else {
-                throw new IllegalArgumentException("Unknown node type: " + node.getClass());
-            }
-        } catch (GraphException e) {
-            throw new GraphElementFactoryException(e);
+    public Resource createResource(BlankNode node) {
+        if (GlobalizedBlankNode.class.isAssignableFrom(node.getClass())) {
+            return new BlankNodeResourceImpl(graph, (GlobalizedBlankNode) node);
+        } else {
+            throw new IllegalArgumentException("Unknown node type: " + node.getClass());
         }
     }
 
-    public Resource createResource(URIReference node) throws GraphElementFactoryException {
-        try {
-            localizer.localize(node);
-            return new URIReferenceResourceImpl(node, readWriteGraph);
-        } catch (GraphException e) {
-            throw new GraphElementFactoryException(e);
-        }
+    public Resource createResource(URIReference node) {
+        return new URIReferenceResourceImpl(graph, node);
     }
 }

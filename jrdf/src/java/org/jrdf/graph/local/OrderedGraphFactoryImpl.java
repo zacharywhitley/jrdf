@@ -86,7 +86,6 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
-    private ResourceFactory resourceFactory;
     private Localizer localizer;
 
     public OrderedGraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory) {
@@ -100,11 +99,10 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, localizer, newLongIndexes[0],
             graphHandlers[0], new MemSortedSetFactory());
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
-        this.resourceFactory = new ResourceFactoryImpl(localizer, readWriteGraph);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph, resourceFactory);
+        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph);
     }
 
     public ReadWriteGraph getReadWriteGraph() {

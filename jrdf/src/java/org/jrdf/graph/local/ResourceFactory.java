@@ -60,12 +60,11 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 
 public interface ResourceFactory {
-    Resource createResource(BlankNode node) throws GraphElementFactoryException;
+    Resource createResource(BlankNode node);
 
-    Resource createResource(URIReference node) throws GraphElementFactoryException;
+    Resource createResource(URIReference node);
 }

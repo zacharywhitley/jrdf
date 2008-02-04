@@ -60,6 +60,7 @@
 package org.jrdf.graph.local;
 
 import org.jrdf.graph.BlankNode;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
@@ -77,8 +78,8 @@ public final class BlankNodeResourceImpl extends AbstractResource implements Glo
     private BlankNodeResourceImpl() {
     }
 
-    BlankNodeResourceImpl(GlobalizedBlankNode newNode, ReadWriteGraph newReadWriteGraph) {
-        super(newNode.getId(), newReadWriteGraph);
+    BlankNodeResourceImpl(Graph newGraph, GlobalizedBlankNode newNode) {
+        super(newGraph, newNode);
         this.node = newNode;
     }
 

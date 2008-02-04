@@ -60,22 +60,20 @@
 package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.ResourceFactory;
 import org.jrdf.util.ClosableIterator;
 import org.jrdf.util.param.ParameterUtil;
 
-import java.util.NoSuchElementException;
-
 public class BlankNodeResourceIterator implements ClosableIterator<Resource> {
     private final ClosableIterator<BlankNode> blankNodeIterator;
     private final ResourceFactory resourceFactory;
 
-    public BlankNodeResourceIterator(ClosableIterator<BlankNode> blankNodeIterator, ResourceFactory resourceFactory) {
-        ParameterUtil.checkNotNull(blankNodeIterator, resourceFactory);
-        this.blankNodeIterator = blankNodeIterator;
-        this.resourceFactory = resourceFactory;
+    public BlankNodeResourceIterator(ClosableIterator<BlankNode> newBlankNodeIterator,
+        ResourceFactory newResourceFactory) {
+        ParameterUtil.checkNotNull(newBlankNodeIterator, newResourceFactory);
+        this.blankNodeIterator = newBlankNodeIterator;
+        this.resourceFactory = newResourceFactory;
     }
 
     public boolean close() {
@@ -87,11 +85,7 @@ public class BlankNodeResourceIterator implements ClosableIterator<Resource> {
     }
 
     public Resource next() {
-        try {
-            return resourceFactory.createResource(blankNodeIterator.next());
-        } catch (GraphElementFactoryException e) {
-            throw new NoSuchElementException();
-        }
+        return resourceFactory.createResource(blankNodeIterator.next());
     }
 
     public void remove() {
