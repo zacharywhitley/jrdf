@@ -62,6 +62,11 @@ package org.jrdf.graph.local.index.nodepool;
 import org.jrdf.graph.GraphException;
 
 public final class ExternalBlankNodeException extends GraphException {
+    private static final long serialVersionUID = -8021717901782583283L;
+
+    private ExternalBlankNodeException() {
+    }
+
     public ExternalBlankNodeException(String message) {
         super(message);
     }
