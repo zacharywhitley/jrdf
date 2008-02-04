@@ -246,7 +246,7 @@ public abstract class AbstractTripleFactory implements TripleFactory {
     }
 
     private void addElementsToCollection(Collection collection, SubjectNode subject, PredicateNode rdfFirst,
-        PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException, GraphElementFactoryException {
+        PredicateNode rdfRest, ObjectNode rdfNil) throws GraphException {
         // Iterate through all elements in the Collection.
         Iterator<ObjectNode> iter = collection.iterator();
         SubjectNode currentSubjectNode = subject;
