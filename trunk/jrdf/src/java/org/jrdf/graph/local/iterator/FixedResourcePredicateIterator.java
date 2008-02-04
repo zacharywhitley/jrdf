@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.longindex.LongIndex;

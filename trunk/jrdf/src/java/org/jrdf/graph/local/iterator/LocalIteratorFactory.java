@@ -56,23 +56,58 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
-import junit.framework.TestCase;
+import org.jrdf.graph.PredicateNode;
+import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.IteratorFactory;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
+import org.jrdf.util.ClosableIterator;
 
-import java.lang.reflect.Modifier;
+/**
+ * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
+ *
+ * @author Andrew Newman
+ * @version $Id$
+ */
+public final class LocalIteratorFactory implements IteratorFactory {
+    private final LongIndex[] longIndexes;
+    private final GraphHandler[] graphHandlers;
+    private final NodePool nodePool;
 
-public class MemIteratorFactoryUnitTest extends TestCase {
+    public LocalIteratorFactory(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers, NodePool nodePool) {
+        this.longIndexes = longIndexes;
+        this.graphHandlers = graphHandlers;
+        this.nodePool = nodePool;
+    }
 
-    public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, MemIteratorFactory.class);
-        checkConstructor(MemIteratorFactory.class, Modifier.PUBLIC, LongIndex[].class, GraphHandler[].class,
-            NodePool.class);
+    public ClosableIterator<Triple> newEmptyClosableIterator() {
+        return new EmptyClosableIterator();
+    }
+
+    public ClosableIterator<Triple> newGraphIterator() {
+        return new GraphIterator(graphHandlers[0]);
+    }
+
+    // TODO (AN) Long indexes and graph handler move into one object? (next one too).
+    public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
+        return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
+    }
+
+    public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
+        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], graphHandlers[index]);
+    }
+
+    public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
+        return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
+    }
+
+    public ClosableIterator<PredicateNode> newPredicateIterator() {
+        return new AnyResourcePredicateIterator(longIndexes[1], nodePool);
+    }
+
+    public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
+        return new FixedResourcePredicateIterator(resource, longIndexes[0], longIndexes[1], nodePool);
     }
 }

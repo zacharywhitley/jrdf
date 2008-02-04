@@ -56,7 +56,7 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
@@ -67,7 +67,7 @@ import static java.lang.reflect.Modifier.PUBLIC;
 
 public class GraphIteratorUnitTest extends TestCase {
     public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, GraphIterator.class);
+        checkImplementationOfInterfaceAndFinal(ClosableLocalIterator.class, GraphIterator.class);
         checkConstructor(GraphIterator.class, PUBLIC, GraphHandler.class);
     }
 }

@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
@@ -80,7 +80,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class GraphIterator implements ClosableMemIterator<Triple> {
+public final class GraphIterator implements ClosableLocalIterator<Triple> {
 
     /**
      * The iterator for the first index.

@@ -56,17 +56,23 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+package org.jrdf.graph.local.iterator;
 
+import junit.framework.TestCase;
+import org.jrdf.graph.local.index.graphhandler.GraphHandler;
+import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.iterator.IteratorFactory;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-package org.jrdf.graph.local.mem.iterator;
+import java.lang.reflect.Modifier;
 
-import org.jrdf.util.ClosableIterator;
+public class MemIteratorFactoryUnitTest extends TestCase {
 
-/**
- * An iterator that allows you to determine if an iterator comes from the in memory graph.
- *
- * @author Andrew Newman
- * @version $Revision$
- */
-public interface ClosableMemIterator<Triple> extends ClosableIterator<Triple> {
+    public void testClassProperties() throws Exception {
+        checkImplementationOfInterfaceAndFinal(IteratorFactory.class, LocalIteratorFactory.class);
+        checkConstructor(LocalIteratorFactory.class, Modifier.PUBLIC, LongIndex[].class, GraphHandler[].class,
+            NodePool.class);
+    }
 }

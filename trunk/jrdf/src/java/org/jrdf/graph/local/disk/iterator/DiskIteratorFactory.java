@@ -67,7 +67,7 @@ import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.iterator.EmptyClosableIterator;
 import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.graph.local.mem.iterator.FixedResourcePredicateIterator;
+import org.jrdf.graph.local.iterator.FixedResourcePredicateIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

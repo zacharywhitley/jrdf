@@ -68,7 +68,7 @@ import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.ExternalBlankNodeException;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
+import org.jrdf.graph.local.iterator.ClosableLocalIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.util.Iterator;
@@ -109,7 +109,7 @@ public class WritableGraphImpl implements WritableGraph {
     }
 
     public void removeIterator(Iterator<Triple> triples) throws GraphException {
-        if (ClosableMemIterator.class.isAssignableFrom(triples.getClass())) {
+        if (ClosableLocalIterator.class.isAssignableFrom(triples.getClass())) {
             localIteratorRemove(triples);
         } else {
             globalIteratorRemove(triples);
@@ -117,10 +117,10 @@ public class WritableGraphImpl implements WritableGraph {
     }
 
     private void localIteratorRemove(Iterator<Triple> triples) {
-        ClosableMemIterator<Triple> memIterator = (ClosableMemIterator<Triple>) triples;
-        while (memIterator.hasNext()) {
-            memIterator.next();
-            memIterator.remove();
+        ClosableLocalIterator<Triple> localIterator = (ClosableLocalIterator<Triple>) triples;
+        while (localIterator.hasNext()) {
+            localIterator.next();
+            localIterator.remove();
         }
     }
 

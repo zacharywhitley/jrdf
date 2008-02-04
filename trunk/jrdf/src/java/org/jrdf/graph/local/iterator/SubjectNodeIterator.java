@@ -57,16 +57,16 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
-import org.jrdf.graph.ObjectNode;
+import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.util.ClosableIterator;
 
-public class ObjectNodeIterator implements ClosableIterator<ObjectNode> {
+public class SubjectNodeIterator implements ClosableIterator<SubjectNode> {
     private ClosableIterator<Triple> iterator;
 
-    public ObjectNodeIterator(ClosableIterator<Triple> itr) {
+    public SubjectNodeIterator(ClosableIterator<Triple> itr) {
         iterator = itr;
     }
 
@@ -78,8 +78,8 @@ public class ObjectNodeIterator implements ClosableIterator<ObjectNode> {
         return iterator.hasNext();
     }
 
-    public ObjectNode next() {
-        return iterator.next().getObject();
+    public SubjectNode next() {
+        return iterator.next().getSubject();
     }
 
     public void remove() {
