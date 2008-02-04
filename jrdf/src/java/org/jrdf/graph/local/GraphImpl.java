@@ -77,16 +77,12 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.longindex.mem.LongIndexMem;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
-import org.jrdf.graph.local.index.nodepool.mem.MemNodePoolFactory;
-import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.graph.local.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.iterator.AnyResourceIterator;
-import org.jrdf.graph.local.iterator.LocalIteratorFactory;
+import org.jrdf.graph.local.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.iterator.URIReferenceResourceIterator;
 import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import org.jrdf.query.relation.type.NodeType;
@@ -102,17 +98,9 @@ import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
 import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 import org.jrdf.writer.rdfxml.RdfXmlWriter;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.io.StringWriter;
 import static java.util.Arrays.asList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * A memory based RDF Graph.
@@ -121,7 +109,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class GraphImpl implements Graph, Serializable {
+public class GraphImpl implements Graph {
 
     private static final String CANT_ADD_NULL_MESSAGE = "Cannot insert null values into the graph";
     private static final String CANT_ADD_ANY_NODE_MESSAGE = "Cannot insert any node values into the graph";
@@ -143,89 +131,57 @@ public class GraphImpl implements Graph, Serializable {
     // This is defined in the private add() method
 
     /**
-     * First index.
-     */
-    private LongIndex longIndex012;
-
-    /**
-     * Second index.
-     */
-    private transient LongIndex longIndex120;
-
-    /**
-     * Third index.
-     */
-    private transient LongIndex longIndex201;
-
-
-    /**
      * Collection of all indexes.
      */
-    private transient LongIndex[] indexes;
+    private LongIndex[] indexes;
 
     /**
      * Graph Element Factory.
      */
-    private transient GraphElementFactory elementFactory;
+    private GraphElementFactory elementFactory;
 
     /**
      * Resource factory.
      */
-    private transient ResourceFactory resourceFactory;
+    private ResourceFactory resourceFactory;
 
     /**
      * The node pool.
      */
-    private transient NodePool nodePool;
+    private NodePool nodePool;
 
     /**
      * Triple Element Factory.  This caches the element factory.
      */
-    private transient TripleFactory tripleFactory;
-
-    /**
-     * Graph handler for the 012 index.
-     */
-    private transient GraphHandler012 graphHandler012;
+    private TripleFactory tripleFactory;
 
     /**
      * Graph Handler container for all 3 graph handlers.
      */
-    private transient GraphHandler[] handlers;
+    private GraphHandler[] handlers;
 
     /**
      * Handle changes to the graph's underlying node pool and indexes.
      */
-    private transient ReadWriteGraph readWriteGraph;
-
-    /**
-     * A way to create iterators.
-     */
-    private transient IteratorFactory iteratorFactory;
+    private ReadWriteGraph readWriteGraph;
 
     /**
      * Registry used for the toString method.
      */
-    protected transient BlankNodeRegistry bNodeRegistry = new MemBlankNodeRegistryImpl();
+    private BlankNodeRegistry bNodeRegistry = new MemBlankNodeRegistryImpl();
 
     /**
      * Namespace map used for toString method.
      */
-    protected transient RdfNamespaceMap nameSpace = new RdfNamespaceMapImpl();
+    private RdfNamespaceMap nameSpace = new RdfNamespaceMapImpl();
 
     /**
      * Default constructor.
      */
-    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, IteratorFactory newIteratorFactory,
-        ReadWriteGraph newWritableGraph) {
-        this.longIndex012 = longIndexes[0];
-        this.longIndex120 = longIndexes[1];
-        this.longIndex201 = longIndexes[2];
+    public GraphImpl(LongIndex[] longIndexes, NodePool newNodePool, ReadWriteGraph newWritableGraph) {
+        this.indexes = longIndexes;
         this.nodePool = newNodePool;
-        this.iteratorFactory = newIteratorFactory;
         this.readWriteGraph = newWritableGraph;
-        LocalizerImpl newLocalizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-        this.elementFactory = new GraphElementFactoryImpl(nodePool, new ResourceFactoryImpl(this), newLocalizer);
         init();
     }
 
@@ -233,62 +189,14 @@ public class GraphImpl implements Graph, Serializable {
      * Initialization method used by the constructor and the deserializer.
      */
     private void init() {
-        // TODO AN Replace these with IOC!
-        // protect each field allocation with a test for null
-        initIndexes();
-
-        initHandlers();
-
-        initFactoriesAndGraph(indexes, handlers);
-    }
-
-    private void initIndexes() {
-        if (null == longIndex012) {
-            longIndex012 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
-        }
-        if (null == longIndex120) {
-            longIndex120 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
-        }
-        if (null == longIndex201) {
-            longIndex201 = new LongIndexMem(new HashMap<Long, Map<Long, Set<Long>>>());
-        }
-
-        indexes = new LongIndex[]{longIndex012, longIndex120, longIndex201};
-
-        if (null == nodePool) {
-            nodePool = new MemNodePoolFactory().createNodePool();
-        }
-    }
-
-    private void initHandlers() {
-        graphHandler012 = new GraphHandler012(indexes, nodePool);
-        GraphHandler120 graphHandler120 = new GraphHandler120(indexes, nodePool);
-        GraphHandler201 graphHandler201 = new GraphHandler201(indexes, nodePool);
+        GraphHandler graphHandler012 = new GraphHandler012(indexes, nodePool);
+        GraphHandler graphHandler120 = new GraphHandler120(indexes, nodePool);
+        GraphHandler graphHandler201 = new GraphHandler201(indexes, nodePool);
         handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
-    }
-
-    private void initFactoriesAndGraph(LongIndex[] indexes, GraphHandler[] handlers) {
-        if (null == iteratorFactory) {
-            iteratorFactory = new LocalIteratorFactory(indexes, handlers, nodePool);
-        }
-
-        if (null == readWriteGraph) {
-            readWriteGraph = new ReadWriteGraphImpl(indexes, nodePool, iteratorFactory);
-        }
-
         Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
-
-        if (null == resourceFactory) {
-            resourceFactory = new ResourceFactoryImpl(this);
-        }
-
-        if (null == elementFactory) {
-            elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory, localizer);
-        }
-
-        if (null == tripleFactory) {
-            tripleFactory = new TripleFactoryImpl(this, elementFactory);
-        }
+        resourceFactory = new ResourceFactoryImpl(this);
+        elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory, localizer);
+        tripleFactory = new TripleFactoryImpl(this, elementFactory);
     }
 
     public boolean contains(Triple triple) throws GraphException {
@@ -412,7 +320,6 @@ public class GraphImpl implements Graph, Serializable {
         // no op
     }
 
-    // TODO AN Move this to a helper utility perhaps.
     private void checkForNullsAndAnyNodes(SubjectNode subject, PredicateNode predicate, ObjectNode object,
         String nullMessage, String anyNodeMessage) {
         checkForNulls(subject, predicate, object, nullMessage);
@@ -431,48 +338,6 @@ public class GraphImpl implements Graph, Serializable {
         }
     }
 
-    /**
-     * Serializes the current object to a stream.
-     *
-     * @param out The stream to write to.
-     * @throws IOException If an I/O error occurs while writing.
-     */
-    private void writeObject(ObjectOutputStream out) throws IOException {
-        // write out the first index with the default writer
-        out.defaultWriteObject();
-        // write all the nodes as well
-        out.writeObject(nodePool.getNodePoolValues());
-        // TODO: Consider writing these nodes individually.  Converting to an array
-        // may take up unnecessary memory
-    }
-
-    /**
-     * Deserializes an object from a stream.
-     *
-     * @param in The stream to read from.
-     * @throws IOException If an I/O error occurs while reading.
-     */
-    @SuppressWarnings({ "unchecked" })
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        // read in the first index with the default reader
-        in.defaultReadObject();
-        // initialize the fields not yet done by the constructor
-        init();
-
-        // read all the nodes as well
-        List<Map<Long, String>> values = (List<Map<Long, String>>) in.readObject();
-
-        // populate the node factory with these nodes
-        nodePool.registerNodePoolValues(values);
-
-        // fill in the other indexes
-        try {
-            this.graphHandler012.reconstructIndices(longIndex012, longIndex120, longIndex201);
-        } catch (GraphException e) {
-            throw new ClassNotFoundException("Unable to add to a graph index", e);
-        }
-    }
-
     public String toString() {
         RdfXmlWriter writer = new RdfXmlWriter(bNodeRegistry, nameSpace);
         StringWriter sw = new StringWriter();
@@ -483,5 +348,4 @@ public class GraphImpl implements Graph, Serializable {
         }
         return sw.toString();
     }
-
 }
