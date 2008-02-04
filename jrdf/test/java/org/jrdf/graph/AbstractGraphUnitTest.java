@@ -63,8 +63,9 @@ import junit.framework.TestCase;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.local.index.nodepool.ExternalBlankNodeException;
 import org.jrdf.query.relation.type.BlankNodeType;
-import static org.jrdf.query.relation.type.BlankNodeType.*;
+import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
 import static org.jrdf.query.relation.type.ResourceNodeType.RESOURCE_TYPE;
 import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TYPE;
@@ -788,12 +789,12 @@ public abstract class AbstractGraphUnitTest extends TestCase {
         URI newURI = new URI("http://namespace#somevalue");
         final URIReference newRes = graphElementFactory.createURIReference(newURI);
         newGraph.add(newRes, newRes, newRes);
-        assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
+        assertThrows(ExternalBlankNodeException.class, FAILED_TO_ADD_TRIPLE, new Block() {
             public void execute() throws Throwable {
                 newGraph.add(blank1, newRes, newRes);
             }
         });
-        assertThrows(GraphException.class, FAILED_TO_ADD_TRIPLE, new Block() {
+        assertThrows(ExternalBlankNodeException.class, FAILED_TO_ADD_TRIPLE, new Block() {
             public void execute() throws Throwable {
                 newGraph.add(blank2, newRes, newRes);
             }
