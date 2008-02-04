@@ -145,8 +145,8 @@ public class LocalizerImpl implements Localizer {
             }
         }
         if (!blankNode.equals(node)) {
-            exception = new GraphException("The node returned by the nodeId (" + currentId + ") was not the same " +
-                "blank node.  Got: " + node + ", expected: " + blankNode);
+            exception = new ExternalBlankNodeException("The node returned by the nodeId (" + currentId + ") was not " +
+                "the same blank node.  Got: " + node + ", expected: " + blankNode);
         }
     }
 

@@ -65,6 +65,7 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import org.jrdf.graph.local.index.nodepool.ExternalBlankNodeException;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
@@ -73,6 +74,7 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 import java.util.Iterator;
 
 public class WritableGraphImpl implements WritableGraph {
+    private static final String MESSAGE = "Failed to add triple.";
     private final NodePool nodePool;
     private final LongIndex[] longIndexes;
     private final Localizer localizer;
@@ -137,8 +139,10 @@ public class WritableGraphImpl implements WritableGraph {
             longIndexes[0].add(values);
             longIndexes[1].add(values[1], values[2], values[0]);
             longIndexes[2].add(values[2], values[0], values[1]);
+        } catch (ExternalBlankNodeException e) {
+            throw new ExternalBlankNodeException(MESSAGE, e);
         } catch (GraphException ge) {
-            throw new GraphException("Failed to add triple.", ge);
+            throw new GraphException(MESSAGE, ge);
         }
     }
 
