@@ -62,7 +62,6 @@ import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.mem.iterator.ClosableMemIterator;
 
 import java.util.Iterator;
 
@@ -73,7 +72,7 @@ import java.util.Iterator;
  * @author Andrew Newman
  * @version $Revision$
  */
-public class TripleClosableIterator implements ClosableMemIterator<Triple> {
+public class TripleClosableIterator implements ClosableLocalIterator<Triple> {
     private Iterator<Triple> iter;
     private Localizer localizer;
     private LongIndex longIndex;

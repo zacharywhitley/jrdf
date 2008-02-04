@@ -56,113 +56,19 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
+package org.jrdf.graph.local.iterator;
 
-package org.jrdf.graph.local.mem.iterator;
-
-import org.jrdf.graph.GraphException;
-import org.jrdf.graph.Triple;
+import junit.framework.TestCase;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
+import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import static java.lang.reflect.Modifier.PUBLIC;
 
-/**
- * An iterator that returns only a single triple, if any exists.
- *
- * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
- * @author Andrew Newman
- * @version $Revision$
- */
-public final class ThreeFixedIterator implements ClosableMemIterator<Triple> {
-
-    /**
-     * Fixed set of nodes.
-     */
-    private Long[] nodes;
-
-    /**
-     * Allows access to a particular part of the index.
-     */
-    private LongIndex longIndex;
-
-    /**
-     * Handles the removal of nodes.
-     */
-    private GraphHandler handler;
-
-    /**
-     * The triple to return on.
-     */
-    private Triple triple;
-
-    /**
-     * The triple to remove.
-     */
-    private Triple removeTriple;
-
-    /**
-     * Constructor.
-     */
-    public ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphHandler newHandler) {
-        nodes = newNodes;
-        longIndex = newLongIndex;
-        handler = newHandler;
-        createTriple();
-    }
-
-    private void createTriple() {
-        if (contains(nodes)) {
-            triple = handler.createTriple(nodes);
-        }
-    }
-
-    private boolean contains(Long[] longNodes) {
-        Map<Long, Set<Long>> subIndex = longIndex.getSubIndex(longNodes[0]);
-        if (subIndex != null) {
-            Set<Long> predicates = subIndex.get(longNodes[1]);
-            if (predicates.contains(longNodes[2])) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    public boolean hasNext() {
-        return null != triple;
-    }
-
-
-    public Triple next() throws NoSuchElementException {
-        if (null == triple) {
-            throw new NoSuchElementException();
-        }
-
-        // return the triple, clearing it first so next will fail on a subsequent call
-        removeTriple = triple;
-        triple = null;
-        return removeTriple;
-    }
-
-
-    public void remove() {
-        if (null != removeTriple) {
-            try {
-                longIndex.remove(nodes);
-                handler.remove(nodes);
-                removeTriple = null;
-            } catch (GraphException ge) {
-                throw new IllegalStateException(ge.getMessage());
-            }
-        } else {
-            throw new IllegalStateException("Next not called or beyond end of data");
-        }
-    }
-
-
-    public boolean close() {
-        return true;
+public class ThreeFixedIteratorUnitTest extends TestCase {
+    public void testClassProperties() throws Exception {
+        checkImplementationOfInterfaceAndFinal(ClosableLocalIterator.class, ThreeFixedIterator.class);
+        checkConstructor(ThreeFixedIterator.class, PUBLIC, Long[].class, LongIndex.class, GraphHandler.class);
     }
 }

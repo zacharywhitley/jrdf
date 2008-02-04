@@ -83,10 +83,10 @@ public class URIReferenceResourceIterator extends ResourceIterator<URIReference>
         return (URIReference) resource.getUnderlyingNode();
     }
 
-    protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
+    protected long getNextNodeId(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
         final GraphHandler graphHandler) {
         while (iterator.hasNext()) {
-            final long id = iterator.next().getKey();
+            final Long id = iterator.next().getKey();
             final Node node = nodePool.getNodeById(id);
             if (URIReference.class.isAssignableFrom(node.getClass())) {
                 return id;

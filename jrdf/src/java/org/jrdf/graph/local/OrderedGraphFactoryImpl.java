@@ -71,7 +71,7 @@ import org.jrdf.graph.local.index.nodepool.NodePoolFactory;
 import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.IteratorFactory;
 import org.jrdf.graph.local.iterator.OrderedIteratorFactoryImpl;
-import org.jrdf.graph.local.mem.iterator.MemIteratorFactory;
+import org.jrdf.graph.local.iterator.LocalIteratorFactory;
 import org.jrdf.set.MemSortedSetFactory;
 
 /**
@@ -95,7 +95,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
         this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         this.graphHandlers = new GraphHandler[]{new GraphHandler012(newLongIndexes, nodePool),
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
-        IteratorFactory tmpIteratorFactory = new MemIteratorFactory(newLongIndexes, graphHandlers, nodePool);
+        IteratorFactory tmpIteratorFactory = new LocalIteratorFactory(newLongIndexes, graphHandlers, nodePool);
         this.iteratorFactory = new OrderedIteratorFactoryImpl(tmpIteratorFactory, localizer, newLongIndexes[0],
             graphHandlers[0], new MemSortedSetFactory());
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);

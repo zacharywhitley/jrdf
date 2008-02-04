@@ -1,7 +1,7 @@
 /*
  * $Header$
- * $Revision$
- * $Date$
+ * $Revision: 982 $
+ * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
  *
  * ====================================================================
  *
@@ -56,19 +56,17 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
 
-import junit.framework.TestCase;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
-import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
-import static java.lang.reflect.Modifier.PUBLIC;
+package org.jrdf.graph.local.iterator;
 
-public class ThreeFixedIteratorUnitTest extends TestCase {
-    public void testClassProperties() throws Exception {
-        checkImplementationOfInterfaceAndFinal(ClosableMemIterator.class, ThreeFixedIterator.class);
-        checkConstructor(ThreeFixedIterator.class, PUBLIC, Long[].class, LongIndex.class, GraphHandler.class);
-    }
+import org.jrdf.util.ClosableIterator;
+
+/**
+ * An iterator that allows you to determine if an iterator comes from the in memory graph.
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1806 $
+ */
+public interface ClosableLocalIterator<Triple> extends ClosableIterator<Triple> {
 }

@@ -56,60 +56,113 @@
  * information on JRDF, please see <http://jrdf.sourceforge.net/>.
  *
  */
-package org.jrdf.graph.local.mem.iterator;
 
-import org.jrdf.graph.PredicateNode;
+package org.jrdf.graph.local.iterator;
+
+import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.EmptyClosableIterator;
-import org.jrdf.graph.local.iterator.IteratorFactory;
-import org.jrdf.util.ClosableIterator;
+
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 /**
- * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
+ * An iterator that returns only a single triple, if any exists.
  *
+ * @author <a href="mailto:pgearon@users.sourceforge.net">Paul Gearon</a>
  * @author Andrew Newman
- * @version $Id$
+ * @version $Revision$
  */
-public final class MemIteratorFactory implements IteratorFactory {
-    private final LongIndex[] longIndexes;
-    private final GraphHandler[] graphHandlers;
-    private final NodePool nodePool;
+public final class ThreeFixedIterator implements ClosableLocalIterator<Triple> {
 
-    public MemIteratorFactory(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers, NodePool nodePool) {
-        this.longIndexes = longIndexes;
-        this.graphHandlers = graphHandlers;
-        this.nodePool = nodePool;
+    /**
+     * Fixed set of nodes.
+     */
+    private Long[] nodes;
+
+    /**
+     * Allows access to a particular part of the index.
+     */
+    private LongIndex longIndex;
+
+    /**
+     * Handles the removal of nodes.
+     */
+    private GraphHandler handler;
+
+    /**
+     * The triple to return on.
+     */
+    private Triple triple;
+
+    /**
+     * The triple to remove.
+     */
+    private Triple removeTriple;
+
+    /**
+     * Constructor.
+     */
+    public ThreeFixedIterator(Long[] newNodes, LongIndex newLongIndex, GraphHandler newHandler) {
+        nodes = newNodes;
+        longIndex = newLongIndex;
+        handler = newHandler;
+        createTriple();
     }
 
-    public ClosableIterator<Triple> newEmptyClosableIterator() {
-        return new EmptyClosableIterator();
+    private void createTriple() {
+        if (contains(nodes)) {
+            triple = handler.createTriple(nodes);
+        }
     }
 
-    public ClosableIterator<Triple> newGraphIterator() {
-        return new GraphIterator(graphHandlers[0]);
+    private boolean contains(Long[] longNodes) {
+        Map<Long, Set<Long>> subIndex = longIndex.getSubIndex(longNodes[0]);
+        if (subIndex != null) {
+            Set<Long> predicates = subIndex.get(longNodes[1]);
+            if (predicates.contains(longNodes[2])) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    // TODO (AN) Long indexes and graph handler move into one object? (next one too).
-    public ClosableIterator<Triple> newOneFixedIterator(Long fixedFirstNode, int index) {
-        return new OneFixedIterator(fixedFirstNode, graphHandlers[index]);
+
+    public boolean hasNext() {
+        return null != triple;
     }
 
-    public ClosableIterator<Triple> newTwoFixedIterator(Long fixedFirstNode, Long fixedSecondNode, int index) {
-        return new TwoFixedIterator(fixedFirstNode, fixedSecondNode, longIndexes[index], graphHandlers[index]);
+
+    public Triple next() throws NoSuchElementException {
+        if (null == triple) {
+            throw new NoSuchElementException();
+        }
+
+        // return the triple, clearing it first so next will fail on a subsequent call
+        removeTriple = triple;
+        triple = null;
+        return removeTriple;
     }
 
-    public ClosableIterator<Triple> newThreeFixedIterator(Long[] newNodes) {
-        return new ThreeFixedIterator(newNodes, longIndexes[0], graphHandlers[0]);
+
+    public void remove() {
+        if (null != removeTriple) {
+            try {
+                longIndex.remove(nodes);
+                handler.remove(nodes);
+                removeTriple = null;
+            } catch (GraphException ge) {
+                throw new IllegalStateException(ge.getMessage());
+            }
+        } else {
+            throw new IllegalStateException("Next not called or beyond end of data");
+        }
     }
 
-    public ClosableIterator<PredicateNode> newPredicateIterator() {
-        return new AnyResourcePredicateIterator(longIndexes[1], nodePool);
-    }
 
-    public ClosableIterator<PredicateNode> newPredicateIterator(Long resource) {
-        return new FixedResourcePredicateIterator(resource, longIndexes[0], longIndexes[1], nodePool);
+    public boolean close() {
+        return true;
     }
 }

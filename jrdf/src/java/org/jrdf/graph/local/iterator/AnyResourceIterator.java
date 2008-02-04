@@ -79,7 +79,7 @@ public class AnyResourceIterator extends ResourceIterator<Resource> {
         return getNextResource();
     }
 
-    protected long getNextNodeID(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
+    protected long getNextNodeId(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
         final GraphHandler graphHandler) {
         return iterator.next().getKey();
     }

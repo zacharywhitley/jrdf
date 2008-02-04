@@ -69,8 +69,8 @@ import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.local.mem.iterator.ObjectNodeIterator;
-import org.jrdf.graph.local.mem.iterator.SubjectNodeIterator;
+import org.jrdf.graph.local.iterator.ObjectNodeIterator;
+import org.jrdf.graph.local.iterator.SubjectNodeIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 

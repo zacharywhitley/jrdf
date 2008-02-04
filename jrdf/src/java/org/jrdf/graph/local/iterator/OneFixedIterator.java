@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.local.mem.iterator;
+package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
@@ -81,7 +81,7 @@ import java.util.Set;
  * @author Andrew Newman
  * @version $Revision$
  */
-public final class OneFixedIterator implements ClosableMemIterator<Triple> {
+public final class OneFixedIterator implements ClosableLocalIterator<Triple> {
 
     /**
      * The fixed item.

@@ -136,7 +136,7 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
     private Resource getNextOSPElement() throws GraphElementFactoryException {
         while (iterator201.hasNext()) {
             //Long index = iterator201.next().getKey();
-            final Long nodeId = getNextNodeID(iterator201, graphHandler201);
+            final Long nodeId = getNextNodeId(iterator201, graphHandler201);
 
             //check the SPO does not contain the given index and that we haven't reached the end of iterator
             if (nodeId != -1 && !longIndex012.contains(nodeId)) {
@@ -158,7 +158,7 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * @throws org.jrdf.graph.GraphElementFactoryException if the resource cannot be created.
      */
     private Resource getNextSPOElement() throws GraphElementFactoryException {
-        final Long index = getNextNodeID(iterator012, graphHandler012);
+        final Long index = getNextNodeId(iterator012, graphHandler012);
         if (index != -1) {
             final Node node = nodePool.getNodeById(index);
             return toResource(node);
@@ -209,6 +209,6 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      *
      * @return the next node identifier.
      */
-    protected abstract long getNextNodeID(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
+    protected abstract long getNextNodeId(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
         GraphHandler graphHandler);
 }
