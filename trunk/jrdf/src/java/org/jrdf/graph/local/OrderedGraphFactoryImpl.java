@@ -102,7 +102,7 @@ public class OrderedGraphFactoryImpl implements ReadWriteGraphFactory {
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph);
+        return new GraphImpl(longIndexes, nodePool, readWriteGraph);
     }
 
     public ReadWriteGraph getReadWriteGraph() {
