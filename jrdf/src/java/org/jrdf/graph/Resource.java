@@ -86,6 +86,16 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      */
     void addValue(PredicateNode predicate, ObjectNode object) throws GraphException;
 
+    void addValue(URI predicate, URI object) throws GraphException;
+
+    void addValue(URI predicate, String lexicalValue) throws GraphException;
+
+    void addValue(URI predicate, Object object) throws GraphException;
+
+    void addValue(URI predicate, String lexicalValue, String language) throws GraphException;
+
+    void addValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
+
     /**
      * Remove any other triples with this as the subject, the given predicate and any object and
      * add a new triple with this as the subject and the given predicate and object.  This many that multiple
@@ -97,67 +107,6 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      */
     void setValue(PredicateNode predicate, ObjectNode object) throws GraphException;
 
-    /**
-     * Remove the triple with this as the subject, the given predicate and object.
-     *
-     * @param predicate the existing predicate in the graph to remove.
-     * @param object the existing object in the graph to remove.
-     * @throws GraphException if the predicate or object does not exist in the graph.
-     */
-    void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException;
-
-    /**
-     * Remove all the triples with this as the subject and the given predicate.
-     *
-     * @param predicate the existing predicate in the graph.
-     * @throws GraphException if the predicate does not exist in the graph.
-     */
-    void removeValues(PredicateNode predicate) throws GraphException;
-
-    /**
-     * Remove the triple with this as the object, the given subject and predicate.
-     *
-     * @param subject the existing subject in the graph to remove.
-     * @param predicate the existing predicate in the graph to remove.
-     * @throws GraphException if the subject or predicate do not exist in the graph.
-     */
-    void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException;
-
-    /**
-     * With this as the subject and using the given predicate return all the objects.
-     *
-     * @param predicate the existing predicate in the graph to use to find the objects.
-     * @return all the objects in the graph with this resource as the subject and the given predicate.
-     * @throws GraphException if the subject or predicate do not exist in the graph.
-     */
-    ClosableIterator<ObjectNode> getObjects(PredicateNode predicate) throws GraphException;
-
-    /**
-     * With this as the object and using the given predicate return all the subjects.
-     *
-     * @param predicate the existing predicate in the graph to use to find the subjects.
-     * @return all the objects in the graph with this resource as the subject and the given predicate.
-     * @throws GraphException if the subject or predicate do not exist in the graph.
-     */
-    ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException;
-
-    /**
-     * Returns the node that the resource represents - either a BlankNode or a URIReference.
-     *
-     * @return the BlankNode or URIReference.
-     */
-    Node getUnderlyingNode();
-
-    void addValue(URI predicate, URI object) throws GraphException;
-
-    void addValue(URI predicate, String lexicalValue) throws GraphException;
-
-    void addValue(URI predicate, Object object) throws GraphException;
-
-    void addValue(URI predicate, String lexicalValue, String language) throws GraphException;
-
-    void addValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
-
     void setValue(URI predicate, URI object) throws GraphException;
 
     void setValue(URI predicate, String lexicalValue) throws GraphException;
@@ -167,6 +116,15 @@ public interface Resource extends URIReference, BlankNode, Serializable {
     void setValue(URI predicate, String lexicalValue, String language) throws GraphException;
 
     void setValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
+
+    /**
+     * Remove the triple with this as the subject, the given predicate and object.
+     *
+     * @param predicate the existing predicate in the graph to remove.
+     * @param object the existing object in the graph to remove.
+     * @throws GraphException if the predicate or object does not exist in the graph.
+     */
+    void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException;
 
     void removeValue(URI predicate, URI object) throws GraphException;
 
@@ -178,11 +136,53 @@ public interface Resource extends URIReference, BlankNode, Serializable {
 
     void removeValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
 
+    /**
+     * Remove all the triples with this as the subject and the given predicate.
+     *
+     * @param predicate the existing predicate in the graph.
+     * @throws GraphException if the predicate does not exist in the graph.
+     */
+    void removeValues(PredicateNode predicate) throws GraphException;
+
     void removeValues(URI predicate) throws GraphException;
+
+    /**
+     * Remove the triple with this as the object, the given subject and predicate.
+     *
+     * @param subject the existing subject in the graph to remove.
+     * @param predicate the existing predicate in the graph to remove.
+     * @throws GraphException if the subject or predicate do not exist in the graph.
+     */
+    void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException;
 
     void removeSubject(URI subject, URI predicate) throws GraphException;
 
+    /**
+     * With this as the subject and using the given predicate return all the objects.
+     *
+     * @param predicate the existing predicate in the graph to use to find the objects.
+     * @return all the objects in the graph with this resource as the subject and the given predicate.
+     * @throws GraphException if the subject or predicate do not exist in the graph.
+     */
+    ClosableIterator<ObjectNode> getObjects(PredicateNode predicate) throws GraphException;
+
     ClosableIterator<ObjectNode> getObjects(URI predicate) throws GraphException;
 
+    /**
+     * With this as the object and using the given predicate return all the subjects.
+     *
+     * @param predicate the existing predicate in the graph to use to find the subjects.
+     * @return all the objects in the graph with this resource as the subject and the given predicate.
+     * @throws GraphException if the subject or predicate do not exist in the graph.
+     */
+    ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException;
+
     ClosableIterator<SubjectNode> getSubjects(URI predicate) throws GraphException;
+
+    /**
+     * Returns the node that the resource represents - either a BlankNode or a URIReference.
+     *
+     * @return the BlankNode or URIReference.
+     */
+    Node getUnderlyingNode();
 }
