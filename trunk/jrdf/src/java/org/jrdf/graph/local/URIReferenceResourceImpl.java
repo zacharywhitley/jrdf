@@ -59,6 +59,7 @@
 
 package org.jrdf.graph.local;
 
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.TypedNodeVisitor;
@@ -76,8 +77,8 @@ public final class URIReferenceResourceImpl extends AbstractResource {
     private URIReferenceResourceImpl() {
     }
 
-    URIReferenceResourceImpl(URIReference newNode, ReadWriteGraph newReadWriteGraph) {
-        super(((LocalizedNode) newNode).getId(), newReadWriteGraph);
+    URIReferenceResourceImpl(Graph newGraph, URIReference newNode) {
+        super(newGraph, ((LocalizedNode) newNode));
         this.node = newNode;
     }
 

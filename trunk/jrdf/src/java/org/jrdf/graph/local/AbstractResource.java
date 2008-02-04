@@ -61,6 +61,7 @@ package org.jrdf.graph.local;
 
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
+import org.jrdf.graph.Graph;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -74,24 +75,24 @@ import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public abstract class AbstractResource implements Resource, LocalizedNode {
     private static final long serialVersionUID = 3641740111800858628L;
-    private ReadWriteGraph readWriteGraph;
-    private Long resource;
+    private Graph graph;
+    private LocalizedNode node;
 
     protected AbstractResource() {
     }
 
-    public AbstractResource(Long newResource, ReadWriteGraph newReadWriteGraph) {
-        checkNotNull(newResource, newReadWriteGraph);
-        this.resource = newResource;
-        this.readWriteGraph = newReadWriteGraph;
+    public AbstractResource(Graph newGraph, LocalizedNode newNode) {
+        checkNotNull(newGraph, newNode);
+        this.graph = newGraph;
+        this.node = newNode;
     }
 
     public Long getId() {
-        return resource;
+        return node.getId();
     }
 
     public void addValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        readWriteGraph.localizeAndAdd(this, predicate, object);
+        graph.add((SubjectNode) node, predicate, object);
     }
 
     public void setValue(PredicateNode predicate, ObjectNode object) throws GraphException {
@@ -100,27 +101,27 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     }
 
     public void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException {
-        readWriteGraph.localizeAndRemove(this, predicate, object);
+        graph.remove((SubjectNode) node, predicate, object);
     }
 
     public void removeValues(PredicateNode predicate) throws GraphException {
-        ClosableIterator<Triple> iterator = readWriteGraph.find(this, predicate, ANY_OBJECT_NODE);
-        readWriteGraph.removeIterator(iterator);
+        ClosableIterator<Triple> iterator = graph.find((SubjectNode) node, predicate, ANY_OBJECT_NODE);
+        graph.remove(iterator);
     }
 
     public void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException {
-        while (readWriteGraph.contains(subject, predicate, this)) {
-            readWriteGraph.localizeAndRemove(subject, predicate, this);
+        while (graph.contains(subject, predicate, this)) {
+            graph.remove(subject, predicate, this);
         }
     }
 
     public ClosableIterator<ObjectNode> getObjects(PredicateNode predicate) throws GraphException {
-        ClosableIterator<Triple> closableIterator = readWriteGraph.find(this, predicate, ANY_OBJECT_NODE);
+        ClosableIterator<Triple> closableIterator = graph.find((SubjectNode) node, predicate, ANY_OBJECT_NODE);
         return new ObjectNodeIterator(closableIterator);
     }
 
     public ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException {
-        ClosableIterator<Triple> closableIterator = readWriteGraph.find(ANY_SUBJECT_NODE, predicate, this);
+        ClosableIterator<Triple> closableIterator = graph.find(ANY_SUBJECT_NODE, predicate, (ObjectNode) node);
         return new SubjectNodeIterator(closableIterator);
     }
 }

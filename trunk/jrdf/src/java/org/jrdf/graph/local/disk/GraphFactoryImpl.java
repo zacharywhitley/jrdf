@@ -63,8 +63,6 @@ import org.jrdf.graph.local.GraphImpl;
 import org.jrdf.graph.local.ReadWriteGraph;
 import org.jrdf.graph.local.ReadWriteGraphFactory;
 import org.jrdf.graph.local.ReadWriteGraphImpl;
-import org.jrdf.graph.local.ResourceFactory;
-import org.jrdf.graph.local.ResourceFactoryImpl;
 import org.jrdf.graph.local.disk.iterator.DiskIteratorFactory;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
@@ -91,7 +89,6 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
     private IteratorFactory iteratorFactory;
     private NodePool nodePool;
     private ReadWriteGraph readWriteGraph;
-    private ResourceFactory resourceFactory;
     private Localizer localizer;
 
     public GraphFactoryImpl(LongIndex[] newLongIndexes, NodePoolFactory newNodePoolFactory, TripleBTree[] trees) {
@@ -103,11 +100,10 @@ public final class GraphFactoryImpl implements ReadWriteGraphFactory {
             new GraphHandler120(newLongIndexes, nodePool), new GraphHandler201(newLongIndexes, nodePool)};
         this.iteratorFactory = new DiskIteratorFactory(longIndexes, graphHandlers, nodePool, localizer, trees);
         this.readWriteGraph = new ReadWriteGraphImpl(longIndexes, nodePool, iteratorFactory);
-        this.resourceFactory = new ResourceFactoryImpl(localizer, readWriteGraph);
     }
 
     public Graph getGraph() {
-        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph, resourceFactory);
+        return new GraphImpl(longIndexes, nodePool, iteratorFactory, readWriteGraph);
     }
 
     public ReadWriteGraph getReadWriteGraph() {
