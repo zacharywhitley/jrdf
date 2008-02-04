@@ -62,6 +62,7 @@ package org.jrdf.graph;
 import org.jrdf.util.ClosableIterator;
 
 import java.io.Serializable;
+import java.net.URI;
 
 /**
  * A resource stands for either a Blank Node or a URI Reference.  This is a convienence interface designed to make it
@@ -146,4 +147,42 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      * @return the BlankNode or URIReference.
      */
     Node getUnderlyingNode();
+
+    void addValue(URI predicate, URI object) throws GraphException;
+
+    void addValue(URI predicate, String lexicalValue) throws GraphException;
+
+    void addValue(URI predicate, Object object) throws GraphException;
+
+    void addValue(URI predicate, String lexicalValue, String language) throws GraphException;
+
+    void addValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
+
+    void setValue(URI predicate, URI object) throws GraphException;
+
+    void setValue(URI predicate, String lexicalValue) throws GraphException;
+
+    void setValue(URI predicate, Object object) throws GraphException;
+
+    void setValue(URI predicate, String lexicalValue, String language) throws GraphException;
+
+    void setValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
+
+    void removeValue(URI predicate, URI object) throws GraphException;
+
+    void removeValue(URI predicate, String lexicalValue) throws GraphException;
+
+    void removeValue(URI predicate, Object object) throws GraphException;
+
+    void removeValue(URI predicate, String lexicalValue, String language) throws GraphException;
+
+    void removeValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
+
+    void removeValues(URI predicate) throws GraphException;
+
+    void removeSubject(URI subject, URI predicate) throws GraphException;
+
+    ClosableIterator<ObjectNode> getObjects(URI predicate) throws GraphException;
+
+    ClosableIterator<SubjectNode> getSubjects(URI predicate) throws GraphException;
 }

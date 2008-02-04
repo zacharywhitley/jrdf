@@ -62,6 +62,7 @@ package org.jrdf.graph.local;
 import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphElementFactory;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.ObjectNode;
 import org.jrdf.graph.PredicateNode;
@@ -73,10 +74,13 @@ import org.jrdf.graph.local.mem.iterator.SubjectNodeIterator;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
+import java.net.URI;
+
 public abstract class AbstractResource implements Resource, LocalizedNode {
     private static final long serialVersionUID = 3641740111800858628L;
     private Graph graph;
     private LocalizedNode node;
+    private GraphElementFactory elementFactory;
 
     protected AbstractResource() {
     }
@@ -84,6 +88,7 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
     public AbstractResource(Graph newGraph, LocalizedNode newNode) {
         checkNotNull(newGraph, newNode);
         this.graph = newGraph;
+        this.elementFactory = graph.getElementFactory();
         this.node = newNode;
     }
 
@@ -95,18 +100,87 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
         graph.add((SubjectNode) node, predicate, object);
     }
 
+    public void addValue(URI predicate, URI object) throws GraphException {
+        addValue(elementFactory.createURIReference(predicate), elementFactory.createURIReference(object));
+    }
+
+    public void addValue(URI predicate, String lexicalValue) throws GraphException {
+        addValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue));
+    }
+
+    public void addValue(URI predicate, Object object) throws GraphException {
+        addValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(object));
+    }
+
+    public void addValue(URI predicate, String lexicalValue, String language) throws GraphException {
+        addValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue, language));
+    }
+
+    public void addValue(URI predicate, String lexicalValue, URI dataType) throws GraphException {
+        addValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue, dataType));
+    }
+
     public void setValue(PredicateNode predicate, ObjectNode object) throws GraphException {
         removeValues(predicate);
         addValue(predicate, object);
+    }
+
+    public void setValue(URI predicate, URI object) throws GraphException {
+        removeValues(predicate);
+        addValue(predicate, object);
+    }
+
+    public void setValue(URI predicate, String lexicalValue) throws GraphException {
+        removeValues(predicate);
+        addValue(predicate, lexicalValue);
+    }
+
+    public void setValue(URI predicate, Object object) throws GraphException {
+        removeValues(predicate);
+        addValue(predicate, object);
+    }
+
+    public void setValue(URI predicate, String lexicalValue, String language) throws GraphException {
+        removeValues(predicate);
+        addValue(predicate, lexicalValue, language);
+    }
+
+    public void setValue(URI predicate, String lexicalValue, URI dataType) throws GraphException {
+        removeValues(predicate);
+        addValue(predicate, lexicalValue, dataType);
     }
 
     public void removeValue(PredicateNode predicate, ObjectNode object) throws GraphException {
         graph.remove((SubjectNode) node, predicate, object);
     }
 
+    public void removeValue(URI predicate, URI object) throws GraphException {
+        removeValue(elementFactory.createURIReference(predicate), elementFactory.createURIReference(object));
+    }
+
+    public void removeValue(URI predicate, String lexicalValue) throws GraphException {
+        removeValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue));
+    }
+
+    public void removeValue(URI predicate, Object object) throws GraphException {
+        removeValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(object));
+    }
+
+    public void removeValue(URI predicate, String lexicalValue, String language) throws GraphException {
+        removeValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue, language));
+    }
+
+    public void removeValue(URI predicate, String lexicalValue, URI dataType) throws GraphException {
+        removeValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue, dataType));
+    }
+
     public void removeValues(PredicateNode predicate) throws GraphException {
         ClosableIterator<Triple> iterator = graph.find((SubjectNode) node, predicate, ANY_OBJECT_NODE);
         graph.remove(iterator);
+    }
+
+    public void removeValues(URI predicate) throws GraphException {
+        removeValues(elementFactory.createURIReference(predicate));
     }
 
     public void removeSubject(SubjectNode subject, PredicateNode predicate) throws GraphException {
@@ -115,13 +189,25 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
         }
     }
 
+    public void removeSubject(URI subject, URI predicate) throws GraphException {
+        removeSubject(elementFactory.createURIReference(subject), elementFactory.createURIReference(predicate));
+    }
+
     public ClosableIterator<ObjectNode> getObjects(PredicateNode predicate) throws GraphException {
         ClosableIterator<Triple> closableIterator = graph.find((SubjectNode) node, predicate, ANY_OBJECT_NODE);
         return new ObjectNodeIterator(closableIterator);
     }
 
+    public ClosableIterator<ObjectNode> getObjects(URI predicate) throws GraphException {
+        return getObjects(elementFactory.createURIReference(predicate));
+    }
+
     public ClosableIterator<SubjectNode> getSubjects(PredicateNode predicate) throws GraphException {
         ClosableIterator<Triple> closableIterator = graph.find(ANY_SUBJECT_NODE, predicate, (ObjectNode) node);
         return new SubjectNodeIterator(closableIterator);
+    }
+
+    public ClosableIterator<SubjectNode> getSubjects(URI predicate) throws GraphException {
+        return getSubjects(elementFactory.createURIReference(predicate));
     }
 }
