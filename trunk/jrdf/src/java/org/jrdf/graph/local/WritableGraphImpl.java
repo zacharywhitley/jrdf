@@ -87,7 +87,7 @@ public class WritableGraphImpl implements WritableGraph {
     }
 
     public void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
-            throws GraphException {
+        throws GraphException {
         // Get local node values also tests that it's a valid subject, predicate and object.
         Long[] values = localizer.localize(subject, predicate, object);
         longIndexes[0].remove(values[0], values[1], values[2]);
