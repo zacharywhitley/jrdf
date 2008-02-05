@@ -59,9 +59,6 @@
 
 package org.jrdf.graph.local;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import junit.textui.TestRunner;
 import org.jrdf.TestJRDFFactory;
 import org.jrdf.graph.AbstractTripleFactoryUnitTest;
 import org.jrdf.graph.Alternative;
@@ -90,45 +87,12 @@ import org.jrdf.vocabulary.RDF;
 public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
 
     /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    public TripleFactoryUnitTest(String name) {
-        super(name);
-    }
-
-    /**
      * Create a graph implementation.
      *
      * @return A new GraphImplUnitTest.
      */
     public Graph newGraph() throws Exception {
         return TestJRDFFactory.getFactory().getNewGraph();
-    }
-
-    /**
-     * Hook for test runner to obtain a test suite from.
-     *
-     * @return The test suite
-     */
-    public static Test suite() {
-        TestSuite suite = new TestSuite(TripleFactoryUnitTest.class);
-        suite.addTest(new TripleFactoryUnitTest("testReification"));
-        suite.addTest(new TripleFactoryUnitTest("testCollections"));
-        suite.addTest(new TripleFactoryUnitTest("testAlternative"));
-        suite.addTest(new TripleFactoryUnitTest("testBag"));
-        suite.addTest(new TripleFactoryUnitTest("testSequence"));
-        return suite;
-    }
-
-    /**
-     * Default test runner.
-     *
-     * @param args The command line arguments
-     */
-    public static void main(String[] args) throws Exception {
-        TestRunner.run(suite());
     }
 
     @Override
@@ -184,44 +148,36 @@ public class TripleFactoryUnitTest extends AbstractTripleFactoryUnitTest {
     @Override
     public Collection createCollection(ObjectNode[] objects) {
         Collection collection = new CollectionImpl();
-
         for (ObjectNode object : objects) {
             collection.add(object);
         }
-
         return collection;
     }
 
     @Override
     public Alternative createAlternative(ObjectNode[] objects) {
         Alternative alternative = new AlternativeImpl();
-
         for (ObjectNode object : objects) {
             alternative.add(object);
         }
-
         return alternative;
     }
 
     @Override
     public Bag createBag(ObjectNode[] objects) {
         Bag bag = new BagImpl();
-
         for (ObjectNode object : objects) {
             bag.add(object);
         }
-
         return bag;
     }
 
     @Override
     public Sequence createSequence(ObjectNode[] objects) {
         Sequence sequence = new SequenceImpl();
-
         for (ObjectNode object : objects) {
             sequence.add(object);
         }
-
         return sequence;
     }
 }
