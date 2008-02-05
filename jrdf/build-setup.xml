@@ -4,8 +4,8 @@
     <property name="project.longname" value="Java RDF API"/>
     <property name="project.shortname" value="jrdf"/>
     <property name="project.version.major" value="0"/>
-    <property name="project.version.minor" value="5.4"/>
-    <property name="gui.version" value="0.5.4"/>
+    <property name="project.version.minor" value="5.5"/>
+    <property name="gui.version" value="0.5.5"/>
     <property name="version-status" value=""/>
     <property name="project.version.full" value="${project.version.major}.${project.version.minor}${version-status}"/>
     <property name="project.jar" value="${project.shortname}-${project.version.full}.jar"/>
