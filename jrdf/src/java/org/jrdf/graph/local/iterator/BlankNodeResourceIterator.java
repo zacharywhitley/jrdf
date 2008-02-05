@@ -62,17 +62,17 @@ package org.jrdf.graph.local.iterator;
 import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.local.ResourceFactory;
+import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
-import org.jrdf.util.param.ParameterUtil;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 public class BlankNodeResourceIterator implements ClosableIterator<Resource> {
     private final ClosableIterator<BlankNode> blankNodeIterator;
     private final ResourceFactory resourceFactory;
 
-    public BlankNodeResourceIterator(ClosableIterator<BlankNode> newBlankNodeIterator,
-        ResourceFactory newResourceFactory) {
-        ParameterUtil.checkNotNull(newBlankNodeIterator, newResourceFactory);
-        this.blankNodeIterator = newBlankNodeIterator;
+    public BlankNodeResourceIterator(ResourceFactory newResourceFactory, NodePool newNodePool) {
+        checkNotNull(newResourceFactory, newNodePool);
+        this.blankNodeIterator = newNodePool.getBlankNodeIterator();
         this.resourceFactory = newResourceFactory;
     }
 

@@ -60,7 +60,6 @@
 package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.BlankNode;
-import org.jrdf.graph.GraphElementFactoryException;
 import org.jrdf.graph.Literal;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
@@ -111,18 +110,14 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
 
     private Resource getNextNode() {
         Resource resource = null;
-        try {
-            if (iterator201.hasNext()) {
-                resource = getNextOSPElement();
-                if (resource == null) {
-                    return getNextNode();
-                }
+        if (iterator201.hasNext()) {
+            resource = getNextOSPElement();
+            if (resource == null) {
+                return getNextNode();
             }
-            if (iterator012.hasNext()) {
-                resource = getNextSPOElement();
-            }
-        } catch (GraphElementFactoryException e) {
-            throw new NoSuchElementException();
+        }
+        if (iterator012.hasNext()) {
+            resource = getNextSPOElement();
         }
         return resource;
     }
@@ -131,9 +126,8 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * Get the next object element from the OSP index.
      *
      * @return next object in the osp index.
-     * @throws org.jrdf.graph.GraphElementFactoryException if the resource cannot be created.
      */
-    private Resource getNextOSPElement() throws GraphElementFactoryException {
+    private Resource getNextOSPElement() {
         while (iterator201.hasNext()) {
             //Long index = iterator201.next().getKey();
             final Long nodeId = getNextNodeId(iterator201, graphHandler201);
@@ -155,9 +149,8 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * Get the next subject element in the SPO index.
      *
      * @return next element in the SPO index.
-     * @throws org.jrdf.graph.GraphElementFactoryException if the resource cannot be created.
      */
-    private Resource getNextSPOElement() throws GraphElementFactoryException {
+    private Resource getNextSPOElement() {
         final Long index = getNextNodeId(iterator012, graphHandler012);
         if (index != -1) {
             final Node node = nodePool.getNodeById(index);
@@ -175,18 +168,17 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      *
      * @param node to be converted.
      * @return passed node as a resource.
-     * @throws GraphElementFactoryException if the resource is failed to be created.
      */
-    private Resource toResource(final Node node) throws GraphElementFactoryException {
-        final Resource resource = null;
+    private Resource toResource(final Node node) {
         if (node instanceof BlankNode) {
             return resourceFactory.createResource((BlankNode) node);
         } else if (node instanceof URIReference) {
             return resourceFactory.createResource((URIReference) node);
         } else if (node instanceof Literal) {
             throw new UnsupportedOperationException("Cannot convert Literals to Resources");
+        } else {
+            return null;
         }
-        return resource;
     }
 
     protected Resource getNextResource() {

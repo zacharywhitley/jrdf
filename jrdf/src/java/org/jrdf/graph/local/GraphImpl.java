@@ -248,7 +248,7 @@ public class GraphImpl implements Graph {
         if (type.equals(URI_REFERENCE_TYPE)) {
             return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
         } else if (type.equals(BNODE_TYPE)) {
-            return new BlankNodeResourceIterator(nodePool.getBlankNodeIterator(), resourceFactory);
+            return new BlankNodeResourceIterator(resourceFactory, nodePool);
         } else {
             throw new UnsupportedOperationException("Cannot find with node type: " + type);
         }
