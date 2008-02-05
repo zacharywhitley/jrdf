@@ -207,7 +207,7 @@ public class GraphImpl implements Graph {
         } else if (type.equals(BNODE_TYPE)) {
             return resourceIteratorFactory.newBlankNodeResourceIterator();
         } else {
-            throw new UnsupportedOperationException("Cannot find with node type: " + type);
+            throw new UnsupportedOperationException("Cannot find resource with node type: " + type);
         }
     }
 
