@@ -87,7 +87,6 @@ public class RunQueryCommand extends ApplicationWindowAwareCommand {
     }
 
     public void setQueryPanelView(QueryPanelView queryPanelView) {
-        System.err.println("Got:L " + queryPanelView);
         this.queryPanelView = queryPanelView;
     }
 
