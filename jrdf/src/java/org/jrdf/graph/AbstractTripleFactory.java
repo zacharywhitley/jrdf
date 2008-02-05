@@ -98,6 +98,10 @@ public abstract class AbstractTripleFactory implements TripleFactory {
         return addTriple(subject, predicate, elementFactory.createURIReference(object));
     }
 
+    public Triple addTriple(URI subject, URI predicate, Resource object) throws GraphElementFactoryException {
+        return addTriple(subject, predicate, (ObjectNode) object.getUnderlyingNode());
+    }
+
     public Triple addTriple(URI subject, URI predicate, String object) throws GraphElementFactoryException {
         return addTriple(subject, predicate, elementFactory.createLiteral(object));
     }

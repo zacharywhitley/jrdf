@@ -98,6 +98,17 @@ public interface TripleFactory {
      *
      * @param subject The subject of the statement.
      * @param predicate The predicate of the statement.
+     * @param object The object of the statement.
+     * @return the newly created triple object.
+     * @throws GraphElementFactoryException if it fails to create the given subject, predicate and object.
+     */
+    Triple addTriple(URI subject, URI predicate, Resource object) throws GraphElementFactoryException;
+
+    /**
+     * Creates and adds a new triple to the graph.
+     *
+     * @param subject The subject of the statement.
+     * @param predicate The predicate of the statement.
      * @param object The native value of the object of the statement.
      * @return the newly created triple object.
      * @throws GraphElementFactoryException if it fails to create the given subject, predicate and object.  The object

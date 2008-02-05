@@ -78,24 +78,71 @@ public interface Resource extends URIReference, BlankNode, Serializable {
     boolean isURIReference();
 
     /**
-     * Add a new triple with this as the subject, the given predicate and object.
+     * Add a new triple with this as the subject, with the given predicate and object.
      *
-     * @param predicate the existing predicate in the graph to create the triple with.
-     * @param object the existing object in the graph to create the triple with.
+     * @param predicate the existing predicate in the graph to use to create the triple.
+     * @param object the existing object in the graph to use to create the triple.
      * @throws GraphException if the predicate or object do not exist in the graph.
      */
     void addValue(PredicateNode predicate, ObjectNode object) throws GraphException;
 
+    /**
+     * Add a new triple with this as the subject, with the given predicate and object.
+     *
+     * @param predicate a new or existing predicate to use to create the triple.
+     * @param object a new or existing object to use to create the triple.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void addValue(URI predicate, URI object) throws GraphException;
 
+    /**
+     * Add a new triple with this as the subject, with the given predicate and object.  The last parameter is
+     * equivalent to calling {@link org.jrdf.graph.GraphElementFactory#createLiteral(String)}
+     *
+     * @param predicate a new or existing predicate to use to create the triple.
+     * @param lexicalValue a new or existing object to use to create the triple.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void addValue(URI predicate, String lexicalValue) throws GraphException;
 
+    /**
+     * Add a new triple with this as the subject, with the given predicate and object.
+     *
+     * @param predicate a new or existing predicate to use to create the triple.
+     * @param object an existing resource from the graph used to create the triple.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes) or the
+     *   Resource was not from this Graph.
+     */
     void addValue(URI predicate, Resource object) throws GraphException;
 
+    /**
+     * Add a new triple with this as the subject, with the given predicate and object.  The last parameter is
+     * equivalent to calling {@link org.jrdf.graph.GraphElementFactory#createLiteral(Object)}
+     *
+     * @param predicate a new or existing predicate to use to create the triple.
+     * @param object a new or existing object to use to create the triple.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void addValue(URI predicate, Object object) throws GraphException;
 
+    /**
+     * Add a new triple with this as the subject, with the given predicate and object.  The last two parameters are
+     * equivalent to calling {@link org.jrdf.graph.GraphElementFactory#createLiteral(String, String)}
+     *
+     * @param predicate a new or existing predicate to use to create the triple.
+     * @param lexicalValue a new or existing object to use to create the triple.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void addValue(URI predicate, String lexicalValue, String language) throws GraphException;
 
+    /**
+     * Add a new triple with this as the subject, with the given predicate and object.  The last parameter is
+     * equivalent to calling {@link org.jrdf.graph.GraphElementFactory#createLiteral(String, URI)}
+     *
+     * @param predicate a new or existing predicate to use to create the triple.
+     * @param lexicalValue a new or existing object to use to create the triple.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void addValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
 
     /**
