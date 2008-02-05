@@ -152,6 +152,13 @@ public abstract class AbstractResourceUnitTest extends TestCase {
             readWriteGraph.getNumberOfTriples() == 4);
     }
 
+    public void testAddValueWithResource() throws Exception {
+        blankNode1.addValue(URI.create("urn:foo"), blankNode2);
+        Resource resource = elementFactory.createResource(URI.create("urn:bar"));
+        blankNode1.addValue(URI.create("urn:foo"), resource);
+        resource.addValue(URI.create("urn:foo"), resource);
+    }
+
     public void testBlankNodeOverrideSetValue() throws Exception {
         checkSetValueOverride(blankNode1, predicate1, new ObjectNode[]{object1, object2, object3});
     }
