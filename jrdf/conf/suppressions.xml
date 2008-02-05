@@ -8,7 +8,6 @@
     <suppress checks="ClassDataAbstractionCoupling" files="DatatypeFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="DiskIteratorFactory"/>
     <suppress checks="ClassDataAbstractionCoupling" files="GraphFactoryImpl"/>
-    <suppress checks="ClassDataAbstractionCoupling" files="GraphImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="NTriplesRDFInputFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="OrderedGraphFactoryImpl"/>
     <suppress checks="ClassDataAbstractionCoupling" files="ParserFactoryImpl"/>
