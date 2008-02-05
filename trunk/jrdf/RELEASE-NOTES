@@ -1,3 +1,12 @@
+JRDF Release 0.5.4
+==================
+* Added easy to use methods on Resource to allow properties to be added/
+ removed more easily (Bug 1852616).
+* Fixed ConcurrentModificationException when using Sesame BTree (Bug 1879194).
+* Removed serialisation of Graph, added better exception when foreign bnode
+ is added, and moved classes from org.jrdf.local.mem if they were no longer
+ memory bound (Bug 1886638, 1884141, 1883251).
+
 JRDF Release 0.5.3
 ==================
 * Consolidated find methods for node types.  Allow findNodes(NodeType) and
@@ -8,7 +17,8 @@ JRDF Release 0.5.3
  (SortedDiskJRDFFactory) (Bug 1877861).
 * Allows URIReferences and Literals to be added across one graph to another
  without using GraphElementFactory (Bug 1874230).
-* TripleImpl moved to top level graph package as it is a global and local class (Bug 1868957).
+* TripleImpl moved to top level graph package as it is a global and local
+ class (Bug 1868957).
 * TripleFactory lacked an addTriple(URI, URI, Object) (Bug 1866496).
 * Wrong types returned by methods (Bug 1866490 and 1866488).
 * TripleImpl shouldn't allow null values (Bug 1852071).
