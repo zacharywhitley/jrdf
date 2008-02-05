@@ -61,35 +61,12 @@ package org.jrdf.graph.local.iterator;
 
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.ResourceFactory;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.util.ClosableIterator;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+public interface ResourceIteratorFactory {
+    ClosableIterator<? extends Node> newAnyResourceIterator();
 
-public class URIReferenceResourceIterator extends ResourceIterator<URIReference> {
+    ClosableIterator<? super Resource> newURIReferenceResourceIterator();
 
-    public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
-        final NodePool newNodePool) {
-        super(newLongIndexes, newResourceFactory, newNodePool);
-    }
-
-    public URIReference next() {
-        Resource resource = getNextResource();
-        return (URIReference) resource.getUnderlyingNode();
-    }
-
-    protected long getNextNodeId(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator) {
-        while (iterator.hasNext()) {
-            final Long id = iterator.next().getKey();
-            final Node node = nodePool.getNodeById(id);
-            if (URIReference.class.isAssignableFrom(node.getClass())) {
-                return id;
-            }
-        }
-        return -1;
-    }
+    ClosableIterator<? super Resource> newBlankNodeResourceIterator();
 }

@@ -72,15 +72,10 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.SubjectNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleFactory;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.AnyResourceIterator;
-import org.jrdf.graph.local.iterator.BlankNodeResourceIterator;
-import org.jrdf.graph.local.iterator.URIReferenceResourceIterator;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactory;
+import org.jrdf.graph.local.iterator.ResourceIteratorFactoryImpl;
 import static org.jrdf.query.relation.type.BlankNodeType.BNODE_TYPE;
 import org.jrdf.query.relation.type.NodeType;
 import static org.jrdf.query.relation.type.PredicateNodeType.PREDICATE_TYPE;
@@ -89,11 +84,8 @@ import static org.jrdf.query.relation.type.URIReferenceNodeType.URI_REFERENCE_TY
 import org.jrdf.query.relation.type.ValueNodeType;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
-import org.jrdf.writer.BlankNodeRegistry;
-import org.jrdf.writer.RdfNamespaceMap;
-import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
-import org.jrdf.writer.mem.RdfNamespaceMapImpl;
-import org.jrdf.writer.rdfxml.RdfXmlWriter;
+import org.jrdf.writer.RdfWriter;
+import org.jrdf.writer.rdfxml.MemRdfXmlWriter;
 
 import java.io.StringWriter;
 import static java.util.Arrays.asList;
@@ -115,14 +107,6 @@ public class GraphImpl implements Graph {
     private static final String CONTAIN_CANT_USE_NULLS = "Cannot use null values for contains";
     private static final String FIND_CANT_USE_NULLS = "Cannot use null values for finds";
 
-    /**
-     * Allow newer compiled version of the stub to operate when changes
-     * have not occurred with the class.
-     * NOTE : update this serialVersionUID when a method or a public member is
-     * deleted.
-     */
-    private static final long serialVersionUID = -3066836734480153804L;
-
     // indexes are mapped as:
     // s -> {p -> {set of o}}
     // This is defined in the private add() method
@@ -138,24 +122,9 @@ public class GraphImpl implements Graph {
     private GraphElementFactory elementFactory;
 
     /**
-     * Resource factory.
-     */
-    private ResourceFactory resourceFactory;
-
-    /**
      * The node pool.
      */
     private NodePool nodePool;
-
-    /**
-     * Triple Element Factory.  This caches the element factory.
-     */
-    private TripleFactory tripleFactory;
-
-    /**
-     * Graph Handler container for all 3 graph handlers.
-     */
-    private GraphHandler[] handlers;
 
     /**
      * Handle changes to the graph's underlying node pool and indexes.
@@ -163,14 +132,14 @@ public class GraphImpl implements Graph {
     private ReadWriteGraph readWriteGraph;
 
     /**
-     * Registry used for the toString method.
+     * Triple Element Factory.  This caches the element factory.
      */
-    private BlankNodeRegistry bNodeRegistry = new MemBlankNodeRegistryImpl();
+    private TripleFactory tripleFactory;
 
     /**
-     * Namespace map used for toString method.
+     * Creates resource iterators.
      */
-    private RdfNamespaceMap nameSpace = new RdfNamespaceMapImpl();
+    private ResourceIteratorFactory resourceIteratorFactory;
 
     /**
      * Default constructor.
@@ -179,20 +148,10 @@ public class GraphImpl implements Graph {
         this.indexes = longIndexes;
         this.nodePool = newNodePool;
         this.readWriteGraph = newWritableGraph;
-        init();
-    }
-
-    /**
-     * Initialization method used by the constructor and the deserializer.
-     */
-    private void init() {
-        GraphHandler graphHandler012 = new GraphHandler012(indexes, nodePool);
-        GraphHandler graphHandler120 = new GraphHandler120(indexes, nodePool);
-        GraphHandler graphHandler201 = new GraphHandler201(indexes, nodePool);
-        handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
-        resourceFactory = new ResourceFactoryImpl(this);
+        ResourceFactory resourceFactory = new ResourceFactoryImpl(this);
         elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
         tripleFactory = new TripleFactoryImpl(this, elementFactory);
+        resourceIteratorFactory = new ResourceIteratorFactoryImpl(indexes, resourceFactory, nodePool);
     }
 
     public boolean contains(Triple triple) throws GraphException {
@@ -228,8 +187,7 @@ public class GraphImpl implements Graph {
         } else if (type.equals(URI_REFERENCE_TYPE)) {
             result = nodePool.getURIReferenceIterator();
         } else if (type.equals(RESOURCE_TYPE)) {
-            // TODO AN - Change this to be off of readWriteGraph if possible.
-            result = new AnyResourceIterator(indexes, handlers, resourceFactory, nodePool);
+            result = resourceIteratorFactory.newAnyResourceIterator();
         } else if (type.equals(PREDICATE_TYPE)) {
             result = readWriteGraph.findUniquePredicates();
         } else {
@@ -244,11 +202,10 @@ public class GraphImpl implements Graph {
     }
 
     public ClosableIterator<? super Resource> findResources(ValueNodeType type) {
-        // TODO AN - Change this to be off of readWriteGraph if possible.
         if (type.equals(URI_REFERENCE_TYPE)) {
-            return new URIReferenceResourceIterator(indexes, handlers, resourceFactory, nodePool);
+            return resourceIteratorFactory.newURIReferenceResourceIterator();
         } else if (type.equals(BNODE_TYPE)) {
-            return new BlankNodeResourceIterator(resourceFactory, nodePool);
+            return resourceIteratorFactory.newBlankNodeResourceIterator();
         } else {
             throw new UnsupportedOperationException("Cannot find with node type: " + type);
         }
@@ -334,8 +291,9 @@ public class GraphImpl implements Graph {
         }
     }
 
+    @Override
     public String toString() {
-        RdfXmlWriter writer = new RdfXmlWriter(bNodeRegistry, nameSpace);
+        RdfWriter writer = new MemRdfXmlWriter();
         StringWriter sw = new StringWriter();
         try {
             writer.write(this, sw);

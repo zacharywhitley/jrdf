@@ -57,39 +57,34 @@
  *
  */
 
-package org.jrdf.graph.local.iterator;
+package org.jrdf.writer.rdfxml;
 
-import org.jrdf.graph.Node;
-import org.jrdf.graph.Resource;
-import org.jrdf.graph.URIReference;
-import org.jrdf.graph.local.ResourceFactory;
-import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
+import org.jrdf.writer.RdfWriter;
+import org.jrdf.writer.WriteException;
+import org.jrdf.writer.mem.MemBlankNodeRegistryImpl;
+import org.jrdf.writer.mem.RdfNamespaceMapImpl;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
 
-public class URIReferenceResourceIterator extends ResourceIterator<URIReference> {
+public class MemRdfXmlWriter implements RdfWriter {
+    private RdfXmlWriter rdfXmlWriter;
 
-    public URIReferenceResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
-        final NodePool newNodePool) {
-        super(newLongIndexes, newResourceFactory, newNodePool);
+    public MemRdfXmlWriter() {
+        rdfXmlWriter = new RdfXmlWriter(new MemBlankNodeRegistryImpl(), new RdfNamespaceMapImpl());
     }
 
-    public URIReference next() {
-        Resource resource = getNextResource();
-        return (URIReference) resource.getUnderlyingNode();
+    public void write(Graph graph, OutputStream stream) throws WriteException, GraphException, IOException,
+        XMLStreamException {
+        rdfXmlWriter.write(graph, stream);
     }
 
-    protected long getNextNodeId(final Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator) {
-        while (iterator.hasNext()) {
-            final Long id = iterator.next().getKey();
-            final Node node = nodePool.getNodeById(id);
-            if (URIReference.class.isAssignableFrom(node.getClass())) {
-                return id;
-            }
-        }
-        return -1;
+    public void write(Graph graph, Writer writer) throws WriteException, GraphException, IOException,
+        XMLStreamException {
+        rdfXmlWriter.write(graph, writer);
     }
 }

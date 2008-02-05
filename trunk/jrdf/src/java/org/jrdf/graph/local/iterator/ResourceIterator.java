@@ -65,7 +65,6 @@ import org.jrdf.graph.Node;
 import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.ResourceFactory;
-import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
@@ -76,25 +75,21 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-abstract class ResourceIterator<E> implements ClosableIterator<E> {
+public abstract class ResourceIterator<E> implements ClosableIterator<E> {
     protected final LongIndex longIndex012;
-    protected final GraphHandler graphHandler012;
     protected final ResourceFactory resourceFactory;
-    protected final GraphHandler graphHandler201;
     protected Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator012;    //spo iterator
     protected Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator201;    //osp iterator
     protected Resource nextResource;
     protected boolean firstTime = true;
     protected NodePool nodePool;
 
-    public ResourceIterator(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
-        final ResourceFactory newResourceFactory, final NodePool newNodePool) {
-        checkNotNull(newLongIndexes, newGraphHandlers, newResourceFactory, newNodePool);
-        graphHandler201 = newGraphHandlers[2];
+    public ResourceIterator(final LongIndex[] newLongIndexes, final ResourceFactory newResourceFactory,
+        final NodePool newNodePool) {
+        checkNotNull(newLongIndexes, newResourceFactory, newNodePool);
         resourceFactory = newResourceFactory;
         longIndex012 = newLongIndexes[0];
         iterator201 = newLongIndexes[2].iterator();
-        graphHandler012 = newGraphHandlers[0];
         iterator012 = newLongIndexes[0].iterator();
         nodePool = newNodePool;
         nextResource = getNextNode();
@@ -130,7 +125,7 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
     private Resource getNextOSPElement() {
         while (iterator201.hasNext()) {
             //Long index = iterator201.next().getKey();
-            final Long nodeId = getNextNodeId(iterator201, graphHandler201);
+            final Long nodeId = getNextNodeId(iterator201);
 
             //check the SPO does not contain the given index and that we haven't reached the end of iterator
             if (nodeId != -1 && !longIndex012.contains(nodeId)) {
@@ -151,7 +146,7 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * @return next element in the SPO index.
      */
     private Resource getNextSPOElement() {
-        final Long index = getNextNodeId(iterator012, graphHandler012);
+        final Long index = getNextNodeId(iterator012);
         if (index != -1) {
             final Node node = nodePool.getNodeById(index);
             return toResource(node);
@@ -197,10 +192,7 @@ abstract class ResourceIterator<E> implements ClosableIterator<E> {
      * Provides a customizable way in which to filter out resource nodes based on type.
      *
      * @param iterator iterators over the index.
-     * @param graphHandler used to create the nodes from the iterator.
-     *
      * @return the next node identifier.
      */
-    protected abstract long getNextNodeId(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator,
-        GraphHandler graphHandler);
+    protected abstract long getNextNodeId(Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator);
 }

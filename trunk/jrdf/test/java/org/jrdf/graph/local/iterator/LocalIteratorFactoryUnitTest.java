@@ -62,13 +62,12 @@ import junit.framework.TestCase;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.iterator.IteratorFactory;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkConstructor;
 import static org.jrdf.util.test.ClassPropertiesTestUtil.checkImplementationOfInterfaceAndFinal;
 
 import java.lang.reflect.Modifier;
 
-public class MemIteratorFactoryUnitTest extends TestCase {
+public class LocalIteratorFactoryUnitTest extends TestCase {
 
     public void testClassProperties() throws Exception {
         checkImplementationOfInterfaceAndFinal(IteratorFactory.class, LocalIteratorFactory.class);
