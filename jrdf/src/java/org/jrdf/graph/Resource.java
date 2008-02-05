@@ -90,6 +90,8 @@ public interface Resource extends URIReference, BlankNode, Serializable {
 
     void addValue(URI predicate, String lexicalValue) throws GraphException;
 
+    void addValue(URI predicate, Resource object) throws GraphException;
+
     void addValue(URI predicate, Object object) throws GraphException;
 
     void addValue(URI predicate, String lexicalValue, String language) throws GraphException;
@@ -111,6 +113,8 @@ public interface Resource extends URIReference, BlankNode, Serializable {
 
     void setValue(URI predicate, String lexicalValue) throws GraphException;
 
+    void setValue(URI predicate, Resource object) throws GraphException;
+
     void setValue(URI predicate, Object object) throws GraphException;
 
     void setValue(URI predicate, String lexicalValue, String language) throws GraphException;
@@ -129,6 +133,8 @@ public interface Resource extends URIReference, BlankNode, Serializable {
     void removeValue(URI predicate, URI object) throws GraphException;
 
     void removeValue(URI predicate, String lexicalValue) throws GraphException;
+
+    void removeValue(URI predicate, Resource object) throws GraphException;
 
     void removeValue(URI predicate, Object object) throws GraphException;
 

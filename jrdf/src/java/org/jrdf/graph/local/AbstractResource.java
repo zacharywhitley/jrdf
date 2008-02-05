@@ -108,6 +108,10 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
         addValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue));
     }
 
+    public void addValue(URI predicate, Resource object) throws GraphException {
+        addValue(elementFactory.createURIReference(predicate), (ObjectNode) object.getUnderlyingNode());
+    }
+
     public void addValue(URI predicate, Object object) throws GraphException {
         addValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(object));
     }
@@ -135,6 +139,11 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
         addValue(predicate, lexicalValue);
     }
 
+    public void setValue(URI predicate, Resource object) throws GraphException {
+        removeValues(predicate);
+        addValue(predicate, object);
+    }
+
     public void setValue(URI predicate, Object object) throws GraphException {
         removeValues(predicate);
         addValue(predicate, object);
@@ -160,6 +169,10 @@ public abstract class AbstractResource implements Resource, LocalizedNode {
 
     public void removeValue(URI predicate, String lexicalValue) throws GraphException {
         removeValue(elementFactory.createURIReference(predicate), elementFactory.createLiteral(lexicalValue));
+    }
+
+    public void removeValue(URI predicate, Resource object) throws GraphException {
+        removeValue(elementFactory.createURIReference(predicate), (ObjectNode) object.getUnderlyingNode());
     }
 
     public void removeValue(URI predicate, Object object) throws GraphException {
