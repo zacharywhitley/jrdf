@@ -62,15 +62,7 @@ package org.jrdf.graph.local;
 import org.jrdf.JRDFFactory;
 import org.jrdf.SortedMemoryJRDFFactory;
 import org.jrdf.graph.AbstractGraphUnitTest;
-import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
-import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.graph.Graph;
-import org.jrdf.graph.Literal;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * Implementation of {@link AbstractGraphUnitTest} test case.
@@ -91,61 +83,61 @@ public class OrderedGraphImplUnitTest extends AbstractGraphUnitTest {
         return FACTORY.getNewGraph();
     }
 
-    //TODO: Create a disk based serialization test.
-
-    /**
-     * Implementation method for testing serialization of the graph.
-     *
-     * @throws Exception When a problem is found.
-     */
-    public void testSerializing() throws Exception {
-        // populate the graph
-        graph.add(blank1, ref1, blank2);
-        graph.add(blank1, ref2, blank2);
-        graph.add(blank1, ref1, l1);
-        graph.add(blank1, ref1, l2);
-        graph.add(blank2, ref1, blank2);
-        graph.add(blank2, ref2, blank2);
-        graph.add(blank2, ref1, l1);
-        graph.add(blank2, ref1, l2);
-        graph.add(blank2, ref1, l2);
-        graph.add(ref1, ref1, ref1);
-
-        // check that the graph is as expected
-        assertEquals(9, graph.getNumberOfTriples());
-
-        // create an in-memory output stream
-        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
-
-        // write the graph
-        os.writeObject(graph);
-
-        // read a new graph back in
-        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
-        ObjectInputStream is = new ObjectInputStream(inputBytes);
-
-        // read the graph
-        Graph graph2 = (Graph) is.readObject();
-
-        ref3 = graph2.getElementFactory().createURIReference(ref1.getURI());
-        Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
-
-        // test that the graphs are equivalent
-        assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
-        assertTrue(graph2.contains(blank1, ref1, blank2));
-        assertTrue(graph2.contains(blank1, ref2, blank2));
-        assertTrue(graph2.contains(blank1, ref1, l1));
-        assertTrue(graph2.contains(blank1, ref1, l2));
-        assertTrue(graph2.contains(blank2, ref1, blank2));
-        assertTrue(graph2.contains(blank2, ref2, blank2));
-        assertTrue(graph2.contains(blank2, ref1, l1));
-        assertTrue(graph2.contains(blank2, ref3, l2));
-        assertTrue(graph2.contains(blank1, ref3, l3));
-        assertTrue(graph2.contains(ref1, ref1, ref1));
-        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE));
-        assertTrue(graph2.contains(ref3, ref3, ref3));
-        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE));
-        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, l3));
-    }
+//    //TODO: Create a disk based serialization test.
+//
+//    /**
+//     * Implementation method for testing serialization of the graph.
+//     *
+//     * @throws Exception When a problem is found.
+//     */
+//    public void testSerializing() throws Exception {
+//        // populate the graph
+//        graph.add(blank1, ref1, blank2);
+//        graph.add(blank1, ref2, blank2);
+//        graph.add(blank1, ref1, l1);
+//        graph.add(blank1, ref1, l2);
+//        graph.add(blank2, ref1, blank2);
+//        graph.add(blank2, ref2, blank2);
+//        graph.add(blank2, ref1, l1);
+//        graph.add(blank2, ref1, l2);
+//        graph.add(blank2, ref1, l2);
+//        graph.add(ref1, ref1, ref1);
+//
+//        // check that the graph is as expected
+//        assertEquals(9, graph.getNumberOfTriples());
+//
+//        // create an in-memory output stream
+//        ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
+//        ObjectOutputStream os = new ObjectOutputStream(outputBytes);
+//
+//        // write the graph
+//        os.writeObject(graph);
+//
+//        // read a new graph back in
+//        ByteArrayInputStream inputBytes = new ByteArrayInputStream(outputBytes.toByteArray());
+//        ObjectInputStream is = new ObjectInputStream(inputBytes);
+//
+//        // read the graph
+//        Graph graph2 = (Graph) is.readObject();
+//
+//        ref3 = graph2.getElementFactory().createURIReference(ref1.getURI());
+//        Literal l3 = graph2.getElementFactory().createLiteral(l1.getLexicalForm());
+//
+//        // test that the graphs are equivalent
+//        assertEquals(graph.getNumberOfTriples(), graph2.getNumberOfTriples());
+//        assertTrue(graph2.contains(blank1, ref1, blank2));
+//        assertTrue(graph2.contains(blank1, ref2, blank2));
+//        assertTrue(graph2.contains(blank1, ref1, l1));
+//        assertTrue(graph2.contains(blank1, ref1, l2));
+//        assertTrue(graph2.contains(blank2, ref1, blank2));
+//        assertTrue(graph2.contains(blank2, ref2, blank2));
+//        assertTrue(graph2.contains(blank2, ref1, l1));
+//        assertTrue(graph2.contains(blank2, ref3, l2));
+//        assertTrue(graph2.contains(blank1, ref3, l3));
+//        assertTrue(graph2.contains(ref1, ref1, ref1));
+//        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref1, ANY_OBJECT_NODE));
+//        assertTrue(graph2.contains(ref3, ref3, ref3));
+//        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, ANY_OBJECT_NODE));
+//        assertTrue(graph2.contains(ANY_SUBJECT_NODE, ref3, l3));
+//    }
 }

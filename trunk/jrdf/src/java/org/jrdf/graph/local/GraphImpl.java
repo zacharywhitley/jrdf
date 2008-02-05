@@ -77,10 +77,7 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler012;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler120;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler201;
 import org.jrdf.graph.local.index.longindex.LongIndex;
-import org.jrdf.graph.local.index.nodepool.Localizer;
-import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
 import org.jrdf.graph.local.index.nodepool.NodePool;
-import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import org.jrdf.graph.local.iterator.AnyResourceIterator;
 import org.jrdf.graph.local.iterator.BlankNodeResourceIterator;
 import org.jrdf.graph.local.iterator.URIReferenceResourceIterator;
@@ -193,9 +190,8 @@ public class GraphImpl implements Graph {
         GraphHandler graphHandler120 = new GraphHandler120(indexes, nodePool);
         GraphHandler graphHandler201 = new GraphHandler201(indexes, nodePool);
         handlers = new GraphHandler[]{graphHandler012, graphHandler120, graphHandler201};
-        Localizer localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
         resourceFactory = new ResourceFactoryImpl(this);
-        elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory, localizer);
+        elementFactory = new GraphElementFactoryImpl(nodePool, resourceFactory);
         tripleFactory = new TripleFactoryImpl(this, elementFactory);
     }
 

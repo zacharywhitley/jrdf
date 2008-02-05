@@ -78,13 +78,19 @@ public class WritableGraphImpl implements WritableGraph {
     private final NodePool nodePool;
     private final LongIndex[] longIndexes;
     private final Localizer localizer;
+    //private final GraphElementFactory elementFactory;
 
     public WritableGraphImpl(LongIndex[] newLongIndexes, NodePool newNodePool, Localizer newLocalizer) {
         checkNotNull(newLongIndexes, newNodePool, newLocalizer);
         this.longIndexes = newLongIndexes;
         this.nodePool = newNodePool;
         this.localizer = newLocalizer;
+        //this.elementFactory = new GraphElementFactoryImpl(nodePool, localizer);
     }
+
+//    public GraphElementFactory getElementFactory() {
+//
+//    }
 
     public void localizeAndRemove(SubjectNode subject, PredicateNode predicate, ObjectNode object)
         throws GraphException {
