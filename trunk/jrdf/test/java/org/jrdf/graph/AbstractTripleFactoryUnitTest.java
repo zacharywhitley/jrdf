@@ -111,15 +111,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
     private Literal l2;
 
     /**
-     * Constructs a new test with the given name.
-     *
-     * @param name the name of the test
-     */
-    public AbstractTripleFactoryUnitTest(String name) {
-        super(name);
-    }
-
-    /**
      * Create test instance.
      */
     public void setUp() throws Exception {
@@ -555,6 +546,14 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
         SubjectNode s2 = elementFactory.createURIReference(new URI("http://example.org/favourite-fruit2"));
         tripleFactory.addSequence(s2, sequence2);
         assertEquals(sequence, sequence2);
+    }
+
+    public void testEasyToUseMethods() throws Exception {
+        tripleFactory.addTriple(uri1, uri1, uri1);
+        assertTrue("Should have statement", graph.contains(ref1, ref1, ref1));
+        Resource resource = elementFactory.createResource(uri2);
+        tripleFactory.addTriple(uri1, uri1, resource);
+        assertTrue("Should have statement", graph.contains(ref1, ref1, ref2));
     }
 
     /**
