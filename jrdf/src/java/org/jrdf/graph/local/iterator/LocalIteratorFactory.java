@@ -64,6 +64,7 @@ import org.jrdf.graph.local.index.graphhandler.GraphHandler;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.graph.local.index.nodepool.NodePool;
 import org.jrdf.util.ClosableIterator;
+import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 /**
  * Default implementation of the IteratorFactory.  Simply uses the normal iterators and an in memory backend.
@@ -76,10 +77,12 @@ public final class LocalIteratorFactory implements IteratorFactory {
     private final GraphHandler[] graphHandlers;
     private final NodePool nodePool;
 
-    public LocalIteratorFactory(final LongIndex[] longIndexes, final GraphHandler[] graphHandlers, NodePool nodePool) {
-        this.longIndexes = longIndexes;
-        this.graphHandlers = graphHandlers;
-        this.nodePool = nodePool;
+    public LocalIteratorFactory(final LongIndex[] newLongIndexes, final GraphHandler[] newGraphHandlers,
+        final NodePool newNodePool) {
+        checkNotNull(newLongIndexes, newGraphHandlers, newNodePool);
+        this.longIndexes = newLongIndexes;
+        this.graphHandlers = newGraphHandlers;
+        this.nodePool = newNodePool;
     }
 
     public ClosableIterator<Triple> newEmptyClosableIterator() {

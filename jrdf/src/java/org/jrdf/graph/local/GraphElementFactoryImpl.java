@@ -68,6 +68,8 @@ import org.jrdf.graph.Resource;
 import org.jrdf.graph.URIReference;
 import org.jrdf.graph.local.index.nodepool.Localizer;
 import org.jrdf.graph.local.index.nodepool.NodePool;
+import org.jrdf.graph.local.index.nodepool.LocalizerImpl;
+import org.jrdf.graph.local.index.nodepool.StringNodeMapperFactoryImpl;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
 import java.net.URI;
@@ -88,11 +90,11 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     /**
      * Package scope constructor.
      */
-    GraphElementFactoryImpl(NodePool newNodePool, ResourceFactory newResourceFactory, Localizer newLocalizer) {
-        checkNotNull(newNodePool, newResourceFactory, newLocalizer);
+    GraphElementFactoryImpl(NodePool newNodePool, ResourceFactory newResourceFactory) {
+        checkNotNull(newNodePool, newResourceFactory);
         this.nodePool = newNodePool;
         this.resourceFactory = newResourceFactory;
-        this.localizer = newLocalizer;
+        this.localizer = new LocalizerImpl(nodePool, new StringNodeMapperFactoryImpl().createMapper());
     }
 
     public Resource createResource() throws GraphElementFactoryException {
@@ -100,11 +102,21 @@ public final class GraphElementFactoryImpl implements GraphElementFactory {
     }
 
     public Resource createResource(BlankNode node) throws GraphElementFactoryException {
-        return resourceFactory.createResource(node);
+        try {
+            localizer.localize(node);
+            return resourceFactory.createResource(node);
+        } catch (GraphException e) {
+            throw new GraphElementFactoryException(e);
+        }
     }
 
     public Resource createResource(URIReference node) throws GraphElementFactoryException {
-        return resourceFactory.createResource(node);
+        try {
+            localizer.localize(node);
+            return resourceFactory.createResource(node);
+        } catch (GraphException e) {
+            throw new GraphElementFactoryException(e);
+        }
     }
 
     public Resource createResource(URI uri) throws GraphElementFactoryException {
