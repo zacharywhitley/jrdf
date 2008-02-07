@@ -66,6 +66,8 @@ import static org.jrdf.graph.AnyObjectNode.ANY_OBJECT_NODE;
 import static org.jrdf.graph.AnyPredicateNode.ANY_PREDICATE_NODE;
 import static org.jrdf.graph.AnySubjectNode.ANY_SUBJECT_NODE;
 import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.test.AssertThrows;
+import static org.jrdf.util.test.AssertThrows.*;
 import org.jrdf.vocabulary.RDF;
 
 import java.net.URI;
@@ -565,14 +567,13 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
      * @param r         The reification node for the triple.
      * @throws Exception The triple could be reified.
      */
-    private void testCantInsert(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object, SubjectNode r) throws Exception {
-        try {
-            tripleFactory.reifyTriple(subject, predicate, object, r);
-            assertTrue(false);
-        }
-        catch (AlreadyReifiedException e) {
-        }
+    private void testCantInsert(final SubjectNode subject, final PredicateNode predicate, final ObjectNode object,
+        final SubjectNode r) throws Exception {
+        assertThrows(AlreadyReifiedException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                tripleFactory.reifyTriple(subject, predicate, object, r);
+            }
+        });
     }
 
 
@@ -583,13 +584,12 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
      * @param r      The reification node for the triple.
      * @throws Exception The triple could be reified.
      */
-    private void testCantInsert(Triple triple, URI r) throws Exception {
-        try {
-            tripleFactory.reifyTriple(triple, elementFactory.createURIReference(r));
-            assertTrue(false);
-        }
-        catch (AlreadyReifiedException e) {
-        }
+    private void testCantInsert(final Triple triple, final URI r) throws Exception {
+        assertThrows(AlreadyReifiedException.class, new AssertThrows.Block() {
+            public void execute() throws Throwable {
+                tripleFactory.reifyTriple(triple, elementFactory.createURIReference(r));
+            }
+        });
     }
 
 
@@ -601,14 +601,12 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
      * @param object    The object for the triple.
      * @throws Exception The triple could be reified.
      */
-    private void testCanInsert(SubjectNode subject, PredicateNode predicate,
-        ObjectNode object) throws Exception {
+    private void testCanInsert(SubjectNode subject, PredicateNode predicate, ObjectNode object) throws Exception {
         try {
-            tripleFactory.reifyTriple(subject, predicate, object,
-                elementFactory.createBlankNode());
-            assertTrue(true);
+            tripleFactory.reifyTriple(subject, predicate, object, elementFactory.createBlankNode());
         }
         catch (AlreadyReifiedException e) {
+            fail("Threw exception when refying triple: " + e.toString());
         }
     }
 
@@ -620,11 +618,6 @@ public abstract class AbstractTripleFactoryUnitTest extends TestCase {
      * @throws Exception The triple could be reified.
      */
     private void testCanInsert(Triple triple) throws Exception {
-        try {
-            tripleFactory.reifyTriple(triple, elementFactory.createBlankNode());
-            assertTrue(true);
-        }
-        catch (AlreadyReifiedException e) {
-        }
+        testCanInsert(triple.getSubject(), triple.getPredicate(), triple.getObject());
     }
 }
