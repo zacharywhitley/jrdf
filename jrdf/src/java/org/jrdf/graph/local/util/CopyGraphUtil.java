@@ -100,4 +100,6 @@ public interface CopyGraphUtil {
         throws GraphException;
 
     void replaceNode(Graph newTargetGraph, Node oldNode, Node newNode) throws GraphException;
+
+    void close();
 }

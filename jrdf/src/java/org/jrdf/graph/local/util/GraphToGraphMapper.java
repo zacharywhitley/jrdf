@@ -97,4 +97,6 @@ public interface GraphToGraphMapper {
     void replacePredicateNode(Node node, Node newNode) throws GraphException;
 
     void replaceNode(Node node, Node newNode) throws GraphException;
+
+    void close();
 }

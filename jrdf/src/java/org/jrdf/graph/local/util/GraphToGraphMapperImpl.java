@@ -107,6 +107,12 @@ public class GraphToGraphMapperImpl implements GraphToGraphMapper {
         return graph;
     }
 
+    public void close() {
+        newBNodeMap.clear();
+        triplesToRemove.clear();
+        triplesToAdd.clear();
+    }
+
     public void addTripleToGraph(Triple triple) throws GraphException {
         SubjectNode subjectNode = elementFactory.createURIReference(((URIReference) triple.getSubject()).getURI());
         PredicateNode predicateNode = elementFactory.createURIReference(

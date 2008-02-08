@@ -125,7 +125,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     private BlankNode bNode3;
     private BlankNode bNode4;
     private TripleFactory tFac1;
-    private TripleFactory tFac2;
     private GraphElementFactory eFac1;
     private GraphElementFactory eFac2;
 
@@ -143,7 +142,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         eFac2 = graph2.getElementFactory();
 
         tFac1 = graph1.getTripleFactory();
-        tFac2 = graph2.getTripleFactory();
 
         node1 = eFac1.createURIReference(URI.create(url1 + "node1"));
         pNode1 = eFac1.createURIReference(URI.create(url1 + "p1"));
@@ -168,6 +166,7 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
     }
 
     public void tearDown() {
+        cgUtil.close();
         mapFactory.close();
         setFactory.close();
         FACTORY.close();
@@ -238,16 +237,6 @@ public class CopyGraphUtilImplUnitTest extends TestCase {
         Triple trip = triples.next();
         assertTrue("Value ok", ((Literal) trip.getObject()).getValue().equals("whatever"));
         assertTrue("Type ok", ((Literal) trip.getObject()).getDatatypeURI().toString().equals("xsd:string"));
-    }
-
-    public void testInsertTwice() throws GraphException {
-        triple1 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode1);
-        triple2 = tFac1.createTriple((SubjectNode) node1, pNode1, bNode1);
-        graph1.add(triple1);
-        graph1.add(triple2);
-
-        assertTrue("Only 1 triple", graph1.getNumberOfTriples() == 1);
-        assertTrue("Only 1 triple", graph1.contains(triple2));
     }
 
     public void testBNodeReference() throws GraphException {
