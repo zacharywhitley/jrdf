@@ -96,6 +96,12 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         return mapper.getGraph();
     }
 
+    public void close() {
+        if (mapper != null) {
+            mapper.close();
+        }
+    }
+
     public Graph copyGraph(Graph newSourceGraph, Graph newTargetGraph) throws GraphException {
         mapper = new GraphToGraphMapperImpl(newTargetGraph, mapFactory, setFactory);
         ClosableIterator<Triple> triples = newSourceGraph.find(ANY_SUBJECT_NODE, ANY_PREDICATE_NODE, ANY_OBJECT_NODE);
@@ -142,6 +148,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
         try {
             Set<Triple> set = getAllTriplesForSubjectNode(node, newSourceGraph);
             createNewGraph(set);
+            set.clear();
             mapper.replaceSubjectNode(node, newNode);
             return newNode;
         } catch (GraphElementFactoryException e) {
@@ -156,6 +163,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
             Set<Triple> set = getAllTriplesForObjectNode(node, newSourceGraph);
             createNewGraph(set);
             mapper.replaceObjectNode(node, newNode);
+            set.clear();
             return newNode;
         } catch (GraphElementFactoryException e) {
             throw new GraphException("Cannot copy RDF graph with object node", e);
@@ -225,7 +233,7 @@ public class CopyGraphUtilImpl implements CopyGraphUtil {
 
     /**
      * Get all the triples that contain node, and all the other triples that contain blank nodes appear
-     * in the existing triples recursively
+     * in the existing triples recursively.
      *
      * @param graph
      * @param set
