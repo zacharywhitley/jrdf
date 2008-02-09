@@ -100,7 +100,7 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      * equivalent to calling {@link org.jrdf.graph.GraphElementFactory#createLiteral(String)}
      *
      * @param predicate a new or existing predicate to use to create the triple.
-     * @param lexicalValue a new or existing object to use to create the triple.
+     * @param lexicalValue a new or existing literal value to use to create the triple.
      * @throws GraphException if there was an error adding the triple (for example localising the nodes).
      */
     void addValue(URI predicate, String lexicalValue) throws GraphException;
@@ -130,7 +130,8 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      * equivalent to calling {@link org.jrdf.graph.GraphElementFactory#createLiteral(String, String)}
      *
      * @param predicate a new or existing predicate to use to create the triple.
-     * @param lexicalValue a new or existing object to use to create the triple.
+     * @param lexicalValue a new or existing literal value to use to create the triple.
+     * @param language the language used to create the literal.
      * @throws GraphException if there was an error adding the triple (for example localising the nodes).
      */
     void addValue(URI predicate, String lexicalValue, String language) throws GraphException;
@@ -140,15 +141,16 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      * equivalent to calling {@link org.jrdf.graph.GraphElementFactory#createLiteral(String, URI)}
      *
      * @param predicate a new or existing predicate to use to create the triple.
-     * @param lexicalValue a new or existing object to use to create the triple.
+     * @param lexicalValue a new or existing literal value to use to create the triple.
+     * @param dataType the datatype URI used to create the literal.
      * @throws GraphException if there was an error adding the triple (for example localising the nodes).
      */
     void addValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
 
     /**
-     * Remove any other triples with this as the subject, the given predicate and any object and
-     * add a new triple with this as the subject and the given predicate and object.  This many that multiple
-     * object values will be replaced by a single object value.
+     * Remove any other triples with this as the subject, the given predicate and any object and add a new triple
+     * with this as the subject and the given predicate and object.  This means that multiple object values will be
+     * replaced by a single object value.
      *
      * @param predicate the existing predicate in the graph to set.
      * @param object the existing object in the graph to set.
@@ -156,16 +158,73 @@ public interface Resource extends URIReference, BlankNode, Serializable {
      */
     void setValue(PredicateNode predicate, ObjectNode object) throws GraphException;
 
+    /**
+     * Removes any other triples with this as the subject, the given predicate and any object and add a new triple
+     * with this as the subject and the given predicate and object.  This means that multiple object values will be
+     * replaced by a single object value.
+     *
+     * @param predicate the existing predicate in the graph to set.
+     * @param object a new or existing object to use to create the triple.
+     * @throws GraphException if the predicate or object do not exist in the graph.
+     */
     void setValue(URI predicate, URI object) throws GraphException;
 
+    /**
+     * Removes any other triples with this as the subject, the given predicate and any object and add a new triple
+     * with this as the subject and the given predicate and object.  This means that multiple object values will be
+     * replaced by a single object value.
+     *
+     * @param predicate a new or existing predicate to set.
+     * @param lexicalValue a new or existing literal value to use to create the triple.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void setValue(URI predicate, String lexicalValue) throws GraphException;
 
+    /**
+     * Removes any other triples with this as the subject, the given predicate and any object and add a new triple
+     * with this as the subject and the given predicate and object.  This means that multiple object values will be
+     * replaced by a single object value.
+     *
+     * @param predicate a new or existing predicate to set.
+     * @param object an existing resource from the graph to set.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes) or the
+     *   Resource was not from this Graph.
+     */
     void setValue(URI predicate, Resource object) throws GraphException;
 
+    /**
+     * Removes any other triples with this as the subject, the given predicate and any object and add a new triple
+     * with this as the subject and the given predicate and object.  This means that multiple object values will be
+     * replaced by a single object value.
+     *
+     * @param predicate a new or existing predicate to set.
+     * @param object a new or existing object to set.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void setValue(URI predicate, Object object) throws GraphException;
 
+    /**
+     * Removes any other triples with this as the subject, the given predicate and any object and add a new triple
+     * with this as the subject and the given predicate and object.  This means that multiple object values will be
+     * replaced by a single object value.
+     *
+     * @param predicate a new or existing predicate to set.
+     * @param lexicalValue a new or existing literal value to use to create the triple.
+     * @param language the language used to create the literal.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void setValue(URI predicate, String lexicalValue, String language) throws GraphException;
 
+    /**
+     * Removes any other triples with this as the subject, the given predicate and any object and add a new triple
+     * with this as the subject and the given predicate and object.  This means that multiple object values will be
+     * replaced by a single object value.
+     *
+     * @param predicate a new or existing predicate to set.
+     * @param lexicalValue a new or existing literal value to use to create the triple.
+     * @param dataType the datatype URI used to create the literal.
+     * @throws GraphException if there was an error adding the triple (for example localising the nodes).
+     */
     void setValue(URI predicate, String lexicalValue, URI dataType) throws GraphException;
 
     /**
