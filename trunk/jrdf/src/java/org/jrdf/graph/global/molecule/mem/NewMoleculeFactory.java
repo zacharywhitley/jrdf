@@ -57,70 +57,16 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
 
-import java.util.Iterator;
 import java.util.Set;
 
-public final class NullNewMolecule implements NewMolecule {
-    /**
-     * Null object for molecule.
-     */
-    public static final NewMolecule NULL_MOLECULE = new NullNewMolecule();
+public interface NewMoleculeFactory {
+    NewMolecule createMolecue();
 
-    private NullNewMolecule() {
-    }
+    NewMolecule createMolecule(Triple... triples);
 
-    public Triple getHeadTriple() {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean contains(NewMolecule molecule) {
-        return false;
-    }
-
-    public int size() {
-        return 0;
-    }
-
-    public NewMolecule add(Triple triple) {
-        throw new UnsupportedOperationException();
-    }
-
-    public NewMolecule add(NewMolecule childMolecule) {
-        throw new UnsupportedOperationException();
-    }
-
-    public Iterator<Triple> getRootTriples() {
-        throw new UnsupportedOperationException();
-    }
-
-    public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
-        throw new UnsupportedOperationException();
-    }
-
-    public NewMolecule add(Triple triple, NewMolecule newMolecule) {
-        throw new UnsupportedOperationException();
-    }
-
-    public NewMolecule add(Triple triple, Triple newTriple) {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean contains(Triple triple) {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    public void remove(Triple triple) {
-    }
-
-    public void specialAdd(NewMolecule molecule) {
-    }
-
-    @Override
-    public String toString() {
-        return "NULL";
-    }
+    NewMolecule createMolecule(Set<Triple> triples);
 }

@@ -57,33 +57,38 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
-import static org.jrdf.graph.global.molecule.NullNewMolecule.NULL_MOLECULE;
+import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.MoleculeSubsumption;
+import org.jrdf.graph.global.molecule.MergeSubmoleculesImpl;
 
-// TODO AN Fix this comparison or use a different comparator in NewNaiveGraphDecomposerImpl.
-public class NewMoleculeComparatorImpl implements NewMoleculeComparator {
-    private static final long serialVersionUID = 3376402602482439640L;
-    private TripleComparator tripleComparator;
+import java.util.Set;
 
-    private NewMoleculeComparatorImpl() {
+public class NewMoleculeFactoryImpl implements NewMoleculeFactory {
+    private final TripleComparator comparator;
+    private final NewMoleculeComparator moleculeComparator;
+    private final MergeSubmolecules moleculeMerger;
+
+    public NewMoleculeFactoryImpl(TripleComparator newTripleComparator, NewMoleculeComparator newMoleculeComparator,
+        MoleculeSubsumption subsumption) {
+        comparator = newTripleComparator;
+        moleculeComparator = newMoleculeComparator;
+        // TODO FIXME AN Circular dependency this is just wrong!
+        moleculeMerger = new MergeSubmoleculesImpl(comparator, moleculeComparator, this, subsumption);
     }
 
-    public NewMoleculeComparatorImpl(TripleComparator newTripleComparator) {
-        tripleComparator = newTripleComparator;
+    public NewMolecule createMolecue() {
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger);
     }
 
-    public int compare(NewMolecule molecule, NewMolecule molecule1) {
-        if (molecule == NULL_MOLECULE) {
-            return -1;
-        } else if (molecule1 == NULL_MOLECULE) {
-            return 1;
-        } else {
-            Triple headTriple = molecule.getHeadTriple();
-            Triple headTriple1 = molecule1.getHeadTriple();
-            return tripleComparator.compare(headTriple, headTriple1);
-        }
+    public NewMolecule createMolecule(Triple... rootTriples) {
+        return new NewMoleculeImpl(moleculeComparator, moleculeMerger, rootTriples);
+    }
+
+    public NewMolecule createMolecule(Set<Triple> triples) {
+        return createMolecule(triples.toArray(new Triple[triples.size()]));
     }
 }

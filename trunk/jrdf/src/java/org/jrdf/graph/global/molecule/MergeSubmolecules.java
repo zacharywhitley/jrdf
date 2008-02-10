@@ -60,6 +60,7 @@
 package org.jrdf.graph.global.molecule;
 
 import org.jrdf.graph.Triple;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 public interface MergeSubmolecules {
     NewMolecule merge(NewMolecule molecule1, NewMolecule molecule2);

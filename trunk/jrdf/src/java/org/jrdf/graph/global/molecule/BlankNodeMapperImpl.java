@@ -64,6 +64,7 @@ import org.jrdf.graph.BlankNode;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 import java.util.HashMap;
 import java.util.Iterator;

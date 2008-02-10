@@ -68,6 +68,7 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.b3r2r3;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkMoluculeContainsRootTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmoleculesContainsHeadTriples;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
 import java.util.Set;
 

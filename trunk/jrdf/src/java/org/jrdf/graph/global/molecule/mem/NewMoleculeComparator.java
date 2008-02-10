@@ -57,35 +57,10 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
-import org.jrdf.graph.Triple;
+import java.io.Serializable;
+import java.util.Comparator;
 
-import java.util.Iterator;
-import java.util.Set;
-
-public interface NewMolecule {
-    Triple getHeadTriple();
-
-    boolean contains(NewMolecule molecule);
-
-    int size();
-
-    NewMolecule add(Triple triple);
-
-    NewMolecule add(NewMolecule childMolecule);
-
-    Iterator<Triple> getRootTriples();
-
-    Set<NewMolecule> getSubMolecules(Triple rootTriple);
-
-    NewMolecule add(Triple triple, NewMolecule newMolecule);
-
-    void specialAdd(NewMolecule molecule);
-
-    NewMolecule add(Triple triple, Triple newTriple);
-
-    boolean contains(Triple triple);
-
-    void remove(Triple triple);
+public interface NewMoleculeComparator extends Comparator<NewMolecule>, Serializable {
 }

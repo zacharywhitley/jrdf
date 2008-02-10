@@ -70,6 +70,11 @@ import org.jrdf.graph.global.BlankNodeImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactory;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.URIReferenceImpl;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import static org.jrdf.util.test.SetUtil.asSet;
 
 import java.util.HashSet;
