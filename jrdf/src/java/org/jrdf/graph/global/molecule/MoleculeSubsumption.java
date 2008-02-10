@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.global.molecule;
 
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
+
 public interface MoleculeSubsumption {
     boolean subsumes(NewMolecule molecule1, NewMolecule molecule2);
 }

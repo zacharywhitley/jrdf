@@ -57,7 +57,7 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
 import junit.framework.TestCase;
 import org.jrdf.graph.Triple;

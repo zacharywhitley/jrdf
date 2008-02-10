@@ -57,16 +57,27 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
-import org.jrdf.graph.Triple;
+import org.jrdf.graph.Graph;
+import org.jrdf.graph.GraphException;
 
 import java.util.Set;
 
-public interface NewMoleculeFactory {
-    NewMolecule createMolecue();
+/**
+ * Decompose a local graph into a global graph (set of Molecules).
+ *
+ * @author Andrew Newman
+ * @version $Revision: 1226 $
+ */
+public interface NewGraphDecomposer {
 
-    NewMolecule createMolecule(Triple... triples);
-
-    NewMolecule createMolecule(Set<Triple> triples);
+    /**
+     * Given the graph, this method returns the graph as a set of Molecules conataining the Most Self Contained Graph.
+     *
+     * @param graph to decompose
+     * @return set of molecules (subgraphs) which make up the graph
+     * @throws GraphException
+     */
+    Set<NewMolecule> decompose(Graph graph) throws GraphException;
 }

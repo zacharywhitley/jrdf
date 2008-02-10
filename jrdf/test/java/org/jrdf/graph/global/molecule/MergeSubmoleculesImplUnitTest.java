@@ -86,6 +86,11 @@ import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.checkSubmolecul
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMoleculeWithSubmolecule;
 import static org.jrdf.graph.global.molecule.GlobalGraphTestUtil.createMultiLevelMolecule;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeComparator;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeComparatorImpl;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeFactory;
+import org.jrdf.graph.global.molecule.mem.NewMoleculeFactoryImpl;
 import org.jrdf.util.test.AssertThrows;
 import static org.jrdf.util.test.AssertThrows.assertThrows;
 import static org.jrdf.util.test.SetUtil.asSet;

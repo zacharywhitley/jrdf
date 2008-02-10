@@ -57,36 +57,70 @@
  *
  */
 
-package org.jrdf.graph.global.molecule;
+package org.jrdf.graph.global.molecule.mem;
 
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.TripleComparator;
-import static org.jrdf.graph.global.molecule.NullNewMolecule.NULL_MOLECULE;
 
-// TODO AN Fix this comparator to do recursive equality on blank nodes - that is HeadTriples must match plus the LHS
-// Level X must exist in RHS and so on recursively.  Possibly -1 and 1 values record if RHS is subsumed by LHS and
+import java.util.Iterator;
+import java.util.Set;
 
-// RHS subsumed LHS.
-public class NewMoleculeHeadTripleComparatorImpl implements NewMoleculeComparator {
-    private static final long serialVersionUID = 3376402602482439640L;
-    private TripleComparator tripleComparator;
+public final class NullNewMolecule implements NewMolecule {
+    /**
+     * Null object for molecule.
+     */
+    public static final NewMolecule NULL_MOLECULE = new NullNewMolecule();
 
-    private NewMoleculeHeadTripleComparatorImpl() {
+    private NullNewMolecule() {
     }
 
-    public NewMoleculeHeadTripleComparatorImpl(TripleComparator newTripleComparator) {
-        tripleComparator = newTripleComparator;
+    public Triple getHeadTriple() {
+        throw new UnsupportedOperationException();
     }
 
-    public int compare(NewMolecule newMolecule1, NewMolecule newMolecule2) {
-        if (newMolecule1 == NULL_MOLECULE) {
-            return -1;
-        } else if (newMolecule2 == NULL_MOLECULE) {
-            return 1;
-        } else {
-            Triple headTriple1 = newMolecule1.getHeadTriple();
-            Triple headTriple2 = newMolecule2.getHeadTriple();
-            return tripleComparator.compare(headTriple1, headTriple2);
-        }
+    public boolean contains(NewMolecule molecule) {
+        return false;
+    }
+
+    public int size() {
+        return 0;
+    }
+
+    public NewMolecule add(Triple triple) {
+        throw new UnsupportedOperationException();
+    }
+
+    public NewMolecule add(NewMolecule childMolecule) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterator<Triple> getRootTriples() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Set<NewMolecule> getSubMolecules(Triple rootTriple) {
+        throw new UnsupportedOperationException();
+    }
+
+    public NewMolecule add(Triple triple, NewMolecule newMolecule) {
+        throw new UnsupportedOperationException();
+    }
+
+    public NewMolecule add(Triple triple, Triple newTriple) {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean contains(Triple triple) {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void remove(Triple triple) {
+    }
+
+    public void specialAdd(NewMolecule molecule) {
+    }
+
+    @Override
+    public String toString() {
+        return "NULL";
     }
 }

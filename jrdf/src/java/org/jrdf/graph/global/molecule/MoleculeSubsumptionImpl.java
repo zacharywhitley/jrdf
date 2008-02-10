@@ -59,6 +59,8 @@
 
 package org.jrdf.graph.global.molecule;
 
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
+
 public class MoleculeSubsumptionImpl implements MoleculeSubsumption {
     public boolean subsumes(NewMolecule molecule1, NewMolecule molecule2) {
         return molecule1.contains(molecule2.getHeadTriple()) || (molecule2.contains(molecule1.getHeadTriple()));
