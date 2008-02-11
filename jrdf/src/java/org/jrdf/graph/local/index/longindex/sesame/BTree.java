@@ -13,10 +13,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.BitSet;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Implementation of an on-disk B-Tree using the <tt>java.nio</tt> classes
@@ -96,7 +95,7 @@ public class BTree {
     /**
      * Flag indicating whether {@link #allocatedNodes} has been initialized.
      */
-    private boolean allocatedNodesInitialized = false;
+    private boolean allocatedNodesInitialized;
 
     // Stored or specified properties //
 
@@ -303,8 +302,8 @@ public class BTree {
 
             // Verify that the value sizes match
             if (this.valueSize != valueSize) {
-                throw new IOException("Specified value size (" + valueSize
-                    + ") is different from what is stored on disk (" + this.valueSize + ")");
+                throw new IOException("Specified value size (" + valueSize + ") is different from what is stored on " +
+                    "disk (" + this.valueSize + ")");
             }
         }
 
@@ -586,18 +585,18 @@ public class BTree {
         /**
          * The old value that has been replaced by the insertion of a new value.
          */
-        byte[] oldValue = null;
+        byte[] oldValue;
 
         /**
          * The value that was removed from a child node due to overflow.
          */
-        byte[] overflowValue = null;
+        byte[] overflowValue;
 
         /**
          * The nodeID to the right of 'overflowValue' that was removed from a
          * child node due to overflow.
          */
-        int overflowNodeID = 0;
+        int overflowNodeID;
     }
 
     /**
@@ -729,8 +728,7 @@ public class BTree {
         if (childNode.getValueCount() < minValueCount) {
             // Child node contains too few values, try to borrow one from its right
             // sibling
-            Node rightSibling = (childIdx < parentNode.getValueCount()) ? parentNode.getChildNode(childIdx + 1)
-                : null;
+            Node rightSibling = (childIdx < parentNode.getValueCount()) ? parentNode.getChildNode(childIdx + 1) : null;
 
             if (rightSibling != null && rightSibling.getValueCount() > minValueCount) {
                 // Right sibling has enough values to give one up
@@ -966,7 +964,7 @@ public class BTree {
         private boolean dataChanged;
 
         /** Registered listeners that want to be notified of changes to the node. */
-        private Set<NodeListener> listeners = new HashSet<NodeListener>();
+        private List<NodeListener> listeners = new LinkedList<NodeListener>();
 
         /**
          * Creates a new Node object with the specified ID.
@@ -1416,7 +1414,7 @@ public class BTree {
          * @return Indicates whether the node listener should be deregistered as a
          *         result of this event.
          */
-        public boolean valueAdded(Node node, int index);
+        boolean valueAdded(Node node, int index);
 
         /**
          * Signals to registered node listeners that a value has been removed from
@@ -1429,7 +1427,7 @@ public class BTree {
          * @return Indicates whether the node listener should be deregistered as a
          *         result of this event.
          */
-        public boolean valueRemoved(Node node, int index);
+        boolean valueRemoved(Node node, int index);
 
         /**
          * Signals to registered node listeners that a value has been changed.
@@ -1441,7 +1439,7 @@ public class BTree {
          * @return Indicates whether the node listener should be deregistered as a
          *         result of this event.
          */
-        public boolean valueChanged(Node node, int index);
+        boolean valueChanged(Node node, int index);
 
         /**
          * Signals to registered node listeners that a node has been split.
@@ -1457,8 +1455,7 @@ public class BTree {
          * @return Indicates whether the node listener should be deregistered as a
          *         result of this event.
          */
-        public boolean nodeSplit(Node node, Node newNode, int medianIdx)
-            throws IOException;
+        boolean nodeSplit(Node node, Node newNode, int medianIdx) throws IOException;
 
         /**
          * Signals to registered node listeners that two nodes have been merged.
@@ -1476,8 +1473,7 @@ public class BTree {
          * @return Indicates whether the node listener should be deregistered with
          *         the <em>source node</em> as a result of this event.
          */
-        public boolean nodeMergedWith(Node sourceNode, Node targetNode, int mergeIdx)
-            throws IOException;
+        boolean nodeMergedWith(Node sourceNode, Node targetNode, int mergeIdx) throws IOException;
     }
 
     /*-----------------------------*
@@ -1873,8 +1869,7 @@ public class BTree {
             random.nextBytes(value);
             btree.insert(value);
             if (i % 50000 == 0) {
-                System.out.println("Inserted " + i + " values in " + (System.currentTimeMillis() - startTime)
-                    + " ms");
+                System.out.println("Inserted " + i + " values in " + (System.currentTimeMillis() - startTime) + " ms");
             }
         }
 
@@ -1888,8 +1883,8 @@ public class BTree {
             value = iter.next();
         }
         iter.close();
-        System.out.println("Iteration over " + count + " items finished in "
-            + (System.currentTimeMillis() - startTime) + " ms");
+        System.out.println("Iteration over " + count + " items finished in " +
+            (System.currentTimeMillis() - startTime) + " ms");
 
         // byte[][] values = new byte[count][13];
         //

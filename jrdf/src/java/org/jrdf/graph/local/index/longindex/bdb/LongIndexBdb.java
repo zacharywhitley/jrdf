@@ -62,12 +62,13 @@ package org.jrdf.graph.local.index.longindex.bdb;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import org.jrdf.map.MapFactory;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
@@ -135,14 +136,14 @@ public final class LongIndexBdb implements LongIndex, Serializable {
         index.clear();
     }
 
-    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
+    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
         Map<Long, Map<Long, Set<Long>>> map = new HashMap<Long, Map<Long, Set<Long>>>();
         Set<Long> set = index.keySet();
         for (Long indx : set) {
             Map<Long, Set<Long>> subIndex = getSubIndex(indx);
             map.put(indx, subIndex);
         }
-        return map.entrySet().iterator();
+        return new ClosableIteratorImpl<Map.Entry<Long, Map<Long, Set<Long>>>>(map.entrySet().iterator());
     }
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
