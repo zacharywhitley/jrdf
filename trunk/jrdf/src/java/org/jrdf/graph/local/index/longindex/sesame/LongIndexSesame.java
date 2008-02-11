@@ -88,7 +88,7 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public void remove(Long... node) throws GraphException {
-        BTreeIterator bTreeIterator = btree.getIterator(node);
+        RecordIterator bTreeIterator = btree.getIterator(node);
         if (getNextBytes(bTreeIterator) == null) {
             throw new GraphException("Unable to remove nonexistent statement");
         }
@@ -109,7 +109,7 @@ public final class LongIndexSesame implements LongIndex {
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
         Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-        BTreeIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
+        RecordIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
         byte[] bytes = getNextBytes(bTreeIterator);
         while (bytes != null) {
             Long[] longs = fromBytes(bytes, TRIPLES);
@@ -127,7 +127,7 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public boolean removeSubIndex(Long first) {
-        BTreeIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
+        RecordIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
         byte[] bytes = getNextBytes(bTreeIterator);
         boolean changed = bytes != null;
         while (bytes != null) {
@@ -139,7 +139,7 @@ public final class LongIndexSesame implements LongIndex {
 
     public long getSize() {
         long counter = 0;
-        BTreeIterator bTreeIterator = btree.iterateAll();
+        RecordIterator bTreeIterator = btree.iterateAll();
         while (getNextBytes(bTreeIterator) != null) {
             counter++;
         }
@@ -172,7 +172,7 @@ public final class LongIndexSesame implements LongIndex {
         }
     }
 
-    private byte[] getNextBytes(BTreeIterator bTreeIterator) {
+    private byte[] getNextBytes(RecordIterator bTreeIterator) {
         try {
             return bTreeIterator.next();
         } catch (IOException e) {

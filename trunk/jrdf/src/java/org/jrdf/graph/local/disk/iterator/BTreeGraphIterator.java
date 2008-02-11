@@ -62,7 +62,7 @@ package org.jrdf.graph.local.disk.iterator;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.sesame.BTreeIterator;
+import org.jrdf.graph.local.index.longindex.sesame.RecordIterator;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
 import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import org.jrdf.util.ClosableIterator;
@@ -74,7 +74,7 @@ public class BTreeGraphIterator implements ClosableIterator<Triple> {
     private static final int TRIPLES = 3;
     private final TripleBTree btree;
     private final GraphHandler handler;
-    private BTreeIterator bTreeIterator;
+    private RecordIterator bTreeIterator;
     private byte[] bytesToRemove;
     private byte[] currentBytes;
     private boolean nextCalled;
