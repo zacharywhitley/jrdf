@@ -112,7 +112,6 @@ public class NewMoleculeImplUnitTest extends TestCase {
         checkHasHeadMolecules(newMolecule, b2r2b1, b1r3r3);
     }
 
-
     public void testCombineSubMolecules() {
         NewMolecule newMolecule = MOLECULE_FACTORY.createMolecule(r1r1b1);
         NewMolecule internalMolecule = MOLECULE_FACTORY.createMolecule(b2r2b1, b1r3r3);
