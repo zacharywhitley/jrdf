@@ -1,7 +1,5 @@
 /*
- * $Header$
- * $Revision: 982 $
- * $Date: 2006-12-08 18:42:51 +1000 (Fri, 08 Dec 2006) $
+ * Copyright Aduna (http://www.aduna-software.com/) (c) 1997-2007.
  *
  * Licensed under the Aduna BSD-style license.
  */
@@ -77,7 +75,7 @@ public class BTree {
      * Object used to determine whether one value is lower, equal or greater than
      * another value. This determines the order of values in the BTree.
      */
-    private final BTreeValueComparator comparator;
+    private final RecordComparator comparator;
 
     /**
      * List containing nodes that are currently "in use", used for caching.
@@ -98,7 +96,7 @@ public class BTree {
     /**
      * Flag indicating whether {@link #allocatedNodes} has been initialized.
      */
-    private boolean allocatedNodesInitialized;
+    private boolean allocatedNodesInitialized = false;
 
     // Stored or specified properties //
 
@@ -157,7 +155,7 @@ public class BTree {
 
     /**
      * Creates a new BTree that uses an instance of
-     * <tt>DefaultBTreeValueComparator</tt> to compare values.
+     * <tt>DefaultRecordComparator</tt> to compare values.
      *
      * @param dataFile
      *        The file for the B-Tree.
@@ -169,7 +167,7 @@ public class BTree {
      *        stored in the B-Tree.
      * @throws IOException
      *         In case the initialization of the B-Tree file failed.
-     * @see DefaultBTreeValueComparator
+     * @see DefaultRecordComparator
      */
     public BTree(File dataFile, int blockSize, int valueSize)
         throws IOException {
@@ -178,7 +176,7 @@ public class BTree {
 
     /**
      * Creates a new BTree that uses an instance of
-     * <tt>DefaultBTreeValueComparator</tt> to compare values.
+     * <tt>DefaultRecordComparator</tt> to compare values.
      *
      * @param dataFile
      *        The file for the B-Tree.
@@ -194,16 +192,16 @@ public class BTree {
      *        severe impact on write performance.
      * @throws IOException
      *         In case the initialization of the B-Tree file failed.
-     * @see DefaultBTreeValueComparator
+     * @see DefaultRecordComparator
      */
     public BTree(File dataFile, int blockSize, int valueSize, boolean forceSync)
         throws IOException {
-        this(dataFile, blockSize, valueSize, new DefaultBTreeValueComparator(), forceSync);
+        this(dataFile, blockSize, valueSize, new DefaultRecordComparator(), forceSync);
     }
 
     /**
-     * Creates a new BTree that uses the supplied <tt>BTreeValueComparator</tt>
-     * to compare the values that are or will be stored in the B-Tree.
+     * Creates a new BTree that uses the supplied <tt>RecordComparator</tt> to
+     * compare the values that are or will be stored in the B-Tree.
      *
      * @param dataFile
      *        The file for the B-Tree.
@@ -214,19 +212,19 @@ public class BTree {
      *        The size (in bytes) of the fixed-length values that are or will be
      *        stored in the B-Tree.
      * @param comparator
-     *        The <tt>BTreeValueComparator</tt> to use for determining whether
-     *        one value is smaller, larger or equal to another.
+     *        The <tt>RecordComparator</tt> to use for determining whether one
+     *        value is smaller, larger or equal to another.
      * @throws IOException
      *         In case the initialization of the B-Tree file failed.
      */
-    public BTree(File dataFile, int blockSize, int valueSize, BTreeValueComparator comparator)
+    public BTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator)
         throws IOException {
         this(dataFile, blockSize, valueSize, comparator, false);
     }
 
     /**
-     * Creates a new BTree that uses the supplied <tt>BTreeValueComparator</tt>
-     * to compare the values that are or will be stored in the B-Tree.
+     * Creates a new BTree that uses the supplied <tt>RecordComparator</tt> to
+     * compare the values that are or will be stored in the B-Tree.
      *
      * @param dataFile
      *        The file for the B-Tree.
@@ -237,8 +235,8 @@ public class BTree {
      *        The size (in bytes) of the fixed-length values that are or will be
      *        stored in the B-Tree.
      * @param comparator
-     *        The <tt>BTreeValueComparator</tt> to use for determining whether
-     *        one value is smaller, larger or equal to another.
+     *        The <tt>RecordComparator</tt> to use for determining whether one
+     *        value is smaller, larger or equal to another.
      * @param forceSync
      *        Flag indicating whether updates should be synced to disk forcefully
      *        by calling {@link FileChannel#force(boolean)}. This may have a
@@ -246,8 +244,7 @@ public class BTree {
      * @throws IOException
      *         In case the initialization of the B-Tree file failed.
      */
-    public BTree(File dataFile, int blockSize, int valueSize, BTreeValueComparator comparator,
-        boolean forceSync)
+    public BTree(File dataFile, int blockSize, int valueSize, RecordComparator comparator, boolean forceSync)
         throws IOException {
         if (dataFile == null) {
             throw new IllegalArgumentException("dataFile must not be null");
@@ -306,8 +303,8 @@ public class BTree {
 
             // Verify that the value sizes match
             if (this.valueSize != valueSize) {
-                throw new IOException("Specified value size (" + valueSize +
-                    ") is different from what is stored on disk (" + this.valueSize + ")");
+                throw new IOException("Specified value size (" + valueSize
+                    + ") is different from what is stored on disk (" + this.valueSize + ")");
             }
         }
 
@@ -391,8 +388,7 @@ public class BTree {
      *
      * @param key
      *        A value that is equal to the value that should be retrieved, at
-     *        least as far as the BTreeValueComparator of this BTree is
-     *        concerned.
+     *        least as far as the RecordComparator of this BTree is concerned.
      * @return The value matching the key, or <tt>null</tt> if no such value
      *         could be found.
      */
@@ -430,7 +426,7 @@ public class BTree {
     /**
      * Returns an iterator that iterates over all values in this B-Tree.
      */
-    public BTreeIterator iterateAll() {
+    public RecordIterator iterateAll() {
         return new RangeIterator(null, null, null, null);
     }
 
@@ -438,7 +434,7 @@ public class BTree {
      * Returns an iterator that iterates over all values between minValue and
      * maxValue, inclusive.
      */
-    public BTreeIterator iterateRange(byte[] minValue, byte[] maxValue) {
+    public RecordIterator iterateRange(byte[] minValue, byte[] maxValue) {
         return new RangeIterator(null, null, minValue, maxValue);
     }
 
@@ -447,7 +443,7 @@ public class BTree {
      * that match the supplied searchKey after searchMask has been applied to the
      * value.
      */
-    public BTreeIterator iterateValues(byte[] searchKey, byte[] searchMask) {
+    public RecordIterator iterateValues(byte[] searchKey, byte[] searchMask) {
         return new RangeIterator(searchKey, searchMask, null, null);
     }
 
@@ -456,9 +452,25 @@ public class BTree {
      * maxValue (inclusive) and returns the values that match the supplied
      * searchKey after searchMask has been applied to the value.
      */
-    public BTreeIterator iterateRangedValues(byte[] searchKey, byte[] searchMask, byte[] minValue,
+    public RecordIterator iterateRangedValues(byte[] searchKey, byte[] searchMask, byte[] minValue,
         byte[] maxValue) {
         return new RangeIterator(searchKey, searchMask, minValue, maxValue);
+    }
+
+    /**
+     * Returns an estimate for the number of values stored in this BTree.
+     */
+    public long getValueCountEstimate()
+        throws IOException {
+        int allocatedNodesCount;
+
+        synchronized (allocatedNodes) {
+            initAllocatedNodes();
+            allocatedNodesCount = allocatedNodes.cardinality();
+        }
+
+        // Assume fill factor of 70%
+        return (long) (allocatedNodesCount * (branchFactor - 1) * 0.7);
     }
 
     /**
@@ -574,18 +586,18 @@ public class BTree {
         /**
          * The old value that has been replaced by the insertion of a new value.
          */
-        byte[] oldValue;
+        byte[] oldValue = null;
 
         /**
          * The value that was removed from a child node due to overflow.
          */
-        byte[] overflowValue;
+        byte[] overflowValue = null;
 
         /**
          * The nodeID to the right of 'overflowValue' that was removed from a
          * child node due to overflow.
          */
-        int overflowNodeID;
+        int overflowNodeID = 0;
     }
 
     /**
@@ -717,7 +729,8 @@ public class BTree {
         if (childNode.getValueCount() < minValueCount) {
             // Child node contains too few values, try to borrow one from its right
             // sibling
-            Node rightSibling = (childIdx < parentNode.getValueCount()) ? parentNode.getChildNode(childIdx + 1) : null;
+            Node rightSibling = (childIdx < parentNode.getValueCount()) ? parentNode.getChildNode(childIdx + 1)
+                : null;
 
             if (rightSibling != null && rightSibling.getValueCount() > minValueCount) {
                 // Right sibling has enough values to give one up
@@ -990,7 +1003,8 @@ public class BTree {
             usageCount++;
         }
 
-        public void release() throws IOException {
+        public void release()
+            throws IOException {
             assert usageCount > 0 : "Releasing node while usage count is " + usageCount;
 
             usageCount--;
@@ -1248,41 +1262,58 @@ public class BTree {
             rightSibling.setValueCount(0);
             rightSibling.dataChanged = true;
 
-            notifyNodeMerged(rightSibling, rightIdx);
+            rightSibling.notifyNodeMerged(this, rightIdx);
         }
 
         public void register(NodeListener listener) {
             synchronized (listeners) {
+                assert !listeners.contains(listener);
                 listeners.add(listener);
             }
         }
 
         public void deregister(NodeListener listener) {
             synchronized (listeners) {
+                assert listeners.contains(listener);
                 listeners.remove(listener);
             }
         }
 
         private void notifyValueAdded(int index) {
             synchronized (listeners) {
-                for (NodeListener l : listeners) {
-                    l.valueAdded(this, index);
+                Iterator<NodeListener> iter = listeners.iterator();
+
+                while (iter.hasNext()) {
+                    // Deregister if listener return true
+                    if (iter.next().valueAdded(this, index)) {
+                        iter.remove();
+                    }
                 }
             }
         }
 
         private void notifyValueRemoved(int index) {
             synchronized (listeners) {
-                for (NodeListener l : listeners) {
-                    l.valueRemoved(this, index);
+                Iterator<NodeListener> iter = listeners.iterator();
+
+                while (iter.hasNext()) {
+                    // Deregister if listener return true
+                    if (iter.next().valueRemoved(this, index)) {
+                        iter.remove();
+                    }
                 }
             }
         }
 
         private void notifyValueChanged(int index) {
             synchronized (listeners) {
-                for (NodeListener l : listeners) {
-                    l.valueChanged(this, index);
+                Iterator<NodeListener> iter = listeners.iterator();
+
+                while (iter.hasNext()) {
+                    // Deregister if listener return true
+                    if (iter.next().valueChanged(this, index)) {
+                        iter.remove();
+                    }
                 }
             }
         }
@@ -1290,36 +1321,40 @@ public class BTree {
         private void notifyNodeSplit(Node rightNode, int medianIdx)
             throws IOException {
             synchronized (listeners) {
-                Set<NodeListener> listenersToDeregister = new HashSet<NodeListener>();
-                for (NodeListener l : listeners) {
-                    NodeListener listener = l.nodeSplit(this, rightNode, medianIdx);
-                    if (listener != null) {
-                        listenersToDeregister.add(listener);
+                Iterator<NodeListener> iter = listeners.iterator();
+
+                while (iter.hasNext()) {
+                    boolean deregister = iter.next().nodeSplit(this, rightNode, medianIdx);
+
+                    if (deregister) {
+                        iter.remove();
                     }
                 }
-                listeners.removeAll(listenersToDeregister);
             }
         }
 
-        private void notifyNodeMerged(Node rightNode, int rightIdx)
+        private void notifyNodeMerged(Node targetNode, int mergeIdx)
             throws IOException {
             synchronized (listeners) {
-                synchronized (rightNode.listeners) {
-                    Set<NodeListener> combinedSet = new HashSet<NodeListener>(listeners);
-                    combinedSet.addAll(rightNode.listeners);
+                Iterator<NodeListener> iter = listeners.iterator();
 
-                    for (NodeListener l : combinedSet) {
-                        l.nodesMerged(this, rightNode, rightIdx);
+                while (iter.hasNext()) {
+                    boolean deregister = iter.next().nodeMergedWith(this, targetNode, mergeIdx);
+
+                    if (deregister) {
+                        iter.remove();
                     }
                 }
             }
         }
 
-        public void read() throws IOException {
+        public void read()
+            throws IOException {
             ByteBuffer buf = ByteBuffer.wrap(data);
             // Don't fill the spare slot in data:
             buf.limit(nodeSize);
             fileChannel.read(buf, offset);
+
             valueCount = ByteArrayUtil.getInt(data, 0);
         }
 
@@ -1370,22 +1405,86 @@ public class BTree {
 
     private interface NodeListener {
 
-        void valueAdded(Node node, int index);
+        /**
+         * Signals to registered node listeners that a value has been added to a
+         * node.
+         *
+         * @param node
+         *        The node which the value has been added to.
+         * @param index
+         *        The index where the value was inserted.
+         * @return Indicates whether the node listener should be deregistered as a
+         *         result of this event.
+         */
+        public boolean valueAdded(Node node, int index);
 
-        void valueRemoved(Node node, int index);
+        /**
+         * Signals to registered node listeners that a value has been removed from
+         * a node.
+         *
+         * @param node
+         *        The node which the value has been removed from.
+         * @param index
+         *        The index where the value was removed.
+         * @return Indicates whether the node listener should be deregistered as a
+         *         result of this event.
+         */
+        public boolean valueRemoved(Node node, int index);
 
-        void valueChanged(Node node, int index);
+        /**
+         * Signals to registered node listeners that a value has been changed.
+         *
+         * @param node
+         *        The node in which the value has been changed.
+         * @param index
+         *        The index of the changed value.
+         * @return Indicates whether the node listener should be deregistered as a
+         *         result of this event.
+         */
+        public boolean valueChanged(Node node, int index);
 
-        NodeListener nodeSplit(Node node, Node newNode, int medianIdx) throws IOException;
+        /**
+         * Signals to registered node listeners that a node has been split.
+         *
+         * @param node
+         *        The node which has been split.
+         * @param newNode
+         *        The newly allocated node containing the "right" half of the
+         *        values.
+         * @param medianIdx
+         *        The index where the node has been split. The value at this index
+         *        has been moved to the node's parent.
+         * @return Indicates whether the node listener should be deregistered as a
+         *         result of this event.
+         */
+        public boolean nodeSplit(Node node, Node newNode, int medianIdx)
+            throws IOException;
 
-        void nodesMerged(Node leftNode, Node rightNode, int rightIdx) throws IOException;
+        /**
+         * Signals to registered node listeners that two nodes have been merged.
+         * All values from the source node have been appended to the value of the
+         * target node.
+         *
+         * @param sourceNode
+         *        The node that donated its values to the target node.
+         * @param targetNode
+         *        The node in which the values have been merged.
+         * @param mergeIdx
+         *        The index of <tt>sourceNode</tt>'s values in
+         *        <tt>targetNode</tt>.
+         *
+         * @return Indicates whether the node listener should be deregistered with
+         *         the <em>source node</em> as a result of this event.
+         */
+        public boolean nodeMergedWith(Node sourceNode, Node targetNode, int mergeIdx)
+            throws IOException;
     }
 
     /*-----------------------------*
       * Inner class SeqScanIterator *
       *-----------------------------*/
 
-    // private class SeqScanIterator implements BTreeIterator {
+    // private class SeqScanIterator implements RecordIterator {
     //
     // private byte[] searchKey;
     //
@@ -1457,7 +1556,7 @@ public class BTree {
       * Inner class RangeIterator *
       *---------------------------*/
 
-    private class RangeIterator implements BTreeIterator, NodeListener {
+    private class RangeIterator implements RecordIterator, NodeListener {
 
         private byte[] searchKey;
 
@@ -1623,7 +1722,7 @@ public class BTree {
             return 0;
         }
 
-        public void valueAdded(Node node, int index) {
+        public boolean valueAdded(Node node, int index) {
             if (node == currentNode) {
                 if (index <= currentIdx) {
                     currentIdx++;
@@ -1639,9 +1738,11 @@ public class BTree {
                     }
                 }
             }
+
+            return false;
         }
 
-        public void valueRemoved(Node node, int index) {
+        public boolean valueRemoved(Node node, int index) {
             if (node == currentNode) {
                 if (index <= currentIdx) {
                     currentIdx--;
@@ -1657,24 +1758,28 @@ public class BTree {
                     }
                 }
             }
+
+            return false;
         }
 
-        public void valueChanged(Node node, int index) {
+        public boolean valueChanged(Node node, int index) {
+            return false;
         }
 
-        public NodeListener nodeSplit(Node node, Node newNode, int medianIdx) throws IOException {
+        public boolean nodeSplit(Node node, Node newNode, int medianIdx)
+            throws IOException {
+            boolean deregister = false;
+
             if (node == currentNode) {
                 if (currentIdx > medianIdx) {
                     currentNode.release();
-                    //currentNode.deregister(this);
+                    deregister = true;
 
                     newNode.use();
                     newNode.register(this);
 
                     currentNode = newNode;
                     currentIdx -= medianIdx + 1;
-
-                    return this;
                 }
             } else {
                 for (int i = 0; i < parentNodeStack.size(); i++) {
@@ -1685,7 +1790,7 @@ public class BTree {
 
                         if (parentIdx > medianIdx) {
                             parentNode.release();
-                            //parentNode.deregister(this);
+                            deregister = true;
 
                             newNode.use();
                             newNode.register(this);
@@ -1694,42 +1799,47 @@ public class BTree {
                             parentIndexStack.set(i, parentIdx - medianIdx - 1);
                         }
 
-                        return this;
+                        break;
                     }
                 }
             }
-            return null;
+
+            return deregister;
         }
 
-        public void nodesMerged(Node leftNode, Node rightNode, int rightIdx)
+        public boolean nodeMergedWith(Node sourceNode, Node targetNode, int mergeIdx)
             throws IOException {
-            if (rightNode == currentNode) {
+            boolean deregister = false;
+
+            if (sourceNode == currentNode) {
                 currentNode.release();
-                currentNode.deregister(this);
+                deregister = true;
 
-                leftNode.use();
-                leftNode.register(this);
+                targetNode.use();
+                targetNode.register(this);
 
-                currentNode = leftNode;
-                currentIdx += rightIdx;
+                currentNode = targetNode;
+                currentIdx += mergeIdx;
             } else {
                 for (int i = 0; i < parentNodeStack.size(); i++) {
                     Node parentNode = parentNodeStack.get(i);
 
-                    if (rightNode == parentNode) {
+                    if (sourceNode == parentNode) {
                         parentNode.release();
-                        parentNode.deregister(this);
+                        deregister = true;
 
-                        leftNode.use();
-                        leftNode.register(this);
+                        targetNode.use();
+                        targetNode.register(this);
 
-                        parentNodeStack.set(i, leftNode);
-                        parentIndexStack.set(i, rightIdx + parentIndexStack.get(i));
+                        parentNodeStack.set(i, targetNode);
+                        parentIndexStack.set(i, mergeIdx + parentIndexStack.get(i));
 
                         break;
                     }
                 }
             }
+
+            return deregister;
         }
     }
 
@@ -1752,7 +1862,7 @@ public class BTree {
         throws Exception {
         File dataFile = new File(args[0]);
         int valueCount = Integer.parseInt(args[1]);
-        BTreeValueComparator comparator = new DefaultBTreeValueComparator();
+        RecordComparator comparator = new DefaultRecordComparator();
         BTree btree = new BTree(dataFile, 501, 13, comparator);
 
         java.util.Random random = new java.util.Random(0L);
@@ -1763,14 +1873,14 @@ public class BTree {
             random.nextBytes(value);
             btree.insert(value);
             if (i % 50000 == 0) {
-                System.out.println("Inserted " + i + " values in " + (System.currentTimeMillis() - startTime) +
-                    " ms");
+                System.out.println("Inserted " + i + " values in " + (System.currentTimeMillis() - startTime)
+                    + " ms");
             }
         }
 
         System.out.println("Iterating over all values in sequential order...");
         startTime = System.currentTimeMillis();
-        BTreeIterator iter = btree.iterateAll();
+        RecordIterator iter = btree.iterateAll();
         value = iter.next();
         int count = 0;
         while (value != null) {
@@ -1778,8 +1888,8 @@ public class BTree {
             value = iter.next();
         }
         iter.close();
-        System.out.println("Iteration over " + count + " items finished in " +
-            (System.currentTimeMillis() - startTime) + " ms");
+        System.out.println("Iteration over " + count + " items finished in "
+            + (System.currentTimeMillis() - startTime) + " ms");
 
         // byte[][] values = new byte[count][13];
         //
@@ -1826,7 +1936,7 @@ public class BTree {
            * btree.print(System.out); System.out.println("Removing E...");
            * btree.remove("E".getBytes()); btree.commitTransaction();
            * btree.print(System.out); System.out.println("Values from I to U:");
-           * BTreeIterator iter = btree.iterateRange("I".getBytes(),
+           * RecordIterator iter = btree.iterateRange("I".getBytes(),
            * "V".getBytes()); byte[] value = iter.next(); while (value != null) {
            * System.out.print(new String(value) + " "); value = iter.next(); }
            * System.out.println();

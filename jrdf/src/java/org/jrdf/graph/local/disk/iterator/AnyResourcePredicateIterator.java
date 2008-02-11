@@ -61,7 +61,7 @@ package org.jrdf.graph.local.disk.iterator;
 
 import org.jrdf.graph.PredicateNode;
 import org.jrdf.graph.local.index.graphhandler.GraphHandler;
-import org.jrdf.graph.local.index.longindex.sesame.BTreeIterator;
+import org.jrdf.graph.local.index.longindex.sesame.RecordIterator;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
 import org.jrdf.graph.local.index.longindex.sesame.TripleBTree;
 import org.jrdf.util.ClosableIterator;
@@ -71,7 +71,7 @@ import java.util.NoSuchElementException;
 
 public class AnyResourcePredicateIterator implements ClosableIterator<PredicateNode> {
     private static final int TRIPLES = 3;
-    private final BTreeIterator bTreeIterator;
+    private final RecordIterator bTreeIterator;
     private final GraphHandler handler;
     private byte[] currentBytes;
     private PredicateNode currentPredicate;

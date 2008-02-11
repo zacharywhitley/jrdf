@@ -17,10 +17,10 @@ import java.util.Set;
 
 public class EntryIterator implements Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> {
     private static final int TRIPLES = 3;
-    private BTreeIterator iterator;
+    private RecordIterator iterator;
     private byte[] currentValues;
 
-    public EntryIterator(BTreeIterator newIterator) {
+    public EntryIterator(RecordIterator newIterator) {
         try {
             this.iterator = newIterator;
             this.currentValues = newIterator.next();

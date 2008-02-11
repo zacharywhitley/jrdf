@@ -69,7 +69,7 @@ public class BTreeFactoryImpl implements BTreeFactory {
     private static final int VALUE_SIZE = 24;
 
     public TripleBTree createBTree(DirectoryHandler handler, String fileName) {
-        BTreeValueComparator comparator = new DefaultBTreeValueComparator();
+        RecordComparator comparator = new DefaultRecordComparator();
         try {
             File parent = handler.makeDir();
             File file = new File(parent, fileName);
