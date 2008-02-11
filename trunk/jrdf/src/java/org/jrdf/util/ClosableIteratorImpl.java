@@ -57,80 +57,30 @@
  *
  */
 
-package org.jrdf.graph.local.index;
+package org.jrdf.util;
 
-import org.jrdf.graph.GraphException;
-import org.jrdf.util.ClosableIterator;
+import java.util.Iterator;
 
-import java.util.Map;
-import java.util.Set;
+public class ClosableIteratorImpl<E> implements ClosableIterator<E> {
+    private final Iterator<E> iterator;
 
-public interface Index<T> {
+    public ClosableIteratorImpl(Iterator<E> newIterator) {
+        this.iterator = newIterator;
+    }
 
-    /**
-     * Adds a triple to a single index.  This method defines the internal structure.
-     *
-     * @param node The nodes to add.
-     * @throws GraphException If there was an error adding the statement.
-     */
-    void add(T... node) throws GraphException;
+    public boolean close() {
+        return true;
+    }
 
-    /**
-     * Removes a triple from a single index.
-     *
-     * @param node the nodes to remove.
-     * @throws GraphException If there was an error revoking the statement, for example if it didn't exist.
-     */
-    void remove(T... node) throws GraphException;
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
 
-    /**
-     * Removes all triples from this index.
-     */
-    void clear();
+    public E next() {
+        return iterator.next();
+    }
 
-    /**
-     * Returns an iterator which contains all the elements in the graph as a
-     * collections of distinct longs, contains a map of longs to other longs.
-     * This prevents any duplication.
-     *
-     * @return an iterator which contains all the elements in the graph as a
-     *         collections of distinct longs, contains a map of longs to other longs.
-     *         This prevents any duplication.
-     */
-    ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> iterator();
-
-    /**
-     * Returns the map of long to set of longs for the given entry of the index.  For example, a given subject id
-     * is given and it returns a map of predicates to objects.
-     *
-     * @param first the entry set to find.
-     * @return a map containing the list of longs to set of longs.
-     */
-    Map<T, Set<T>> getSubIndex(T first);
-
-    /**
-     * Returns true if the value given exists in the index.
-     *
-     * @param first the key to search for.
-     * @return true if the key exsts.
-     */
-    boolean contains(T first);
-
-    /**
-     * Removes the given entry of long to set of longs with the given entry.  For example, a given subject id is
-     * given and it will remove all the associated predicate and objects for that subject.
-     *
-     * @param first the entry set to remove.
-     * @return true if the entry set was non-null.
-     */
-    boolean removeSubIndex(T first);
-
-    /**
-     * Returns the number of triples in the index.
-     *
-     * @return the number of triples in the index.
-     */
-    long getSize();
-
-    void close();
+    public void remove() {
+        iterator.remove();
+    }
 }

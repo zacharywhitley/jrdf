@@ -60,11 +60,12 @@
 package org.jrdf.graph.local.index;
 
 import org.jrdf.graph.GraphException;
+import org.jrdf.util.ClosableIterator;
+import org.jrdf.util.ClosableIteratorImpl;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -107,8 +108,8 @@ public class AbstractIndex<T> implements Index<T>, Serializable {
         return index.containsKey(node);
     }
 
-    public Iterator<Map.Entry<T, Map<T, Set<T>>>> iterator() {
-        return index.entrySet().iterator();
+    public ClosableIterator<Map.Entry<T, Map<T, Set<T>>>> iterator() {
+        return new ClosableIteratorImpl<Map.Entry<T, Map<T, Set<T>>>>(index.entrySet().iterator());
     }
 
     public void remove(T... node) throws GraphException {

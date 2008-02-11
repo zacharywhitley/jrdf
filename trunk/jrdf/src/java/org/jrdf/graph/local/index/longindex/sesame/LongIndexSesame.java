@@ -63,11 +63,11 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.local.index.longindex.LongIndex;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.fromBytes;
 import static org.jrdf.graph.local.index.longindex.sesame.ByteHandler.toBytes;
+import org.jrdf.util.ClosableIterator;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -88,11 +88,19 @@ public final class LongIndexSesame implements LongIndex {
     }
 
     public void remove(Long... node) throws GraphException {
-        RecordIterator bTreeIterator = btree.getIterator(node);
-        if (getNextBytes(bTreeIterator) == null) {
-            throw new GraphException("Unable to remove nonexistent statement");
+        RecordIterator iterator = btree.getIterator(node);
+        try {
+            if (getNextBytes(iterator) == null) {
+                throw new GraphException("Unable to remove nonexistent statement");
+            }
+            removeBytes(toBytes(node));
+        } finally {
+            try {
+                iterator.close();
+            } catch (IOException e) {
+                throw new GraphException(e);
+            }
         }
-        removeBytes(toBytes(node));
     }
 
     public void clear() {
@@ -103,47 +111,80 @@ public final class LongIndexSesame implements LongIndex {
         }
     }
 
-    public Iterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
+    public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
         return new EntryIterator(btree.iterateAll());
     }
 
     public Map<Long, Set<Long>> getSubIndex(Long first) {
         Map<Long, Set<Long>> resultMap = new HashMap<Long, Set<Long>>();
-        RecordIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
-        byte[] bytes = getNextBytes(bTreeIterator);
-        while (bytes != null) {
-            Long[] longs = fromBytes(bytes, TRIPLES);
-            Set<Long> longSet = getLongSet(longs, resultMap);
-            longSet.add(longs[2]);
-            resultMap.put(longs[1], longSet);
-            bytes = getNextBytes(bTreeIterator);
+        RecordIterator iterator = btree.getIterator(first, 0L, 0L);
+        try {
+            byte[] bytes = getNextBytes(iterator);
+            while (bytes != null) {
+                Long[] longs = fromBytes(bytes, TRIPLES);
+                Set<Long> longSet = getLongSet(longs, resultMap);
+                longSet.add(longs[2]);
+                resultMap.put(longs[1], longSet);
+                bytes = getNextBytes(iterator);
+            }
+            return resultMap.isEmpty() ? null : resultMap;
+        } finally {
+            try {
+                iterator.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return resultMap.isEmpty() ? null : resultMap;
     }
 
     public boolean contains(Long first) {
-        byte[] bytes = getNextBytes(btree.getIterator(first, 0L, 0L));
-        return bytes != null;
+        RecordIterator iterator = btree.getIterator(first, 0L, 0L);
+        try {
+            byte[] bytes = getNextBytes(iterator);
+            return bytes != null;
+        } finally {
+            try {
+                iterator.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     public boolean removeSubIndex(Long first) {
-        RecordIterator bTreeIterator = btree.getIterator(first, 0L, 0L);
-        byte[] bytes = getNextBytes(bTreeIterator);
-        boolean changed = bytes != null;
-        while (bytes != null) {
-            removeBytes(bytes);
-            bytes = getNextBytes(bTreeIterator);
+        RecordIterator iterator = btree.getIterator(first, 0L, 0L);
+        try {
+            byte[] bytes = getNextBytes(iterator);
+            boolean changed = bytes != null;
+            while (bytes != null) {
+                removeBytes(bytes);
+                bytes = getNextBytes(iterator);
+            }
+            return changed;
+        } finally {
+            try {
+                iterator.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return changed;
     }
 
     public long getSize() {
         long counter = 0;
-        RecordIterator bTreeIterator = btree.iterateAll();
-        while (getNextBytes(bTreeIterator) != null) {
-            counter++;
+        RecordIterator iterator = btree.iterateAll();
+        try {
+            while (getNextBytes(iterator) != null) {
+                counter++;
+            }
+            return counter;
+        } finally {
+            try {
+                iterator.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-        return counter;
     }
 
     public void close() {
