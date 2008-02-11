@@ -32,6 +32,7 @@
     <suppress checks="ClassDataAbstractionCoupling" files="DecomposerPerformance"/>
     <suppress checks="CyclomaticComplexity" files="NewNaiveGraphDecomposerImpl"/>
     <suppress checks="CyclomaticComplexity" files="AbstractMoleculeIndexMem" />
+    <suppress checks="CyclomaticComplexity" files="AbstractNewMoleculeIndexMem" />
     <suppress checks="CyclomaticComplexity" files="BlankNodeMapperImpl" />
     <suppress checks="JavaNCSS" files="DecomposerPerformance"/>
     <suppress checks="JavaNCSS" files="NewMoleculeImpl"/>

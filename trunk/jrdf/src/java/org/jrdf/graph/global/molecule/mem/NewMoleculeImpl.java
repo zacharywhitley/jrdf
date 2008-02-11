@@ -67,6 +67,8 @@ import org.jrdf.graph.TripleComparator;
 import org.jrdf.graph.TripleImpl;
 import org.jrdf.graph.global.GroundedTripleComparatorFactoryImpl;
 import org.jrdf.graph.global.molecule.MergeSubmolecules;
+import org.jrdf.graph.global.molecule.MoleculeTraverser;
+import org.jrdf.graph.global.molecule.MoleculeTraverserImpl;
 import org.jrdf.util.ClosableIterator;
 import static org.jrdf.util.param.ParameterUtil.checkNotNull;
 
@@ -292,33 +294,7 @@ public class NewMoleculeImpl implements NewMolecule {
 
     @Override
     public String toString() {
-        return printRootTriples(1, this, getRootTriples()).toString();
-    }
-
-    private StringBuilder printRootTriples(int level, NewMolecule molecule, Iterator<Triple> rootTriples) {
-        final StringBuilder res = new StringBuilder();
-        while (rootTriples.hasNext()) {
-            Triple triple = rootTriples.next();
-            res.append("\n");
-            for (int index = 0; index < level; index++) {
-                res.append("--");
-            }
-            res.append("> " + triple + " = ");
-            Set<NewMolecule> newMolecules = molecule.getSubMolecules(triple);
-            if (newMolecules.isEmpty()) {
-                res.append("{}");
-            } else {
-                res.append(printSubMolecules(level + 1, newMolecules));
-            }
-        }
-        return res;
-    }
-
-    private StringBuilder printSubMolecules(int level, Set<NewMolecule> subMolecules) {
-        final StringBuilder res = new StringBuilder();
-        for (NewMolecule molecule : subMolecules) {
-            res.append(printRootTriples(level, molecule, molecule.getRootTriples()));
-        }
-        return res;
+        MoleculeTraverser traverser = new MoleculeTraverserImpl();
+        return traverser.traverse(this, new NewMoleculeToString()).toString();
     }
 }
