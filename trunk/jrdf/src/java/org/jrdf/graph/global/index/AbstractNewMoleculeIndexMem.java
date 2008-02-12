@@ -62,17 +62,16 @@ package org.jrdf.graph.global.index;
 import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
-import org.jrdf.graph.global.molecule.mem.NewMolecule;
 import org.jrdf.graph.global.molecule.MoleculeTraverser;
 import org.jrdf.graph.global.molecule.MoleculeTraverserImpl;
+import org.jrdf.graph.global.molecule.mem.NewMolecule;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex, Serializable {
+public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex {
     private static final long serialVersionUID = -8587157481997476484L;
     private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
     private Map<Node, Map<Node, Map<Node, NewMolecule>>> index;
@@ -111,7 +110,7 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex, S
             group = new HashMap<Node, NewMolecule>();
             subIndex.put(second, group);
         }
-        if (group.containsKey(third)) {
+        if (molecule != null && group.containsKey(third)) {
             NewMolecule tmpMolecule = group.remove(third);
             group.put(third, tmpMolecule.add(molecule));
         } else {
