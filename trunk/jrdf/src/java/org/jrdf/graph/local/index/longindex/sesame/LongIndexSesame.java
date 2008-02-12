@@ -102,11 +102,12 @@ public final class LongIndexSesame implements LongIndex {
         }
     }
 
+    // TODO AN This is still memory bound.
     public ClosableIterator<Map.Entry<Long, Map<Long, Set<Long>>>> iterator() {
         return new EntryIterator(btree.iterateAll());
     }
 
-    // TODO This is still memory bound.
+    // TODO AN This is still memory bound.
     public Map<Long, Set<Long>> getSubIndex(Long first) {
         try {
             return RecordIteratorHelper.getSubIndex(btree, first);
