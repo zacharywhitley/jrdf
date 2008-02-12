@@ -70,14 +70,13 @@ import java.util.Set;
 public class MoleculeTraverserImpl implements MoleculeTraverser {
     private MoleculeHandler handler;
 
-    public Object traverse(NewMolecule newMolecule, MoleculeHandler newHandler) {
+    public void traverse(NewMolecule newMolecule, MoleculeHandler newHandler) {
         checkNotNull(newHandler);
         handler = newHandler;
         // The initial molecule is a set of one molecule.
         Set<NewMolecule> molecules = new HashSet<NewMolecule>();
         molecules.add(newMolecule);
         iterateOverMolecules(molecules);
-        return newHandler.getResult();
     }
 
     private void iterateOverTriples(NewMolecule molecule, Iterator<Triple> rootTriples) {

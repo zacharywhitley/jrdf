@@ -65,15 +65,19 @@ import org.jrdf.graph.global.molecule.MoleculeHandler;
 import java.util.Set;
 
 public class NewMoleculeToString implements MoleculeHandler {
-    private StringBuilder res = new StringBuilder();
+    private StringBuilder builder;
     private int level;
 
+    public NewMoleculeToString(StringBuilder newBuilder) {
+        this.builder = newBuilder;
+    }
+
     public Object getResult() {
-        return res;
+        return builder;
     }
 
     public void handleEmptyMolecules() {
-        res.append("{}");
+        builder.append("{}");
     }
 
     public void handleContainsMolecules(Set<NewMolecule> newMolecules) {
@@ -81,10 +85,10 @@ public class NewMoleculeToString implements MoleculeHandler {
     }
 
     public void handleTriple(Triple triple) {
-        res.append("\n");
+        builder.append("\n");
         for (int index = 0; index < level; index++) {
-            res.append("--");
+            builder.append("--");
         }
-        res.append("> ").append(triple).append(" = ");
+        builder.append("> ").append(triple).append(" = ");
     }
 }

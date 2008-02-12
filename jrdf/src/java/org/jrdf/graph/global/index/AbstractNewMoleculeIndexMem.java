@@ -63,6 +63,8 @@ import org.jrdf.graph.GraphException;
 import org.jrdf.graph.Node;
 import org.jrdf.graph.Triple;
 import org.jrdf.graph.global.molecule.mem.NewMolecule;
+import org.jrdf.graph.global.molecule.MoleculeTraverser;
+import org.jrdf.graph.global.molecule.MoleculeTraverserImpl;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -72,6 +74,7 @@ import java.util.Map;
 
 public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex, Serializable {
     private static final long serialVersionUID = -8587157481997476484L;
+    private final MoleculeTraverser traverser = new MoleculeTraverserImpl();
     private Map<Node, Map<Node, Map<Node, NewMolecule>>> index;
 
     protected AbstractNewMoleculeIndexMem() {
@@ -82,14 +85,13 @@ public abstract class AbstractNewMoleculeIndexMem implements NewMoleculeIndex, S
         this.index = newIndex;
     }
 
+    public void add(Node first, Node second, Node third) {
+        addInternalNodes(first, second, third, null);
+    }
+
     public void add(Node first, Node second, Node third, NewMolecule molecule) {
         addInternalNodes(first, second, third, molecule);
-//        Iterator<Triple> iterator = molecule.tailTriples();
-//        while (iterator.hasNext()) {
-//            Triple triple = iterator.next();
-//            Node[] nodes = getNodes(triple);
-//            addInternalNodes(nodes[0], nodes[1], nodes[2], molecule);
-//        }
+        traverser.traverse(molecule, new NewMoleculeToIndex(this));
     }
 
     protected abstract Node[] getNodes(Triple triple);
